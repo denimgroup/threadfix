@@ -113,7 +113,7 @@ public class ApplicationDetailPage extends BasePage {
         // clickShowDetails().clickAddDefectTrackerButton().setUsername(defectTrackerName).setUrlInput(defectTrackerURL).selectProduct()
         return new ApplicationDetailPage(driver);
         /*
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
+         * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
 		 * "appInfoDiv"))); //TODO missing id
 		 * driver.findElementByLinkText("Add Defect Tracker").click();
 		 * wait.until
@@ -777,6 +777,16 @@ public class ApplicationDetailPage extends BasePage {
         return new FilterPage(driver);
     }
 
+    public ApplicationDetailPage clickManualFindingButton() {
+        driver.findElementById("addManualFindingModalLink").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickStaticRadioButton() {
+        driver.findElementById("staticRadioButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {
@@ -885,35 +895,35 @@ public class ApplicationDetailPage extends BasePage {
         return isClickable("actionButton");
     }
 
-    public boolean isEditDeletePresent(){
+    public boolean isEditDeletePresent() {
         return driver.findElementById("editApplicationModalButton").isDisplayed();
     }
 
-    public boolean isEditDeleteClickable(){
+    public boolean isEditDeleteClickable() {
         return isClickable("editApplicationModalButton");
     }
 
-    public boolean isEditVulnFiltersPresent(){
+    public boolean isEditVulnFiltersPresent() {
         return driver.findElementById("editVulnerabilityFiltersButton").isDisplayed();
     }
 
-    public boolean isEditVulnFiltersClickable(){
+    public boolean isEditVulnFiltersClickable() {
         return isClickable("editVulnerabilityFiltersButton");
     }
 
-    public boolean isUploadScanPresent(){
+    public boolean isUploadScanPresent() {
         return driver.findElementById("uploadScanModalLink").isDisplayed();
     }
 
-    public boolean isUploadScanClickable(){
+    public boolean isUploadScanClickable() {
         return isClickable("uploadScanModalLink");
     }
 
-    public boolean isAddManualFindingsPresent(){
+    public boolean isAddManualFindingsPresent() {
         return driver.findElementById("addManualFindingModalLink").isDisplayed();
     }
 
-    public boolean isAddManualFindingsClickable(){
+    public boolean isAddManualFindingsClickable() {
         return isClickable("addManualFindingModalLink");
     }
 
@@ -923,10 +933,118 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isDeletebuttonClickable() {
         return isClickable("deleteLink");
-
     }
 
+    public boolean isNameInputPresent() {
+        return driver.findElementById("nameInput").isDisplayed();
+    }
 
+    public boolean isURLInputPresent() {
+        return driver.findElementById("urlInput").isDisplayed();
+    }
 
+    public boolean isUniqueIDPresent() {
+        return driver.findElementById("uniqueIdInput").isDisplayed();
+    }
+
+    public boolean isTeamSelectionPresent() {
+        return driver.findElementById("organizationId").isDisplayed();
+    }
+
+    public boolean isCritcalityPresent() {
+        return driver.findElementById("criticalityId").isDisplayed();
+    }
+
+    public boolean isAppTypePresent() {
+        return driver.findElementById("frameworkType").isDisplayed();
+    }
+
+    public boolean isSourceURLPresent() {
+        return driver.findElementById("repositoryUrl").isDisplayed();
+    }
+
+    public boolean isSourceFolderPresent() {
+        return driver.findElementById("repositoryFolder").isDisplayed();
+    }
+
+    public boolean isDefectTrackerAddPresent() {
+        return driver.findElementById("addDefectTrackerButton").isDisplayed();
+    }
+
+    public boolean isDefectTrackerAddClickable() {
+        return isClickable("addDefectTrackerButton");
+    }
+
+    public boolean isWAFAddButtonPresent() {
+        return driver.findElementById("addWafButton").isDisplayed();
+    }
+
+    public boolean isWAFAddButtonClickable() {
+        return isClickable("addWafButton");
+    }
+
+    public boolean isSaveChangesButtonPresent() {
+        return driver.findElementById("submitAppModal").isDisplayed();
+    }
+
+    public boolean isSaveChangesButtonClickable() {
+        return isClickable("submitAppModal");
+    }
+
+    public boolean isSubmitScanLinkPresent(String appName) {
+        return driver.findElementById("submitScanModal-" + appName).isDisplayed();
+    }
+
+    public boolean isDynamicRadioPresent() {
+        return driver.findElementById("dynamicRadioButton").isDisplayed();
+    }
+
+    public boolean isStaticRadioPresent() {
+        return driver.findElementById("staticRadioButton").isDisplayed();
+    }
+
+    public boolean isCWEInputPresent() {
+        return driver.findElementById("txtSearch").isDisplayed();
+    }
+
+    public boolean isURLDynamicSearchPresent() {
+        return driver.findElementById("urlDynamicSearch").isDisplayed();
+    }
+
+    public boolean isURLStaticSearchPresent() {
+        return driver.findElementById("urlStaticSearch").isDisplayed();
+    }
+
+    public boolean isLineNumberInputPresent() {
+        return driver.findElementById("urlSearch").isDisplayed();
+    }
+
+    public boolean isParameterPresent() {
+        return driver.findElementById("parameterInput").isDisplayed();
+    }
+
+    public boolean isSeverityPresent() {
+        return driver.findElementById("severityInput").isDisplayed();
+    }
+
+    public boolean isDescriptionInputPresent() {
+        return driver.findElementById("descriptionInput").isDisplayed();
+    }
+
+    public boolean isSubmitManualFindingPresent() {
+        return driver.findElementById("dynamicSubmit").isDisplayed();
+    }
+
+    public boolean isSubmitManualFindingClickable() {
+        return isClickable("dynamicSubmit");
+    }
+
+    public boolean isManualFindingCloseButtonPresent() {
+        return driver.findElementById("closeManualFindingModalButton").isDisplayed();
+    }
+
+    public boolean isManualFindingCloseButtonClickable() {
+        return isClickable("closeManualFindingModalButton");
+    }
 
 }

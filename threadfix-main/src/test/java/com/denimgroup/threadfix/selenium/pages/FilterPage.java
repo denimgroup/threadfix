@@ -141,4 +141,11 @@ public class FilterPage extends BasePage {
         driver.findElementById("showInfo2").click();
         return new FilterPage(driver);
     }
+
+    /*_____________ Boolean Methods______________*/
+
+    public boolean isCreateNewFilterPresent() {
+        return driver.findElementById("createNewKeyModalButton").isDisplayed();
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.denimgroup.threadfix.selenium.pagetests;
 
 import static org.junit.Assert.assertTrue;
+
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
@@ -129,28 +131,57 @@ public class ApplicationDetailsPageTest extends BaseTest {
         ap.clickEditDeleteBtn();
         assertTrue("Delete Button is not present", ap.isDeleteButtonPresent());
         assertTrue("Delete Button is not clickable", ap.isDeletebuttonClickable());
-        //destroyTeamAppandScan();
+        assertTrue("App Name Input is not present.", ap.isNameInputPresent());
+        assertTrue("URL input is not Present.", ap.isURLInputPresent());
+        assertTrue("Unique ID is not present.", ap.isUniqueIDPresent());
+        assertTrue("Team Selection is not present.", ap.isTeamSelectionPresent());
+        assertTrue("Critical Selection is not present.", ap.isCritcalityPresent());
+        assertTrue("Application Type is not present.", ap.isAppTypePresent());
+        assertTrue("Source Code URL is not present.", ap.isSourceURLPresent());
+        assertTrue("Source Code Folder is not present.", ap.isSourceFolderPresent());
+        assertTrue("Defect Tracker add button is not present.", ap.isDefectTrackerAddPresent());
+        assertTrue("Defect Tracker add button is not clickable.", ap.isDefectTrackerAddClickable());
+        assertTrue("Waf add button is not present.", ap.isWAFAddButtonPresent());
+        assertTrue("Waf add button is not clickable.", ap.isWAFAddButtonClickable());
+        assertTrue("Save Changes button is not present.", ap.isSaveChangesButtonPresent());
+        assertTrue("Save Changes button is not clickable.", ap.isSaveChangesButtonClickable());
     }
 
-    //@Test
+    @Test
     public void testActionButtonEditVulnFilter() {
         ApplicationDetailPage ap = buildTeamAppandScan();
-        //assertTrue("Edit Vulnerabilty Filters page does not show", );
-        //destroyTeamAppandScan();
+        ap.clickActionButton();
+        FilterPage filterPage = ap.clickEditVulnerabilityFilters();
+        assertTrue("Did not navigate to FilterPage.", filterPage.isCreateNewFilterPresent());
     }
 
-    //@Test
+    @Test
     public void testActionButtonUploadScan() {
-        buildTeamAppandScan();
-        //assert goes here
-        //destroyTeamAppandScan();
+        ApplicationDetailPage ap = buildTeamAppandScan();
+        ap.clickUploadScanLink();
+        assertTrue("Did not generate upload scan dialog", ap.isSubmitScanLinkPresent(appName));
     }
 
-    //@Test
+    @Test
     public void testActionButtonAddManualFinding() {
-        buildTeamAppandScan();
-        //assert goes here
-        //destroyTeamAppandScan();
+        ApplicationDetailPage ap = buildTeamAppandScan();
+        ap.clickActionButton()
+                .clickManualFindingButton();
+        sleep(2000);
+        assertTrue("Dynamic Radio button is not present.", ap.isDynamicRadioPresent());
+        assertTrue("Static Radio button is not present.", ap.isStaticRadioPresent());
+        assertTrue("CWE input is not present", ap.isCWEInputPresent());
+        assertTrue("Source URL is not present", ap.isURLDynamicSearchPresent());
+        assertTrue("Parameter input is not present.", ap.isParameterPresent());
+        assertTrue("Severity is not present.", ap.isSeverityPresent());
+        assertTrue("Description Input is not present.", ap.isDescriptionInputPresent());
+        assertTrue("Submit button is not present.", ap.isSubmitManualFindingPresent());
+        assertTrue("Submit button is not clickable.", ap.isSubmitManualFindingClickable());
+        assertTrue("Cancel button is not present.", ap.isManualFindingCloseButtonPresent());
+        assertTrue("Cancel button is not clickable.", ap.isManualFindingCloseButtonClickable());
+        ap.clickStaticRadioButton();
+        assertTrue("Line Number Input is not present.", ap.isLineNumberInputPresent());
+        assertTrue("Source File is not present.", ap.isURLStaticSearchPresent());
     }
 
     //@Test
