@@ -338,7 +338,20 @@ public class UserTests extends BaseTest {
 
     @Test
     public void testDeleteUser(){
+        String userName = "testDeleteUser" + getRandomString(3);
+        String password = "testDeleteUser";
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink();
 
+        userIndexPage.clickAddUserLink()
+                .enterName(userName,null)
+                .enterPassword(password,null)
+                .enterConfirmPassword(password,null)
+                .clickAddNewUserBtn()
+                .clickEditLink(userName)
+                .clickDelete(userName);
+        assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
+        assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }
 
 	@Test

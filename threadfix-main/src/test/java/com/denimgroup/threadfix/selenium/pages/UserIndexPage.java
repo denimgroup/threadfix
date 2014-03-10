@@ -45,6 +45,12 @@ public class UserIndexPage extends BasePage {
 		handleAlert();
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage clickDelete(String user){
+        driver.findElementById("delete" + user).click();
+        handleAlert();
+        return new UserIndexPage(driver);
+    }
 	
 	public UserPermissionsPage clickEditPermissions(String name){
 		driver.findElementById("editPermissions" + (name)).click();
