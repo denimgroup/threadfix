@@ -35,7 +35,7 @@ import org.openqa.selenium.interactions.Actions;
 public class LoginPage extends BasePage {
 
 	public static String url = "http://localhost:8080/threadfix/";
-    //public static String url = "https://10.2.4.141:8443/threadfix/";
+    //public static String url = "http://jenkins-slave5:8080/threadfix/";
 
 	public LoginPage(WebDriver webdriver) {
 		super(webdriver);

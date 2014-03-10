@@ -305,7 +305,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getUrlText() {
-        return driver.findElementById("urlText").getText().trim();
+        return driver.findElementById("urlInput").getAttribute("value");
     }
 
     public String getDefectTrackerText() {
