@@ -38,6 +38,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 public class DefectTrackerTests extends BaseTest {
 
     private DefectTrackerIndexPage defectTrackerIndexPage;
+    private ApplicationDetailPage applicationDetailPage;
 
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
 	private static final String TEST_JIRA_URL = DefectTrackerIndexPage.JIRA_URL;
@@ -250,186 +251,113 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void TFSCreate() {
-		String newDefectTrackerName = "testEditDefectTracker"
-				+ getRandomString(10);
-		String url = "https://tfs.denimgroup.com:8080";
-		String type2 = "Microsoft TFS";
+		String newDefectTrackerName = "tfsCreate" + getRandomString(3);
+		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
+		String defectTrackerType = "Microsoft TFS";
 
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
-				"password").clickDefectTrackersLink();
-
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickAddDefectTrackerButton();
-
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,
-				newDefectTrackerName);
-		defectTrackerIndexPage = defectTrackerIndexPage.enterType(null, type2);
-		defectTrackerIndexPage = defectTrackerIndexPage.enterURL(null, url);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickSaveNewDefectTracker();
-
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickEditLink(newDefectTrackerName);
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(
-				newDefectTrackerName, newDefectTrackerName + " - edited");
-		defectTrackerIndexPage = defectTrackerIndexPage.enterType(
-				newDefectTrackerName, type2);
-		defectTrackerIndexPage = defectTrackerIndexPage.enterURL(
-				newDefectTrackerName, url);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickUpdateDefectTrackerButton();
-
-		assertTrue(
-				"DefectTracker Page did not create correctly.",
-				defectTrackerIndexPage
-						.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
-
-		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
-                .clickDeleteButton(newDefectTrackerName + " - edited")
+		defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
-		assertFalse(
-				"DefectTracker Page did delete.",
-				defectTrackerIndexPage
-						.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
+		defectTrackerIndexPage = defectTrackerIndexPage
+				.clickAddDefectTrackerButton()
+                .enterName(null,newDefectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null, defectTrackerURL)
+                .clickSaveNewDefectTracker();
 
-		loginPage = defectTrackerIndexPage.clickDefectTrackersLink().logout();
+		assertTrue("DefectTracker Page did not create a TFS tracker correctly.",
+				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 	}
 
 	@Test
 	public void TFSEdit() {
-		String newDefectTrackerName = "testEditDefectTracker"
-				+ getRandomString(10);
-		String url = "https://tfs.denimgroup.com:8080";
-		String type2 = "Microsoft TFS";
-		String replacementName = "replacementDefectTracker"
-				+ getRandomString(10);
+		String newDefectTrackerName = "editTFSDefectTracker" + getRandomString(3);
+        String replacementName = "replacementDefectTracker" + getRandomString(3);
+		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
+		String defectTrackerType = "Microsoft TFS";
 
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
-				"password").clickDefectTrackersLink();
+		defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
 
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickAddDefectTrackerButton();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setNameInput(newDefectTrackerName)
+                .setDefectTrackerTypeSelect(defectTrackerType)
+                .setUrlInput(defectTrackerURL)
+                .clickSaveNewDefectTracker();
 
-		defectTrackerIndexPage.setNameInput(newDefectTrackerName);
-		defectTrackerIndexPage.setDefectTrackerTypeSelect(type2);
-		defectTrackerIndexPage.setUrlInput(url);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickSaveNewDefectTracker();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName)
+                .clickUpdateDefectTrackerButton()
+                .clickDefectTrackersLink()
+                .clickEditLink(newDefectTrackerName)
+                .enterName(newDefectTrackerName,replacementName)
+                .clickUpdateDefectTrackerButton();
 
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickEditLink(newDefectTrackerName);
-
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickUpdateDefectTrackerButton();
-
-		assertTrue("DefectTracker Page did not create correctly.",
-				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
-                .clickEditLink(newDefectTrackerName).enterName(newDefectTrackerName,replacementName);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickUpdateDefectTrackerButton();
-
-		assertTrue("DefectTracker Page did not edit correctly.",
+		assertTrue("DefectTracker Page did not edit TFS tracker correctly.",
 				defectTrackerIndexPage.doesNameExist(replacementName));
-
-		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickDeleteButton(replacementName);
-
-		loginPage = defectTrackerIndexPage.logout();
 	}
+
+    @Test
+    public void jiraCreate() {
+        String newDefectTrackerName = "jiraCreate"+ getRandomString(3);
+        String defectTrackerType = "Jira";
+
+        defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
+
+        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(null,newDefectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null,TEST_JIRA_URL)
+                .clickSaveNewDefectTracker();
+
+        assertTrue("DefectTracker Page did not create correctly.",
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
+    }
 
 	@Test
 	public void jiraEdit() {
-		String newDefectTrackerName = "testEditDefectTracker" + getRandomString(4);
-		String type2 = "Jira";
-		String replacementName = "replacementDefectTracker" + getRandomString(4);
+		String newDefectTrackerName = "jiraEdit" + getRandomString(3);
+        String replacementName = "jiraEditNew" + getRandomString(3);
+		String defectTrackerType = "Jira";
 
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
-																.clickDefectTrackersLink()
-																.clickAddDefectTrackerButton()
-																.enterName(null, newDefectTrackerName)
-																.enterType(null, type2)
-																.enterURL(null, TEST_JIRA_URL)
-																.clickSaveNewDefectTracker()
-																.clickEditLink(newDefectTrackerName)
-																.clickUpdateDefectTrackerButton();
+		defectTrackerIndexPage = loginPage.login("user","password")
+                .clickDefectTrackersLink();
 
-		assertTrue("DefectTracker Page did not create correctly.",
-				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));
+        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(null, newDefectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null, TEST_JIRA_URL)
+                .clickSaveNewDefectTracker();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName)
-													.enterName(newDefectTrackerName,replacementName)
-													.clickUpdateDefectTrackerButton();
+                .enterName(newDefectTrackerName, replacementName)
+                .clickUpdateDefectTrackerButton();
 
-		assertTrue("DefectTracker Page did not edit correctly.",
+		assertTrue("DefectTracker page did not edit jira tracker correctly.",
 				defectTrackerIndexPage.doesNameExist(replacementName));
-
-		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
-													.clickDeleteButton(replacementName);
-	}
-
-	@Test
-	public void jiraCreate() {
-		String newDefectTrackerName = "testEditDefectTracker"
-				+ getRandomString(10);
-		String type2 = "Jira";
-
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
-				"password").clickDefectTrackersLink();
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-														.enterName(null,newDefectTrackerName)
-														.enterType(null, type2)
-														.enterURL(null,TEST_JIRA_URL)
-														.clickSaveNewDefectTracker();
-
-		assertTrue("DefectTracker Page did not create correctly.",
-					defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
-
-		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(newDefectTrackerName)
-														.clickDefectTrackersLink();
-
-		assertFalse("DefectTracker Page did not delete.",
-					defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
-
-		loginPage = defectTrackerIndexPage.clickDefectTrackersLink().logout();
 	}
 
 	@Test
 	public void bugzillaEdit() {
-		String newDefectTrackerName = "testEditDefectTracker" + getRandomString(4);
-		String type2 = "Bugzilla";
-		String replacementName = "replacementDefectTracker" + getRandomString(4);
+		String newDefectTrackerName = "bugzillaEdit" + getRandomString(3);
+        String replacementName = "bugzillaEditNew" + getRandomString(3);
+		String defectTrackerType = "Bugzilla";
 
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
-																	.clickDefectTrackersLink()
-																	.clickAddDefectTrackerButton()
-																	.enterName(null, newDefectTrackerName)
-																	.enterType(null, type2)
-																	.enterURL(null, "http://10.2.10.145/bugzilla/")
-																	.clickSaveNewDefectTracker()
-																	.clickEditLink(newDefectTrackerName)
-																	.clickUpdateDefectTrackerButton();
+		defectTrackerIndexPage = loginPage.login("user","password")
+                .clickDefectTrackersLink();
 
-		assertTrue("DefectTracker Page did not create correctly.",
-				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));
+        defectTrackerIndexPage= defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(null, newDefectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null, "http://10.2.10.145/bugzilla/")
+                .clickSaveNewDefectTracker();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName)
-														.enterName(newDefectTrackerName,replacementName)
-														.clickUpdateDefectTrackerButton();
+                .enterName(newDefectTrackerName, replacementName)
+                .clickUpdateDefectTrackerButton();
 
-		assertTrue("DefectTracker Page did not edit correctly.",
+		assertTrue("DefectTracker page did not edit bugzilla tracker correctly.",
 				defectTrackerIndexPage.doesNameExist(replacementName));
-
-		// Delete and logout
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
-													.clickDeleteButton(replacementName);
 	}
 
 	@Test
@@ -440,55 +368,32 @@ public class DefectTrackerTests extends BaseTest {
 				BUGZILLA_USERNAME == null);
 		assertFalse("BUGZILLA_URL is not assigned from system properties",
 				BUGZILLA_URL == null);
-		assertFalse(
-				"BUGZILLAPROJECTNAME is not assigned from system properties",
+		assertFalse("BUGZILLAPROJECTNAME is not assigned from system properties",
 				BUGZILLAPROJECTNAME == null);
 
-		String newDefectTrackerName = "testEditDefectTracker"
-				+ getRandomString(10);
-		String type = "Bugzilla";
+		String defectTrackerName = "attachAppBugzilla" + getRandomString(3);
+		String defectTrackerType = "Bugzilla";
 		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);
 		String appName = "bugzillaAttachTestApp" + getRandomString(3);
-		String urlText = "http://test.com";
 
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
-				"password").clickDefectTrackersLink();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickAddDefectTrackerButton();
+		defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,
-				newDefectTrackerName);
-		defectTrackerIndexPage = defectTrackerIndexPage.enterType(null, type);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.enterURL(null, BUGZILLA_URL);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickSaveNewDefectTracker();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(null, defectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null, BUGZILLA_URL)
+                .clickSaveNewDefectTracker();
 
-		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.expandTeamRowByIndex(teamName)
-				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication(teamName)
+		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 				.clickViewAppLink(appName, teamName)
-				.addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME,
-						BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickEditDeleteBtn()
-						.isDefectTrackerAttached());
-
-		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
-		sleep(1500);
-		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
-										.clickViewTeamLink(teamName)
-										.clickDeleteButton()
-										.clickDefectTrackersLink()
-										.clickDeleteButton(newDefectTrackerName)
-										.logout();
+				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
 	}
 
 
@@ -503,51 +408,32 @@ public class DefectTrackerTests extends BaseTest {
 		assertFalse("TFS_PROJECTNAME is not assigned from system properties",
 				TFS_PROJECTNAME == null);
 
-		String newDefectTrackerName = "testEditDefectTracker"
-				+ getRandomString(10);
-		String type = "Microsoft TFS";
+		String defectTrackerName = "testEditDefectTracker" + getRandomString(3);
+		String defectTrackerType = "Microsoft TFS";
 		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);
 		String appName = "bugzillaAttachTestApp" + getRandomString(3);
-		String urlText = "http://test.com";
 
-		DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
-				"password").clickDefectTrackersLink();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickAddDefectTrackerButton();
+		defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,
-				newDefectTrackerName);
-		defectTrackerIndexPage = defectTrackerIndexPage.enterType(null, type);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.enterURL(null, TFS_URL);
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickSaveNewDefectTracker();
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(null, defectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null, TFS_URL)
+                .clickSaveNewDefectTracker();
 
-		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage
+		applicationDetailPage = defectTrackerIndexPage
 				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.expandTeamRowByIndex(teamName)
-				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
-				.addDefectTracker(newDefectTrackerName, TFS_USERNAME,
-						TFS_PASSWORD, TFS_PROJECTNAME);
+				.addDefectTracker(defectTrackerName, TFS_USERNAME, TFS_PASSWORD, TFS_PROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn()
 						.isDefectTrackerAttached());
-
-		sleep(1500);
-		loginPage = applicationDetailPage.clickOrganizationHeaderLink()
-										.clickOrganizationHeaderLink()
-										.clickViewTeamLink(teamName)
-										.clickDeleteButton()
-										.clickDefectTrackersLink()
-										.clickDeleteButton(newDefectTrackerName)
-										.logout();
 	}
 
 	@Test
