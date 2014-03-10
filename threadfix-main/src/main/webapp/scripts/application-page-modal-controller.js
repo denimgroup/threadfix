@@ -19,6 +19,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    if (!$scope.config.defectTrackerList) {
                        $scope.config.defectTrackerList = [];
                    }
+
+                   $rootScope.$broadcast('applicationInfo', $scope.config.application);
+
                    $scope.config.application.organization = $scope.config.application.team;
                } else {
                    $log.info("HTTP request for form objects failed. Error was " + data.message);

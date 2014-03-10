@@ -290,7 +290,7 @@ public class Application extends AuditableEntity {
 
     @OneToMany(mappedBy = "application")
 	@OrderBy("importTime DESC")
-	@JsonIgnore
+	@JsonView(AllViews.TableRow.class)
 	public List<Scan> getScans() {
 		return scans;
 	}

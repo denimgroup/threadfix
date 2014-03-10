@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-table-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/add-defect-tracker-modal-controller.js"></script>
 </head>
 
