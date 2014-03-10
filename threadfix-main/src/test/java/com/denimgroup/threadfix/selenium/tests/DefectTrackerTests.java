@@ -316,7 +316,7 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void TFSEdit() {
-		String newDefectTrackerName = "editTFSDefectTracker" + getRandomString(3);
+		String defectTrackerName = "editTFSDefectTracker" + getRandomString(3);
         String replacementName = "replacementDefectTracker" + getRandomString(3);
 		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
 		String defectTrackerType = "Microsoft TFS";
@@ -325,16 +325,13 @@ public class DefectTrackerTests extends BaseTest {
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .setNameInput(newDefectTrackerName)
-                .setDefectTrackerTypeSelect(defectTrackerType)
-                .setUrlInput(defectTrackerURL)
+                .enterName(null, defectTrackerName)
+                .enterType(null, defectTrackerType)
+                .enterURL(null, defectTrackerURL)
                 .clickSaveNewDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName)
-                .clickUpdateDefectTrackerButton()
-                .clickDefectTrackersLink()
-                .clickEditLink(newDefectTrackerName)
-                .enterName(newDefectTrackerName,replacementName)
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
+                .enterName(defectTrackerName,replacementName)
                 .clickUpdateDefectTrackerButton();
 
 		assertTrue("DefectTracker Page did not edit TFS tracker correctly.",
@@ -343,25 +340,25 @@ public class DefectTrackerTests extends BaseTest {
 
     @Test
     public void jiraCreate() {
-        String newDefectTrackerName = "jiraCreate"+ getRandomString(3);
+        String DefectTrackerName = "jiraCreate"+ getRandomString(3);
         String defectTrackerType = "Jira";
 
         defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(null,newDefectTrackerName)
+                .enterName(null,DefectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null,TEST_JIRA_URL)
                 .clickSaveNewDefectTracker();
 
         assertTrue("DefectTracker Page did not create correctly.",
-                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(DefectTrackerName));
     }
 
 	@Test
 	public void jiraEdit() {
-		String newDefectTrackerName = "jiraEdit" + getRandomString(3);
+		String defectTrackerName = "jiraEdit" + getRandomString(3);
         String replacementName = "jiraEditNew" + getRandomString(3);
 		String defectTrackerType = "Jira";
 
@@ -369,13 +366,13 @@ public class DefectTrackerTests extends BaseTest {
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(null, newDefectTrackerName)
+                .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, TEST_JIRA_URL)
                 .clickSaveNewDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName)
-                .enterName(newDefectTrackerName, replacementName)
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
+                .enterName(defectTrackerName, replacementName)
                 .clickUpdateDefectTrackerButton();
 
 		assertTrue("DefectTracker page did not edit jira tracker correctly.",
@@ -403,7 +400,7 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void bugzillaEdit() {
-		String newDefectTrackerName = "bugzillaEdit" + getRandomString(3);
+		String defectTrackerName = "bugzillaEdit" + getRandomString(3);
         String replacementName = "bugzillaEditNew" + getRandomString(3);
 		String defectTrackerType = "Bugzilla";
 
@@ -411,13 +408,13 @@ public class DefectTrackerTests extends BaseTest {
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage= defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(null, newDefectTrackerName)
+                .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, "http://10.2.10.145/bugzilla/")
                 .clickSaveNewDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(newDefectTrackerName)
-                .enterName(newDefectTrackerName, replacementName)
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
+                .enterName(defectTrackerName, replacementName)
                 .clickUpdateDefectTrackerButton();
 
 		assertTrue("DefectTracker page did not edit bugzilla tracker correctly.",
@@ -557,7 +554,7 @@ public class DefectTrackerTests extends BaseTest {
 		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .addDefectTracker(defectTracker1, JIRA_USERNAME,JIRA_PASSWORD, JIRAPROJECTNAME);
+                .addDefectTracker(defectTracker1, JIRA_USERNAME, JIRA_PASSWORD, JIRAPROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());

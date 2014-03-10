@@ -24,9 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.selenium.pages.*;
-import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -36,65 +34,34 @@ import java.util.Map.Entry;
 
 import static org.junit.Assert.assertTrue;
 
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+
 public class DocumentTests extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
-	public UploadScanPage uploadScanPage;
 	public TeamIndexPage teamIndexPage;
-	public TeamDetailPage teamDetailPage;
-	
+
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
 	
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
-	
-	public static String getScanFilePath(String category, String scannerName, String fileName) {
-		String string = "SupportingFiles/" + category  + "/" + scannerName + "/" + fileName;
-		
-		String urlFromCommandLine = System.getProperty("scanFileBaseLocation");
-		if (urlFromCommandLine != null) {
-			return urlFromCommandLine + string;
-		}
-		
-		return DocumentTests.class.getClassLoader().getResource(string).toString();
-	}
-	
-	// Uploads every scan type to a single app
-	//needs more verfication
 	@Test
 	public void testUploadScans() throws MalformedURLException {
-		String teamName = "uploadDocTeam" + getRandomString(5);
-		String appName = "uploadDocApp" + getRandomString(5);
-		int docCnt  = 0;
+		String teamName = "uploadDocTeam" + getRandomString(3);
+		String appName = "uploadDocApp" + getRandomString(3);
+        File appScanFile;
+        int docCnt  = 0;
 
-		
-		// log in
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
 		teamIndexPage = loginPage.login("user", "password")
-								.clickOrganizationHeaderLink()
-								.clickOrganizationHeaderLink()
-				 				.clickAddTeamButton()
-								.setTeamName(teamName)
-								.addNewTeam()
-								.expandTeamRowByIndex(teamName)
-								.addNewApplication(teamName, appName, "http://" + appName, "Low")
-								.saveApplication(teamName);
+                .clickOrganizationHeaderLink();
 
-			teamIndexPage.populateAppList(teamName);
-
-			applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+		applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
 		
-		// create an org and an app and upload the documents, then delete everything
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
 			if (mapEntry.getValue() != null){
-				File appScanFile = null;
-				
 				if (System.getProperty("scanFileBaseLocation") == null) {
 					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
 				} else {
@@ -111,17 +78,7 @@ public class DocumentTests extends BaseTest {
 
 			applicationDetailPage = applicationDetailPage.clickDocumentTab();
 			docCnt++;
-
-//			String tempName = mapEntry.getKey();
-//			assertTrue("Scan Channel is not present " + mapEntry.getKey(),applicationDetailPage.isScanChannelPresent(tempName));
-//			assertTrue("Scan count is incorrect after uploading "+mapEntry.getKey(), docCnt == applicationDetailPage.scanCount());
 		}
-		
 		assertTrue("Document count is incorrect", docCnt == applicationDetailPage.docsCount());
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-							.clickViewTeamLink(teamName)
-							.clickDeleteButton()
-							.logout();
 	}
 }
