@@ -64,7 +64,52 @@ public class DefectTrackerTests extends BaseTest {
 			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
-	@Test
+    static {
+        if (TEST_BUGZILLA_URL == null) {
+            throw new RuntimeException("Please set TEST_BUGZILLA_URL property");
+        }
+        if (TEST_JIRA_URL == null){
+            throw new RuntimeException("Please set TEST_JIRA_URL property.");
+        }
+        if (JIRA_USERNAME == null){
+            throw new RuntimeException("Please set JIRA_USERNAME property.");
+        }
+        if (JIRA_PASSWORD == null){
+            throw new RuntimeException("Please set JIRA_PASSWORD property.");
+        }
+        if (JIRA_URL == null){
+            throw new RuntimeException("Please set JIRA_URL property.");
+        }
+        if (JIRAPROJECTNAME == null){
+            throw new RuntimeException("Please set JIRAPROJECTNAME property.");
+        }
+        if (BUGZILLA_USERNAME == null){
+            throw new RuntimeException("Please set BUGZILLA_USERNAME property.");
+        }
+        if (BUGZILLA_PASSWORD == null){
+            throw new RuntimeException("Please set BUGZILLA PASSWORD property.");
+        }
+        if (BUGZILLA_URL == null){
+            throw new RuntimeException("Please set BUGZILLA_URL property.");
+        }
+        if (BUGZILLAPROJECTNAME == null){
+            throw new RuntimeException("Please set BUGZILLAPROJECTNAME property.");
+        }
+        if (TFS_USERNAME == null){
+            throw new RuntimeException("Please set TFS_USERNAME property.");
+        }
+        if (TFS_PASSWORD == null){
+            throw new RuntimeException("Please set TFS_PASSWORD property.");
+        }
+        if (TFS_URL == null){
+            throw new RuntimeException("Please set TFS_URL property.");
+        }
+        if (TFS_PROJECTNAME == null){
+            throw new RuntimeException("Please set TFS_PROJECTNAME property.");
+        }
+    }
+
+    @Test
 	public void testCreateDefectTracker() {
 		String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
 		String defectTrackerType = "Bugzilla";
@@ -404,6 +449,7 @@ public class DefectTrackerTests extends BaseTest {
                 .clickSaveNewDefectTracker();
 
 		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
 				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 		

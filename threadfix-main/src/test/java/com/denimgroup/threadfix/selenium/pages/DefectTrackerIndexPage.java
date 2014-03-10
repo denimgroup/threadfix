@@ -197,6 +197,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 
 	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code){
+        sleep(2000);
 		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(code);
 		return new DefectTrackerIndexPage(driver);
 	}
