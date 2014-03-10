@@ -1024,3 +1024,25 @@ div.filter-modal.modal {
     overflow: auto;
     text-align:left;
 }
+
+.uploadable {
+    display:none;
+}
+
+body.dragover .uploadable {
+    /*z-index:5000;*/
+    display:block;
+    background: #111;
+    color:#FFF;
+    font-size: 55px;
+    text-align: center;
+    vertical-align: middle;
+    /*border: 5px dashed #DDD;*/
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: .95;
+    z-index: 1040;
+}

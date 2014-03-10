@@ -87,3 +87,28 @@ threadfixModule.directive('passwordValidate', function() {
         }
     };
 });
+
+threadfixModule.directive('dragCss', function() {
+    return {
+        restrict: 'A',
+        link: function($scope, elem, attr) {
+            elem.bind('dragenter', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $scope.$apply(function() {
+                    $scope.dragClass = attr.dragCss;
+                });
+            });
+            elem.bind('dragleave', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                $scope.$apply(function() {
+                    $scope.dragClass = '';
+                });
+            });
+            elem.bind('drop', function(e) {
+                $scope.dragClass = '';
+            });
+        }
+    };
+});

@@ -19,7 +19,7 @@
       ng-file-drop="onFileSelect($files)"
       id="apps">
 
-
+    <div class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
     <div>
 
         <%@ include file="forms/uploadScanForm.jsp"%>
