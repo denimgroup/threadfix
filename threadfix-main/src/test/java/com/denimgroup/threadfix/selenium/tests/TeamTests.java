@@ -28,29 +28,19 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class TeamTests extends BaseTest {
 
-	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	
 	private TeamIndexPage teamIndexPage;
 	private TeamDetailPage teamDetailPage;
     private ApplicationDetailPage applicationDetailPage;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
 
 	@Test
 	public void testCreateTeam(){

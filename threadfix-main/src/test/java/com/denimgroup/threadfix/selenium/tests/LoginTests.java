@@ -33,16 +33,9 @@ import org.openqa.selenium.WebDriver;
 import static org.junit.Assert.assertTrue;
 
 public class LoginTests extends BaseTest{
-	
-	private WebDriver driver;
+
 	private static LoginPage loginPage;
-	
-	@Before
-	public void init() {
-		super.init();
-		driver = super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
+
 	
 	@Test
 	public void badUsernameTest(){

@@ -34,6 +34,7 @@ import java.util.Random;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.data.entities.Waf;
@@ -51,30 +52,15 @@ import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 public class WafTests extends BaseTest {
 
-	private RemoteWebDriver driver;
 	private static LoginPage loginPage;
 	private WafIndexPage wafIndexPage;
 	public ApplicationDetailPage applicationDetailPage;
-	public UploadScanPage uploadScanPage;
-	public TeamIndexPage teamIndexPage;
-	public TeamDetailPage teamDetailPage;
-	public ReportsIndexPage reportsIndexPage;
-	public GeneratedReportPage generatedReportPage;
 	public TeamIndexPage organizationIndexPage;
-	public ApplicationAddPage applicationAddPage;
-	
 	Random generator = new Random();
 
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 
 	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-		}
 	
 	public static URL getScanFilePath(String category, String scannerName,
 			String fileName) {
@@ -349,7 +335,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("deny");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText = driver.findElementById("wafrule").getText();
+		String PageText = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText.contains("SecRule"));
 
 		// Generate pass Waf Rules
@@ -357,7 +343,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("pass");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText2 = driver.findElementById("wafrule").getText();
+		String PageText2 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText2.contains("SecRule"));
 
 		// Generate drop Waf Rules
@@ -365,7 +351,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("drop");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText5 = driver.findElementById("wafrule").getText();
+		String PageText5 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText5.contains("SecRule"));
 
 		// Generate allow Waf Rules
@@ -373,7 +359,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("allow");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText6 = driver.findElementById("wafrule").getText();
+		String PageText6 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText6.contains("SecRule"));
 		WafRulesPage.clickOrganizationHeaderLink()
 				.clickViewTeamLink(orgName)
@@ -479,7 +465,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("alert");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText = driver.findElementById("wafrule").getText();
+		String PageText = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText.contains("alert"));
 
 		// Generate log waf rules
@@ -487,7 +473,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("log");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText1 = driver.findElementById("wafrule").getText();
+		String PageText1 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText1.contains("log"));
 
 		// Generate pass Waf Rules
@@ -495,7 +481,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("pass");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText2 = driver.findElementById("wafrule").getText();
+		String PageText2 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText2.contains("pass"));
 
 		// Generate activate Waf Rules
@@ -503,7 +489,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("activate");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText3 = driver.findElementById("wafrule").getText();
+		String PageText3 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText3.contains("activate"));
 
 		// Generate Dynamic Waf Rules
@@ -511,7 +497,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("dynamic");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText4 = driver.findElementById("wafrule").getText();
+		String PageText4 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText4.contains("dynamic"));
 
 		// Generate drop Waf Rules
@@ -519,7 +505,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("drop");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText5 = driver.findElementById("wafrule").getText();
+		String PageText5 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText5.contains("drop"));
 
 		// Generate reject Waf Rules
@@ -527,7 +513,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("reject");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText6 = driver.findElementById("wafrule").getText();
+		String PageText6 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText6.contains("reject"));
 
 		// Generate sdrop Waf Rules
@@ -535,7 +521,7 @@ public class WafTests extends BaseTest {
 		WafRulesPage.setWafDirectiveSelect("sdrop");
 		WafRulesPage.clickGenerateWafRulesButton();
 		WafRulesPage = new WafRulesPage(driver);
-		String PageText7 = driver.findElementById("wafrule").getText();
+		String PageText7 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText7.contains("sdrop"));
 		
 		WafRulesPage.clickOrganizationHeaderLink()

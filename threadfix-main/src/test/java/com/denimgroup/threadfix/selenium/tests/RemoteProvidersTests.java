@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.denimgroup.threadfix.selenium.pages.EditMappingPage;
@@ -36,12 +37,6 @@ import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
 
 public class RemoteProvidersTests extends BaseTest {
-
-	private RemoteWebDriver driver;
-
-	private static LoginPage loginPage;
-
-	private EditMappingPage edtMapPage;
 	
 	private static String SENTINEL_API_KEY = null;
 	private static String VERACODE_USER = null;
@@ -51,9 +46,6 @@ public class RemoteProvidersTests extends BaseTest {
 
 	@Before
 	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
 		assignVars();
 	}
 	
@@ -181,10 +173,10 @@ public class RemoteProvidersTests extends BaseTest {
 		assertTrue("Incorrect credentials accepted",indexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
-	// Need to have team - NewTeam White hat and application - WhiteHat
-	// Application
+	// THESE TESTS HAVE BEEN COMMENTED OUT SO THEIR INTENT CAN BE SCRYED AND REWRITTEN
+	// Need to have team - NewTeam White hat and application - WhiteHat Application
 
-	@Ignore
+	/*@Ignore
 	@Test
 	public void configureTeamLink() {
 		if (SENTINEL_API_KEY == null) {
@@ -207,16 +199,16 @@ public class RemoteProvidersTests extends BaseTest {
 				.saveWhiteHat()
 				.mapWhiteHatToTeamAndApp(1, teamName, appName);
 		
-		String pageHeader = driver.findElementByTagName("h2").getText();
+		String pageHeader = driver.findElement(By.tagName("h2")).getText();
 		assertTrue("Mapping Page Not Found",
 				pageHeader.contains("Edit Mapping for Demo Site BE"));
 		
-		String pageText = edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team",
+		String pageText =  edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team",
 				"WhiteHat Application").getH2Tag();
 		
 		assertTrue("Remote Provider Page not found",
 				pageText.contains("Remote Providers"));
-	}
+	}*/
 
 	/*
 	@Ignore

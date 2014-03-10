@@ -36,18 +36,9 @@ import static org.junit.Assert.assertTrue;
 
 public class ScanQueueTests extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
 	public ApplicationDetailPage applicationDetailPage;
 	public TeamIndexPage teamIndexPage;
 	private static Map<String, String> scansMap = ScanContents.SCAN_FILE_MAP;
-	
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
 	
 	@Test
 	public void testAddScanQueue() throws MalformedURLException {

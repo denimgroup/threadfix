@@ -114,7 +114,7 @@ public class DefectTrackerTests extends BaseTest {
 		String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
 		String defectTrackerType = "Bugzilla";
 
-		defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -131,7 +131,7 @@ public class DefectTrackerTests extends BaseTest {
         String newDefectTrackerName = "testDeleteDefectTracker"+ getRandomString(3);
         String defectTrackerType = "Bugzilla";
 
-        defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
                 .enterName(null, newDefectTrackerName).enterType(null, defectTrackerType)
@@ -154,7 +154,7 @@ public class DefectTrackerTests extends BaseTest {
 		String emptyInputError = "This field cannot be blank";
 		String urlError = "Not a valid URL";
 
-		defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink()
                 .clickAddDefectTrackerButton();
 
@@ -217,7 +217,7 @@ public class DefectTrackerTests extends BaseTest {
 		String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "Bugzilla";
 
-		defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -253,7 +253,7 @@ public class DefectTrackerTests extends BaseTest {
 
 		String emptyInputError = "This field cannot be blank";
 
-		defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()

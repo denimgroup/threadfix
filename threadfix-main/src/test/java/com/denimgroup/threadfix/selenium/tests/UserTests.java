@@ -26,50 +26,29 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.ConfigureDefaultsPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import org.openqa.selenium.By;
 
 public class UserTests extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private UserChangePasswordPage changePasswordPage;
-	private static LoginPage loginPage;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
-
 	@Test
 	public void testCreateUser() {
-		String userName = "testCreateUser", password = "testCreateUser";
+		String userName = "testCreateUser" + getRandomString(3);
+        String password = "testCreateUser";
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 												.clickManageUsersLink();
 
-		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
-
-		userIndexPage = userIndexPage.clickAddUserLink()
-										.enterName(userName,null)
-										.enterPassword(password,null)
-										.enterConfirmPassword(password,null)
-										.clickAddNewUserBtn();
-
-		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
+		userIndexPage.clickAddUserLink()
+                    .enterName(userName,null)
+                    .enterPassword(password,null)
+                    .enterConfirmPassword(password,null)
+                    .clickAddNewUserBtn();
+        assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
-		userIndexPage = userIndexPage.clickDeleteButton(userName);
-		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(userName));
-
-		loginPage = userIndexPage.logout();
 	}
 
 	@Test 
@@ -159,8 +138,10 @@ public class UserTests extends BaseTest {
 
 	@Test
 	public void testEditUser() {
-		String userName = "testCreateUser", password = "testCreateUser";
-		String editedUserName = "testCreateUser3", editedPassword = "testCreateUser3";
+		String userName = "testEditUser" + getRandomString(3);
+        String password = "testEditUser";
+		String editedUserName = "testEditUser" + getRandomString(3);
+        String editedPassword = "testCreateUser3";
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 											.clickManageUsersLink();
@@ -179,20 +160,16 @@ public class UserTests extends BaseTest {
 		userIndexPage.enterName(editedUserName,userName);
 		userIndexPage.enterPassword(editedPassword,userName);
 		userIndexPage.enterConfirmPassword(editedPassword,userName);
-		
-
-		// Save and check that the name changed
-
-		userIndexPage = userIndexPage.clickUpdateUserBtn(userName);
-
+		userIndexPage.clickUpdateUserBtn(userName);
+        sleep(500);
 		assertTrue("Username changed when edited.", userIndexPage.isUserNamePresent(editedUserName));
 
 		// Test that we are able to log in the second time.
 		// This ensures that the password was correctly updated.
 		// if this messes up, the test won't complete.
-		userIndexPage.logout().login(editedUserName, editedPassword)
-							.clickManageUsersLink()
-							.clickDeleteButtonSameUser(editedUserName);
+		DashboardPage dashboardPage = userIndexPage.logout()
+                                                .login(editedUserName, editedPassword);
+        assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
 	}
 
 	@Test 
@@ -307,17 +284,15 @@ public class UserTests extends BaseTest {
 	}
 
 	@Test
-	public void navigationTest() {
+	public void testNavigation() {
 		loginPage.login("user", "password")
-				.clickManageUsersLink();
-
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("User Password Change Page not found", PageText.contains("Manage Users"));
-	}
+                 .clickManageUsersLink();
+        assertTrue("Could not navigate to User Index Page.",driver.findElements(By.id("newUserModalLink")).size() != 0);
+		}
 
 	@Test
 	public void testChangePasswordValidation() {
-		changePasswordPage = loginPage.login("user", "password")
+        UserChangePasswordPage changePasswordPage = loginPage.login("user", "password")
 				.clickChangePasswordLink()
 				.setCurrentPassword(" ")
 				.setNewPassword("password1234")
@@ -361,83 +336,40 @@ public class UserTests extends BaseTest {
         changePasswordPage.logout();
 	}
 
+    @Test
+    public void testDeleteUser(){
+
+    }
+
 	@Test
 	public void testChangePassword() {
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
-				.clickManageUsersLink()
-				.clickAddUserLink()
-				.enterName("testuser",null)
-				.enterPassword("testpassword",null)
-				.enterConfirmPassword("testpassword",null)
-				.clickAddNewUserBtn()
-				.logout()
-				.login("testuser", "testpassword")
-				.clickChangePasswordLink()
-				.setConfirmPassword("newtestpassword")
-				.setNewPassword("newtestpassword")
-				.setCurrentPassword("testpassword")
-				.clickUpdate()
-				.logout()
-				.login("testuser", "newtestpassword")
-				.clickManageUsersLink()
-				.clickDeleteButtonSameUser("testuser")
-				.login("user", "password")
-				.clickManageUsersLink();
-	
+        String userName = "testChangePassword" + getRandomString(3);
+        String password = "testChangePassword";
+        String editedPassword = getRandomString(13);
 
-
-		//assertFalse("Change password link present.", orgIndexPage.isElementPresent("changePasswordLink"));
-
-
-
-		assertFalse("User was not deleted", userIndexPage.isUserNamePresent("testuser"));
-
-		userIndexPage.logout();
-	}
-
-	@Test
-	public void userPasswordChangeTest(){
-		String baseUserName = "passwordChangeUser";
 		DashboardPage dashboardPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(baseUserName,null)
-				.enterPassword("lengthy password 2",null)
-				.enterConfirmPassword("lengthy password 2",null)
+				.enterName(userName, null)
+				.enterPassword(password, null)
+				.enterConfirmPassword(password, null)
 				.clickAddNewUserBtn()
 				.logout()
-				.login(baseUserName, "lengthy password 2");
-		
-		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
-		
-		UserChangePasswordPage passwordChangePage = dashboardPage.clickChangePasswordLink()
-																.setCurrentPassword("lengthy password 2")
-																.setNewPassword("lengthy password 3")
-																.setConfirmPassword("lengthy password 3")
-																.clickUpdate();
-		
-		assertTrue("Password change did not save",passwordChangePage.isSaveSuccessful());
-		
-		loginPage = passwordChangePage.logout()
-						.loginInvalid(baseUserName,"lengthy password 2");
-		
-		assertTrue("Able to login with old password",loginPage.isloginError());
-		
-		dashboardPage = loginPage.login(baseUserName, "lengthy password 3");
-				
-		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
-		
-		dashboardPage.logout()
-					.login("user", "password")
-					.clickManageUsersLink()
-					.clickDeleteButton(baseUserName)
-					.logout();
-		
-		
+				.login(userName, password)
+				.clickChangePasswordLink()
+				.setConfirmPassword(editedPassword)
+				.setNewPassword(editedPassword)
+				.setCurrentPassword(password)
+				.clickUpdate()
+				.logout()
+				.login(userName, editedPassword);
+
+		assertTrue("Unable to login with new Password.", dashboardPage.isLoggedin());
+
 	}
 	
 	@Test
-	public void userPasswordChangeValidationTest(){
+	public void testPasswordChangeValidation(){
 		String baseUserName = "passwordChangeValidation";
 		DashboardPage dashboardPage = loginPage.login("user", "password")
 				.clickManageUsersLink()

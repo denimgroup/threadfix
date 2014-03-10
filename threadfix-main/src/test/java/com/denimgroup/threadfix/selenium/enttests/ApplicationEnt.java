@@ -25,24 +25,13 @@ package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.junit.Assert.assertTrue;
 
 public class ApplicationEnt extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
 	private ApplicationDetailPage applicationDetailPage;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver) super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
 
 	@Test
 	public void viewBasicPermissableUsers(){

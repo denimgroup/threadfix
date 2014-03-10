@@ -300,7 +300,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isTeamPresent(String teamName) {
-        return (teamName.equals(driver.findElementById("teamName" + teamName).getText()));
+        return (teamName.equals(driver.findElementById("teamName" + teamName)));
     }
 
     public boolean isCreateValidationPresent(String teamName) {

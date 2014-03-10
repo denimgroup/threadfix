@@ -35,8 +35,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 public abstract class BaseTest {
 	
-//	protected final Log log = LogFactory.getLog(this.getClass());
-	
 	protected WebDriver driver;
     protected LoginPage loginPage;
 
@@ -62,11 +60,6 @@ public abstract class BaseTest {
 	public void shutDown() {
         driver.quit();
 	}
-	
-	public WebDriver getDriver(){
-//		log.debug("Getting Driver");
-        return driver;
-    }
 	
 	public void sleep(int num) {
 		try {

@@ -43,8 +43,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class BasePage {
 	
-	protected final Log log = LogFactory.getLog(this.getClass());
-	
 	public final static int NUM_SECONDS_TO_WAIT = 20;
 	
 	protected RemoteWebDriver driver;
@@ -53,7 +51,6 @@ public abstract class BasePage {
 		driver =  (RemoteWebDriver) webdriver;
 		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
-		log.debug("Loading " + this.getClass().toString());
 	}
 	/*--------------click functions--------------*/
 	public LoginPage logout() {

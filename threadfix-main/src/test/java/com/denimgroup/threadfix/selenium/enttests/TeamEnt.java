@@ -34,24 +34,11 @@ import static org.junit.Assert.assertTrue;
 
 public class TeamEnt extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
-
-	private TeamDetailPage teamDetailPage;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
-
-
     //Ignore because this feature is not available in this version(2.0M2)
 	@Test
 	public void viewBasicPermissableUsers(){
 		String teamName = getRandomString(8);
-		teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
 				.setTeamName(teamName)
@@ -77,7 +64,7 @@ public class TeamEnt extends BaseTest {
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
 		String role = getRandomString(8);
-		teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
 				.setTeamName(teamName)
@@ -126,7 +113,7 @@ public class TeamEnt extends BaseTest {
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
 		String role = getRandomString(8);
-		teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
 				.setTeamName(teamName)
@@ -172,7 +159,7 @@ public class TeamEnt extends BaseTest {
 		String teamName = getRandomString(8);
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
-		teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.clickAddTeamButton()
 				.setTeamName(teamName)

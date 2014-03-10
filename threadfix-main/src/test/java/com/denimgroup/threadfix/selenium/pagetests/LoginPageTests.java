@@ -34,20 +34,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class LoginPageTests extends BaseTest {
-	private WebDriver driver;
 	private static LoginPage loginPage;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
-	
-	@After
-	public void shutdown(){
-		super.shutDown();
-	}
 	
 	@Test
 	public void usernameFieldPresentTest(){

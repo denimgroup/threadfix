@@ -14,9 +14,7 @@ import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 
 public class VulnTests extends BaseTest {
-	
-	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
+
 	private String teamName = getRandomString(8);
 	private String appName = getRandomString(8);
 	private String defectTrackerName = getRandomString(8);
@@ -39,19 +37,6 @@ public class VulnTests extends BaseTest {
 	private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
 	private static final String TFS_URL = System.getProperty("TFS_URL");
 	private static final String TFS_PROJECTNAME = System.getProperty("TFS_PROJECTNAME");
-	
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-		}
-
-	
-	@After
-	public void shutDown() {
-		driver.quit();
-	}
 	
 	@Test
 	public void mergeSingleVulnJira(){

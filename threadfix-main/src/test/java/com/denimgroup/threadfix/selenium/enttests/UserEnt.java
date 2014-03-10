@@ -35,17 +35,6 @@ import static org.junit.Assert.assertTrue;
 
 public class UserEnt extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private UserChangePasswordPage changePasswordPage;
-	private static LoginPage loginPage;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
-
 	//If this test fails it can cascade and cause several other tests to fail
 	@Test
 	public void testDeleteLastUserRemoveLastRole(){

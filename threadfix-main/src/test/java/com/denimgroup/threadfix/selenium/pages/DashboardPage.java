@@ -89,4 +89,8 @@ public class DashboardPage extends BasePage{
 	public int getNumComments(){
 		return driver.findElementsByClassName("bodyRow").size()-getNumUploads();
 	}
+
+    public boolean isLoggedin(){
+        return driver.findElementsById("main-content").size() != 0;
+    }
 }

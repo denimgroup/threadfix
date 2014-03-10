@@ -37,18 +37,8 @@ import static org.junit.Assert.assertTrue;
 
 public class RoleEnt extends BaseTest {
 
-	private RemoteWebDriver driver;
-	private static LoginPage loginPage;
-
 	RolesIndexPage rolesIndexPage = null;
 	RoleCreatePage roleCreatePage = null;
-
-	@Before
-	public void init() {
-		super.init();
-		driver = (RemoteWebDriver)super.getDriver();
-		loginPage = LoginPage.open(driver);
-	}
 
 	/**
 	 * Also tests delete
