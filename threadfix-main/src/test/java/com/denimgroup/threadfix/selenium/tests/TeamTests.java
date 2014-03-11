@@ -169,23 +169,14 @@ public class TeamTests extends BaseTest {
 
     @Test
     public void testViewMore() {
-        String teamName = getRandomString(8);
+        String teamName = "testViewMore" + getRandomString(3);
+        DatabaseUtils.createTeam(teamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
-        TeamDetailPage teamDetailPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .clickViewTeamLink(teamName);
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
-
-        teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
-
-        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
-                .clickDeleteButton();
-
-        loginPage = teamIndexPage.logout();
     }
 
     // TODO Wait for the graphs to have id's, then test
