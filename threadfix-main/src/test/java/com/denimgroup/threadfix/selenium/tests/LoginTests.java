@@ -34,20 +34,10 @@ import static org.junit.Assert.assertTrue;
 
 public class LoginTests extends BaseTest{
 
-	private static LoginPage loginPage;
-
-	
 	@Test
 	public void badUsernameTest(){
-		//non existant user
 		loginPage = loginPage.loginInvalid("WRONG!!!","password");
 		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
-//		//case check
-//		loginPage = loginPage.loginInvalid("USER","password");
-//		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
-//		//whitespace
-//		loginPage = loginPage.loginInvalid("u s e r","password");
-//		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
 	}
 	
 	@Test
@@ -73,8 +63,6 @@ public class LoginTests extends BaseTest{
 		assertTrue("Correct user was not logged in",dashboardPage.isLoggedInUser(username));
 		loginPage = dashboardPage.logout();
 		assertTrue("User was not logged out",loginPage.isLoggedOut());
-		
-		
 		
 	}
 	
