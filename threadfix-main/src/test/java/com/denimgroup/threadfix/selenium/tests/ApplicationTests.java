@@ -38,11 +38,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class ApplicationTests extends BaseTest {
 
-	private ApplicationDetailPage applicationDetailPage;
-	private TeamIndexPage teamIndexPage;
-	private WafIndexPage wafIndexPage;
-	private WafRulesPage wafDetailPage;
-
 	@Test 
 	public void testCreateBasicApplicationDisplayedTeamIndexPage() {
 		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
@@ -51,7 +46,7 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         teamIndexPage.expandTeamRowByName(teamName)
@@ -69,7 +64,7 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         //Create Team & Application
@@ -78,7 +73,7 @@ public class ApplicationTests extends BaseTest {
                 .saveApplication(teamName);
 
         //Navigate to Application Detail Page
-        applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
@@ -109,7 +104,7 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
 		//Team & Application set up...hopefully to be removed later
@@ -143,7 +138,7 @@ public class ApplicationTests extends BaseTest {
 				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
 
 		// Test browser field length limits
-		applicationDetailPage = teamIndexPage.clickCloseAddAppModal(teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickCloseAddAppModal(teamName)
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, longInputName, longInputUrl, "Low")
@@ -178,14 +173,14 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName1, urlText1, "Low")
 				.saveApplication(teamName);
 
-		applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
 				.clickViewAppLink(appName1, teamName);
 
@@ -211,14 +206,14 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName1, urlText1, "Low")
                 .saveApplication(teamName);
 
-        applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName1, teamName);
 
@@ -258,7 +253,7 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 		
 		//set up an organization,
@@ -275,7 +270,7 @@ public class ApplicationTests extends BaseTest {
                 .saveApplication(teamName)
                 .clickOrganizationHeaderLink();
 
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
 		// Test blank input
@@ -334,16 +329,16 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
-		
-		wafIndexPage = teamIndexPage.clickWafsHeaderLink()
+
+        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, type)
                 .clickCreateWaf();
 
 		// Add Application with WAF
-		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, appUrl, "Low")
                 .saveApplication(teamName)
@@ -355,7 +350,7 @@ public class ApplicationTests extends BaseTest {
                 .addWaf(wafName);
 
 		// Check that it also appears on the WAF page.
-		wafDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+        WafRulesPage wafDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .clickWafsHeaderLink()
                 .clickRules(wafName);
 		
@@ -396,11 +391,11 @@ public class ApplicationTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 		
 		//Create two WAFs
-        wafIndexPage = teamIndexPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName1, type1)
                 .clickCreateWaf()
@@ -418,7 +413,7 @@ public class ApplicationTests extends BaseTest {
                 .expandTeamRowByName(teamName);
 
         //Create second application
-        applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
                 .clickEditDeleteBtn()
 				.clickAddWaf()
 				.addWaf(wafName1);
@@ -448,11 +443,11 @@ public class ApplicationTests extends BaseTest {
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createTeam(teamName2);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         //Add an app with same name to both teams
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
 				.addNewApplication(teamName1, appName, "", "Low")
 				.saveApplication(teamName1)
 				.expandTeamRowByName(teamName2)
