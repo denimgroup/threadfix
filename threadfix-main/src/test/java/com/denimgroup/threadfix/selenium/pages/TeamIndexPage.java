@@ -30,6 +30,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -230,7 +231,9 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage saveApplication(String teamName) {
-        driver.findElementById("submitAppModal" + teamName).click();
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
+        WebElement tempElement = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("submitAppModal" + teamName)));
+        tempElement.click();
         sleep(1000);
         return new TeamIndexPage(driver);
     }
