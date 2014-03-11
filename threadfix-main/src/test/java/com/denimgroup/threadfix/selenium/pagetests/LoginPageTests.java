@@ -34,7 +34,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class LoginPageTests extends BaseTest {
-	private static LoginPage loginPage;
 	
 	@Test
 	public void usernameFieldPresentTest(){
