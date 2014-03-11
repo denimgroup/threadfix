@@ -37,9 +37,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class DefectTrackerTests extends BaseTest {
 
-    private DefectTrackerIndexPage defectTrackerIndexPage;
-    private ApplicationDetailPage applicationDetailPage;
-
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
 	private static final String TEST_JIRA_URL = DefectTrackerIndexPage.JIRA_URL;
     private static final String JIRA_USERNAME = System.getProperty("JIRA_USERNAME");
@@ -300,7 +297,7 @@ public class DefectTrackerTests extends BaseTest {
 		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
 		String defectTrackerType = "Microsoft TFS";
 
-		defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage
@@ -321,7 +318,7 @@ public class DefectTrackerTests extends BaseTest {
 		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
 		String defectTrackerType = "Microsoft TFS";
 
-		defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -343,7 +340,7 @@ public class DefectTrackerTests extends BaseTest {
         String DefectTrackerName = "jiraCreate"+ getRandomString(3);
         String defectTrackerType = "Jira";
 
-        defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -362,7 +359,7 @@ public class DefectTrackerTests extends BaseTest {
         String replacementName = "jiraEditNew" + getRandomString(3);
 		String defectTrackerType = "Jira";
 
-		defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -385,7 +382,7 @@ public class DefectTrackerTests extends BaseTest {
         String defectTrackerUrl = "http://10.2.10.145/bugzilla/";
         String defectTrackerType = "Bugzilla";
 
-        defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -404,7 +401,7 @@ public class DefectTrackerTests extends BaseTest {
         String replacementName = "bugzillaEditNew" + getRandomString(3);
 		String defectTrackerType = "Bugzilla";
 
-		defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage= defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -436,7 +433,7 @@ public class DefectTrackerTests extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-		defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -445,7 +442,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterURL(null, BUGZILLA_URL)
                 .clickSaveNewDefectTracker();
 
-		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
 				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
@@ -469,7 +466,7 @@ public class DefectTrackerTests extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-		defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -478,7 +475,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterURL(null, TFS_URL)
                 .clickSaveNewDefectTracker();
 
-		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
 				.addDefectTracker(defectTrackerName, TFS_USERNAME, TFS_PASSWORD, TFS_PROJECTNAME);
@@ -502,7 +499,7 @@ public class DefectTrackerTests extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-		defectTrackerIndexPage = loginPage.login("user",
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
 				"password").clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -511,7 +508,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterURL(null, JIRA_URL)
                 .clickSaveNewDefectTracker();
 
-		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
 				.addDefectTracker(newDefectTrackerName, JIRA_USERNAME, JIRA_PASSWORD, JIRAPROJECTNAME);
@@ -537,7 +534,7 @@ public class DefectTrackerTests extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-		defectTrackerIndexPage = loginPage.login("user","password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -550,8 +547,8 @@ public class DefectTrackerTests extends BaseTest {
                 .enterType(null, defectTrackerType)
                 .enterURL(null, JIRA_URL)
                 .clickSaveNewDefectTracker();
-		
-		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .addDefectTracker(defectTracker1, JIRA_USERNAME, JIRA_PASSWORD, JIRAPROJECTNAME);

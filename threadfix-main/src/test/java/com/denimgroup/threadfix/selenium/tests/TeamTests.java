@@ -36,17 +36,11 @@ import static org.junit.Assert.assertTrue;
 
 public class TeamTests extends BaseTest {
 
-	private static LoginPage loginPage;
-	
-	private TeamIndexPage teamIndexPage;
-	private TeamDetailPage teamDetailPage;
-    private ApplicationDetailPage applicationDetailPage;
-
 	@Test
 	public void testCreateTeam(){
-		String newOrgName = "testCreateOrganization";
+		String newOrgName = "testCreateOrganization" + getRandomString(3);
 
-		teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(newOrgName));
 
         teamIndexPage = teamIndexPage.clickAddTeamButton()
@@ -55,20 +49,13 @@ public class TeamTests extends BaseTest {
 
 		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(newOrgName));
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
-
-		teamIndexPage = teamIndexPage.clickViewTeamLink(newOrgName)
-									.clickDeleteButton();
-
-		assertFalse("The organization was still present after attempted deletion.", teamIndexPage.isTeamPresent(newOrgName));
-	
-		loginPage = teamIndexPage.logout();
 	}
 
     @Test
     public void testExpandAndCollapseIndividualTeam(){
         String teamName = getRandomString(8);
 
-        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
         teamIndexPage = teamIndexPage.clickAddTeamButton()
                 .setTeamName(teamName)
@@ -96,7 +83,7 @@ public class TeamTests extends BaseTest {
         String teamName1 = getRandomString(8);
         String teamName2 = getRandomString(8);
 
-        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
         teamIndexPage = teamIndexPage.clickAddTeamButton()
                 .setTeamName(teamName1)
@@ -123,7 +110,7 @@ public class TeamTests extends BaseTest {
 	@Test
 	public void longTeamNameEditModalHeader(){
 		String newOrgName = getRandomString(1024);
-		teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
 								.clickOrganizationHeaderLink()
 								.clickAddTeamButton()
 								.setTeamName(newOrgName)
@@ -148,7 +135,7 @@ public class TeamTests extends BaseTest {
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 		// Test empty input
-		teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
 									.clickOrganizationHeaderLink()
 									.clickAddTeamButton()
 									.setTeamName(emptyString)
@@ -186,8 +173,8 @@ public class TeamTests extends BaseTest {
 	public void testEditOrganization(){
 		String newOrgName = "testEditOrganization";
 		String editedOrgName = "testEditOrganization - edited";
-		
-		teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(newOrgName));
 		
 		// Save an organization
@@ -197,7 +184,7 @@ public class TeamTests extends BaseTest {
 		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(newOrgName));
 		
 		// Edit that organization
-		teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+        TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
 													.clickViewTeamLink(newOrgName)
 													.clickEditOrganizationLink()
 													.setNameInput(editedOrgName)
@@ -222,9 +209,9 @@ public class TeamTests extends BaseTest {
     public void testViewMore() {
         String teamName = getRandomString(8);
 
-        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
-        teamDetailPage = teamIndexPage.clickAddTeamButton()
+        TeamDetailPage teamDetailPage = teamIndexPage.clickAddTeamButton()
                 .setTeamName(teamName)
                 .addNewTeam()
                 .clickViewTeamLink(teamName);
@@ -246,9 +233,9 @@ public class TeamTests extends BaseTest {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
-        teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
-        applicationDetailPage = teamIndexPage.clickAddTeamButton()
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickAddTeamButton()
                 .setTeamName(teamName)
                 .addNewTeam()
                 .addNewApplication(teamName, appName, "", "Low")
@@ -283,8 +270,8 @@ public class TeamTests extends BaseTest {
 		String emptyInputError = "This field cannot be blank";
 		
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-		
-		teamDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
 																.clickAddTeamButton()
 																.setTeamName(orgName)
 																.addNewTeam()

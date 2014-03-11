@@ -51,29 +51,6 @@ import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
 
 public class WafTests extends BaseTest {
-
-	private static LoginPage loginPage;
-	private WafIndexPage wafIndexPage;
-	public ApplicationDetailPage applicationDetailPage;
-	public TeamIndexPage organizationIndexPage;
-	Random generator = new Random();
-
-	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
-
-	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
-	
-	public static URL getScanFilePath(String category, String scannerName,
-			String fileName) {
-		String string = "/SupportingFiles/" + category + "/" + scannerName + "/"
-				+ fileName;
-
-		return ClassLoader.getSystemResource(string);// .getFile();
-	}
-	
-	@After
-	public void shutDown() {
-		driver.quit();
-	}
 	
 	@Test
 	public void testCreateWaf(){
@@ -289,7 +266,7 @@ public class WafTests extends BaseTest {
 		String whKey = System.getProperty("WHITEHAT_KEY");
 
 		//set up an organization
-		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+        TeamIndexPage organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
 			.clickAddTeamButton()
             .setTeamName(orgName)
             .addNewTeam()
@@ -297,7 +274,7 @@ public class WafTests extends BaseTest {
             .addNewApplication(orgName, appName, urlText, "Low")
             .saveApplication(orgName);
 
-		applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
+        ApplicationDetailPage applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
 			.clickConfigureWhiteHat()
 			.setWhiteHatAPI(whKey)
 			.saveWhiteHat()
@@ -310,7 +287,7 @@ public class WafTests extends BaseTest {
 		String newWafName = "testCreateModSecWaf1";
 		String type = "mod_security";
 
-		wafIndexPage = organizationIndexPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = organizationIndexPage.clickWafsHeaderLink()
             .clickAddWafLink()
             .createNewWaf(newWafName, type)
             .clickCreateWaf();
@@ -397,7 +374,7 @@ public class WafTests extends BaseTest {
 		String whKey = System.getProperty("WHITEHAT_KEY");
 
 		//set up an organization
-		organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+        TeamIndexPage organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
 				.clickAddTeamButton()
 				.setTeamName(orgName)
 				.addNewTeam()
@@ -406,7 +383,7 @@ public class WafTests extends BaseTest {
 				.addNewApplication(orgName, appName, urlText, "Low")
 				.saveApplication(orgName);
 
-		applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
+        ApplicationDetailPage applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
 							.clickConfigureWhiteHat()
 							.setWhiteHatAPI(whKey)
 							.saveWhiteHat()
@@ -441,7 +418,7 @@ public class WafTests extends BaseTest {
 		String newWafName = "testCreateSnortWaf1";
 		String type = "Snort";
 
-		wafIndexPage = organizationIndexPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = organizationIndexPage.clickWafsHeaderLink()
 				.clickAddWafLink()
 				.createNewWaf(newWafName, type)
 				.clickCreateWaf();
