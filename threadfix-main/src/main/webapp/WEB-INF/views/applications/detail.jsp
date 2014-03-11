@@ -59,13 +59,7 @@
 
         <tabset style="margin-top:10px;">
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
-            <tab heading="
-                ${ fn:length(application.scans) }
-                        <c:if test="${ fn:length(application.scans) == 1 }">Scan</c:if>
-                        <c:if test="${ fn:length(application.scans) != 1 }">Scans</c:if>
-            ">
-                <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
-            </tab>
+            <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <tab heading="
                 ${ fn:length(application.documents) }
                         <c:if test="${ fn:length(application.documents) == 1 }">File</c:if>

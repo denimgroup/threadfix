@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('VulnTableController', function ($scope, $window, $http, threadfixAPIService) {
+myAppModule.controller('VulnTableController', function ($scope, $window, $http, $rootScope) {
 
     $scope.initialized = false;
 
@@ -40,6 +40,9 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
                 if (data.success) {
                     $scope.vulns = data.object.vulnerabilities;
                     $scope.numVulns = data.object.numVulns;
+                    $scope.empty = $scope.numVulns === 0;
+                    $rootScope.$broadcast('scans', data.object.scans);
+
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }
@@ -67,6 +70,11 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     $scope.$on('scanUploaded', function() {
         $scope.empty = false;
         refresh();
+    });
+
+    $scope.$on('scanDeleted', function() {
+        refresh();
+        $scope.empty = $scope.numVulns === 0;
     });
 
 });

@@ -35,10 +35,14 @@
                 </td>
                 <c:if test="${ canUploadScans }">
                     <td>
-                        <a ng-click="deleteScan(scan)">Delete Scan</a>
+                        <a ng-hide="scan.deleting" class="btn btn-danger" ng-click="deleteScan(scan)">Delete Scan</a>
+                        <a ng-show="scan.deleting" class="btn btn-danger" ng-disabled>
+                            <span class="spinner"></span>
+                            Deleting
+                        </a>
                     </td>
                     <td>
-                        <a ng-click="viewScan(scan)">View Scan</a>
+                        <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
                     </td>
                 </c:if>
             </tr>

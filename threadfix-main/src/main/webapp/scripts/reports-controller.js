@@ -56,7 +56,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         }
     });
 
-    $scope.$on('scanUploaded', function() {
+    var reload = function() {
         $scope.loadingLeft = true;
         $scope.leftReport = null;
         $scope.loadingRight = true;
@@ -65,7 +65,17 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         $scope.leftReportFailed = false;
         $scope.empty = false;
         loadReports();
-    });
+    }
 
+    $scope.$on('scanUploaded', reload);
+    $scope.$on('scanDeleted', function(event, shouldReload) {
+        if (shouldReload) {
+            reload();
+        } else {
+            $scope.leftReport = null;
+            $scope.rightReport = null;
+            $scope.empty = true;
+        }
+    });
 
 });

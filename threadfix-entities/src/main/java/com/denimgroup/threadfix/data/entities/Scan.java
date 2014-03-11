@@ -114,7 +114,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
     public Calendar getImportTime() {
 		return importTime;
 	}
@@ -254,7 +254,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
     public Integer getNumberTotalVulnerabilities() {
 		return numberTotalVulnerabilities;
 	}
@@ -410,7 +410,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
     public Integer getNumberHiddenVulnerabilities() {
 		if (numberHiddenVulnerabilities == null) {
 			return 0;
@@ -467,7 +467,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         return getApplication();
     }
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
     @Transient
     private String getScannerName() {
         return getApplicationChannel().getChannelType().getName();

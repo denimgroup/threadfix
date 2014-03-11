@@ -20,7 +20,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        $scope.config.defectTrackerList = [];
                    }
 
-                   $rootScope.$broadcast('applicationInfo', $scope.config.application);
+                   $rootScope.$broadcast('scans', $scope.config.scans);
 
                    $scope.config.application.organization = $scope.config.application.team;
                } else {

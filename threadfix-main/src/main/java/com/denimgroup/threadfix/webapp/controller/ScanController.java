@@ -26,11 +26,11 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ScanDeleteService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,13 +96,13 @@ public class ScanController {
 	
 	@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
-	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId,
+	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId,
 			HttpServletRequest request) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
-			return new ModelAndView("403");
+			return RestResponse.failure("You do not have permission to delete scans.");
 		}
 		
 		if (scanId != null) {
@@ -112,9 +112,7 @@ public class ScanController {
 			}
 		}
 		
-		ControllerUtils.addSuccessMessage(request, "The scan was successfully deleted.");
-        ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_TAB);
-		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);
+		return RestResponse.success("Successfully deleted scan.");
 	}
 	
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)

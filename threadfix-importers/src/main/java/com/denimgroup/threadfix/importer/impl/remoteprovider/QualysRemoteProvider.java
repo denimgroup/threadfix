@@ -30,6 +30,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -210,7 +211,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		
 		parse(stream, parser);
 		
-		if (parser.list != null && parser.list.size() > 0) {
+		if (parser.list.size() > 0) {
 			LOG.info("Number of Qualys applications: " + parser.list.size());
 		} else {
 			LOG.warn("No Qualys applications were found. Check your configuration.");
@@ -354,7 +355,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 	// PARSER CLASSES
 
 	private class QualysAppsParser extends HandlerWithBuilder {
-		
+
+        @NotNull
 		public List<RemoteProviderApplication> list = new ArrayList<>();
 		
 		private boolean getName = false;
@@ -430,10 +432,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		currentDate = getBuilderText();
 	    		getDate = false;
 	    	} else if (getName) {
-	    		String toAdd = getBuilderText();
-	    			    		
-	    		webAppName = toAdd;
-	    		
+                webAppName = getBuilderText();
 	    		getName = false;
 		    }
 	    	

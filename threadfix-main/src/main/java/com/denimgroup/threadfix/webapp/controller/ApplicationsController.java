@@ -158,7 +158,9 @@ public class ApplicationsController {
     public @ResponseBody String getObjects(@PathVariable("appId") Integer appId) throws IOException {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("application", applicationService.loadApplication(appId));
+        Application application = applicationService.loadApplication(appId);
+
+        map.put("application", application);
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
         map.put("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
         map.put("wafList", wafService.loadAll());
@@ -166,6 +168,7 @@ public class ApplicationsController {
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
         map.put("teams", organizationService.loadAllActive());
+        map.put("scans", application.getScans());
 
         String data = getWriter().writeValueAsString(RestResponse.success(map));
 
