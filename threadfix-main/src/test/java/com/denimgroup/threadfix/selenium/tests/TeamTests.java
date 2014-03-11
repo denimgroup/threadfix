@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -54,26 +55,13 @@ public class TeamTests extends BaseTest {
     @Test
     public void testExpandAndCollapseIndividualTeam(){
         String teamName = getRandomString(8);
+        DatabaseUtils.createTeam(teamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
-
-        teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .expandTeamRowByIndex(teamName);
-
-        // TODO use DatabaseUtils.createTeam(newOrgName); instead of page objects.
-
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName);
         assertTrue("Team info was not expanded properly.", teamIndexPage.isTeamExpanded(teamName));
-
-        teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName);
-
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName);
         assertFalse("Team info was not collapsed properly.", teamIndexPage.isTeamExpanded(teamName));
-
-        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
-                .clickDeleteButton();
-
-        loginPage = teamIndexPage.logout();
     }
 
     // TODO possible deletion due to tables having a height of zero, the aren't 'not displayed'
@@ -117,12 +105,8 @@ public class TeamTests extends BaseTest {
 								.addNewTeam()
 								.clickViewTeamLink(newOrgName.substring(0,60))
 								.clickEditOrganizationLink();
-		int width = teamDetailPage.getEditModalHeaderWidth();
-		teamDetailPage.clickCloseEditModal().clickDeleteButton();
 		
-		assertTrue("Header width was incorrect with long team name",width == 400);
-		
-		
+		assertTrue("Header width was incorrect with long team name",teamDetailPage.getEditModalHeaderWidth() == 400);
 	}
 	
 	@Test
@@ -161,48 +145,26 @@ public class TeamTests extends BaseTest {
 													.addNewTeamInvalid();
 		
 		assertTrue(teamIndexPage.getNameErrorMessage().equals("That name is already taken."));
-		
-		// Delete and logout
-		loginPage = teamIndexPage.clickCloseAddTeamModal()
-									.clickViewTeamLink(orgName)
-									.clickDeleteButton()
-									.logout();
 	}
 
 	@Test
-	public void testEditOrganization(){
-		String newOrgName = "testEditOrganization";
-		String editedOrgName = "testEditOrganization - edited";
+	public void testEditTeam(){
+		String newTeamName = "testEditTeam" + getRandomString(4);
+		String editedTeamName = "testEditTeam" + getRandomString(4);
+        DatabaseUtils.createTeam(newTeamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
-		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(newOrgName));
-		
-		// Save an organization
-		teamIndexPage = teamIndexPage.clickAddTeamButton()
-									.setTeamName(newOrgName)
-									.addNewTeam();
-		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(newOrgName));
-		
-		// Edit that organization
+
         TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-													.clickViewTeamLink(newOrgName)
+													.clickViewTeamLink(newTeamName)
 													.clickEditOrganizationLink()
-													.setNameInput(editedOrgName)
+													.setNameInput(editedTeamName)
 													.clickUpdateButtonValid();
 
-        TeamIndexCache.getCache().deleteTeamWithName(newOrgName);
-        TeamIndexCache.getCache().addTeamWithName(editedOrgName);
-
-		assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedOrgName));
+		assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedTeamName));
 		
 		teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
-		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(editedOrgName));
-		teamIndexPage = teamIndexPage.clickViewTeamLink(editedOrgName)
-									.clickDeleteButton();
-		
-		assertFalse("The organization was still present after attempted deletion.", teamIndexPage.isTeamPresent(editedOrgName));
-	
-		loginPage = teamIndexPage.logout();
+		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(editedTeamName));
 	}
 
     @Test
