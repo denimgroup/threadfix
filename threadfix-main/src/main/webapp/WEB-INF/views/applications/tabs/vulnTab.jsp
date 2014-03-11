@@ -1,13 +1,31 @@
-
 <tab ng-controller="VulnTableController"
      ng-init="numVulns = <c:out value="${numVulns}"/>"
      heading="{{ heading }}">
+
+
+    <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+        <div ng-show="vulns" id="btnDiv1" class="btn-group">
+            <button id="actionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
+                Action <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+
+                <c:if test="${ canModifyVulnerabilities }">
+                    <li><a class="pointer" id="submitDefectButton1" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
+                </c:if>
+                <c:if test="${ canModifyVulnerabilities }">
+                    <li><a class="pointer" id="closeVulnsButton1" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>
+                    <li><a class="pointer" id="markFalsePositivesButton1" ng-click="markVulnerabilitiesAsFalsePositive()">Mark as False Positive</a></li>
+                </c:if>
+            </ul>
+        </div>
+    </c:if>
+
 
     <div ng-show="empty" class="empty-tab-drop-area">
         <div>Drop a scan here to upload.</div>
     </div>
 
-    <!-- TODO add DRAG SCAN HERE area-->
     <div ng-hide="empty || vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
     <div ng-show="vulns">
@@ -306,5 +324,24 @@
             <%--<%@ include file="/WEB-INF/views/errorMessage.jsp" %>--%>
         <%--</c:if>--%>
     </div>
+
+    <!-- TODO reduce duplication -->
+    <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+        <div ng-show="vulns" id="btnDiv1" class="btn-group">
+            <button id="actionItems2" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
+                Action <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+
+                <c:if test="${ canSubmitDefects }">
+                    <li><a class="pointer" id="submitDefectButton2" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
+                </c:if>
+                <c:if test="${ canModifyVulnerabilities }">
+                    <li><a class="pointer" id="closeVulnsButton2" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>
+                    <li><a class="pointer" id="markFalsePositivesButton2" ng-click="markVulnerabilitiesAsFalsePositive()">Mark as False Positive</a></li>
+                </c:if>
+            </ul>
+        </div>
+    </c:if>
 
 </tab>

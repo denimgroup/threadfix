@@ -5,6 +5,28 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     $scope.initialized = false;
 
     $scope.page = 1;
+    $scope.open = true;
+    $scope.falsePositive = false;
+    $scope.hidden = false;
+
+    var getTableSortBean = function(vulnIds) {
+        if (vulnIds) {
+            return {
+                page: $scope.page,
+                open: $scope.open,
+                falsePositive: $scope.falsePositive,
+                hidden: $scope.hidden,
+                vulnerabilityIds: vulnIds
+            }
+        } else {
+            return {
+                page: $scope.page,
+                open: $scope.open,
+                falsePositive: $scope.falsePositive,
+                hidden: $scope.hidden
+            }
+        }
+    }
 
     $scope.csrfToken = $scope.$parent.csrfToken;
 
@@ -45,12 +67,29 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         }
     }
 
-    var getTableSortBean = function() {
-        return {
-            page: $scope.page
-        }
+    $scope.closeVulnerabilities = function() {
+
+        // TODO check to see if we have at least one vulnerability
+
+        var object = getTableSortBean($scope.vulns.filter(function(vuln) { return vuln.checked; }).map(function(vuln) { return vuln.id }));
+
+        $http.post($window.location.pathname + "/table/close" + $scope.csrfToken, object).
+            success(function(data, status, headers, config) {
+
+                if (data.success) {
+                    $scope.vulns = data.object.vulnerabilities;
+                    $scope.numVulns = data.object.numVulns;
+                    $scope.empty = $scope.numVulns === 0;
+                } else {
+                    $scope.output = "Failure. Message was : " + data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+            });
     }
 
+    // Listeners / refresh stuff
     var refresh = function() {
         $scope.loading = true;
         $http.post($window.location.pathname + "/table" + $scope.csrfToken,
