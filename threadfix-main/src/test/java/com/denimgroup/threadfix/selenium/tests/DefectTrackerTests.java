@@ -186,8 +186,8 @@ public class DefectTrackerTests extends BaseTest {
 				defectTrackerIndexPage.getUrlErrorsText().equals("URL is invalid."));
 
 		// Test browser length limit
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,
-				longInput).enterURL(null, TEST_BUGZILLA_URL)
+		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,longInput)
+                .enterURL(null, TEST_BUGZILLA_URL)
                 .clickSaveNewDefectTracker();
 
 		// might need to change the row number that this is checking
