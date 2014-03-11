@@ -945,6 +945,18 @@ div.box-shadow {
     display:inline-block;
 }
 
+.empty-tab-drop-area {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    height:130px;
+}
+
+.empty-tab-drop-area div {
+    vertical-align: middle;
+    text-align: center;
+    line-height:130px;
+}
+
 .drop-box {
     background: #F8F8F8;
     border: 5px dashed #DDD;

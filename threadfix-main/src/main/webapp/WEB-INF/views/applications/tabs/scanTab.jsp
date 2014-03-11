@@ -2,7 +2,11 @@
 <tab ng-controller="ScanTableController"
      heading="{{ heading }}">
 
-    <table class="table table-striped">
+    <div ng-hide="scans" class="empty-tab-drop-area">
+        <div>Drop a scan here to upload.</div>
+    </div>
+
+    <table ng-show="scans" class="table table-striped">
         <thead>
             <tr>
                 <th class="first">Channel</th>
@@ -19,10 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-hide="scans">
-                <td colspan="6" style="text-align:center;">No scans found.</td>
-            </tr>
-            <tr ng-show="scans" ng-repeat="scan in scans" class="bodyRow">
+            <tr ng-repeat="scan in scans" class="bodyRow">
                 <td id="channelType{{ $index }}"> {{ scan.scannerName }} </td>
                 <td>
                     {{ scan.importTime }}

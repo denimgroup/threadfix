@@ -3,7 +3,14 @@
      ng-init="numVulns = <c:out value="${numVulns}"/>"
      heading="{{ heading }}">
 
-    <div>
+    <div ng-show="empty" class="empty-tab-drop-area">
+        <div>Drop a scan here to upload.</div>
+    </div>
+
+    <!-- TODO add DRAG SCAN HERE area-->
+    <div ng-hide="empty || vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
+    <div ng-show="vulns">
         <div class="pagination no-margin" ng-show="numVulns > 100" >
             <pagination class="no-margin" total-items="numVulns / 10" max-size="5" page="page"></pagination>
 
@@ -12,12 +19,12 @@
             <span ng-show="loading" style="float:right" class="spinner dark"></span>
         </div>
 
-        <!-- TODO add DRAG SCAN HERE area-->
-        <div ng-hide="empty || vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
-
-        <table ng-show="vulns" class="table sortable table-hover tf-colors" id="anyid">
+        <table class="table sortable table-hover tf-colors" id="anyid">
             <thead>
                 <tr>
+                    <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
+                        <th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" ng-click="checkAll"></th>
+                    </c:if>
                     <th style="width:8px;"></th>
                     <th class="pointer" style="min-width:70px">
                         Severity<span id="headerCaret2" class="caret-down"></span>
@@ -42,6 +49,12 @@
                         success: vuln.severityName === 'Medium',
                         info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
                         }">
+                    <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
+                        <td>
+                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ index }}" type="checkbox" value="{{ vuln.id }}" name="vulnerabilityIds">
+                            <input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
+                        </td>
+                    </c:if>
                     <td class="pointer">
                         <span ng-class="{ expanded: team.expanded }" id="caret{{ vuln.id }}" class="caret-right"></span>
                     </td>
