@@ -21,46 +21,43 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.selenium.tests;
+package com.denimgroup.threadfix.selenium.enttests;
 
-import com.denimgroup.threadfix.selenium.pages.*;
-import org.junit.Before;
+import static org.junit.Assert.assertTrue;
+
+import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.selenium.pages.*;
 
-public class ScanQueueTests extends BaseTest {
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+
+public class ScanQueueEnt extends BaseTest {
 
 	public ApplicationDetailPage applicationDetailPage;
 	public TeamIndexPage teamIndexPage;
+
 	private static Map<String, String> scansMap = ScanContents.SCAN_FILE_MAP;
 	
 	@Test
 	public void testAddScanQueue() throws MalformedURLException {
-		String teamName = "scanQueueTaskTeam" + getRandomString(5);
-		String appName = "scanQueueTaskApp" + getRandomString(5);
-		int scanQueueCnt  = 0;
+		String teamName = "scanQueueTaskTeam" + getRandomString(3);
+		String appName = "scanQueueTaskApp" + getRandomString(3);
+		int scanQueueCount  = 0;
 
-		
-		// log in
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
 		teamIndexPage = loginPage.login("user", "password")
-								.clickOrganizationHeaderLink()
-								.clickOrganizationHeaderLink()
-				 				.clickAddTeamButton()
-								.setTeamName(teamName)
-								.addNewTeam()
-								.expandTeamRowByIndex(teamName)
-								.addNewApplication(teamName, appName, "http://" + appName, "Low")
-								.saveApplication(teamName);
-		
-		teamIndexPage.populateAppList(teamName);
-			
-		applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+                .clickOrganizationHeaderLink();
+
+		applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
 		
 		// create an org and an app and add scan queue task, then delete everything
 		for (Entry<String, String> mapEntry : scansMap.entrySet()) {
@@ -70,23 +67,17 @@ public class ScanQueueTests extends BaseTest {
 
             }
 			applicationDetailPage = applicationDetailPage.clickScansQueueTab()
-                                                        .clickAddNewScanQueueLink()
-														.setScanQueueType(tempName)
-														.submitScanQueue();
-//														.clickExpandAllVulns();
+                    .clickAddNewScanQueueLink()
+                    .setScanQueueType(tempName)
+                    .submitScanQueue();
+//					.clickExpandAllVulns();
 
 			applicationDetailPage = applicationDetailPage.clickScansQueueTab();
-			scanQueueCnt++;
+			scanQueueCount++;
 			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),applicationDetailPage.isScanQueuePresent(tempName));
-			assertTrue("Scan Queue Task count is incorrect after adding "+mapEntry.getKey(), scanQueueCnt == applicationDetailPage.scanQueueCount());
+			assertTrue("Scan Queue Task count is incorrect after adding "+mapEntry.getKey(), scanQueueCount == applicationDetailPage.scanQueueCount());
 		}
-		
-		assertTrue("Scan Queue Task count is incorrect", scanQueueCnt == applicationDetailPage.scanQueueCount());
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-							.clickViewTeamLink(teamName)
-							.clickDeleteButton()
-							.logout();
+		assertTrue("Scan Queue Task count is incorrect", scanQueueCount == applicationDetailPage.scanQueueCount());
 	}
 
 }

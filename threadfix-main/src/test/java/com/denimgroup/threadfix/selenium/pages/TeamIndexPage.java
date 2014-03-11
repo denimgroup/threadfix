@@ -231,8 +231,8 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage saveApplication(String teamName) {
         driver.findElementById("submitAppModal" + teamName).click();
-        sleep(6000);
-        return setPage();
+        sleep(1000);
+        return new TeamIndexPage(driver);
     }
 
     public TeamIndexPage saveApplicationInvalid(String teamName) {

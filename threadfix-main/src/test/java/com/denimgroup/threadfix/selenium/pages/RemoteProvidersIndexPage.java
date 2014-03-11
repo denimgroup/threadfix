@@ -334,6 +334,12 @@ public class RemoteProvidersIndexPage extends BasePage {
 		handleAlert();
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public RemoteProvidersIndexPage clearVeraCode() {
+        driver.findElementById("clearConfig2").click();
+        handleAlert();
+        return new RemoteProvidersIndexPage(driver);
+    }
 	
 	public String successAlert(){
 		return driver.findElementByClassName("alert-success").getText();

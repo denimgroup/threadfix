@@ -58,12 +58,12 @@ public class RemoteProvidersTests extends BaseTest {
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat();
 
-		assertTrue("WhiteHat Sentinel is not present",
+		assertTrue("WhiteHat Sentinel was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
 		
 		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 		
-		assertTrue("Delete Validation is not present",
+		assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
 	}
 
@@ -90,46 +90,48 @@ public class RemoteProvidersTests extends BaseTest {
                 .setVeraPassword(VERACODE_PASSWORD)
                 .saveVera();
 
-		//asserts and deletes when page is working properly
+        assertTrue("Veracode was not configured properly",
+                remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
 	}
 	
 	@Test
 	public void invalidVeracode(){
-		RemoteProvidersIndexPage indexPage = loginPage.login("user", "password")
-													.clickRemoteProvidersLink()
-													.clickConfigureVeracode()
-													.setVeraUsername("No Such User")
-													.setVeraPassword("Password Bad")
-													.saveVeraInvalid();
+		remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureVeracode()
+                .setVeraUsername("No Such User")
+                .setVeraPassword("Password Bad")
+                .saveVeraInvalid();
 
-		assertTrue("Incorrect credentials accepted",indexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+		assertTrue("Incorrect credentials accepted", remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
-	// Remove Configuration User Name Pwd
 
+    //Credentials are not valid any longer
 	@Ignore
 	@Test
 	public void configureQualys() {
-		if (QUALYS_PASS == null || QUALYS_USER == null) {
-			return;
-		}
-		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
-														.clickRemoteProvidersLink()
-														.clickConfigureQualys()
-														.setQualysUsername(QUALYS_USER)
-														.setQualysPassword(QUALYS_PASS)
-														.saveQualys();
+		remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .saveQualys();
 		
-		//assert and clear qualys (waiting on bug fix)
 	}
 	
 	@Test
 	public void invalidQualys(){
 		RemoteProvidersIndexPage indexPage = loginPage.login("user", "password")
-													.clickRemoteProvidersLink()
-													.clickConfigureQualys()
-													.setQualysUsername("No Such User")
-													.setQualysPassword("Password Bad")
-													.saveQualysInvalid();
+                .clickRemoteProvidersLink()
+                .clickConfigureQualys()
+                .setQualysUsername("No Such User")
+                .setQualysPassword("Password Bad")
+                .saveQualysInvalid();
 		
 		assertTrue("Incorrect credentials accepted",indexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
