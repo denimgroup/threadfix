@@ -24,6 +24,27 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         vuln.findings.forEach(setDate);
     }
 
+    $scope.toggleAll = function() {
+        var check = function(vuln) {
+            vuln.checked = !$scope.allSelected;
+        }
+
+        $scope.vulns.forEach(check);
+    }
+
+    $scope.setCheckedAll = function(checked) {
+        if (checked) {
+            $scope.allSelected = false;
+        } else {
+
+            if ($scope.vulns.filter(function(vuln) {
+                return !vuln.checked;
+            }).length === 1) { // the checkbox that calls this action isn't checked yet
+                $scope.allSelected = true;
+            }
+        }
+    }
+
     var getTableSortBean = function() {
         return {
             page: $scope.page

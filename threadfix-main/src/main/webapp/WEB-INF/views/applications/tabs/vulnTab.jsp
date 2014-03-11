@@ -19,23 +19,23 @@
             <span ng-show="loading" style="float:right" class="spinner dark"></span>
         </div>
 
-        <table class="table sortable table-hover tf-colors" id="anyid">
+        <table class="table sortable table-hover tf-colors" style="table-layout: fixed;" id="anyid">
             <thead>
                 <tr>
                     <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
-                        <th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" ng-click="checkAll"></th>
+                        <th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" ng-model="allSelected" ng-click="toggleAll()"></th>
                     </c:if>
                     <th style="width:8px;"></th>
-                    <th class="pointer" style="min-width:70px">
+                    <th style="width:80px" class="pointer">
                         Severity<span id="headerCaret2" class="caret-down"></span>
                     </th>
-                    <th class="pointer">
+                    <th style="width:250px" class="pointer">
                         Type<span id="headerCaret1" class="caret-down"></span>
                     </th>
-                    <th class="pointer">
+                    <th style="width:250px" class="pointer">
                         Path<span id="headerCaret3" class="caret-down"></span>
                     </th>
-                    <th class="pointer" style="min-width:90px;">
+                    <th class="pointer" style="width:90px;">
                         Parameter<span id="headerCaret4" class="caret-down"></span>
                     </th>
                     <th style="width:25px;"></th>
@@ -43,7 +43,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-click="expand(vuln)" ng-repeat-start="vuln in vulns" class="bodyRow pointer" ng-class="{
+                <tr ng-repeat-start="vuln in vulns" class="bodyRow pointer" ng-class="{
                         error: vuln.severityName === 'Critical',
                         warning: vuln.severityName === 'High',
                         success: vuln.severityName === 'Medium',
@@ -51,21 +51,21 @@
                         }">
                     <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
                         <td>
-                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ index }}" type="checkbox" value="{{ vuln.id }}" name="vulnerabilityIds">
+                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ index }}" ng-click="setCheckedAll(vuln.checked)" type="checkbox" ng-model="vuln.checked">
                             <input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
                         </td>
                     </c:if>
-                    <td class="pointer">
-                        <span ng-class="{ expanded: team.expanded }" id="caret{{ vuln.id }}" class="caret-right"></span>
+                    <td ng-click="expand(vuln)" class="pointer">
+                        <span ng-class="{ expanded: vuln.expanded }" id="caret{{ vuln.id }}" class="caret-right"></span>
                     </td>
-                    <td class="pointer" id="severity{{ $index }}"> {{ vuln.severityName }} </td>
-                    <td class="pointer" id="type{{ $index }}">
+                    <td ng-click="expand(vuln)" class="pointer" id="severity{{ $index }}"> {{ vuln.severityName }} </td>
+                    <td ng-click="expand(vuln)" class="pointer" id="type{{ $index }}">
                         {{ vuln.vulnerabilityName }}
                     </td>
 
                     <!-- TODO dependencies -->
-                    <td class="pointer" id="path{{ $index }}"> {{ vuln.path }} </td>
-                    <td class="pointer" id="parameter{{ $index }}"> {{ vuln.parameter }} </td>
+                    <td ng-click="expand(vuln)" class="pointer" style="word-wrap: break-word; width:100px" id="path{{ $index }}"> {{ vuln.path }} </td>
+                    <td ng-click="expand(vuln)" class="pointer" id="parameter{{ $index }}"> {{ vuln.parameter }} </td>
                     <%--<c:if test="${ not empty vulnerability.originalFinding.dependency }">--%>
                         <%--<td class="pointer" colspan="2">--%>
                             <%--<c:out value="${ vulnerability.originalFinding.dependency.cve } "/>--%>
@@ -97,7 +97,7 @@
                             <%--</c:if>--%>
                         <%--</td>--%>
                     <%--</c:if>--%>
-                    <td class="expandableTrigger">
+                    <td ng-click="expand(vuln)" class="expandableTrigger">
                         <div ng-show="vuln.findings.length > 1" id="findingIcon{{ $index }}" class="tooltip-container" data-placement="left" title="{{ vuln.findings.length }} Findings" style="text-align:left;">
                             <img src="<%=request.getContextPath()%>/images/icn_fork_arrow25x25.png" class="transparent_png" alt="Threadfix" />
                         </div>
