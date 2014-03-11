@@ -275,10 +275,9 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByLinkText(appName).isDisplayed();
     }
 
-    public TeamIndexPage clickUploadScan(String appName,String teamName) {
-        modalNum = modalNumber(teamName,appName);
-        driver.findElementById("uploadScanModalLink" + (teamName) + "-" + (appName)).click();
-        waitForElement(driver.findElementById("uploadScan"+modalNum));
+    public TeamIndexPage clickUploadScan(String teamName,String appName) {
+        driver.findElementById("uploadScanModalLink" + teamName + "-" + appName).click();
+        waitForElement(driver.findElementById("submitScanModal" + teamName + "-" + appName));
         return setPage();
     }
 
@@ -289,13 +288,13 @@ public class TeamIndexPage extends BasePage {
         return page;
     }
 
-    public TeamIndexPage setFileInput(String file) {
-        driver.findElementById("fileInput"+modalNum).sendKeys(file);
+    public TeamIndexPage setFileInput(String teamName, String appName, String file) {
+        driver.findElementById("fileInput" + teamName + "-" + appName).sendKeys(file);
         return setPage();
     }
 
-    public ApplicationDetailPage clickUploadScanButton(String appName) { //refactor to not use modal num
-        driver.findElementById("submitScanModal-"+appName).click();
+    public ApplicationDetailPage clickUploadScanButton(String teamName, String appName) {
+        driver.findElementById("submitScanModal" + teamName + "-" + appName).click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -528,24 +527,15 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean teamVulnerabilitiesFiltered(String teamName, String level, String expected) {
-        String temp = driver.findElementById("num" + level + "Vulns" + teamName).getText();
-        return temp.equals(expected);
+        return driver.findElementById("num" + level + "Vulns" + teamName).getText().equals(expected);
     }
 
-    // TODO (redo) possibly with tags
-    public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level,String expected) {
+    public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level, String expected) {
         return getApplicationSpecificVulnerability(teamName, appName, level).equals(expected);
     }
 
     public String getApplicationSpecificVulnerability(String teamName, String appName, String level) {
-        populateAppList(teamName);
-        int appIndex = getAppIndex(appName);
-        WebElement appTable = driver.findElementById("teamAppTable" + teamName);
-
-        List<WebElement> rows = appTable.findElements(By.className("app-row"));
-        WebElement cell = rows.get(appIndex - 1).findElement(By.id("num" + level + "Vulns" + teamName));
-
-        return cell.getText();
+        return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText();
     }
 
 }

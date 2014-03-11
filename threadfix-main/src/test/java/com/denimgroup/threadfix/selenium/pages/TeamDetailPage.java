@@ -255,9 +255,8 @@ public class TeamDetailPage extends BasePage {
         return false;
     }
 
-    public boolean applicationVulnerabilitiesFiltered(String appName, String level,String expected) {
-        populateAppList();
-        return driver.findElementById("app" + level + "Vulns" + getAppIndex(appName)).getText().equals(expected);
+    public boolean applicationVulnerabilitiesFiltered(String appName, String level, String expected) {
+        return driver.findElementById("app" + level + "Vulns" + appName).getText().equals(expected);
     }
 
     public boolean isActionBtnPresent(){

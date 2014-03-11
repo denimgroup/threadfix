@@ -34,7 +34,6 @@ import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
-
 public class DefectTrackerTests extends BaseTest {
 
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;

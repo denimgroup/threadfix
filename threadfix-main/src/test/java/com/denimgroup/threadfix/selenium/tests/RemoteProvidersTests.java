@@ -32,40 +32,14 @@ import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
 
 public class RemoteProvidersTests extends BaseTest {
-	
-	private static String SENTINEL_API_KEY = null;
-	private static String VERACODE_USER = null;
-	private static String VERACODE_PASSWORD = null;
-	private static String QUALYS_USER = null;
-	private static String QUALYS_PASS = null;
 
-	@Before
-	public void init() {
-		assignVars();
-	}
+    private RemoteProvidersIndexPage remoteProvidersIndexPage;
 	
-	private void assignVars() {
-		String tmp = System.getProperty("WHITEHAT_KEY");
-		if (tmp != null) {
-			SENTINEL_API_KEY = tmp;
-		}
-		tmp = System.getProperty("VERACODE_USERNAME");
-		if (tmp != null) {
-			VERACODE_USER = tmp;
-		}
-		tmp = System.getProperty("VERACODE_PASSWORD");
-		if (tmp != null) {
-			VERACODE_PASSWORD = tmp;
-		}
-		tmp = System.getProperty("QUALYS_USER");
-		if (tmp != null) {
-			QUALYS_USER = tmp;
-		}
-		tmp = System.getProperty("QUALYS_PASS");
-		if (tmp != null) {
-			QUALYS_PASS = tmp;
-		}
-	}
+	private static String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
+	private static String VERACODE_USER = System.getProperty("VERACODE_USERNAME");
+	private static String VERACODE_PASSWORD = System.getProperty("VERACODE_PASSWORD");
+	private static String QUALYS_USER = System.getProperty("QUALYS_USER");
+	private static String QUALYS_PASS = System.getProperty("QUALYS_PASS");
 
 	@Test
 	public void navigationTest() {
@@ -73,56 +47,48 @@ public class RemoteProvidersTests extends BaseTest {
 									.clickRemoteProvidersLink()
 									.getH2Tag();
 		
-		assertTrue("Remote Provider Page not found",
-				pageHeader.contains("Remote Providers"));
+		assertTrue("Remote Provider Page not found",pageHeader.contains("Remote Providers"));
 	}
 
 	@Test
 	public void configureSentinel() {
-	if (SENTINEL_API_KEY == null) {
-			return;
-		}
-		RemoteProvidersIndexPage indexPage = loginPage.login("user", "password")
-							  								.clickRemoteProvidersLink()
-							  								.clickConfigureWhiteHat()
-							  								.setWhiteHatAPI(SENTINEL_API_KEY)
-							  								.saveWhiteHat();
-		
+		remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
 
-		assertTrue("Add Validation is not present",indexPage.successAlert().contains("Applications successfully updated"));
+		assertTrue("WhiteHat Sentinel is not present",
+                remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
 		
-		indexPage = indexPage.clearWhiteHat();
+		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 		
-		assertTrue("Delete Validation is not present",indexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
-		//assertTrue("Remote Provider Page not found",
-			//	pageHeader.contains("Remote Providers"));
+		assertTrue("Delete Validation is not present",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
 	}
 
-	// Weird that this fails
-	@Ignore
+	//No error message is shown.
+    @Ignore
 	@Test
 	public void invalidSentinel(){
-		RemoteProvidersIndexPage indexPage = loginPage.login("user", "password")
-					.clickRemoteProvidersLink()
-					.clickConfigureWhiteHat()
-					.setWhiteHatAPI("This should't Work!")
-					.saveWhiteHatInvalid();
+		remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI("This should't Work!")
+                .saveWhiteHatInvalid();
 
-		assertTrue("Incorrect credentials accepted",indexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));		
+		assertTrue("Incorrect credentials accepted",
+                remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
 	@Test
 	public void configureVeracode() {
-		if (VERACODE_PASSWORD == null || VERACODE_USER == null) {
-			return;
-		}
-		
-		RemoteProvidersIndexPage indexPage = loginPage.login("user", "password")
-															.clickRemoteProvidersLink()
-															.clickConfigureVeracode()
-															.setVeraUsername(VERACODE_USER)
-															.setVeraPassword(VERACODE_PASSWORD)
-															.saveVera();
+		remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera();
 
 		//asserts and deletes when page is working properly
 	}

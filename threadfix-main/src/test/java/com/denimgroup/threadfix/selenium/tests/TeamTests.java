@@ -232,6 +232,7 @@ public class TeamTests extends BaseTest {
     public void testTeamGraphs() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
@@ -240,9 +241,9 @@ public class TeamTests extends BaseTest {
                 .addNewTeam()
                 .addNewApplication(teamName, appName, "", "Low")
                 .saveApplication(teamName)
-                .clickUploadScan(appName,teamName)
-                .setFileInput("test")
-                .clickUploadScanButton(appName);
+                .clickUploadScan(teamName, appName)
+                .setFileInput(teamName, appName, file)
+                .clickUploadScanButton(teamName, appName);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 

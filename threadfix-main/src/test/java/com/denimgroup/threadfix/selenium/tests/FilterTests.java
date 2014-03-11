@@ -23,16 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-
+import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 import com.denimgroup.threadfix.selenium.pages.*;
-import org.junit.Test;
+
 import org.openqa.selenium.NoSuchElementException;
 
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class FilterTests extends BaseTest{
-
+    private TeamIndexPage teamIndexPage;
+    private TeamDetailPage teamDetailPage;
+    private ApplicationDetailPage applicationDetailPage;
+    private FilterPage applicationFilterPage;
+    private FilterPage teamFilterPage;
+    private FilterPage globalFilterPage;
 
     // TODO test if you can edit an existing filter and ensure the results are correct
 
@@ -46,28 +52,30 @@ public class FilterTests extends BaseTest{
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName1);
+        DatabaseUtils.createApplication(teamName, appName2);
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .addNewApplication(teamName, appName1, "", "Low")
-                .saveApplication(teamName)
-                .clickUploadScan(appName1, teamName)
-                .setFileInput(file)
-                .clickUploadScanButton(appName1);
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
-
-        applicationDetailPage = teamIndexPage.addNewApplication(teamName, appName2, "", "Low")
-                .saveApplication(teamName)
-                .clickUploadScan(appName2, teamName)
-                .setFileInput(file)
-                .clickUploadScanButton(appName2);
+        //Upload scan to application 1
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickUploadScan(teamName, appName1)
+                .setFileInput(teamName, appName1, file)
+                .clickUploadScanButton(teamName, appName1);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
-        FilterPage applicationFilterPage = teamIndexPage.expandTeamRowByIndex(teamName)
+        //Upload scan to application 2
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickUploadScan(teamName, appName2)
+                .setFileInput(teamName, appName2, file)
+                .clickUploadScanButton(teamName, appName2);
+
+        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName1, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
@@ -82,7 +90,7 @@ public class FilterTests extends BaseTest{
                 .saveFilterChanges();
 
         teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink()
-                .expandTeamRowByIndex(teamName);
+                .expandTeamRowByName(teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
                 teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "High", "2"));
@@ -90,7 +98,6 @@ public class FilterTests extends BaseTest{
                 teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Medium", "0"));
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
                 teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Info", "0"));
-
 
         applicationDetailPage = teamIndexPage.clickViewAppLink(appName1, teamName);
 
@@ -100,13 +107,6 @@ public class FilterTests extends BaseTest{
                 applicationDetailPage.vulnerabilitiesFiltered("Medium", "0"));
         assertTrue("Vulnerabilities were not filtered properly on application detail page.",
                 applicationDetailPage.vulnerabilitiesFiltered("Info", "0"));
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickDeleteButton();
-
-        loginPage = teamIndexPage.logout();
-        clearGlobalFilter();
     }
 
     @Test
@@ -118,20 +118,20 @@ public class FilterTests extends BaseTest{
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .addNewApplication(teamName, appName, "", "Low")
-                .saveApplication(teamName)
-                .clickUploadScan(appName, teamName)
-                .setFileInput(file)
-                .clickUploadScanButton(appName);
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickUploadScan(teamName, appName)
+                .setFileInput(teamName, appName, file)
+                .clickUploadScanButton(teamName, appName);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
-        FilterPage teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
+        teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
                 .clickActionButton()
                 .clickEditTeamFilters()
                 .clickCreateNewFilter()
@@ -153,7 +153,7 @@ public class FilterTests extends BaseTest{
         assertTrue("The severity filter was not set properly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, severity, "2"));
 
-        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+        teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("The filter was not implemented correctly",
                 teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Medium", "0"));
@@ -161,13 +161,6 @@ public class FilterTests extends BaseTest{
                 teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Info", "0"));
         assertTrue("The severity filter was implemented correctly",
                 teamDetailPage.applicationVulnerabilitiesFiltered(appName, "High", "2"));
-
-        teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickDeleteButton();
-
-        loginPage = teamIndexPage.logout();
-        clearGlobalFilter();
     }
 
     @Test
@@ -180,29 +173,28 @@ public class FilterTests extends BaseTest{
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createApplication(teamName1, appName1);
+        DatabaseUtils.createTeam(teamName2);
+        DatabaseUtils.createApplication(teamName2, appName2);
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName1)
-                .addNewTeam()
-                .clickAddTeamButton()
-                .setTeamName(teamName2)
-                .addNewTeam()
-                .addNewApplication(teamName1, appName1, "", "Low")
-                .saveApplication(teamName1)
-                .clickUploadScan(appName1, teamName1)
-                .setFileInput(file)
-                .clickUploadScanButton(appName1);
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
+                .clickUploadScan(teamName1, appName1)
+                .setFileInput(teamName1, appName1, file)
+                .clickUploadScanButton(teamName1, appName1);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
-        applicationDetailPage = teamIndexPage.addNewApplication(teamName2, appName2, "", "Low")
-                .saveApplication(teamName2)
-                .clickUploadScan(appName2, teamName2)
-                .setFileInput(file)
-                .clickUploadScanButton(appName2);
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName2)
+                .clickUploadScan(teamName2, appName2)
+                .setFileInput(teamName2, appName2, file)
+                .clickUploadScanButton(teamName2, appName2);
 
-        FilterPage globalFilterPage = applicationDetailPage.clickOrganizationHeaderLink().clickManageFiltersLink();
+        globalFilterPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .clickManageFiltersLink();
 
         globalFilterPage = globalFilterPage
                 .clickCreateNewFilter()
@@ -231,35 +223,30 @@ public class FilterTests extends BaseTest{
         assertTrue("The global severity filter for team2 was not set properly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "High", "2"));
 
-        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName1)
-                .clickDeleteButton()
-                .clickViewTeamLink(teamName2)
-                .clickDeleteButton();
-
         loginPage = teamIndexPage.logout();
         clearGlobalFilter();
     }
 
     @Test
     public void layeredFilterTest() {
-        String teamName1 = getRandomString(8);
-        String appName1 = getRandomString(8);
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType1 = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 
         // Team and App set up, add scans
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName1)
-                .addNewTeam()
-                .addNewApplication(teamName1, appName1, "", "Low")
-                .saveApplication(teamName1)
-                .clickUploadScan(appName1, teamName1)
-                .setFileInput(file)
-                .clickUploadScanButton(appName1);
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickUploadScan(teamName, appName)
+                .setFileInput(teamName, appName, file)
+                .clickUploadScanButton(teamName, appName);
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
@@ -267,7 +254,7 @@ public class FilterTests extends BaseTest{
         FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .setVulnerabilityType(vulnerabilityType1)
-                .setSeverity("High")
+                .setSeverity(severity)
                 .addFilter()
                 .closeSuccessNotification()
                 .enableSeverityFilters()
@@ -279,7 +266,7 @@ public class FilterTests extends BaseTest{
         teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
         
         // Set teamName1 to show 'Medium' vulnerabilities
-        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         FilterPage teamFilterPage = teamDetailPage.clickActionButton()
                 .clickEditTeamFilters()
@@ -290,8 +277,8 @@ public class FilterTests extends BaseTest{
         teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
 
         // Set appName1 to  to hide 'Critical'
-        applicationDetailPage = teamIndexPage.expandTeamRowByIndex(teamName1)
-                .clickViewAppLink(appName1, teamName1);
+        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
 
         FilterPage applicationFilterPage = applicationDetailPage.clickActionButton()
                 .clickEditVulnerabilityFilters()
@@ -303,27 +290,23 @@ public class FilterTests extends BaseTest{
         teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink();
 
         assertTrue("Application filter of hiding 'Critical' was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Critical", "0"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "0"));
         assertTrue("Global and Team severity filter changes were not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "High", "2"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "High", "2"));
         assertTrue("Team filter of showing 'Medium' was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Medium", "6"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "6"));
         assertTrue("Global filter of hiding 'Low' was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Low", "4"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "4"));
         assertTrue("Application filter of showing 'Info' was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Info", "10"));
-
-
-        teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName1)
-                .clickDeleteButton();
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "10"));
 
         loginPage = teamIndexPage.logout();
         clearGlobalFilter();
     }
 
     public void clearGlobalFilter() {
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
 
         try {
             FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
@@ -334,7 +317,8 @@ public class FilterTests extends BaseTest{
         } catch (NoSuchElementException e) {
             System.out.println("There was not a global vulnerability filter set.");
         }
-        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
+
+        globalFilterPage = teamIndexPage.clickManageFiltersLink()
                 .enableSeverityFilters()
                 .showCritical()
                 .showHigh()
@@ -345,7 +329,6 @@ public class FilterTests extends BaseTest{
                 .saveFilterChanges();
 
         loginPage = teamIndexPage.logout();
-
     }
 }
 
