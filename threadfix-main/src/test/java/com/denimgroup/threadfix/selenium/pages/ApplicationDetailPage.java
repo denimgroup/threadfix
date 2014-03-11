@@ -603,8 +603,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDefectActionBtn() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("actionButton1")));
-        driver.findElementsById("actionButton1").get(1).click();
+        waitForElement(driver.findElementById("actionButton1"));
+        driver.findElementById("actionButton1").click();
         return new ApplicationDetailPage(driver);
     }
 

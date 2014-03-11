@@ -36,7 +36,47 @@ public class VulnTests extends BaseTest {
 	private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
 	private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
 	private static final String TFS_URL = System.getProperty("TFS_URL");
-	private static final String TFS_PROJECTNAME = System.getProperty("TFS_PROJECTNAME");
+	private static final String TFS_PROJECTNAME = "Vulnerability Manager Demo";
+
+
+    static {
+        if (TEST_BUGZILLA_URL == null) {
+            throw new RuntimeException("Please set TEST_BUGZILLA_URL property");
+        }
+        if (TEST_JIRA_URL == null){
+            throw new RuntimeException("Please set TEST_JIRA_URL property.");
+        }
+        if (JIRA_USERNAME == null){
+            throw new RuntimeException("Please set JIRA_USERNAME property.");
+        }
+        if (JIRA_PASSWORD == null){
+            throw new RuntimeException("Please set JIRA_PASSWORD property.");
+        }
+        if (JIRA_URL == null){
+            throw new RuntimeException("Please set JIRA_URL property.");
+        }
+        if (JIRAPROJECTNAME == null){
+            throw new RuntimeException("Please set JIRAPROJECTNAME property.");
+        }
+        if (BUGZILLA_USERNAME == null){
+            throw new RuntimeException("Please set BUGZILLA_USERNAME property.");
+        }
+        if (BUGZILLA_PASSWORD == null){
+            throw new RuntimeException("Please set BUGZILLA PASSWORD property.");
+        }
+        if (BUGZILLA_URL == null){
+            throw new RuntimeException("Please set BUGZILLA_URL property.");
+        }
+        if (TFS_USERNAME == null){
+            throw new RuntimeException("Please set TFS_USERNAME property.");
+        }
+        if (TFS_PASSWORD == null){
+            throw new RuntimeException("Please set TFS_PASSWORD property.");
+        }
+        if (TFS_URL == null){
+            throw new RuntimeException("Please set TFS_URL property.");
+        }
+    }
 	
 	@Test
 	public void mergeSingleVulnJira(){
@@ -244,7 +284,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-150")
+				.selectMergeDefect("THREAD-163")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns()
@@ -252,7 +292,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-157")
+				.selectMergeDefect("THREAD-164")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
@@ -321,7 +361,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-115")
+				.selectMergeDefect("THREAD-183")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns()
@@ -329,7 +369,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(5)
 				.clickVulnCheckBox(6)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-140")
+				.selectMergeDefect("THREAD-184")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns()
@@ -337,7 +377,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(4)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-141")
+				.selectMergeDefect("THREAD-185")
 				.clickMergeDefectSubmit();
 		
 		ad = ad.clickExpandAllVulns();
@@ -452,15 +492,6 @@ public class VulnTests extends BaseTest {
 			default:
 				return false;
 		}
-
-        System.out.println("defect tracker app name: " + defectTrackerAppName);
-        System.out.println("defect Tracker URL: " + defectTrackerURL);
-        System.out.println("Username: " + userName);
-        System.out.println("password: " + password);
-        System.out.println("project name: " + projectName);
-        System.out.println("white hat appName: " + whiteHatAppName);
-        System.out.println( "defect tracker type: " + dtType);
-
 
 		//add team
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
