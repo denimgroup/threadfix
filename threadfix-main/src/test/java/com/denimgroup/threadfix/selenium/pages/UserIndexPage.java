@@ -184,8 +184,12 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public String getPasswordError(){
-		return driver.findElementById("password.errors").getText().trim();
+		return driver.findElementById("passwordInputErrorSpan").getText().trim();
 	}
+
+    public String getPasswordMatchError(){
+        return driver.findElementById("passwordInputError").getText().trim();
+    }
 	
 	public UserIndexPage clickCancel(String name){
 		driver.findElementByClassName("modal-footer").click();
