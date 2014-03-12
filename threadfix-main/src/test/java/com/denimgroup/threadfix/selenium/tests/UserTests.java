@@ -53,26 +53,9 @@ public class UserTests extends BaseTest {
 
 	@Test 
 	public void testUserFieldValidation() {
-		DashboardPage dashboardPage;
-		StringBuilder stringBuilder = new StringBuilder("");
-		for (int i = 0; i < 400; i++) { stringBuilder.append('i'); }
-
-		String longInput = stringBuilder.toString();
-
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 											.clickManageUsersLink()
-											.clickAddUserLink()
-											.enterName("",null)
-											.enterPassword("",null)
-											.enterConfirmPassword("",null)
-											.clickAddNewUserBtnInvalid();
-
-		// Test Empty
-
-		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
-		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
-
-		// Test White Space
+											.clickAddUserLink();
 
 		userIndexPage.enterName("        ",null);
 		userIndexPage.enterPassword("  ",null);
@@ -80,8 +63,7 @@ public class UserTests extends BaseTest {
 
 		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 
-		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
-		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
+		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
 		// Test length
 		userIndexPage.enterName("Test User",null);
@@ -98,43 +80,47 @@ public class UserTests extends BaseTest {
 		userIndexPage.enterPassword("lengthy password 1",null);
 		userIndexPage.enterConfirmPassword("lengthy password 2",null);
 		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
-		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordError().equals("Passwords do not match."));
-
-		// Create a user
-		userIndexPage.enterName(longInput,null);
-		userIndexPage.enterPassword(longInput,null);
-		userIndexPage.enterConfirmPassword(longInput,null);
-
-		userIndexPage = userIndexPage.clickAddNewUserBtn();
-		
-		String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
-		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
-		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
-		
-		dashboardPage = userIndexPage.logout()
-					.login(userName, longInput);
-		
-		assertTrue("user: "+longInput+" was not logged in.",dashboardPage.isLoggedInUser(userName));
-		
-		userIndexPage = dashboardPage.logout()
-					.login("user", "password")
-					.clickManageUsersLink()
-					.clickAddUserLink();
-		// Test name uniqueness check
-
-		userIndexPage.enterName(userName,null);
-		userIndexPage.enterPassword("dummy password",null);
-		userIndexPage.enterConfirmPassword("dummy password",null);
-
-		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
-		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
-		
-		
-
-		userIndexPage = userIndexPage.clickCloseAddUserModal().clickDeleteButton(userName);
-
-		userIndexPage.logout();
+		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
 	}
+
+    @Test
+    public void testCreateDuplicateUser(){
+        StringBuilder stringBuilder = new StringBuilder("");
+        for (int i = 0; i < 400; i++) { stringBuilder.append('i'); }
+
+        String longInput = stringBuilder.toString();
+        // Create a user
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink();
+        userIndexPage.enterName(longInput,null);
+        userIndexPage.enterPassword(longInput,null);
+        userIndexPage.enterConfirmPassword(longInput,null);
+
+        userIndexPage = userIndexPage.clickAddNewUserBtn();
+
+        String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
+        assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
+        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
+
+        DashboardPage dashboardPage = userIndexPage.logout()
+                .login(userName, longInput);
+
+        assertTrue("user: "+longInput+" was not logged in.",dashboardPage.isLoggedInUser(userName));
+
+        userIndexPage = dashboardPage.logout()
+                .login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink();
+        // Test name uniqueness check
+
+        userIndexPage.enterName(userName,null);
+        userIndexPage.enterPassword("dummy password",null);
+        userIndexPage.enterConfirmPassword("dummy password",null);
+
+        userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+        assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
+    }
 
 	@Test
 	public void testEditUser() {
