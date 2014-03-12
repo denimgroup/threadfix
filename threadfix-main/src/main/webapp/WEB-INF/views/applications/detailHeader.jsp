@@ -40,15 +40,11 @@
                 <c:if test="${ canUploadScans }">
                     <li><a class="pointer" id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
                     <li><a class="pointer" id="addManualFindingModalLink">Add Manual Finding</a></li>
-                    <c:if test="${ not empty application.defectTracker }">
-                        <spring:url value="/organizations/{orgId}/applications/{appId}/defects/update" var="updateDefectUrl">
-                            <spring:param name="orgId" value="${ application.organization.id }"/>
-                            <spring:param name="appId" value="${ application.id }"/>
-                        </spring:url>
-                        <li><a id="updateDefectsLink" href="${ fn:escapeXml(updateDefectUrl) }">
+                    <li ng-show="config.application.defectTracker">
+                        <a id="updateDefectsLink" ng-click="updateDefectStatus()">
                             Update Defect Status
-                        </a></li>
-                    </c:if>
+                        </a>
+                    </li>
                 </c:if>
             </ul>
         </div>

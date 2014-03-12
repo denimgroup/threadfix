@@ -35,6 +35,23 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
            });
     });
 
+    $scope.updateDefectStatus = function() {
+        $http.get($window.location.pathname + "/defects/update" + $scope.csrfToken).
+            success(function(data, status, headers, config) {
+
+                if (data.success) {
+                    $scope.successMessage = data.object;
+                } else {
+                    $log.info("Request to update defect statuses failed. Error was " + data.message);
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("HTTP request for form objects failed.");
+                // TODO improve error handling and pass something back to the users
+                $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
+            });
+    }
+
     // Handle the complex modal interactions on the edit application modal
     $scope.$on('modalSwitch', function(event, name) {
         $scope.currentModal.dismiss('modalChanged');
