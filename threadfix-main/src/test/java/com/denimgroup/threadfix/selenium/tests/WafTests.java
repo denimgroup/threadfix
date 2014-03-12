@@ -290,7 +290,7 @@ public class WafTests extends BaseTest {
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath());
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
             .clickOrganizationHeaderLink();

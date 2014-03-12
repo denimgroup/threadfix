@@ -144,7 +144,7 @@ public class ApplicationDetailPage extends BasePage {
                 .clickTestConnection()
                 .selectProduct(productname)
                 .clickSubmitTrackerButton();
-        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
+        waitForElement(driver.findElementById("submitDTModal"));
         sleep(5000);
         return new ApplicationDetailPage(driver);
 		/*
