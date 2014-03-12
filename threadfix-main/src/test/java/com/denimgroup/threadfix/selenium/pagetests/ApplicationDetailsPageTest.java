@@ -53,7 +53,6 @@ public class ApplicationDetailsPageTest extends BaseTest {
             assertTrue("Config link is not clickable", dashboardPage.isConfigMenuLinkClickable());
             assertTrue("Logo link is not present", dashboardPage.isLogoPresent());
             assertTrue("Logo link is not clickable", dashboardPage.isLogoClickable());
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -67,7 +66,6 @@ public class ApplicationDetailsPageTest extends BaseTest {
             assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
             assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
             assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -91,7 +89,6 @@ public class ApplicationDetailsPageTest extends BaseTest {
         assertTrue("Manage Filters is not clickable", dashboardPage.isManageFiltersMenuLinkClickable());
         assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -99,14 +96,12 @@ public class ApplicationDetailsPageTest extends BaseTest {
         ApplicationDetailPage ap = buildTeamAppandScan();
         assertTrue("BreadCrumb Application is not present", ap.isBreadcrumbPresent());
         assertTrue("BreadCrumb Application is not present", ap.isApplicationBreadcrumbPresent(teamName));
-        //destroyTeamAppandScan();
     }
 
     @Test
     public void testApplicationName() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
         assertTrue("Application Name is not present", ap.isApplicationNamePresent());
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -114,7 +109,6 @@ public class ApplicationDetailsPageTest extends BaseTest {
         ApplicationDetailPage ap = buildTeamAppandScan();
         assertTrue("Action Button is not present", ap.isActionButtonPresent());
         assertTrue("Action Button is not Clickable", ap.isActionButtonClickable());
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -129,7 +123,6 @@ public class ApplicationDetailsPageTest extends BaseTest {
         assertTrue("Scan Upload button is not clickable", ap.isUploadScanClickable());
         assertTrue("Add Manual finding button is not present", ap.isAddManualFindingsPresent());
         assertTrue("Add Manual finding button is not clickable", ap.isAddManualFindingsClickable());
-        //destroyTeamAppandScan();
     }
 
     @Test

@@ -46,7 +46,6 @@ public class TeamIndexPageTest extends BaseTest {
         assertTrue("Config link is not clickable", dashboardPage.isConfigMenuLinkClickable());
         assertTrue("Logo link is not present", dashboardPage.isLogoPresent());
         assertTrue("Logo link is not clickable", dashboardPage.isLogoClickable());
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -60,7 +59,6 @@ public class TeamIndexPageTest extends BaseTest {
         assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
         assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
         assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
-        //destroyTeamAppandScan();
     }
 
     @Test
@@ -84,6 +82,17 @@ public class TeamIndexPageTest extends BaseTest {
         assertTrue("Manage Filters is not clickable", dashboardPage.isManageFiltersMenuLinkClickable());
         assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
+    }
+
+    @Test
+    public void testAddExpandCollapseButtons() {
+        TeamIndexPage ti = setupDatabase();
+        assertTrue("Add Team Button is notpresent", ti.isAddTeamBtnPresent());
+        assertTrue("Add TeamB Button is not clickable", ti.isAddTeamBtnClickable());
+        assertTrue("Expand All button is not present", ti.isExpandAllBtnPresent());
+        assertTrue("Expand ALl button is not clickable", ti.isExpandAllBtnClickable());
+        assertTrue("Collapse All button is not present", ti.isCollapseAllBtnPresent());
+        assertTrue("Collapse All button is not clickable", ti.isCollapseAllBtnClickable());
     }
 
     public TeamIndexPage setupDatabase() {
