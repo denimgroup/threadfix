@@ -116,5 +116,10 @@ public class WafRulesPage extends BasePage {
 		new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
 		return new WafRulesPage(driver);
 	}
+
+    public WafRulesPage setWafApplicationSelect(String teamName, String appName) {
+        new Select(driver.findElementById("wafApplicationSelect")).selectByVisibleText(teamName + "/" + appName);
+        return new WafRulesPage(driver);
+    }
 	
 }

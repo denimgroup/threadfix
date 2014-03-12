@@ -32,14 +32,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.selenium.pages.ApplicationAddPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.GeneratedReportPage;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.ReportsIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UploadScanPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 
@@ -289,40 +283,28 @@ public class WafTests extends BaseTest {
         assertTrue("Waf edit header was too wide",width == 400);
     }
 
-	//Create mod-Security Waf and generate rules
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
 		String teamName = "attachModSecTeam" + getRandomString(3);
 		String appName = "attachModSecApp" + getRandomString(3);
-		String rtApp = "Demo Site BE";
-		String whKey = System.getProperty("WHITEHAT_KEY");
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
             .clickOrganizationHeaderLink();
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickRemoteProvidersLink()
-                .clickConfigureWhiteHat()
-                .setWhiteHatAPI(whKey)
-                .saveWhiteHat()
-                .clickEditMapping(rtApp)
-                .setTeamMapping(rtApp, teamName)
-                .setAppMapping(rtApp, appName)
-                .clickSaveMapping(rtApp)
-                .clickImportScan(rtApp);
-		
-		String wafName = "testCreateModSecWaf1";
+		String wafName = "testCreateModSecWaf" + getRandomString(3);
 		String wafType = "mod_security";
 
-        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, wafType)
                 .clickCreateWaf();
 
 		//Add waf to application
-		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+		ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                  .expandTeamRowByName(teamName)
                  .clickViewAppLink(appName, teamName)
                  .clickEditDeleteBtn()
@@ -330,183 +312,34 @@ public class WafTests extends BaseTest {
                  .addWaf(wafName);
 
 		//Generating  Deny waf Rules
-		applicationDetailPage.clickWafsHeaderLink()
+		WafRulesPage wafRulesPage = applicationDetailPage.clickWafsHeaderLink()
                 .clickRules(wafName)
-                .setWafDirectiveSelect("deny");
-							
-		WafRulesPage WafRulesPage = new WafRulesPage(driver);	
-		WafRulesPage.setWafDirectiveSelect("deny");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
+                .setWafApplicationSelect(teamName, appName)
+                .setWafDirectiveSelect("deny")
+                .clickGenerateWafRulesButton();
+
 		String PageText = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText.contains("SecRule"));
 
 		// Generate pass Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("pass");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
+		wafRulesPage = wafRulesPage.setWafDirectiveSelect("pass")
+                .clickGenerateWafRulesButton();
+
 		String PageText2 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText2.contains("SecRule"));
 
 		// Generate drop Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("drop");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
+		wafRulesPage = wafRulesPage.setWafDirectiveSelect("drop")
+                .clickGenerateWafRulesButton();
+
 		String PageText5 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText5.contains("SecRule"));
 
 		// Generate allow Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("allow");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
+		wafRulesPage = wafRulesPage.setWafDirectiveSelect("allow")
+                .clickGenerateWafRulesButton();
+
 		String PageText6 = driver.findElement(By.id("wafrule")).getText();
 		assertTrue("Waf rule not generated", PageText6.contains("SecRule"));
-	}
-
-	// Generate Snort Waf Rules
-	@Test
-	public void attachWafToaNewApp() throws MalformedURLException {
-		String orgName = "testCreateOrg1"+getRandomString(8);
-		String appName = "testCreateApp1"+getRandomString(8);
-		String urlText = "http://testurl.com";
-		String rtApp = "Demo Site BE";
-		String whKey = System.getProperty("WHITEHAT_KEY");
-
-		//set up an organization
-        TeamIndexPage organizationIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(orgName)
-				.addNewTeam()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(orgName)
-				.addNewApplication(orgName, appName, urlText, "Low")
-				.saveApplication(orgName);
-
-        ApplicationDetailPage applicationDetailPage = organizationIndexPage.clickRemoteProvidersLink()
-							.clickConfigureWhiteHat()
-							.setWhiteHatAPI(whKey)
-							.saveWhiteHat()
-							.clickEditMapping(rtApp)
-							.setTeamMapping(rtApp, orgName)
-							.setAppMapping(rtApp, appName)
-							.clickSaveMapping(rtApp)
-							.clickImportScan(rtApp);
-		
-//		applicationDetailPage = organizationIndexPage.clickViewAppLink(appName, orgName);
-//		
-//		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
-//			if (mapEntry.getValue() != null){
-//				File appScanFile = null;
-//				if (System.getProperty("scanFileBaseLocation") == null) {
-//						appScanFile = new File(new URL(mapEntry.getValue()).getFile());
-//				} else {
-//					appScanFile = new File(mapEntry.getValue());
-//				}
-//				assertTrue("The test file did not exist.", appScanFile.exists());
-//			} else {
-//				continue;
-//			}
-//
-//			applicationDetailPage = applicationDetailPage.clickUploadScanLink()
-//						.setFileInput(mapEntry.getValue())
-//						.submitScan();
-//		}
-
-		//Creating a new Waf
-
-		String newWafName = "testCreateSnortWaf1";
-		String type = "Snort";
-
-        WafIndexPage wafIndexPage = organizationIndexPage.clickWafsHeaderLink()
-				.clickAddWafLink()
-				.createNewWaf(newWafName, type)
-				.clickCreateWaf();
-
-
-		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
-
-		//Add waf to application
-		applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-				 .expandTeamRowByIndex(orgName)
-				 .clickViewAppLink(appName,orgName)
-				 .clickEditDeleteBtn()
-				 .clickAddWaf()
-				 .addWaf(newWafName);
-
-		//Generating  Alert waf Rules
-		applicationDetailPage.clickWafsHeaderLink()
-		.clickRules(newWafName);
-		
-		WafRulesPage WafRulesPage = new WafRulesPage(driver);	
-		WafRulesPage.setWafDirectiveSelect("alert");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText.contains("alert"));
-
-		// Generate log waf rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("log");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText1 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText1.contains("log"));
-
-		// Generate pass Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("pass");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText2 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText2.contains("pass"));
-
-		// Generate activate Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("activate");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText3 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText3.contains("activate"));
-
-		// Generate Dynamic Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("dynamic");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText4 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText4.contains("dynamic"));
-
-		// Generate drop Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("drop");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText5 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText5.contains("drop"));
-
-		// Generate reject Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("reject");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText6 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText6.contains("reject"));
-
-		// Generate sdrop Waf Rules
-		WafRulesPage = new WafRulesPage(driver);
-		WafRulesPage.setWafDirectiveSelect("sdrop");
-		WafRulesPage.clickGenerateWafRulesButton();
-		WafRulesPage = new WafRulesPage(driver);
-		String PageText7 = driver.findElement(By.id("wafrule")).getText();
-		assertTrue("Waf rule not generated", PageText7.contains("sdrop"));
-		
-		WafRulesPage.clickOrganizationHeaderLink()
-			.clickViewTeamLink(orgName)
-			.clickDeleteButton()
-			.clickWafsHeaderLink()
-			.clickDeleteWaf(newWafName);
 	}
 }
