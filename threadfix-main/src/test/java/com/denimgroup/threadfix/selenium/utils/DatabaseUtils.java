@@ -7,6 +7,8 @@ import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 
+import java.io.File;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -49,6 +51,7 @@ public class DatabaseUtils {
     }
 
     public static void uploadScan(String teamName, String appName, String filePath) {
+        assertTrue("FilePath is not valid: " + filePath, new File(filePath).exists());
         RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
         assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
 
