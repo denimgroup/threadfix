@@ -33,13 +33,6 @@ import org.openqa.selenium.NoSuchElementException;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class FilterTests extends BaseTest{
-    private TeamIndexPage teamIndexPage;
-    private TeamDetailPage teamDetailPage;
-    private ApplicationDetailPage applicationDetailPage;
-    private FilterPage applicationFilterPage;
-    private FilterPage teamFilterPage;
-    private FilterPage globalFilterPage;
-
     // TODO test if you can edit an existing filter and ensure the results are correct
 
     @Test
@@ -55,27 +48,13 @@ public class FilterTests extends BaseTest{
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName1);
         DatabaseUtils.createApplication(teamName, appName2);
+        DatabaseUtils.uploadScan(teamName, appName1, file);
+        DatabaseUtils.uploadScan(teamName, appName2, file);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        //Upload scan to application 1
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
-                .clickUploadScan(teamName, appName1)
-                .setFileInput(teamName, appName1, file)
-                .clickUploadScanButton(teamName, appName1);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
-
-        //Upload scan to application 2
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
-                .clickUploadScan(teamName, appName2)
-                .setFileInput(teamName, appName2, file)
-                .clickUploadScanButton(teamName, appName2);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
-
-        applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
+        FilterPage applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName1, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
@@ -99,7 +78,7 @@ public class FilterTests extends BaseTest{
         assertTrue("Vulnerabilities were not filtered properly on team index page.",
                 teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName1, "Info", "0"));
 
-        applicationDetailPage = teamIndexPage.clickViewAppLink(appName1, teamName);
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName1, teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on application detail page.",
                 applicationDetailPage.vulnerabilitiesFiltered("High", "2"));
@@ -120,18 +99,12 @@ public class FilterTests extends BaseTest{
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
-                .clickUploadScan(teamName, appName)
-                .setFileInput(teamName, appName, file)
-                .clickUploadScanButton(teamName, appName);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
-
-        teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
+        FilterPage teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
                 .clickActionButton()
                 .clickEditTeamFilters()
                 .clickCreateNewFilter()
@@ -153,7 +126,7 @@ public class FilterTests extends BaseTest{
         assertTrue("The severity filter was not set properly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, severity, "2"));
 
-        teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("The filter was not implemented correctly",
                 teamDetailPage.applicationVulnerabilitiesFiltered(appName, "Medium", "0"));
@@ -175,26 +148,15 @@ public class FilterTests extends BaseTest{
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createApplication(teamName1, appName1);
+        DatabaseUtils.uploadScan(teamName1, appName1, file);
         DatabaseUtils.createTeam(teamName2);
         DatabaseUtils.createApplication(teamName2, appName2);
+        DatabaseUtils.uploadScan(teamName2, appName2, file);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
-                .clickUploadScan(teamName1, appName1)
-                .setFileInput(teamName1, appName1, file)
-                .clickUploadScanButton(teamName1, appName1);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
-
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName2)
-                .clickUploadScan(teamName2, appName2)
-                .setFileInput(teamName2, appName2, file)
-                .clickUploadScanButton(teamName2, appName2);
-
-        globalFilterPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .clickManageFiltersLink();
+        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink();
 
         globalFilterPage = globalFilterPage
                 .clickCreateNewFilter()
@@ -238,17 +200,10 @@ public class FilterTests extends BaseTest{
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
 
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
-
-        // Team and App set up, add scans
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
-                .clickUploadScan(teamName, appName)
-                .setFileInput(teamName, appName, file)
-                .clickUploadScanButton(teamName, appName);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
         // Set global severity filter for vulnerabilityType1 and hide 'Medium', 'Low', 'Info' vulnerabilities
         FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
@@ -277,7 +232,7 @@ public class FilterTests extends BaseTest{
         teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
 
         // Set appName1 to  to hide 'Critical'
-        applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
         FilterPage applicationFilterPage = applicationDetailPage.clickActionButton()
@@ -305,7 +260,7 @@ public class FilterTests extends BaseTest{
     }
 
     public void clearGlobalFilter() {
-        teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         try {
@@ -318,7 +273,7 @@ public class FilterTests extends BaseTest{
             System.out.println("There was not a global vulnerability filter set.");
         }
 
-        globalFilterPage = teamIndexPage.clickManageFiltersLink()
+        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
                 .enableSeverityFilters()
                 .showCritical()
                 .showHigh()
@@ -328,7 +283,7 @@ public class FilterTests extends BaseTest{
                 .disableSeverityFilters()
                 .saveFilterChanges();
 
-        loginPage = teamIndexPage.logout();
+        loginPage = globalFilterPage.logout();
     }
 }
 

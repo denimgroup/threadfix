@@ -42,15 +42,9 @@ public class DashboardTests extends BaseTest{
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
-		dashboardPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.clickViewAppLink(appName, teamName)
-				.clickUploadScanLink()
-				.setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"))
-				.submitScan(appName)
-				.clickDashboardLink();
+		dashboardPage = loginPage.login("user", "password");
 
 		assertFalse("6 month vulnerability graph is not displayed", dashboardPage.is6MonthGraphNoDataFound());
 		assertFalse("Top 10 vulnerabilities graph is not displayed", dashboardPage.isTop10GraphNoDataFound());
@@ -63,15 +57,9 @@ public class DashboardTests extends BaseTest{
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
-        dashboardPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickUploadScanLink()
-                .setFileInput(appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"))
-                .submitScan(appName)
-                .clickDashboardLink();
+        dashboardPage = loginPage.login("user", "password");
 
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
