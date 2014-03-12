@@ -4,6 +4,7 @@ import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -97,7 +98,8 @@ public class TeamIndexPageTest extends BaseTest {
 
     public TeamIndexPage setupDatabase() {
         DatabaseUtils.createTeam(teamName);
-
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
         dashboardPage = loginPage.login("user", "password");
 
         dashboardPage.clickOrganizationHeaderLink();

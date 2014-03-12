@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.selenium.utils;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -47,4 +48,12 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + applicationRestResponse.message, applicationRestResponse.success);
     }
 
+    public static void uploadScan(String teamName, String appName, String filePath) {
+        RestResponse<Application> response = CLIENT.searchForApplicationByName(appName, teamName);
+        assertTrue("Request for Application was unsuccessful. Message:" + response.message, response.success);
+
+        RestResponse<Scan> restResponse = CLIENT.uploadScan(String.valueOf(response.object.getId()), filePath);
+        assertTrue("Response was unsuccessful. Message: " + restResponse.message, restResponse.success);
+
+    }
 }
