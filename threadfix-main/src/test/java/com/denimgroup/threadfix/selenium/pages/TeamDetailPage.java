@@ -374,11 +374,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isAddAppBtnPresent(){
-        return driver.findElementByLinkText("Add Application").isDisplayed();
+        return driver.findElementById("addApplicationModalButton").isDisplayed();
     }
 
     public boolean isAddAppBtnClickable(){
-        return isClickable("Add Application");
+        return isClickable("addApplicationModalButton");
     }
 
     public boolean isAppLinkPresent(String appName){

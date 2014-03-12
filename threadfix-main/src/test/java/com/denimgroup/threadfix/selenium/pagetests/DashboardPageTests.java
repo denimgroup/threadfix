@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.selenium.pagetests;
 import static org.junit.Assert.*;
 
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,37 +35,109 @@ import org.junit.Test;
 
 
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-//import com.denimgroup.threadfix.selenium.pages.LoginPage;
 
 public class DashboardPageTests extends BaseTest {
 
-//	private static LoginPage loginPage;
-//	private RemoteWebDriver driver;
-	private DashboardPage dashboardPage;
-	
-	@Before
-	public void init() {
-		super.init();
-//		driver = (RemoteWebDriver) super.getDriver();
-		dashboardPage = loginPage.login("user", "password");
-	}
-	
-	@After
-	public void shutdown(){
-		super.shutDown();
+    private static final String API_KEY = System.getProperty("API_KEY");
+    private static final String REST_URL = System.getProperty("REST_URL");
+    private  DashboardPage dashboardPage;
+    private  DatabaseUtils dataBaseUtil;
+    private  String teamName = getRandomString(8);
+    private  String appName = getRandomString(8);
+
+    static {
+        if (API_KEY == null) {
+            throw new RuntimeException("Please set API_KEY in run configuration.");
+        }
+        if (REST_URL == null) {
+            throw new RuntimeException("Please set REST_URL in run configuration.");
+        }
+    }
+
+    @Test
+    public void testTeamIndexHeaderNavigation() {
+        dataBaseUtil.createTeam(teamName);
+        dataBaseUtil.createApplication(teamName, appName);
+        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        dashboardPage = loginPage.login("user", "password");
+
+        assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
+        assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
+        assertTrue("Application link is not present", dashboardPage.isApplicationMenuLinkPresent());
+        assertTrue("Application link is not clickable", dashboardPage.isApplicationMenuLinkClickable());
+        assertTrue("Scan link is not present", dashboardPage.isScansMenuLinkPresent());
+        assertTrue("Scan link is not clickable", dashboardPage.isScansMenuLinkClickable());
+        assertTrue("Report link is not present", dashboardPage.isReportsMenuLinkPresent());
+        assertTrue("Report link is not clickable", dashboardPage.isReportsMenuLinkClickable());
+        assertTrue("User link is not present", dashboardPage.isUsersMenuLinkPresent());
+        assertTrue("User link is not clickable", dashboardPage.isUsersMenuLinkClickable());
+        assertTrue("Config link is not present", dashboardPage.isConfigMenuLinkPresent());
+        assertTrue("Config link is not clickable", dashboardPage.isConfigMenuLinkClickable());
+        assertTrue("Logo link is not present", dashboardPage.isLogoPresent());
+        assertTrue("Logo link is not clickable", dashboardPage.isLogoClickable());
+    }
+
+    @Test
+    public void testTeamIndexTabUserNavigation() {
+        dataBaseUtil.createTeam(teamName);
+        dataBaseUtil.createApplication(teamName, appName);
+        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        dashboardPage = loginPage.login("user", "password");
+
+        dashboardPage.clickUserTab();
+        assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
+        assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
+        assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
+        assertTrue("Toggle help is not present", dashboardPage.isToggleHelpLinkPresent());
+        assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
+        assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
+        assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
+    }
+
+    @Test
+    public void testTeamIndexConfigTabNavigation() {
+        dataBaseUtil.createTeam(teamName);
+        dataBaseUtil.createApplication(teamName, appName);
+        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        dashboardPage = loginPage.login("user", "password");
+
+        dashboardPage.clickConfigTab();
+        assertTrue("Configuration tab is not dropped down", dashboardPage.isConfigDropDownPresent());
+        assertTrue("API link is not present", dashboardPage.isApiKeysLinkPresent());
+        assertTrue("API link is not clickable", dashboardPage.isApiKeysMenuLinkClickable());
+        assertTrue("DefectTracker is not present" ,dashboardPage.isDefectTrackerLinkPresent());
+        assertTrue("DefectTracker is not clickable", dashboardPage.isDefectTrackerMenuLinkClickable());
+        assertTrue("Remote Providers is not present", dashboardPage.isRemoteProvidersLinkPresent());
+        assertTrue("Remote Providers is not clickable", dashboardPage.isRemoteProvidersMenuLinkClickable());
+        assertTrue("Scanner plugin link is not present", dashboardPage.isScansMenuLinkPresent());
+        assertTrue("Scanner plugin link is not clickable", dashboardPage.isScansMenuLinkClickable());
+        assertTrue("Waf link is not present", dashboardPage.isWafsLinkPresent());
+        assertTrue("Waf link is not clickable", dashboardPage.isWafsMenuLinkClickable());
+        assertTrue("Manage Users is not present", dashboardPage.isManageUsersLinkPresent());
+        assertTrue("Manage Users is not clickable", dashboardPage.isManageUsersMenuLinkClickable());
+        assertTrue("Manage Filters is not present", dashboardPage.isManageFiltersMenuLinkPresent());
+        assertTrue("Manage Filters is not clickable", dashboardPage.isManageFiltersMenuLinkClickable());
+        assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
+        assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
+    }
+
+    @Test
+	public void teamIndexGraphPresentTest(){
+
+        dataBaseUtil.createTeam(teamName);
+        dataBaseUtil.createApplication(teamName, appName);
+        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        dashboardPage = loginPage.login("user", "password");
+        dashboardPage.clickDashboardLink();
+        sleep(3000);
+
+		assertFalse("6 month burndown graph section is not present", dashboardPage.is6MonthGraphNoDataFound());
+        assertFalse("Top 10 graph section is not present", dashboardPage.isTop10GraphNoDataFound());
 	}
 
-    //Expand on this!
-	@Test
-	public void monthBurndownGraphPresentTest(){
-        dashboardPage.clickDashboardLink();
-		assertTrue("6 month burndown graph section is not present", dashboardPage.is6MonthGraphNoDataFound());
-	}
 
-    //Expand on this!
-	@Test
-	public void top10GraphPresentTest(){
-        dashboardPage.clickDashboardLink();
-		assertTrue("Top 10 graph section is not present", dashboardPage.isTop10GraphNoDataFound());
-	}
 }
