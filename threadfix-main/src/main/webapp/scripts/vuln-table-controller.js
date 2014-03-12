@@ -232,6 +232,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     }
 
     // Defect submission modal
+    // should close over $scope but let's see
+    var localRefresh = function() {
+        $scope.refresh(true, false);
+    }
 
     $scope.showSubmitDefectModal = function() {
 
@@ -279,10 +283,63 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (waf) {
-            $scope.config.application.waf = waf;
-            $scope.successMessage = "Set waf to " + waf.name;
-            $scope.showEditModal();
+        modalInstance.result.then(function (s) {
+            $scope.successMessage = "Successfully merged the vulnerability.";
+            localRefresh();
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.showMergeDefectModal = function() {
+
+        var filteredVulns = $scope.vulns.filter(function(vuln) {
+            return vuln.checked;
+        });
+
+        if (filteredVulns.length === 0) {
+            alert('You must select at least one vulnerability.');
+            return;
+        }
+
+        filteredVulns = filteredVulns.filter(function(vuln) {
+            return !vuln.defect;
+        })
+
+        if (filteredVulns.length === 0) {
+            alert('All of the selected vulnerabilities already have defects.');
+            return;
+        }
+
+        var modalInstance = $modal.open({
+            windowClass: 'submit-defect-form',
+            templateUrl: 'mergeDefectForm.html',
+            controller: 'DefectSubmissionModalController',
+            resolve: {
+                url: function() {
+                    var app = $scope.application;
+                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defects/merge" + $scope.csrfToken;
+                },
+                configUrl: function() {
+                    var app = $scope.application;
+                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defectSubmission" + $scope.csrfToken;
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {
+                        vulns: filteredVulns
+                    }
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (returnValue) {
+            $scope.successMessage = "Successfully merged the vulnerability.";
+            localRefresh();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

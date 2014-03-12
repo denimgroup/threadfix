@@ -22,6 +22,11 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 $scope.config = data.object.projectMetadata;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
+                $scope.config.defects = data.object.defectList.map(function(defect) {
+                    return defect.nativeId;
+                });
+
+                $scope.object.id = $scope.config.defects[0];
                 $scope.object.selectedComponent = $scope.config.components[0];
                 $scope.object.priority = $scope.config.priorities[0];
                 $scope.object.status = $scope.config.statuses[0];

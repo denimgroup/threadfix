@@ -7,6 +7,7 @@
 
             <c:if test="${ canSubmitDefects }">
                 <li ng-show="vulnType === 'Open' && application.defectTracker"><a class="pointer" id="submitDefectButton1" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
+                <li ng-show="vulnType === 'Open' && application.defectTracker"><a class="pointer" id="mergeDefectButton1" ng-click="showMergeDefectModal()">Merge Defect</a></li>
             </c:if>
             <c:if test="${ canModifyVulnerabilities }">
                 <li ng-show="vulnType === 'Open'"><a class="pointer" id="closeVulnsButton1" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>

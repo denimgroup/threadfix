@@ -30,7 +30,7 @@
         <%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
         <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
         <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
-        <%--<%@ include file="/WEB-INF/views/defects/mergeDefectModal.jsp" %>--%>
+        <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
 
         <div id="headerDiv">
             <%@ include file="/WEB-INF/views/applications/detailHeader.jsp" %>
@@ -46,17 +46,6 @@
         <div class="container-fluid">
             <%@include file="reports.jspf"%>
         </div>
-
-        <!-- TODO Fix the active tab stuff -->
-        <%--<c:choose>--%>
-            <%--<c:when test="${activeTab == 'scan_tab'}"><c:set var="scanTab" value="active" /></c:when>--%>
-            <%--<c:when test="${activeTab == 'file_tab'}"><c:set var="fileTab" value="active" /></c:when>--%>
-            <%--<c:when test="${activeTab == 'scan_agent_task_tab'}"><c:set var="scanAgentTaskTab" value="active" /></c:when>--%>
-            <%--<c:when test="${activeTab == 'scheduled_scan_tab'}"><c:set var="scheduledScanTab" value="active" /></c:when>--%>
-            <%--<c:when test="${activeTab == 'closed_vuln_tab'}"><c:set var="closedVulnTab" value="active" /></c:when>--%>
-            <%--<c:when test="${activeTab == 'false_positive_tab'}"><c:set var="falsePositiveTab" value="active" /></c:when>--%>
-            <%--<c:otherwise><c:set var="activeVulnTab" value="active" /></c:otherwise>--%>
-        <%--</c:choose>--%>
 
         <tabset style="margin-top:10px;">
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>

@@ -224,14 +224,16 @@ public class ApplicationsController {
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
 
+        List<Defect> defectList = null;
 		if (dt != null) {
+            defectList = dt.getDefectList();
 			data = dt.getProjectMetadata();
 		}
 
         Map<String, Object> map = new HashMap<>();
 
-		map.put("defectTrackerName",
-				application.getDefectTracker().getDefectTrackerType().getName());
+		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());
+		map.put("defectList", defectList);
 		map.put("projectMetadata", data);
 
 		return map;
