@@ -37,22 +37,23 @@
             <thead>
                 <tr>
                     <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
-                        <th style="width:22px" class="first unsortable"><input type="checkbox" id="chkSelectAll" ng-model="allSelected" ng-click="toggleAll()"></th>
+                        <th style="width:12px" class="first unsortable"><input type="checkbox" id="chkSelectAll" ng-model="allSelected" ng-click="toggleAll()"></th>
                     </c:if>
                     <th style="width:8px;"></th>
-                    <th style="width:80px" class="pointer">
+                    <th style="width:64px" class="pointer">
                         Severity<span id="headerCaret2" class="caret-down"></span>
                     </th>
-                    <th style="width:250px" class="pointer">
+                    <th style="width:260px" class="pointer">
                         Type<span id="headerCaret1" class="caret-down"></span>
                     </th>
-                    <th style="width:250px" class="pointer">
+                    <th style="width:220px" class="pointer">
                         Path<span id="headerCaret3" class="caret-down"></span>
                     </th>
                     <th class="pointer" style="width:90px;">
                         Parameter<span id="headerCaret4" class="caret-down"></span>
                     </th>
-                    <th style="width:25px;"></th>
+                    <th style="width:24px;"></th>
+                    <th ng-show="application.defectTracker" style="width:24px;"></th>
                     <th style="width:65px;"></th>
                 </tr>
             </thead>
@@ -64,7 +65,7 @@
                         info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
                         }">
                     <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
-                        <td>
+                        <td style="width:12px">
                             <input class="vulnIdCheckbox" id="vulnerabilityIds{{ index }}" ng-click="setCheckedAll(vuln.checked)" type="checkbox" ng-model="vuln.checked">
                             <input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
                         </td>
@@ -87,30 +88,13 @@
                         <%--</td>--%>
                     <%--</c:if>--%>
 
-                    <!-- TODO defects -->
-                    <%--<c:if test="${ not empty application.defectTracker }">--%>
-                        <%--<td >--%>
-                            <%--<c:if test="${ not empty vulnerability.defect }">--%>
-                                <%--<div  class="tooltip-container" data-placement="left" title="<c:out value="${ vulnerability.defect.nativeId }"/> (<c:out value="${ vulnerability.defect.status }"/>)" style="width:100%;text-align:right;">--%>
-                                    <%--<a id="bugLink{{ $index }}"--%>
-                                       <%--target="_blank"--%>
-                                            <%--<c:if test="${ not empty vulnerability.defect.defectURL }"> href="<c:out value="${ vulnerability.defect.defectURL }"/>" </c:if> >--%>
-                                        <%--<c:choose>--%>
-                                            <%--<c:when test="${ openCodes.contains(vulnerability.defect.status) }">--%>
-                                                <%--<img src="<%=request.getContextPath()%>/images/icn_bug_red_stroke.png" class="transparent_png" alt="Threadfix" />--%>
-                                            <%--</c:when>--%>
-                                            <%--<c:when test="${ closedCodes.contains(vulnerability.defect.status) }">--%>
-                                                <%--<img src="<%=request.getContextPath()%>/images/icn_bug_grn_stroke.png" class="transparent_png" alt="Threadfix" />--%>
-                                            <%--</c:when>--%>
-                                            <%--<c:otherwise>--%>
-                                                <%--<img src="<%=request.getContextPath()%>/images/icn_bug_yellow_stroke.png" class="transparent_png" alt="Threadfix" />--%>
-                                            <%--</c:otherwise>--%>
-                                        <%--</c:choose>--%>
-                                    <%--</a>--%>
-                                <%--</div>--%>
-                            <%--</c:if>--%>
-                        <%--</td>--%>
-                    <%--</c:if>--%>
+                    <td ng-show="application.defectTracker">
+                        <div ng-show="vuln.defect" class="tooltip-container" data-placement="left" ng-attr-title="{{ vuln.defect.nativeId }} ({{ vuln.defect.status }})" style="width:100%;text-align:right;">
+                            <a id="bugLink{{ $index }}" target="_blank" ng-href="{{ vuln.defect.defectURL }}">
+                                <img ng-src="<%=request.getContextPath()%>/images/{{ vuln.defect.bugImageName }}" class="transparent_png" alt="Threadfix"/>
+                            </a>
+                        </div>
+                    </td>
                     <td ng-click="expand(vuln)" class="expandableTrigger">
                         <div ng-show="vuln.findings.length > 1" id="findingIcon{{ $index }}" class="tooltip-container" data-placement="left" title="{{ vuln.findings.length }} Findings" style="text-align:left;">
                             <img src="<%=request.getContextPath()%>/images/icn_fork_arrow25x25.png" class="transparent_png" alt="Threadfix" />

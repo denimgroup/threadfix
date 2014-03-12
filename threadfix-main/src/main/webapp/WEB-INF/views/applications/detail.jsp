@@ -2,14 +2,15 @@
 
 <head>
 	<title><c:out value="${ application.name }"/></title>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/add-defect-tracker-modal-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-detail-page-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-page-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/defect-submission-modal-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-table-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/add-defect-tracker-modal-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
 </head>
 
 <!-- Get the CSRF token so we can use it everywhere -->
@@ -28,7 +29,7 @@
         <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
         <%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
         <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
-        <%--<%@ include file="/WEB-INF/views/defects/submitDefectModal.jsp" %>--%>
+        <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
         <%--<%@ include file="/WEB-INF/views/defects/mergeDefectModal.jsp" %>--%>
 
         <div id="headerDiv">

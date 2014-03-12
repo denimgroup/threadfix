@@ -203,9 +203,9 @@ public class ApplicationsController {
     }
 	
 	// TODO move this to a different spot so as to be less annoying
-	private void addDefectModelAttributes(Model model, int appId, int orgId) {
+	private Map<String, Object> addDefectModelAttributes(int appId, int orgId) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
-			return;
+			return null;
 		}
 		
 		Application application = applicationService.loadApplication(appId);
@@ -216,7 +216,7 @@ public class ApplicationsController {
 		
 		if (application.getDefectTracker() == null ||
 				application.getDefectTracker().getDefectTrackerType() == null) {
-			return;
+			return null;
 		}
 		
 		applicationService.decryptCredentials(application);
@@ -227,22 +227,28 @@ public class ApplicationsController {
 		if (dt != null) {
 			data = dt.getProjectMetadata();
 		}
-		
-		model.addAttribute("defectTrackerName",
+
+        Map<String, Object> map = new HashMap<>();
+
+		map.put("defectTrackerName",
 				application.getDefectTracker().getDefectTrackerType().getName());
-		model.addAttribute("projectMetadata", data);
-		model.addAttribute(new DefectViewModel());
+		map.put("projectMetadata", data);
+
+		return map;
 	}
 
 	@RequestMapping("/{appId}/defectSubmission")
-	public String getDefectSubmissionForm(@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId, SessionStatus status, Model model) {
+	public @ResponseBody RestResponse<Map<String, Object>> getDefectSubmissionForm(
+            @PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId) {
 
-		addDefectModelAttributes(model, appId, orgId);
+		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId);
 
-		model.addAttribute("contentPage", "defects/submitDefectForm.jsp");
-
-		return "ajaxSuccessHarness";
+        if (returnMap == null) {
+            return RestResponse.failure("Unable to retrieve Defect Tracker information.");
+        } else {
+            return RestResponse.success(returnMap);
+        }
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")

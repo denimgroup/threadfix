@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('VulnTableController', function ($scope, $window, $http, $rootScope) {
+myAppModule.controller('VulnTableController', function ($scope, $window, $http, $rootScope, $modal, $log) {
 
     $scope.initialized = false;
 
@@ -91,7 +91,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         $rootScope.$broadcast('scans', data.object.scans);
         $scope.allSelected = false;
 
-        if ($scope.numVulns === 0) {
+        if ($scope.numVulns === 0 && !$scope.hasFilters()) {
             $scope.vulnType = 'Open';
         }
 
@@ -130,9 +130,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         }
     };
 
-
     // Define listeners
-
     $scope.$watch('vulnType', $scope.refresh);
 
     $scope.$watch('csrfToken', function() {
@@ -159,6 +157,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     $scope.$on('scanUploaded', function() {
         $scope.empty = false;
         $scope.refresh();
+    });
+
+    $scope.$on('application', function(event, application) {
+        $scope.application = application;
     });
 
     $scope.$on('scanDeleted', function() {
@@ -228,5 +230,62 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             $scope.refresh(true, false);
         }
     }
+
+    // Defect submission modal
+
+    $scope.showSubmitDefectModal = function() {
+
+        var filteredVulns = $scope.vulns.filter(function(vuln) {
+            return vuln.checked;
+        });
+
+        if (filteredVulns.length === 0) {
+            alert('You must select at least one vulnerability.');
+            return;
+        }
+
+        filteredVulns = filteredVulns.filter(function(vuln) {
+            return !vuln.defect;
+        })
+
+        if (filteredVulns.length === 0) {
+            alert('All of the selected vulnerabilities already have defects.');
+            return;
+        }
+
+        var modalInstance = $modal.open({
+            windowClass: 'submit-defect-form',
+            templateUrl: 'submitDefectForm.html',
+            controller: 'DefectSubmissionModalController',
+            resolve: {
+                url: function() {
+                    var app = $scope.application;
+                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defects" + $scope.csrfToken;
+                },
+                configUrl: function() {
+                    var app = $scope.application;
+                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defectSubmission" + $scope.csrfToken;
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {
+                        vulns: filteredVulns
+                    }
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (waf) {
+            $scope.config.application.waf = waf;
+            $scope.successMessage = "Set waf to " + waf.name;
+            $scope.showEditModal();
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
 
 });

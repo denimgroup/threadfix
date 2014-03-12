@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -47,7 +49,7 @@ public class Defect extends AuditableEntity {
 
 	public enum TrackerType {
 		BUGZILLA, JIRA
-	};
+	}
 
 	private String nativeId;
 
@@ -66,6 +68,7 @@ public class Defect extends AuditableEntity {
 	 * @return
 	 */
 	@Column(length = 50, nullable = false)
+    @JsonView(AllViews.TableRow.class)
 	public String getNativeId() {
 		return nativeId;
 	}
@@ -75,6 +78,7 @@ public class Defect extends AuditableEntity {
 	}
 	
 	@Column(length = 255, nullable = false)
+    @JsonView(AllViews.TableRow.class)
 	public String getStatus() {
 		return status;
 	}
@@ -90,7 +94,8 @@ public class Defect extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-	public String getDefectURL() {
+    @JsonView(AllViews.TableRow.class)
+    public String getDefectURL() {
 		return defectURL;
 	}
 
@@ -121,5 +126,14 @@ public class Defect extends AuditableEntity {
 	public void setVulnerabilities(List<Vulnerability> vulnerabilities) {
 		this.vulnerabilities = vulnerabilities;
 	}
+
+    @Transient
+    @JsonView(AllViews.TableRow.class)
+    private String getBugImageName() {
+        String color = OPEN_CODES.contains(status) ? "red" :
+                CLOSED_CODES.contains(status) ? "grn" :
+                "blk";
+        return "icn_bug_" + color + "_stroke.png";
+    }
 
 }

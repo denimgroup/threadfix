@@ -28,19 +28,17 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -69,21 +67,16 @@ public class DefectsController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String onSubmit(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<String> onSubmit(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+			@ModelAttribute DefectViewModel defectViewModel) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You don't have permission to submit defects.");
 		}
 		
 		if (defectViewModel.getVulnerabilityIds() == null
 				|| defectViewModel.getVulnerabilityIds().size() == 0) {
-			log.info("No vulnerabilities selected for Defect submission.");
-			String message = "You must select at least one vulnerability.";
-			ControllerUtils.addErrorMessage(request, message);
-			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-			return "ajaxRedirectHarness";
+			return RestResponse.failure("You must select at least one vulnerability.");
 		}
 
 		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(defectViewModel.getVulnerabilityIds());
@@ -95,22 +88,20 @@ public class DefectsController {
 				defectViewModel.getPriority(), 
 				defectViewModel.getStatus());
 		
-		if (newDefect != null)
-			ControllerUtils.addSuccessMessage(request, "The Defect was submitted to the tracker.");
-		else 
-			ControllerUtils.addErrorMessage(request, "The Defect couldn't be submitted to the tracker.");
-		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-		return "ajaxRedirectHarness";
+		if (newDefect != null) {
+			return RestResponse.success("The Defect was submitted to the tracker.");
+        } else {
+            return RestResponse.failure("The Defect couldn't be submitted to the tracker.");
+        }
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String updateVulnsFromDefectTracker(@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<String> updateVulnsFromDefectTracker(@PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, appId)) {
-			return "403";
-		}
+			return RestResponse.failure("You don't have permission to pull updates from the tracker.");
+        }
 		
 		Application app = applicationService.loadApplication(appId);
 		
@@ -120,41 +111,29 @@ public class DefectsController {
 		}
 		
 		queueSender.addDefectTrackerVulnUpdate(orgId, appId);
-		
-		ControllerUtils.addSuccessMessage(request, 
-				"The Defect Tracker update request was submitted to the tracker.");
 
-		return "redirect:/organizations/" + app.getOrganization().getId() + 
-				"/applications/" + app.getId();
+		return RestResponse.success("The Defect Tracker update request was submitted to the tracker.");
 	}
 
 	@RequestMapping(value = "/merge", method = RequestMethod.POST)
-	public String onMerge(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
-			@ModelAttribute DefectViewModel defectViewModel, ModelMap model,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<String> onMerge(@PathVariable("orgId") int orgId, @PathVariable("appId") int appId,
+			@ModelAttribute DefectViewModel defectViewModel) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You don't have permission to modify defects.");
 		}
 		
 		List<Integer> vulnerabilityIds = defectViewModel.getVulnerabilityIds();
 		if (vulnerabilityIds == null || vulnerabilityIds.size() == 0) {
-			log.info("No vulnerabilities selected for Defect merge.");
-			String message = "You must select at least one vulnerability to merge.";
-			ControllerUtils.addErrorMessage(request, message);
-			model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-			return "ajaxRedirectHarness";
-		}
+			return RestResponse.failure("You must select at least one vulnerability.");
+        }
 		
 		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(vulnerabilityIds);
-		
+
 		if (defectService.mergeDefect(vulnerabilities, defectViewModel.getId())) {
-			ControllerUtils.addSuccessMessage(request, "Vulnerability(s) was merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
+			return RestResponse.success("Vulnerability(s) was merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
 		} else {
-			ControllerUtils.addErrorMessage(request, "Vulnerability(s) could not be merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
+            return RestResponse.failure("Vulnerability(s) could not be merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
 		}
-	
-		model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-		return "ajaxRedirectHarness";
 	}
 }

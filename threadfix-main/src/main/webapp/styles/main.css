@@ -935,6 +935,10 @@ div.box-shadow {
     padding-left:435px;
     width:70px;
 }
+.modal-spinner-div {
+    padding-left:300px;
+    width:70px;
+}
 
 .modal-loading {
     width:100%;
@@ -1026,7 +1030,6 @@ div.box-shadow {
 
 div.filter-modal.modal ul {
     z-index: 1100;
-
 }
 
 div.filter-modal.modal {
@@ -1035,6 +1038,12 @@ div.filter-modal.modal {
     max-width:900px;
     overflow: auto;
     text-align:left;
+}
+
+div.submit-defect-form.modal {
+    margin-left:-350px;
+    width: 700px;
+    max-width:700px;
 }
 
 .uploadable {
