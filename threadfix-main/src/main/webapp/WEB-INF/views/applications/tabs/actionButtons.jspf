@@ -1,0 +1,23 @@
+<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+    <div ng-show="vulns" id="btnDiv1" class="btn-group">
+        <button ng-hide="submitting" id="actionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
+            Action <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+
+            <c:if test="${ canSubmitDefects }">
+                <li><a ng-show="vulnType === 'Open'" class="pointer" id="submitDefectButton1" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
+            </c:if>
+            <c:if test="${ canModifyVulnerabilities }">
+                <li><a ng-show="vulnType === 'Open'" class="pointer" id="closeVulnsButton1" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>
+                <li><a ng-show="vulnType === 'Closed'" class="pointer" id="openVulnsButton1" ng-click="openVulnerabilities()">Open Vulnerabilities</a></li>
+                <li><a ng-show="vulnType !== 'False Positive'" class="pointer" id="markFalsePositivesButton1" ng-click="markFalsePositives()">Mark as False Positive</a></li>
+                <li><a ng-show="vulnType === 'False Positive'" class="pointer" id="unmarkFalsePositivesButton1" ng-click="unmarkFalsePositives()">Unmark as False Positive</a></li>
+            </c:if>
+        </ul>
+        <button ng-disabled class="btn" ng-show="submitting">
+            <span class="spinner dark"></span>
+            Submitting
+        </button>
+    </div>
+</c:if>

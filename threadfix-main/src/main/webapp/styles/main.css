@@ -1058,3 +1058,16 @@ body.dragover .uploadable {
     opacity: .95;
     z-index: 1040;
 }
+
+.filter-table {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.filter-table input {
+    margin-bottom:5px;
+}
+
+.filter-table .span2 {
+    margin-top:7px;
+}

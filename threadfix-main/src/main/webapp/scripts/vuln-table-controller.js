@@ -10,7 +10,11 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     var getTableSortBean = function(vulnIds) {
         var object = {
-            page: $scope.page
+            page: $scope.page,
+            cweFilter: $scope.cweFilter,
+            severityFilter: $scope.severityFilter,
+            parameterFilter: $scope.parameterFilter,
+            locationFilter: $scope.locationFilter
         }
 
         if (vulnIds) {
@@ -91,13 +95,19 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             $scope.vulnType = 'Open';
         }
 
+        if (!$scope.vulns) {
+            $scope.vulns = [];
+        }
+
+        $scope.filtered = $scope.hasFilters();
+
         $scope.loading = false;
 
         calculateShowTypeSelect();
     }
 
     // Listeners / refresh stuff
-    var refresh = function(newValue, oldValue) {
+    $scope.refresh = function(newValue, oldValue) {
         if (newValue !== oldValue) {
             $scope.loading = true;
             $http.post($window.location.pathname + "/table" + $scope.csrfToken,
@@ -123,35 +133,44 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     // Define listeners
 
-    $scope.$watch('vulnType', refresh);
+    $scope.$watch('vulnType', $scope.refresh);
 
     $scope.$watch('csrfToken', function() {
-        return refresh(true, false);
+        return $scope.refresh(true, false);
     });
 
-    $scope.$watch('page', refresh); // TODO look at caching some of this
+    $scope.$watch('page', $scope.refresh); // TODO look at caching some of this
 
     $scope.$watch('numVulns', function() {
+
+        var descriptor = $scope.vulnType;
+
+        if ($scope.hasFilters()) {
+            descriptor = 'Filtered ' + descriptor;
+        }
+
         if ($scope.numVulns === 1) {
-            $scope.heading = '1 ' + $scope.vulnType + ' Vulnerability';
+            $scope.heading = '1 ' + descriptor + ' Vulnerability';
         } else {
-            $scope.heading = $scope.numVulns + ' ' + $scope.vulnType + ' Vulnerabilities';
+            $scope.heading = $scope.numVulns + ' ' + descriptor + ' Vulnerabilities';
         }
     });
 
     $scope.$on('scanUploaded', function() {
         $scope.empty = false;
-        refresh();
+        $scope.refresh();
     });
 
     $scope.$on('scanDeleted', function() {
-        refresh();
+        $scope.refresh();
         $scope.empty = $scope.numVulns === 0;
     });
 
     // Define bulk operations
 
     var bulkOperation = function(urlExtension) {
+
+        $scope.submitting = true;
 
         var object = getTableSortBean($scope.vulns.filter(function(vuln) {
             return vuln.checked;
@@ -168,9 +187,12 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }
+                $scope.submitting = false;
+
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed. HTTP status was " + status;
+                $scope.submitting = false;
             });
     }
 
@@ -188,6 +210,23 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.unmarkFalsePositives = function() {
         bulkOperation("/falsePositives/unmark");
+    }
+
+    $scope.hasFilters = function() {
+        return $scope.cweFilter || $scope.severityFilter || $scope.parameterFilter || $scope.locationFilter;
+    }
+
+    $scope.clearFilters = function() {
+        var shouldRefresh = $scope.hasFilters();
+
+        $scope.cweFilter = '';
+        $scope.severityFilter = '';
+        $scope.parameterFilter = '';
+        $scope.locationFilter = '';
+
+        if (shouldRefresh) {
+            $scope.refresh(true, false);
+        }
     }
 
 });

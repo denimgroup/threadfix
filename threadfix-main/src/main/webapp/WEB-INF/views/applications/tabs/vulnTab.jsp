@@ -2,44 +2,28 @@
      ng-init="numVulns = <c:out value="${numVulns}"/>"
      heading="{{ heading }}">
 
-    <div ng-show="showTypeSelect" class="btn-group" style="padding-bottom:10px">
+    <div ng-hide="empty || vulns || hasFilters()" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
+    <%@ include file="actionButtons.jspf" %>
+
+    <div ng-show="showTypeSelect" class="btn-group">
         <button type="button" class="btn" ng-model="vulnType" btn-radio="'Open'">{{ numOpen }} Open</button>
         <button ng-show="numClosed > 0" type="button" class="btn" ng-model="vulnType" btn-radio="'Closed'">{{ numClosed }} Closed</button>
         <button ng-show="numFalsePositive > 0" type="button" class="btn" ng-model="vulnType" btn-radio="'False Positive'">{{ numFalsePositive }} False Positive</button>
         <button ng-show="numHidden > 0" type="button" class="btn" ng-model="vulnType" btn-radio="'Hidden'">{{ numHidden }} Hidden</button>
     </div>
 
-    <br>
+    <span ng-show="vulns && loading" style="float:right" class="spinner dark"></span>
 
-    <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
-        <div ng-show="vulns" id="btnDiv1" class="btn-group">
-            <button ng-hide="loading" id="actionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
-                Action <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
+    <%@ include file="filter.jspf" %>
 
-                <c:if test="${ canSubmitDefects }">
-                    <li><a ng-show="vulnType === 'Open'" class="pointer" id="submitDefectButton1" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
-                </c:if>
-                <c:if test="${ canModifyVulnerabilities }">
-                    <li><a ng-show="vulnType === 'Open'" class="pointer" id="closeVulnsButton1" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>
-                    <li><a ng-show="vulnType === 'Closed'" class="pointer" id="openVulnsButton1" ng-click="openVulnerabilities()">Open Vulnerabilities</a></li>
-                    <li><a ng-show="vulnType !== 'False Positive'" class="pointer" id="markFalsePositivesButton1" ng-click="markFalsePositives()">Mark as False Positive</a></li>
-                    <li><a ng-show="vulnType === 'False Positive'" class="pointer" id="unmarkFalsePositivesButton1" ng-click="unmarkFalsePositives()">Unmark as False Positive</a></li>
-                </c:if>
-            </ul>
-            <button ng-disabled class="btn" ng-show="loading">
-                <span ng-show="loading" class="spinner dark"></span>
-                Submitting
-            </button>
-        </div>
-    </c:if>
-
-    <div ng-show="empty" class="empty-tab-drop-area">
+    <div ng-show="empty && !filtered" class="empty-tab-drop-area">
         <div>Drop a scan here to upload.</div>
     </div>
 
-    <div ng-hide="empty || vulns" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+    <div ng-show="empty && filtered" class="alert alert-danger">
+        These filters found 0 results.
+    </div>
 
     <div ng-show="vulns">
         <div class="pagination no-margin" ng-show="numVulns > 100" >
@@ -47,7 +31,6 @@
 
             <input  ng-enter="goToPage()" style="width:50px" type="number" ng-model="pageInput"/>
             <button class="btn" ng-click="goToPage()"> Go to Page </button>
-            <span ng-show="loading" style="float:right" class="spinner dark"></span>
         </div>
 
         <table class="table sortable table-hover tf-colors" style="table-layout: fixed;" id="anyid">
@@ -338,23 +321,6 @@
         <%--</c:if>--%>
     </div>
 
-    <!-- TODO reduce duplication -->
-    <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
-        <div ng-show="vulns" id="btnDiv1" class="btn-group">
-            <button id="actionItems2" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
-                Action <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-
-                <c:if test="${ canSubmitDefects }">
-                    <li><a class="pointer" id="submitDefectButton2" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
-                </c:if>
-                <c:if test="${ canModifyVulnerabilities }">
-                    <li><a class="pointer" id="closeVulnsButton2" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>
-                    <li><a class="pointer" id="markFalsePositivesButton2" ng-click="markVulnerabilitiesAsFalsePositive()">Mark as False Positive</a></li>
-                </c:if>
-            </ul>
-        </div>
-    </c:if>
+    <%@ include file="actionButtons.jspf" %>
 
 </tab>
