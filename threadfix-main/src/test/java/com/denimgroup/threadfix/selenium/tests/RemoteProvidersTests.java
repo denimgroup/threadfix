@@ -32,8 +32,6 @@ import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
 
 
 public class RemoteProvidersTests extends BaseTest {
-
-    private RemoteProvidersIndexPage remoteProvidersIndexPage;
 	
 	private static String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
 	private static String VERACODE_USER = System.getProperty("VERACODE_USERNAME");
@@ -52,7 +50,7 @@ public class RemoteProvidersTests extends BaseTest {
 
 	@Test
 	public void configureSentinel() {
-		remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -71,7 +69,7 @@ public class RemoteProvidersTests extends BaseTest {
     @Ignore
 	@Test
 	public void invalidSentinel(){
-		remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI("This should't Work!")
@@ -83,7 +81,7 @@ public class RemoteProvidersTests extends BaseTest {
 
 	@Test
 	public void configureVeracode() {
-		remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
@@ -101,7 +99,7 @@ public class RemoteProvidersTests extends BaseTest {
 	
 	@Test
 	public void invalidVeracode(){
-		remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername("No Such User")
@@ -115,7 +113,7 @@ public class RemoteProvidersTests extends BaseTest {
 	@Ignore
 	@Test
 	public void configureQualys() {
-		remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
