@@ -1075,6 +1075,7 @@ body.dragover .uploadable {
 
 .filter-table input {
     margin-bottom:5px;
+    width:700px;
 }
 
 .filter-table .span2 {

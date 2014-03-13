@@ -8,10 +8,22 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.vulnType = 'Open';
 
+    var getCweFilter = function() {
+        if ($scope.cweFilter) {
+            var myRe = /CWE ([0-9]+)/g;
+            var myArray = myRe.exec($scope.cweFilter)
+            if (myArray) {
+                return myArray[1];
+            }
+        }
+
+        return '';
+    };
+
     var getTableSortBean = function(vulnIds) {
         var object = {
             page: $scope.page,
-            cweFilter: $scope.cweFilter,
+            cweFilter: getCweFilter(),
             severityFilter: $scope.severityFilter,
             parameterFilter: $scope.parameterFilter,
             locationFilter: $scope.locationFilter
@@ -82,6 +94,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     var refreshSuccess = function(data) {
         $scope.vulns = data.object.vulnerabilities;
+        $scope.genericVulnerabilities = data.object.genericVulnerabilities;
         $scope.numVulns = data.object.numVulns;
         $scope.numClosed = data.object.numClosed;
         $scope.numOpen = data.object.numOpen;

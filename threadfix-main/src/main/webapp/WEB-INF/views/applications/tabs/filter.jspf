@@ -7,19 +7,30 @@
     <div class="filter-table">
         <div class="row">
             <div class="span2">Vulnerability Type</div>
-            <div class="span4"><input type="text" ng-model="cweFilter"></div>
+            <div class="span4">
+                <input type="text"
+                      class="form-control"
+                      ng-model="cweFilter"
+                      typeahead="(vulnerability.name + ' (CWE ' + vulnerability.id + ')') for vulnerability in genericVulnerabilities | filter:$viewValue | limitTo:10"/>
+            </div>
         </div>
         <div class="row">
             <div class="span2">Severity Filter</div>
-            <div class="span4"><input type="text" ng-model="severityFilter"></div>
+            <div class="span4">
+                <input type="text" ng-model="severityFilter"/>
+            </div>
         </div>
         <div class="row">
             <div class="span2">Path Filter</div>
-            <div class="span4"><input type="text" ng-model="locationFilter"></div>
+            <div class="span4">
+                <input type="text" ng-model="locationFilter"/>
+            </div>
         </div>
         <div class="row">
             <div class="span2">Parameter Filter</div>
-            <div class="span4"><input type="text" ng-model="parameterFilter"></div>
+            <div class="span4">
+                <input type="text" ng-model="parameterFilter"/>
+            </div>
         </div>
     </div>
 </div>
