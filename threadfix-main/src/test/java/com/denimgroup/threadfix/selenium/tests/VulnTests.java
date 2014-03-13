@@ -2,23 +2,23 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.*;
 
+import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import javax.xml.crypto.Data;
 
 public class VulnTests extends BaseTest {
 
 	private String teamName = getRandomString(8);
 	private String appName = getRandomString(8);
 	private String defectTrackerName = getRandomString(8);
-	
+    private ApplicationDetailPage applicationDetailPage;
+
 	private final static int JIRA = 0;
 	private final static int BUG = 1;
 	private final static int TFS = 2;
@@ -37,6 +37,8 @@ public class VulnTests extends BaseTest {
 	private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
 	private static final String TFS_URL = System.getProperty("TFS_URL");
 	private static final String TFS_PROJECTNAME = "Vulnerability Manager Demo";
+    private static final String API_KEY = System.getProperty("API_KEY");
+    private static final String REST_URL = System.getProperty("REST_URL");
 
 
     static {
@@ -76,59 +78,58 @@ public class VulnTests extends BaseTest {
         if (TFS_URL == null){
             throw new RuntimeException("Please set TFS_URL property.");
         }
+        if (API_KEY == null) {
+            throw new RuntimeException("Please set API_KEY in run configuration.");
+        }
+        if (REST_URL == null) {
+            throw new RuntimeException("Please set REST_URL in run configuration.");
+        }
     }
 	
 	@Test
 	public void mergeSingleVulnJira(){
+        int boxNumber = 1;
 		assertTrue("Jira",build(JIRA));
 		//merge here
 		//nav to app detail page
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-											.clickOrganizationHeaderLink()
-											.expandTeamRowByIndex(teamName)
-											.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
-				.clickVulnCheckBox(1)
+		applicationDetailPage.clickExpandAllVulns()
+				.clickVulnCheckBox(boxNumber)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-157")
 				.clickMergeDefectSubmit();
 		
 		//verify
-		ad = ad.clickExpandAllVulns();
+        applicationDetailPage.clickExpandAllVulns();
 		
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 1);
 
-        ad.clickOrganizationHeaderLink();
-		
-		ad.logout();
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 
 	@Test
 	public void mergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("2")
 				.clickMergeDefectSubmit();
 
 		//verify
-		ad = ad.clickExpandAllVulns();
+        applicationDetailPage.clickExpandAllVulns();
 
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 1);
 
-        ad.clickOrganizationHeaderLink();
+        applicationDetailPage.clickOrganizationHeaderLink();
 
-        ad.logout();
-		destroy();
+        applicationDetailPage.logout();
 	}
 
     @Ignore
@@ -136,18 +137,14 @@ public class VulnTests extends BaseTest {
 	public void mergeSingleVulnTFS(){
 		assertTrue("bug",build(TFS));
 		//merge here
-		destroy();
 	}
 	
 	@Test
 	public void mergeMultiVulnJira(){
 		assertTrue("Jira",build(JIRA));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
@@ -156,25 +153,21 @@ public class VulnTests extends BaseTest {
 				.clickMergeDefectSubmit();
 
 		//verify
-		ad = ad.clickExpandAllVulns();
+		applicationDetailPage.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 3);
 
-        ad.clickOrganizationHeaderLink();
+        applicationDetailPage.clickOrganizationHeaderLink();
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.logout();
 	}
 
 	@Test
 	public void mergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
@@ -183,14 +176,13 @@ public class VulnTests extends BaseTest {
 				.clickMergeDefectSubmit();
 
 		//verify
-		ad = ad.clickExpandAllVulns();
+        applicationDetailPage.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 3);
 
-        ad.clickOrganizationHeaderLink();
+        applicationDetailPage.clickOrganizationHeaderLink();
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.logout();
 	}
 
 	@Ignore
@@ -198,69 +190,60 @@ public class VulnTests extends BaseTest {
 	public void mergeMultiVulnTFS(){
 		assertTrue("bug",build(TFS));
 		//merge here
-		destroy();
 	}
 	
 	@Test
 	public void changeMergeSingleVulnJira(){
 		assertTrue("Jira",build(JIRA));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-156")
 				.clickMergeDefectSubmit();
 
 		//change merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-155")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
+        applicationDetailPage.clickExpandAllVulns();
 
-        ad.clickOrganizationHeaderLink();
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 1);
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 
 	@Test
 	public void changeMergeSingleVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("2")
 				.clickMergeDefectSubmit();
 
 		//change merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
                 .clickVulnCheckBox(1)
 				.clickMergeDefectLink()
 				.selectMergeDefect("4")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 1);
+        applicationDetailPage.clickExpandAllVulns();
 
-        ad.clickOrganizationHeaderLink();
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 1);
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 
 	@Ignore
@@ -268,76 +251,67 @@ public class VulnTests extends BaseTest {
 	public void changeMergeSingleVulnTFS(){
 		assertTrue("bug",build(TFS));
 		//merge here
-		destroy();
 	}
 	
 	@Test
 	public void changeMergeMultiVulnJira(){
 		assertTrue("Jira",build(JIRA));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-163")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns()
+
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-164")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
+        applicationDetailPage.clickExpandAllVulns();
 
-        ad.clickOrganizationHeaderLink();
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 3);
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 
 	@Test
 	public void changeMergeMultiVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("2")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns()
+
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("4")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 3);
+        applicationDetailPage.clickExpandAllVulns();
 
-        ad.clickOrganizationHeaderLink();
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 3);
 
-   		ad.logout();
-		
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
+
 	}
 
 	@Ignore
@@ -345,91 +319,82 @@ public class VulnTests extends BaseTest {
 	public void changeMergeMultiVulnTFS(){
 		assertTrue("bug",build(TFS));
 		//merge here
-		destroy();
 	}
 	
 	@Test
 	public void changeMergeMultiDiffVulnJira(){
 		assertTrue("Jira",build(JIRA));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-183")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns()
+
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(4)
 				.clickVulnCheckBox(5)
 				.clickVulnCheckBox(6)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-184")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns()
+
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(4)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("THREAD-185")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 6);
+        applicationDetailPage.clickExpandAllVulns();
 
-        ad.clickOrganizationHeaderLink();
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 6);
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 
 	@Test
 	public void changeMergeMultiDiffVulnBugzilla(){
 		assertTrue("bug",build(BUG));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
-				.clickViewAppLink(appName, teamName);
+
 		//submit merge
-		ad = ad.clickExpandAllVulns()
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("2")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns()
+
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(4)
 				.clickVulnCheckBox(5)
 				.clickVulnCheckBox(6)
 				.clickMergeDefectLink()
 				.selectMergeDefect("4")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns()
+
+        applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickVulnCheckBox(6)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
 				.selectMergeDefect("3")
 				.clickMergeDefectSubmit();
-		
-		ad = ad.clickExpandAllVulns();
 
-		assertTrue("Number of submitted vulns is incorrect",ad.getNumOfSubmitedDefects() == 6);
+        applicationDetailPage.clickExpandAllVulns();
 
-        ad.clickOrganizationHeaderLink();
+		assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 6);
 
-		ad.logout();
-		destroy();
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 
 	}
 
@@ -438,24 +403,25 @@ public class VulnTests extends BaseTest {
 	public void changeMergeMultiDiffVulnTFS(){
 		assertTrue("bug",build(TFS));
 		//merge here
-		destroy();
+
 	}
 
 	@Test
 	public void submitBlankDefect(){
 		assertTrue("blank defect",build(JIRA));
-		ApplicationDetailPage ad = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
+
+        applicationDetailPage.clickOrganizationHeaderLink()
 				.expandTeamRowByIndex(teamName)
 				.clickViewAppLink(appName, teamName)
 				.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickSubmitDefectLink()
 				.submitDefect();
-		assertTrue("defect was not submitted",ad.getAlert().contains("The Defect was submitted to the tracker."));
-        ad.clickOrganizationHeaderLink();
-		ad.logout();
-		destroy();
+
+		assertTrue("defect was not submitted", applicationDetailPage.getAlert().contains("The Defect was submitted to the tracker."));
+        applicationDetailPage.clickOrganizationHeaderLink();
+        applicationDetailPage.logout();
+
 		
 	}
 	
@@ -493,66 +459,32 @@ public class VulnTests extends BaseTest {
 				return false;
 		}
 
-		//add team
-		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
 
-        sleep(2000);
-		
-		//add app
-		teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName)
-					.addNewApplication(teamName, appName, "", "Low")
-					.saveApplication(teamName);
-		
+        TeamIndexPage ti = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+
+
 		//add defect Tracker
-		DefectTrackerIndexPage defectTrackerIndexPage = teamIndexPage.clickDefectTrackersLink()
-																	.clickAddDefectTrackerButton()
-																	.enterName(null, defectTrackerName)
-																	.enterType(null, defectTrackerAppName)
-																	.enterURL(null, defectTrackerURL)
-																	.clickSaveNewDefectTracker();
+		DefectTrackerIndexPage defectTrackerIndexPage = ti.clickDefectTrackersLink()
+														  .clickAddDefectTrackerButton()
+														  .enterName(null, defectTrackerName)
+														  .enterType(null, defectTrackerAppName)
+														  .enterURL(null, defectTrackerURL)
+														  .clickSaveNewDefectTracker();
 
 		//attach defect Tracker
-		ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
-																			.expandTeamRowByIndex(teamName)
-																			.clickViewAppLink(appName, teamName)
-																			.addDefectTracker(defectTrackerName, userName, password, projectName);
-		//import scan
-		applicationDetailPage.clickRemoteProvidersLink()
-                            .clickRemoteProvidersLink()
-                            .clickRemoteProvidersLink()
-                            .clickRemoteProvidersLink()
-							.clickConfigureWhiteHat()
-							.setWhiteHatAPI(whiteHatKey)
-							.saveWhiteHat()
-							.clickEditMapping(whiteHatAppName)
-							.setTeamMapping(whiteHatAppName, teamName)
-							.setAppMapping(whiteHatAppName, appName)
-							.clickSaveMapping(whiteHatAppName)
-							.clickImportScan(whiteHatAppName)
-							.clickOrganizationHeaderLink()
-							.logout();
+		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+							   .expandTeamRowByIndex(teamName)
+							   .clickViewAppLink(appName, teamName)
+							   .addDefectTracker(defectTrackerName, userName, password, projectName);
 
-		
-		
 		return true;
 	}
 	
-	private void destroy(){
-		loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickViewTeamLink(teamName)
-				.clickDeleteButton()
-				.clickRemoteProvidersLink()
-				.clickRemoveWhiteHatConfig()
-				.clickDefectTrackersLink()
-				.clickDeleteButton(defectTrackerName)
-                .clickOrganizationHeaderLink()
-                .logout();
-	}
+
 
 
 }

@@ -85,7 +85,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickTestConnection() {
         driver.findElementById("jsonLink").click();
-        waitForElement(driver.findElementById("jsonResult"));
+        waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -144,7 +144,7 @@ public class ApplicationDetailPage extends BasePage {
                 .clickTestConnection()
                 .selectProduct(productname)
                 .clickSubmitTrackerButton();
-        waitForElement(driver.findElementById("submitDTModal"));
+        //waitForElement(driver.findElementById("submitDTModal"));
         sleep(5000);
         return new ApplicationDetailPage(driver);
 		/*
@@ -599,7 +599,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public int getNumOfSubmitedDefects() {
-        return driver.findElementById("anyid").findElements(By.className("transparent_png")).size();
+        int temp;
+        temp = driver.findElementById("anyid").findElements(By.className("transparent_png")).size();
+        return temp;
     }
 
     public ApplicationDetailPage clickDefectActionBtn() {
