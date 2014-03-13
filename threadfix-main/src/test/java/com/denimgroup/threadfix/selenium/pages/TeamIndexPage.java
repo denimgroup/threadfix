@@ -231,10 +231,8 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage saveApplication(String teamName) {
-        WebDriverWait driverWait = new WebDriverWait(driver, 10);
-        WebElement tempElement = driverWait.until(ExpectedConditions.elementToBeClickable(By.id("submitAppModal" + teamName)));
-        tempElement.click();
-        sleep(1000);
+        driver.findElementById("submitAppModal" + teamName).click();
+        sleep(3000);
         return new TeamIndexPage(driver);
     }
 
@@ -257,6 +255,7 @@ public class TeamIndexPage extends BasePage {
         sleep(1000);
         return new TeamIndexPage(driver);
     }
+
 
     public TeamIndexPage addNewApplication(String teamName, String appName,String url, String criticality) {
         clickAddNewApplication(teamName);
