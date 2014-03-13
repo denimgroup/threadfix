@@ -40,17 +40,25 @@
                         <th style="width:12px" class="first unsortable"><input type="checkbox" id="chkSelectAll" ng-model="allSelected" ng-click="toggleAll()"></th>
                     </c:if>
                     <th style="width:8px;"></th>
-                    <th style="width:64px" class="pointer">
-                        Severity<span id="headerCaret2" class="caret-down"></span>
+                    <th style="width:64px" class="pointer" ng-click="setSort('Severity')">
+                        Severity<span id="headerCaret2"
+                                      class="caret-down"
+                                      ng-class="{ expanded: sortType === 'Severity'}"></span>
                     </th>
-                    <th style="width:260px" class="pointer">
-                        Type<span id="headerCaret1" class="caret-down"></span>
+                    <th style="width:260px" class="pointer" ng-click="setSort('Type')">
+                        Type<span id="headerCaret1"
+                                  class="caret-down"
+                                  ng-class="{ expanded: sortType === 'Type'}"></span>
                     </th>
-                    <th style="width:220px" class="pointer">
-                        Path<span id="headerCaret3" class="caret-down"></span>
+                    <th style="width:220px" class="pointer" ng-click="setSort('Path')">
+                        Path<span id="headerCaret3"
+                                  class="caret-down"
+                                  ng-class="{ expanded: sortType === 'Path'}"></span>
                     </th>
-                    <th class="pointer" style="width:90px;">
-                        Parameter<span id="headerCaret4" class="caret-down"></span>
+                    <th class="pointer" style="width:90px;" ng-click="setSort('Parameter')">
+                        Parameter<span id="headerCaret4"
+                                       class="caret-down"
+                                       ng-class="{ expanded: sortType === 'Parameter'}"></span>
                     </th>
                     <th style="width:24px;"></th>
                     <th ng-show="application.defectTracker" style="width:24px;"></th>

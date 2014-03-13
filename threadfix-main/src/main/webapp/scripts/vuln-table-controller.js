@@ -8,6 +8,9 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.vulnType = 'Open';
 
+    $scope.sortType = 'Type';
+    $scope.sort = 1;
+
     var getCweFilter = function() {
         if ($scope.cweFilter) {
             var myRe = /CWE ([0-9]+)/g;
@@ -20,14 +23,34 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         return '';
     };
 
+    $scope.setSort = function(newSortType) {
+
+        $scope.sort = newSortType === $scope.sortType ?
+            ($scope.sort == 2 ? 1 : 2) : 1;
+
+        $scope.page = 1;
+        $scope.sortType = newSortType;
+        $scope.refresh(true, false);
+
+    };
+
     var getTableSortBean = function(vulnIds) {
         var object = {
             page: $scope.page,
             cweFilter: getCweFilter(),
             severityFilter: $scope.severityFilter,
             parameterFilter: $scope.parameterFilter,
-            locationFilter: $scope.locationFilter
+            locationFilter: $scope.locationFilter,
+            sort: $scope.sort // 1 is ascending, 2 is descending
         }
+
+        var field = ["",
+            "Type",
+            "Severity",
+            "Path",
+            "Parameter"].indexOf($scope.sortType);
+
+        object.field = field;
 
         if (vulnIds) {
             object.vulnerabilityIds = vulnIds;
