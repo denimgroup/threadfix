@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -50,7 +51,8 @@ public abstract class BasePage {
 	public BasePage(WebDriver webdriver){
 		driver =  (RemoteWebDriver) webdriver;
 		driver.manage().timeouts().implicitlyWait(NUM_SECONDS_TO_WAIT, TimeUnit.SECONDS);
-		driver.manage().window().maximize();
+        Dimension dimensions = new Dimension(1250,1020);
+        driver.manage().window().setSize(dimensions);
 	}
 	/*--------------click functions--------------*/
 	public LoginPage logout() {
