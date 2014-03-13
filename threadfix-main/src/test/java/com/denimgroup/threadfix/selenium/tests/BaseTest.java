@@ -54,7 +54,8 @@ public abstract class BaseTest {
 	public void init() {
         TeamIndexCache.getCache().clear();
         loginPage = LoginPage.open(driver);
-	}
+        driver.manage().window().maximize();
+    }
 
 	@After
 	public void shutDown() {
