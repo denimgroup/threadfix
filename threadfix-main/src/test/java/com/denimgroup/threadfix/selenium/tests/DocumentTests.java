@@ -38,9 +38,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class DocumentTests extends BaseTest {
 
-	public ApplicationDetailPage applicationDetailPage;
-	public TeamIndexPage teamIndexPage;
-
 	public String appWasAlreadyUploadedErrorText = "Scan file has already been uploaded.";
 	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
 	
@@ -54,10 +51,10 @@ public class DocumentTests extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-		teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-		applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 		
 		for (Entry<String, String> mapEntry : fileMap.entrySet()) {

@@ -33,8 +33,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 public class DashboardTests extends BaseTest{
 
-	private DashboardPage dashboardPage;
-
 	@Test
 	public void dashboardGraphsDisplayTest(){
         String teamName = "dashboardGraphTestTeam" + getRandomString(3);
@@ -44,7 +42,7 @@ public class DashboardTests extends BaseTest{
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
-		dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.login("user", "password");
 
 		assertFalse("6 month vulnerability graph is not displayed", dashboardPage.is6MonthGraphNoDataFound());
 		assertFalse("Top 10 vulnerabilities graph is not displayed", dashboardPage.isTop10GraphNoDataFound());
@@ -59,7 +57,7 @@ public class DashboardTests extends BaseTest{
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
-        dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.login("user", "password");
 
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
