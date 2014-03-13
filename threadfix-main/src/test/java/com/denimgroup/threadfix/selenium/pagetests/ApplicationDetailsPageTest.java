@@ -235,7 +235,7 @@ public class ApplicationDetailsPageTest extends BaseTest {
 
 
         dashboardPage.clickOrganizationHeaderLink()
-                .expandTeamRowByIndex(teamName)
+                .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "", "Low")
                 .saveApplication(teamName)
                 .clickViewAppLink(appName, teamName)

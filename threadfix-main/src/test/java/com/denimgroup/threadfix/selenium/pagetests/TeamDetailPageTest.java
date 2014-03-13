@@ -147,7 +147,7 @@ public class TeamDetailPageTest extends BaseTest {
                 .addNewTeam();
 
 		//Add Application
-		teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName)
+		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "", "Low")
                 .saveApplication(teamName);
 
