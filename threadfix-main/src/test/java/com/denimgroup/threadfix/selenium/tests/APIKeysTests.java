@@ -139,8 +139,8 @@ public class APIKeysTests extends BaseTest {
 
         //Edit API Key with short note to have long note
         apiIndexPage = apiIndexPage.clickEdit(shortNote)
-                .setNote(shortNote, longNoteB)
-                .clickSubmitButton(longNoteB)
+                .setNote(longNoteB, shortNote)
+                .clickSubmitButton(shortNote)
                 .waitModalDisappear();
 
         newWidth = apiIndexPage.getTableWidth();
