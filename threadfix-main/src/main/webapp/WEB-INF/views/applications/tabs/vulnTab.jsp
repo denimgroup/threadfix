@@ -154,11 +154,11 @@
 
                             <div class="right-tile">
                                 <h4>Comments</h4>
-                                <div class="vuln-table-box" id="commentDiv${ vulnerability.id }" style="width:450px;margin-bottom:10px;">
+                                <div class="vuln-table-box" id="commentDiv{{ vuln.id }}" style="width:450px;margin-bottom:10px;">
                                     <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
                                 </div>
                                 <br>
-                                <%@include file="/WEB-INF/views/applications/modals/vulnCommentModal.jsp"%>
+                                <a class="btn margin-bottom" ng-click="showCommentForm(vuln)">Add Comment</a>
                             </div>
                         </div>
                     </td>

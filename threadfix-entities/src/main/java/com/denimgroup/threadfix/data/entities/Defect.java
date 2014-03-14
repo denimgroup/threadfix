@@ -119,7 +119,8 @@ public class Defect extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "defect")
-	public List<Vulnerability> getVulnerabilities() {
+    @JsonIgnore
+    public List<Vulnerability> getVulnerabilities() {
 		return vulnerabilities;
 	}
 

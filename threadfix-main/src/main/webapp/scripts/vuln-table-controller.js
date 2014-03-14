@@ -23,6 +23,36 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         return '';
     };
 
+    // TODO refactor this controller into several controllers
+    // /organizations/{orgId}/applications/{applicationId}/vulnerabilities/{vulnerabilityId}/addComment
+
+    $scope.showCommentForm = function(vuln) {
+        var modalInstance = $modal.open({
+            templateUrl: 'vulnCommentForm.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return window.location.pathname + "/vulnerabilities/" + vuln.id + "/addComment" + $scope.csrfToken;
+                },
+                object: function () {
+                    return {};
+                },
+                buttonText: function() {
+                    return "Add Comment";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (comments) {
+            vuln.vulnerabilityComments = comments
+            $log.info("Successfully added comment.");
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+
     $scope.setSort = function(newSortType) {
 
         $scope.sort = newSortType === $scope.sortType ?
@@ -76,9 +106,12 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         $scope.page = $scope.pageInput;
     }
 
+    $scope.dateToString = function(date) {
+        var time = new Date(date)
+        return (time.getMonth() + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes());
+    }
     var setDate = function(finding) {
-        var time = new Date(finding.importTime)
-        finding.importTime = (time.getMonth() + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes());
+        finding.importTime = $scope.dateToString(finding.importTime);
     }
 
     $scope.expand = function(vuln) {

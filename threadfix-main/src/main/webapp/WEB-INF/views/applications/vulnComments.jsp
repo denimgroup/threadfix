@@ -1,5 +1,3 @@
-<%@ include file="/common/taglibs.jsp"%>
-
 <table class="table">
 	<thead>
 		<tr>
@@ -10,25 +8,19 @@
 		<tr>
 	</thead>
 	<tbody>
-		<c:if test="${ empty vulnerability.vulnerabilityComments }">
-			<tr class="bodyRow">
-				<td colspan="4" style="text-align:center;">No comments found.</td>
-			</tr>
-		</c:if>
-	
-		<c:forEach var="comment" items="${ vulnerability.vulnerabilityComments }" varStatus="status">
-			<tr class="bodyRow left-align">
-				<td id="commentNum${ status.count }"><c:out value="${ status.count }" /></td>
-				<td id="commentUser${ status.count }"><c:out value="${ comment.user.name }" /></td>
-				<td id="commentDate${ status.count }"><fmt:formatDate value="${ comment.time }"
-						pattern="hh:mm:ss MM/dd/yyyy" /></td>
-				<td id="commentText${ status.count }">
-					<div class="vuln-comment-word-wrap">
-						<c:out value="${ comment.comment }" />
-					</div>
-				</td>
-			</tr>
-		</c:forEach>
+        <tr ng-hide="vuln.vulnerabilityComments" class="bodyRow">
+            <td colspan="4" style="text-align:center;">No comments found.</td>
+        </tr>
+        <tr ng-show="vuln.vulnerabilityComments" ng-repeat="comment in vuln.vulnerabilityComments" class="bodyRow left-align">
+            <td id="commentNum{{ $index }}">{{ $index + 1 }}</td>
+            <td id="commentUser{{ $index }}">{{ comment.username }}</td>
+            <td id="commentDate{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td id="commentText{{ $index }}">
+                <div class="vuln-comment-word-wrap">
+                    {{ comment.comment }}
+                </div>
+            </td>
+        </tr>
 	</tbody>
 </table>
 
