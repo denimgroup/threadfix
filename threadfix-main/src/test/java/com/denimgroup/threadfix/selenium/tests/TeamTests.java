@@ -52,17 +52,6 @@ public class TeamTests extends BaseTest {
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
 	}
 
-    @Test
-    public void testExpandAndCollapseIndividualTeam(){
-        String teamName = getRandomString(8);
-        DatabaseUtils.createTeam(teamName);
-
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
-        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName);
-        assertTrue("Team info was not expanded properly.", teamIndexPage.isTeamExpanded(teamName));
-        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName);
-        assertFalse("Team info was not collapsed properly.", teamIndexPage.isTeamExpanded(teamName));
-    }
 
     // TODO possible deletion due to tables having a height of zero, the aren't 'not displayed'
     @Ignore

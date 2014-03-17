@@ -108,31 +108,7 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage addNewDefectTracker(String defectTrackerName,
-                                                     String defectTrackerURL, String defectTrackerType) {
-        // clickShowDetails().clickAddDefectTrackerButton().setUsername(defectTrackerName).setUrlInput(defectTrackerURL).selectProduct()
-        return new ApplicationDetailPage(driver);
-        /*
-         * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
-		 * "appInfoDiv"))); //TODO missing id
-		 * driver.findElementByLinkText("Add Defect Tracker").click();
-		 * wait.until
-		 * (ExpectedConditions.visibilityOfElementLocated(By.id("addDTForm")));
-		 * //TODO missing id
-		 * driver.findElementByLinkText("Add Defect Tracker").click();
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(
-		 * "createDefectTracker")));
-		 * driver.findElementById("nameInput").sendKeys(defectTrackerName);
-		 * driver.findElementById("urlInput").sendKeys(defectTrackerURL); new
-		 * Select
-		 * (driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText
-		 * (defectTrackerType); driver.findElementById("submitDTModal").click();
-		 * wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(
-		 * "createDefectTracker"))); //TODO currently does not allow you to add
-		 * a defect tracker from application detail page return new
-		 * ApplicationDetailPage(driver);
-		 */
-    }
+
 
     public ApplicationDetailPage addDefectTracker(String defectTracker,
                                                   String username, String password, String productname) {
@@ -144,28 +120,9 @@ public class ApplicationDetailPage extends BasePage {
                 .clickTestConnection()
                 .selectProduct(productname)
                 .clickSubmitTrackerButton();
-        //waitForElement(driver.findElementById("submitDTModal"));
         sleep(5000);
         return new ApplicationDetailPage(driver);
-		/*
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
-		 * .id("appInfoDiv"))); // TODO missing id
-		 * driver.findElementByLinkText("Add Defect Tracker").click();
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
-		 * .id("addDTForm"))); new
-		 * Select(driver.findElementById("defectTrackerId"))
-		 * .selectByVisibleText(defectTracker);
-		 * driver.findElementById("username").sendKeys(username);
-		 * driver.findElementById("password").sendKeys(password);
-		 * driver.findElementByLinkText("Test Connection").click();
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
-		 * .id("jsonResult"))); new
-		 * Select(driver.findElementById("projectList"))
-		 * .selectByVisibleText(productname);
-		 * driver.findElementById("submitDTModal").click();
-		 * wait.until(ExpectedConditions.invisibilityOfElementLocated(By
-		 * .id("addDTForm"))); return new ApplicationDetailPage(driver);
-		 */
+
     }
 
     public ApplicationDetailPage editDefectTracker(String defectTracker,
@@ -178,28 +135,9 @@ public class ApplicationDetailPage extends BasePage {
                 .clickTestConnection()
                 .selectProduct(productname)
                 .clickSubmitTrackerButton();
-//		waitForElement(driver.findElementById("defectTrackerText"));
         sleep(1000);
         return new ApplicationDetailPage(driver);
-		/*
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
-		 * .id("appInfoDiv"))); // TODO missing id
-		 * driver.findElementByLinkText("Add Defect Tracker").click();
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
-		 * .id("addDTForm"))); new
-		 * Select(driver.findElementById("defectTrackerId"))
-		 * .selectByVisibleText(defectTracker);
-		 * driver.findElementById("username").sendKeys(username);
-		 * driver.findElementById("password").sendKeys(password);
-		 * driver.findElementByLinkText("Test Connection").click();
-		 * wait.until(ExpectedConditions.visibilityOfElementLocated(By
-		 * .id("jsonResult"))); new
-		 * Select(driver.findElementById("projectList"))
-		 * .selectByVisibleText(productname);
-		 * driver.findElementById("submitDTModal").click();
-		 * wait.until(ExpectedConditions.invisibilityOfElementLocated(By
-		 * .id("addDTForm"))); return new ApplicationDetailPage(driver);
-		 */
+
     }
 
     public ApplicationDetailPage addNewWaf(String Name, String Type) {

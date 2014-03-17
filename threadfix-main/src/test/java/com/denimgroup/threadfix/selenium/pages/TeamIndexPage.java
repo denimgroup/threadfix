@@ -338,10 +338,6 @@ public class TeamIndexPage extends BasePage {
         return isClickable("addTeamModalButton");
 	}
 
-    public boolean isTeamExpanded(String teamName){
-        return driver.findElementById("teamAppTableDiv" + teamName).isDisplayed();
-    }
-
     public boolean areAllTeamsExpanded() {
         for (int i = 1; i <= getNumTeamRows(); i++){
             if (!(driver.findElementById("teamAppTableDiv" + i).isDisplayed())) {
