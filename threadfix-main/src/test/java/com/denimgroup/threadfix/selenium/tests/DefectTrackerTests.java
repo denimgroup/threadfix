@@ -49,7 +49,7 @@ public class DefectTrackerTests extends BaseTest {
     private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
     private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
     private static final String TFS_URL = System.getProperty("TFS_URL");
-    private static final String TFS_PROJECTNAME = System.getProperty("TFS_PROJECTNAME");
+    private static final String TFS_PROJECTNAME = ("Vulnerability Manager Demo");
 
 	String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
@@ -88,9 +88,6 @@ public class DefectTrackerTests extends BaseTest {
         if (BUGZILLA_URL == null){
             throw new RuntimeException("Please set BUGZILLA_URL property.");
         }
-        if (BUGZILLAPROJECTNAME == null){
-            throw new RuntimeException("Please set BUGZILLAPROJECTNAME property.");
-        }
         if (TFS_USERNAME == null){
             throw new RuntimeException("Please set TFS_USERNAME property.");
         }
@@ -99,9 +96,6 @@ public class DefectTrackerTests extends BaseTest {
         }
         if (TFS_URL == null){
             throw new RuntimeException("Please set TFS_URL property.");
-        }
-        if (TFS_PROJECTNAME == null){
-            throw new RuntimeException("Please set TFS_PROJECTNAME property.");
         }
     }
 
