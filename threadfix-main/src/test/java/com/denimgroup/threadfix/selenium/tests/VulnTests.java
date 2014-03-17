@@ -97,7 +97,7 @@ public class VulnTests extends BaseTest {
 		applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(boxNumber)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-157")
+				.selectMergeDefect("THREAD-190")
 				.clickMergeDefectSubmit();
 		
 		//verify
@@ -149,7 +149,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-157")
+				.selectMergeDefect("THREAD-185")
 				.clickMergeDefectSubmit();
 
 		//verify
@@ -200,14 +200,14 @@ public class VulnTests extends BaseTest {
         applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-156")
+				.selectMergeDefect("THREAD-175")
 				.clickMergeDefectSubmit();
 
 		//change merge
         applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-155")
+				.selectMergeDefect("THREAD-176")
 				.clickMergeDefectSubmit();
 
         applicationDetailPage.clickExpandAllVulns();
@@ -477,7 +477,7 @@ public class VulnTests extends BaseTest {
 
 		//attach defect Tracker
 		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
-							   .expandTeamRowByIndex(teamName)
+							   .expandTeamRowByName(teamName)
 							   .clickViewAppLink(appName, teamName)
 							   .addDefectTracker(defectTrackerName, userName, password, projectName);
 
