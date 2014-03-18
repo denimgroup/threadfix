@@ -507,17 +507,12 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void testSwitchDefectTrackers() {
-		assertFalse("JIRA_PASSWORD is not assigned from system properties",JIRA_PASSWORD == null);
-		assertFalse("JIRA_USERNAME is not assigned from system properties",JIRA_USERNAME == null);
-		assertFalse("JIRA_URL is not assigned from system properties",JIRA_URL == null);
-		assertFalse("JIRAPROJECTNAME is not assigned from system properties",JIRAPROJECTNAME == null);
-
 		String defectTracker1 = "testSwitchDefectTracker1" + getRandomString(3);
 		String defectTracker2 = "testSwitchDefectTracker2" + getRandomString(3);
-		String defectTrackerType = "Jira";
+		String defectTrackerType = "Bugzilla";
 
-		String teamName = "jIRAAttachTestTeam" + getRandomString(3);
-		String appName = "JIRAAttachTestApp" + getRandomString(3);
+		String teamName = "bugzillaAAttachTestTeam" + getRandomString(3);
+		String appName = "bugzillaAttachTestApp" + getRandomString(3);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -528,18 +523,18 @@ public class DefectTrackerTests extends BaseTest {
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .enterName(null,defectTracker1)
                 .enterType(null, defectTrackerType)
-                .enterURL(null, JIRA_URL)
+                .enterURL(null, BUGZILLA_URL)
                 .clickSaveNewDefectTracker()
                 .clickAddDefectTrackerButton()
                 .enterName(null,defectTracker2)
                 .enterType(null, defectTrackerType)
-                .enterURL(null, JIRA_URL)
+                .enterURL(null, BUGZILLA_URL)
                 .clickSaveNewDefectTracker();
 
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .addDefectTracker(defectTracker1, JIRA_USERNAME, JIRA_PASSWORD, JIRAPROJECTNAME);
+                .addDefectTracker(defectTracker1, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 		
 		assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
@@ -550,7 +545,7 @@ public class DefectTrackerTests extends BaseTest {
 		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .editDefectTracker(defectTracker2, JIRA_USERNAME, JIRA_PASSWORD, JIRAPROJECTNAME);
+                .editDefectTracker(defectTracker2, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
