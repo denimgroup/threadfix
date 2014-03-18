@@ -124,14 +124,15 @@ public class RemoteProvidersTests extends BaseTest {
 	
 	@Test
 	public void invalidQualys(){
-		RemoteProvidersIndexPage indexPage = loginPage.login("user", "password")
+		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
                 .saveQualysInvalid();
 		
-		assertTrue("Incorrect credentials accepted",indexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+		assertTrue("Incorrect credentials accepted",
+                remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
 	// THESE TESTS HAVE BEEN COMMENTED OUT SO THEIR INTENT CAN BE SCRYED AND REWRITTEN

@@ -127,17 +127,6 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 	
 	public DefectTrackerIndexPage clickDeleteButton(String name){
-////		for(int i = 0; i < getNumRows(); i ++){
-//////			System.out.println(names.get(i).getText() + " and name = " + name);
-////			if(name.equals(names.get(i).getText())){
-////				//driver.findElementById("deleteButton" + (i + 1)).click();
-//////				System.out.println("Got in here");
-//////				driver.fin
-//////				deleteButtons.get(i).click();
-//				handleAlert();
-//			}
-//		}
-		
 		clickEditLink(name);
 		sleep(500);
 		driver.findElementById("deleteButton"+(getIndex(name)+1)).click();
@@ -155,11 +144,10 @@ public class DefectTrackerIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 	
-	
 	public String getDefectTrackerName(int row){
 		return driver.findElementById("defectTrackerName"+row).getText();
 	}
-	
+
 	public String getNameInput(){
 		return nameInput.getText();
 	}

@@ -104,14 +104,12 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickSubmitTrackerButton() {
         driver.findElementById("submitDTModal").click();
-        sleep(4000);
+        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
         return new ApplicationDetailPage(driver);
     }
 
-
-
-    public ApplicationDetailPage addDefectTracker(String defectTracker,
-                                                  String username, String password, String productname) {
+    public ApplicationDetailPage addDefectTracker(String defectTracker, String username,
+                                                  String password, String productname) {
         clickEditDeleteBtn()
                 .clickAddDefectTrackerButton()
                 .selectDefectTracker(defectTracker)

@@ -118,6 +118,7 @@ public abstract class BasePage {
 	
 	public WafIndexPage clickWafsHeaderLink() {
 		clickConfigTab();
+        waitForElement(driver.findElementById("wafsLink"));
 		driver.findElementById("wafsLink").click();
 		sleep(1000);
 		return new WafIndexPage(driver);

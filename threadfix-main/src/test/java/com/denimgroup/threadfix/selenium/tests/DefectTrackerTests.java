@@ -184,12 +184,13 @@ public class DefectTrackerTests extends BaseTest {
                 .enterURL(null, TEST_BUGZILLA_URL)
                 .clickSaveNewDefectTracker();
 
-		// might need to change the row number that this is checking
+        String testLongInput = longInput.substring(0, DefectTracker.NAME_LENGTH);
+
 		assertTrue("The Defect Tracker name was not cropped correctly.",
-				defectTrackerIndexPage.getDefectTrackerName(1).length() == DefectTracker.NAME_LENGTH);
+				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(testLongInput));
 
 		// Test name duplication checking
-		String orgName = defectTrackerIndexPage.getDefectTrackerName(1);
+		String orgName = testLongInput;
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
@@ -272,9 +273,13 @@ public class DefectTrackerTests extends BaseTest {
 		// Test browser length limit
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(newDefectTrackerName, longInput)
 				               .clickUpdateDefectTrackerButton();
-		newDefectTrackerName = defectTrackerIndexPage.getNameText(1);
-		assertTrue("The defectTracker name was not cropped correctly.",
-                defectTrackerIndexPage.getNameText(1).length() == DefectTracker.NAME_LENGTH);
+
+        String testLongInput = longInput.substring(0, DefectTracker.NAME_LENGTH);
+
+        assertTrue("The Defect Tracker name was not cropped correctly.",
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(testLongInput));
+
+        newDefectTrackerName = testLongInput;
 
 		// Test name duplication checking
 		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
@@ -446,15 +451,10 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void testAttachToAppTFSTracker() {
-		assertFalse("TFS_PASSWORD is not assigned from system properties", TFS_PASSWORD == null);
-		assertFalse("TFS_USERNAME is not assigned from system properties", TFS_USERNAME == null);
-		assertFalse("BUGZILLA_URL is not assigned from system properties", TFS_URL == null);
-		assertFalse("TFS_PROJECTNAME is not assigned from system properties", TFS_PROJECTNAME == null);
-
 		String defectTrackerName = "attachAppTFS" + getRandomString(3);
 		String defectTrackerType = "Microsoft TFS";
-		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);
-		String appName = "bugzillaAttachTestApp" + getRandomString(3);
+		String teamName = "tfsAttachTestTeam" + getRandomString(3);
+		String appName = "tfsAttachTestApp" + getRandomString(3);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -479,11 +479,6 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void testAttachToAppJiraTracker() {
-		assertFalse("JIRA_PASSWORD is not assigned from system properties", JIRA_PASSWORD == null);
-		assertFalse("JIRA_USERNAME is not assigned from system properties", JIRA_USERNAME == null);
-		assertFalse("JIRA_URL is not assigned from system properties", JIRA_URL == null);
-		assertFalse("JIRAPROJECTNAME is not assigned from system properties", JIRAPROJECTNAME == null);
-
 		String newDefectTrackerName = "attachAppJira" + getRandomString(3);
 		String type = "Jira";
 		String teamName = "jIRAAttachTestTeam" + getRandomString(3);
@@ -492,8 +487,8 @@ public class DefectTrackerTests extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user",
-				"password").clickDefectTrackersLink();
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
+                .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .enterName(null, newDefectTrackerName)
