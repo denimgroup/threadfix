@@ -10,12 +10,14 @@
 	<table class="dataTable">
 		<tbody>
 			<tr>
+                <c:if test="${ defectTrackerName != 'HP Quality Center' }">
 				<td>Component:</td>
 				<td class="inputValue">
 					<form:select style="width:120px;" path="selectedComponent">
 						<form:options items="${projectMetadata.components}"/>
 					</form:select>
 				</td>
+                </c:if>
 				<td>Priority:</td>
 				<td class="inputValue">
 					<form:select style="width:120px;" path="priority">
@@ -31,12 +33,14 @@
 			</tr>
 			<c:if test="${ defectTrackerName != 'Jira' }">
 				<tr>
+                    <c:if test="${ defectTrackerName != 'HP Quality Center' }">
 					<td>Version:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="version">
 							<form:options items="${projectMetadata.versions}"/>
 						</form:select>
 					</td>
+                        </c:if>
 					<td>Severity:</td>
 					<td class="inputValue">
 						<form:select style="width:120px;" path="severity">
