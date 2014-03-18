@@ -95,18 +95,6 @@ public abstract class BasePage {
 
 	public TeamIndexPage clickOrganizationHeaderLink() {
             driver.findElementById("orgHeader").click();
-			/*sleep(2000);
-
-            TeamIndexCache cache = TeamIndexCache.getCache();
-
-            if (!cache.isInitialized()) {
-                cache.initialize(getList());
-            }
-*/
-            /*System.out.println("\nCache is initialized or Applications link clicked.");
-            cache.printList();*/
-
-
 			return new TeamIndexPage(driver);
 	}
 	
@@ -133,6 +121,7 @@ public abstract class BasePage {
 	public void clickConfigTab(){
 		driver.findElementById("tabConfigAnchor").click();
 		sleep(1000);
+        waitForElement(driver.findElementById("apiKeysLink"));
 	}
 	
 	public void clickUserTab(){
