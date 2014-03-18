@@ -418,11 +418,6 @@ public class DefectTrackerTests extends BaseTest {
 
 	@Test
 	public void testAttachToAppBugzillaTracker() {
-		assertFalse("BUGZILLA_PASSWORD is not assigned from system properties", BUGZILLA_PASSWORD == null);
-		assertFalse("BUGZILLA_USERNAME is not assigned from system properties", BUGZILLA_USERNAME == null);
-		assertFalse("BUGZILLA_URL is not assigned from system properties", BUGZILLA_URL == null);
-		assertFalse("BUGZILLAPROJECTNAME is not assigned from system properties", BUGZILLAPROJECTNAME == null);
-
 		String defectTrackerName = "attachAppBugzilla" + getRandomString(3);
 		String defectTrackerType = "Bugzilla";
 		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);

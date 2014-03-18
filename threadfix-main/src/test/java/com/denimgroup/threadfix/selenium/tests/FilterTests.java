@@ -156,9 +156,7 @@ public class FilterTests extends BaseTest{
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink();
-
-        globalFilterPage = globalFilterPage
+        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .setVulnerabilityType(vulnerabilityType)
                 .setSeverity("High")
