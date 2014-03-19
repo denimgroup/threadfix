@@ -135,8 +135,9 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickAddNewUserBtn(){
+        waitForElement(driver.findElementById("addUserButton"));
 		driver.findElementById("addUserButton").click();
-		sleep(500);
+		sleep(5000);
 		return new UserIndexPage(driver);
 	}
 	
@@ -155,9 +156,8 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickUpdateUserBtnInvalid(String name){
-		sleep(500);
-		driver.findElementById("addUserButton").click();
-		sleep(500);
+		waitForElement(driver.findElementById("addUserButton"+name));
+		driver.findElementById("addUserButton"+name).click();
 		return new UserIndexPage(driver);
 	}
 	
@@ -170,6 +170,7 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickEditLink(String roleName) {
+        waitForElement(driver.findElementById("editUserModal"+roleName+"Link"));
 		driver.findElementById("editUserModal"+roleName+"Link").click();
 		sleep(1000);
 		return new UserIndexPage(driver);
@@ -214,4 +215,8 @@ public class UserIndexPage extends BasePage {
 	public boolean isGlobalAccessSelected(String oldName){
 		return driver.findElementById("hasGlobalGroupAccessCheckbox" + (oldName)).isSelected();
 	}
+
+    public boolean isSaveChangesButtonClickable(String name) {
+        return isClickable("addUserButton"+name);
+    }
 }
