@@ -159,6 +159,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ScannerType.ZAPROXY.getFullName(), "OWASPZAPReport", "site", "alerts");
 		addToMap(ScannerType.DEPENDENCY_CHECK.getFullName(), "analysis");
         addToMap(ScannerType.CHECKMARX.getFullName(), "CxXMLResults");
+        addToMap(ScannerType.CENZIC_HAILSTORM.getFullName(), "Assessments", "AssessmentRunData");
 	}
 	
 	private static void addToMap(String name, String... tags) {
