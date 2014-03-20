@@ -62,7 +62,7 @@ public class UserTests extends BaseTest {
 		userIndexPage.enterConfirmPassword("  ",null);
 
 		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
-
+        sleep(5000);
 		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
 		// Test length
@@ -119,6 +119,7 @@ public class UserTests extends BaseTest {
         userIndexPage.enterConfirmPassword("dummy password",null);
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+        sleep(5000);
         assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
     }
 
@@ -160,13 +161,8 @@ public class UserTests extends BaseTest {
 
 	@Test 
 	public void testEditUserFieldValidation() {
-		DashboardPage dashboardPage;
 		String baseUserName = "testEditUser";
-		String userNameDuplicateTest = "duplicate user";
-		StringBuilder stringBuilder = new StringBuilder("");
-		for (int i = 0; i < 400; i++) { stringBuilder.append('a'); }
-
-		String longInput = stringBuilder.toString();
+		String userNameDuplicateTest = "duplicate-user";
 
 		// Set up the two User objects for the test
 
@@ -191,6 +187,8 @@ public class UserTests extends BaseTest {
 								.clickUpdateUserBtn(baseUserName);
 		assertTrue("User name was not present in the table.",userIndexPage.isUserNamePresent(baseUserName));
 
+        userIndexPage = userIndexPage.clickManageUsersLink();
+
 		// Test Empty
 		userIndexPage = userIndexPage.clickEditLink(baseUserName)
 								.enterName("",baseUserName)
@@ -198,74 +196,98 @@ public class UserTests extends BaseTest {
 								.enterConfirmPassword("",baseUserName)
 								.clickUpdateUserBtnInvalid(baseUserName);
 
-		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
-		//assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
+		assertTrue("Name error not present", !userIndexPage.isSaveChangesButtonClickable(baseUserName));
+
+        userIndexPage.clickManageUsersLink();
+    }
+
+    @Test
+    public void testEditUserValidationWhiteSpace (){
+        String userName = "userName"+ getRandomString(5);
+        String passWord = "passWord"+ getRandomString(5);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName, null)
+                .enterPassword(passWord, null)
+                .enterConfirmPassword(passWord, null)
+                .clickAddNewUserBtn();
 
 		// Test White Space
-		userIndexPage = userIndexPage.enterName("        ",null)
-								.enterPassword("  ",null)
-								.enterConfirmPassword("  ",null)
-								.clickUpdateUserBtnInvalid(baseUserName);
+		userIndexPage = userIndexPage.clickManageUsersLink()
+                                .clickAddUserLink()
+                                .enterName("        ", null)
+								.enterPassword("             ", null)
+								.enterConfirmPassword("             ", null)
+								.clickAddNewUserBtn();
 
-
-
+        sleep(5000);
 		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
-		//assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password is a required field."));
+    }
 
+    @Test
+    public void testEditUserValidationNoMatching(){
+        String userName = "userName"+ getRandomString(5);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                                    .clickManageUsersLink();
 		// Test non-matching passwords
-		userIndexPage = userIndexPage.enterName("new name",null)
+		userIndexPage = userIndexPage.clickAddUserLink()
+                                    .enterName(userName ,null)
 									.enterPassword("lengthy password 1",null)
-									.enterConfirmPassword("lengthy password 2",null)
-									.clickUpdateUserBtnInvalid(baseUserName);
+									.enterConfirmPassword("lengthy password 2", null)
+									.clickAddNewUserBtn();
 
+        sleep(5000);
 		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordError().equals("Passwords do not match."));
 
+    }
+
+    @Test
+    public void testEditUserValidationLength(){
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink();
+
+
 		// Test length
-		userIndexPage = userIndexPage.enterName("Test User",null)
+		userIndexPage = userIndexPage.clickAddUserLink()
+                                    .enterName("Test User", null)
 									.enterPassword("test",null)
 									.enterConfirmPassword("test",null)
-									.clickUpdateUserBtnInvalid(baseUserName);
+									.clickAddNewUserBtn();
 
+        sleep(5000);
+		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
-		assertTrue("Password length error not present", userIndexPage.getPasswordError().contains("Password has a minimum length of 12."));
-		
-		//max length check
-		userIndexPage = userIndexPage.enterName(longInput,null)
-				.enterPassword(longInput,null)
-				.enterConfirmPassword(longInput,null)
-				.clickUpdateUserBtn(baseUserName);
-						  
-		String userName = "aaaaaaaaaaaaaaaaaaaaaaaaa";
-		assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
-		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
-		dashboardPage = userIndexPage.logout()
-				.login(userName, longInput);
-	
-		assertTrue("user: "+longInput+" was not logged in.",dashboardPage.isLoggedInUser(userName));
+    }
+
+    @Test
+    public void testEditUserValidationUnique(){
+        DashboardPage dashboardPage;
+        String userName = "userName"+ getRandomString(5);
+        String passWord = "passWord"+ getRandomString(5);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName, null)
+                .enterPassword(passWord, null)
+                .enterConfirmPassword(passWord, null)
+                .clickAddNewUserBtn();
 	
 		// Test name uniqueness check
-		userIndexPage = dashboardPage.logout()
-				.login("user", "password")
+		userIndexPage = userIndexPage
 				.clickManageUsersLink()
-				.clickEditLink(userName)
-				.enterName(userNameDuplicateTest,userName)
-				.enterPassword("lengthy password 2",userName)
-				.enterConfirmPassword("lengthy password 2",userName)
-				.clickUpdateUserBtnInvalid(userName);
+				.clickAddUserLink()
+				.enterName(userName,null)
+				.enterPassword("lengthy password 2",null)
+				.enterConfirmPassword("lengthy password 2",null)
+				.clickAddNewUserBtn();
 
-
+        sleep(5000);
 		assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
-
-		// Delete the users and logout
-
-		userIndexPage = userIndexPage.clickCancel(userName)
-				.clickManageUsersLink()
-				.clickDeleteButton(userName)
-				.clickDeleteButton(userNameDuplicateTest);
-		
-		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(baseUserName));
-		assertFalse("User was still in table after attempted deletion.", userIndexPage.isUserNamePresent(userNameDuplicateTest));
-		
 		
 	}
 

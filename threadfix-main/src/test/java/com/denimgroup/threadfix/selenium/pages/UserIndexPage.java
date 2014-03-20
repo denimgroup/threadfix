@@ -181,7 +181,9 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public String getNameError(){
-		return driver.findElementById("name.errors").getText().trim();
+        String returnval;
+		returnval = driver.findElementById("name.errors").getText().trim();
+        return returnval;
 	}
 	
 	public String getPasswordError(){
