@@ -88,12 +88,12 @@ public class TeamTests extends BaseTest {
 	public void longTeamNameEditModalHeader(){
 		String newOrgName = getRandomString(1024);
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
-								.clickOrganizationHeaderLink()
-								.clickAddTeamButton()
-								.setTeamName(newOrgName)
-								.addNewTeam()
-								.clickViewTeamLink(newOrgName.substring(0,60))
-								.clickEditOrganizationLink();
+                .clickOrganizationHeaderLink()
+                .clickAddTeamButton()
+                .setTeamName(newOrgName)
+                .addNewTeam()
+                .clickViewTeamLink(newOrgName.substring(0,60))
+                .clickEditOrganizationLink();
 		
 		assertTrue("Header width was incorrect with long team name",teamDetailPage.getEditModalHeaderWidth() == 400);
 	}
@@ -109,10 +109,10 @@ public class TeamTests extends BaseTest {
 
 		// Test empty input
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-									.clickOrganizationHeaderLink()
-									.clickAddTeamButton()
-									.setTeamName(emptyString)
-									.addNewTeamInvalid();
+                .clickOrganizationHeaderLink()
+                .clickAddTeamButton()
+                .setTeamName(emptyString)
+                .addNewTeamInvalid();
 		
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamIndexPage.getNameErrorMessage()));
 		
@@ -129,9 +129,9 @@ public class TeamTests extends BaseTest {
 		
 		// Test name duplication checking
 		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
-													.clickAddTeamButton()
-													.setTeamName(orgName)
-													.addNewTeamInvalid();
+                .clickAddTeamButton()
+                .setTeamName(orgName)
+                .addNewTeamInvalid();
 		
 		assertTrue(teamIndexPage.getNameErrorMessage().equals("That name is already taken."));
 	}
@@ -145,10 +145,10 @@ public class TeamTests extends BaseTest {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-													.clickViewTeamLink(newTeamName)
-													.clickEditOrganizationLink()
-													.setNameInput(editedTeamName)
-													.clickUpdateButtonValid();
+                .clickViewTeamLink(newTeamName)
+                .clickEditOrganizationLink()
+                .setNameInput(editedTeamName)
+                .clickUpdateButtonValid();
 
 		assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedTeamName));
 		
@@ -189,7 +189,7 @@ public class TeamTests extends BaseTest {
 
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
 
-        teamIndexPage = teamIndexPage.expandTeamRowByIndex(teamName);
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName);
 
         assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName,appName));
 
@@ -215,13 +215,13 @@ public class TeamTests extends BaseTest {
 		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
         TeamDetailPage teamDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
-																.clickAddTeamButton()
-																.setTeamName(orgName)
-																.addNewTeam()
-																.clickAddTeamButton()
-																.setTeamName(orgNameDuplicateTest)
-																.addNewTeam()
-																.clickViewTeamLink(orgName);
+                .clickAddTeamButton()
+                .setTeamName(orgName)
+                .addNewTeam()
+                .clickAddTeamButton()
+                .setTeamName(orgNameDuplicateTest)
+                .addNewTeam()
+                .clickViewTeamLink(orgName);
 		
 		// Test edit with no changes
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink().clickUpdateButtonValid();
@@ -229,20 +229,20 @@ public class TeamTests extends BaseTest {
 		
 		// Test empty input
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-													 .setNameInput(emptyString)
-													 .clickUpdateButtonInvalid();
+                .setNameInput(emptyString)
+                .clickUpdateButtonInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
 		// Test whitespace input
 		teamDetailPage = teamDetailPage.setNameInput(whiteSpaceString)
-												   .clickUpdateButtonInvalid();
+                .clickUpdateButtonInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
 		// Test browser length limit
 		teamDetailPage = teamDetailPage.clickCloseEditModal()
-													.clickEditOrganizationLink()
-													.setNameInput(longInput)
-													 .clickUpdateButtonValid();
+                .clickEditOrganizationLink()
+                .setNameInput(longInput)
+                .clickUpdateButtonValid();
 		
 		orgName = longInput.substring(0, Organization.NAME_LENGTH+1);
 		
@@ -251,63 +251,18 @@ public class TeamTests extends BaseTest {
 		
 		// Test name duplication checking
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-													 .setNameInput(orgNameDuplicateTest)
-													 .clickUpdateButtonInvalid();
+                .setNameInput(orgNameDuplicateTest)
+                .clickUpdateButtonInvalid();
 		
 		assertTrue(teamDetailPage.getErrorText().equals("That name is already taken."));
 				
 		// Delete and logout
 		loginPage = teamDetailPage.clickOrganizationHeaderLink()
-									.clickViewTeamLink(orgName)
-									.clickDeleteButton()
-									.clickOrganizationHeaderLink()
-									.clickViewTeamLink(orgNameDuplicateTest)
-									.clickDeleteButton()
-									.logout();
-	}
-	
-	@Test
-	public void switchAppTeam(){
-        String team1 = getRandomString(8);
-		String team2 = getRandomString(8);
-        String appName = getRandomString(8);
-
-		TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
-								.clickAddTeamButton()
-								.setTeamName(team1)
-								.addNewTeam()
-								.clickAddTeamButton()
-								.setTeamName(team2)
-								.addNewTeam();
-
-        TeamDetailPage teamDetailPage = teamIndexPage
-								.expandTeamRowByIndex(team1)
-								.addNewApplication(team1, appName, "", "Low")
-								.saveApplication(team1)
-								.clickOrganizationHeaderLink()
-								.expandTeamRowByIndex(team1)
-								.clickViewAppLink(appName,team1)
-								.clickEditDeleteBtn()
-								.setTeam(team2)
-								.clickUpdateApplicationButton()
-								.clickOrganizationHeaderLink()
-								.clickViewTeamLink(team1);
-		
-		Boolean oneBool = teamDetailPage.isAppPresent(appName);
-
-        teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
-				.clickViewTeamLink(team2);
-		
-		Boolean twoBool = teamDetailPage.isAppPresent(appName);
-
-        teamDetailPage.clickOrganizationHeaderLink()
-					.clickViewTeamLink(team1)
-					.clickDeleteButton().clickOrganizationHeaderLink();
-
-        teamIndexPage.clickViewTeamLink(team2)
-				.clickDeleteButton()
-				.logout();
-		
-		assertTrue("app was not switched properly", !oneBool && twoBool);
+                .clickViewTeamLink(orgName)
+                .clickDeleteButton()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(orgNameDuplicateTest)
+                .clickDeleteButton()
+                .logout();
 	}
 }

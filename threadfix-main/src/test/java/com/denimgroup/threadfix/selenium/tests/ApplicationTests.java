@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
@@ -467,6 +468,38 @@ public class ApplicationTests extends BaseTest {
 
 		assertTrue("Unable to add apps with the same name to different teams", isAppInTeam1 && isAppInTeam2);
 	}
+
+    @Test
+    public void switchAppTeam() {
+        String teamName1 = "switchAppTeam" + getRandomString(3);
+        String teamName2 = "switchAppTeam" + getRandomString(3);
+        String appName = "switchApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createTeam(teamName2);
+        DatabaseUtils.createApplication(teamName1, appName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        TeamDetailPage teamDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
+                .clickViewAppLink(appName, teamName1)
+                .clickEditDeleteBtn()
+                .setTeam(teamName2)
+                .clickUpdateApplicationButton()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName1);
+
+        Boolean appOnTeam1 = teamDetailPage.isAppPresent(appName);
+
+        teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName2);
+
+        Boolean appOnTeam2 = teamDetailPage.isAppPresent(appName);
+
+        assertTrue("The application was not switched properly.", !appOnTeam1 && appOnTeam2);
+
+    }
 	
 	public void sleep(int num) {
 		try {
