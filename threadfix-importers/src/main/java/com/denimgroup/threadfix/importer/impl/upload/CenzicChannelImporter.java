@@ -88,7 +88,7 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 		    	case "Url"   : getUrlText = true;         break;
 		    	case "field"   : getParamText = true;       break;
 		    	case "Severity"  : getSeverityText = true;    break;
-		    	case "StartTime" : getDateText = true;        break;
+		    	case "ReportItemCreateDate" : getDateText = true;        break;
                 case "ReportItemType" : getReportItemType = true;        break;
 	    	}
 	    }
@@ -112,8 +112,10 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
 	    	} else if (getDateText) {
-	    		String temp = getBuilderText();
-	    		date = DateUtils.getCalendarFromString("MM/dd/yyyy hh:mm:ss a", temp);
+                String temp = getBuilderText();
+                if (date == null) {
+                    date = DateUtils.getCalendarFromString("MM/dd/yyyy hh:mm:ss a", temp);
+                }
 	    		getDateText = false;
 	    	} else if (getReportItemType) {
                 currentReportItemType = getBuilderText();
@@ -190,7 +192,7 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name, String qName, Attributes atts) {
 	    	if ("Assessments".equals(qName)) {
 	    		correctFormat = true;
-	    	} else if ("StartTime".equals(qName)) {
+	    	} else if ("ReportItemCreateDate".equals(qName)) {
 	    		getDateText = true;
 	    	}
 	    	
@@ -205,7 +207,7 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    		hasDate = testDate != null;
 	    		getDateText = false;
 	    	}
-            if (getReportItemType) {
+            if (getReportItemType && hasDate) {
                 hasFindings = true;
                 setTestStatus();
                 throw new SAXException(FILE_CHECK_COMPLETED);
@@ -214,7 +216,7 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getDateText || getReportItemType) {
+	    	if (getDateText) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
