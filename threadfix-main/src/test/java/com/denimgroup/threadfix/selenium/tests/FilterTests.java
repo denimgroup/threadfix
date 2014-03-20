@@ -59,9 +59,7 @@ public class FilterTests extends BaseTest{
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
                 .clickCreateNewFilter()
-                .setVulnerabilityType(vulnerabilityType)
-                .setSeverity(severity)
-                .addFilter()
+                .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
                 .enableSeverityFilters()
                 .hideMedium()
@@ -108,9 +106,7 @@ public class FilterTests extends BaseTest{
                 .clickActionButton()
                 .clickEditTeamFilters()
                 .clickCreateNewFilter()
-                .setVulnerabilityType(vulnerabilityType)
-                .setSeverity(severity)
-                .addFilter()
+                .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
                 .enableSeverityFilters()
                 .hideMedium()
@@ -145,6 +141,7 @@ public class FilterTests extends BaseTest{
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
+        String severity = "High";
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createApplication(teamName1, appName1);
@@ -158,9 +155,7 @@ public class FilterTests extends BaseTest{
 
         FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
                 .clickCreateNewFilter()
-                .setVulnerabilityType(vulnerabilityType)
-                .setSeverity("High")
-                .addFilter()
+                .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
                 .enableSeverityFilters()
                 .hideMedium()
@@ -193,7 +188,7 @@ public class FilterTests extends BaseTest{
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
 
-        String vulnerabilityType1 = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
+        String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
 
         DatabaseUtils.createTeam(teamName);
@@ -206,9 +201,7 @@ public class FilterTests extends BaseTest{
         // Set global severity filter for vulnerabilityType1 and hide 'Medium', 'Low', 'Info' vulnerabilities
         FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
                 .clickCreateNewFilter()
-                .setVulnerabilityType(vulnerabilityType1)
-                .setSeverity(severity)
-                .addFilter()
+                .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
                 .enableSeverityFilters()
                 .hideMedium()

@@ -51,37 +51,37 @@ public class UserTests extends BaseTest {
 		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 	}
 
-	@Test 
-	public void testUserFieldValidation() {
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
-											.clickManageUsersLink()
-											.clickAddUserLink();
+    @Test
+    public void testUserFieldValidation() {
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink();
 
-		userIndexPage.enterName("        ",null);
-		userIndexPage.enterPassword("  ",null);
-		userIndexPage.enterConfirmPassword("  ",null);
+        userIndexPage.enterName("        ",null);
+        userIndexPage.enterPassword("  ",null);
+        userIndexPage.enterConfirmPassword("  ",null);
 
-		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+        userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         sleep(5000);
-		assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
+        assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
-		// Test length
-		userIndexPage.enterName("Test User",null);
-		userIndexPage.enterPassword("test",null);
-		userIndexPage.enterConfirmPassword("test",null);
+        // Test length
+        userIndexPage.enterName("Test User",null);
+        userIndexPage.enterPassword("test",null);
+        userIndexPage.enterConfirmPassword("test",null);
 
 
-		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+        userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 
-		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
+        assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
 
-		// Test non-matching passwords
-		userIndexPage.enterName("new name",null);
-		userIndexPage.enterPassword("lengthy password 1",null);
-		userIndexPage.enterConfirmPassword("lengthy password 2",null);
-		userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
-		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
-	}
+        // Test non-matching passwords
+        userIndexPage.enterName("new name",null);
+        userIndexPage.enterPassword("lengthy password 1",null);
+        userIndexPage.enterConfirmPassword("lengthy password 2",null);
+        userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
+        assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
+    }
 
     @Test
     public void testCreateDuplicateUser(){

@@ -312,7 +312,8 @@ public class WafTests extends BaseTest {
                  .addWaf(wafName);
 
 		//Generating  Deny waf Rules
-		WafRulesPage wafRulesPage = applicationDetailPage.clickWafsHeaderLink()
+		WafRulesPage wafRulesPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .clickWafsHeaderLink()
                 .clickRules(wafName)
                 .setWafApplicationSelect(teamName, appName)
                 .setWafDirectiveSelect("deny")

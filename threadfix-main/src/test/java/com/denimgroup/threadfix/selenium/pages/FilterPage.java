@@ -35,7 +35,6 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage clickCreateNewFilter() {
-        waitForElement(driver.findElementById("createNewKeyModalButton"));
         driver.findElementById("createNewKeyModalButton").click();
         return new FilterPage(driver);
     }
@@ -51,9 +50,18 @@ public class FilterPage extends BasePage {
         return new FilterPage(driver);
     }
 
-    public FilterPage addFilter() {
+    public FilterPage clickAddFilter() {
         driver.findElementById("submitFilterModalCreate").click();
+        return new FilterPage(driver);
+    }
+
+    public FilterPage addVulnerabilityFilter(String vulnerabilityType, String severity) {
+        setVulnerabilityType(vulnerabilityType)
+                .setSeverity(severity)
+                .clickAddFilter();
+
         waitForElement(driver.findElementByClassName("alert-success"));
+
         return new FilterPage(driver);
     }
 

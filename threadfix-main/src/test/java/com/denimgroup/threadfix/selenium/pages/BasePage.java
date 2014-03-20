@@ -106,7 +106,6 @@ public abstract class BasePage {
 	
 	public WafIndexPage clickWafsHeaderLink() {
 		clickConfigTab();
-        waitForElement(driver.findElementById("wafsLink"));
 		driver.findElementById("wafsLink").click();
 		sleep(1000);
 		return new WafIndexPage(driver);
@@ -120,7 +119,7 @@ public abstract class BasePage {
 	
 	public void clickConfigTab(){
 		driver.findElementById("tabConfigAnchor").click();
-		sleep(1000);
+		sleep(2000);
         waitForElement(driver.findElementById("apiKeysLink"));
 	}
 	

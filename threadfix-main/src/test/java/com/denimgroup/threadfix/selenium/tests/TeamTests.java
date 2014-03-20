@@ -52,7 +52,6 @@ public class TeamTests extends BaseTest {
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
 	}
 
-
     // TODO possible deletion due to tables having a height of zero, the aren't 'not displayed'
     @Ignore
     @Test

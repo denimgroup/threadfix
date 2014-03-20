@@ -104,7 +104,6 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickSubmitTrackerButton() {
         driver.findElementById("submitDTModal").click();
-        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -118,13 +117,16 @@ public class ApplicationDetailPage extends BasePage {
                 .clickTestConnection()
                 .selectProduct(productname)
                 .clickSubmitTrackerButton();
-        sleep(5000);
+
+        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
+        sleep(2000);
+
         return new ApplicationDetailPage(driver);
 
     }
 
-    public ApplicationDetailPage editDefectTracker(String defectTracker,
-                                                   String username, String password, String productname) {
+    public ApplicationDetailPage editDefectTracker(String defectTracker, String username,
+                                                   String password, String productname) {
         clickEditDeleteBtn()
                 .clickEditDefectTrackerButton()
                 .selectDefectTracker(defectTracker)
@@ -133,7 +135,10 @@ public class ApplicationDetailPage extends BasePage {
                 .clickTestConnection()
                 .selectProduct(productname)
                 .clickSubmitTrackerButton();
-        sleep(1000);
+
+        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
+        sleep(2000);
+
         return new ApplicationDetailPage(driver);
 
     }
