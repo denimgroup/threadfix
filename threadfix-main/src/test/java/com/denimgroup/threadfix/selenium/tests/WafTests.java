@@ -292,13 +292,12 @@ public class WafTests extends BaseTest {
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath());
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-            .clickOrganizationHeaderLink();
-
 		String wafName = "testCreateModSecWaf" + getRandomString(3);
 		String wafType = "mod_security";
 
-        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, wafType)
                 .clickCreateWaf();
