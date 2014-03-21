@@ -343,7 +343,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public String successAlert(){
         waitForElement(driver.findElementByClassName("alert-success"));
-		return driver.findElementByClassName("alert-success").getText();
+		return driver.findElementByClassName("alert-success").getText().trim();
 	}
 	
 //old methods
