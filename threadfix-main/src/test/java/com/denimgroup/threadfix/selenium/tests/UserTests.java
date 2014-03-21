@@ -240,7 +240,7 @@ public class UserTests extends BaseTest {
 									.clickAddNewUserBtn();
 
         sleep(5000);
-		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordError().equals("Passwords do not match."));
+		assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
 
     }
 
