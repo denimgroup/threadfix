@@ -139,6 +139,7 @@ public class FilterTests extends BaseTest{
         String appName1 = getRandomString(8);
         String appName2 = getRandomString(8);
         String file = ScanContents.getScanFilePath();
+        TeamIndexPage teamIndexPage;
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
@@ -150,10 +151,9 @@ public class FilterTests extends BaseTest{
         DatabaseUtils.createApplication(teamName2, appName2);
         DatabaseUtils.uploadScan(teamName2, appName2, file);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-
-        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
+        FilterPage globalFilterPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
@@ -187,6 +187,7 @@ public class FilterTests extends BaseTest{
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
+        TeamIndexPage teamIndexPage;
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
@@ -195,11 +196,10 @@ public class FilterTests extends BaseTest{
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, file);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-
         // Set global severity filter for vulnerabilityType1 and hide 'Medium', 'Low', 'Info' vulnerabilities
-        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
+        FilterPage globalFilterPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
