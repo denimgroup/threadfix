@@ -263,7 +263,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-163")
+				.selectMergeDefect("THREAD-193")
 				.clickMergeDefectSubmit();
 
         applicationDetailPage.clickExpandAllVulns()
@@ -271,7 +271,7 @@ public class VulnTests extends BaseTest {
 				.clickVulnCheckBox(2)
 				.clickVulnCheckBox(3)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-164")
+				.selectMergeDefect("THREAD-192")
 				.clickMergeDefectSubmit();
 
         applicationDetailPage.clickExpandAllVulns();
