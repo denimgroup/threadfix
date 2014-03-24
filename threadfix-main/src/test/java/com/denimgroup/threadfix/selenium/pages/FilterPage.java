@@ -36,6 +36,7 @@ public class FilterPage extends BasePage {
 
     public FilterPage clickCreateNewFilter() {
         waitForElement(driver.findElementById("createNewKeyModalButton"));
+        sleep(5000);
         driver.findElementById("createNewKeyModalButton").click();
         return new FilterPage(driver);
     }

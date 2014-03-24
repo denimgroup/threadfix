@@ -88,6 +88,7 @@ public class RemoteProvidersTests extends BaseTest {
                 .setVeraPassword(VERACODE_PASSWORD)
                 .saveVera();
 
+        sleep(5000);
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
 
@@ -100,6 +101,7 @@ public class RemoteProvidersTests extends BaseTest {
 	@Test
 	public void invalidVeracode(){
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername("No Such User")
@@ -125,6 +127,7 @@ public class RemoteProvidersTests extends BaseTest {
 	@Test
 	public void invalidQualys(){
 		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername("No Such User")
