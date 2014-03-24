@@ -424,6 +424,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		// remove any outdated vuln -> waf rule links
 		updateWafRules(loadApplication(application.getId()), databaseWafId);
+
+        encryptRepositoryCredentials(application);
 	}
 	
 	@Override
@@ -523,6 +525,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 
 		validateApplicationDefectTracker(application, result);
+        encryptRepositoryCredentials(application);
 	}
 
 	@Override
@@ -603,7 +606,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	public Application encryptCredentials(Application application) {
 		try {
-			if (application != null && application.getPassword() != null && application.getPassword() != null) {
+			if (application != null && application.getPassword() != null && application.getUserName() != null) {
 				application.setEncryptedPassword(ESAPI.encryptor().encrypt(application.getPassword()));
 				application.setEncryptedUserName(ESAPI.encryptor().encrypt(application.getUserName()));
 			}
@@ -626,6 +629,35 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		return application;
 	}
+
+    @Override
+    public Application encryptRepositoryCredentials(Application application) {
+        try {
+            if (application != null && application.getRepositoryPassword() != null && !application.getRepositoryPassword().isEmpty()
+                    && application.getRepositoryUserName() != null && !application.getRepositoryUserName().isEmpty()) {
+                application.setRepositoryEncryptedPassword(ESAPI.encryptor().encrypt(application.getRepositoryPassword()));
+                application.setRepositoryEncryptedUserName(ESAPI.encryptor().encrypt(application.getRepositoryUserName()));
+            }
+
+        } catch (EncryptionException e) {
+            log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+        }
+        return application;
+    }
+
+    @Override
+    public Application decryptRepositoryCredentials(Application application) {
+        try {
+            if (application != null && application.getRepositoryEncryptedPassword() != null &&
+                    application.getRepositoryEncryptedUserName() != null) {
+                application.setRepositoryPassword(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedPassword()));
+                application.setRepositoryUserName(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedUserName()));
+            }
+        } catch (EncryptionException e) {
+            log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+        }
+        return application;
+    }
 
 	@Override
 	public void generateVulnerabilityReports(List<Organization> organizations) {

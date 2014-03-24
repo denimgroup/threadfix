@@ -76,7 +76,28 @@
 					<form:input id="repositoryUrl" maxlength="250" path="repositoryUrl"/>
                     <form:errors path="repositoryUrl" cssClass="errors" />
 				</td>
-			</tr>						
+			</tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Revision:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:input id="repositoryBranch" maxlength="250" path="repositoryBranch"/>
+                    <form:errors path="repositoryBranch" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code UserName:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:input id="repositoryUsername" maxlength="250" path="repositoryUserName"/>
+                    <form:errors path="repositoryUserName" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Password:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:password id="repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
+                    <form:errors path="repositoryPassword" cssClass="errors" />
+                </td>
+            </tr>
 			<tr>
 				<td class="right-align" style="padding:5px;">Source Code Folder:</td>
 				<td class="left-align"  style="padding:5px;">
