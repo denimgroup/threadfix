@@ -84,9 +84,10 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickTestConnection() {
+        waitForElement(driver.findElementById("jsonLink"));
         driver.findElementById("jsonLink").click();
 
-        if (getTestConnectionResult().equals("Invalid username / password combination")) {
+        if (getTestConnectionResult().contains("Invalid username / password combination")) {
             throw new RuntimeException("Testing Connection to Defect Tracker Failed, please check username and password.");
         } else {
             waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
