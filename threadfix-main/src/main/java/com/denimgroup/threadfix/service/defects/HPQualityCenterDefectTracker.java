@@ -230,6 +230,10 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             return getUrl();
         }
 
+        if (getUrl().endsWith("/qcbin/")) {
+            return getUrl().substring(0,getUrl().length()-1);
+        }
+
         String tempUrl = getUrl().trim();
         if (tempUrl.endsWith("/")) {
             tempUrl = tempUrl.concat("qcbin");
