@@ -39,6 +39,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import static org.junit.Assert.assertTrue;
 
 public class ApplicationDetailPage extends BasePage {
 
@@ -86,18 +87,9 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickTestConnection() {
         waitForElement(driver.findElementById("jsonLink"));
         driver.findElementById("jsonLink").click();
-
-        if (getTestConnectionResult().contains("Invalid username / password combination")) {
-            throw new RuntimeException("Testing Connection to Defect Tracker Failed, please check username and password.");
-        } else {
-            waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
-        }
-
+        sleep(3000);
+        waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
         return new ApplicationDetailPage(driver);
-    }
-
-    public String getTestConnectionResult(){
-        return driver.findElementById("jsonResult").getText().trim();
     }
 
     public ApplicationDetailPage selectProduct(String product) {
