@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,7 +116,9 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveVera(){
 		driver.findElementById("submitRemoteProviderFormButton2").click();
+        sleep(6000);
 		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+        sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
@@ -293,38 +294,73 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	/*-------------- action functions ---------------*/
-	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String team, String app){
+	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String teamName, String appName){
 		clickEditWhiteHatButton(appRow);
-		selectTeamModal(team);
-		selectAppModal(app);
-		saveMappingWhiteHat();
-		return new RemoteProvidersIndexPage(driver);
-	}
-
-	public RemoteProvidersIndexPage saveMappingWhiteHat(){
-		driver.findElementByClassName("modal-footer").findElement(By.linkText("Update Application")).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		selectWhiteHatTeamMapping(teamName, appRow);
+		selectWhiteHatAppMapping(appName, appRow);
+		clickUpdateMappings();
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickEditWhiteHatButton(int row){
-		driver.findElementById("provider3updateMapping" + row).click();
+		driver.findElementById("provider1updateMapping" + row).click();
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public UserIndexPage selectTeamModal(String role){
-		WebElement a = driver.findElementById("orgSelect1");
-		new Select(a).selectByVisibleText(role);
+	public UserIndexPage selectWhiteHatTeamMapping(String teamName, int appRow){
+		WebElement a = driver.findElementById("orgSelect1-" + appRow);
+		new Select(a).selectByVisibleText(teamName);
 		return new UserIndexPage(driver);
 	}
-	
-	
-	public UserIndexPage selectAppModal(String role){
-		WebElement a = driver.findElementById("appSelect1");
-		new Select(a).selectByVisibleText(role);
+
+	public UserIndexPage selectWhiteHatAppMapping(String appName, int appRow){
+		WebElement a = driver.findElementById("appSelect1-" + appRow);
+		new Select(a).selectByVisibleText(appName);
 		return new UserIndexPage(driver);
 	}
-	
+
+    public ApplicationDetailPage clickWhiteHatImportScan(int appRow) {
+        driver.findElementById("provider1import" + appRow).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public RemoteProvidersIndexPage mapVeracodeToTeamAndApp(int appRow, String teamName, String appName) {
+        clickVeraCodeEditMappingButton(appRow);
+        selectVeracodeTeamMapping(teamName, appRow);
+        selectVeracodeAppMapping(appName, appRow);
+        clickUpdateMappings();
+        sleep(6000);
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
+        driver.findElementById("provider2updateMapping" + appRow).click();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage selectVeracodeTeamMapping(String teamName, int appRow) {
+        WebElement teamSelect = driver.findElementById("orgSelect2-" + appRow);
+        new Select(teamSelect).selectByVisibleText(teamName);
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage selectVeracodeAppMapping(String appName, int appRow) {
+        WebElement appSelect = driver.findElementById("appSelect2-" + appRow);
+        new Select(appSelect).selectByVisibleText(appName);
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage clickUpdateMappings(){
+        //driver.findElementById("submitRemoteProviderFormButton").click();
+        driver.findElementByLinkText("Update Application").click();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public ApplicationDetailPage clickVeracodeImportScan(int appRow) {
+        driver.findElementById("provider2import" + appRow).click();
+        return new ApplicationDetailPage(driver);
+    }
+
 	public String getErrorMessage(){
 		return driver.findElementByClassName("alert-error").getText();
 	}

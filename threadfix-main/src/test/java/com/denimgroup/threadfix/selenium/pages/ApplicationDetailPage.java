@@ -802,6 +802,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
     }
 
+    public boolean remoteProvidersScansUploaded() {
+        return driver.findElementByClassName("alert-error").getText().contains("No active Vulnerabilities found.");
+    }
+
     public boolean isDuplicateScan() {
         sleep(1000);
         String s = "";

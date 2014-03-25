@@ -62,7 +62,7 @@ public class DashboardTests extends BaseTest{
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
 
-    //TODO
+    //TODO waiting for better ids
     @Ignore
     @Test
     public void dashboardRecentUploadsDisplayTest() {

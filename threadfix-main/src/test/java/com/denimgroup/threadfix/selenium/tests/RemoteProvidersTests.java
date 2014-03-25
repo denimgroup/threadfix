@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -65,7 +67,7 @@ public class RemoteProvidersTests extends BaseTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
 	}
 
-	//No error message is shown.
+	//TODO error message not shown.
     @Ignore
 	@Test
 	public void invalidSentinel(){
@@ -111,7 +113,7 @@ public class RemoteProvidersTests extends BaseTest {
 		assertTrue("Incorrect credentials accepted", remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
-    //Credentials are not valid any longer
+    //TODO need valid QualysGuard credentials
 	@Ignore
 	@Test
 	public void configureQualys() {
@@ -121,7 +123,6 @@ public class RemoteProvidersTests extends BaseTest {
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
                 .saveQualys();
-		
 	}
 	
 	@Test
@@ -138,136 +139,59 @@ public class RemoteProvidersTests extends BaseTest {
                 remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
-	// THESE TESTS HAVE BEEN COMMENTED OUT SO THEIR INTENT CAN BE SCRYED AND REWRITTEN
-	// Need to have team - NewTeam White hat and application - WhiteHat Application
+    @Test
+    public void importWhiteHatScan() {
+        String teamName = "importWhiteHatTeam" + getRandomString(3);
+        String appName = "importWhiteHatApp" + getRandomString(3);
 
-	/*@Ignore
-	@Test
-	public void configureTeamLink() {
-		if (SENTINEL_API_KEY == null) {
-			return;
-		}
-		
-		String teamName = "SampleWhiteHatRemoteProviderTeam" + getRandomString(3);
-		String appName = "WhiteHat Application" + getRandomString(3);
-		String urlText = "http://test.com";
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
-		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.addNewApplication(teamName, appName, urlText, "Low")
-				.clickRemoteProvidersLink()
-				.clickConfigureWhiteHat()
-				.setWhiteHatAPI(SENTINEL_API_KEY)
-				.saveWhiteHat()
-				.mapWhiteHatToTeamAndApp(1, teamName, appName);
-		
-		String pageHeader = driver.findElement(By.tagName("h2")).getText();
-		assertTrue("Mapping Page Not Found",
-				pageHeader.contains("Edit Mapping for Demo Site BE"));
-		
-		String pageText =  edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team",
-				"WhiteHat Application").getH2Tag();
-		
-		assertTrue("Remote Provider Page not found",
-				pageText.contains("Remote Providers"));
-	}*/
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat()
+                .mapWhiteHatToTeamAndApp(1, teamName, appName);
 
-	/*
-	@Ignore
-	@Test
-	public void addTeamsNoApp() {
-		if (SENTINEL_API_KEY.equals("your-key")) {
-			return;
-		}
-		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
-				.clickRemoteProvidersLink();
-		
-		rpIndexPage.clickEdit(3);
-		edtMapPage = new EditMappingPage(driver);
-		String PageHeader = driver.findElementByTagName("h2").getText();
-		assertTrue("Mapping Page Not Found",
-				PageHeader.contains("Edit Mapping for Demo Site SE"));
-		edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team", "");
-		String Error = driver.findElementById("application.id.errors")
-				.getText();
-		assertTrue("Mapping Oage Not Found",
-				Error.contains("Application is invalid."));
-		edtMapPage = new EditMappingPage(driver);
-		edtMapPage.clickBackLink();
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("Remote Provider Page not found",
-				PageText.contains("Remote Providers"));
-	}
-	*/
-	/*
-	@Ignore
-	@Test
-	public void addNoTeam() {
-		if (SENTINEL_API_KEY.equals("your-key")) {
-			return;
-		}
-		edtMapPage = loginPage.login("user", "password")
-							.clickRemoteProvidersLink()
-							.clickEdit(3);
-		
-		String PageHeader = driver.findElementByTagName("h2").getText();
-		assertTrue("Mapping Page Not Found",
-				PageHeader.contains("Edit Mapping for Demo Site SE"));
-		edtMapPage.fillAllClickSaveTeam("Pick a Team", "");
-		String error = driver.findElementById("application.id.errors")
-				.getText();
-		assertTrue("Mapping Page Not Found",
-				error.contains("Application is invalid."));
-		edtMapPage = new EditMappingPage(driver);
-		
-		String pageText = edtMapPage.clickBackLink().getH2Tag();
-		assertTrue("Remote Provider Page not found",
-				pageText.contains("Remote Providers"));
-	}
-	*/
-	
-	// Need to have team - NewTeam White hat and application - WhiteHat
-	// Application
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
 
-	/*
-	@Ignore
-	@Test
-	public void importScan() {
-		if (SENTINEL_API_KEY.equals("your-key")) {
-			return;
-		}
-		RemoteProvidersIndexPage rpIndexPage = loginPage.login("user", "password")
-														.clickRemoteProvidersLink();
-		rpIndexPage.clickEdit(1);
-		edtMapPage = new EditMappingPage(driver);
-		String PageHeader = driver.findElementByTagName("h2").getText();
-		assertTrue("Mapping Page Not Found",
-				PageHeader.contains("Edit Mapping for Demo Site PE"));
-		edtMapPage.fillAllClickSaveTeam("Sample WhiteHat Remote Provider Team",
-				"WhiteHat Application");
-		rpIndexPage = new RemoteProvidersIndexPage(driver);
-		String PageText = driver.findElementByTagName("h2").getText();
-		assertTrue("Remote Provider Page not found",
-				PageText.contains("Remote Providers"));
-		rpIndexPage.clickImport(0);
-		ApplicationDetailPage appDetPage = new ApplicationDetailPage(driver);
-		String pageHeader = appDetPage.getNameText();
-		assertTrue("Application Page not Found",
-				pageHeader.contains("WhiteHat Application"));
-		
-		appDetPage.sleep(1000);
-		
-		appDetPage.clickViewScansLink()
-        	.clickDeleteScanButton(0)
-        	.clickBackToAppLink()
-        	.clickDeleteLink()
-        	.clickDeleteButton()
-        	.clickRemoteProvidersLink()
-        	.clickClearConfigButton(0);
-	}
-	*/
+        assertFalse("WhiteHat scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded());
+
+        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+    }
+
+    @Test
+    public void importVeracodeScan() {
+        String teamName = "importVeracodeTeam" + getRandomString(3);
+        String appName = "importVeracodeApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera()
+                .mapVeracodeToTeamAndApp(3, teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
+
+        assertFalse("Veracode scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded());
+
+        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+
+    }
 }

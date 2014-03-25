@@ -175,28 +175,15 @@ public class TeamTests extends BaseTest {
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam()
-                .addNewApplication(teamName, appName, "", "Low")
-                .saveApplication(teamName)
-                .clickUploadScan(teamName, appName)
-                .setFileInput(teamName, appName, file)
-                .clickUploadScanButton(teamName, appName);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink();
-
-        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName);
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
 
         assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName,appName));
-
-        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName)
-                .clickDeleteButton();
-
-        loginPage = teamIndexPage.logout();
-
     }
 
 	//selenium issue
