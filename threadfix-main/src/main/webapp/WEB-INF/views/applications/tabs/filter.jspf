@@ -1,4 +1,4 @@
-<button ng-hide="showFilters || !vulns" ng-click="showFilters = true" class="btn">Show Filters</button>
+<button ng-hide="showFilters || !vulns || empty" ng-click="showFilters = true" class="btn">Show Filters</button>
 
 <div ng-show="showFilters" style="padding-top: 10px" ng-enter="refresh(true, false)">
     <button ng-click="showFilters = false" class="btn">Hide Filters</button>

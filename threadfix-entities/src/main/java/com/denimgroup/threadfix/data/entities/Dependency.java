@@ -24,6 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.map.annotate.JsonView;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -42,7 +45,8 @@ public class Dependency extends AuditableEntity {
 	private String cve;
 
 	@Column(length = 20)
-	public String getCve() {
+    @JsonView(AllViews.TableRow.class)
+    public String getCve() {
 		return cve;
 	}
 

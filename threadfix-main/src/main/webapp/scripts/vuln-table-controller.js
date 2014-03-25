@@ -225,7 +225,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.$on('scanUploaded', function() {
         $scope.empty = false;
-        $scope.refresh();
+        $scope.refresh(true, false);
     });
 
     $scope.$on('application', function(event, application) {
@@ -233,7 +233,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     });
 
     $scope.$on('scanDeleted', function() {
-        $scope.refresh();
+        $scope.refresh(true, false);
         $scope.empty = $scope.numVulns === 0;
     });
 

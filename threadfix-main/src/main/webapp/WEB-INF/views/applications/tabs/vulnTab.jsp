@@ -86,15 +86,13 @@
                         {{ vuln.vulnerabilityName }}
                     </td>
 
-                    <!-- TODO dependencies -->
-                    <td ng-click="expand(vuln)" class="pointer" style="word-wrap: break-word; width:100px" id="path{{ $index }}"> {{ vuln.path }} </td>
-                    <td ng-click="expand(vuln)" class="pointer" id="parameter{{ $index }}"> {{ vuln.parameter }} </td>
-                    <%--<c:if test="${ not empty vulnerability.originalFinding.dependency }">--%>
-                        <%--<td class="pointer" colspan="2">--%>
-                            <%--<c:out value="${ vulnerability.originalFinding.dependency.cve } "/>--%>
-                            <%--(<a target="_blank" id="cve{{ $index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ vulnerability.originalFinding.dependency.cve }">View</a>)--%>
-                        <%--</td>--%>
-                    <%--</c:if>--%>
+                    <td ng-hide="vuln.dependency" ng-click="expand(vuln)" class="pointer" style="word-wrap: break-word; width:100px" id="path{{ $index }}"> {{ vuln.path }} </td>
+                    <td ng-hide="vuln.dependency" ng-click="expand(vuln)" class="pointer" id="parameter{{ $index }}"> {{ vuln.parameter }} </td>
+
+                    <td ng-show="vuln.dependency" class="pointer" colspan="2">
+                        {{ vuln.dependency.cve }}
+                        (<a target="_blank" id="cve{{ $index }}" ng-href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vuln.dependency.cve }}">View</a>)
+                    </td>
 
                     <td ng-show="application.defectTracker">
                         <div ng-show="vuln.defect" class="tooltip-container" data-placement="left" ng-attr-title="{{ vuln.defect.nativeId }} ({{ vuln.defect.status }})" style="width:100%;text-align:right;">
