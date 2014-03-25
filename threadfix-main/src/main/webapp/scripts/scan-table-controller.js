@@ -47,14 +47,8 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
         window.location.href = $window.location.pathname + '/scans/' + scan.id + $scope.csrfToken;
     };
 
-    var setDate = function(scan) {
-        var time = new Date(scan.importTime)
-        scan.importTime = (time.getMonth() + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes());
-    }
-
     $scope.$on('scans', function(event, scans) {
         $scope.scans = scans;
-        $scope.scans.forEach(setDate);
         if (!$scope.scans || !$scope.scans.length > 0) {
             $scope.scans = undefined;
         } else {
