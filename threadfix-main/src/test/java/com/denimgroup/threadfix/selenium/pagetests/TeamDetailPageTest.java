@@ -52,31 +52,6 @@ public class TeamDetailPageTest extends BaseTest {
 
 		teamDetailPage = teamDetailPage.clickCloseEditModal();
 	}
-
-	@Ignore // permissions are being tested, should not test for current setup
-	@Test
-	public void permUsersModalTest(){
-        assertTrue("Build did not work properly", buildElements());
-        TeamDetailPage teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName).clickUserPermLink();
-		boolean editPresent = teamDetailPage.isPUEditPermLinkPresent();
-		boolean editClick = teamDetailPage.isPUEditPermLinkClickable();
-		boolean closePresent = teamDetailPage.isPUClosePresent();
-		boolean closeClick = teamDetailPage.isPUCloseClickable();
-		
-		teamDetailPage.clickCloseUserPermModal().logout();
-		
-		String ep,ec,cp,cc;
-		ep = ec = cp = cc = "";
-		if(!editPresent){ep = "Edit Perm Link was not present";}
-		if(!editClick){ec = "Edit Perm Link was not clickable";}
-		if(!closePresent){cp = "Close button was not present";}
-		if(!closeClick){cc = "Close button was not clickable";}
-		assertTrue(ep + " | "+ ec + " | "+ cp + " | "+ cc,
-				editPresent && editClick && closePresent && closeClick);
-		
-//		assertTrue(true);
-//		dashboardPage.logout();
-	}
 	
 	@Test
 	public void chartTest(){
