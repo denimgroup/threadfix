@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-table-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document-form-controller.js"></script>
 </head>
 
 <!-- Get the CSRF token so we can use it everywhere -->
@@ -19,6 +20,7 @@
       ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>';
          empty = <c:out value="${ numVulns }"/> === 0"
       ng-file-drop="onFileSelect($files)"
+      ng-class="{ 'drag-enabled': dragEnabled }"
       id="apps">
 
     <div class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
@@ -32,6 +34,7 @@
         <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
         <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
         <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
+        <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
 
         <div id="headerDiv">
             <%@ include file="/WEB-INF/views/applications/detailHeader.jsp" %>
@@ -51,13 +54,7 @@
         <tabset style="margin-top:10px;">
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
-            <tab heading="
-                ${ fn:length(application.documents) }
-                        <c:if test="${ fn:length(application.documents) == 1 }">File</c:if>
-                        <c:if test="${ fn:length(application.documents) != 1 }">Files</c:if>
-            ">
-                <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
-            </tab>
+            <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
             <c:if test="${isEnterprise}">
                 <tab heading="
                     ${ fn:length(application.scans) }

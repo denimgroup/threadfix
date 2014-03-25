@@ -2,8 +2,20 @@ var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, threadfixAPIService) {
 
+    $scope.dragEnabled = true;
+
+    $scope.$on('dragOff', function() {
+        $scope.dragEnabled = false;
+    });
+
+    $scope.$on('dragOn', function() {
+        $scope.dragEnabled = true;
+    });
+
     $scope.onFileSelect = function($files) {
-        $scope.$broadcast('fileDragged', $files);
+        if ($scope.dragEnabled) {
+            $scope.$broadcast('fileDragged', $files);
+        }
     };
 
     $scope.appId  = $window.location.pathname.match(/([0-9]+)$/)[0];

@@ -22,6 +22,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
+                   $rootScope.$broadcast('documents', $scope.config.documents);
 
                    $scope.config.application.organization = $scope.config.application.team;
                } else {

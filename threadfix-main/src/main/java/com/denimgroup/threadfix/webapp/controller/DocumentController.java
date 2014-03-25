@@ -26,17 +26,17 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -56,43 +56,34 @@ public class DocumentController {
 
     @Autowired
 	private DocumentService documentService;
-	
-	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
 
-	
+	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
+    private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
+
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ModelAndView uploadSubmit(@PathVariable("appId") int appId, 
-			@PathVariable("orgId") int orgId, HttpServletRequest request,
-			@RequestParam("file") MultipartFile file) {
-		
+	public @ResponseBody String uploadSubmit(@PathVariable("appId") int appId,
+			@PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
-			return new ModelAndView("403");
-		}				
-		String fileName = documentService.saveFileToApp(appId, file);
-		
-		if (fileName == null || fileName.equals("")) {
+			return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
+		}
+		Document document = documentService.saveFileToApp(appId, file);
+
+		if (document == null) {
 			log.warn("Saving the file have failed. Returning to file upload page.");
-			ModelAndView mav = new ModelAndView("ajaxFailureHarness");
-			mav.addObject("message","Unable to save the file to the application.");
-			mav.addObject("contentPage","applications/forms/uploadDocForm.jsp");
-			return mav;
+            return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
 		}else {
-			ControllerUtils.addSuccessMessage(request,
-                    "The file was successfully added to the application.");
-            ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
-			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
-			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId);
-			return mav;		
+			return writer.writeValueAsString(RestResponse.success(document));
 		}
 	}
 
 	@RequestMapping(value = "/vulnerabilities/{vulnId}/upload", method = RequestMethod.POST)
-	public ModelAndView uploadSubmitVuln(@PathVariable("appId") int appId, 
+	public ModelAndView uploadSubmitVuln(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("vulnId") int vulnId,
 			HttpServletRequest request,
 			@RequestParam("file") MultipartFile file) {
-		
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
 			return new ModelAndView("403");
 		}
@@ -109,13 +100,13 @@ public class DocumentController {
                     "The file was successfully added to the vulnerability.");
 			ModelAndView mav = new ModelAndView("ajaxRedirectHarness");
 			mav.addObject("contentPage","/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnId);
-			return mav;		
+			return mav;
 
 		}
 	}
 
 	@RequestMapping(value = "/{docId}/view", method = RequestMethod.GET)
-	public String detailDocument(Model model,@PathVariable("orgId") Integer orgId, 
+	public String detailDocument(Model model,@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
 			HttpServletResponse response) throws SQLException, IOException {
@@ -123,12 +114,12 @@ public class DocumentController {
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
-		
+
 		Document document = null;
 		if (docId != null) {
 			document = documentService.loadDocument(docId);
 		}
-		
+
 		if (document == null) {
 			if (orgId != null && appId != null)
 				return "redirect:/organizations/" + orgId + "/applications/" + appId + "/documents";
@@ -137,7 +128,7 @@ public class DocumentController {
 			else
 				return "redirect:/";
 		}
-		
+
 		String contentType = document.getContentType();
 		response.setContentType(contentType);
 		if(contentType.equals(documentService.getContentTypeService().getDefaultType())){
@@ -151,25 +142,25 @@ public class DocumentController {
 		in.close();
 		out.flush();
 		out.close();
-		
+
 		return null;
 	}
-	
-	@RequestMapping(value = "/{docId}/download", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/{docId}/download", method = RequestMethod.GET)
 	public String downloadDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
 			HttpServletResponse response) throws SQLException, IOException {
-		
+
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)){
 			return "403";
 		}
-		
+
 		Document document = null;
 		if (docId != null) {
 			document = documentService.loadDocument(docId);
 		}
-		
+
 		if (document == null) {
 			if (orgId != null && appId != null)
 				return "redirect:/organizations/" + orgId + "/applications/" + appId + "/documents";
@@ -186,45 +177,45 @@ public class DocumentController {
 		in.close();
 		out.flush();
 		out.close();
-		
+
 		return null;
 	}
 
-	
 	@RequestMapping(value = "/{docId}/delete", method = RequestMethod.POST)
-	public String deleteDocument(@PathVariable("orgId") Integer orgId, 
+	public @ResponseBody String deleteDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
 			HttpServletRequest request) throws SQLException, IOException {
-		
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return "403";
 		}
-		
+
 		Document document = null;
 		if (docId != null) {
 			document = documentService.loadDocument(docId);
 		}
-		
+
 		if (document == null) {
 			if (orgId != null && appId != null)
-				return "redirect:/organizations/" + orgId + "/applications/" + appId + "/documents";
+				return writer.writeValueAsString(RestResponse.success("Invalid document ID received."));
 			else if (orgId != null)
 				return "redirect:/organizations/" + orgId;
 			else
 				return "redirect:/";
 		}
-        boolean deleteFromApp = false;
-        if (document.getApplication() != null && document.getApplication().getId() != null )
-            deleteFromApp = true;
-		String urlReturn = documentService.deleteDocument(document);
-        ControllerUtils.addSuccessMessage(request, "The file was successfully deleted.");
-        if (deleteFromApp)
-            ControllerUtils.setActiveTab(request, ControllerUtils.FILE_TAB);
+        boolean appPage = document.getApplication() != null && document.getApplication().getId() != null;
 
-		return urlReturn;
+        String urlReturn = documentService.deleteDocument(document);
+        ControllerUtils.addSuccessMessage(request, "The file was successfully deleted.");
+
+        if (appPage) {
+            return writer.writeValueAsString(RestResponse.success("Successfully deleted scan."));
+        } else {
+            return urlReturn;
+        }
 	}
-	
+
 
 	
 }

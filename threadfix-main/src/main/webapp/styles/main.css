@@ -1050,8 +1050,7 @@ div.submit-defect-form.modal {
     display:none;
 }
 
-body.dragover .uploadable {
-    /*z-index:5000;*/
+body.dragover.drag-enabled .uploadable {
     display:block;
     background: #111;
     color:#FFF;

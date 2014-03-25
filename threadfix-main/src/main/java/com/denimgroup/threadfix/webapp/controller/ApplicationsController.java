@@ -169,6 +169,7 @@ public class ApplicationsController {
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
         map.put("teams", organizationService.loadAllActive());
         map.put("scans", application.getScans());
+        map.put("documents", application.getDocuments());
 
         String data = getWriter().writeValueAsString(RestResponse.success(map));
 

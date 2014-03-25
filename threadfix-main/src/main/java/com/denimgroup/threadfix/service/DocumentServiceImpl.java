@@ -23,14 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.rowset.serial.SerialBlob;
-
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.dao.DocumentDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Document;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +36,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.DocumentDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Document;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false)
@@ -73,9 +71,8 @@ public class DocumentServiceImpl implements DocumentService {
 	 * @return filename that was saved
 	 */
 	@Override
-	public String saveFileToApp(Integer appId, MultipartFile file) {
-		String retVal = saveFileToApp(appId, file, null);
-		return(retVal);
+	public Document saveFileToApp(Integer appId, MultipartFile file) {
+		return saveFileToApp(appId, file, null);
 	}
 	
 	
@@ -88,7 +85,7 @@ public class DocumentServiceImpl implements DocumentService {
 	 * @return filename that was saved
 	 */
 	@Override
-	public String saveFileToApp(Integer appId, MultipartFile file, String overrideFilename) {
+	public Document saveFileToApp(Integer appId, MultipartFile file, String overrideFilename) {
 		if (appId == null || file == null) {
 			log.warn("The document upload file failed to save, it had null input.");
 			return null;
@@ -141,7 +138,7 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
-		return fileFullName;
+		return doc;
 	}
 
 	@Override

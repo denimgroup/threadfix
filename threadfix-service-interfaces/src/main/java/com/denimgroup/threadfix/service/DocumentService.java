@@ -29,8 +29,8 @@ import com.denimgroup.threadfix.data.entities.Document;
 
 public interface DocumentService {
 
-	String saveFileToApp(Integer appId, MultipartFile file, String overrideFilename);
-	String saveFileToApp(Integer appId, MultipartFile file);
+    Document saveFileToApp(Integer appId, MultipartFile file, String overrideFilename);
+	Document saveFileToApp(Integer appId, MultipartFile file);
 	String saveFileToVuln(Integer vulnId, MultipartFile file);
 	Document loadDocument(Integer docId);
 	String deleteDocument(Document document);

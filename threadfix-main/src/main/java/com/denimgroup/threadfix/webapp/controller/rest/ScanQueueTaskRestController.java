@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.webapp.controller.rest;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Document;
 import com.denimgroup.threadfix.data.entities.ScanQueueTask;
 import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
@@ -208,7 +209,9 @@ public class ScanQueueTaskRestController extends RestController {
             return RestResponse.failure(message);
 		} else {
 			String filename = ScanQueueTask.makeScanAgentConfigFileName(scannerType);
-			String returnedFilename = this.documentService.saveFileToApp(appId, file, filename);
+			Document document = this.documentService.saveFileToApp(appId, file, filename);
+            String returnedFilename = document == null ? null : document.getName();
+
 			log.debug("Filename of: " + filename + " resulted in final filename of: " + returnedFilename);
             String message = "Scan configuration for scanner: " + scannerType + " saved for appId: " + appId;
 			log.info(message);

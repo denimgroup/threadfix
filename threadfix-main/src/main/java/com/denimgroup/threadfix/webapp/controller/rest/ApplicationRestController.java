@@ -130,7 +130,7 @@ public class ApplicationRestController extends RestController {
 			return RestResponse.failure(result);
 		}
 		
-		if(filename != null) {
+		if (filename != null) {
 			documentService.saveFileToApp(appId, file, filename);
 		} else {
 			documentService.saveFileToApp(appId, file);
