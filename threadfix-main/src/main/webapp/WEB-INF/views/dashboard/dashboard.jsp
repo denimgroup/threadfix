@@ -85,7 +85,7 @@
 							<tr class="no-top-border">
 								<td class="thick-left" colspan="3">
 									<span style="font-weight:bold;color:red;"><c:out value="${ scan.numberTotalVulnerabilities }"/></span> Vulnerabilities from
-									<c:out value="${ scan.applicationChannel.channelType.name }"/> (<c:out value="${ scan.scannerType }"/>)
+									<c:out value="${ scan.applicationChannel.channelType.name }"/> <c:if test="${ not empty scan.scannerType }">(<c:out value="${ scan.scannerType }"/>)</c:if>
 								</td>
 							</tr>
 						</c:forEach>
