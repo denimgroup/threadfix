@@ -62,8 +62,6 @@ public class DashboardTests extends BaseTest{
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
 
-    //TODO waiting for better ids
-    @Ignore
     @Test
     public void dashboardRecentCommentsDisplayTest() {
         String teamName = "dashboardGraphTestTeam" + getRandomString(3);
