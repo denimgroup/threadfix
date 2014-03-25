@@ -94,9 +94,9 @@ public class ScanDetailPage extends BasePage{
 	public String getNumMergedResults(int row){
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
-	public FindingEditPage clickViewFinding(int row){
+	public FindingDetailPage clickViewFinding(int row){
 		driver.findElementById("mappedVulnType"+row).click();
-		return new FindingEditPage(driver);
+		return new FindingDetailPage(driver);
 	}
 	
 }

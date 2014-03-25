@@ -50,6 +50,10 @@ public class DashboardPage extends BasePage{
                 .findElement(By.className("thick-left")).getText().trim());
     }
 
+    public boolean isCommentDisplayed() {
+        return driver.findElementById("commentText1").isDisplayed();
+    }
+
 	public ReportsIndexPage click6MonthViewMore(){
 		driver.findElementById("leftViewMore").click();
 		return new ReportsIndexPage(driver);

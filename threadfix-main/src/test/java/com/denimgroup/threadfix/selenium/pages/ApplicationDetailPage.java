@@ -733,6 +733,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ScanDetailPage clickViewScan() {
+        driver.findElementByLinkText("View Scan").click();
+        return new ScanDetailPage(driver);
+    }
+
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {

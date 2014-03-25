@@ -25,9 +25,9 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import static org.junit.Assert.*;
-import org.junit.*;
 
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.*;
+import org.junit.*;
 
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
@@ -49,7 +49,7 @@ public class DashboardTests extends BaseTest{
 	}
 
     @Test
-    public void dashboardRecentCommentsDisplayTest(){
+    public void dashboardRecentUploadsDisplayTest(){
         String teamName = "dashboardGraphTestTeam" + getRandomString(3);
         String appName = "dashboardGraphTestApp" + getRandomString(3);
 
@@ -65,7 +65,32 @@ public class DashboardTests extends BaseTest{
     //TODO waiting for better ids
     @Ignore
     @Test
-    public void dashboardRecentUploadsDisplayTest() {
+    public void dashboardRecentCommentsDisplayTest() {
+        String teamName = "dashboardGraphTestTeam" + getRandomString(3);
+        String appName = "dashboardGraphTestApp" + getRandomString(3);
+        String commentText = "This is a test comment.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewScan()
+                .clickViewFinding(1)
+                .clickViewVulnerability()
+                .clickAddComment()
+                .setCommentText(commentText)
+                .clickSubmitComment();
+
+        DashboardPage dashboardPage = vulnerabilityDetailPage.clickDashboardLink();
+
+        assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
 
 }

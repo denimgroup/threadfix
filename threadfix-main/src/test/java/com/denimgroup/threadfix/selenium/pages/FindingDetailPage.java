@@ -21,29 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
 
-public class VulnerabilityDetailPage extends BasePage{
+public class FindingDetailPage extends BasePage {
 
-	public VulnerabilityDetailPage(WebDriver webdriver) {
-		super(webdriver);
-	}
-	
-    public VulnerabilityDetailPage clickAddComment() {
-        driver.findElementByLinkText("Add Comment").click();
-        return new VulnerabilityDetailPage(driver);
+    public FindingDetailPage(WebDriver webDriver) {
+        super(webDriver);
     }
 
-    public VulnerabilityDetailPage setCommentText(String commentText) {
-        driver.findElementById("commentInputBox").sendKeys(commentText);
-        return new VulnerabilityDetailPage(driver);
-    }
-
-    public VulnerabilityDetailPage clickSubmitComment() {
-        driver.findElementByClassName("btn-primary").click();
+    public VulnerabilityDetailPage clickViewVulnerability() {
+        driver.findElementByLinkText("View Vulnerability").click();
         return new VulnerabilityDetailPage(driver);
     }
 }
