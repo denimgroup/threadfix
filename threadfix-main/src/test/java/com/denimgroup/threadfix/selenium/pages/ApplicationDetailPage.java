@@ -87,7 +87,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickTestConnection() {
         waitForElement(driver.findElementById("jsonLink"));
         driver.findElementById("jsonLink").click();
-        sleep(3000);
+        sleep(8000);
         waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
         return new ApplicationDetailPage(driver);
     }
@@ -577,7 +577,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickMergeDefectSubmit() {
         driver.findElementsById("mergeDefectButton").get(2).click();
-        sleep(4000);
+        sleep(6000);
         return new ApplicationDetailPage(driver);
     }
 

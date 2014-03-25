@@ -132,11 +132,25 @@ public class VulnTests extends BaseTest {
         applicationDetailPage.logout();
 	}
 
-    @Ignore
 	@Test
 	public void mergeSingleVulnTFS(){
 		assertTrue("bug",build(TFS));
-		//merge here
+
+        //submit merge
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickMergeDefectLink()
+                .selectMergeDefect("793")
+                .clickMergeDefectSubmit();
+
+        //verify
+        applicationDetailPage.clickExpandAllVulns();
+
+        assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 1);
+
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 	
 	@Test
@@ -185,11 +199,27 @@ public class VulnTests extends BaseTest {
         applicationDetailPage.logout();
 	}
 
-	@Ignore
 	@Test
 	public void mergeMultiVulnTFS(){
 		assertTrue("bug",build(TFS));
-		//merge here
+
+        //submit merge
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickVulnCheckBox(2)
+                .clickVulnCheckBox(3)
+                .clickMergeDefectLink()
+                .selectMergeDefect("793")
+                .clickMergeDefectSubmit();
+
+        //verify
+        applicationDetailPage.clickExpandAllVulns();
+
+        assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 3);
+
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 	
 	@Test
@@ -246,11 +276,31 @@ public class VulnTests extends BaseTest {
         applicationDetailPage.logout();
 	}
 
-	@Ignore
 	@Test
 	public void changeMergeSingleVulnTFS(){
 		assertTrue("bug",build(TFS));
-		//merge here
+
+        //submit merge
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickMergeDefectLink()
+                .selectMergeDefect("793")
+                .clickMergeDefectSubmit();
+
+        //change merge
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickMergeDefectLink()
+                .selectMergeDefect("826")
+                .clickMergeDefectSubmit();
+
+        applicationDetailPage.clickExpandAllVulns();
+
+        assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 1);
+
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 	
 	@Test
@@ -314,11 +364,34 @@ public class VulnTests extends BaseTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void changeMergeMultiVulnTFS(){
 		assertTrue("bug",build(TFS));
-		//merge here
+
+        //submit merge
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickVulnCheckBox(2)
+                .clickVulnCheckBox(3)
+                .clickMergeDefectLink()
+                .selectMergeDefect("793")
+                .clickMergeDefectSubmit();
+
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickVulnCheckBox(2)
+                .clickVulnCheckBox(3)
+                .clickMergeDefectLink()
+                .selectMergeDefect("826")
+                .clickMergeDefectSubmit();
+
+        applicationDetailPage.clickExpandAllVulns();
+
+        assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 3);
+
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 	
 	@Test
@@ -398,12 +471,42 @@ public class VulnTests extends BaseTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void changeMergeMultiDiffVulnTFS(){
 		assertTrue("bug",build(TFS));
-		//merge here
 
+        //submit merge
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickVulnCheckBox(2)
+                .clickVulnCheckBox(3)
+                .clickMergeDefectLink()
+                .selectMergeDefect("793")
+                .clickMergeDefectSubmit();
+
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(4)
+                .clickVulnCheckBox(5)
+                .clickVulnCheckBox(6)
+                .clickMergeDefectLink()
+                .selectMergeDefect("826")
+                .clickMergeDefectSubmit();
+
+        applicationDetailPage.clickExpandAllVulns()
+                .clickVulnCheckBox(1)
+                .clickVulnCheckBox(4)
+                .clickVulnCheckBox(3)
+                .clickMergeDefectLink()
+                .selectMergeDefect("860")
+                .clickMergeDefectSubmit();
+
+        applicationDetailPage.clickExpandAllVulns();
+
+        assertTrue("Number of submitted vulns is incorrect",applicationDetailPage.getNumOfSubmitedDefects()-1 == 6);
+
+        applicationDetailPage.clickOrganizationHeaderLink();
+
+        applicationDetailPage.logout();
 	}
 
 	@Test
