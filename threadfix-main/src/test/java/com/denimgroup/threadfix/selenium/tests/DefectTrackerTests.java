@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.sun.tools.doclets.internal.toolkit.resources.doclets_zh_CN;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
@@ -233,7 +234,7 @@ public class DefectTrackerTests extends BaseTest {
 	}
 
 	@Test
-	public void testEditDefectTrackerFieldValidation() {
+	public void testEditDefectTrackerFieldValidation() {                            //this one!!!!!!!!!!
         String emptyString = "";
         String whiteSpaceString = "           ";
 
@@ -258,6 +259,8 @@ public class DefectTrackerTests extends BaseTest {
                 .enterType(null, defectTrackerType)
 				.enterURL(null, TEST_BUGZILLA_URL)
 				.clickSaveNewDefectTracker(newDefectTrackerName)
+                .clickOrganizationHeaderLink()
+                .clickDefectTrackersLink()
                 .clickEditLink(newDefectTrackerName);
 
 		// Test empty and whitespace input
