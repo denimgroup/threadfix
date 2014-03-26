@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 public class FilterPage extends BasePage {
@@ -36,7 +37,7 @@ public class FilterPage extends BasePage {
 
     public FilterPage clickCreateNewFilter() {
         waitForElement(driver.findElementById("createNewKeyModalButton"));
-        sleep(5000);
+        sleep(7000);
         driver.findElementById("createNewKeyModalButton").click();
         return new FilterPage(driver);
     }
