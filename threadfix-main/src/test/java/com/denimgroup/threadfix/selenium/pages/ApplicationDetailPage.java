@@ -36,6 +36,7 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.seleniumemulation.WaitForCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -569,9 +570,9 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    // TODO find a better way to wait for list to populate
     public ApplicationDetailPage selectMergeDefect(String defect) {
-        WebDriverWait wait = new WebDriverWait(driver, 180);
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("mergeDefectButton")));
+        sleep(35000);
         new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
         return new ApplicationDetailPage(driver);
     }
