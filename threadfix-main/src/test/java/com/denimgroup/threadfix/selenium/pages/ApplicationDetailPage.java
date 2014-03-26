@@ -565,12 +565,12 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickMergeDefectLink() {
         clickDefectActionBtn();
         driver.findElementById("mergeDefectButton").click();
-        sleep(3000);
+        sleep(8000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage selectMergeDefect(String defect) {
-        sleep(20000);
+        sleep(25000);
         new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
         return new ApplicationDetailPage(driver);
     }
