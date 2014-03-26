@@ -36,7 +36,7 @@
 					<td colspan="10" style="text-align: center;">Loading Scans.</td>
 				</tr>
                 <tr ng-show="scans" ng-repeat="scan in scans">
-                    <td>{{ scan.importTime }}</td>
+                    <td>{{ scan.importTime | date:'medium' }}</td>
                     <td>{{ scan.app.name }}</td>
                     <td>{{ scan.team.name }}</td>
                     <td>{{ scan.scannerName }}</td>

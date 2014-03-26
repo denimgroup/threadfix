@@ -19,6 +19,12 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    if (!$scope.config.defectTrackerList) {
                        $scope.config.defectTrackerList = [];
                    }
+                   if (!$scope.config.recentFileList) {
+                       $scope.config.recentFileList = [];
+                   }
+                   if (!$scope.config.recentPathList) {
+                       $scope.config.recentPathList = [];
+                   }
 
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
@@ -297,6 +303,44 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         modalInstance.result.then(function (scan) {
             $log.info("Successfully uploaded scan.");
             $rootScope.$broadcast('scanUploaded');
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+    }
+
+    $scope.submitFindingForm = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'manualFindingForm.html',
+            windowClass: 'wide',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return window.location.pathname + "/scans/new" + $scope.csrfToken;
+                },
+                object: function () {
+                    return {
+                        application: {
+                            id: $scope.config.application.id
+                        },
+                        group: "dynamic",
+                        dataFlowElements: [{}],
+                        channelSeverity: $scope.config.manualSeverities[0]
+                    };
+                },
+                config: function() {
+                    return $scope.config;
+                },
+                buttonText: function() {
+                    return "Submit Finding";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (result) {
+            $scope.successMessage = result;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

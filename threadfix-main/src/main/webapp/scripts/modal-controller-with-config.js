@@ -28,7 +28,15 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
                     if (data.success) {
                         $modalInstance.close(data.object);
                     } else {
-                        $scope.error = "Failure. Message was : " + data.message;
+                        if (data.errorMap) {
+                            for (var index in data.errorMap) {
+                                if (data.errorMap.hasOwnProperty(index)) {
+                                    $scope.object[index + ".error"] = data.errorMap[index];
+                                }
+                            }
+                        } else {
+                            $scope.error = "Failure. Message was : " + data.message;
+                        }
                     }
                 }).
                 error(function(data, status, headers, config) {

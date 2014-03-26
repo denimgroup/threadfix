@@ -82,6 +82,8 @@ public class ApplicationsController {
 	private ChannelVulnerabilityService channelVulnerabilityService;
     @Autowired
     private ChannelTypeService channelTypeService;
+    @Autowired
+    private GenericVulnerabilityService genericVulnerabilityService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -160,7 +162,10 @@ public class ApplicationsController {
 
         Application application = applicationService.loadApplication(appId);
 
+        // basic information
         map.put("application", application);
+
+        // edit form
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
         map.put("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
         map.put("wafList", wafService.loadAll());
@@ -168,8 +173,18 @@ public class ApplicationsController {
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
         map.put("teams", organizationService.loadAllActive());
+
+        // scans tab
         map.put("scans", application.getScans());
+
+        // doc tab
         map.put("documents", application.getDocuments());
+
+        // manual Finding form
+        map.put("manualSeverities", findingService.getManualSeverities());
+        map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
+        map.put("recentFileList", findingService.getRecentStaticPaths(appId));
+        map.put("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
 
         String data = getWriter().writeValueAsString(RestResponse.success(map));
 

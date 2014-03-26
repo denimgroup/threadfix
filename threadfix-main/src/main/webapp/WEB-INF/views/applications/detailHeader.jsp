@@ -11,8 +11,8 @@
 <div ng-controller="ApplicationPageModalController">
     <h2 style="padding-bottom:5px;line-height:1">
 
-        <span ng-hide="config" id="nameText" style="padding-top:5px;"><c:out value="${ application.name }"/></span>
-        <span ng-show="config" id="nameText" style="padding-top:5px;">{{ config.application.name }}</span>
+    <span ng-hide="config" id="nameText" style="padding-top:5px;"><c:out value="${ application.name }"/></span>
+    <span ng-show="config" id="nameText" style="padding-top:5px;">{{ config.application.name }}</span>
     <c:if test="${ not empty canManageApplications }">
         <div id="btnDiv1" class="btn-group">
             <button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
@@ -39,7 +39,7 @@
                 </c:if>
                 <c:if test="${ canUploadScans }">
                     <li><a class="pointer" id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
-                    <li><a class="pointer" id="addManualFindingModalLink">Add Manual Finding</a></li>
+                    <li><a class="pointer" id="addManualFindingModalLink" ng-click="submitFindingForm()">Add Manual Finding</a></li>
                     <li ng-show="config.application.defectTracker">
                         <a id="updateDefectsLink" ng-click="updateDefectStatus()">
                             Update Defect Status

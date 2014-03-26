@@ -35,6 +35,7 @@
         <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
         <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
         <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
+        <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
 
         <div id="headerDiv">
             <%@ include file="/WEB-INF/views/applications/detailHeader.jsp" %>

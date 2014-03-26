@@ -7,15 +7,6 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
     $scope.pageNumber = 1;
     $scope.numScans = 0;
 
-    var nameCompare = function(a,b) {
-        return a.name.localeCompare(b.name);
-    };
-
-    var setDate = function(scan) {
-        var time = new Date(scan.importTime)
-        scan.importTime = (time.getMonth() + "/" + time.getDate() + "/" + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes());
-    }
-
     // since we need the csrfToken to make the request, we need to wait until it's initialized
     $scope.$watch('csrfToken', function() {
         $http.post("/scans/table/" + $scope.pageNumber + $scope.csrfToken).
@@ -25,8 +16,6 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
                 if (data.success) {
                     $scope.scans = data.object.scanList;
                     $scope.numScans = data.object.numScans;
-
-                    $scope.scans.forEach(setDate);
 
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
