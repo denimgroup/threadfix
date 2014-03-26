@@ -24,8 +24,6 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
@@ -167,7 +165,7 @@ public class TeamTests extends BaseTest {
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 
-    // TODO Wait for the graphs to have id's, then test
+    // TODO Wait for the graphs to have id's, then test. Right now, indexing would be required to locate the graph.
     @Ignore
     @Test
     public void testTeamGraphs() {
@@ -187,26 +185,19 @@ public class TeamTests extends BaseTest {
     }
 
 	//selenium issue
-	@Ignore
 	@Test
 	public void testEditOrganizationBoundaries(){
-		String orgName = "testEditOrganizationBoundaries";
-		String orgNameDuplicateTest = "testEditOrganizationBoundaries2";
-		
-		String emptyString = "";
-		String whiteSpaceString = "           ";
+		String orgName = "testEditOrgBound" + getRandomString(3);
+		String orgNameDuplicateTest = "testEditOrgBound2" + getRandomString(3);
 		
 		String emptyInputError = "This field cannot be blank";
 		
-		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+		String longInput = getRandomString(119);
+
+        DatabaseUtils.createTeam(orgName);
+        DatabaseUtils.createTeam(orgNameDuplicateTest);
 
         TeamDetailPage teamDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
-                .clickAddTeamButton()
-                .setTeamName(orgName)
-                .addNewTeam()
-                .clickAddTeamButton()
-                .setTeamName(orgNameDuplicateTest)
-                .addNewTeam()
                 .clickViewTeamLink(orgName);
 		
 		// Test edit with no changes
@@ -215,12 +206,12 @@ public class TeamTests extends BaseTest {
 		
 		// Test empty input
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-                .setNameInput(emptyString)
+                .setNameInput("")
                 .clickUpdateButtonInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
 		// Test whitespace input
-		teamDetailPage = teamDetailPage.setNameInput(whiteSpaceString)
+		teamDetailPage = teamDetailPage.setNameInput("           ")
                 .clickUpdateButtonInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorText()));
 		
@@ -230,10 +221,9 @@ public class TeamTests extends BaseTest {
                 .setNameInput(longInput)
                 .clickUpdateButtonValid();
 		
-		orgName = longInput.substring(0, Organization.NAME_LENGTH+1);
+		orgName = longInput.substring(0, 60);
 		
-		assertTrue("The organization name was not cropped correctly.", teamDetailPage.getOrgName().equals(orgName));
-		orgName = longInput.substring(0,Organization.NAME_LENGTH);
+		assertTrue("The organization name was not cropped correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(orgName));
 		
 		// Test name duplication checking
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
@@ -241,14 +231,5 @@ public class TeamTests extends BaseTest {
                 .clickUpdateButtonInvalid();
 		
 		assertTrue(teamDetailPage.getErrorText().equals("That name is already taken."));
-				
-		// Delete and logout
-		loginPage = teamDetailPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(orgName)
-                .clickDeleteButton()
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(orgNameDuplicateTest)
-                .clickDeleteButton()
-                .logout();
 	}
 }
