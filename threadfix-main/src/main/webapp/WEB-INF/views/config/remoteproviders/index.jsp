@@ -7,9 +7,9 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
-<spring:url value="" var="emptyUrl"/>
-<body ng-controller="RemoteProvidersController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+<body ng-controller="RemoteProvidersController">
 	<h2>Remote Providers</h2>
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
     <%@ include file="/WEB-INF/views/config/remoteproviders/configure.jsp" %>
     <%@ include file="/WEB-INF/views/config/remoteproviders/editMapping.jsp" %>

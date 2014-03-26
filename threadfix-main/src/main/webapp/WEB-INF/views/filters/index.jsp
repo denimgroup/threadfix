@@ -6,9 +6,9 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
-<spring:url value="" var="emptyUrl"/>
-<body ng-controller="VulnerabilityFiltersController"
-        ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+<body ng-controller="VulnerabilityFiltersController">
+
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 

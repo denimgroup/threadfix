@@ -20,10 +20,7 @@
         </div>
     </security:authorize>
 
-    <!-- Get the CSRF token so we can use it everywhere -->
-    <spring:url value="" var="emptyUrl"/>
-
-    <div ng-controller="ApplicationsIndexController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+    <div ng-controller="ApplicationsIndexController">
 
         <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 

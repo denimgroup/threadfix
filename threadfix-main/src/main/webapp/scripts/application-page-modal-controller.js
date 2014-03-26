@@ -1,14 +1,12 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal) {
-
-    $scope.csrfToken = $scope.$parent.csrfToken;
+myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal, tfEncoder) {
 
     $scope.currentModal = null;
 
     // initialize objects for forms
-    $scope.$watch('csrfToken', function() {
-       $http.get($window.location.pathname + "/objects" + $scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+       $http.get(tfEncoder.encodeRelative("/objects")).
            success(function(data, status, headers, config) {
 
                if (data.success) {
@@ -43,7 +41,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     });
 
     $scope.updateDefectStatus = function() {
-        $http.get($window.location.pathname + "/defects/update" + $scope.csrfToken).
+        $http.get(tfEncoder.encode("/defects/update")).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -97,11 +95,11 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             resolve: {
                 url: function() {
                     var app = $scope.config.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit");
                 },
                 object: function () {
                     var app = $scope.config.application;
-                    app.deleteUrl = "/organizations/" + app.team.id + "/applications/" + app.id + "/delete" + $scope.csrfToken
+                    app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete")
                     return $scope.config.application;
                 },
                 config: function() {
@@ -131,7 +129,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             resolve: {
                 url: function() {
                     var app = $scope.config.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/edit/wafAjax" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit/wafAjax");
                 },
                 object: function () {
                     return {
@@ -166,7 +164,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/wafs/new/ajax/appPage" + $scope.csrfToken;
+                    return tfEncoder.encode("/wafs/new/ajax/appPage");
                 },
                 object: function () {
                     return {
@@ -203,12 +201,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             templateUrl: 'addDefectTrackerModal.html',
             controller: 'AddDefectTrackerModalController',
             resolve: {
-                csrfToken: function() {
-                    return $scope.csrfToken;
-                },
                 url: function() {
                     var app = $scope.config.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/edit/addDTAjax" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit/addDTAjax");
                 },
                 object: function () {
 
@@ -247,7 +242,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/configuration/defecttrackers/new" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/defecttrackers/new");
                 },
                 object: function () {
                     return {
@@ -292,7 +287,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             resolve: {
                 url: function() {
                     var app = $scope.config.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote");
                 },
                 files: function() {
                     return files;
@@ -316,7 +311,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return window.location.pathname + "/scans/new" + $scope.csrfToken;
+                    return tfEncoder.encodeRelative("/scans/new");
                 },
                 object: function () {
                     return {

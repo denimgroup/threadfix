@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $window) {
+myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $window, tfEncoder) {
 
     $scope.initialized = false;
 
@@ -8,8 +8,8 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
     $scope.numScans = 0;
 
     // since we need the csrfToken to make the request, we need to wait until it's initialized
-    $scope.$watch('csrfToken', function() {
-        $http.post("/scans/table/" + $scope.pageNumber + $scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        $http.post(tfEncoder.encode("/scans/table/" + $scope.pageNumber)).
             success(function(data, status, headers, config) {
                 $scope.initialized = true;
 
@@ -27,7 +27,7 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
     });
 
     $scope.goTo = function(scan) {
-        $window.location.href = "/organizations/" + scan.team.id + "/applications/" + scan.app.id + "/scans/" + scan.id + $scope.csrfToken;
+        $window.location.href = tfEncoder.encode("/organizations/" + scan.team.id + "/applications/" + scan.app.id + "/scans/" + scan.id);
     };
 
 });

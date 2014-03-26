@@ -7,8 +7,8 @@
 </head>
 
 <body id="config">
-    <spring:url value="" var="emptyUrl"/>
-    <div ng-controller="DefectTrackersController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <div ng-controller="DefectTrackersController">
         <h2>Defect Trackers</h2>
 
         <%@ include file="modals/editDTModal.jsp" %>

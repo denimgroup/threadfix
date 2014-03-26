@@ -4,7 +4,7 @@ var myAppModule = angular.module('threadfix')
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log) {
+myAppModule.controller('UserPageController', function ($scope, $modal, $http, $log, tfEncoder) {
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
@@ -13,7 +13,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     var reloadList = function() {
         $scope.initialized = false;
 
-        $http.get('users/list' + $scope.csrfToken).
+        $http.get(tfEncoder.encode('users/list')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -35,7 +35,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             });
     }
 
-    $scope.$watch('csrfToken', function() {
+    $scope.$on('rootScopeInitialized', function() {
         reloadList();
     });
 
@@ -45,7 +45,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             controller: 'UserModalController',
             resolve: {
                 url: function() {
-                    return "/configuration/users/new" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/users/new");
                 },
                 user: function() {
                     return {};
@@ -72,13 +72,13 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
             controller: 'UserModalController',
             resolve: {
                 url: function() {
-                    return "/configuration/users/" + user.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/users/" + user.id + "/edit");
                 },
                 user: function() {
                     return user;
                 },
                 deleteUrl: function() {
-                    return "/configuration/users/" + user.id + "/delete" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/users/" + user.id + "/delete");
                 }
             }
         });

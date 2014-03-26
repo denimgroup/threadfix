@@ -6,14 +6,15 @@
 </head>
 
 <body id="scans">
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+
 	<h2>Scans</h2>
 	
 	<div id="helpText">
 		This page lists all of the scans that have been uploaded to ThreadFix.
 	</div>
 		
-	<spring:url value="" var="emptyUrl" />
-	<div ng-controller="ScanHistoryController" ng-init="csrfToken = '<c:out value='${ emptyUrl }'/>'">
+	<div ng-controller="ScanHistoryController">
         <!-- TODO re-add pagination -->
 		<table class="table">
 			<thead>

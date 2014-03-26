@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('VulnTableController', function ($scope, $window, $http, $rootScope, $modal, $log) {
+myAppModule.controller('VulnTableController', function ($scope, $window, $http, $rootScope, $modal, $log, tfEncoder) {
 
     $scope.initialized = false;
 
@@ -32,7 +32,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return window.location.pathname + "/vulnerabilities/" + vuln.id + "/addComment" + $scope.csrfToken;
+                    return tfEncoder.encodeRelative("/vulnerabilities/" + vuln.id + "/addComment");
                 },
                 object: function () {
                     return {};
@@ -97,8 +97,6 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
         return object;
     }
-
-    $scope.csrfToken = $scope.$parent.csrfToken;
 
     $scope.heading = '0 Vulnerabilities';
 
@@ -179,7 +177,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     $scope.refresh = function(newValue, oldValue) {
         if (newValue !== oldValue) {
             $scope.loading = true;
-            $http.post($window.location.pathname + "/table" + $scope.csrfToken,
+            $http.post(tfEncoder.encodeRelative("/table"),
                     getTableSortBean()).
                 success(function(data, status, headers, config) {
                     $scope.initialized = true;
@@ -202,7 +200,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     // Define listeners
     $scope.$watch('vulnType', $scope.refresh);
 
-    $scope.$watch('csrfToken', function() {
+    $scope.$on('rootScopeInitialized', function() {
         return $scope.refresh(true, false);
     });
 
@@ -250,7 +248,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         }));
         $scope.loading = true;
 
-        $http.post($window.location.pathname + urlExtension + $scope.csrfToken, object).
+        $http.post(tfEncoder.encodeRelative(urlExtension), object).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -333,11 +331,11 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             resolve: {
                 url: function() {
                     var app = $scope.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defects" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/defects");
                 },
                 configUrl: function() {
                     var app = $scope.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defectSubmission" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/defectSubmission");
                 },
                 object: function () {
                     return {};
@@ -387,11 +385,11 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             resolve: {
                 url: function() {
                     var app = $scope.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defects/merge" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/defects/merge");
                 },
                 configUrl: function() {
                     var app = $scope.application;
-                    return "/organizations/" + app.team.id + "/applications/" + app.id + "/defectSubmission" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/defectSubmission");
                 },
                 object: function () {
                     return {};

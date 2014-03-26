@@ -48,7 +48,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
             });
     };
 
-    $scope.$watch('csrfToken', function() {
+    $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = $scope.$parent.reportQuery;
         $scope.rightReportTitle = $scope.$parent.rightReportTitle;
         if (!$scope.empty) {

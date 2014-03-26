@@ -6,12 +6,10 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 </head>
 
-<spring:url value="" var="emptyUrl"/>
-
 <body ng-controller="TeamDetailPageController"
-      ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'"
       id="apps">
 
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
     <%@ include file="/WEB-INF/views/organizations/editTeamForm.jsp" %>

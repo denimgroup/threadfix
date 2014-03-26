@@ -1,13 +1,13 @@
 var module = angular.module('threadfix')
 
-module.controller('WafsPageController', function($scope, $http, $modal, $log){
+module.controller('WafsPageController', function($scope, $http, $modal, $log, tfEncoder){
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
     };
 
-    $scope.$watch('csrfToken', function() {
-        $http.get('/wafs/map' + $scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        $http.get(tfEncoder.encode('/wafs/map')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -37,7 +37,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log){
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/wafs/new/ajax/appPage" + $scope.csrfToken;
+                    return tfEncoder.encode("/wafs/new/ajax/appPage");
                 },
                 object: function () {
                     return {
@@ -80,7 +80,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log){
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/wafs/" + waf.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/wafs/" + waf.id + "/edit");
                 },
                 object: function() {
                     return waf;
@@ -94,7 +94,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log){
                     }
                 },
                 deleteUrl: function() {
-                    return "/wafs/" + waf.id + "/delete" + $scope.csrfToken;
+                    return tfEncoder.encode("/wafs/" + waf.id + "/delete");
                 }
             }
         });
@@ -124,7 +124,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log){
     }
 
     $scope.goToWaf = function(waf) {
-        window.location.href = "/wafs/" + waf.id + $scope.csrfToken;
+        window.location.href = tfEncoder.encode("/wafs/" + waf.id);
     }
 
 });

@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, threadfixAPIService) {
+myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, $rootScope) {
 
     $scope.dragEnabled = true;
 
@@ -21,8 +21,8 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
     $scope.appId  = $window.location.pathname.match(/([0-9]+)$/)[0];
     $scope.teamId = $window.location.pathname.match(/([0-9]+)/)[0];
 
-    $scope.$watch('csrfToken', function() {
-        $scope.reportQuery = $scope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
+    $scope.$on('rootScopeInitialized', function() {
+        $scope.reportQuery = $rootScope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
     });
 
     $scope.rightReportTitle = "Top 10 Vulnerabilities";

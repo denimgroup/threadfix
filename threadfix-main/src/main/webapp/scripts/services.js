@@ -1,27 +1,44 @@
 var threadfixModule = angular.module('threadfix')
 
-threadfixModule.factory('threadfixAPIService', function($location, $http) {
+threadfixModule.factory('tfEncoder', function($rootScope) {
+
+    var tfEncoder = {};
+
+    tfEncoder.encode = function(path) {
+        return $rootScope.urlRoot + path + $rootScope.csrfToken;
+    }
+
+    tfEncoder.encodeRelative = function(path) {
+        return $location.path() + path + $rootScope.csrfToken;
+    }
+
+    return tfEncoder;
+});
+
+threadfixModule.factory('threadfixAPIService', function($location, $http, tfEncoder, $rootScope) {
 
     var threadfixAPIService = {};
 
-    threadfixAPIService.getTeams = function(csrfToken) {
+    threadfixAPIService.getTeams = function() {
         return $http({
             method: 'GET',
-            url: '/organizations/jsonList' + csrfToken
+            url: tfEncoder.encode('/organizations/jsonList')
         });
     };
 
-    threadfixAPIService.loadReport = function(url) {
+    threadfixAPIService.loadAppTableReport = function(id) {
+        var url = '/organizations/' + id + '/getReport';
+
         return $http({
             method: 'GET',
-            url: url
+            url: tfEncoder.encode(url)
         });
     };
 
-    threadfixAPIService.loadVulns = function(csrfToken) {
+    threadfixAPIService.loadVulns = function() {
         return $http({
             method: 'GET',
-            url: $location.path() + "/vulns" + csrfToken
+            url: $location.path() + "/vulns" + $rootScope.csrfToken
         });
     }
 

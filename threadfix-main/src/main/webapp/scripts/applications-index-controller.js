@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $upload, threadfixAPIService) {
+myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $upload, tfEncoder, threadfixAPIService) {
 
     // Initialize
     $scope.initialized = false;
@@ -14,8 +14,8 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
     }
 
     // since we need the csrfToken to make the request, we need to wait until it's initialized
-    $scope.$watch('csrfToken', function() {
-        threadfixAPIService.getTeams($scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        threadfixAPIService.getTeams().
             success(function(data, status, headers, config) {
                 $scope.initialized = true;
 
@@ -67,20 +67,14 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
     var loadGraph = function(team) {
 
         if (team.report == null) {
-
-            var url = '/organizations/' + team.id + '/getReport' + $scope.csrfToken;
-
-            var failureDiv = '<div class="" style="margin-top:10px;margin-right:20px;width:300px;height:200px;text-align:center;line-height:150px;">Failed to load report.</div>';
-
-            threadfixAPIService.loadReport(url).
+            threadfixAPIService.loadAppTableReport(team.id).
                 success(function(data, status, headers, config) {
 
                     // TODO figure out Jasper better, it's a terrible way to access the report images.
-                    var matches = data.match(/(<img src="\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
+                    var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
                     if (matches !== null && matches[1] !== null) {
                         team.report = matches[1];
                     } else {
-                        team.report = true;
                         team.reportFailed = true;
                     }
                 }).
@@ -101,7 +95,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return "/organizations/modalAdd" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/modalAdd");
                 },
                 object: function() {
                     return {};
@@ -140,7 +134,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return "/organizations/" + team.id + "/modalAddApp" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + team.id + "/modalAddApp");
                 },
                 object: function () {
                     return application;
@@ -177,7 +171,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             controller: 'UploadScanController',
             resolve: {
                 url: function() {
-                    return "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
                 },
                 files: function() {
                     return false;
@@ -201,7 +195,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             controller: 'UploadScanController',
             resolve: {
                 url: function() {
-                    return "/organizations/" + team.id + "/applications/" + app.id + "/upload/remote" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
                 },
                 files: function() {
                     return $files;

@@ -6,10 +6,11 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-page-controller.js"></script>
 </head>
 
-<spring:url value="" var="emptyUrl"/>
-<body id="config" ng-controller="UserPageController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+<body id="config" ng-controller="UserPageController">
 
-	<h2>Manage Users</h2>
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+
+    <h2>Manage Users</h2>
 	
 	<div id="helpText">
 		Here you can create, edit, and delete users.

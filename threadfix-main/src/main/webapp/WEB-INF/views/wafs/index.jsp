@@ -6,13 +6,11 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
-<spring:url value="" var="emptyUrl"/>
-<body id="wafs"
-        ng-controller="WafsPageController"
-        ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+<body id="wafs" ng-controller="WafsPageController">
 
 	<h2>WAFs</h2>
 
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <%@ include file="/WEB-INF/views/wafs/forms/editWafForm.jsp" %>
     <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
 

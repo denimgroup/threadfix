@@ -7,6 +7,8 @@
 </head>
 
 <body class="dashboard">
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+
 	<h2>Dashboard</h2>
 	
 	<spring:url value="/organizations" var="teamsUrl"/>
@@ -30,10 +32,7 @@
 		</security:authorize>
 	</c:if>
 
-    <!-- Get the CSRF token so we can use it everywhere -->
-    <spring:url value="" var="emptyUrl"/>
-
-    <div ng-controller="DashboardController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'" class="container-fluid">
+    <div ng-controller="DashboardController" class="container-fluid">
 		<%@include file="/WEB-INF/views/applications/reports.jspf"%>
 
 	    <div class="row-fluid">

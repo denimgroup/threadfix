@@ -85,7 +85,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     var loadReport = function() {
         if ($scope.initialized) {
             $scope.loading = true;
-            $http.post("/reports/ajax" + $scope.csrfToken, $scope.getReportParameters()).
+            $http.post(tfEncoder.encode("/reports/ajax"), $scope.getReportParameters()).
                 success(function(data, status, headers, config) {
                     $scope.reportHTML = data;
                     $scope.loading = false;
@@ -104,8 +104,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.$watch('formatId', loadReport);
     $scope.$watch('reportId', loadReport);
 
-    $scope.$watch('csrfToken', function() {
-        threadfixAPIService.getTeams($scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        threadfixAPIService.getTeams().
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.teams = data.object;

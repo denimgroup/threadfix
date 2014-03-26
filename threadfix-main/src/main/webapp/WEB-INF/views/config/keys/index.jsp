@@ -6,8 +6,8 @@
 </head>
 
 <body>
-    <spring:url value="" var="emptyUrl"/>
-    <div ng-controller="ApiKeysController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <div ng-controller="ApiKeysController">
         <h2>API Keys</h2>
 
         <%@ include file="newForm.jsp" %>

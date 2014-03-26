@@ -7,10 +7,9 @@
 
 <body id="reports">
 
-    <spring:url value="" var="emptyUrl"/>
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-    <div ng-controller="ReportPageController"
-         ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+    <div ng-controller="ReportPageController">
 
         <h2>Reports</h2>
 

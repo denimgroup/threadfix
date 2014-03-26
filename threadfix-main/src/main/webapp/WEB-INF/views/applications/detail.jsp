@@ -14,14 +14,13 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document-form-controller.js"></script>
 </head>
 
-<!-- Get the CSRF token so we can use it everywhere -->
-<spring:url value="" var="emptyUrl"/>
 <body ng-controller="ApplicationDetailPageController"
-      ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>';
-         empty = <c:out value="${ numVulns }"/> === 0"
+      ng-init="empty = <c:out value="${ numVulns }"/> === 0"
       ng-file-drop="onFileSelect($files)"
       ng-class="{ 'drag-enabled': dragEnabled }"
       id="apps">
+
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
     <div class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
     <div>

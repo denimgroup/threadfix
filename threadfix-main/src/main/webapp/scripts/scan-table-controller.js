@@ -3,7 +3,6 @@ var myAppModule = angular.module('threadfix')
 myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope) {
 
     $scope.heading = '0 Scans';
-//    $scope.csrfToken = $scope.$parent.$csrfToken;
 
     $scope.refresh = function() {
 
@@ -14,7 +13,7 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
         scan.deleting = true;
 
         if (confirm('Are you sure you want to delete this scan?')) {
-            $http.post($window.location.pathname + '/scans/' + scan.id + '/delete' + $scope.csrfToken).
+            $http.post(tfEncoder.encodeRelative('/scans/' + scan.id + '/delete')).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {
@@ -44,7 +43,7 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
     };
 
     $scope.viewScan = function(scan) {
-        window.location.href = $window.location.pathname + '/scans/' + scan.id + $scope.csrfToken;
+        window.location.href = tfEncoder.encode('/scans/' + scan.id);
     };
 
     $scope.$on('scans', function(event, scans) {

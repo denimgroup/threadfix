@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -15,9 +15,9 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.teamId  = $window.location.pathname.match(/([0-9]+)$/)[0];
 
-    $scope.$watch('csrfToken', function() {
-        $scope.reportQuery = $scope.csrfToken + "&orgId=" + $scope.teamId;
-        $http.get($scope.teamId + "/info" + $scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        $scope.reportQuery = $rootScope.csrfToken + "&orgId=" + $scope.teamId;
+        $http.get(tfEncoder.encodeRelative($scope.teamId + "/info")).
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.team = data.object.team;
@@ -41,7 +41,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return "/organizations/" + $scope.team.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + $scope.team.id + "/edit");
                 },
                 object: function () {
                     return $scope.team;
@@ -83,7 +83,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return "/organizations/" + $scope.team.id + "/modalAddApp" + $scope.csrfToken;
+                    return tfEncoder.encode("/organizations/" + $scope.team.id + "/modalAddApp");
                 },
                 object: function () {
                     return application;
@@ -108,7 +108,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
     };
 
     $scope.goToPage = function(app) {
-        $window.location.href = $scope.team.id + "/applications/" + app.id + $scope.csrfToken;
+        $window.location.href = tfEncoder.encodeRelative($scope.team.id + "/applications/" + app.id);
     }
 
 });

@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('RemoteProvidersController', function($scope, $http, $modal, $log, $window){
+module.controller('RemoteProvidersController', function($scope, $http, $modal, $log, tfEncoder){
 
     $scope.providers = [];
 
@@ -18,8 +18,8 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         }).length > 0;
     };
 
-    $scope.$watch('csrfToken', function() {
-        $http.get('/configuration/remoteproviders/getMap' + $scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        $http.get(tfEncoder.encode('/configuration/remoteproviders/getMap')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -65,7 +65,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
 
     $scope.clearConfiguration = function(provider) {
 
-        var url = "/configuration/remoteproviders/" + provider.id + "/clearConfiguration" + $scope.csrfToken;
+        var url = tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/clearConfiguration");
 
         if (confirm("Are you sure you want to clear your " + provider.name + " configuration?")) {
             provider.clearingConfiguration = true;
@@ -91,16 +91,16 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
     };
 
     $scope.goToApp = function(app) {
-        window.location.href = "/organizations/" + app.team.id + "/applications/" + app.id + $scope.csrfToken;
+        window.location.href = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id);
     };
 
     $scope.goToTeam = function(team) {
-        window.location.href = "/organizations/" + team.id + $scope.csrfToken;
+        window.location.href = tfEncoder.encode("/organizations/" + team.id);
     };
 
     $scope.importAllScans = function(provider) {
 
-        var url = "/configuration/remoteproviders/" + provider.id + "/importAll" + $scope.csrfToken;
+        var url = tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/importAll");
 
         provider.importingScans = true;
 
@@ -122,7 +122,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
     }
 
     $scope.importScansApp = function(provider, app) {
-        var url = "/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/import" + $scope.csrfToken;
+        var url = tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/import");
 
         app.importingScans = true;
 
@@ -130,7 +130,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
             success(function(data, status, headers, config) {
                 if (data.success) {
                     if (confirm("ThreadFix imported scans successfully. Would you like to go to the application's page?")) {
-                        window.location.href = "/organizations/" + app.application.team.id + "/applications/" + app.application.id + $scope.csrfToken;
+                        window.location.href = tfEncoder.encode("/organizations/" + app.application.team.id + "/applications/" + app.application.id);
                     }
                 } else {
                     provider.errorMessage = "Error encountered: " + data.message;
@@ -149,7 +149,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
             controller: 'RemoteProviderModalController',
             resolve: {
                 url: function() {
-                    return "/configuration/remoteproviders/" + provider.id + "/configure" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/configure");
                 },
                 type: function() {
                     return provider;
@@ -182,7 +182,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/edit");
                 },
                 object: function() {
                     if (!app.application) {
@@ -224,7 +224,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 },
                 deleteUrl: function() {
                     if (app.application) {
-                        return "/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/delete/" + app.application.id + $scope.csrfToken;
+                        return tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/delete/" + app.application.id);
                     } else {
                         return null;
                     }
@@ -246,7 +246,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
     }
 
     $scope.updateApplications = function(provider) {
-        var url = "/configuration/remoteproviders/" + provider.id + "/update" + $scope.csrfToken;
+        var url = tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/update");
 
         provider.updatingApps = true;
 

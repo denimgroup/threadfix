@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('DefectTrackersController', function($scope, $http, $modal, $log){
+module.controller('DefectTrackersController', function($scope, $http, $modal, $log, tfEncoder) {
 
     $scope.trackers = [];
 
@@ -12,8 +12,8 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
         return a.name.localeCompare(b.name);
     };
 
-    $scope.$watch('csrfToken', function() {
-        $http.get('/configuration/defecttrackers/info' + $scope.csrfToken).
+    $scope.$on('rootScopeInitialized', function() {
+        $http.get(tfEncoder.encode('/configuration/defecttrackers/info')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -42,7 +42,7 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/configuration/defecttrackers/new" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/defecttrackers/new");
                 },
                 object: function() {
                     return {
@@ -81,7 +81,7 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return "/configuration/defecttrackers/" + tracker.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/defecttrackers/" + tracker.id + "/edit");
                 },
                 object: function() {
                     return tracker;
@@ -95,7 +95,7 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
                     };
                 },
                 deleteUrl: function() {
-                    return "/configuration/defecttrackers/" + tracker.id + "/delete" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/defecttrackers/" + tracker.id + "/delete");
                 }
             }
         });

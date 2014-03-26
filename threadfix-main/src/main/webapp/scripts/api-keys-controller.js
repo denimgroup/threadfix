@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('ApiKeysController', function($scope, $http, $modal, $log){
+module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfEncoder){
 
     $scope.keys = [];
 
@@ -8,8 +8,9 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log){
         return a.apiKey.localeCompare(b.apiKey);
     };
 
-    $scope.$watch('csrfToken', function() {
-        $http.get('/configuration/keys/list' + $scope.csrfToken).
+    // TODO move to service
+    $scope.$on('rootScopeInitialized', function() {
+        $http.get(tfEncoder.encode('/configuration/keys/list')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -34,7 +35,7 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log){
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return "/configuration/keys/new" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/keys/new");
                 },
                 object: function() {
                     return {};
@@ -64,7 +65,7 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log){
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return "/configuration/keys/" + key.id + "/edit" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/keys/" + key.id + "/edit");
                 },
                 object: function() {
                     return key;
@@ -73,7 +74,7 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log){
                     return "Save Edits";
                 },
                 deleteUrl: function() {
-                    return "/configuration/keys/" + key.id + "/delete" + $scope.csrfToken;
+                    return tfEncoder.encode("/configuration/keys/" + key.id + "/delete");
                 }
             }
         });

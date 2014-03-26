@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('DocumentFormController', function ($scope, $window, $modal, $http, $log, $rootScope) {
+myAppModule.controller('DocumentFormController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
 
     $scope.heading = '0 Files';
 
@@ -13,7 +13,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
             controller: 'UploadScanController',
             resolve: {
                 url: function() {
-                    return window.location.pathname + "/documents/upload" + $scope.csrfToken;
+                    return tfEncoder.encodeRelative("/documents/upload");
                 },
                 files: function() {
                     return undefined;
@@ -41,7 +41,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
         document.deleting = true;
 
         if (confirm('Are you sure you want to delete this file?')) {
-            $http.post($window.location.pathname + '/documents/' + document.id + '/delete' + $scope.csrfToken).
+            $http.post(tfEncoder.encodeRelative('/documents/' + document.id + '/delete')).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {
@@ -71,7 +71,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
     };
 
     $scope.downloadDocument = function(scan) {
-        $http.post($window.location.pathname + '/documents/' + scan.id + '/delete' + $scope.csrfToken).
+        $http.post(tfEncoder.encodeRelative('/documents/' + scan.id + '/delete')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -99,7 +99,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
             });    };
 
     $scope.viewDocument = function(scan) {
-        window.location.href = $window.location.pathname + '/scans/' + scan.id + $scope.csrfToken;
+        window.location.href = tfEncoder.encodeRelative('/scans/' + scan.id);
     };
 
     $scope.$on('documents', function(event, documents) {
