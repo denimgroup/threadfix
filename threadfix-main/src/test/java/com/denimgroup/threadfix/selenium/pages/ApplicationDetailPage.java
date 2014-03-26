@@ -570,7 +570,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage selectMergeDefect(String defect) {
-        sleep(25000);
+        WebDriverWait wait = new WebDriverWait(driver, 180);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("mergeDefectButton")));
         new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
         return new ApplicationDetailPage(driver);
     }

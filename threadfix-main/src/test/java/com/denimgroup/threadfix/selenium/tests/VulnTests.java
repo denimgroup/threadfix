@@ -576,7 +576,7 @@ public class VulnTests extends BaseTest {
 														  .enterName(null, defectTrackerName)
 														  .enterType(null, defectTrackerAppName)
 														  .enterURL(null, defectTrackerURL)
-														  .clickSaveNewDefectTracker();
+														  .clickSaveNewDefectTracker(defectTrackerName);
 
 		//attach defect Tracker
 		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()

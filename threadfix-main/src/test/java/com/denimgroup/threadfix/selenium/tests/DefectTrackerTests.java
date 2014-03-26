@@ -110,7 +110,7 @@ public class DefectTrackerTests extends BaseTest {
 		defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .enterName(null, newDefectTrackerName)
 				.enterType(null, defectTrackerType).enterURL(null, TEST_BUGZILLA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(newDefectTrackerName);
 
 		assertTrue("The defectTracker was not present in the table.",
 				defectTrackerIndexPage.doesNameExist(newDefectTrackerName));
@@ -126,7 +126,7 @@ public class DefectTrackerTests extends BaseTest {
                 .clickAddDefectTrackerButton()
                 .enterName(null, newDefectTrackerName).enterType(null, defectTrackerType)
                 .enterURL(null, TEST_BUGZILLA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(newDefectTrackerName);
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickDeleteButton(newDefectTrackerName)
                 .clickDefectTrackersLink();
@@ -179,12 +179,12 @@ public class DefectTrackerTests extends BaseTest {
 		assertTrue("The Defect Tracker URL was not validated correctly.",
 				defectTrackerIndexPage.getUrlErrorsText().equals("URL is invalid."));
 
+        String testLongInput = longInput.substring(0, DefectTracker.NAME_LENGTH);
+
 		// Test browser length limit
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(null,longInput)
                 .enterURL(null, TEST_BUGZILLA_URL)
-                .clickSaveNewDefectTracker();
-
-        String testLongInput = longInput.substring(0, DefectTracker.NAME_LENGTH);
+                .clickSaveNewDefectTracker(testLongInput);
 
 		assertTrue("The Defect Tracker name was not cropped correctly.",
 				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(testLongInput));
@@ -215,7 +215,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, originalDefectTrackerName)
                 .enterType(null, originalDefectTrackerType)
 				.enterURL(null, TEST_JIRA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(originalDefectTrackerName);
 
         //Edit previously created defect tracker
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(originalDefectTrackerName)
@@ -251,13 +251,13 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerNameDuplicateTest)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, TEST_BUGZILLA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerNameDuplicateTest);
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
 				.enterName(null, newDefectTrackerName)
                 .enterType(null, defectTrackerType)
 				.enterURL(null, TEST_BUGZILLA_URL)
-				.clickSaveNewDefectTracker()
+				.clickSaveNewDefectTracker(newDefectTrackerName)
                 .clickEditLink(newDefectTrackerName);
 
 		// Test empty and whitespace input
@@ -303,7 +303,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null,newDefectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, defectTrackerURL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(newDefectTrackerName);
 
 		assertTrue("DefectTracker Page did not create a TFS tracker correctly.",
 				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
@@ -323,7 +323,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, defectTrackerURL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .enterName(defectTrackerName,replacementName)
@@ -335,20 +335,20 @@ public class DefectTrackerTests extends BaseTest {
 
     @Test
     public void jiraCreate() {
-        String DefectTrackerName = "jiraCreate"+ getRandomString(3);
+        String defectTrackerName = "jiraCreate"+ getRandomString(3);
         String defectTrackerType = "Jira";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(null,DefectTrackerName)
+                .enterName(null,defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null,TEST_JIRA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
         assertTrue("DefectTracker Page did not create correctly.",
-                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(DefectTrackerName));
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
     }
 
 	@Test
@@ -364,7 +364,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, TEST_JIRA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .enterName(defectTrackerName, replacementName)
@@ -387,7 +387,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, defectTrackerUrl)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
         assertTrue("DefectTracker Page did not create correctly.",
                 defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
@@ -406,7 +406,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, "http://10.2.10.145/bugzilla/")
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .enterName(defectTrackerName, replacementName)
@@ -433,7 +433,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, BUGZILLA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -461,7 +461,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, defectTrackerName)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, TFS_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTrackerName);
 
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
@@ -489,7 +489,7 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null, newDefectTrackerName)
                 .enterType(null, type)
                 .enterURL(null, JIRA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(newDefectTrackerName);
 
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
@@ -519,12 +519,12 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null,defectTracker1)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, BUGZILLA_URL)
-                .clickSaveNewDefectTracker()
+                .clickSaveNewDefectTracker(defectTracker1)
                 .clickAddDefectTrackerButton()
                 .enterName(null,defectTracker2)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, BUGZILLA_URL)
-                .clickSaveNewDefectTracker();
+                .clickSaveNewDefectTracker(defectTracker2);
 
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
