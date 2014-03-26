@@ -21,6 +21,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/services.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/header-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/init-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/directives.js"></script>
 
     <!--[if lt IE 7]>
@@ -38,6 +39,8 @@
       <decorator:getProperty property="body.ng-class" writeEntireProperty="true"/>
 	  <decorator:getProperty property="body.class" writeEntireProperty="true"/>
 	  <decorator:getProperty property="body.ng-file-drop" writeEntireProperty="true"/>>
+
+    <spring:url value="" var="emptyUrl" htmlEscape="true"/>
 	<div id="wrapper">
         <div id="main">
 			<jsp:include page="/common/header.jsp"/>

@@ -7,7 +7,7 @@
 	</a>
 </div>
 
-<div id="menu" ng-controller="HeaderController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+<div id="menu" ng-controller="HeaderController">
 	<table>
 		<tbody>
 			<tr>
