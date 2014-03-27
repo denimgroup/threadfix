@@ -23,18 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.internal.seleniumemulation.IsVisible;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefectTrackerIndexPage extends BasePage { 
 
@@ -229,7 +228,7 @@ public class DefectTrackerIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 
-	public DefectTrackerIndexPage clickSaveNewDefectTracker(String defectTracker) {
+	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
 		driver.findElementById("submitDTCreateModal").click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));

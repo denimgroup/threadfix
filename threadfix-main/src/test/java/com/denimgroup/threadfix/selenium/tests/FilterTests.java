@@ -23,14 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.FilterPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
-
-import com.denimgroup.threadfix.selenium.pages.*;
-
 import org.openqa.selenium.NoSuchElementException;
 
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import static org.junit.Assert.assertTrue;
 
 public class FilterTests extends BaseTest{
     // TODO test if you can edit an existing filter and ensure the results are correct
@@ -152,7 +153,6 @@ public class FilterTests extends BaseTest{
         DatabaseUtils.uploadScan(teamName2, appName2, file);
 
         FilterPage globalFilterPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
                 .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity)
@@ -198,7 +198,6 @@ public class FilterTests extends BaseTest{
 
         // Set global severity filter for vulnerabilityType1 and hide 'Medium', 'Low', 'Info' vulnerabilities
         FilterPage globalFilterPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
                 .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity)

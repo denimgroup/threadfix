@@ -226,14 +226,14 @@ public class VulnTests extends BaseTest {
         applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-175")
+				.selectMergeDefect("THREAD-220")
 				.clickMergeDefectSubmit();
 
 		//change merge
         applicationDetailPage.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
 				.clickMergeDefectLink()
-				.selectMergeDefect("THREAD-176")
+				.selectMergeDefect("THREAD-221")
 				.clickMergeDefectSubmit();
 
         applicationDetailPage.clickExpandAllVulns();
@@ -510,7 +510,7 @@ public class VulnTests extends BaseTest {
 		assertTrue("blank defect",build(JIRA));
 
         applicationDetailPage.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
 				.clickExpandAllVulns()
 				.clickVulnCheckBox(1)
@@ -568,11 +568,11 @@ public class VulnTests extends BaseTest {
 
 		//add defect Tracker
 		DefectTrackerIndexPage defectTrackerIndexPage = ti.clickDefectTrackersLink()
-														  .clickAddDefectTrackerButton()
-														  .enterName(null, defectTrackerName)
-														  .enterType(null, defectTrackerAppName)
-														  .enterURL(null, defectTrackerURL)
-														  .clickSaveNewDefectTracker(defectTrackerName);
+                .clickAddDefectTrackerButton()
+                 .enterName(null, defectTrackerName)
+                 .enterType(null, defectTrackerAppName)
+                 .enterURL(null, defectTrackerURL)
+                 .clickSaveNewDefectTracker();
 
 		//attach defect Tracker
 		applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()

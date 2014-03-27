@@ -24,23 +24,14 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.internal.seleniumemulation.WaitForCondition;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ApplicationDetailPage extends BasePage {
 
@@ -112,14 +103,14 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage addDefectTracker(String defectTracker, String username,
-                                                  String password, String productname) {
+                                                  String password, String productName) {
         clickEditDeleteBtn()
                 .clickAddDefectTrackerButton()
                 .selectDefectTracker(defectTracker)
                 .setUsername(username)
                 .setPassword(password)
                 .clickTestConnection()
-                .selectProduct(productname)
+                .selectProduct(productName)
                 .clickSubmitTrackerButton();
 
         waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
@@ -130,14 +121,14 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage editDefectTracker(String defectTracker, String username,
-                                                   String password, String productname) {
+                                                   String password, String productName) {
         clickEditDeleteBtn()
                 .clickEditDefectTrackerButton()
                 .selectDefectTracker(defectTracker)
                 .setUsername(username)
                 .setPassword(password)
                 .clickTestConnection()
-                .selectProduct(productname)
+                .selectProduct(productName)
                 .clickSubmitTrackerButton();
 
         waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
@@ -566,7 +557,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickMergeDefectLink() {
         clickDefectActionBtn();
         driver.findElementById("mergeDefectButton").click();
-        sleep(8000);
+        sleep(12000);
         return new ApplicationDetailPage(driver);
     }
 
