@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.sun.tools.doclets.internal.toolkit.resources.doclets_zh_CN;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
