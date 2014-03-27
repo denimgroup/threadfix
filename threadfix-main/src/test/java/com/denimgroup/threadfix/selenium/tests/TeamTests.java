@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
@@ -57,15 +56,12 @@ public class TeamTests extends BaseTest {
         String teamName1 = getRandomString(8);
         String teamName2 = getRandomString(8);
 
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createTeam(teamName2);
+
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
-        teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(teamName1)
-                .addNewTeam()
-                .clickAddTeamButton()
-                .setTeamName(teamName2)
-                .addNewTeam()
-                .expandAllTeams();
+        teamIndexPage = teamIndexPage.expandAllTeams();
 
         assertTrue("All teams were not expanded properly.", teamIndexPage.areAllTeamsExpanded());
 
