@@ -1,16 +1,12 @@
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.*;
-
-import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
-import javax.xml.crypto.Data;
+import static org.junit.Assert.assertTrue;
 
 public class VulnTests extends BaseTest {
 
