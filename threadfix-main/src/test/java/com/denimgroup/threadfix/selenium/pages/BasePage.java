@@ -23,24 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public abstract class BasePage {
 	
@@ -415,7 +407,7 @@ public abstract class BasePage {
 	}
 	
 	public void waitForElement(WebElement e){
-		WebDriverWait wait = new WebDriverWait(driver,20);
+		WebDriverWait wait = new WebDriverWait(driver,30);
 		wait.until(ExpectedConditions.visibilityOf(e));
 	}
 	
