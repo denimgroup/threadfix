@@ -31,6 +31,7 @@ public enum ScannerType {
 	BRAKEMAN("brakeman", "Brakeman"),
 	BURPSUITE("burp", "Burp Suite"),
 	CAT_NET("catnet", "Microsoft CAT.NET"),
+    CENZIC_HAILSTORM("cenzic", "Cenzic Hailstorm"),
     CHECKMARX("checkmarx", "CheckMarx"),
 	DEPENDENCY_CHECK("dependencycheck", "Dependency Check"),
 	FINDBUGS("findbugs", "FindBugs"),
@@ -48,6 +49,7 @@ public enum ScannerType {
 	SENTINEL("whitehat", "WhiteHat Sentinel"),
 	VERACODE("veracode", "Veracode"),
 	MANUAL("manual", "Manual");
+
 
 	private String fullName;
 	private String shortName;

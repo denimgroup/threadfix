@@ -26,9 +26,10 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 
-public class LdapAuthenticator implements LdapService {
+public class LdapAuthenticator implements AuthenticationProvider {
 
     protected final SanitizedLogger log = new SanitizedLogger(LdapService.class);
 
@@ -47,18 +48,5 @@ public class LdapAuthenticator implements LdapService {
     public boolean supports(Class<?> authentication) {
         return ldapService != null && ldapService.supports(authentication);
     }
-
-    @Override
-    public boolean innerAuthenticate(String username, String password) {
-        return ldapService != null && ldapService.innerAuthenticate(username, password);
-    }
-
-    @Override
-    public void setLogger(SanitizedLogger log) {
-        if (ldapService != null) {
-            ldapService.setLogger(log); // TODO investigate
-        }
-    }
-
 
 }

@@ -62,6 +62,21 @@ public class Application extends AuditableEntity {
     @Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
     private  String repositoryUrl;
 
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String repositoryBranch, repositoryDBBranch;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String repositoryUserName;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String repositoryPassword;
+
+    @Size(max = 1024, message = "{errors.maxlength} 1024.")
+    private String repositoryEncryptedPassword;
+
+    @Size(max = 1024, message = "{errors.maxlength} 1024.")
+    private String repositoryEncryptedUserName;
+
 	@URL(message = "{errors.url}")
 	@Size(min = 0, max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
 	private String url;
@@ -533,7 +548,7 @@ public class Application extends AuditableEntity {
 		this.sourceCodeAccessLevel = sourceCodeAccessLevel;
 	}
 
-	@Column(length = URL_LENGTH)
+    @JsonIgnore
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}
@@ -542,7 +557,65 @@ public class Application extends AuditableEntity {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	@Column(length = URL_LENGTH)
+    @JsonIgnore
+    public String getRepositoryBranch() {
+        return repositoryBranch;
+    }
+
+    public void setRepositoryBranch(String repositoryBranch) {
+        this.repositoryBranch = repositoryBranch;
+    }
+
+    @JsonIgnore
+    public String getRepositoryDBBranch() {
+        return repositoryDBBranch;
+    }
+
+    public void setRepositoryDBBranch(String repositoryDBBranch) {
+        this.repositoryDBBranch = repositoryDBBranch;
+    }
+
+    @Transient
+    @JsonIgnore
+    public String getRepositoryUserName() {
+        return repositoryUserName;
+    }
+
+    public void setRepositoryUserName(String repositoryUserName) {
+        this.repositoryUserName = repositoryUserName;
+    }
+
+    @Transient
+    @JsonIgnore
+    public String getRepositoryPassword() {
+        return repositoryPassword;
+    }
+
+    public void setRepositoryPassword(String repositoryPassword) {
+        this.repositoryPassword = repositoryPassword;
+    }
+
+    @Column(length = 1024)
+    @JsonIgnore
+    public String getRepositoryEncryptedPassword() {
+        return repositoryEncryptedPassword;
+    }
+
+    public void setRepositoryEncryptedPassword(String repositoryEncryptedPassword) {
+        this.repositoryEncryptedPassword = repositoryEncryptedPassword;
+    }
+
+    @Column(length = 1024)
+    @JsonIgnore
+    public String getRepositoryEncryptedUserName() {
+        return repositoryEncryptedUserName;
+    }
+
+    public void setRepositoryEncryptedUserName(String repositoryEncryptedUserName) {
+        this.repositoryEncryptedUserName = repositoryEncryptedUserName;
+    }
+
+    @Column(length = URL_LENGTH)
     @JsonIgnore
 	public String getRepositoryFolder() {
 		return repositoryFolder;

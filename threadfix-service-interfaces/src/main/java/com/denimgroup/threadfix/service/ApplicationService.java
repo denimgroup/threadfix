@@ -140,6 +140,20 @@ public interface ApplicationService {
 	 */
 	Application decryptCredentials(Application application);
 
+    /**
+     *
+     * @param application
+     * @return
+     */
+    Application encryptRepositoryCredentials(Application application);
+
+    /**
+     *
+     * @param application
+     * @return
+     */
+    Application decryptRepositoryCredentials(Application application);
+
 	/**
 	 * 
 	 * @param organizations

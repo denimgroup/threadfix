@@ -109,7 +109,7 @@ class FindingProcessorFactory {
 		File applicationDirectory = new File(baseDirectory + application.getId());
 
 		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
-			Repository repo = GitService.cloneGitTreeToDirectory(application.getRepositoryUrl(), applicationDirectory);
+			Repository repo = GitService.cloneGitTreeToDirectory(application, applicationDirectory);
 
 			if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
 				return repo.getWorkTree();
