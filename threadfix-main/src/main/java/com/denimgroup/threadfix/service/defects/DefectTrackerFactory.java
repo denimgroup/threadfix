@@ -97,6 +97,8 @@ public final class DefectTrackerFactory {
 			return new TFSDefectTracker();
         } else if (type.getName().equals(DefectTrackerType.HP_QUALITYCENTER)) {
             return new HPQualityCenterDefectTracker();
+        } else if (type.getName().equals(DefectTrackerType.VERSION_ONE)) {
+            return new VersionOneDefectTracker();
         } else {
 			
 			// Must be a legitimate Java identifier

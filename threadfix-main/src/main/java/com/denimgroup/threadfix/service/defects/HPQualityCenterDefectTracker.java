@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.HPQC.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.Domains;
 import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.Entity;
-import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.EntityMarshallingUtils;
 
 import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
@@ -53,7 +52,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         defect.setFields(createFields(description, metadata));
 
         try {
-            String defectXml = EntityMarshallingUtils.unmarshal(Entity.class, defect);
+            String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
             return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
         } catch (Exception e) {
             log.error("Error when trying to unmarshal defect object to xml string", e);
@@ -135,7 +134,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         Domains domains;
         try {
             domains =
-                    EntityMarshallingUtils.marshal(Domains.class, xmlResult);
+                    MarshallingUtils.marshal(Domains.class, xmlResult);
             if (domains != null ) {
                 StringBuilder builder = new StringBuilder();
                 for (Domains.Domain domain : domains.getDomains()) {

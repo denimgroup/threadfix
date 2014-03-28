@@ -11,7 +11,15 @@
 		<tbody>
 			<tr>
                 <c:if test="${ defectTrackerName != 'HP Quality Center' }">
-				<td>Component:</td>
+
+                    <c:if test="${ defectTrackerName != 'Version One' }">
+                        <td>Component:</td>
+                    </c:if>
+                    <c:if test="${ defectTrackerName == 'Version One' }">
+                        <td>Sprint:</td>
+                    </c:if>
+
+
 				<td class="inputValue">
 					<form:select style="width:120px;" path="selectedComponent">
 						<form:options items="${projectMetadata.components}"/>
@@ -31,7 +39,7 @@
 					</form:select>
 				</td>
 			</tr>
-			<c:if test="${ defectTrackerName != 'Jira' }">
+			<c:if test="${ defectTrackerName != 'Jira' && defectTrackerName != 'Version One' }">
 				<tr>
                     <c:if test="${ defectTrackerName != 'HP Quality Center' }">
 					<td>Version:</td>
