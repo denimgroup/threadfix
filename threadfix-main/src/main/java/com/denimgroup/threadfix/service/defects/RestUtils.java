@@ -38,6 +38,8 @@ import org.json.JSONObject;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import javax.net.ssl.SSLHandshakeException;
+
 /**
  * This class holds code for more easily interacting with HTTP-authenticated REST services.
  * So far this is just JIRA but this code could be useful in other places too.
@@ -110,7 +112,7 @@ public class RestUtils {
 		}
 	}
 	
-	public static InputStream postUrl(String urlString, String data, String username, String password) {
+	public static InputStream postUrl(String urlString, String data, String username, String password, String contentType) {
 		URL url = null;
 		try {
 			url = new URL(urlString);
@@ -126,8 +128,8 @@ public class RestUtils {
 
 			setupAuthorization(httpConnection, username, password);
 			
-			httpConnection.addRequestProperty("Content-Type", "application/json");
-			httpConnection.addRequestProperty("Accept", "application/json");
+			httpConnection.addRequestProperty("Content-Type", contentType);
+			httpConnection.addRequestProperty("Accept", contentType);
 			
 			httpConnection.setDoOutput(true);
 			outputWriter = new OutputStreamWriter(httpConnection.getOutputStream());
@@ -169,8 +171,8 @@ public class RestUtils {
 		return null;
 	}
 	
-	public static String postUrlAsString(String urlString, String data, String username, String password) {
-		InputStream responseStream = postUrl(urlString,data,username,password);
+	public static String postUrlAsString(String urlString, String data, String username, String password, String contentType) {
+		InputStream responseStream = postUrl(urlString,data,username,password, contentType);
 		
 		if (responseStream == null) {
 			return null;
@@ -247,5 +249,43 @@ public class RestUtils {
 
     public static void setPostErrorResponse(String postErrorResponse) {
         RestUtils.postErrorResponse = postErrorResponse;
+    }
+
+    /**
+     *
+     * @param urlString JIRA URL to connect to
+     * @return true if we get an HTTP 401, false if we get another HTTP response code (such as 200:OK)
+     * 		or if an exception occurs
+     */
+    public static boolean requestHas401Error(String urlString) {
+        log.info("Checking to see if we get an HTTP 401 error for the URL '" + urlString + "'");
+
+        boolean retVal;
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                retVal = true;
+            } else {
+                log.info("Got a non-401 HTTP repsonse code of: " + connection.getResponseCode());
+                retVal = false;
+            }
+        } catch (MalformedURLException e) {
+            log.warn("URL string of '" + urlString + "' is not a valid URL.", e);
+            retVal = false;
+        } catch (SSLHandshakeException e) {
+            log.warn("Certificate Error encountered while trying to find the response code.", e);
+            retVal = false;
+        } catch (IOException e) {
+            log.warn("IOException encountered while trying to find the response code: " + e.getMessage(), e);
+            retVal = false;
+        }
+
+        log.info("Return value will be " + retVal);
+
+        return retVal;
     }
 }

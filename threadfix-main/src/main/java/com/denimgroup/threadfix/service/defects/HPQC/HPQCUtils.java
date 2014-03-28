@@ -3,9 +3,7 @@ package com.denimgroup.threadfix.service.defects.HPQC;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.*;
-import com.denimgroup.threadfix.service.defects.RestUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.denimgroup.threadfix.service.defects.MarshallingUtils;
 
 import javax.xml.bind.JAXBException;
 import java.net.HttpURLConnection;
@@ -302,15 +300,16 @@ public class HPQCUtils {
             if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
                 String responseStr = serverResponse.toString();
                 if (responseStr.contains("</Entity>")) {
-
-                    return getFieldValue(parseEntityXml(responseStr), "status");
+                    String status = getFieldValue(parseEntityXml(responseStr), "status");
+                    log.info("Current status for defect " + defect.getNativeId() + " is " + status);
+                    defect.setStatus(status);
+                    return status;
                 } else {
                     log.warn("XML response is incorrect");
                 }
             } else {
                 log.warn("URL not found");
             }
-//            logout();
         } catch (Exception e) {
             log.warn("Error when trying to get status of Defect Id " + defect.getNativeId() + " from HPQC");
         }
@@ -320,7 +319,7 @@ public class HPQCUtils {
 
     private static Entity parseEntityXml(String entityXml) {
         try {
-            return EntityMarshallingUtils.marshal(Entity.class, entityXml);
+            return MarshallingUtils.marshal(Entity.class, entityXml);
         } catch (JAXBException e) {
             log.error("Error when trying to parse Entity from string xml");
         }
@@ -329,7 +328,7 @@ public class HPQCUtils {
 
     private static Entities parseEntitiesXml(String entitiesXml) {
         try {
-            return EntityMarshallingUtils.marshal(Entities.class, entitiesXml);
+            return MarshallingUtils.marshal(Entities.class, entitiesXml);
         } catch (JAXBException e) {
             log.error("Error when trying to parse Entity from string xml");
         }
@@ -354,7 +353,7 @@ public class HPQCUtils {
         Map<String, List<String>> map = new HashMap<>();
         try {
             lists =
-                    EntityMarshallingUtils.marshal(Lists.class, responseStr);
+                    MarshallingUtils.marshal(Lists.class, responseStr);
             if (lists != null && lists.getLists() != null) {
                 for (Lists.ListInfo listInfo : lists.getLists()) {
                     if (listInfo != null && listInfo.getItems().getItemList() != null) {

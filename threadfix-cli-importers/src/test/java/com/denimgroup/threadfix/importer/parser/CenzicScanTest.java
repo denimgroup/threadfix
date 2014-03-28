@@ -26,6 +26,6 @@ public class CenzicScanTest extends TransactionalTest {
     @Test
      public void cenzicScanTest() {
         ScanComparisonUtils.compare(cenzicResults, ScanLocationManager.getRoot() +
-                "Dynamic\\CenzicHailstorm\\ReportItem_2013-06-21_09-14.xml");
+                "Dynamic/CenzicHailstorm/ReportItem_2013-06-21_09-14.xml");
     }
 }
