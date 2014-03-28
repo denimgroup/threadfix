@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service.defects;
+package com.denimgroup.threadfix.service.defects.utils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

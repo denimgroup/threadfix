@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.defects;
+package com.denimgroup.threadfix.service.defects.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

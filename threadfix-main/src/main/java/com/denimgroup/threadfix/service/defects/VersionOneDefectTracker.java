@@ -25,15 +25,13 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.defects.VersionOne.Assets;
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
+import com.denimgroup.threadfix.service.defects.utils.RestUtils;
+import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
 
 import javax.xml.bind.JAXBException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -60,7 +58,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
                 metadata.getStatus() + "'&sel=Name","Status", "set"));
         try {
             String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
-            String result = RestUtils.postUrlAsString(getUrlWithRest() + "Defect",defectXml,getUsername(),getPassword(), CONTENT_TYPE);
+            String result = RestUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
 
             return getDefectNumber(result);
         } catch (Exception e) {

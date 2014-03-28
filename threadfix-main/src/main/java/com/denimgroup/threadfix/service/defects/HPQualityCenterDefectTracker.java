@@ -26,9 +26,10 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.defects.HPQC.HPQCUtils;
-import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.Domains;
-import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.Entity;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Entity;
+import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 
 import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
