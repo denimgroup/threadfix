@@ -23,21 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.net.MalformedURLException;
-
+import com.denimgroup.threadfix.data.entities.Waf;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
+import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
-import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
+import java.net.MalformedURLException;
 
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class WafTests extends BaseTest {
@@ -297,8 +294,9 @@ public class WafTests extends BaseTest {
 
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .clickWafsHeaderLink()
-                .clickAddWafLink()
+                .clickWafsHeaderLink();
+
+                wafIndexPage.clickAddWafLink()
                 .createNewWaf(wafName, wafType)
                 .clickCreateWaf();
 

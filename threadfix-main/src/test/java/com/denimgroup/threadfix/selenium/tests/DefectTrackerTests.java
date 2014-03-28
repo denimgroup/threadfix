@@ -519,7 +519,9 @@ public class DefectTrackerTests extends BaseTest {
                 .enterName(null,defectTracker1)
                 .enterType(null, defectTrackerType)
                 .enterURL(null, BUGZILLA_URL)
-                .clickSaveNewDefectTracker()
+                .clickSaveNewDefectTracker();
+
+        defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
                 .enterName(null,defectTracker2)
                 .enterType(null, defectTrackerType)
