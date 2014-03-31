@@ -1,4 +1,4 @@
-package com.denimgroup.threadfix.service.defects.HPQC.infrastructure;
+package com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure;
 
 import java.util.Map;
 

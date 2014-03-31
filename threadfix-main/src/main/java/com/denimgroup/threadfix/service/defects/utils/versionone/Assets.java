@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.defects.VersionOne;
+package com.denimgroup.threadfix.service.defects.utils.versionone;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;

@@ -35,6 +35,7 @@ import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
 
+import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

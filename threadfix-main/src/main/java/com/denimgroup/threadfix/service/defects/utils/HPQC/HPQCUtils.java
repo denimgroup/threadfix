@@ -1,9 +1,9 @@
-package com.denimgroup.threadfix.service.defects.HPQC;
+package com.denimgroup.threadfix.service.defects.utils.hpqc;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.defects.HPQC.infrastructure.*;
-import com.denimgroup.threadfix.service.defects.MarshallingUtils;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
+import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 
 import javax.xml.bind.JAXBException;
 import java.net.HttpURLConnection;
