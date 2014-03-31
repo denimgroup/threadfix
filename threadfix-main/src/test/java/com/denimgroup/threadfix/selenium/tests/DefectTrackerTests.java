@@ -289,49 +289,49 @@ public class DefectTrackerTests extends BaseTest {
 		assertTrue(defectTrackerIndexPage.getNameErrorsText().equals("That name is already taken."));
 	}
 
-	@Test
-	public void TFSCreate() {
-		String newDefectTrackerName = "tfsCreate" + getRandomString(3);
-		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
-		String defectTrackerType = "Microsoft TFS";
+//	@Test
+//	public void TFSCreate() {
+//		String newDefectTrackerName = "tfsCreate" + getRandomString(3);
+//		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
+//		String defectTrackerType = "Microsoft TFS";
+//
+//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+//                .clickDefectTrackersLink();
+//
+//		defectTrackerIndexPage = defectTrackerIndexPage
+//				.clickAddDefectTrackerButton()
+//                .enterName(null,newDefectTrackerName)
+//                .enterType(null, defectTrackerType)
+//                .enterURL(null, defectTrackerURL)
+//                .clickSaveNewDefectTracker();
+//
+//		assertTrue("DefectTracker Page did not create a TFS tracker correctly.",
+//				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
+//	}
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-                .clickDefectTrackersLink();
-
-		defectTrackerIndexPage = defectTrackerIndexPage
-				.clickAddDefectTrackerButton()
-                .enterName(null,newDefectTrackerName)
-                .enterType(null, defectTrackerType)
-                .enterURL(null, defectTrackerURL)
-                .clickSaveNewDefectTracker();
-
-		assertTrue("DefectTracker Page did not create a TFS tracker correctly.",
-				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
-	}
-
-	@Test
-	public void TFSEdit() {
-		String defectTrackerName = "editTFSDefectTracker" + getRandomString(3);
-        String replacementName = "replacementDefectTracker" + getRandomString(3);
-		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
-		String defectTrackerType = "Microsoft TFS";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-                .clickDefectTrackersLink();
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(null, defectTrackerName)
-                .enterType(null, defectTrackerType)
-                .enterURL(null, defectTrackerURL)
-                .clickSaveNewDefectTracker();
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
-                .enterName(defectTrackerName,replacementName)
-                .clickUpdateDefectTrackerButton();
-
-		assertTrue("DefectTracker Page did not edit TFS tracker correctly.",
-				defectTrackerIndexPage.doesNameExist(replacementName));
-	}
+//	@Test
+//	public void TFSEdit() {
+//		String defectTrackerName = "editTFSDefectTracker" + getRandomString(3);
+//        String replacementName = "replacementDefectTracker" + getRandomString(3);
+//		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
+//		String defectTrackerType = "Microsoft TFS";
+//
+//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+//                .clickDefectTrackersLink();
+//
+//		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+//                .enterName(null, defectTrackerName)
+//                .enterType(null, defectTrackerType)
+//                .enterURL(null, defectTrackerURL)
+//                .clickSaveNewDefectTracker();
+//
+//		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
+//                .enterName(defectTrackerName,replacementName)
+//                .clickUpdateDefectTrackerButton();
+//
+//		assertTrue("DefectTracker Page did not edit TFS tracker correctly.",
+//				defectTrackerIndexPage.doesNameExist(replacementName));
+//	}
 
     @Test
     public void jiraCreate() {
@@ -444,33 +444,33 @@ public class DefectTrackerTests extends BaseTest {
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
 	}
 
-	@Test
-	public void testAttachToAppTFSTracker() {
-		String defectTrackerName = "attachAppTFS" + getRandomString(3);
-		String defectTrackerType = "Microsoft TFS";
-		String teamName = "tfsAttachTestTeam" + getRandomString(3);
-		String appName = "tfsAttachTestApp" + getRandomString(3);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-                .clickDefectTrackersLink();
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(null, defectTrackerName)
-                .enterType(null, defectTrackerType)
-                .enterURL(null, TFS_URL)
-                .clickSaveNewDefectTracker();
-
-        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.clickViewAppLink(appName, teamName)
-				.addDefectTracker(defectTrackerName, TFS_USERNAME, TFS_PASSWORD, TFS_PROJECTNAME);
-		
-		assertTrue("Defect tracker wasn't attached correctly",
-                applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
-	}
+//	@Test
+//	public void testAttachToAppTFSTracker() {
+//		String defectTrackerName = "attachAppTFS" + getRandomString(3);
+//		String defectTrackerType = "Microsoft TFS";
+//		String teamName = "tfsAttachTestTeam" + getRandomString(3);
+//		String appName = "tfsAttachTestApp" + getRandomString(3);
+//
+//        DatabaseUtils.createTeam(teamName);
+//        DatabaseUtils.createApplication(teamName, appName);
+//
+//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+//                .clickDefectTrackersLink();
+//
+//		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+//                .enterName(null, defectTrackerName)
+//                .enterType(null, defectTrackerType)
+//                .enterURL(null, TFS_URL)
+//                .clickSaveNewDefectTracker();
+//
+//        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+//				.expandTeamRowByName(teamName)
+//				.clickViewAppLink(appName, teamName)
+//				.addDefectTracker(defectTrackerName, TFS_USERNAME, TFS_PASSWORD, TFS_PROJECTNAME);
+//
+//		assertTrue("Defect tracker wasn't attached correctly",
+//                applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+//	}
 
 	@Test
 	public void testAttachToAppJiraTracker() {
