@@ -76,6 +76,10 @@ Windows Command Injection,Windows Command Injection,78,
 Windows Command Injection (WS),Windows Command Injection (WS),78,
 Windows Relative Path,Windows Relative Path,22,
 Windows Relative Path (WS),Windows Relative Path (WS),22,
+Cross Site Request Forgery,Cross Site Request Forgery,352,
+Output Encoding,Output Encoding,116,
+Site Analysis,Site Analysis,99,
+SSL Checks,SSL Checks,327,
 type.severities,,,
 Information,Information,1,1
 High,High,4,4
