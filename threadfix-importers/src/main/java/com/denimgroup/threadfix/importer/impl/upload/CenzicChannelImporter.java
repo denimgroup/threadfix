@@ -32,7 +32,6 @@ import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -60,13 +59,15 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 		private boolean getUrlText            = false;
 		private boolean getParamText          = false;
 		private boolean getSeverityText       = false;
-		private boolean getDateText           = false;
+		private boolean getItemDateText = false;
+        private boolean getDateText = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
         private String currentReportItemType = null;
+        private String currentCweId = null;
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -84,11 +85,13 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 				      String qName, Attributes atts)
 	    {
 	    	switch (qName) {
+                case "SmartAttackInfo" : currentCweId = atts.getValue("VulnerabilityIds"); break;
+                case "StartTime"    : getDateText = true; break;
 		    	case "SmartAttackName"      : getChannelVulnText = true; break;
 		    	case "Url"   : getUrlText = true;         break;
 		    	case "field"   : getParamText = true;       break;
 		    	case "Severity"  : getSeverityText = true;    break;
-		    	case "ReportItemCreateDate" : getDateText = true;        break;
+		    	case "ReportItemCreateDate" : getItemDateText = true;        break;
                 case "ReportItemType" : getReportItemType = true;        break;
 	    	}
 	    }
@@ -111,38 +114,47 @@ class CenzicChannelImporter extends AbstractChannelImporter {
             } else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
-	    	} else if (getDateText) {
+	    	} else if (getItemDateText) {
                 String temp = getBuilderText();
                 if (date == null) {
                     date = DateUtils.getCalendarFromString("MM/dd/yyyy hh:mm:ss a", temp);
                 }
-	    		getDateText = false;
+	    		getItemDateText = false;
+            } else if (getDateText) {
+                String temp = getBuilderText();
+                if (date == null) {
+                    date = DateUtils.getCalendarFromString("MM/dd/yyyy hh:mm:ss", temp);
+                }
+                getDateText = false;
 	    	} else if (getReportItemType) {
                 currentReportItemType = getBuilderText();
                 getReportItemType = false;
             }
 	    	
-	    	if ("Vulnerable".equalsIgnoreCase(currentReportItemType) && "ReportItem".equals(qName)) {
-	    		
-	    		Finding finding = constructFinding(currentUrlText, currentParameter,
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		
-	    		add(finding);
+	    	if ("ReportItem".equals(qName)) {
 
-                getReportItemType = false;
+                if ("Vulnerable".equalsIgnoreCase(currentReportItemType)) {
+                    Finding finding = constructFinding(currentUrlText, currentParameter,
+                            currentChannelVulnCode, currentSeverityCode, getCweId(currentCweId));
+
+                    add(finding);
+                }
+
 	    		currentSeverityCode    = null;
 	    		currentParameter       = null;
 	    		currentUrlText         = null;
+                currentReportItemType = null;
 	    	}
 
             if ("SmartAttacksData".equals(qName)) {
                 currentChannelVulnCode = null;
+                currentCweId = null;
             }
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getDateText || getReportItemType) {
+	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getItemDateText || getReportItemType || getDateText) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }
@@ -155,6 +167,12 @@ class CenzicChannelImporter extends AbstractChannelImporter {
                 return params[1].trim();
 
             return  currentParameter;
+        }
+
+        private String getCweId(String currentCwe) {
+            if (currentCwe == null || !currentCwe.contains("CWE-"))
+                return null;
+            return currentCwe.replace("CWE-","");
         }
 	}
 
