@@ -43,11 +43,11 @@ public class ApplicationEnt extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
@@ -74,7 +74,7 @@ public class ApplicationEnt extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
 				.clickManageRolesLink()
@@ -97,7 +97,7 @@ public class ApplicationEnt extends BaseTest {
 				.selectAppRoleNewPerm(appName, role)
 				.clickAddMappingNewPerm()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
@@ -128,7 +128,7 @@ public class ApplicationEnt extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickAddNewApplication(teamName)
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
@@ -150,7 +150,7 @@ public class ApplicationEnt extends BaseTest {
 				.setRoleNewPerm(role)
 				.clickAddMappingNewPerm()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
@@ -180,7 +180,7 @@ public class ApplicationEnt extends BaseTest {
 				.setTeamName(teamName)
 				.addNewTeam()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickAddTeamButton()
 				.addNewApplication(teamName, appName, "", "Low")
 				.saveApplication(teamName)
@@ -192,7 +192,7 @@ public class ApplicationEnt extends BaseTest {
 				.clickGlobalAccess(null)
 				.clickAddNewUserBtn()
 				.clickOrganizationHeaderLink()
-				.expandTeamRowByIndex(teamName)
+				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		

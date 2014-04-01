@@ -27,10 +27,8 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -163,11 +161,11 @@ public class RoleEnt extends BaseTest {
 															.logout()
 															.login(user, pw)
 															.clickOrganizationHeaderLink()
-															.expandTeamRowByIndex(teamName)
+															.expandTeamRowByName(teamName)
 															.addNewApplication(teamName, appName, "", "Low")
 															.saveApplication(teamName)
 															.clickOrganizationHeaderLink()
-															.expandTeamRowByIndex(teamName)
+															.expandTeamRowByName(teamName)
 															.clickViewAppLink(appName, teamName);
 		
 		Boolean add  = applicationDetailPage.getNameText().contains(appName);
