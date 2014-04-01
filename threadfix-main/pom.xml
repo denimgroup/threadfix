@@ -632,7 +632,7 @@
                         <version>${maven-surefire.version}</version>
                         <executions>
                             <execution>
-                                <id>enterprise-test</id>
+                                <id>default-test</id>
                                 <phase>test</phase>
                                 <goals>
                                     <goal>test</goal>
@@ -640,8 +640,17 @@
                                 <configuration>
                                     <skip>false</skip>
                                     <includes>
+                                        <include>**/*Tests.java</include>
+                                        <include>**/*Test.java</include>
                                         <include>**/enttests/*.java</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>**/*Rest*.java</exclude>
+                                        <exclude>**/service/repository/*.java</exclude>
+                                        <exclude>**/service/scans/*.java</exclude>
+                                        <exclude>**/plugin/scanner/*.java</exclude>
+                                        <exclude>**/webservices/test/*.java</exclude>
+                                    </excludes>
                                 </configuration>
                             </execution>
                         </executions>
