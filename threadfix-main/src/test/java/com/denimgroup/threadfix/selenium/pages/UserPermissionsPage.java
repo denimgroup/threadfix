@@ -100,16 +100,5 @@ public class UserPermissionsPage extends BasePage {
 		sleep(3000);
 		return new UserPermissionsPage(driver);
 	}
-	
-	
-	
-	
-//	public int getIndex(String teamName, String Application, String role){
-//		//waiting on ids for the fields
-//		List<WebElement> teams;
-//		List<WebElement> apps;
-//		List<WebElement> roles;
-//		
-//	}
 
 }

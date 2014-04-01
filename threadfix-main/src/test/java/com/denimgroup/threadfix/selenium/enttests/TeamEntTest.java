@@ -23,7 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
-import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
@@ -33,7 +36,28 @@ import static org.junit.Assert.assertTrue;
 
 public class TeamEntTest extends BaseTest {
 
-    // TODO test needs to be re-written as this functionality has moved
+    // TODO this element does not exist in the build currently
+    @Ignore
+    @Test
+    public void teamPermissibleUsersModalTest(){
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickUserPermLink();
+
+        assertTrue("Edit Perm link was not present", teamDetailPage.isPUEditPermLinkPresent());
+        assertTrue("Edit Perm link was not clickable", teamDetailPage.isPUEditPermLinkClickable());
+        assertTrue("Close button was not present", teamDetailPage.isPUClosePresent());
+        assertTrue("Close button was not clickable", teamDetailPage.isPUCloseClickable());
+    }
+
+    // TODO test needs to be re-written as this functionality has moved or is not being created properly
     @Ignore
 	@Test
 	public void viewBasicPermissibleUsers(){
@@ -48,6 +72,8 @@ public class TeamEntTest extends BaseTest {
         assertTrue("The user was not in the permissible user list", teamDetailPage.isUserPresentPerm("user"));
 	}
 
+    // TODO test needs to be re-written as this functionality has moved or is not being created properly
+    @Ignore
 	@Test
 	public void addAppOnlyUserView(){
 		String teamName = getRandomString(8);
@@ -87,88 +113,75 @@ public class TeamEntTest extends BaseTest {
 				.clickViewTeamLink(teamName)
 				.clickUserPermLink();
 
-		assertTrue("user was not in the permissible user list",
+		assertTrue("The user was not in the permissible user list",
                 teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName));
 	}
 
-    //Ignore because this feature is not available in this version(2.0M2)
+    // TODO test needs to be re-written as this functionality has moved or is not being created properly
+    @Ignore
 	@Test
 	public void addAppAllUserView(){
 		String teamName = getRandomString(8);
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
-		String role = getRandomString(8);
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+		String newRole = "newRole" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(role,null)
-				.setPermissionValue("canManageTeams",true,null)
-				.clickSaveRole(null)
-				.clickManageUsersLink()
+				.setRoleName(newRole, null)
+				.setPermissionValue("canManageTeams", true, null)
+				.clickSaveRole(null);
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword(password,null)
-				.enterConfirmPassword(password,null)
+				.enterName(userName, null)
+				.enterPassword(password, null)
+				.enterConfirmPassword(password, null)
 				.clickGlobalAccess(null)
-				.clickAddNewUserBtn()
-				.clickEditPermissions(userName)
+				.clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
 				.clickAddPermissionsLink()
 				.setTeamNewPerm(teamName)
-				.setRoleNewPerm(role)
-				.clickAddMappingNewPerm()
-				.clickOrganizationHeaderLink()
+				.setRoleNewPerm(newRole)
+				.clickAddMappingNewPerm();
+
+        TeamDetailPage teamDetailPage = userPermissionsPage.clickOrganizationHeaderLink()
 				.clickViewTeamLink(teamName)
 				.clickUserPermLink();
 		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-		boolean present = teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName);
-		
-		teamDetailPage.clickOrganizationHeaderLink()
-								.clickViewTeamLink(teamName)
-								.clickDeleteButton()
-								.clickManageRolesLink()
-								.clickDeleteButton(role)
-								.clickManageUsersLink()
-								.clickDeleteButton(userName)
-								.logout();
-		assertTrue("user was not in the permissable user list",present);
+		assertTrue("The user was not in the permissible user list",
+                teamDetailPage.isUserPresentPerm("user") && teamDetailPage.isUserPresentPerm(userName));
 	}
 
-    //Ignore because this feature is not available in this version(2.0M2)
+    // TODO test needs to be re-written as this functionality has moved or is not being created properly
+    @Ignore
 	@Test
 	public void addUserNoPermUserView(){
 		String teamName = getRandomString(8);
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
+
+        DatabaseUtils.createTeam(teamName);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword(password,null)
-				.enterConfirmPassword(password,null)
+				.enterName(userName, null)
+				.enterPassword(password, null)
+				.enterConfirmPassword(password, null)
 				.clickGlobalAccess(null)
-				.clickAddNewUserBtn()
-				.clickOrganizationHeaderLink()
+				.clickAddNewUserBtn();
+
+        TeamDetailPage teamDetailPage = userIndexPage.clickOrganizationHeaderLink()
 				.clickViewTeamLink(teamName)
 				.clickUserPermLink();
-		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-		boolean present = teamDetailPage.isUserPresentPerm("user") && !teamDetailPage.isUserPresentPerm(userName);
-		
-		teamDetailPage.clickOrganizationHeaderLink()
-								.clickViewTeamLink(teamName)
-								.clickDeleteButton()
-								.clickManageUsersLink()
-								.clickDeleteButton(userName)
-								.logout();
-		assertTrue("user was not in the permissable user list",present);	
+
+		assertTrue("The user was not in the permissible user list",
+                teamDetailPage.isUserPresentPerm("user") && !teamDetailPage.isUserPresentPerm(userName));
 	}
 }
