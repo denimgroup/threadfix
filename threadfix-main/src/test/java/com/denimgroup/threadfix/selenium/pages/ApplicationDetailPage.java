@@ -609,7 +609,7 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScansQueueTab() {
+    public ApplicationDetailPage clickScanAgentTasksTab() {
         driver.findElementById("scanQueueTabLink").click();
         sleep(1000);
         waitForElement(driver.findElementById("scanQueueTable"));
@@ -633,7 +633,7 @@ public class ApplicationDetailPage extends BasePage {
         return -1;
     }
 
-    public ApplicationDetailPage clickAddNewScanQueueLink() {
+    public ApplicationDetailPage clickAddNewScanTask() {
         driver.findElementById("addScanQueueLink" + modalNumber()).click();
         waitForElement(driver.findElementById("addScanQueue" + modalNumber()));
         return new ApplicationDetailPage(driver);

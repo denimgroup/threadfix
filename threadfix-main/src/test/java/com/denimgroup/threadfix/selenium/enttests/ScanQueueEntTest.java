@@ -23,29 +23,24 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
-import static org.junit.Assert.assertTrue;
-
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.denimgroup.threadfix.selenium.pages.*;
-
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import static org.junit.Assert.assertTrue;
 
 public class ScanQueueEntTest extends BaseTest {
-
-	public ApplicationDetailPage applicationDetailPage;
-	public TeamIndexPage teamIndexPage;
 
 	private static Map<String, String> scansMap = ScanContents.SCAN_FILE_MAP;
 	
 	@Test
-	public void testAddScanQueue() throws MalformedURLException {
+	public void testAddScanTask() throws MalformedURLException {
 		String teamName = "scanQueueTaskTeam" + getRandomString(3);
 		String appName = "scanQueueTaskApp" + getRandomString(3);
 		int scanQueueCount  = 0;
@@ -53,26 +48,22 @@ public class ScanQueueEntTest extends BaseTest {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-		teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-
-		applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 		
-		// create an org and an app and add scan queue task, then delete everything
 		for (Entry<String, String> mapEntry : scansMap.entrySet()) {
             String tempName = mapEntry.getKey();
             if(mapEntry.getKey().equals("NTO Spider6")){
                 tempName = "NTO Spider";
-
             }
-			applicationDetailPage = applicationDetailPage.clickScansQueueTab()
-                    .clickAddNewScanQueueLink()
+
+			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab()
+                    .clickAddNewScanTask()
                     .setScanQueueType(tempName)
                     .submitScanQueue();
-//					.clickExpandAllVulns();
 
-			applicationDetailPage = applicationDetailPage.clickScansQueueTab();
 			scanQueueCount++;
 			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),applicationDetailPage.isScanQueuePresent(tempName));
 			assertTrue("Scan Queue Task count is incorrect after adding "+mapEntry.getKey(), scanQueueCount == applicationDetailPage.scanQueueCount());
