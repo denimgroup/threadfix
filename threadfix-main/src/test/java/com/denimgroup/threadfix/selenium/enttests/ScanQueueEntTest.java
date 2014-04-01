@@ -37,7 +37,7 @@ import com.denimgroup.threadfix.selenium.pages.*;
 
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
-public class ScanQueueEnt extends BaseTest {
+public class ScanQueueEntTest extends BaseTest {
 
 	public ApplicationDetailPage applicationDetailPage;
 	public TeamIndexPage teamIndexPage;

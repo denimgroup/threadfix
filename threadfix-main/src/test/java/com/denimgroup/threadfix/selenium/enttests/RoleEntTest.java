@@ -33,7 +33,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class RoleEnt extends BaseTest {
+public class RoleEntTest extends BaseTest {
 
 	RolesIndexPage rolesIndexPage = null;
 	RoleCreatePage roleCreatePage = null;

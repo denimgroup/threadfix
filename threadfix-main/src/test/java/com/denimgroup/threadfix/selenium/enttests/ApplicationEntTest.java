@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class ApplicationEnt extends BaseTest {
+public class ApplicationEntTest extends BaseTest {
 
 	private ApplicationDetailPage applicationDetailPage;
 

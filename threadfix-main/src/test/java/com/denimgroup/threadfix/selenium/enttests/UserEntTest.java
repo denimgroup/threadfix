@@ -32,7 +32,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class UserEnt extends BaseTest {
+public class UserEntTest extends BaseTest {
 
 	//If this test fails it can cascade and cause several other tests to fail
     // TODO this test will not run correctly because of bugs involved with user creation

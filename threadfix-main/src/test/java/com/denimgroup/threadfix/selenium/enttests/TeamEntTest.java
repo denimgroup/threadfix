@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class TeamEnt extends BaseTest {
+public class TeamEntTest extends BaseTest {
 
     // TODO test needs to be re-written as this functionality has moved
     @Ignore

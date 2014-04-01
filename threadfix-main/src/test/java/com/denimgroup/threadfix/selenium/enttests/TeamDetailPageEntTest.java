@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class TeamDetailPageEnt extends BaseTest {
+public class TeamDetailPageEntTest extends BaseTest {
 
 	private DashboardPage dashboardPage;
 	private String teamName = getRandomString(8);
