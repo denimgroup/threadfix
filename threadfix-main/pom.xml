@@ -632,7 +632,7 @@
                         <version>${maven-surefire.version}</version>
                         <executions>
                             <execution>
-                                <id>default-test</id>
+                                <id>enterprise-test</id>
                                 <phase>test</phase>
                                 <goals>
                                     <goal>test</goal>
