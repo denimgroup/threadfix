@@ -23,12 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
-import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.pages.ConfigureDefaultsPage;
+import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -36,16 +35,18 @@ import static org.junit.Assert.assertTrue;
 public class UserEnt extends BaseTest {
 
 	//If this test fails it can cascade and cause several other tests to fail
+    // TODO this test will not run correctly because of bugs involved with user creation
+    @Ignore
 	@Test
 	public void testDeleteLastUserRemoveLastRole(){
+        String newRole = "User";
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickDeleteButton("user");
 		assertTrue("User was deleted", userIndexPage.isUserNamePresent("user"));
 		
-		userIndexPage = userIndexPage.clickEditLink("user")
-									.chooseRoleForGlobalAccess("User", "user")
-									.clickUpdateUserBtnInvalid("user");
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess(newRole, "user")
+                .clickUpdateUserBtnInvalid("user");
 		
 		assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
 		
@@ -53,152 +54,127 @@ public class UserEnt extends BaseTest {
 	}
 
     //No Ldap users currently
+    // TODO this test will not run correctly because of bugs involved with user creation
+    @Ignore
 	@Test
 	public void createLdapUser(){
-		String baseUserName = "testLdapUser";
+		String userName = "testLdapUser" + getRandomString(3);
+
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(baseUserName,null)
-				.enterPassword("lengthy password 2",null)
-				.enterConfirmPassword("lengthy password 2",null)
+				.enterName(userName,null)
+				.enterPassword("TestPassword",null)
+				.enterConfirmPassword("TestPassword",null)
 				.clickLDAP(null)
 				.clickAddNewUserBtn()
-				.clickEditLink(baseUserName);
-		
-		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(baseUserName));
-		//turnoff ldap
-		userIndexPage = userIndexPage.clickLDAP(baseUserName)
-									.clickUpdateUserBtn(baseUserName)
-									.clickEditLink(baseUserName);
-		
-		assertFalse("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(baseUserName));
+				.clickEditLink(userName);
+		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
+
+		//turn ldap off
+		userIndexPage = userIndexPage.clickLDAP(userName)
+                .clickUpdateUserBtn(userName)
+                .clickEditLink(userName);
+		assertFalse("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
+
 		//turn ldap on
-		userIndexPage = userIndexPage.clickLDAP(baseUserName)
-									.clickUpdateUserBtn(baseUserName)
-									.clickEditLink(baseUserName)
-									.clickCancel(baseUserName);
-		
-		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(baseUserName));
-		
-		userIndexPage.clickDeleteButton(baseUserName)
-					.logout();
-		
-		
+		userIndexPage = userIndexPage.clickLDAP(userName)
+                .clickUpdateUserBtn(userName)
+                .clickEditLink(userName)
+                .clickCancel(userName);
+		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
 	}
 
     //No user roles currently
+    // TODO this test will not run correctly because of bugs involved with editing user options
+    @Ignore
 	@Test
-	public void changeUserRoleTest(){
-		String baseUserName = "testChangeRoleUser";
+	public void editRoleTest(){
+		String userName = "testChangeRoleUser" + getRandomString(3);
+
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(baseUserName,null)
-				.enterPassword("lengthy password 2",null)
-				.enterConfirmPassword("lengthy password 2",null)
+				.enterName(userName, null)
+				.enterPassword("TestPassword", null)
+				.enterConfirmPassword("TestPassword", null)
+                .chooseRoleForGlobalAccess("Administrator", userName)
 				.clickAddNewUserBtn()
-				.clickEditLink(baseUserName);
-		
-		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(baseUserName, "Administrator"));
-		
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("User",baseUserName)
-									.clickUpdateUserBtn(baseUserName)
-									.clickEditLink(baseUserName);
-		
-		assertTrue("User role was not selected", userIndexPage.isRoleSelected(baseUserName, "User"));
-		
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access",baseUserName)
-				.clickUpdateUserBtn(baseUserName)
-				.clickEditLink(baseUserName);
-		
-		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(baseUserName, "Read Access"));
-		
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator",baseUserName)
-				.clickUpdateUserBtn(baseUserName)
-				.clickEditLink(baseUserName)
-				.clickGlobalAccess(baseUserName)
-				.clickUpdateUserBtn(baseUserName)
-				.clickEditLink(baseUserName);
-		
-		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected(baseUserName));
-		
-		userIndexPage = userIndexPage.clickGlobalAccess(baseUserName)
-									.clickUpdateUserBtn(baseUserName)
-									.clickEditLink(baseUserName);
+				.clickEditLink(userName);
+		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 
-		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected(baseUserName));
-		
-		userIndexPage.clickCancel(baseUserName)
-					.clickDeleteButton(baseUserName)
-					.logout();
-		
-		
+        // Change role to 'Read Access'
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access",userName)
+				.clickUpdateUserBtn(userName)
+				.clickEditLink(userName);
+		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
+
+        // Revoke Global Access
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator",userName)
+				.clickUpdateUserBtn(userName)
+				.clickEditLink(userName)
+				.clickGlobalAccess(userName)
+				.clickUpdateUserBtn(userName)
+				.clickEditLink(userName);
+		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected(userName));
+
+        // Reinstate Global Access
+		userIndexPage = userIndexPage.clickGlobalAccess(userName)
+                .clickUpdateUserBtn(userName)
+                .clickEditLink(userName);
+		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected(userName));
 	}
 
 	// If this test fails with the defaults changed it could cause the other user tests to fail
 	@Test
-	public void disableGlobalAccessTest(){
-		String baseUserName = "configureDefaultsUser";
+	public void defaultRoleTest(){
+		String userName = "configureDefaultsUser" + getRandomString(3);
+
 		ConfigureDefaultsPage configDefaultsPage = loginPage.login("user", "password")
-											.clickConfigureDefaultsLink()
-											.setRoleSelect("User")
-											.clickUpdateDefaults();
-		
-		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
+                .clickConfigureDefaultsLink()
+                .setRoleSelect("User")
+                .clickUpdateDefaults();
+		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
 		
 		UserIndexPage userIndexPage = configDefaultsPage.clickManageUsersLink()
-														.clickAddUserLink()
-														.enterName(baseUserName,null)
-														.enterPassword("lengthy password 2",null)
-														.enterConfirmPassword("lengthy password 2",null)
-														.clickAddNewUserBtn()
-														.clickEditLink(baseUserName);
+                .clickAddUserLink()
+                .enterName(userName, null)
+                .enterPassword("TestPassword", null)
+                .enterConfirmPassword("TestPassword", null)
+                .clickAddNewUserBtn()
+                .clickEditLink(userName);
+		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 		
-		assertTrue("User role was not selected",userIndexPage.isRoleSelected(baseUserName, "User"));
+		configDefaultsPage = userIndexPage.clickCancel(userName)
+                .clickDelete(userName)
+                .clickConfigureDefaultsLink()
+                .setRoleSelect("Administrator")
+                .clickUpdateDefaults();
+		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
 		
-		configDefaultsPage = userIndexPage.clickCancel(baseUserName)
-										.clickDeleteButton(baseUserName)
-										.clickConfigureDefaultsLink()
-										.setRoleSelect("Administrator")
-										.clickUpdateDefaults();
+		userIndexPage = configDefaultsPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName, null)
+                .enterPassword("TestPassword", null)
+                .enterConfirmPassword("TestPassword", null)
+                .clickAddNewUserBtn()
+                .clickEditLink(userName);
+		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(userName, "Administrator"));
 		
+		configDefaultsPage = userIndexPage.clickCancel(userName)
+                .clickDelete(userName)
+                .clickConfigureDefaultsLink()
+                .checkGlobalGroupCheckbox()
+                .clickUpdateDefaults();
 		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
 		
 		userIndexPage = configDefaultsPage.clickManageUsersLink()
-										.clickAddUserLink()
-										.enterName(baseUserName,null)
-										.enterPassword("lengthy password 2",null)
-										.enterConfirmPassword("lengthy password 2",null)
-										.clickAddNewUserBtn()
-										.clickEditLink(baseUserName);
-		
-		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(baseUserName, "Administrator"));
-		
-		configDefaultsPage = userIndexPage.clickCancel(baseUserName)
-										.clickDeleteButton(baseUserName)
-										.clickConfigureDefaultsLink()
-										.checkGlobalGroupCheckbox()
-										.clickUpdateDefaults();
-		
-		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
-		
-		userIndexPage = configDefaultsPage.clickManageUsersLink()
-										.clickAddUserLink()
-										.enterName(baseUserName,null)
-										.enterPassword("lengthy password 2",null)
-										.enterConfirmPassword("lengthy password 2",null)
-										.clickAddNewUserBtn()
-										.clickEditLink(baseUserName);
-		
-		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(baseUserName, "Read Access"));
-		
-		userIndexPage.clickCancel(baseUserName)
-					.clickDeleteButton(baseUserName)
-					.clickConfigureDefaultsLink()
-					.checkGlobalGroupCheckbox()
-					.clickUpdateDefaults()
-					.logout();
-			
+                .clickAddUserLink()
+                .enterName(userName,null)
+                .enterPassword("TestPassword",null)
+                .enterConfirmPassword("TestPassword",null)
+                .clickAddNewUserBtn()
+                .clickEditLink(userName);
+		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
 	}
 }

@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 public class UserIndexPage extends BasePage {
@@ -110,7 +109,8 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public boolean isLDAPSelected(String oldName){
-		return driver.findElementById("isLdapUserCheckbox"+(oldName)).isSelected();
+		//return driver.findElementById("isLdapUserCheckbox"+(oldName)).isSelected();
+        return driver.findElementByClassName("ldapCheckbox").isSelected();
 	}
 	
 	public UserIndexPage clickGlobalAccess(String oldName){
@@ -126,7 +126,7 @@ public class UserIndexPage extends BasePage {
 		if(oldName == null){
 			new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
 		}else{
-			new Select(driver.findElementById("roleSelect"+(oldName))).selectByVisibleText(role);
+			new Select(driver.findElementById("roleSelect" + oldName)).selectByVisibleText(role);
 		}
 		return new UserIndexPage(driver);
 	}
