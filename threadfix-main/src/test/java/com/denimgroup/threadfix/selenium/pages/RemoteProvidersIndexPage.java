@@ -23,13 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RemoteProvidersIndexPage extends BasePage {
 	/*private List<WebElement> name = new ArrayList<WebElement>();
@@ -320,7 +321,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 
     public ApplicationDetailPage clickWhiteHatImportScan(int appRow) {
-        driver.findElementById("provider1import" + appRow).click();
+        String elementToClick = "provider1import" + appRow;
+        if (!tryClick(By.id(elementToClick))) {
+            throw new ElementNotVisibleException(elementToClick);
+        }
         return new ApplicationDetailPage(driver);
     }
 
@@ -334,7 +338,10 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
-        driver.findElementById("provider2updateMapping" + appRow).click();
+        String elementToClick = "provider2updateMapping" + appRow;
+        if (!tryClick(By.id(elementToClick))) {
+            throw new ElementNotVisibleException(elementToClick);
+        }
         return new RemoteProvidersIndexPage(driver);
     }
 

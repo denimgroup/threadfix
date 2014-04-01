@@ -419,4 +419,20 @@ public abstract class BasePage {
 	protected static String getRandomString(int length) {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
+
+    public boolean tryClick(By by) {
+        int attempts = 0;
+        boolean result = false;
+        while (attempts < 2) {
+            try {
+                driver.findElement(by).click();
+                result = true;
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.err.print("Attempting to avoid StaleElementReferenceException.");
+            }
+            attempts++;
+        }
+        return result;
+    }
 }
