@@ -16,7 +16,11 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
                 if (data.success) {
                     $scope.keys = data.object;
 
-                    $scope.keys.sort(keyCompare);
+                    if ($scope.keys.length === 0) {
+                        $scope.keys = undefined;
+                    } else {
+                        $scope.keys.sort(keyCompare);
+                    }
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -47,6 +51,10 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
         });
 
         modalInstance.result.then(function (newKey) {
+
+            if (!$scope.keys) {
+                $scope.keys = [];
+            }
 
             $scope.keys.push(newKey);
 
@@ -82,6 +90,7 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
         modalInstance.result.then(function (editedKey) {
 
             if (editedKey) {
+                $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
                 $scope.keys.sort(keyCompare);
             } else {
                 var index = $scope.keys.indexOf(key);
@@ -89,9 +98,12 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
                 if (index > -1) {
                     $scope.keys.splice(index, 1);
                 }
-            }
 
-            $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
+                if ($scope.keys.length === 0) {
+                    $scope.keys = undefined;
+                }
+                $scope.successMessage = "API key was successfully deleted.";
+            }
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

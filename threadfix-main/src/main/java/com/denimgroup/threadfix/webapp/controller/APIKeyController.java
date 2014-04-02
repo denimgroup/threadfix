@@ -75,7 +75,7 @@ public class APIKeyController {
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<APIKey> newSubmit(HttpServletRequest request,
-                                                        @RequestParam String note) {
+                                                        @RequestParam(required = false) String note) {
 
         // checkboxes can be difficult
 		boolean restricted = request.getParameter("isRestrictedKey") != null;
@@ -115,7 +115,7 @@ public class APIKeyController {
 	
 	@RequestMapping(value = "/{keyId}/edit", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<APIKey> saveEdit(HttpServletRequest request,
-			@PathVariable("keyId") int keyId, @RequestParam String note) {
+			@PathVariable("keyId") int keyId, @RequestParam(required = false) String note) {
 		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
 		
 		boolean restricted = request.getParameter("isRestrictedKey") != null;

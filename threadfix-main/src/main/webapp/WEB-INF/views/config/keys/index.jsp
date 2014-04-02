@@ -10,6 +10,8 @@
     <div ng-controller="ApiKeysController">
         <h2>API Keys</h2>
 
+        <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+        <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
         <%@ include file="newForm.jsp" %>
         <%@ include file="editForm.jsp" %>
 
@@ -26,15 +28,13 @@
                 <tr>
                     <th class="long first">Key</th>
                     <th class="medium">Note</th>
-                    <th class="short centered">Edit / Delete</th>
-                    <c:if test="${ not empty apiKeyList }">
-                        <th class="short last">Restricted</th>
-                    </c:if>
+                    <th class="centered">Edit / Delete</th>
+                    <th class="short last">Restricted</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-hide="keys || loading">
-                    <td colspan="4">No API Keys found.</td>
+                    <td colspan="4" style="text-align:center;">No API Keys found.</td>
                 </tr>
                 <tr ng-repeat="key in keys">
                     <td id="key{{ $index }}" style="max-width:300px;word-wrap: break-word;">{{ key.apiKey }}</td>
