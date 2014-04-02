@@ -35,6 +35,7 @@ import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
 
+import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	// The double slash is the Jira newline wiki syntax.
 	private static final String newLineRegex = "\\\\n", 
 			doubleSlashNewLine = " \\\\\\\\\\\\\\\\ ";
+
+    private static final String CONTENT_TYPE = "application/json";
 				
 	// HELPER METHODS
 	
@@ -141,8 +144,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 			RestUtils.setupAuthorization(httpConnection, username, password);
 			
-			httpConnection.addRequestProperty("Content-Type", "application/json");
-			httpConnection.addRequestProperty("Accept", "application/json");
+			httpConnection.addRequestProperty("Content-Type", CONTENT_TYPE);
+			httpConnection.addRequestProperty("Accept", CONTENT_TYPE);
 			
 			String headerResult = httpConnection.getHeaderField("X-Seraph-LoginReason");
 
@@ -260,9 +263,10 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			return false;
 		}
 
-		boolean valid = requestHas401Error(getUrlWithRest() + "user");
+		boolean valid = RestUtils.requestHas401Error(getUrlWithRest() + "user");
 		
 		if (valid) {
+            setLastError(BAD_URL);
 			log.info("JIRA URL was valid, returned 401 response as expected because we do not yet have credentials.");
 		} else {
 			log.warn("JIRA URL was invalid or some other problem occurred, 401 response was expected but not returned.");
@@ -354,7 +358,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		String description = makeDescription(vulnerabilities, metadata);
         String payload = getPayload(null, projectsHash, metadata, priorityHash, description,componentsHash);
 				
-		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
+		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword(), CONTENT_TYPE);
 		String id = null;
 		try {
             if (result != null && RestUtils.getJSONObject(result) != null) {
@@ -365,7 +369,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                 List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
                 log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
                 payload = getPayload(errorFieldList, projectsHash, metadata, priorityHash, description,componentsHash);
-                result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword());
+                result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword(), CONTENT_TYPE);
                 if (result != null && RestUtils.getJSONObject(result) != null) {
                     id = RestUtils.getJSONObject(result).getString("key");
                 }
@@ -521,7 +525,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public List<Defect> getDefectList() {		
 			
 		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
-		String result = RestUtils.postUrlAsString(getUrlWithRest() + "search",payload,getUsername(),getPassword());
+		String result = RestUtils.postUrlAsString(getUrlWithRest() + "search",payload,getUsername(),getPassword(), CONTENT_TYPE);
 		List<Defect> defectList = new ArrayList<>();
 		try {
             String issuesString = RestUtils.getJSONObject(result).getString("issues");

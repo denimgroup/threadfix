@@ -52,13 +52,44 @@
 						itemLabel="displayName"/>
 				</td>
 			</tr>
-			<tr>
-				<td class="right-align" style="padding:5px;">Source Code URL:</td>
-				<td class="left-align"  style="padding:5px;">
-					<form:input id="repositoryUrl${organization.name}" maxlength="250" path="repositoryUrl"/>
+			<%--<tr>--%>
+				<%--<td class="right-align" style="padding:5px;">Source Code URL:</td>--%>
+				<%--<td class="left-align"  style="padding:5px;">--%>
+					<%--<form:input id="repositoryUrl${organization.name}" maxlength="250" path="repositoryUrl"/>--%>
+                    <%--<form:errors path="repositoryUrl" cssClass="errors" />--%>
+				<%--</td>--%>
+			<%--</tr>--%>
+
+
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code URL:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:input id="repositoryUrl${organization.name}" maxlength="250" path="repositoryUrl"/>
                     <form:errors path="repositoryUrl" cssClass="errors" />
-				</td>
-			</tr>			
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Revision:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:input id="repositoryBranch${organization.name}" maxlength="250" path="repositoryBranch"/>
+                    <form:errors path="repositoryBranch" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code UserName:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:input id="repositoryUsername${organization.name}" maxlength="250" path="repositoryUserName"/>
+                    <form:errors path="repositoryUserName" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Password:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <form:password id="repositoryPassword${organization.name}" showPassword="true" maxlength="250" path="repositoryPassword"/>
+                    <form:errors path="repositoryPassword" cssClass="errors" />
+                </td>
+            </tr>
+
 			<tr>
 				<td class="right-align" style="padding:5px;">Source Code Folder:</td>
 				<td class="left-align"  style="padding:5px;">

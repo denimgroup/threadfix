@@ -346,7 +346,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         }
 
         // Create new Vulnerability Map
-        if ((channelVulnerability.getVulnerabilityMaps() == null)
+        if ((channelVulnerability.getVulnerabilityMaps() == null || channelVulnerability.getVulnerabilityMaps().size() == 0)
                 && cweCode != null && !cweCode.isEmpty()) {
             GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
             if (genericVuln != null) {

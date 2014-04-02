@@ -23,29 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.repository;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.framework.engine.ProjectConfig;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.CanceledException;
-import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidConfigurationException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
+import org.eclipse.jgit.api.errors.*;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
 
-import javax.persistence.Transient;
+import java.io.File;
+import java.io.IOException;
 
 public class GitService {
 	
@@ -54,81 +45,158 @@ public class GitService {
 	}
 	
 	public static void main(String[] args) throws NoWorkTreeException, IOException {
-		File test = new File("C:\\test\\scratch\\13\\.git");
-		
-		new FileRepositoryBuilder().setGitDir(test).build().getWorkTree();
-		
+		File test = new File("C:\\test\\scratch\\13\\bodgeit");
+        File clinictest = new File("C:\\test\\scratch\\13\\clinic");
+        File tftest = new File("C:\\test\\scratch\\13\\tf");
+        String authenURL = "http://satgit2.denimgroup.com/sbir/bodgeit.git";
+        String nonauthenURL = "https://github.com/spring-projects/spring-petclinic.git";
+        String tfURL = "https://github.com/denimgroup/threadfix.git";
+        try {
+            File gitDirectoryFile = new File("C:\\test\\scratch\\13\\bodgeit\\.git");
+                Repository localRepo = new FileRepository(gitDirectoryFile);
+                Git git = new Git(localRepo);
+            git.fetch().setCredentialsProvider(new UsernamePasswordCredentialsProvider("aaa", "aaaa")).call();
+
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
 //		new FileRepository(test).getWorkTree();
 	}
-	
+
 	// Cursory testing indicates that this works.
-	public static Repository cloneGitTreeToDirectory(String gitUrl, File fileLocation) {
+	public static Repository cloneGitTreeToDirectory(Application application, File fileLocation) {
 		
 		if (fileLocation.exists()) {
 			try {
-				
 				File gitDirectoryFile = new File(fileLocation.getAbsolutePath() + File.separator + ".git");
-				
 				if (!gitDirectoryFile.exists()) {
-					
-					Git newRepo = Git.cloneRepository()
-						.setURI(gitUrl)
-						.setDirectory(fileLocation)
-						.call();
-					
-					return newRepo.getRepository();
+                    Git newRepo = clone(application, fileLocation);
+                    if (newRepo != null)
+                        return newRepo.getRepository();
 				} else {
-					// for now let's not try to pull
-					Repository localRepo = new FileRepository(gitDirectoryFile);
-					Git git = new Git(localRepo);
-					
-//					if (localRepo.getRepositoryState() == RepositoryState.SAFE) {
-//						git.pull().call();
-//					}
+                    Repository localRepo = new FileRepository(gitDirectoryFile);
+                    Git git = new Git(localRepo);
+//                    // Fetch repository if user asked for new revision/branch
+//                    if (application.getRepositoryBranch() != null
+//                            && !application.equals(application.getRepositoryDBBranch())) {
+//                        application.setRepositoryDBBranch(application.getRepositoryBranch());
+//                            git = fetch(application, git);
+//                    }
 					return git.getRepository();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-			} catch (WrongRepositoryStateException e) {
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-			} catch (DetachedHeadException e) {
-				e.printStackTrace();
-			} catch (InvalidRemoteException e) {
-				e.printStackTrace();
-			} catch (CanceledException e) {
-				e.printStackTrace();
-			} catch (RefNotFoundException e) {
-				e.printStackTrace();
-			} catch (NoHeadException e) {
-				e.printStackTrace();
-			} catch (TransportException e) {
-				e.printStackTrace();
-			} catch (GitAPIException e) {
-				e.printStackTrace();
 			} catch (JGitInternalException e) {
 				e.printStackTrace();
-			}
+            }
 		} else {
 			try {
-				Git result = Git.cloneRepository()
-					.setURI(gitUrl)
-					.setDirectory(fileLocation)
-					.call();
-				
+                Git result = clone(application, fileLocation);
 				if (result != null) {
 					return result.getRepository();
 				}
-			} catch (GitAPIException e) {
-				e.printStackTrace();
 			} catch (JGitInternalException e) {
 				e.printStackTrace();
 			}
 		}
-
 		return null;
 	}
+
+    private static Git clone(Application application, File fileLocation) {
+        Git git = null;
+        try {
+            CloneCommand clone = Git.cloneRepository();
+            clone.setURI(application.getRepositoryUrl())
+                    .setDirectory(fileLocation);
+            if (application.getRepositoryEncryptedUserName() != null
+                    && application.getRepositoryEncryptedPassword() != null) {
+                decryptRepositoryCredentials(application);
+                UsernamePasswordCredentialsProvider credentials = new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
+                        application.getRepositoryPassword());
+                clone.setCredentialsProvider(credentials);
+            }
+
+            if (application.getRepositoryBranch() != null) {
+                application.setRepositoryDBBranch(application.getRepositoryBranch());
+                clone.call()
+                        .checkout()
+                        .setCreateBranch(true)
+                        .setName(application.getRepositoryBranch())
+                        .setUpstreamMode(CreateBranchCommand.SetupUpstreamMode.TRACK)
+                        .setStartPoint(application.getRepositoryBranch()).call();
+            } else {
+                git = clone.call();
+            }
+        } catch (WrongRepositoryStateException e) {
+            e.printStackTrace();
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
+        } catch (DetachedHeadException e) {
+            e.printStackTrace();
+        } catch (InvalidRemoteException e) {
+            e.printStackTrace();
+        } catch (CanceledException e) {
+            e.printStackTrace();
+        } catch (RefNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoHeadException e) {
+            e.printStackTrace();
+        } catch (TransportException e) {
+            e.printStackTrace();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+        return git;
+
+    }
+
+
+//    private static Git fetch(Application application, Git git) {
+//        try {
+//            if (application.getRepositoryEncryptedUserName() != null
+//                    && application.getRepositoryEncryptedPassword() != null) {
+//                decryptRepositoryCredentials(application);
+//                UsernamePasswordCredentialsProvider credentials = new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
+//                        application.getRepositoryPassword());
+//                git.fetch().setCredentialsProvider(credentials).call();
+//            } else {
+//                git.fetch().call();
+//            }
+//        } catch (WrongRepositoryStateException e) {
+//            e.printStackTrace();
+//        } catch (InvalidConfigurationException e) {
+//            e.printStackTrace();
+//        } catch (DetachedHeadException e) {
+//            e.printStackTrace();
+//        } catch (InvalidRemoteException e) {
+//            e.printStackTrace();
+//        } catch (CanceledException e) {
+//            e.printStackTrace();
+//        } catch (RefNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (NoHeadException e) {
+//            e.printStackTrace();
+//        } catch (TransportException e) {
+//            e.printStackTrace();
+//        } catch (GitAPIException e) {
+//            e.printStackTrace();
+//        }
+//        return git;
+//
+//    }
+
+    private static Application decryptRepositoryCredentials(Application application) {
+        try {
+            if (application != null && application.getRepositoryEncryptedPassword() != null &&
+                    application.getRepositoryEncryptedUserName() != null) {
+                application.setRepositoryPassword(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedPassword()));
+                application.setRepositoryUserName(ESAPI.encryptor().decrypt(application.getRepositoryEncryptedUserName()));
+            }
+        } catch (EncryptionException e) {
+            e.printStackTrace();
+        }
+        return application;
+    }
 
     // TODO move this somewhere central
     private static final String baseDirectory = "scratch/";
@@ -139,7 +207,7 @@ public class GitService {
         File applicationDirectory = new File(baseDirectory + application.getId());
 
         if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
-            Repository repo = GitService.cloneGitTreeToDirectory(application.getRepositoryUrl(), applicationDirectory);
+            Repository repo = GitService.cloneGitTreeToDirectory(application, applicationDirectory);
 
             if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
                 return repo.getWorkTree();

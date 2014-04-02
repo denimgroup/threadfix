@@ -18,6 +18,7 @@ public class FolderMappings {
         addToMap(ScannerType.APPSCAN_ENTERPRISE, "Dynamic/AppScanEnterprise");
         addToMap(ScannerType.ARACHNI, "Dynamic/Arachni");
         addToMap(ScannerType.BURPSUITE, "Dynamic/Burp");
+        addToMap(ScannerType.CENZIC_HAILSTORM, "Dynamic/CenzicHailstorm");
         addToMap(ScannerType.NESSUS, "Dynamic/Nessus");
         addToMap(ScannerType.NETSPARKER, "Dynamic/NetSparker");
         addToMap(ScannerType.NTO_SPIDER, "Dynamic/NTOSpider");

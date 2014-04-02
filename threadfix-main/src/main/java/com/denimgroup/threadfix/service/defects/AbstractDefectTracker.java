@@ -132,7 +132,25 @@ public abstract class AbstractDefectTracker {
 	 * 
 	 * @return
 	 */
-	public abstract String getTrackerError();
+    public String getTrackerError() {
+        log.info("Attempting to find the reason that Defect Tracker integration failed.");
+
+        String reason;
+
+        if (!hasValidUrl()) {
+            reason =  "The Defect Tracker url was incorrect.";
+        } else if (!hasValidCredentials()) {
+            reason =  "The supplied credentials were incorrect.";
+        } else if (!hasValidProjectName()) {
+            reason =  "The project name was invalid.";
+        } else {
+            reason = "The Defect Tracker integration failed but the " +
+                    "cause is not the URL, credentials, or the Project Name.";
+        }
+
+        log.info(reason);
+        return reason;
+    }
 
 	/**
 	 * Check the username and password fields against the url field for valid credentials.

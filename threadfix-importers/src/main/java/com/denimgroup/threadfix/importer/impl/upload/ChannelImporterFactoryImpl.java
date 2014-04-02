@@ -60,6 +60,7 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
             case BRAKEMAN:           channelImporter = new BrakemanChannelImporter(); break;
             case BURPSUITE:          channelImporter = new BurpSuiteChannelImporter(); break;
             case CAT_NET:            channelImporter = new CatNetChannelImporter(); break;
+            case CENZIC_HAILSTORM:   channelImporter = new CenzicChannelImporter(); break;
             case CHECKMARX:          channelImporter = new CheckMarxChannelImporter(); break;
             case DEPENDENCY_CHECK:   channelImporter = new DependencyCheckChannelImporter(); break;
             case FINDBUGS:           channelImporter = new FindBugsChannelImporter(); break;
