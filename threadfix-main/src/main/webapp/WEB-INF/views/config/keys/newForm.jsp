@@ -14,6 +14,9 @@
                         <input name="note" ng-model="object.note" type="text"
                                focus-on="focusInput" size="70" ng-maxlength="255" />
                     </td>
+                    <td>
+                        <span class="errors" ng-show="form.note.$dirty && form.note.$error.maxlength">Over 255 characters limit!</span>
+                    </td>
                 </tr>
                 <tr>
                     <td>Restricted?</td>

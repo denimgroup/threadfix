@@ -19,7 +19,11 @@
                                focus-on="focusInput"
                                size="50"
                                ng-maxlength="50"
-                               ng-model="object.name"/>
+                               ng-model="object.name" required/>
+                    </td>
+                    <td ng-show="form.name.$dirty && form.name.$invalid">
+                        <span class="errors" ng-show="form.name.$error.required">Name is required.</span>
+                        <span class="errors" ng-show="form.name.$error.maxlength">Over 50 characters limit!</span>
                     </td>
                 </tr>
                 <tr>
@@ -31,7 +35,13 @@
                                size="50"
                                ng-model="object.url"
                                maxlength="255"
-                               value="${ defectTracker.url }"/>
+                               value="${ defectTracker.url }" required/>
+                    </td>
+                    <td>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
+                        <!--<span ng-show="keytoolError" class="errors">Instructions for importing a self-signed certificate can be found <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.</span>-->
                     </td>
                     <!-- TODO put this back in -->
                     <!--<td class="no-color">-->

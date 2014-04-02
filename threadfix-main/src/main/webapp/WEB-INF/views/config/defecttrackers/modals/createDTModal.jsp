@@ -10,8 +10,9 @@
                     <td class="inputValue">
                         <input type="text" focus-on="focusInput" ng-model="object.name" id="nameInput" name="name" size="50" maxlength="50" required/>
                     </td>
-                    <td>
-                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                    <td ng-show="form.name.$dirty && form.name.$invalid">
+                        <span class="errors" ng-show="form.name.$error.required">Name is required.</span>
+                        <span class="errors" ng-show="form.name.$error.maxlength">Over 50 characters limit!</span>
                     </td>
                 </tr>
                 <tr>
@@ -21,6 +22,8 @@
                     </td>
                     <td>
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
                         <span ng-show="keytoolError" class="errors">Instructions for importing a self-signed certificate can be found <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.</span>
                     </td>
                 </tr>
