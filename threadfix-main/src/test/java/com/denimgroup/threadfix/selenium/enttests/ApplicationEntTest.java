@@ -23,8 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
-import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -33,34 +38,27 @@ public class ApplicationEntTest extends BaseTest {
 
 	private ApplicationDetailPage applicationDetailPage;
 
+    // Todo, functionality that this test is looking for is not present
+    @Ignore
 	@Test
-	public void viewBasicPermissableUsers(){
+	public void viewBasicPermissibleUsers(){
 		String teamName = getRandomString(8);
 		String appName = getRandomString(8);
-		applicationDetailPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.addNewApplication(teamName, appName, "", "Low")
-				.saveApplication(teamName)
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+		ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-		boolean present = applicationDetailPage.isUserPresentPerm("user");
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-								.clickViewTeamLink(teamName)
-								.clickDeleteButton()
-								.logout();
-		assertTrue("user was not in the permissable user list",present);
+		assertTrue("user was not in the permissible user list", applicationDetailPage.isUserPresentPerm("user"));
 	}
 
+    // Todo, functionality that this test is looking for is not present
+    @Ignore
 	@Test
 	public void addAppOnlyUserView(){
 		String teamName = getRandomString(8);
@@ -68,53 +66,44 @@ public class ApplicationEntTest extends BaseTest {
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
 		String role = getRandomString(8);
-		applicationDetailPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.addNewApplication(teamName, appName, "", "Low")
-				.saveApplication(teamName)
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(role,null)
-				.setPermissionValue("canManageApplications",true,null)
-				.clickSaveRole(null)
-				.clickManageUsersLink()
+				.setRoleName(role, null)
+				.setPermissionValue("canManageApplications", true, null)
+				.clickSaveRole(null);
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword(password,null)
-				.enterConfirmPassword(password,null)
+				.enterName(userName, null)
+				.enterPassword(password, null)
+				.enterConfirmPassword(password, null)
 				.clickGlobalAccess(null)
-				.clickAddNewUserBtn()
-				.clickEditPermissions(userName)
+				.clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
 				.clickAddPermissionsLink()
 				.setTeamNewPerm(teamName)
 				.clickAllAppsNewPerm()
 				.selectAppNewPerm(appName)
 				.selectAppRoleNewPerm(appName, role)
-				.clickAddMappingNewPerm()
-				.clickOrganizationHeaderLink()
+				.clickAddMappingNewPerm();
+
+        ApplicationDetailPage applicationDetailPage = userPermissionsPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-		boolean present = applicationDetailPage.isUserPresentPerm("user") && applicationDetailPage.isUserPresentPerm(userName);
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickDeleteButton()
-                .clickManageRolesLink()
-                .clickDeleteButton(role)
-                .clickManageUsersLink()
-                .clickDeleteButton(userName)
-                .logout();
-		assertTrue("user was not in the permissable user list",present);
+		assertTrue("The user was not in the permissible user list",
+                applicationDetailPage.isUserPresentPerm("user") && applicationDetailPage.isUserPresentPerm(userName));
 	}
 
+    // Todo, functionality that this test is looking for is not present
+    @Ignore
 	@Test
 	public void addAppAllUserView(){
 		String teamName = getRandomString(8);
@@ -122,97 +111,67 @@ public class ApplicationEntTest extends BaseTest {
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
 		String role = getRandomString(8);
-		applicationDetailPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.clickAddNewApplication(teamName)
-				.addNewApplication(teamName, appName, "", "Low")
-				.saveApplication(teamName)
-				.clickManageRolesLink()
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(role,null)
-				.setPermissionValue("canManageApplications",true,null)
-				.clickSaveRole(null)
-				.clickManageUsersLink()
+				.setRoleName(role, null)
+				.setPermissionValue("canManageApplications", true, null)
+				.clickSaveRole(null);
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword(password,null)
-				.enterConfirmPassword(password,null)
+				.enterName(userName, null)
+				.enterPassword(password, null)
+				.enterConfirmPassword(password, null)
 				.clickGlobalAccess(null)
-				.clickAddNewUserBtn()
-				.clickEditPermissions(userName)
+				.clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
 				.clickAddPermissionsLink()
 				.setTeamNewPerm(teamName)
 				.setRoleNewPerm(role)
-				.clickAddMappingNewPerm()
-				.clickOrganizationHeaderLink()
+				.clickAddMappingNewPerm();
+
+        ApplicationDetailPage applicationDetailPage = userPermissionsPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-		boolean present = applicationDetailPage.isUserPresentPerm("user") && applicationDetailPage.isUserPresentPerm(userName);
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickDeleteButton()
-                .clickManageRolesLink()
-                .clickDeleteButton(role)
-                .clickManageUsersLink()
-                .clickDeleteButton(userName)
-                .logout();
-		assertTrue("user was not in the permissable user list",present);
+		assertTrue("user was not in the permissible user list",
+                applicationDetailPage.isUserPresentPerm("user") && applicationDetailPage.isUserPresentPerm(userName));
 	}
 
+    // Todo, functionality that this test is looking for is not present
+    @Ignore
 	@Test
 	public void addUserNoPermUserView(){
 		String teamName = getRandomString(8);
 		String appName = getRandomString(8);
 		String userName = getRandomString(8);
 		String password = getRandomString(12);
-		applicationDetailPage = loginPage.login("user", "password")
-				.clickOrganizationHeaderLink()
-				.clickAddTeamButton()
-				.setTeamName(teamName)
-				.addNewTeam()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.clickAddTeamButton()
-				.addNewApplication(teamName, appName, "", "Low")
-				.saveApplication(teamName)
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword(password,null)
-				.enterConfirmPassword(password,null)
+				.enterName(userName, null)
+				.enterPassword(password, null)
+				.enterConfirmPassword(password, null)
 				.clickGlobalAccess(null)
-				.clickAddNewUserBtn()
-				.clickOrganizationHeaderLink()
+				.clickAddNewUserBtn();
+
+        ApplicationDetailPage applicationDetailPage = userIndexPage.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink(appName,teamName)
 				.clickViewPermUsers();
 		
-//		int cnt = applicationDetailPage.getNumPermUsers();
-		boolean present = applicationDetailPage.isUserPresentPerm("user") && !applicationDetailPage.isUserPresentPerm(userName);
-		
-		applicationDetailPage.clickOrganizationHeaderLink()
-								.clickViewTeamLink(teamName)
-								.clickDeleteButton()
-								.clickManageUsersLink()
-								.clickDeleteButton(userName)
-								.logout();
-		assertTrue("user was not in the permissable user list",present);	
-	}
-	
-	public void sleep(int num) {
-		try {
-			Thread.sleep(num);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		assertTrue("user was not in the permissible user list",
+                applicationDetailPage.isUserPresentPerm("user") && !applicationDetailPage.isUserPresentPerm(userName));
 	}
 }
