@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.webapp.config;
 
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -60,9 +61,9 @@ public class FormRestResponse<T> extends RestResponse<T> {
 
         Map<String, String> resultMap = new HashMap<>();
         for (FieldError error : result.getFieldErrors()) {
-
-            String value = error.getDefaultMessage() == null ? error.getCode() : error.getDefaultMessage();
-            resultMap.put(error.getField(), value);
+            String value = getErrorMessage(error);
+            String field = error.getField().replace(".","");
+            resultMap.put(field, value);
         }
 
         restResponse.errorMap = resultMap;
@@ -79,5 +80,16 @@ public class FormRestResponse<T> extends RestResponse<T> {
         restResponse.errorMap = resultMap;
         restResponse.message = response;
         return restResponse;
+    }
+
+    private static String getErrorMessage(FieldError error) {
+        if (error.getDefaultMessage() != null)
+            return error.getDefaultMessage();
+        String code = error.getCode();
+        String[] args = null;
+        if (error.getArguments() != null)
+            args = (String[]) error.getArguments();
+        return MessageConstants.getValue(code, args);
+
     }
 }

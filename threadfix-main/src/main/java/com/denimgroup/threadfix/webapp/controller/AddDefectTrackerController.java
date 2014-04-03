@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -90,42 +92,40 @@ public class AddDefectTrackerController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody RestResponse<DefectTracker> processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
-			BindingResult result, SessionStatus status, Model model,
-			HttpServletRequest request) {
+			BindingResult result) {
 		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
 		
 		if (result.hasErrors()) {
-			return RestResponse.failure("Found some errors."); // TODO enhance the RestResponse class with those errors
+            return FormRestResponse.failure("Found some errors.",result);
 		} else {
 			
 			DefectTracker databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
 			if (databaseDefectTracker != null)
-				result.rejectValue("name", "errors.nameTaken");
+				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 
 			if (defectTracker.getDefectTrackerType() == null) {
-				result.rejectValue("defectTrackerType.id", "errors.invalid", 
+				result.rejectValue("defectTrackerType.id", MessageConstants.ERROR_INVALID,
 						new String [] { "Defect Tracker Type" }, null );
-			
 			} else if (defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()) == null) {
-				result.rejectValue("defectTrackerType.id", "errors.invalid", 
+				result.rejectValue("defectTrackerType.id", MessageConstants.ERROR_INVALID,
 						new String [] { defectTracker.getDefectTrackerType().getId().toString() }, null );
 			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
-				if (!result.hasFieldErrors("url")) {
-					result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);		
-				} else if (result.getFieldError("url").getDefaultMessage() != null &&
-						result.getFieldError("url").getDefaultMessage().equals(
-								AbstractDefectTracker.INVALID_CERTIFICATE)){
-                    // TODO fix this
-					model.addAttribute("showKeytoolLink", true);
-				}
-			}
+                if (!result.hasFieldErrors("url")) {
+                    result.rejectValue("url", MessageConstants.ERROR_INVALID, new String [] { "URL" }, null);
+                } else if (result.getFieldError("url").getDefaultMessage() != null &&
+                        result.getFieldError("url").getDefaultMessage().equals(
+                                AbstractDefectTracker.INVALID_CERTIFICATE) ){
+                    result.rejectValue("url", null, null, MessageConstants.ERROR_SELF_CERTIFICATE);
+                }
+            }
 			
 			if (result.hasErrors()) {
-                return RestResponse.failure("Found some errors."); // TODO enhance the RestResponse class with those errors
+                return FormRestResponse.failure("Found some errors.",result);
 			}
-			
+
+            defectTracker.setDefectTrackerType(defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()));
 			defectTrackerService.storeDefectTracker(defectTracker);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();

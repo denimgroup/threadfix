@@ -11,6 +11,7 @@
     <div ng-controller="DefectTrackersController">
         <h2>Defect Trackers</h2>
 
+        <%@ include file="/WEB-INF/views/successMessage.jspf" %>
         <%@ include file="modals/editDTModal.jsp" %>
         <%@ include file="modals/createDTModal.jsp" %>
 

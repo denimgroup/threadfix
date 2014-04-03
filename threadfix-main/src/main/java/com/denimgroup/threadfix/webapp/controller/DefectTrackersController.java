@@ -79,7 +79,7 @@ public class DefectTrackersController {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 		if (defectTracker != null) {
 			defectTrackerService.deleteById(defectTrackerId);
-			return RestResponse.success("API key was successfully deleted.");
+			return RestResponse.success("Defect Tracker was successfully deleted.");
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("DefectTracker", defectTrackerId));
 			throw new ResourceNotFoundException();

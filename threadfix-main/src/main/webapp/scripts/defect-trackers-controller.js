@@ -68,7 +68,7 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
 
             $scope.trackers.sort(nameCompare);
 
-            $scope.successMessage = "Successfully created key " + newTracker.name;
+            $scope.successMessage = "Successfully created defect tracker " + newTracker.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -103,6 +103,7 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
         modalInstance.result.then(function (editedTracker) {
 
             if (editedTracker) {
+                $scope.successMessage = "Successfully edited tracker " + editedTracker.name;
                 $scope.trackers.sort(nameCompare);
             } else {
                 var index = $scope.trackers.indexOf(tracker);
@@ -112,9 +113,8 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
                 }
 
                 $scope.empty = $scope.trackers.length === 0;
+                $scope.successMessage = "Defect tracker was successfully deleted.";
             }
-
-            $scope.successMessage = "Successfully edited tracker " + editedTracker.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

@@ -10,9 +10,10 @@
                     <td class="inputValue">
                         <input type="text" focus-on="focusInput" ng-model="object.name" id="nameInput" name="name" size="50" maxlength="50" required/>
                     </td>
-                    <td ng-show="form.name.$dirty && form.name.$invalid">
-                        <span class="errors" ng-show="form.name.$error.required">Name is required.</span>
-                        <span class="errors" ng-show="form.name.$error.maxlength">Over 50 characters limit!</span>
+                    <td>
+                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.maxlength">Over 50 characters limit!</span>
+                        <span class="errors" ng-show="object.nameError"> {{ object.nameError }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -24,7 +25,8 @@
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
-                        <span ng-show="keytoolError" class="errors">Instructions for importing a self-signed certificate can be found <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.</span>
+                        <span class="errors" ng-show="object.urlError"> {{ object.urlError }}</span>
+                        <span class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.</span>
                     </td>
                 </tr>
                 <tr>
@@ -33,11 +35,11 @@
                         <select ng-options="type.name for type in config.trackerTypes"
                                 ng-model="object.defectTrackerType"
                                 id="defectTrackerTypeSelect"
-                                name="defectTrackerType.id">
+                                name="defectTrackerTypeid">
                         </select>
                     </td>
                     <td>
-                        <errors name="defectTrackerType.id" cssClass="errors" />
+                        <span class="errors" ng-show="object.defectTrackerTypeidError"> {{ object.defectTrackerTypeidError }}</span>
                     </td>
                 </tr>
             </tbody>

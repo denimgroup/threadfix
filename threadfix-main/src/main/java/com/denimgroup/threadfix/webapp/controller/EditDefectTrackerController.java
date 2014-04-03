@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +86,7 @@ public class EditDefectTrackerController {
             defectTracker.setId(defectTrackerId);
         }
         if (result.hasErrors()) {
-            return RestResponse.failure(result.toString());
+            return FormRestResponse.failure("Found some errors.",result);
         }
 
 		DefectTracker databaseDefectTracker;
@@ -95,20 +97,20 @@ public class EditDefectTrackerController {
 		} else {
 			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
 			if (databaseDefectTracker != null && !databaseDefectTracker.getId().equals(defectTracker.getId())) {
-				result.rejectValue("name", "errors.nameTaken");
+				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
 				if (!result.hasFieldErrors("url")) {
-					result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);		
+					result.rejectValue("url", MessageConstants.ERROR_INVALID, new String [] { "URL" }, null);
 				} else if (result.getFieldError("url").getDefaultMessage() != null &&
 						result.getFieldError("url").getDefaultMessage().equals(
 								AbstractDefectTracker.INVALID_CERTIFICATE)){
-					model.addAttribute("showKeytoolLink", true);
+                    result.rejectValue("url", null, null, MessageConstants.ERROR_SELF_CERTIFICATE);
 				}
 			}
 		}
 		
 		if (result.hasErrors()) {
-			return RestResponse.failure(result.toString());
+            return FormRestResponse.failure("Found some errors.",result);
 		} else {
 			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 			if (databaseDefectTracker != null && databaseDefectTracker.getDefectTrackerType() != null &&
