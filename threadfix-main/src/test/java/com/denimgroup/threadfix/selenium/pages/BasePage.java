@@ -435,4 +435,22 @@ public abstract class BasePage {
         }
         return result;
     }
+
+    public String tryGetText(By by) {
+        int attempts = 0;
+        String result = null;
+        while (attempts < 2) {
+            try {
+                result = driver.findElement(by).getText();
+                break;
+            } catch (StaleElementReferenceException e) {
+                System.err.print("Attempting to avoid StaleElementReferenceException.");
+            }
+            attempts++;
+        }
+        if (result == null) {
+            throw new NoSuchElementException("Element not found.");
+        }
+        return result;
+    }
 }

@@ -105,13 +105,13 @@ public class ApplicationEntTest extends BaseTest {
 		boolean present = applicationDetailPage.isUserPresentPerm("user") && applicationDetailPage.isUserPresentPerm(userName);
 		
 		applicationDetailPage.clickOrganizationHeaderLink()
-								.clickViewTeamLink(teamName)
-								.clickDeleteButton()
-								.clickManageRolesLink()
-								.clickDeleteButton(role)
-								.clickManageUsersLink()
-								.clickDeleteButton(userName)
-								.logout();
+                .clickViewTeamLink(teamName)
+                .clickDeleteButton()
+                .clickManageRolesLink()
+                .clickDeleteButton(role)
+                .clickManageUsersLink()
+                .clickDeleteButton(userName)
+                .logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
 
@@ -158,13 +158,13 @@ public class ApplicationEntTest extends BaseTest {
 		boolean present = applicationDetailPage.isUserPresentPerm("user") && applicationDetailPage.isUserPresentPerm(userName);
 		
 		applicationDetailPage.clickOrganizationHeaderLink()
-								.clickViewTeamLink(teamName)
-								.clickDeleteButton()
-								.clickManageRolesLink()
-								.clickDeleteButton(role)
-								.clickManageUsersLink()
-								.clickDeleteButton(userName)
-								.logout();
+                .clickViewTeamLink(teamName)
+                .clickDeleteButton()
+                .clickManageRolesLink()
+                .clickDeleteButton(role)
+                .clickManageUsersLink()
+                .clickDeleteButton(userName)
+                .logout();
 		assertTrue("user was not in the permissable user list",present);
 	}
 
