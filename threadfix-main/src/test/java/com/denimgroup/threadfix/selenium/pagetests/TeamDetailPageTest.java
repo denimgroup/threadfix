@@ -1,29 +1,27 @@
 package com.denimgroup.threadfix.selenium.pagetests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import static org.junit.Assert.assertTrue;
 
 public class TeamDetailPageTest extends BaseTest {
 
-	private DashboardPage dashboardPage;
-	private String teamName = getRandomString(8);
-	private String appName = getRandomString(8);
-
 	@Test
 	public void actionButtonTest(){
-        assertTrue("Build did not work properly", buildElements());
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
 
-        TeamDetailPage teamDetailPage = dashboardPage.clickOrganizationHeaderLink()
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password").
+                clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickActionButton();
 
@@ -35,8 +33,16 @@ public class TeamDetailPageTest extends BaseTest {
 	
 	@Test
 	public void editDeleteModalTest(){
-        assertTrue("Build did not work properly", buildElements());
-        TeamDetailPage teamDetailPage = dashboardPage.clickOrganizationHeaderLink()
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickEditOrganizationLink();
 
@@ -44,102 +50,68 @@ public class TeamDetailPageTest extends BaseTest {
         assertTrue("Delete Button was not present.", teamDetailPage.isDeleteTeamButtonPresent());
         assertTrue("Delete Button was not clickable.", teamDetailPage.EDDeleteClickable());
         assertTrue("Name input was not present", teamDetailPage.EDNamePresent());
-
-		boolean closePresent = teamDetailPage.EDClosePresent();
-		boolean closeClick = teamDetailPage.EDCloseClickable();
-		boolean savePresent = teamDetailPage.EDSavePresent();
-		boolean saveClick = teamDetailPage.EDSaveClickable();
-
-		teamDetailPage = teamDetailPage.clickCloseEditModal();
+        assertTrue("Close modal button was not present", teamDetailPage.EDClosePresent());
+        assertTrue("Close modal button was not clickable", teamDetailPage.EDCloseClickable());
+		assertTrue("Save button was not present.", teamDetailPage.EDSavePresent());
+		assertTrue("Save button was not clickable.", teamDetailPage.EDSaveClickable());
 	}
 	
 	@Test
 	public void chartTest(){
-        assertTrue("Build did not work properly", buildElements());
-        TeamDetailPage teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
-		sleep(5000);
-		boolean llPresent = teamDetailPage.isleftViewMoreLinkPresent();
-		boolean llClick = teamDetailPage.isleftViewMoreLinkClickable();
-//		boolean rlPresent = teamDetailPage.isrightViewMoreLinkPresent();
-		boolean rlPresent = true;
-		boolean rlClick = teamDetailPage.isrightViewMoreLinkClickable();
-		boolean lcPresent = teamDetailPage.is6MonthChartPresnt();
-		boolean rcPresent = teamDetailPage.isTop10ChartPresent();
-		String lp,lc,rp,rc,lcp,rcp;
-		lp = lc = rp = rc = lcp = rcp = "";
-		if(!llPresent){lp = "Left view more link was not present";}
-		if(!llClick){lc = "Left view more Link was not clickable";}
-		if(!rlPresent){rp = "Right view more link was not present";}
-		if(!rlClick){rc = "right view more was not clickable";}
-		if(!lcPresent){lcp = "6 month vuln burndown chart was not present";}
-		if(!rcPresent){rcp = "Top 10 vuln chart was not present";}
-		assertTrue(lp + " | "+ lc + " | "+ rp + " | "+ rc + " | "+ lcp + " | "+ rcp,
-				llPresent && llClick && rlPresent && rlClick && lcPresent && rcPresent);
-		
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+		sleep(5000); 
+        assertTrue("Left view more link was not present.", teamDetailPage.isleftViewMoreLinkPresent());
+        assertTrue("Left view more link was not clickable.", teamDetailPage.isleftViewMoreLinkClickable());
+        assertTrue("Right view more link was not present.", true);
+        assertTrue("Right view more link was not clickable.", teamDetailPage.isrightViewMoreLinkClickable());
+        assertTrue("6 month vulnerability burn-down chart was not present", teamDetailPage.is6MonthChartPresnt());
+        assertTrue("Top 10 vulnerabilities chart was not present.", teamDetailPage.isTop10ChartPresent());
 	}
 	
 	@Test
 	public void addApplicationButtonTest(){
-        assertTrue("Build did not work properly", buildElements());
-        TeamDetailPage teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
-		boolean addAppPresent = teamDetailPage.isAddAppBtnPresent();
-		boolean addAppClick = teamDetailPage.isAddAppBtnClickable();
-		String ap,ac;
-		ap = ac = "";
-		if(!addAppPresent){ap = "Add App button was not present";}
-		if(!addAppClick){ap = "Add App button was not clickable";}
-		
-		assertTrue(ap + " | " + ac, addAppPresent && addAppClick);
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        assertTrue("Add App button was not present.", teamDetailPage.isAddAppBtnPresent());
+        assertTrue("Add app button was not clickable.", teamDetailPage.isAddAppBtnClickable());
 
 	}
 
 	@Test
 	public void applicationDetailLink(){
-        assertTrue("Build did not work properly", buildElements());
-        TeamDetailPage teamDetailPage = dashboardPage.clickOrganizationHeaderLink().clickViewTeamLink(teamName);
-		boolean appLinkPresent = teamDetailPage.isAppLinkPresent(appName);
-		boolean appLinkClick = teamDetailPage.isAppLinkClickable(appName);
-		String ap,ac;
-		ap = ac = "";
-		if(!appLinkPresent){ap = "Link for app," + appName + " button was not present";}
-		if(!appLinkClick){ap = "Link for app," + appName + " button was not clickable";}
-		assertTrue(ap + " | "+ ac,appLinkPresent && appLinkClick);
-	}
-	
-	private  boolean buildElements(){
-		dashboardPage = loginPage.login("user", "password");
-		String whiteHatApplication = "Demo Site BE";
-		String whiteHatKey = System.getProperty("WHITEHAT_KEY");
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
 
-        if(whiteHatKey == null){
-			return false;
-		}
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
 
-		//Add Team
-        TeamIndexPage teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
-                .clickAddTeamButton()
-                .setTeamName(teamName)
-                .addNewTeam();
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
 
-		//Add Application
-		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
-                .addNewApplication(teamName, appName, "", "Low")
-                .saveApplication(teamName);
-
-		//Import RemoteProviders
-		teamIndexPage.clickRemoteProvidersLink()
-                .clickConfigureWhiteHat()
-                .setWhiteHatAPI(whiteHatKey)
-                .saveWhiteHat()
-                .clickEditMapping(whiteHatApplication)
-                .setTeamMapping(whiteHatApplication, teamName)
-                .setAppMapping(whiteHatApplication, appName)
-                .clickSaveMapping(whiteHatApplication)
-                .clickImportScan(whiteHatApplication)
-                .logout();
-
-		dashboardPage = loginPage.login("user", "password");
-		
-		return true;
+        assertTrue("Link for application detail page was not present.", teamDetailPage.isAppLinkPresent(appName));
+        assertTrue("Link for application detail page was not clickable.", teamDetailPage.isAppLinkClickable(appName));
 	}
 }
