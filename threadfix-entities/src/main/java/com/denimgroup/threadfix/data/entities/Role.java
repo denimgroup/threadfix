@@ -49,7 +49,7 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs,
-			canViewJobStatuses,enterprise;
+			canViewJobStatuses, enterprise;
 	
 	public static final String[] PROTECTED_PERMISSIONS = new String[]{
 			"canManageRoles", "canManageUsers"
@@ -59,7 +59,7 @@ public class Role extends AuditableEntity {
 		"canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
 		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
 		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-		"canGenerateReports", "canViewJobStatuses", "canManageApplications", "enterprise"
+		"canGenerateReports", "canViewJobStatuses", "canManageApplications"
 	};
 	
 	@NotEmpty(message = "{errors.required}")
@@ -209,12 +209,12 @@ public class Role extends AuditableEntity {
 	public void setCanViewJobStatuses(Boolean canViewJobStatuses) {
 		this.canViewJobStatuses = canViewJobStatuses;
 	}
-	
+
 	@Column
 	public Boolean getEnterprise(){
 		return enterprise != null && enterprise;
 	}
-	
+
 	public void setEnterprise(Boolean enterprise){
 		this.enterprise = enterprise;
 	}
@@ -267,7 +267,7 @@ public class Role extends AuditableEntity {
 
 		if (getCanViewJobStatuses())
 			permissions.add(Permission.CAN_VIEW_JOB_STATUSES);
-		
+
 		if (getEnterprise())
 			permissions.add(Permission.ENTERPRISE);
 

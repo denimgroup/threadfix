@@ -25,9 +25,11 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
+import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -319,9 +321,9 @@ public class RoleEntTest extends BaseTest {
 					.chooseRoleForGlobalAccess(roleName, "user")
 					.clickUpdateUserBtn("user")
 					.clickManageRolesLink()
-					.clickDeleteButton(roleName);
-		
-		
+					.clickDeleteButton(roleName)
+                    .clickManageRolesLink();
+
 		assertTrue("Role was not removed.",rolesIndexPage.isNamePresent(roleName));
 		
 		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
@@ -343,41 +345,6 @@ public class RoleEntTest extends BaseTest {
 		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName2));
 	}
 	
-	/**
-	 * Try to set users for the role such that no one will have admin permissions
-	 * will be dangerous to run on regression(if it fails all other tests could fail)
-	 */
-	@Ignore
-	@Test
-	public void testRemoveUsersFromRole() {
-		// Test on admin role
-		// if it breaks then so be it
-		
-		// Make sure that admin is the only role
-		
-		// try to set users to none
-		// fail
-		
-		// create another role with the important permissions and a user
-		
-		// set users for original role to none
-		// success
-		
-		// set users for new role to none
-		// failure
-		
-	}
-	
-	
-	/**
-	 * Try to delete the last users with admin permissions
-	 * will be dangerous to run on regression(if it fails all other tests could fail)
-	 */
-	@Ignore
-	@Test
-	public void testDeleteUsers() {
-		
-	}
 	
 	
 	
