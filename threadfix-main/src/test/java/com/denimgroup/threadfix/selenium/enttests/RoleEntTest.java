@@ -25,11 +25,9 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.RoleCreatePage;
-import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -143,32 +141,36 @@ public class RoleEntTest extends BaseTest {
 		String pw = getRandomString(15);
 		String teamName = getRandomString(10);
 		String appName = getRandomString(10);
-		ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
-															.clickOrganizationHeaderLink()
-															.clickAddTeamButton()
-															.setTeamName(teamName)
-															.addNewTeam()
-															.clickManageRolesLink()
-															.clickCreateRole()
-															.setRoleName(roleName,null)
-															.setPermissionValue("canManageApplications",true,null)
-															.clickSaveRole(null)
-															.clickManageUsersLink()
-															.clickAddUserLink()
-															.enterName(user,null)
-															.enterPassword(pw, null)
-															.enterConfirmPassword(pw, null)
-															.chooseRoleForGlobalAccess(roleName, null)
-															.clickAddNewUserBtn()
-															.logout()
-															.login(user, pw)
-															.clickOrganizationHeaderLink()
-															.expandTeamRowByName(teamName)
-															.addNewApplication(teamName, appName, "", "Low")
-															.saveApplication(teamName)
-															.clickOrganizationHeaderLink()
-															.expandTeamRowByName(teamName)
-															.clickViewAppLink(appName, teamName);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+					 .clickOrganizationHeaderLink()
+					 .clickManageRolesLink()
+					 .clickCreateRole()
+					 .setRoleName(roleName, null)
+					 .setPermissionValue("canManageApplications", true, null)
+					 .clickSaveRole(null)
+                     .clickOrganizationHeaderLink();
+
+        teamIndexPage.clickManageUsersLink()
+                     .clickAddUserLink()
+                     .enterName(user, null)
+                     .enterPassword(pw, null)
+                     .enterConfirmPassword(pw, null)
+                     .chooseRoleForGlobalAccess(roleName, null)
+                     .clickAddNewUserBtn()
+                     .logout();
+
+		ApplicationDetailPage applicationDetailPage = loginPage.login(user, pw)
+					.clickOrganizationHeaderLink()
+					.expandTeamRowByName(teamName)
+					.addNewApplication(teamName, appName, "", "Low")
+				    .saveApplication(teamName)
+					.clickOrganizationHeaderLink()
+					.expandTeamRowByName(teamName)
+					.clickViewAppLink(appName, teamName);
 		
 		Boolean add  = applicationDetailPage.getNameText().contains(appName);
 		
@@ -249,7 +251,8 @@ public class RoleEntTest extends BaseTest {
 		 UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink();
-		 userIndexPage.enterName("RoleRemoval",null)
+
+		   userIndexPage.enterName("RoleRemoval",null)
 		 				.enterPassword("passwordpassword", null)
 		 				.enterConfirmPassword("passwordpassword", null)
 		 				.chooseRoleForGlobalAccess(admin, null)
