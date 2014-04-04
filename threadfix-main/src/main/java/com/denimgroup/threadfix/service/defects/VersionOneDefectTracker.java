@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
+import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
 
 import javax.xml.bind.JAXBException;
@@ -40,6 +41,8 @@ import java.util.*;
 public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     private static final String CONTENT_TYPE = "application/xml";
+
+    RestUtils restUtils = RestUtilsImpl.getInstance();
 
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
@@ -58,7 +61,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
                 metadata.getStatus() + "'&sel=Name","Status", "set"));
         try {
             String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
-            String result = RestUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
+            String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
 
             return getDefectNumber(result);
         } catch (Exception e) {
@@ -167,7 +170,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         log.info("Checking VersionOne credentials.");
         lastError = null;
 
-        String response = RestUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" +
+        String response = restUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" +
                 getUsername() + "'", getUsername(), getPassword());
 
             boolean valid = false;
@@ -204,7 +207,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             return false;
         }
 
-        boolean valid = RestUtils.requestHas401Error(getUrlWithRest() + "Member");
+        boolean valid = restUtils.requestHas401Error(getUrlWithRest() + "Member");
 
         if (valid) {
             setLastError(BAD_URL);
@@ -249,7 +252,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     private List<String> getProjectList() {
         List<String> projectList = null;
 
-        String result = RestUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" + getUsername() + "'&sel=Scopes",
+        String result = restUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" + getUsername() + "'&sel=Scopes",
                 getUsername(), getPassword());
         try {
             if (result != null) {
@@ -276,7 +279,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         List<Assets.Asset> assetList = new ArrayList<>();
 
         try {
-            String result = RestUtils.getUrlAsString(url, getUsername(), getPassword());
+            String result = restUtils.getUrlAsString(url, getUsername(), getPassword());
             if (result != null) {
                 Assets assets = MarshallingUtils.marshal(Assets.class, result);
                 if (assets != null && assets.getAssets() != null) {
@@ -376,7 +379,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         if (getProjectId() == null) {
             setProjectId(getProjectIdByName());
         }
-        String result = RestUtils.getUrlAsString(getUrlWithRest().replace("Data/","") + "New/Defect?ctx=" + getProjectId(), getUsername(), getPassword());
+        String result = restUtils.getUrlAsString(getUrlWithRest().replace("Data/", "") + "New/Defect?ctx=" + getProjectId(), getUsername(), getPassword());
 
         try {
             if (result != null) {
@@ -403,7 +406,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             String id = asset.getId();
             if (id != null)
                 id = id.replace(":","/");
-            String numberXmlDefect = RestUtils.getUrlAsString(getUrlWithRest() +
+            String numberXmlDefect = restUtils.getUrlAsString(getUrlWithRest() +
                     id + "?sel=Number", getUsername(), getPassword());
             asset = MarshallingUtils.marshal(Assets.Asset.class, numberXmlDefect);
             if (asset != null && asset.getAttributes() != null
