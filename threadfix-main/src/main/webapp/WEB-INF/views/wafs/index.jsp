@@ -10,6 +10,7 @@
 
 	<h2>WAFs</h2>
 
+    <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <%@ include file="/WEB-INF/views/wafs/forms/editWafForm.jsp" %>
     <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>

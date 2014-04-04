@@ -110,13 +110,14 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
                 $scope.wafs.push(editedWaf);
 
                 $scope.wafs.sort(nameCompare);
+                $scope.successMessage = "Successfully edited waf " + editedWaf.name;
+            } else {
+                $scope.successMessage = "The WAF deletion was successful for WAF " + waf.name;
             }
 
             if ($scope.wafs.length === 0){
                 $scope.wafs = undefined;
             }
-
-            $scope.successMessage = "Successfully edited waf " + editedWaf.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

@@ -78,6 +78,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                         provider.remoteProviderApplications = undefined;
                         provider.successMessage = undefined;
                         provider.errorMessage = undefined;
+                        $scope.successMessage = provider.name + " configuration was cleared successfully.";
                     } else {
                         provider.errorMessage = "Error encountered: " + data.message;
                     }
@@ -165,11 +166,16 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
             }
         });
 
-        modalInstance.result.then(function (newTracker) {
+        modalInstance.result.then(function (newProvider) {
 
-            window.location.href = "/configuration/remoteproviders";
+            provider.remoteProviderApplications = newProvider.remoteProviderApplications;
+            $scope.paginate(provider);
 
-            $scope.successMessage = "Successfully edited tracker " + newTracker.name;
+            $scope.empty = $scope.providers.length === 0;
+
+            $scope.providers.sort(nameCompare);
+
+            $scope.successMessage = "Successfully edited remote provider " + newProvider.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -186,10 +192,11 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 },
                 object: function() {
                     if (!app.application) {
-                        return {
-                            organization: $scope.teams[0],
-                            application: $scope.teams[0].applications[0]
-                        }
+                        if ( $scope.teams &&  $scope.teams[0] &&  $scope.teams[0].applications)
+                            return {
+                                organization: $scope.teams[0],
+                                application: $scope.teams[0].applications[0]
+                            }
                     } else {
                         var teamId = app.application.team.id;
                         var appId = app.application.id;
