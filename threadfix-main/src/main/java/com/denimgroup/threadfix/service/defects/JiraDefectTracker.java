@@ -23,25 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.SSLHandshakeException;
-
+import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
+import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * This class has been rewritten to use the JIRA REST interface and may not work on older
@@ -53,6 +46,8 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  */
 public class JiraDefectTracker extends AbstractDefectTracker {
 	
+    RestUtils restUtils = RestUtilsImpl.getInstance();
+    
 	// The double slash is the Jira newline wiki syntax.
 	private static final String newLineRegex = "\\\\n", 
 			doubleSlashNewLine = " \\\\\\\\\\\\\\\\ ";
@@ -88,81 +83,14 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 		return tempUrl;
 	}
-	
-	/**
-	 * 
-	 * @param urlString JIRA URL to connect to
-	 * @return true if we get an HTTP 401, false if we get another HTTP response code (such as 200:OK)
-	 * 		or if an exception occurs
-	 */
-	private boolean requestHas401Error(String urlString) {
-		log.info("Checking to see if we get an HTTP 401 error for the JIRA URL '" + urlString + "'");
-		
-		boolean retVal;
-		
-		try {
-			URL url = new URL(urlString);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(true);
-			
-			if (connection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				retVal = true;
-			} else {
-				log.info("Got a non-401 HTTP repsonse code of: " + connection.getResponseCode());
-				retVal = false;
-			}
-		} catch (MalformedURLException e) {
-			log.warn("JIRA URL string of '" + urlString + "' is not a valid URL.", e);
-			setLastError(BAD_URL);
-			retVal = false;
-		} catch (SSLHandshakeException e) {
-			log.warn("Certificate Error encountered while trying to find the response code.", e);
-			setLastError(INVALID_CERTIFICATE);
-			retVal = false;
-		} catch (IOException e) {
-			log.warn("IOException encountered while trying to find the response code: " + e.getMessage(), e);
-			setLastError(IO_ERROR);
-			retVal = false;
-		}
-		
-		log.info("Return value will be " + retVal);
-		
-		return retVal;
-	}
-	
-	private boolean hasXSeraphLoginReason() {
-		URL url;
-		try {
-			url = new URL(getUrlWithRest() + "user?username=" + getUsername());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return false;
-		}
 
-		try {
-			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-
-			RestUtils.setupAuthorization(httpConnection, username, password);
-			
-			httpConnection.addRequestProperty("Content-Type", CONTENT_TYPE);
-			httpConnection.addRequestProperty("Accept", CONTENT_TYPE);
-			
-			String headerResult = httpConnection.getHeaderField("X-Seraph-LoginReason");
-
-			return headerResult != null && headerResult.equals("AUTHENTICATION_DENIED");
-		} catch (IOException e) {
-			log.warn("IOException encountered while trying to find the response code.", e);
-		}
-		return false;
-	}
-	
 	private List<String> getNamesFromList(String path) {
-		String result = RestUtils.getUrlAsString(getUrlWithRest() + path, username, password);
+		String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
 
 		List<String> names = new ArrayList<>();
 		
 		if (result != null) {
-			JSONArray returnArray = RestUtils.getJSONArray(result);
+			JSONArray returnArray = JsonUtils.getJSONArray(result);
 		
 			for (int i = 0; i < returnArray.length(); i++) {
 				try {
@@ -177,13 +105,13 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 	
 	private Map<String,String> getNameFieldMap(String path, String field) {
-		String result = RestUtils.getUrlAsString(getUrlWithRest() + path, username, password);
+		String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
 		
 		if (result == null) {
 			return null;
 		}
 		
-		JSONArray returnArray = RestUtils.getJSONArray(result);
+		JSONArray returnArray = JsonUtils.getJSONArray(result);
 		
 		Map<String,String> nameFieldMap = new HashMap<>();
 		
@@ -205,9 +133,10 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public boolean hasValidCredentials() {
 		log.info("Checking JIRA credentials.");
 		lastError = null;
+
+        String urlString = getUrlWithRest() + "user?username=" + getUsername();
 		
-		String response = RestUtils.getUrlAsString(getUrlWithRest() + "user?username=" + 
-											getUsername(),getUsername(),getPassword());
+		String response = restUtils.getUrlAsString(urlString, getUsername(), getPassword());
 		
 		try {
             boolean valid = false;
@@ -215,16 +144,16 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
             if (response == null) {
                 reason = "Null response was received from Jira server.";
-            } else if (RestUtils.getJSONObject(response) == null) {
+            } else if (JsonUtils.getJSONObject(response) == null) {
                 reason = "The REST response was not a valid JSON object.";
 
                 // TODO this is dodgy--perhaps this is causing the error in GitHub issue 136?
-            } else if (!RestUtils.getJSONObject(response).getString("name").equals(getUsername())) {
-                String name = RestUtils.getJSONObject(response).getString("name");
+            } else if (!JsonUtils.getJSONObject(response).getString("name").equals(getUsername())) {
+                String name = JsonUtils.getJSONObject(response).getString("name");
                 reason = "The returned name (" + name + ") did not match the username.";
             } else {
                 valid = true;
-                System.out.println(RestUtils.getJSONObject(response).getString("name"));
+                log.info("Name is " + (JsonUtils.getJSONObject(response).getString("name")));
             }
 
 			if (valid) {
@@ -234,7 +163,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                 lastError = reason;
 			}
 			
-			if (hasXSeraphLoginReason()) {
+			if (restUtils.hasXSeraphLoginReason(urlString, getUsername(), getPassword())) {
 				lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
 			}
 						
@@ -263,7 +192,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			return false;
 		}
 
-		boolean valid = RestUtils.requestHas401Error(getUrlWithRest() + "user");
+		boolean valid = restUtils.requestHas401Error(getUrlWithRest() + "user");
 		
 		if (valid) {
             setLastError(BAD_URL);
@@ -295,7 +224,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		} else {
 			if (!hasValidUrl()) {
 				lastError = "Supplied endpoint was invalid.";
-			} else if (hasXSeraphLoginReason()) {
+			} else if (restUtils.hasXSeraphLoginReason(getUrlWithRest() + "user?username=" + getUsername(),
+                    getUsername(), getPassword())) {
 				lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
 			} else if (!hasValidCredentials()) {
 				lastError = "Invalid username / password combination";
@@ -358,20 +288,20 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		String description = makeDescription(vulnerabilities, metadata);
         String payload = getPayload(null, projectsHash, metadata, priorityHash, description,componentsHash);
 				
-		String result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword(), CONTENT_TYPE);
+		String result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
 		String id = null;
 		try {
-            if (result != null && RestUtils.getJSONObject(result) != null) {
-                id = RestUtils.getJSONObject(result).getString("key");
+            if (result != null && JsonUtils.getJSONObject(result) != null) {
+                id = JsonUtils.getJSONObject(result).getString("key");
             } else {
                 // Trying to send request to Jira one more time, remove all error fields if any
-                String errorResponseMsg = RestUtils.getPostErrorResponse();
+                String errorResponseMsg = restUtils.getPostErrorResponse();
                 List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
                 log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
                 payload = getPayload(errorFieldList, projectsHash, metadata, priorityHash, description,componentsHash);
-                result = RestUtils.postUrlAsString(getUrlWithRest() + "issue",payload,getUsername(),getPassword(), CONTENT_TYPE);
-                if (result != null && RestUtils.getJSONObject(result) != null) {
-                    id = RestUtils.getJSONObject(result).getString("key");
+                result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
+                if (result != null && JsonUtils.getJSONObject(result) != null) {
+                    id = JsonUtils.getJSONObject(result).getString("key");
                 }
             }
         } catch (JSONException e) {
@@ -382,8 +312,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
     private List<String> getErrorFieldList(String errorResponseMsg) throws JSONException {
         List<String> errorFieldList = new ArrayList<>();
-        if (errorResponseMsg != null && RestUtils.getJSONObject(errorResponseMsg) != null) {
-            String errorResponse = RestUtils.getJSONObject(errorResponseMsg).getString("errors");
+        if (errorResponseMsg != null && JsonUtils.getJSONObject(errorResponseMsg) != null) {
+            String errorResponse = JsonUtils.getJSONObject(errorResponseMsg).getString("errors");
             if (errorResponse == null || errorResponse.isEmpty())
                 return errorFieldList;
             String[] errorList = errorResponse.split("\\\",\\\"");
@@ -462,8 +392,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		
 		log.info("Updating status for defect " + defect.getNativeId());
 		
-		String result = RestUtils.getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(), 
-				getUsername(), getPassword());
+		String result = restUtils.getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(),
+                getUsername(), getPassword());
 		
 		if (result != null) {
 			try {
@@ -525,12 +455,12 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public List<Defect> getDefectList() {		
 			
 		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
-		String result = RestUtils.postUrlAsString(getUrlWithRest() + "search",payload,getUsername(),getPassword(), CONTENT_TYPE);
+		String result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
 		List<Defect> defectList = new ArrayList<>();
 		try {
-            String issuesString = RestUtils.getJSONObject(result).getString("issues");
+            String issuesString = JsonUtils.getJSONObject(result).getString("issues");
 
-            JSONArray returnArray = RestUtils.getJSONArray(issuesString);
+            JSONArray returnArray = JsonUtils.getJSONArray(issuesString);
 
             for (int i = 0; i < returnArray.length(); i++) {
                 Defect defect = new Defect();
