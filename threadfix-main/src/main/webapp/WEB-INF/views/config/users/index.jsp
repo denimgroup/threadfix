@@ -35,6 +35,9 @@
 			</tr>
 		</thead>
 		<tbody id="userTableBody">
+            <tr ng-hide="users || loading">
+                <td colspan="3" style="text-align:center;">No Users found.</td>
+            </tr>
 			<tr ng-repeat="user in users" class="bodyRow">
 				<td id="name{{ user.name }}">
 					{{ user.name }}

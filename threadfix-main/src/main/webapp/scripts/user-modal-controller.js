@@ -33,7 +33,15 @@ myAppModule.controller('UserModalController', function ($scope, $modalInstance, 
                         data.object.passwordConfirm = undefined;
                         $modalInstance.close(data.object);
                     } else {
-                        $scope.error = "Failure. Message was : " + data.message;
+                        if (data.errorMap) {
+                            for (var index in data.errorMap) {
+                                if (data.errorMap.hasOwnProperty(index)) {
+                                    $scope.user[index + "_error"] = data.errorMap[index];
+                                }
+                            }
+                        } else {
+                            $scope.error = "Failure. Message was : " + data.message;
+                        }
                     }
                 }).
                 error(function(data, status, headers, config) {

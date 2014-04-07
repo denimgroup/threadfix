@@ -31,6 +31,8 @@ import com.denimgroup.threadfix.service.AccessControlMapService;
 import com.denimgroup.threadfix.service.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -105,13 +107,13 @@ public class EditUserController {
 		}
 		
 		if (result.hasErrors()) {
-			return RestResponse.failure("Error: " + result.getAllErrors());
+			return FormRestResponse.failure("Errors", result);
 		} else {
 
 			User databaseUser = userService.loadUser(user.getName());
 			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
-				result.rejectValue("name", "errors.nameTaken");
-                return RestResponse.failure("Error: " + result.getAllErrors());
+				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
+                return FormRestResponse.failure("Errors", result);
 			}
 			
 			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {

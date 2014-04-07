@@ -13,7 +13,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     var reloadList = function() {
         $scope.initialized = false;
 
-        $http.get(tfEncoder.encode('users/list')).
+        $http.get(tfEncoder.encode('/configuration/users/list')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -55,6 +55,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
         modalInstance.result.then(function (newUser) {
 
+            if (!$scope.users) {
+                $scope.users = [];
+            }
             $scope.users.push(newUser);
 
             $scope.users.sort(nameCompare);
@@ -89,7 +92,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 $scope.users.sort(nameCompare);
                 $scope.successMessage = "Successfully edited user " + editedUser.name;
             } else {
-                $scope.successMessage = "Successfully deleted user.";
+                $scope.successMessage = "Successfully deleted user " + user.name;
                 reloadList();
             }
 

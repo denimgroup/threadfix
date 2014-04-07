@@ -115,7 +115,7 @@ public class UsersController {
 		return "config/users/index";
 	}
 
-    @RequestMapping(value = "list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody RestResponse<List<User>> list() {
         List<User> users = userService.loadAllUsers();
 

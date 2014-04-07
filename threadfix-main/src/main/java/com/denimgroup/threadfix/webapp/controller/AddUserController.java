@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -90,12 +92,12 @@ public class AddUserController {
 	public @ResponseBody RestResponse<User> processNew(@Valid @ModelAttribute User user, BindingResult result) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
-			return RestResponse.failure("Errors: " + result.hasErrors());
+			return FormRestResponse.failure("Errors", result);
 		} else {
 			User databaseUser = userService.loadUser(user.getName().trim());
 			if (databaseUser != null) {
-				result.rejectValue("name", "errors.nameTaken");
-                return RestResponse.failure("Errors: " + result.hasErrors());
+				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
+                return FormRestResponse.failure("Errors", result);
 			}
 
 			Integer id = userService.createUser(user);

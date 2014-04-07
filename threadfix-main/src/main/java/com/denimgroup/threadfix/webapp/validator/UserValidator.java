@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.validator;
 
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -55,7 +56,7 @@ public class UserValidator implements Validator {
 		}
 
 		if (isEmptyOrWhitespace(user.getName())) {
-			errors.rejectValue("name", "errors.required", new String[] { "Name" }, null);
+			errors.rejectValue("name", MessageConstants.ERROR_REQUIRED, new String[] { "Name" }, null);
 		} else if (user.getName() != null && user.getName().length() > 25) {
 			errors.rejectValue("name", null, "Name has a maximum length of 25.");
 		}
@@ -64,7 +65,7 @@ public class UserValidator implements Validator {
 		if (!user.getIsLdapUser()) {
 			if (user.isNew()) {
 				if (isEmptyOrWhitespace(user.getUnencryptedPassword())) {
-					errors.rejectValue("password", "errors.required", new String[] { "Password" }, "");
+					errors.rejectValue("password", MessageConstants.ERROR_REQUIRED, new String[] { "Password" }, "");
 				}
 			}
 
