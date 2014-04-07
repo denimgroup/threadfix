@@ -24,6 +24,8 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.service.defects.mock.BugzillaClientMock;
+import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -31,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by mac on 4/7/14.
  */
-public class BugzillaTests {
+public class BugzillaTests implements TestConstants{
 
     public AbstractDefectTracker getTracker() {
         DefectTrackerType type = new DefectTrackerType();
@@ -41,7 +43,7 @@ public class BugzillaTests {
         AbstractDefectTracker tracker = DefectTrackerFactory.getTracker(type);
 
         // TODO mock the appropriate class
-        //((JiraDefectTracker) tracker).restUtils = new RestUtilsMock();
+        ((BugzillaDefectTracker) tracker).bugzillaClient = new BugzillaClientMock();
 
         return tracker;
     }
