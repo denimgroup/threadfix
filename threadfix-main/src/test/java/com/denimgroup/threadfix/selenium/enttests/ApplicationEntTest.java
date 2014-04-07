@@ -36,8 +36,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ApplicationEntTest extends BaseTest {
 
-	private ApplicationDetailPage applicationDetailPage;
-
     // Todo, functionality that this test is looking for is not present
     @Ignore
 	@Test
