@@ -1,5 +1,30 @@
-package com.denimgroup.threadfix.service.defects;
+package com.denimgroup.threadfix.service.defects.mock;
 
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+import com.denimgroup.threadfix.service.defects.util.HttpTrafficFileLoader;
+import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.google.gson.Gson;
 
@@ -10,21 +35,22 @@ import static org.junit.Assert.assertTrue;
 
 public class RestUtilsMock implements RestUtils, TestConstants {
 
-    boolean reporterRestricted = false;
+    // don't do this in actual code
+    public boolean reporterRestricted = false;
 
     private String postErrorResponse = null;
 
     public static final Map<String, String> urlToResponseMap = new HashMap<>();
     static {
-        urlToResponseMap.put("/rest/api/2/search", "jira-issue-search");
-        urlToResponseMap.put("/rest/api/2/priority", "jira-priorities");
-        urlToResponseMap.put("/rest/api/2/project/", "jira-projects");
-        urlToResponseMap.put("/rest/api/2/project", "jira-projects");
-        urlToResponseMap.put("/rest/api/2/issue", "jira-issue-submit");
-        urlToResponseMap.put("/rest/api/2/project/NCT/components", "jira-nct-components");
-        urlToResponseMap.put("/rest/api/2/issue/NCT-38", "jira-issue-status-NCT-38");
-        urlToResponseMap.put("/rest/api/2/issue/PDP-60", "jira-issue-status-PDP-60");
-        urlToResponseMap.put("/rest/api/2/user?username=threadfix", "jira-user-search");
+        urlToResponseMap.put("/rest/api/2/search", "jira/issue-search");
+        urlToResponseMap.put("/rest/api/2/priority", "jira/priorities");
+        urlToResponseMap.put("/rest/api/2/project/", "jira/projects");
+        urlToResponseMap.put("/rest/api/2/project", "jira/projects");
+        urlToResponseMap.put("/rest/api/2/issue", "jira/issue-submit");
+        urlToResponseMap.put("/rest/api/2/project/NCT/components", "jira/nct-components");
+        urlToResponseMap.put("/rest/api/2/issue/NCT-38", "jira/issue-status-NCT-38");
+        urlToResponseMap.put("/rest/api/2/issue/PDP-60", "jira/issue-status-PDP-60");
+        urlToResponseMap.put("/rest/api/2/user?username=threadfix", "jira/user-search");
 
         for (String value : urlToResponseMap.values()) {
             assertTrue("Missing file for " + value, HttpTrafficFileLoader.getResponse(value) != null);
