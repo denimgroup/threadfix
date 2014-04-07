@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -184,7 +185,7 @@ public abstract class AbstractVulnFilterController {
 		
 		if (bindingResult.hasErrors()) {
 			log.warn(FAILURE_MESSAGE);
-            return RestResponse.failure("Errors: " + bindingResult.getAllErrors());
+            return FormRestResponse.failure(FAILURE_MESSAGE, bindingResult);
 		} else {
 			vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);
 			status.setComplete();
@@ -213,7 +214,7 @@ public abstract class AbstractVulnFilterController {
 
         if (bindingResult.hasErrors()) {
             log.warn(FAILURE_MESSAGE);
-            return RestResponse.failure("Errors: " + bindingResult.getAllErrors());
+            return FormRestResponse.failure("Found some errors", bindingResult);
         } else {
             vulnerabilityFilter.setId(filterId);
             vulnerabilityFilterService.save(vulnerabilityFilter, orgId, appId);

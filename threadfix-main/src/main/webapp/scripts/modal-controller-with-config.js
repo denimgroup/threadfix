@@ -35,7 +35,7 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
                                     if (data.errorMap[index] === 'errors.self.certificate') {
                                         $scope.showKeytoolLink = true;
                                     } else {
-                                        $scope.object[index + "Error"] = data.errorMap[index];
+                                        $scope.object[index + "_error"] = data.errorMap[index];
                                     }
                                 }
                             }

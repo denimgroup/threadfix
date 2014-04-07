@@ -13,7 +13,7 @@
                     <td>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.maxlength">Over 50 characters limit!</span>
-                        <span class="errors" ng-show="object.nameError"> {{ object.nameError }}</span>
+                        <span class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -25,7 +25,7 @@
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.required">URL is required.</span>
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
                         <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
-                        <span class="errors" ng-show="object.urlError"> {{ object.urlError }}</span>
+                        <span class="errors" ng-show="object.url_error"> {{ object.url_error }}</span>
                         <span class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.</span>
                     </td>
                 </tr>
@@ -39,7 +39,7 @@
                         </select>
                     </td>
                     <td>
-                        <span class="errors" ng-show="object.defectTrackerTypeidError"> {{ object.defectTrackerTypeidError }}</span>
+                        <span class="errors" ng-show="object.defectTrackerType_id_error"> {{ object.defectTrackerType_id_error }}</span>
                     </td>
                 </tr>
             </tbody>

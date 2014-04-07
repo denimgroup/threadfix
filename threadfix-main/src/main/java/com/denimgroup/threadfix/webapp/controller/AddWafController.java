@@ -32,6 +32,8 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -88,7 +90,7 @@ public class AddWafController {
 		String validationResult = newSubmit(waf,result,status,model,request);
 		
 		if (!validationResult.equals("SUCCESS")) {
-			return RestResponse.failure(validationResult);
+			return FormRestResponse.failure(validationResult, result);
 		}
 		
 		Application application = null;
@@ -143,14 +145,14 @@ public class AddWafController {
 			} else {
 				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
 				if (databaseWaf != null) {
-					result.rejectValue("name", "errors.nameTaken");
+					result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 				}
 			}
 			
 			if (waf.getWafType() == null) {
-				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
+				result.rejectValue("wafType.id", MessageConstants.ERROR_REQUIRED, new String [] { "WAF Type" }, null );
             } else if (wafService.loadWafType(waf.getWafType().getId()) == null) {
-				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
+				result.rejectValue("wafType.id", MessageConstants.ERROR_INVALID, new String [] { waf.getWafType().getId().toString() }, null );
             } else {
 				waf.setWafType(wafService.loadWafType(waf.getWafType().getId()));
             }

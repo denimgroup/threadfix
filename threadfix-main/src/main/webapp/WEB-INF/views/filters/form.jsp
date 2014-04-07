@@ -20,10 +20,12 @@
                 <td>
                     <input required style="z-index:4000;width:320px"
                            type="text"
-                           name = "sourceGenericVulnerability.name"
+                           name = "sourceGenericVulnerabilityName"
                            ng-model="object.sourceGenericVulnerability.name"
                            typeahead="(vulnerability.name + ' (CWE ' + vulnerability.id + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
                            class="form-control"/>
+                    <span class="errors" ng-show="form.sourceGenericVulnerabilityName.$dirty && form.sourceGenericVulnerabilityName.$error.required">Vulnerability is required.</span>
+                    <span class="errors" ng-show="object.sourceGenericVulnerability_name_error"> {{ object.sourceGenericVulnerability_name_error }}</span>
                 </td>
             </tr>
             <tr>
@@ -31,9 +33,11 @@
                     Target Severity Type
                 </td>
                 <td>
-                    <select required style="width:320px" name="targetGenericSeverity.id" ng-model="object.targetGenericSeverity.id">
+                    <select required style="width:320px" name="targetGenericSeverityId" ng-model="object.targetGenericSeverity.id">
                         <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="{{ severity.id }}"> {{ severity.name }} </option>
                     </select>
+                    <span class="errors" ng-show="form.targetGenericSeverityId.$dirty && form.targetGenericSeverityId.$error.required">Severity is required.</span>
+                    <span class="errors" ng-show="object.targetGenericSeverity_id_error"> {{ object.targetGenericSeverity_id_error }}</span>
                 </td>
             </tr>
         </table>

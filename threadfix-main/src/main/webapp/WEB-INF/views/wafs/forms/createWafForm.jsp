@@ -11,6 +11,7 @@
 						<input ng-model="object.name" type="text" focus-on="focusInput" id="wafCreateNameInput" name="name" required ng-maxlength="50"/>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.maxlength">Over 50 characters limit!</span>
+                        <span class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
 					</td>
 				</tr>
 				<tr>
@@ -24,6 +25,7 @@
                             </option>
 						</select>
                         <span class="errors" ng-show="form.wafTypeId.$dirty && form.wafTypeId.$error.required">Type is required.</span>
+                        <span class="errors" ng-show="object.wafType_id_error"> {{ object.wafType_id_error }}</span>
 					</td>
 				</tr>
 			</tbody>

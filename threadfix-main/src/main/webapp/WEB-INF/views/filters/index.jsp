@@ -43,6 +43,8 @@
         <div id="tabsDiv">
             <h3>{{ vulnFiltersTitle }}</h3>
 
+            <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+
             <a id="createNewKeyModalButton" ng-click="showNewFilterModal()" class="btn">Create New Filter</a>
 
             <div id="tableDiv">

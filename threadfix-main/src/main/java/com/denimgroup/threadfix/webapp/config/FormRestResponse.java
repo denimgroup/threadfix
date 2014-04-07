@@ -62,7 +62,7 @@ public class FormRestResponse<T> extends RestResponse<T> {
         Map<String, String> resultMap = new HashMap<>();
         for (FieldError error : result.getFieldErrors()) {
             String value = getErrorMessage(error);
-            String field = error.getField().replace(".","");
+            String field = error.getField().replace(".","_");
             resultMap.put(field, value);
         }
 
