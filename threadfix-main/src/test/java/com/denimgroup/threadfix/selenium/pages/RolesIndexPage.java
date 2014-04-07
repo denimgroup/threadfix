@@ -24,12 +24,12 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RolesIndexPage extends BasePage {
 
@@ -114,6 +114,7 @@ public class RolesIndexPage extends BasePage {
 	public RolesIndexPage clickSaveRole(String oldName){ 
 		if(oldName == null){
 			driver.findElementById("newRoleFormSubmitButton").click();
+            sleep(2000);
 			waitForInvisibleElement(driver.findElementById("createRoleModal"));
 		}else{
 			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
@@ -175,6 +176,7 @@ public class RolesIndexPage extends BasePage {
 
 	
 	public RolesIndexPage clickCloseModal(){
+        waitForElement(driver.findElementByClassName("modal-footer").findElement(By.className("btn")));
 		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
 		return new RolesIndexPage(driver);
 	}
