@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ReportPageController', function ($scope, $window, $http, threadfixAPIService) {
+myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService) {
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);

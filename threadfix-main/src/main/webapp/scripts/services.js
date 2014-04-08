@@ -35,6 +35,13 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
         });
     };
 
+    threadfixAPIService.loadReport = function(url) {
+        return $http({
+            method: 'GET',
+            url: tfEncoder.encode(url)
+        });
+    };
+
     threadfixAPIService.loadVulns = function() {
         return $http({
             method: 'GET',
