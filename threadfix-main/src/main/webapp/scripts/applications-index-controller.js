@@ -99,11 +99,22 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                 },
                 object: function() {
                     return {};
+                },
+                config: function() {
+                    return {};
+                },
+                buttonText: function() {
+                    return "Add Team";
                 }
             }
+
         });
 
         modalInstance.result.then(function (newTeam) {
+
+            if (!$scope.teams) {
+                $scope.teams = [];
+            }
 
             $scope.teams.push(newTeam);
 
