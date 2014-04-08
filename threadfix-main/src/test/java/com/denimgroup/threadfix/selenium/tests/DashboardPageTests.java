@@ -21,29 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.selenium.pagetests;
+package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.*;
-
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-//import org.openqa.selenium.remote.RemoteWebDriver;
-
-
+import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+
+@Category(RegressionTest.class)
 public class DashboardPageTests extends BaseTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");
     private static final String REST_URL = System.getProperty("REST_URL");
-    private  DashboardPage dashboardPage;
-    private  DatabaseUtils dataBaseUtil;
-    private  String teamName = getRandomString(8);
-    private  String appName = getRandomString(8);
 
     static {
         if (API_KEY == null) {
@@ -56,11 +50,14 @@ public class DashboardPageTests extends BaseTest {
 
     @Test
     public void testTeamIndexHeaderNavigation() {
-        dataBaseUtil.createTeam(teamName);
-        dataBaseUtil.createApplication(teamName, appName);
-        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        dashboardPage = loginPage.login("user", "password");
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        DashboardPage dashboardPage = loginPage.login("user", "password");
 
         assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
@@ -80,11 +77,13 @@ public class DashboardPageTests extends BaseTest {
 
     @Test
     public void testTeamIndexTabUserNavigation() {
-        dataBaseUtil.createTeam(teamName);
-        dataBaseUtil.createApplication(teamName, appName);
-        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.login("user", "password");
 
         dashboardPage.clickUserTab();
         assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
@@ -98,11 +97,13 @@ public class DashboardPageTests extends BaseTest {
 
     @Test
     public void testTeamIndexConfigTabNavigation() {
-        dataBaseUtil.createTeam(teamName);
-        dataBaseUtil.createApplication(teamName, appName);
-        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.login("user", "password");
 
         dashboardPage.clickConfigTab();
         assertTrue("Configuration tab is not dropped down", dashboardPage.isConfigDropDownPresent());
@@ -126,12 +127,14 @@ public class DashboardPageTests extends BaseTest {
 
     @Test
 	public void teamIndexGraphPresentTest(){
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
 
-        dataBaseUtil.createTeam(teamName);
-        dataBaseUtil.createApplication(teamName, appName);
-        dataBaseUtil.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.login("user", "password");
         dashboardPage.clickDashboardLink();
         sleep(3000);
 

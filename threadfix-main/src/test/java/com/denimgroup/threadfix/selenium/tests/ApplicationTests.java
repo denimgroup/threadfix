@@ -23,20 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.selenium.RegressionTest;
+import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
-import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
-
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-
+@Category(RegressionTest.class)
 public class ApplicationTests extends BaseTest {
 
 	@Test 

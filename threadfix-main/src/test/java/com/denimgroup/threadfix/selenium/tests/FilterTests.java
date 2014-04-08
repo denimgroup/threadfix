@@ -23,16 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.FilterPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.openqa.selenium.NoSuchElementException;
 
 import static org.junit.Assert.assertTrue;
 
+@Category(RegressionTest.class)
 public class FilterTests extends BaseTest{
     // TODO test if you can edit an existing filter and ensure the results are correct
 

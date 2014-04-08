@@ -1,14 +1,16 @@
-package com.denimgroup.threadfix.selenium.pagetests;
+package com.denimgroup.threadfix.selenium.tests;
+
+import com.denimgroup.threadfix.selenium.RegressionTest;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.FilterPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.selenium.pages.*;
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.*;
-
+@Category(RegressionTest.class)
 public class ApplicationDetailsPageTest extends BaseTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");

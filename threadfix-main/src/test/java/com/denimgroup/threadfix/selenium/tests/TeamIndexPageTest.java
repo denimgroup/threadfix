@@ -1,17 +1,15 @@
-package com.denimgroup.threadfix.selenium.pagetests;
+package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
+@Category(RegressionTest.class)
 public class TeamIndexPageTest extends BaseTest {
 
     private static final String API_KEY = System.getProperty("API_KEY");

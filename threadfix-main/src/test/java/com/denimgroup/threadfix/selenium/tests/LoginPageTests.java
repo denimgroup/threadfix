@@ -21,18 +21,16 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.selenium.pagetests;
+package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.selenium.pages.LoginPage;
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import org.junit.After;
-import org.junit.Before;
+import com.denimgroup.threadfix.selenium.RegressionTest;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Category(RegressionTest.class)
 public class LoginPageTests extends BaseTest {
 	
 	@Test

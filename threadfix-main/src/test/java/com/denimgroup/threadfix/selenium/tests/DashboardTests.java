@@ -24,13 +24,19 @@
 
 package com.denimgroup.threadfix.selenium.tests;
 
-import static org.junit.Assert.*;
-
-import com.denimgroup.threadfix.selenium.pages.*;
-import org.junit.*;
-
+import com.denimgroup.threadfix.selenium.RegressionTest;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+@Category(RegressionTest.class)
 public class DashboardTests extends BaseTest{
 
 	@Test
