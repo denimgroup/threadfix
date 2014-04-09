@@ -669,7 +669,7 @@
             </activation>
             <properties>
                 <deploy.tomcat>true</deploy.tomcat>
-            <properties/>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -708,7 +708,7 @@
             </activation>
             <properties>
                 <deploy.tomcat>true</deploy.tomcat>
-            <properties/>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
