@@ -227,6 +227,7 @@
         <maven-compiler.version>2.3.2</maven-compiler.version>
         <maven-surefire.version>2.6</maven-surefire.version>
         <surefire-junit47.version>2.17</surefire-junit47.version>
+        <tomcat.version>2.2</tomcat.version>
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>
