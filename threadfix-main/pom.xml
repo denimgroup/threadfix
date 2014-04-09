@@ -137,7 +137,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <groups>com.test.annotation.type.IntegrationTest</groups>
+                    <skipTests>true</skipTests>
                 </configuration>
                 <executions>
                     <execution>
