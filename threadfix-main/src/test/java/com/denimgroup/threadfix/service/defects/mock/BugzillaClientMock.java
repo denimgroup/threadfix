@@ -20,6 +20,7 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
     public static final Map<String,String> versionMap = new HashMap<>();
     public static final Map<String, Object[]> products = new HashMap<>();
     public static final Map<String, Object[]> productMap = new HashMap<>();
+    public static final Map<String, Integer> bugCreateMap = new HashMap<>();
     static {
         products.put("ids", new Object[]{1, 2, 3 ,4});
         productMap.put("products", new Object[]{new HashMap<String, Object>(), new HashMap<String, Object>(),
@@ -30,6 +31,7 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
         fillProductMap(products[2], "No Component Project", 3);
         fillProductMap(products[3], "For ThreadFix", 4);
 
+        bugCreateMap.put("id", 110);
         versionMap.put("version","4.2.1");
     }
 
@@ -54,7 +56,8 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
 
     @Override
     public Map<String, Integer> createBug(Map<String, String> bugMap) throws XmlRpcException {
-        return null;
+        assertTrue("Status is still invalid.", status == ConnectionStatus.VALID);
+        return bugCreateMap;
     }
 
     @Override
@@ -74,7 +77,18 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
         }
 
         if (method.equals("Product.get")) {
-            return productMap;
+
+            if (params[0] instanceof HashMap<?, ?>) {
+                Object[] names = (Object[]) ((HashMap<Object, Object>) params[0]).get("names");
+
+                if (names == null) { // this means that the ids hash was passed in (probably) and we're in getProductNamesTest
+                    return productMap;
+                } else if (names.length == 1 && names[0].equals(TestConstants.BUGZILLA_PROJECT)) {
+                    return productMap; // TODO return the expected map for valid project lookup
+                } else { // this means it's the wrong project name
+                    return null; // TODO return null or whatever
+                }
+            }
         }
 
         return null;

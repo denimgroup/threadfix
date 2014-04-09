@@ -126,4 +126,14 @@ public class BugzillaTests implements TestConstants{
 
         assertFalse("Project name wasn't supposed to be valid.", bugzillaTracker.hasValidProjectName());
     }
+
+    @Test
+    public void testSubmitDefect() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
+
+        String nativeId = bugzillaTracker.createDefect(DefectUtils.getSampleVulnerabilities(),
+                DefectUtils.getBasicMetadata(bugzillaTracker.getProjectMetadata()));
+
+        assertTrue("Expected ID to be 110 but was " + nativeId, "110".equals(nativeId));
+    }
 }
