@@ -23,7 +23,7 @@
 
     <properties>
         <deploy.tomcat>false</deploy.tomcat>
-    <properties/>
+    </properties>
 
 	<repositories>
 		<repository>
