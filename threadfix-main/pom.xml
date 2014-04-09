@@ -18,8 +18,12 @@
 	<inceptionYear>2009</inceptionYear>
 
 	<prerequisites>
-		<maven>2</maven>
+		<maven>3</maven>
 	</prerequisites>
+
+    <properties>
+        <deploy.tomcat>false</deploy.tomcat>
+    <properties/>
 
 	<repositories>
 		<repository>
@@ -605,6 +609,18 @@
                 </plugins>
             </build>
         </profile>
+        <!-- Enterprise profile turns on enterprise dependency -->
+        <profile>
+            <id>enterprise</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.denimgroup.threadfix</groupId>
+                    <artifactId>threadfix-enterprise</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <!-- Testing Profiles -->
         <profile>
             <id>int</id>
             <activation>
@@ -647,10 +663,13 @@
             </build>
         </profile>
         <profile>
-            <id>reg</id>
+            <id>com_reg</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <deploy.tomcat>true</deploy.tomcat>
+            <properties/>
             <build>
                 <plugins>
                     <plugin>
@@ -687,6 +706,9 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <deploy.tomcat>true</deploy.tomcat>
+            <properties/>
             <build>
                 <plugins>
                     <plugin>
@@ -718,44 +740,26 @@
                 </plugins>
             </build>
         </profile>
-
-        <!-- Enterprise profile turns on enterprise dependency -->
         <profile>
-            <id>enterprise</id>
-            <dependencies>
-                <dependency>
-                    <groupId>com.denimgroup.threadfix</groupId>
-                    <artifactId>threadfix-enterprise</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
+            <id>deployTomcat</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>deploy.tomcat</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.17</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.maven.surefire</groupId>
-                                <artifactId>surefire-junit47</artifactId>
-                                <version>${surefire-junit47.version}</version>
-                            </dependency>
-                        </dependencies>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>2.3-SNAPSHOT</version>
                         <configuration>
-                            <groups>com.test.annotation.type.IntegrationTest</groups>
+                            <path>/threadfix</path>
+                            <username>threadfix</username>
+                            <password>threadfix</password>
                         </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                                <configuration>
-                                    <includes>
-                                        <include>**/*.class</include>
-                                    </includes>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
