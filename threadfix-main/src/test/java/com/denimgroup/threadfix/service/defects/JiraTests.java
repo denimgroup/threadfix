@@ -58,7 +58,7 @@ public class JiraTests implements TestConstants {
         tracker.setUrl(JIRA_BASE_URL);
         tracker.setUsername(JIRA_USERNAME);
         tracker.setPassword(JIRA_PASSWORD);
-        tracker.setProjectName(JIRA_VALID_PROJECT);
+        tracker.setProjectName(JIRA_PROJECT);
 
         return tracker;
     }

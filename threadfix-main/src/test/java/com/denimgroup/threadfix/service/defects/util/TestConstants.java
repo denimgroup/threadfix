@@ -32,11 +32,11 @@ public interface TestConstants {
             JIRA_USERNAME = "threadfix",
             JIRA_BASE_URL = "http://test.atlassian.net",
             JIRA_PASSWORD = "password",
-            JIRA_VALID_PROJECT = "No Component Test",
-            BUGZILLA_USERNAME = "mcollins@denimgroup.com",
-            BUGZILLA_PASSWORD = "bugzilla",
-            BUGZILLA_BASE_URL = "http://10.2.10.145/bugzilla",
-            Bugzilla_VALID_PROJECT = "For ThreadFix";
+            JIRA_PROJECT = "ThreadFixProject",
+            BUGZILLA_USERNAME = "threadfix@denimgroup.com",
+            BUGZILLA_PASSWORD = "password",
+            BUGZILLA_BASE_URL = "http://192.168.0.1/bugzilla",
+            BUGZILLA_PROJECT = "For ThreadFix";
 
 
 }

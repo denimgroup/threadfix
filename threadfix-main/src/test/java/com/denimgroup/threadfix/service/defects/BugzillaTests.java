@@ -25,9 +25,13 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.BugzillaClientMock;
+import com.denimgroup.threadfix.service.defects.util.DefectUtils;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -48,10 +52,78 @@ public class BugzillaTests implements TestConstants{
         return tracker;
     }
 
+    public AbstractDefectTracker getConfiguredTracker() {
+        AbstractDefectTracker bugzillaTracker = getTracker();
+
+        bugzillaTracker.setUrl(BUGZILLA_BASE_URL);
+        bugzillaTracker.setUsername(BUGZILLA_USERNAME);
+        bugzillaTracker.setPassword(BUGZILLA_PASSWORD);
+        bugzillaTracker.setProjectName(BUGZILLA_PROJECT);
+
+        return bugzillaTracker;
+    }
+
     @Test
     public void testFactory() {
-        AbstractDefectTracker tracker = getTracker();
+        AbstractDefectTracker bugzillaTracker = getTracker();
 
-        assertTrue("Tracker should have been bugzilla but wasn't.", tracker instanceof BugzillaDefectTracker);
+        assertTrue("Tracker should have been bugzilla but wasn't.", bugzillaTracker instanceof BugzillaDefectTracker);
+    }
+
+    @Test
+    public void testHasValidURL() {
+        AbstractDefectTracker bugzillaTracker = getTracker();
+
+        bugzillaTracker.setUrl(BUGZILLA_BASE_URL);
+
+        assertTrue("URL was supposed to be valid", bugzillaTracker.hasValidUrl());
+    }
+
+    @Test
+    public void testInvalidCredentials() {
+        AbstractDefectTracker bugzillaTracker = getTracker();
+
+        bugzillaTracker.setUrl("http://fake.com");
+
+        assertFalse("Bugzilla accepted a fake URL", bugzillaTracker.hasValidUrl());
+    }
+
+    @Test
+    public void testHasValidCredentials() {
+        AbstractDefectTracker bugzillaTracker = getTracker();
+
+        bugzillaTracker.setUrl(BUGZILLA_BASE_URL);
+        bugzillaTracker.setUsername(BUGZILLA_USERNAME);
+        bugzillaTracker.setPassword(BUGZILLA_PASSWORD);
+
+        assertTrue("Credentials were supposed to be valid.", bugzillaTracker.hasValidCredentials());
+    }
+
+    @Test
+    public void testGetProjectName() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
+
+        List<String> projects = DefectUtils.getProductsFromString(bugzillaTracker.getProductNames());
+
+        assertTrue("Expected 4 project, got " + projects.size(), projects.size() == 4);
+    }
+
+    @Test
+    public void testHasValidProjectName() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
+
+        assertTrue("Project name was supposed to be valid.", bugzillaTracker.hasValidProjectName());
+    }
+
+    @Test
+    public void testInvalidProjectName() {
+        AbstractDefectTracker bugzillaTracker = getTracker();
+
+        bugzillaTracker.setUrl(BUGZILLA_BASE_URL);
+        bugzillaTracker.setUsername(BUGZILLA_USERNAME);
+        bugzillaTracker.setPassword(BUGZILLA_PASSWORD);
+        bugzillaTracker.setProjectName("Bad Project Name");
+
+        assertFalse("Project name wasn't supposed to be valid.", bugzillaTracker.hasValidProjectName());
     }
 }
