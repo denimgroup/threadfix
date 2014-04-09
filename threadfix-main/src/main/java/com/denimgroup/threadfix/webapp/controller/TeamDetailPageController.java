@@ -159,7 +159,7 @@ public class TeamDetailPageController {
             log.info("Organization soft deletion was successful on Organization " + organization.getName() + ".");
             ControllerUtils.addSuccessMessage(request,
                     "Team " + teamName + " has been deleted successfully.");
-            return "redirect:/organizations";
+            return "redirect:/";
         }
     }
 

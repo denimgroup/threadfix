@@ -37,6 +37,7 @@ import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,7 +79,8 @@ public class ApplicationsIndexController {
     private ScanMergeService scanMergeService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(Model model, HttpServletRequest request) {
+        model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
         model.addAttribute("applicationTypes", FrameworkType.values());

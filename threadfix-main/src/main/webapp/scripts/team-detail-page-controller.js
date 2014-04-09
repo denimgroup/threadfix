@@ -48,17 +48,24 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                 },
                 buttonText: function() {
                     return "Save Changes";
+                },
+                deleteUrl: function() {
+                    return tfEncoder.encode("/organizations/" + $scope.team.id + "/delete");
                 }
             }
         });
 
-        modalInstance.result.then(function (newApplication) {
+        modalInstance.result.then(function (editedTeam) {
 
-            $scope.applications.push(newApplication);
+            if (editedTeam) {
+            $scope.applications.push(editedTeam);
 
             $scope.applications.sort(nameCompare);
 
-            $scope.successMessage = "Successfully added application " + newApplication.name;
+            $scope.successMessage = "Successfully added application " + editedTeam.name;
+            } else {
+                $window.location.href = tfEncoder.encode("/organizations");
+            }
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

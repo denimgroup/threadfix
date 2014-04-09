@@ -2,6 +2,13 @@
     <div class="modal-header">
         <h4 id="myModalLabel">
             Edit Team
+             <span class="delete-span">
+                <a id="deleteTeamButton"
+                   class="btn btn-danger header-button"
+                   ng-click="showDeleteDialog('Team')">
+                    Delete
+                </a>
+            </span>
         </h4>
     </div>
 

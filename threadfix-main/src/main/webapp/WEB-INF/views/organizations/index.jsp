@@ -24,10 +24,13 @@
 
         <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
-        <div ng-show="successMessage" class="alert alert-success">
-            <button class="close" ng-click="successMessage = false" type="button">x</button>
-            {{ successMessage }}
-        </div>
+        <c:if test="${ not empty successMessage }">
+            <div class="alert alert-success">
+                <button class="close" data-dismiss="alert" type="button">x</button>
+                <c:out value="${ successMessage }"/>
+            </div>
+        </c:if>
+        <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
         <div ng-show="errorMessage" class="alert alert-success">
             <button class="close" data-dismiss="errorMessage = false" type="button">x</button>

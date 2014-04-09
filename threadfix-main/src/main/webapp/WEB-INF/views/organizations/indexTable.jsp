@@ -47,10 +47,9 @@
                     Add Application
                 </a>
             <td>
-                <a style="text-decoration:none" id="organizationLink{{ $index }}" href="/organizations/{{ team.id }}{{ csrfToken }}">View Team</a>
+                <a style="text-decoration:none" id="organizationLink{{ $index }}" ng-click="goTo(team)">View Team</a>
             </td>
         </tr>
-
 
         <tr ng-file-drop-available="dropSupported=true"
             ng-repeat-end class="grey-background" ng-init="teamIndex=$index">
@@ -60,14 +59,15 @@
                          id="teamInfoDiv{{ team.id }}"
                          class="collapse applicationSection"
                          ng-class="{ expanded: team.expanded }">
-                    <div ng-show="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
-                    <div ng-hide="team.report" ng-hide="team.reportFailed" class="team-report-wrapper">
-                        <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                    <div ng-show="team.applications">
+                        <div ng-show="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
+                        <div ng-hide="team.report" ng-hide="team.reportFailed" class="team-report-wrapper">
+                            <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                        </div>
+                        <div ng-show="team.reportFailed" class="team-report-wrapper">
+                            Report Failed
+                        </div>
                     </div>
-                    <div ng-show="team.reportFailed" class="team-report-wrapper">
-                        Report Failed
-                    </div>
-
                     <div ng-hide="team.applications">
                         No applications were found for this team.
                     </div>
@@ -88,12 +88,9 @@
                             </thead>
                             <tr class="app-row" ng-repeat="app in team.applications | filter:active" ng-init="appIndex=$index"
                                     ng-file-drop="onFileSelect(team, app, $files)">
-                                <td style="padding:5px;word-wrap: break-word;">
+                                <td class="pointer" style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
-                                        <a id="applicationLink{{ teamIndex }}-{{ appIndex}}"
-                                           href="/organizations/{{ team.id }}/applications/{{ app.id }}{{ csrfToken }}">
-                                            {{ app.name }}
-                                        </a>
+                                        <a id="applicationLink{{ teamIndex }}-{{ appIndex}}" ng-click="goToPage(team, app)">{{ app.name }}</a>
                                     </div>
                                 </td>
                                 <td class="centered" id="numTotalVulns{{ teamIndex }}-{{ appIndex}}">{{ app.totalVulnCount }}</td>

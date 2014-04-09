@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $upload, tfEncoder, threadfixAPIService) {
+myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $upload, $window, tfEncoder, threadfixAPIService) {
 
     // Initialize
     $scope.initialized = false;
@@ -221,6 +221,14 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
+    };
+
+    $scope.goTo = function(team) {
+        $window.location.href = tfEncoder.encode("/organizations/" + team.id);
+    };
+
+    $scope.goToPage = function(team, app) {
+        $window.location.href = tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id);
     };
 
     var updateTeam = function(oldTeam, newTeam) {
