@@ -744,6 +744,10 @@
             <id>deployTomcat</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>deploy.tomcat</name>
+                    <value>true</value>
+                </property>
             </activation>
             <build>
                 <plugins>
@@ -756,6 +760,13 @@
                             <username>threadfix</username>
                             <password>threadfix</password>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>deploy-only</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
