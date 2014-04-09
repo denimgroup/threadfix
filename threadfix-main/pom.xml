@@ -770,6 +770,7 @@
                                 <goals>
                                     <goal>deploy-only</goal>
                                 </goals>
+                                <phase>pre-integration-test</phase>
                             </execution>
                         </executions>
                     </plugin>
