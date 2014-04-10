@@ -1,6 +1,8 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope) {
+myAppModule.controller('ScanTableController', function ($scope, $window, $http, $log, $rootScope, tfEncoder) {
+
+    var currentUrl = "/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId;
 
     $scope.heading = '0 Scans';
 
@@ -13,7 +15,7 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
         scan.deleting = true;
 
         if (confirm('Are you sure you want to delete this scan?')) {
-            $http.post(tfEncoder.encodeRelative('/scans/' + scan.id + '/delete')).
+            $http.post(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/delete')).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {
@@ -43,7 +45,7 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
     };
 
     $scope.viewScan = function(scan) {
-        window.location.href = tfEncoder.encode('/scans/' + scan.id);
+        window.location.href = tfEncoder.encode(currentUrl + '/scans/' + scan.id);
     };
 
     $scope.$on('scans', function(event, scans) {

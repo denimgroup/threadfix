@@ -241,9 +241,9 @@ public class TeamDetailPageController {
                     ", the ID " + application.getId() +
                     ", and the Organization " + application.getOrganization().getName());
 
-            ControllerUtils.addSuccessMessage(request,
-                    "Application " + application.getName() + " was successfully created in team " +
-                            application.getOrganization().getName() + ".");
+//            ControllerUtils.addSuccessMessage(request,
+//                    "Application " + application.getName() + " was successfully created in team " +
+//                            application.getOrganization().getName() + ".");
 
             return "Success";
         }

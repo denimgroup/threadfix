@@ -2,6 +2,8 @@ var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('VulnTableController', function ($scope, $window, $http, $rootScope, $modal, $log, tfEncoder) {
 
+    var currentUrl = "/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId;
+
     $scope.initialized = false;
 
     $scope.page = 1;
@@ -32,7 +34,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encodeRelative("/vulnerabilities/" + vuln.id + "/addComment");
+                    return tfEncoder.encode(currentUrl + "/vulnerabilities/" + vuln.id + "/addComment");
                 },
                 object: function () {
                     return {};
@@ -103,6 +105,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     $scope.goToPage = function() {
         $scope.page = $scope.pageInput;
     }
+
+    $scope.goTo = function(vuln) {
+        $window.location.href = tfEncoder.encode(currentUrl + "/vulnerabilities/" + vuln.id);
+    };
 
     $scope.dateToString = function(date) {
         var time = new Date(date)
@@ -177,7 +183,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
     $scope.refresh = function(newValue, oldValue) {
         if (newValue !== oldValue) {
             $scope.loading = true;
-            $http.post(tfEncoder.encodeRelative("/table"),
+            $http.post(tfEncoder.encode(currentUrl + "/table"),
                     getTableSortBean()).
                 success(function(data, status, headers, config) {
                     $scope.initialized = true;
@@ -248,7 +254,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         }));
         $scope.loading = true;
 
-        $http.post(tfEncoder.encodeRelative(urlExtension), object).
+        $http.post(tfEncoder.encode(currentUrl + urlExtension), object).
             success(function(data, status, headers, config) {
 
                 if (data.success) {

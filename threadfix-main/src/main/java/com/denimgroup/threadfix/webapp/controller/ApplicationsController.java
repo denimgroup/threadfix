@@ -152,11 +152,24 @@ public class ApplicationsController {
         return mapper.writerWithView(AllViews.FormInfo.class);
     }
 
-    @RequestMapping("{appId}/objects/base")
+    @RequestMapping("{appId}/objects")
     public @ResponseBody String getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
         Map<String, Object> map = new HashMap<>();
 
         Application application = applicationService.loadApplication(appId);
+
+        // manual Finding form
+        map.put("manualSeverities", findingService.getManualSeverities());
+        map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
+        map.put("recentFileList", findingService.getRecentStaticPaths(appId));
+        map.put("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+
+        // defect tracker add form
+        map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
+        map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackerTypes());
+
+        map.put("wafList", wafService.loadAll());
+        map.put("wafTypeList", wafService.loadAllWafTypes());
 
         // basic information
         map.put("application", application);
@@ -171,47 +184,6 @@ public class ApplicationsController {
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
         map.put("teams", organizationService.loadAllActive());
-
-        return getSerializedMap(map);
-    }
-
-    @RequestMapping("{appId}/objects/manualFindingForm")
-    public @ResponseBody String getManualFindingFormObjects(@PathVariable("appId") Integer appId) throws IOException {
-        Map<String, Object> map = new HashMap<>();
-
-        // manual Finding form
-        map.put("manualSeverities", findingService.getManualSeverities());
-        map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
-        map.put("recentFileList", findingService.getRecentStaticPaths(appId));
-        map.put("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
-
-        return getSerializedMap(map);
-    }
-
-    @RequestMapping("{appId}/objects/defectTrackerList")
-    public @ResponseBody String getDefectTrackerList() throws IOException {
-        return getSerializedMap("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
-    }
-
-    @RequestMapping("{appId}/objects/defectTrackerTypeList")
-    public @ResponseBody String getDefectTrackerTypeList() throws IOException {
-        return getSerializedMap("defectTrackerList", defectTrackerService.loadAllDefectTrackerTypes());
-    }
-
-    @RequestMapping("{appId}/objects/wafList")
-    public @ResponseBody String getWafList() throws IOException {
-        return getSerializedMap("wafList", wafService.loadAll());
-    }
-
-    @RequestMapping("{appId}/objects/wafTypeList")
-    public @ResponseBody String getWafTypeList() throws IOException {
-        return getSerializedMap("wafTypeList", wafService.loadAllWafTypes());
-    }
-
-    private String getSerializedMap(String key, Object value) throws IOException {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put(key, value);
 
         return getSerializedMap(map);
     }

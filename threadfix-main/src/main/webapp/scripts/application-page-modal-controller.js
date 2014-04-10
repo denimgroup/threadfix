@@ -2,11 +2,13 @@ var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal, tfEncoder) {
 
+    var currentUrl = "/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId;
+
     $scope.currentModal = null;
 
     // initialize objects for forms
     $scope.$on('rootScopeInitialized', function() {
-       $http.get(tfEncoder.encodeRelative("/objects")).
+       $http.get(tfEncoder.encode(currentUrl + "/objects")).
            success(function(data, status, headers, config) {
 
                if (data.success) {
@@ -311,7 +313,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return tfEncoder.encodeRelative("/scans/new");
+                    return tfEncoder.encode(currentUrl + "/scans/new");
                 },
                 object: function () {
                     return {

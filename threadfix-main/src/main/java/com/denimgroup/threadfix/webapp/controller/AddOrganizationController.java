@@ -42,7 +42,6 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/organizations/modalAdd")
-@SessionAttributes("organization")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 public class AddOrganizationController {
 

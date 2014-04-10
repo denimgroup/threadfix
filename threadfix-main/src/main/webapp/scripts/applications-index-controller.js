@@ -74,9 +74,10 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
                     if (matches !== null && matches[1] !== null) {
                         team.report = matches[1];
-                    } else {
-                        team.reportFailed = true;
                     }
+//                    else {
+//                        team.reportFailed = true;
+//                    }
                 }).
                 error(function(data, status, headers, config) {
 
@@ -112,7 +113,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         modalInstance.result.then(function (newTeam) {
 
-            if (!$scope.teams) {
+            if (!$scope.teams || $scope.teams.length === 0) {
                 $scope.teams = [];
             }
 
@@ -158,7 +159,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         modalInstance.result.then(function (newApplication) {
 
-            if (team.applications == null) {
+            if (!team.applications || team.applications.length === 0) {
                 team.applications = [];
             }
 
@@ -167,7 +168,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             team.applications.sort(nameCompare);
 
             team.expanded = true;
-            loadGraph(team);
+//            loadGraph(team);
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
