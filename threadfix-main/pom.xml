@@ -762,13 +762,11 @@
                         <version>${tomcat.version}</version>
                         <configuration>
                             <path>/threadfix</path>
-                            <username>threadfix</username>
-                            <password>threadfix</password>
                         </configuration>
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>deploy-only</goal>
+                                    <goal>run-war-only</goal>
                                 </goals>
                                 <phase>pre-integration-test</phase>
                             </execution>
