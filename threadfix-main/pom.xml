@@ -766,7 +766,7 @@
                         <executions>
                             <execution>
                                 <goals>
-                                    <goal>run-war-only</goal>
+                                    <goal>run-war</goal>
                                 </goals>
                                 <phase>pre-integration-test</phase>
                             </execution>
