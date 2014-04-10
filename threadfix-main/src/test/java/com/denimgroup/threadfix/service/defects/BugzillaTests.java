@@ -27,12 +27,12 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.BugzillaClientMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by mac on 4/7/14.
@@ -46,7 +46,6 @@ public class BugzillaTests implements TestConstants{
 
         AbstractDefectTracker tracker = DefectTrackerFactory.getTracker(type);
 
-        // TODO mock the appropriate class
         ((BugzillaDefectTracker) tracker).bugzillaClient = new BugzillaClientMock();
 
         return tracker;
@@ -80,7 +79,7 @@ public class BugzillaTests implements TestConstants{
     }
 
     @Test
-    public void testInvalidCredentials() {
+    public void testInvalidUrl() {
         AbstractDefectTracker bugzillaTracker = getTracker();
 
         bugzillaTracker.setUrl("http://fake.com");
@@ -97,6 +96,17 @@ public class BugzillaTests implements TestConstants{
         bugzillaTracker.setPassword(BUGZILLA_PASSWORD);
 
         assertTrue("Credentials were supposed to be valid.", bugzillaTracker.hasValidCredentials());
+    }
+
+    @Test
+    public void testHasInvalidCredentials() {
+        AbstractDefectTracker bugzillaTracker = getTracker();
+
+        bugzillaTracker.setUrl("http://fakeurl.com");
+        bugzillaTracker.setUsername("usernameWrong");
+        bugzillaTracker.setPassword("usernameWrong");
+
+        assertTrue("Credentials were supposed to be valid.", !bugzillaTracker.hasValidCredentials());
     }
 
     @Test
@@ -127,6 +137,20 @@ public class BugzillaTests implements TestConstants{
         assertFalse("Project name wasn't supposed to be valid.", bugzillaTracker.hasValidProjectName());
     }
 
+    //TODO Copied from Jira, needs to be corrected for Bugzilla
+    @Ignore
+    @Test
+    public void testSubmissionParameters() {
+
+    }
+
+    //TODO Copied from Jira, needs to be corrected for Bugzilla
+    @Ignore
+    @Test
+    public void testDefectCount() {
+
+    }
+
     @Test
     public void testSubmitDefect() {
         AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
@@ -136,4 +160,19 @@ public class BugzillaTests implements TestConstants{
 
         assertTrue("Expected ID to be 110 but was " + nativeId, "110".equals(nativeId));
     }
+
+    //TODO Copied from Jira, needs to be corrected for Bugzilla
+    @Ignore
+    @Test
+    public void testDefectStatusUpdateCloseDefect() {
+
+    }
+
+    //TODO Copied from Jira, needs to be corrected for Bugzilla
+    @Ignore
+    @Test
+    public void testDefectStatusUpdateNoChange() {
+
+    }
+
 }

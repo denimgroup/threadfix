@@ -104,6 +104,17 @@ public class JiraTests implements TestConstants {
     }
 
     @Test
+    public void testHasInvalidCredentials() {
+        AbstractDefectTracker jiraTracker = getTracker();
+
+        jiraTracker.setUrl("http://fakeurl.com");
+        jiraTracker.setUsername("usernameWrong");
+        jiraTracker.setPassword("passwordWrong");
+
+        assertTrue("Credentials were supposed to be valid.", !jiraTracker.hasValidCredentials());
+    }
+
+    @Test
     public void testGetProjectNames() {
         AbstractDefectTracker jiraTracker = getConfiguredTracker();
 
