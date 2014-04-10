@@ -762,6 +762,7 @@
                         <version>${tomcat.version}</version>
                         <configuration>
                             <path>/threadfix</path>
+                            <update>true</update>
                         </configuration>
                         <executions>
                             <execution>
