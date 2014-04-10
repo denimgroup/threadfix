@@ -499,6 +499,7 @@
             <groupId>org.apache.tomcat.maven</groupId>
             <artifactId>tomcat7-maven-plugin</artifactId>
             <version>${tomcat.version}</version>
+            <scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -766,10 +767,21 @@
                         </configuration>
                         <executions>
                             <execution>
+                                <id>deploy</id>
                                 <goals>
-                                    <goal>run-war</goal>
+                                    <goal>run-war-only</goal>
                                 </goals>
                                 <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <fork>true</fork>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown</id>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
                             </execution>
                         </executions>
                     </plugin>
