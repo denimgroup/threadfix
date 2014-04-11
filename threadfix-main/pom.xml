@@ -698,11 +698,36 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <deploy.tomcat>true</deploy.tomcat>
-            </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>${tomcat.version}</version>
+                        <configuration>
+                            <path>/threadfix</path>
+                            <update>true</update>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>deploy</id>
+                                <goals>
+                                    <goal>run-war-only</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <fork>true</fork>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown</id>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>2.17</version>
@@ -737,9 +762,6 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <deploy.tomcat>true</deploy.tomcat>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -775,10 +797,6 @@
             <id>deployTomcat</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
-                <property>
-                    <name>deploy.tomcat</name>
-                    <value>true</value>
-                </property>
             </activation>
             <build>
                 <plugins>
@@ -794,19 +812,12 @@
                             <execution>
                                 <id>deploy</id>
                                 <goals>
-                                    <goal>run-war-only</goal>
+                                    <goal>run-war</goal>
                                 </goals>
                                 <phase>pre-integration-test</phase>
                                 <configuration>
                                     <fork>true</fork>
                                 </configuration>
-                            </execution>
-                            <execution>
-                                <id>shutdown</id>
-                                <goals>
-                                    <goal>shutdown</goal>
-                                </goals>
-                                <phase>post-integration-test</phase>
                             </execution>
                         </executions>
                     </plugin>
