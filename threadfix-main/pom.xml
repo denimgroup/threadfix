@@ -660,7 +660,7 @@
                                 <configuration>
                                     <skip>false</skip>
                                     <excludes>
-                                        <excludedGroups>com.test.annotation.type.RegressionTest</excludedGroups>
+                                        <excludedGroups>com.denimgroup.threadfix.selenium</excludedGroups>
                                     </excludes>
                                 </configuration>
                             </execution>
