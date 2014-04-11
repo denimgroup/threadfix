@@ -23,13 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
-import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -37,7 +35,6 @@ import java.util.Map.Entry;
 
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTest.EnterpriseTest.class)
 public class ScanQueueEntIT extends BaseIT {
 
 	private static Map<String, String> scansMap = ScanContents.SCAN_FILE_MAP;
