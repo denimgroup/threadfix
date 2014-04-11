@@ -659,6 +659,10 @@
                                 </goals>
                                 <configuration>
                                     <skip>false</skip>
+                                    <includes>
+                                        <include>**/*Test.class</include>
+                                        <include>**/*Tests.class</include>
+                                    </includes>
                                 </configuration>
                             </execution>
                         </executions>
