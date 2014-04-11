@@ -218,14 +218,14 @@
         <easymock.version>3.0</easymock.version>
         <hsqldb.version>1.8.0.10</hsqldb.version>
         <mysql.version>5.1.26</mysql.version>
-        <junit.version>4.8.2</junit.version>
+        <junit.version>4.11</junit.version>
         <selenium-client.version>1.0.2</selenium-client.version>
 
         <!-- Plugin versions -->
         <cargo.version>1.0.3</cargo.version>
         <emma.version>1.0-alpha-2</emma.version>
         <maven-compiler.version>2.3.2</maven-compiler.version>
-        <maven-surefire.version>2.7.2</maven-surefire.version>
+        <maven-surefire.version>2.17</maven-surefire.version>
         <surefire-junit47.version>2.17</surefire-junit47.version>
         <tomcat.version>2.2</tomcat.version>
         <jacoco.version>0.7.0.201403182114</jacoco.version>
