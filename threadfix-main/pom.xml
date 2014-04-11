@@ -664,7 +664,7 @@
                                         <include>**/*Tests.class</include>
                                     </includes>
                                     <excludes>
-                                        <exclude>**/webservices.tests/*.class</exclude>
+                                        <exclude>**/webservices/*.class</exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
