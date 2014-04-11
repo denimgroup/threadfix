@@ -1,15 +1,13 @@
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTest.class)
+
 public class TeamIndexPageIT extends BaseIT {
 
     private static final String API_KEY = System.getProperty("API_KEY");

@@ -736,7 +736,6 @@
                         </dependencies>
                         <configuration>
                             <skipTests>false</skipTests>
-                            <groups>com.test.annotation.type.RegressionTest</groups>
                         </configuration>
                         <executions>
                             <execution>
@@ -744,9 +743,7 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <includes>
-                                        <include>**/*.class</include>
-                                    </includes>
+                                    <excludes>**/enttests/*.class</excludes>
                                 </configuration>
                             </execution>
                         </executions>

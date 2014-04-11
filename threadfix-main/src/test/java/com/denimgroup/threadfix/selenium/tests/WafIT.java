@@ -24,13 +24,11 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
 
 import java.net.MalformedURLException;
@@ -39,7 +37,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-@Category(RegressionTest.class)
+
 public class WafIT extends BaseIT {
 	
 	@Test

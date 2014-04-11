@@ -23,12 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -38,7 +36,7 @@ import java.util.Map.Entry;
 
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTest.class)
+
 public class DocumentIT extends BaseIT {
 
 	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
