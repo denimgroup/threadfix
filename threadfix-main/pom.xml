@@ -736,7 +736,6 @@
                         </dependencies>
                         <configuration>
                             <skipTests>false</skipTests>
-                            <groups>com.denimgroup.threadfix.selenium.RegressionTest</groups>
                         </configuration>
                         <executions>
                             <execution>
@@ -744,9 +743,7 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <includes>
-                                        <include>**/*.class</include>
-                                    </includes>
+                                    <excludes>**/enttests/*.class</excludes>
                                 </configuration>
                             </execution>
                         </executions>
@@ -771,9 +768,6 @@
                                 <version>${surefire-junit47.version}</version>
                             </dependency>
                         </dependencies>
-                        <configuration>
-                            <groups>com.test.annotation.type.EnterpriseTest</groups>
-                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
