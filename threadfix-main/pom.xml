@@ -659,10 +659,6 @@
                                 </goals>
                                 <configuration>
                                     <skip>false</skip>
-                                    <includes>
-                                        <include>**/*Tests.java</include>
-                                        <include>**/*Test.java</include>
-                                    </includes>
                                     <excludes>
                                         <excludedGroups>com.test.annotation.type.RegressionTest</excludedGroups>
                                     </excludes>
