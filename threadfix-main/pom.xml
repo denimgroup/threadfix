@@ -496,6 +496,11 @@
 			</exclusions>
 		</dependency>
         <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tomcat.maven</groupId>
             <artifactId>tomcat7-maven-plugin</artifactId>
             <version>${tomcat.version}</version>
@@ -662,6 +667,30 @@
                                         <excludedGroups>com.test.annotation.type.RegressionTest</excludedGroups>
                                     </excludes>
                                 </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <configuration>
+                            <destfile>${basedir}/target/coverage-reports/jacoco-unit.exec</destfile>
+                            <datafile>${basedir}/target/coverage-reports/jacoco-unit.exec</datafile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>jacoco-initialize</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-site</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>

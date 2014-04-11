@@ -47,7 +47,7 @@ public class ApiKeyInserterer extends SpringBeanAutowiringSupport implements App
 
         if (apiKeys.isEmpty()) {
             APIKey key = new APIKey();
-            key.setApiKey("KEYVALUE");
+            key.setApiKey("viwfFyFURJYPzdmH4fycQOvg4lBchgRvzfJSAEBg");
             apiKeyDao.saveOrUpdate(key);
         }
     }
