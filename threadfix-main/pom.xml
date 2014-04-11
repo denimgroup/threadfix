@@ -736,7 +736,7 @@
                         </dependencies>
                         <configuration>
                             <skipTests>false</skipTests>
-                            <groups>com.test.annotation.type.RegressionTest</groups>
+                            <groups>com.denimgroup.threadfix.selenium.RegressionTest</groups>
                         </configuration>
                         <executions>
                             <execution>
