@@ -35,7 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class UserTests extends BaseTest {
+public class UserIT extends BaseIT {
 
 	@Test
 	public void testCreateUser() {

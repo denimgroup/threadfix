@@ -36,7 +36,7 @@ import org.openqa.selenium.NoSuchElementException;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class FilterTests extends BaseTest{
+public class FilterIT extends BaseIT {
     // TODO test if you can edit an existing filter and ensure the results are correct
 
     @Test

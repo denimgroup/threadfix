@@ -34,7 +34,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class ApplicationTests extends BaseTest {
+public class ApplicationIT extends BaseIT {
 
 	@Test 
 	public void testCreateBasicApplicationDisplayedTeamIndexPage() {

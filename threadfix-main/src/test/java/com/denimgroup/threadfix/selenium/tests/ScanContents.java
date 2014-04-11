@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ScanContents extends BaseTest{
+public class ScanContents extends BaseIT {
 
 	public final static Map<String, String> SCAN_FILE_MAP = new HashMap<>();
 	static {

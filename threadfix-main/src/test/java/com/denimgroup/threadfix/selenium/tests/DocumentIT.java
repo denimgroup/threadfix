@@ -21,57 +21,63 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.selenium.enttests;
+package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTest.EnterpriseTest.class)
-public class ScanQueueEntTest extends BaseTest {
+@Category(RegressionTest.class)
+public class DocumentIT extends BaseIT {
 
-	private static Map<String, String> scansMap = ScanContents.SCAN_FILE_MAP;
+	private static Map<String, String> fileMap = ScanContents.SCAN_FILE_MAP;
 	
 	@Test
-	public void testAddScanTask() throws MalformedURLException {
-		String teamName = "scanQueueTaskTeam" + getRandomString(3);
-		String appName = "scanQueueTaskApp" + getRandomString(3);
-		int scanQueueCount  = 0;
+	public void testUploadScans() throws MalformedURLException {
+		String teamName = "uploadDocTeam" + getRandomString(3);
+		String appName = "uploadDocApp" + getRandomString(3);
+        File appScanFile;
+        int docCnt  = 0;
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 		
-		for (Entry<String, String> mapEntry : scansMap.entrySet()) {
-            String tempName = mapEntry.getKey();
-            if(mapEntry.getKey().equals("NTO Spider6")){
-                tempName = "NTO Spider";
-            }
+		for (Entry<String, String> mapEntry : fileMap.entrySet()) {
+			if (mapEntry.getValue() != null){
+				if (System.getProperty("scanFileBaseLocation") == null) {
+					appScanFile = new File(new URL(mapEntry.getValue()).getFile());
+				} else {
+					appScanFile = new File(mapEntry.getValue());
+				}
+				assertTrue("The test file did not exist.", appScanFile.exists());
+			} else {
+				continue;
+			}
+			applicationDetailPage = applicationDetailPage.clickDocumentTab()
+                    .clickUploadDocLink()
+                    .setDocFileInput(mapEntry.getValue())
+                    .submitDoc();
 
-			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab()
-                    .clickAddNewScanTask()
-                    .setScanQueueType(tempName)
-                    .submitScanQueue();
-
-			scanQueueCount++;
-			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),applicationDetailPage.isScanQueuePresent(tempName));
-			assertTrue("Scan Queue Task count is incorrect after adding "+mapEntry.getKey(), scanQueueCount == applicationDetailPage.scanQueueCount());
+			applicationDetailPage = applicationDetailPage.clickDocumentTab();
+			docCnt++;
 		}
-		assertTrue("Scan Queue Task count is incorrect", scanQueueCount == applicationDetailPage.scanQueueCount());
+		assertTrue("Document count is incorrect", docCnt == applicationDetailPage.docsCount());
 	}
-
 }

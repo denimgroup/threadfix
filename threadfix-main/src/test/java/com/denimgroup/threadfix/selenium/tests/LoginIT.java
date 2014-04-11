@@ -32,7 +32,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class LoginTests extends BaseTest{
+public class LoginIT extends BaseIT {
 
 	@Test
 	public void badUsernameTest(){

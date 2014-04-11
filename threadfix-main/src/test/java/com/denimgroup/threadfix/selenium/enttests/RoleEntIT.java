@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.selenium.RegressionTest;
 import com.denimgroup.threadfix.selenium.pages.*;
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.EnterpriseTest.class)
-public class RoleEntTest extends BaseTest {
+public class RoleEntIT extends BaseIT {
 
 	RolesIndexPage rolesIndexPage = null;
 	RoleCreatePage roleCreatePage = null;

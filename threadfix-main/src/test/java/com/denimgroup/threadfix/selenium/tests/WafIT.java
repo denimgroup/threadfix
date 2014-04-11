@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @Category(RegressionTest.class)
-public class WafTests extends BaseTest {
+public class WafIT extends BaseIT {
 	
 	@Test
 	public void testCreateWaf(){

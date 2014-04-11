@@ -35,7 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class DefectTrackerTests extends BaseTest {
+public class DefectTrackerIT extends BaseIT {
 
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;
 	private static final String TEST_JIRA_URL = DefectTrackerIndexPage.JIRA_URL;

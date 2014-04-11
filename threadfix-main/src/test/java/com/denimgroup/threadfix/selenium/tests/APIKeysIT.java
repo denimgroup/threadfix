@@ -33,7 +33,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class APIKeysTests extends BaseTest {
+public class APIKeysIT extends BaseIT {
 	
     private ApiKeysIndexPage apiIndexPage;
 	

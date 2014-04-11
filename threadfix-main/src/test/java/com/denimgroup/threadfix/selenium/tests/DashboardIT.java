@@ -37,7 +37,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class DashboardTests extends BaseTest{
+public class DashboardIT extends BaseIT {
 
 	@Test
 	public void dashboardGraphsDisplayTest(){

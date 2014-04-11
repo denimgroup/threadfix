@@ -28,7 +28,7 @@ import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
-import com.denimgroup.threadfix.selenium.tests.BaseTest;
+import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.EnterpriseTest.class)
-public class TeamEntTest extends BaseTest {
+public class TeamEntIT extends BaseIT {
 
     // TODO this element does not exist in the build currently
     @Ignore

@@ -10,7 +10,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class TeamIndexPageTest extends BaseTest {
+public class TeamIndexPageIT extends BaseIT {
 
     private static final String API_KEY = System.getProperty("API_KEY");
     private static final String REST_URL = System.getProperty("REST_URL");

@@ -9,7 +9,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class TeamDetailPageTest extends BaseTest {
+public class TeamDetailPageIT extends BaseIT {
 
 	@Test
 	public void actionButtonTest(){

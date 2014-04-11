@@ -35,7 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(RegressionTest.class)
-public class RemoteProvidersTests extends BaseTest {
+public class RemoteProvidersIT extends BaseIT {
 	
 	private static String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
 	private static String VERACODE_USER = System.getProperty("VERACODE_USERNAME");

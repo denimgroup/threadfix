@@ -659,9 +659,6 @@
                                 </goals>
                                 <configuration>
                                     <skip>false</skip>
-                                    <excludes>
-                                        <excludedGroups>com.denimgroup.threadfix.selenium.*</excludedGroups>
-                                    </excludes>
                                 </configuration>
                             </execution>
                         </executions>

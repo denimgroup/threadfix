@@ -36,12 +36,12 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 @Category(RegressionTest.class)
-public abstract class BaseTest {
+public abstract class BaseIT {
 	
 	protected WebDriver driver;
     protected LoginPage loginPage;
 
-	public BaseTest() {
+	public BaseIT() {
 		DesiredCapabilities capability = new DesiredCapabilities();
         capability.setBrowserName(DesiredCapabilities.firefox().getBrowserName());
         FirefoxProfile profile = new FirefoxProfile();

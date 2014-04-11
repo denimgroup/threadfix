@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @Category(RegressionTest.class)
-public class DashboardPageTests extends BaseTest {
+public class DashboardPageIT extends BaseIT {
 
     private static final String API_KEY = System.getProperty("API_KEY");
     private static final String REST_URL = System.getProperty("REST_URL");
