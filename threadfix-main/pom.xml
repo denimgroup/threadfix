@@ -735,7 +735,7 @@
                             </dependency>
                         </dependencies>
                         <configuration>
-                            <skip>false</skip>
+                            <skipTests>false</skipTests>
                             <groups>com.test.annotation.type.RegressionTest</groups>
                         </configuration>
                         <executions>
