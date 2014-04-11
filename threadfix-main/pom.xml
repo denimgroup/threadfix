@@ -659,6 +659,7 @@
                                 </goals>
                                 <configuration>
                                     <skip>false</skip>
+                                    <argLine>-javaagent:${sonar.jacoco.jar}=destfile=${sonar.jacoco.reportPath},includes=com.*</argLine>
                                     <includes>
                                         <include>**/*Test.class</include>
                                         <include>**/*Tests.class</include>
@@ -751,6 +752,7 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
+                                    <argLine>-javaagent:${sonar.jacoco.jar}=destfile=${sonar.jacoco.itReportPath},includes=com.*</argLine>
                                     <includes>
                                         <include>**/*.class</include>
                                     </includes>
