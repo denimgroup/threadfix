@@ -663,7 +663,9 @@
                                         <include>**/*Test.class</include>
                                         <include>**/*Tests.class</include>
                                     </includes>
-                                    <excludedGroups>com.denimgroup.threadfix.webservices.tests.*</excludedGroups>
+                                    <excludes>
+                                        <exclude>**/Rest*Test*.class</exclude>
+                                    </excludes>
                                 </configuration>
                             </execution>
                         </executions>
