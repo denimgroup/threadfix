@@ -743,7 +743,9 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <excludes>**/enttests/*.class</excludes>
+                                    <excludes>
+                                        <exclude>**/enttests/*.class</exclude>
+                                    </excludes>
                                 </configuration>
                             </execution>
                         </executions>
