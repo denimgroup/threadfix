@@ -514,6 +514,7 @@
             <version>${jacoco.version}</version>
             <type>jar</type>
             <classifier>runtime</classifier>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.maven</groupId>
@@ -746,6 +747,7 @@
                         <configuration>
                             <skipTests>false</skipTests>
                             <groups>com.denimgroup.threadfix.selenium.RegressionTests</groups>
+                            <argLine>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec</argLine>
                         </configuration>
                         <executions>
                             <execution>
