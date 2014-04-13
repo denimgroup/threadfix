@@ -517,10 +517,23 @@
             <version>${jacoco.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${jacoco.version}</version>
+            <type>jar</type>
+            <classifier>runtime</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tomcat.maven</groupId>
             <artifactId>tomcat7-maven-plugin</artifactId>
             <version>${tomcat.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>${cargo.version}</version>
         </dependency>
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -697,30 +710,38 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <version>${tomcat.version}</version>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>1.4.8</version>
                         <configuration>
-                            <path>/threadfix</path>
-                            <update>true</update>
+                            <container>
+                                <containerId>tomcat7x</containerId>
+                                <zipUrlInstaller>
+                                    <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
+                                </zipUrlInstaller>
+                            </container>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/0.5.5.201112152213/org.jacoco.agent-0.5.5.201112152213-runtime.jar=destfile=${project.build.directory}/itest.jacoco</cargo.jvmargs>
+                                </properties>
+                            </configuration>
                         </configuration>
                         <executions>
+                            <!-- start server before integration tests -->
                             <execution>
-                                <id>deploy</id>
-                                <goals>
-                                    <goal>run-war-only</goal>
-                                </goals>
+                                <id>start-container</id>
                                 <phase>pre-integration-test</phase>
-                                <configuration>
-                                    <fork>true</fork>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>shutdown</id>
                                 <goals>
-                                    <goal>shutdown</goal>
+                                    <goal>start</goal>
                                 </goals>
+                            </execution>
+                            <!-- stop server after integration tests -->
+                            <execution>
+                                <id>stop-container</id>
                                 <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
