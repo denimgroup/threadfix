@@ -710,7 +710,7 @@
                             </container>
                             <configuration>
                                 <properties>
-                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/itest.jacoco</cargo.jvmargs>
+                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec</cargo.jvmargs>
                                 </properties>
                             </configuration>
                         </configuration>
