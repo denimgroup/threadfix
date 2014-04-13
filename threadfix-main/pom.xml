@@ -672,13 +672,13 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven-surefire.version}</version>
-                        <!--<dependencies>
+                        <dependencies>
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>
                                 <artifactId>surefire-junit47</artifactId>
                                 <version>${surefire-junit47.version}</version>
                             </dependency>
-                        </dependencies>-->
+                        </dependencies>
                         <executions>
                             <execution>
                                 <id>default-test</id>
@@ -692,9 +692,6 @@
                                         <include>**/*Test.class</include>
                                         <include>**/*Tests.class</include>
                                     </includes>
-                                    <excludes>
-                                        <exclude>**/Rest*Test*.class</exclude>
-                                    </excludes>
                                 </configuration>
                             </execution>
                         </executions>
@@ -757,6 +754,7 @@
                         </dependencies>
                         <configuration>
                             <skipTests>false</skipTests>
+                            <groups>com.denimgroup.threadfix.selenium.RegressionTests</groups>
                         </configuration>
                         <executions>
                             <execution>
@@ -764,9 +762,9 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <excludes>
-                                        <exclude>**/enttests/*.class</exclude>
-                                    </excludes>
+                                    <includes>
+                                        <include>**/*.class</include>
+                                    </includes>
                                 </configuration>
                             </execution>
                         </executions>
@@ -782,6 +780,42 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>1.4.8</version>
+                        <configuration>
+                            <container>
+                                <containerId>tomcat7x</containerId>
+                                <zipUrlInstaller>
+                                    <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
+                                </zipUrlInstaller>
+                            </container>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/itest.jacoco</cargo.jvmargs>
+                                </properties>
+                            </configuration>
+                        </configuration>
+                        <executions>
+                            <!-- start server before integration tests -->
+                            <execution>
+                                <id>start-container</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <!-- stop server after integration tests -->
+                            <execution>
+                                <id>stop-container</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe.version}</version>
                         <dependencies>
@@ -791,6 +825,10 @@
                                 <version>${surefire-junit47.version}</version>
                             </dependency>
                         </dependencies>
+                        <configuration>
+                            <skipTests>false</skipTests>
+                            <groups>com.denimgroup.threadfix.selenium.EnterpriseTests</groups>
+                        </configuration>
                         <executions>
                             <execution>
                                 <goals>

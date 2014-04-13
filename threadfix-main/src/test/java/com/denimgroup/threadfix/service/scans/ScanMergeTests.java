@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.service.scans;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
-import com.denimgroup.threadfix.webservices.tests.BaseRestTest;
+import com.denimgroup.threadfix.webservices.tests.BaseRestIT;
 import org.json.JSONException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-public class ScanMergeTests extends BaseRestTest {
+public class ScanMergeTests extends BaseRestIT {
 	
 	public static final boolean debug = true;
 	

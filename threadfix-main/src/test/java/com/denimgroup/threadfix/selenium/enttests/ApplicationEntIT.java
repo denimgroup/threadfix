@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
+import com.denimgroup.threadfix.selenium.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
@@ -31,9 +32,11 @@ import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
+@Category(EnterpriseTests.class)
 public class ApplicationEntIT extends BaseIT {
 
     // Todo, functionality that this test is looking for is not present

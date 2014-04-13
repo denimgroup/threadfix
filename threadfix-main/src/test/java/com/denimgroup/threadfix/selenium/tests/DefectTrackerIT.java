@@ -24,15 +24,17 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
+import com.denimgroup.threadfix.selenium.RegressionTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
+@Category(RegressionTests.class)
 public class DefectTrackerIT extends BaseIT {
 
 	private static final String TEST_BUGZILLA_URL = DefectTrackerIndexPage.DT_URL;

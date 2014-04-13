@@ -1,12 +1,14 @@
 package com.denimgroup.threadfix.selenium.tests;
 
+import com.denimgroup.threadfix.selenium.RegressionTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
-
+@Category(RegressionTests.class)
 public class TeamDetailPageIT extends BaseIT {
 
 	@Test

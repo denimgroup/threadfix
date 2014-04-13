@@ -23,15 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
+import com.denimgroup.threadfix.selenium.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ConfigureDefaultsPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Category(EnterpriseTests.class)
 public class UserEntIT extends BaseIT {
 
 	//If this test fails it can cascade and cause several other tests to fail
