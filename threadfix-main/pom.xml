@@ -782,11 +782,11 @@
                                     <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
                                 </zipUrlInstaller>
                             </container>
-                            <configuration>
+                            <!--<configuration>
                                 <properties>
                                     <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar</cargo.jvmargs>
                                 </properties>
-                            </configuration>
+                            </configuration>-->
                         </configuration>
                         <executions>
                             <!-- start server before integration tests -->
