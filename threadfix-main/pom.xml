@@ -21,14 +21,6 @@
 		<maven>3</maven>
 	</prerequisites>
 
-    <properties>
-        <deploy.tomcat>false</deploy.tomcat>
-        <!--<coverage.reports.dir>${basedir}/target/coverage-reports</coverage.reports.dir>
-        <sonar.jacoco.reportPath>${coverage.reports.dir}/jacoco-unit.exec</sonar.jacoco.reportPath>
-        <sonar.jacoco.itReportPath>${coverage.reports.dir}/jacoco-it.exec</sonar.jacoco.itReportPath>
-        <sonar.jacoco.jar>${basedir}/lib/jacocoagent.jar</sonar.jacoco.jar>-->
-    </properties>
-
 	<repositories>
 		<repository>
 			<id>lib</id>
@@ -792,7 +784,7 @@
                             </container>
                             <configuration>
                                 <properties>
-                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/itest.jacoco</cargo.jvmargs>
+                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar</cargo.jvmargs>
                                 </properties>
                             </configuration>
                         </configuration>
