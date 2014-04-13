@@ -514,7 +514,6 @@
             <version>${jacoco.version}</version>
             <type>jar</type>
             <classifier>runtime</classifier>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.maven</groupId>
