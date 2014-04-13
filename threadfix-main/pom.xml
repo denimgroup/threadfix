@@ -699,65 +699,41 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <version>${tomcat.version}</version>
+                        <groupId>org.codehaus.cargo</groupId>
+                        <artifactId>cargo-maven2-plugin</artifactId>
+                        <version>1.4.8</version>
                         <configuration>
-                            <path>/threadfix</path>
+                            <container>
+                                <containerId>tomcat7x</containerId>
+                                <zipUrlInstaller>
+                                    <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
+                                </zipUrlInstaller>
+                            </container>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/itest.jacoco</cargo.jvmargs>
+                                </properties>
+                            </configuration>
                         </configuration>
                         <executions>
+                            <!-- start server before integration tests -->
                             <execution>
-                                <id>tomcat-deploy</id>
+                                <id>start-container</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
-                                    <goal>run-war</goal>
+                                    <goal>start</goal>
                                 </goals>
                             </execution>
+                            <!-- stop server after integration tests -->
                             <execution>
-                                <id>tomcat-shutdown</id>
+                                <id>stop-container</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
-                                    <goal>shutdown</goal>
+                                    <goal>stop</goal>
                                 </goals>
                             </execution>
                         </executions>
                     </plugin>
-                    <!--<plugin>-->
-                        <!--<groupId>org.codehaus.cargo</groupId>-->
-                        <!--<artifactId>cargo-maven2-plugin</artifactId>-->
-                        <!--<version>1.4.8</version>-->
-                        <!--<configuration>-->
-                            <!--<container>-->
-                                <!--<containerId>tomcat7x</containerId>-->
-                                <!--<zipUrlInstaller>-->
-                                    <!--<url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>-->
-                                <!--</zipUrlInstaller>-->
-                            <!--</container>-->
-                            <!--<configuration>-->
-                                <!--<properties>-->
-                                    <!--<cargo.jvmargs>-javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/itest.jacoco</cargo.jvmargs>-->
-                                <!--</properties>-->
-                            <!--</configuration>-->
-                        <!--</configuration>-->
-                        <!--<executions>-->
-                            <!--&lt;!&ndash; start server before integration tests &ndash;&gt;-->
-                            <!--<execution>-->
-                                <!--<id>start-container</id>-->
-                                <!--<phase>pre-integration-test</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>start</goal>-->
-                                <!--</goals>-->
-                            <!--</execution>-->
-                            <!--&lt;!&ndash; stop server after integration tests &ndash;&gt;-->
-                            <!--<execution>-->
-                                <!--<id>stop-container</id>-->
-                                <!--<phase>post-integration-test</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>stop</goal>-->
-                                <!--</goals>-->
-                            <!--</execution>-->
-                        <!--</executions>-->
-                    <!--</plugin>-->
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe.version}</version>
