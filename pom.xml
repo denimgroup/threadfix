@@ -125,25 +125,6 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <configuration>
-                            <destFile>${sonar.jacoco.ITreportPath}</destFile>
-                            <append>true</append>
-                        </configuration>
-                        <id>default-prepare-agent-integration</id>
-                        <goals>
-                            <goal>prepare-agent-integration</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>it-report</id>
-                        <goals>
-                            <goal>report-integration</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${sonar.jacoco.ITreportPath}</dataFile>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>

@@ -147,6 +147,33 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <destFile>${sonar.jacoco.ITreportPath}</destFile>
+                            <append>true</append>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                        <id>default-prepare-agent-integration</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>it-report</id>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${sonar.jacoco.ITreportPath}</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 
 		<resources>
@@ -735,6 +762,7 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
+                                    <argLine>${failsafeArgLine}</argLine>
                                     <includes>
                                         <include>**/*.class</include>
                                     </includes>
