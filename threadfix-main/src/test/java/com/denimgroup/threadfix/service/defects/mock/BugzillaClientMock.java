@@ -17,11 +17,26 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
 
     ConnectionStatus status = ConnectionStatus.INVALID;
 
+    public static final Map<String, Object[]> severities = new HashMap<>();
+    public static final Map<String, Object[]> statuses = new HashMap<>();
+    public static final Map<String, Object[]> priorities = new HashMap<>();
+    public static final Map<String, Object[]> version = new HashMap<>();
+    public static final Map<String, Object[]> components = new HashMap<>();
+
     public static final Map<String,String> versionMap = new HashMap<>();
     public static final Map<String, Object[]> products = new HashMap<>();
     public static final Map<String, Object[]> productMap = new HashMap<>();
     public static final Map<String, Integer> bugCreateMap = new HashMap<>();
     static {
+        severities.put("values", new Object[]{"blocker", "critical", "major",
+                "normal", "minor", "trivial", "enhancement"});
+        statuses.put("values", new Object[]{"UNCONFIRMED", "CONFIRMED",
+                "IN_PROGRESS", "RESOLVED", "VERIFIED"});
+        priorities.put("values", new Object[]{"Highest", "High", "Normal",
+                "Low", "Lowest", "---"});
+        version.put("values", new Object[]{"unspecified"});
+        components.put("values", new Object[]{"Sample Component"});
+
         products.put("ids", new Object[]{1, 2, 3 ,4});
         productMap.put("products", new Object[]{new HashMap<String, Object>(), new HashMap<String, Object>(),
                 new HashMap<String, Object>(), new HashMap<String, Object>()});
@@ -77,7 +92,6 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
         }
 
         if (method.equals("Product.get")) {
-
             if (params[0] instanceof HashMap<?, ?>) {
                 Object[] names = (Object[]) ((HashMap<Object, Object>) params[0]).get("names");
 
@@ -88,6 +102,24 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
                 } else { // this means it's the wrong project name
                     return null; // TODO return null or whatever
                 }
+            }
+        }
+
+        if (method.equals("Bug.legal_values")) {
+            if (params[0] instanceof Map<?, ?>) {
+                Map<String, String> map = (Map<String, String>) params[0];
+                switch (map.get("field")) {
+                    case "bug_severity":
+                        return severities;
+                    case "bug_status":
+                        return statuses;
+                    case "priority":
+                        return priorities;
+                    case "version":
+                        return version;
+                    case "component":
+                        return components;
+                 }
             }
         }
 

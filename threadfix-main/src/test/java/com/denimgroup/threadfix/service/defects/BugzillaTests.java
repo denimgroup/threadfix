@@ -137,10 +137,26 @@ public class BugzillaTests implements TestConstants{
         assertFalse("Project name wasn't supposed to be valid.", bugzillaTracker.hasValidProjectName());
     }
 
-    //TODO Copied from Jira, needs to be corrected for Bugzilla
-    @Ignore
     @Test
     public void testSubmissionParameters() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
+
+        ProjectMetadata metadata = bugzillaTracker.getProjectMetadata();
+
+        int severitySize = metadata.getSeverities().size();
+        assertEquals("Severities should have had 7 matches, but had " + severitySize, severitySize, 7);
+
+        int statusSize = metadata.getStatuses().size();
+        assertEquals("Status should have had 4 matches, but had " + statusSize, statusSize, 4);
+
+        int prioritySize = metadata.getPriorities().size();
+        assertEquals("Priorities should have had 6 matches, but had " + prioritySize, prioritySize, 6);
+
+        int versionSize = metadata.getVersions().size();
+        assertEquals("Version size should have been 1, but was " + versionSize, versionSize, 1);
+
+        int componentSize = metadata.getComponents().size();
+        assertEquals("Components size should have been 1, but was " + componentSize, componentSize, 1);
 
     }
 
@@ -148,7 +164,10 @@ public class BugzillaTests implements TestConstants{
     @Ignore
     @Test
     public void testDefectCount() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
 
+        int defectCount = bugzillaTracker.getDefectList().size();
+        assertTrue("Expected X number of issues, got " + defectCount, defectCount == 0 );
     }
 
     @Test
