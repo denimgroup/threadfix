@@ -51,6 +51,11 @@
             <name>Sinh Tran</name>
             <email>stran@denimgroup.com</email>
         </developer>
+        <developer>
+            <id>mhall</id>
+            <name>Mike Hall</name>
+            <email>mhall@denimgroup.com</email>
+        </developer>
     </developers>
 
     <organization>
@@ -101,6 +106,33 @@
                         <source>1.7</source>
                         <target>1.7</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <configuration>
+                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                                <append>true</append>
+                            </configuration>
+                            <id>default-prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <configuration>
+                                <destFile>${sonar.jacoco.ITreportPath}</destFile>
+                                <append>true</append>
+                            </configuration>
+                            <id>default-prepare-agent-integration</id>
+                            <goals>
+                                <goal>prepare-agent-integration</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -230,6 +262,13 @@
         <surefire-junit47.version>2.17</surefire-junit47.version>
         <tomcat.version>2.2</tomcat.version>
         <jacoco.version>0.7.0.201403182114</jacoco.version>
+
+        <!-- Code Coverage Properties -->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.jacoco.ITreportPath>${project.basedir}/../target/jacocoIT.exec</sonar.jacoco.ITreportPath>
+        <sonar.language>java</sonar.language>
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>
