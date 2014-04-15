@@ -709,7 +709,7 @@
                             <execution>
                                 <id>deploy</id>
                                 <goals>
-                                    <goal>run</goal>
+                                    <goal>run-war</goal>
                                 </goals>
                                 <phase>pre-integration-test</phase>
                             </execution>
