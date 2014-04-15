@@ -668,7 +668,7 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
+                    <!--<plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
                         <version>1.4.8</version>
@@ -681,7 +681,6 @@
                             </container>
                         </configuration>
                         <executions>
-                            <!-- start server before integration tests -->
                             <execution>
                                 <id>start-container</id>
                                 <phase>pre-integration-test</phase>
@@ -689,13 +688,30 @@
                                     <goal>start</goal>
                                 </goals>
                             </execution>
-                            <!-- stop server after integration tests -->
                             <execution>
                                 <id>stop-container</id>
                                 <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>stop</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>-->
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>${tomcat.version}</version>
+                        <configuration>
+                            <path>/threadfix</path>
+                            <update>true</update>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>deploy</id>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <phase>pre-integration-test</phase>
                             </execution>
                         </executions>
                     </plugin>
