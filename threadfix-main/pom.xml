@@ -711,7 +711,7 @@
                         </dependencies>
                         <configuration>
                             <skipTests>false</skipTests>
-                            <groups>com.denimgroup.threadfix.selenium.RegressionTests</groups>
+                            <groups>com.denimgroup.threadfix.selenium.QuickTests</groups>
                         </configuration>
                         <executions>
                             <execution>
