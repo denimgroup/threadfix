@@ -27,6 +27,8 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
     public static final Map<String, Object[]> products = new HashMap<>();
     public static final Map<String, Object[]> productMap = new HashMap<>();
     public static final Map<String, Integer> bugCreateMap = new HashMap<>();
+
+    public static final Map<String, Object[]>defectList =  new HashMap<>();
     static {
         severities.put("values", new Object[]{"blocker", "critical", "major",
                 "normal", "minor", "trivial", "enhancement"});
@@ -48,11 +50,23 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
 
         bugCreateMap.put("id", 110);
         versionMap.put("version","4.2.1");
+
+        defectList.put("bugs", new Object[]{new HashMap<String, Object>(), new HashMap<String, Object>(),
+                new HashMap<String, Object>(), new HashMap<String, Object>()});
+        Object[] bugs = defectList.get("bugs");
+        fillDefectList(bugs[0], "id", 1);
+        fillDefectList(bugs[1], "id", 2);
+        fillDefectList(bugs[2], "id", 3);
+        fillDefectList(bugs[3], "id", 4);
     }
 
     private static void fillProductMap(Object map, String name, int id) {
         ((HashMap<Object, Object>) map).put("name", name);
         ((HashMap<Object, Object>) map).put("id", id);
+    }
+
+    private static void fillDefectList(Object map, Object field, Object value) {
+        ((HashMap<Object, Object>) map).put(field, value);
     }
 
     //TODO mock against BugzillaClientImpl.java, check return values for all methods
@@ -120,6 +134,12 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
                     case "component":
                         return components;
                  }
+            }
+        }
+
+        if (method.equals("Bug.search")) {
+            if (params[0] instanceof  Map<?,?>) {
+                return defectList;
             }
         }
 

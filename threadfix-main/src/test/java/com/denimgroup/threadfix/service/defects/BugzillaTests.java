@@ -160,14 +160,12 @@ public class BugzillaTests implements TestConstants{
 
     }
 
-    //TODO Copied from Jira, needs to be corrected for Bugzilla
-    @Ignore
     @Test
     public void testDefectCount() {
         AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
 
         int defectCount = bugzillaTracker.getDefectList().size();
-        assertTrue("Expected X number of issues, got " + defectCount, defectCount == 0 );
+        assertTrue("Expected 4 number of issues, got " + defectCount, defectCount == 4 );
     }
 
     @Test
@@ -184,6 +182,7 @@ public class BugzillaTests implements TestConstants{
     @Ignore
     @Test
     public void testDefectStatusUpdateCloseDefect() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
 
     }
 
