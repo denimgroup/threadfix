@@ -739,6 +739,16 @@
                                     <goal>run-war</goal>
                                 </goals>
                                 <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <fork>true</fork>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>shutdown</id>
+                                <goals>
+                                    <goal>shutdown</goal>
+                                </goals>
+                                <phase>post-integration-test</phase>
                             </execution>
                         </executions>
                     </plugin>
