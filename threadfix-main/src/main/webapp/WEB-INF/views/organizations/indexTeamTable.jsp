@@ -56,12 +56,18 @@
 			<td class="centered expandableTrigger" id="numLowVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.lowVulnCount }"/></td>
 			<td class="centered expandableTrigger" id="numInfoVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.infoVulnCount }"/></td>
 			<td class="expandableTrigger"></td>
-			<td> 
-				<a id="addApplicationModalButton<c:out value="${ organization.name }"/>" href="#myAppModal${ organization.id }"
-						role="button" class="btn" data-toggle="modal">
-					Add Application
-				</a>
 			<td>
+                <c:if test="${ licenseService }">
+                    <a id="addApplicationModalButton<c:out value="${ organization.name }"/>" href="#myAppModal${ organization.id }"
+                            role="button" class="btn" data-toggle="modal">
+                        Add Application
+                    </a>
+                </c:if>
+		        <c:if test="${ not canAddApps }">
+                    <a id="addApplicationModalButton" href="javascript:alert('You have reached the application limit of <c:out value="${ appLimit }"/> for your current license. To upgrade your license, please contact Denim Group.');" class="btn">Add Application</a>
+
+		        </c:if>
+            <td>
 				<spring:url value="/organizations/{orgId}" var="organizationUrl">
 					<spring:param name="orgId" value="${ organization.id }"/>
 				</spring:url>
