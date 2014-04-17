@@ -62,26 +62,22 @@
 				</td>
 			</tr>
 
-            <!-- TODO re-add this stuff -->
             <tr>
-                <td class="right-align" style="padding:5px;">Source Code Revision:</td>
-                <td class="left-align"  style="padding:5px;">
-                    <input id="repositoryBranch" maxlength="250" name="repositoryBranch"/>
-                    <errors path="repositoryBranch" cssClass="errors" />
+                <td>Source Code Revision</td>
+                <td>
+                    <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="250" name="repositoryBranch"/>
                 </td>
             </tr>
             <tr>
-                <td class="right-align" style="padding:5px;">Source Code UserName:</td>
-                <td class="left-align"  style="padding:5px;">
-                    <input id="repositoryUsername" maxlength="250" name="repositoryUserName"/>
-                    <errors path="repositoryUserName" cssClass="errors" />
+                <td>Source Code UserName</td>
+                <td>
+                    <input type="text" id="repositoryUsername" ng-model="object.repositoryUserName" maxlength="250" name="repositoryUserName"/>
                 </td>
             </tr>
             <tr>
-                <td class="right-align" style="padding:5px;">Source Code Password:</td>
-                <td class="left-align"  style="padding:5px;">
-                    <password id="repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
-                    <errors path="repositoryPassword" cssClass="errors" />
+                <td>Source Code Password</td>
+                <td>
+                    <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
                 </td>
             </tr>
 			<tr>

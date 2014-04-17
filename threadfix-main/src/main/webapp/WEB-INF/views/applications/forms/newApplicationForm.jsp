@@ -72,6 +72,24 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>Source Code Revision</td>
+                    <td>
+                        <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="250" name="repositoryBranch"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Source Code UserName</td>
+                    <td>
+                        <input type="text" id="repositoryUsername" ng-model="object.repositoryUserName" maxlength="250" name="repositoryUserName"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Source Code Password</td>
+                    <td>
+                        <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
+                    </td>
+                </tr>
+                <tr>
                     <td class="right-align">Source Code Folder</td>
                     <td class="left-align" >
                         <input name="repositoryFolder"

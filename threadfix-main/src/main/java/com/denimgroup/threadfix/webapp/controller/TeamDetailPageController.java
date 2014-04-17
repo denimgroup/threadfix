@@ -166,8 +166,8 @@ public class TeamDetailPageController {
     @RequestMapping(value="/modalAddApp", method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
             produces="application/json")
     public @ResponseBody RestResponse<Application> submitAppFromDetailPage(@PathVariable("orgId") int orgId,
-                                                                           @Valid @ModelAttribute Application application, BindingResult result,
-                                                                           SessionStatus status, Model model, HttpServletRequest request) {
+               @Valid @ModelAttribute Application application, BindingResult result,
+               Model model) {
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
             return RestResponse.failure("Permissions Failure");
         }
@@ -179,16 +179,9 @@ public class TeamDetailPageController {
             throw new ResourceNotFoundException();
         }
 
-        String referrer = request.getHeader("referer");
-        boolean detailPage = referrer.contains("/organizations/");
-
-        String submitResult = submitApp(orgId, application,result,status,model,request);
+        String submitResult = submitApp(orgId, application,result,model);
 
         if (submitResult.equals("Success")) {
-            if (detailPage) {
-                status.setComplete();
-            }
-
             log.info("Successfully created application " + application.getName() + " in team " + team.getName());
 
             return RestResponse.success(application);
@@ -199,8 +192,8 @@ public class TeamDetailPageController {
         }
     }
 
-    public String submitApp(int orgId, @Valid @ModelAttribute Application application, BindingResult result,
-                            SessionStatus status, Model model, HttpServletRequest request) {
+    public String submitApp(int orgId, @Valid @ModelAttribute Application application,
+                            BindingResult result, Model model) {
 
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
             return "403";
@@ -240,10 +233,6 @@ public class TeamDetailPageController {
             log.debug("User " + user + " has created an Application with the name " + application.getName() +
                     ", the ID " + application.getId() +
                     ", and the Organization " + application.getOrganization().getName());
-
-//            ControllerUtils.addSuccessMessage(request,
-//                    "Application " + application.getName() + " was successfully created in team " +
-//                            application.getOrganization().getName() + ".");
 
             return "Success";
         }
