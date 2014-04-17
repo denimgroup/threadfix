@@ -12,7 +12,7 @@
     </appender>
     
     <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender"> 
-    	<param name="file" value="${catalina.home}/logs/threadfix.log" /> 
+    	<param name="file" value="${catalina.home}/logs/threadfix.log" />
     	<param name="datePattern" value="'.'yyyy-MM" /> 
     	<param name="append" value="true" />
     	<param name="Threshold" value="DEBUG"/>

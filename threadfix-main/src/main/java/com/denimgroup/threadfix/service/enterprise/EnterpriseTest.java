@@ -22,16 +22,19 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.enterprise;
 
+import com.denimgroup.threadfix.service.LdapService;
+import com.denimgroup.threadfix.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import java.io.InputStream;
 
 public class EnterpriseTest extends SpringBeanAutowiringSupport {
 
     public static final String ENTERPRISE_FEATURE_ERROR =
             "This feature is not enabled in the community edition of ThreadFix.";
-
 
     @Autowired(required = false)
     LdapService ldapService;
@@ -43,5 +46,13 @@ public class EnterpriseTest extends SpringBeanAutowiringSupport {
         EnterpriseTest enterpriseTest = new EnterpriseTest();
 
         return enterpriseTest.ldapService != null && enterpriseTest.permissionService != null;
+    }
+
+    public static boolean hasValidLicense() {
+        return LicenseReader.getLicenseInformation().isValid();
+    }
+
+    public static boolean isLicenseExpired() {
+        return LicenseReader.isLicenseExpired();
     }
 }
