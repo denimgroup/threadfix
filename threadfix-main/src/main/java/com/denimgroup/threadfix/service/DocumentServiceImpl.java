@@ -142,7 +142,7 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	public String saveFileToVuln(Integer vulnId, MultipartFile file) {
+	public Document saveFileToVuln(Integer vulnId, MultipartFile file) {
 		if (vulnId == null || file == null) {
 			log.warn("The document upload file failed to save, it had null input.");
 			return null;
@@ -183,7 +183,7 @@ public class DocumentServiceImpl implements DocumentService {
 			return null;
 		}
 		
-		return fileFullName;
+		return doc;
 	}
 
 	@Override

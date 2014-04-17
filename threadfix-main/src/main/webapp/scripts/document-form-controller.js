@@ -29,7 +29,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
             }
             $scope.documents.push(document);
             $scope.heading = $scope.documents.length + ' Files';
-            $scope.successMessage = "Successfully uploaded document" + document.name;
+            $scope.$parent.successMessage = "Successfully uploaded document " + document.name;
             $scope.$emit('dragOn');
 
         }, function () {
@@ -41,9 +41,8 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
 
     $scope.deleteFile = function(document) {
 
-        document.deleting = true;
-
         if (confirm('Are you sure you want to delete this file?')) {
+            document.deleting = true;
             $http.post(tfEncoder.encode($scope.currentUrl + '/documents/' + document.id + '/delete')).
                 success(function(data, status, headers, config) {
 
@@ -60,6 +59,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
                         } else {
                             $scope.heading = $scope.documents.length + ' Files';
                         }
+                        $scope.$parent.successMessage = "Successfully deleted document " + document.name;
 
                     } else {
                         document.deleting = false;
