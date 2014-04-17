@@ -20,6 +20,8 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
 
     $scope.appId  = $window.location.pathname.match(/([0-9]+)$/)[0];
     $scope.teamId = $window.location.pathname.match(/([0-9]+)/)[0];
+    $scope.currentUrl = "/organizations/" + $scope.teamId + "/applications/" + $scope.appId;
+
 
     $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = $rootScope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;

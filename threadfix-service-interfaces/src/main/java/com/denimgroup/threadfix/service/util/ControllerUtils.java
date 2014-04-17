@@ -42,6 +42,7 @@ public final class ControllerUtils {
     public static final String SCHEDULED_SCAN_TAB = "scheduled_scan_tab";
     public static final String CLOSED_VULN_TAB = "closed_vuln_tab";
     public static final String FALSE_POSITIVE_TAB = "false_positive_tab";
+    public static final int NUMBER_ITEM_PER_PAGE = 100;
 
 	private ControllerUtils() {
 		// Nobody can instantiate this class

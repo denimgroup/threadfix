@@ -2,11 +2,15 @@
 
 <head>
 	<title>Scan Details</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-detail-page-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-mapped-finding-table-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-unmapped-finding-table-controller.js"></script>
 </head>
 
-<body id="apps">
+<body id="scanDetail"
+      ng-controller="ScanDetailPageController" ng-init="showStatistic = false; statisticText = 'Show Statistics'">
+
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />
@@ -15,13 +19,6 @@
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />
 		<spring:param name="appId" value="${ scan.application.id }" />
 	</spring:url>
-	<spring:url value="{scanId}/table" var="tableUrl">
-		<spring:param name="scanId" value="${ scan.id }"/>
-	</spring:url>
-	<spring:url value="{scanId}/unmappedTable" var="unmappedTableUrl">
-		<spring:param name="scanId" value="${ scan.id }"/>
-	</spring:url>
-	<spring:url value="/login.jsp" var="loginUrl" />
 
 	<ul class="breadcrumb">
 	    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -33,8 +30,8 @@
 	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> 
 	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings
 		<span>
-			<a href="#statisticsDiv" data-toggle="collapse" class="btn header-button">Show Statistics</a>
-			<a class="btn btn-danger scanDelete header-button" data-delete-form="deleteForm">Delete Scan</a>
+			<a ng-click="statistic()" id="statisticButton" class="btn header-button" >{{ statisticText }}</a>
+			<a ng-click="deleteScan()" class="btn btn-danger header-button">Delete Scan</a>
 		</span>
 	</h2>
 	
@@ -46,9 +43,9 @@
 	<div id="helpText">
 		This page lists various statistics about a set of scan results from one scan file.<br/>
 	</div>
-	
+
 	<div class="container-fluid">
-		<div id="statisticsDiv" class="row-fluid collapse">
+		<div ng-show="showStatistic" id="statisticsDiv" class="row-fluid">
 			<div class="span4">
 				<h4>Import Statistics</h4>
 				<table class="dataTable">
@@ -151,49 +148,61 @@
 				</table>
 				</div>
 			</c:if>
-			
+
 			<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
-				<div id="toReplace" class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>" 
-					data-login-url="<c:out value="${ loginUrl }"/>">
-				<h4>Mapped Findings</h4>
-				<table class="table table-striped" id="1">
-					<thead>
-						<tr>
-							<th class="first">Severity</th>
-							<th>Vulnerability Type</th>
-							<th>Path</th>
-							<th>Parameter</th>
-							<th class="last">Number Merged Results</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="bodyRow">
-							<td colspan="6" style="text-align: center;">Loading Findings.</td>
-						</tr>
-					</tbody>
-				</table>
-				</div>
-				
-				<div id="toReplace2"class="refreshOnLoad" data-source-url="<c:out value="${ unmappedTableUrl }"/>" 
-					data-login-url="<c:out value="${ loginUrl }"/>">
-				<h4>Unmapped Findings</h4>
-				<table class="table table-striped" id="2">
-					<thead>
-						<tr>
-							<th class="first">Severity</th>
-							<th>Vulnerability Type</th>
-							<th>Path</th>
-							<th>Parameter</th>
-							<th class="last">Number Merged Results</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="bodyRow">
-							<td colspan="5" style="text-align: center;">Loading Findings.</td>
-						</tr>
-					</tbody>
-				</table>
-				</div>
+                <%--<div ng-show="loading">--%>
+                    <%--<div class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>"--%>
+                        <%--data-login-url="<c:out value="${ loginUrl }"/>">--%>
+                    <%--<h4>Mapped Findings</h4>--%>
+                    <%--<table class="table table-striped" >--%>
+                        <%--<thead>--%>
+                            <%--<tr>--%>
+                                <%--<th class="first">Severity</th>--%>
+                                <%--<th>Vulnerability Type</th>--%>
+                                <%--<th>Path</th>--%>
+                                <%--<th>Parameter</th>--%>
+                                <%--<th class="last">Number Merged Results</th>--%>
+                            <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                            <%--<tr class="bodyRow">--%>
+                                <%--<td colspan="6" style="text-align: center;">Loading Findings.</td>--%>
+                            <%--</tr>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+				    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div ng-show="mappedVulns" >--%>
+                <div>
+                    <%@ include file="/WEB-INF/views/scans/table.jsp" %>
+                </div>
+
+                <%--<div ng-show="loading">--%>
+                    <%--<div class="refreshOnLoad" data-source-url="<c:out value="${ unmappedTableUrl }"/>"--%>
+                        <%--data-login-url="<c:out value="${ loginUrl }"/>">--%>
+                    <%--<h4>Unmapped Findings</h4>--%>
+                    <%--<table class="table table-striped" id="2">--%>
+                        <%--<thead>--%>
+                            <%--<tr>--%>
+                                <%--<th class="first">Severity</th>--%>
+                                <%--<th>Vulnerability Type</th>--%>
+                                <%--<th>Path</th>--%>
+                                <%--<th>Parameter</th>--%>
+                                <%--<th class="last">Number Merged Results</th>--%>
+                            <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                            <%--<tr class="bodyRow">--%>
+                                <%--<td colspan="5" style="text-align: center;">Loading Findings.</td>--%>
+                            <%--</tr>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <div>
+                <%--<div ng-show="mappedVulns" >--%>
+                    <%@ include file="/WEB-INF/views/scans/unmappedTable.jsp" %>
+                </div>
 			</c:if>
 		</div>
 	</div>

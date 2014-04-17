@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 
@@ -93,6 +94,7 @@ public class ChannelSeverity extends BaseEntity {
 		this.findings = findings;
 	}
 
+    @JsonView(AllViews.TableRow.class)
 	public int getNumericValue() {
 		return numericValue;
 	}

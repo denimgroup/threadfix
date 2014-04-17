@@ -48,7 +48,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 
 @Controller
-@RequestMapping("/organizations/{orgId}/applications/{appId}/documents")
+@RequestMapping("/organizations/{orgId}/applications/{appId}")
 public class DocumentController {
 	
 	public static final String SCANNER_TYPE_ERROR = "ThreadFix was unable to find a suitable " +
@@ -57,10 +57,10 @@ public class DocumentController {
     @Autowired
 	private DocumentService documentService;
 
-	private final SanitizedLogger log = new SanitizedLogger(UploadScanController.class);
+	private final SanitizedLogger log = new SanitizedLogger(DocumentController.class);
     private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	@RequestMapping(value = "/documents/upload", method = RequestMethod.POST)
 	public @ResponseBody String uploadSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId, @RequestParam("file") MultipartFile file) throws IOException {
 
@@ -77,7 +77,7 @@ public class DocumentController {
 		}
 	}
 
-	@RequestMapping(value = "/vulnerabilities/{vulnId}/upload", method = RequestMethod.POST)
+	@RequestMapping(value = "/vulnerabilities/{vulnId}/documents/upload", method = RequestMethod.POST)
 	public ModelAndView uploadSubmitVuln(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("vulnId") int vulnId,
@@ -105,7 +105,7 @@ public class DocumentController {
 		}
 	}
 
-	@RequestMapping(value = "/{docId}/view", method = RequestMethod.GET)
+	@RequestMapping(value = "/documents/{docId}/view", method = RequestMethod.GET)
 	public String detailDocument(Model model,@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
@@ -146,7 +146,7 @@ public class DocumentController {
 		return null;
 	}
 
-	@RequestMapping(value = "/{docId}/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/documents/{docId}/download", method = RequestMethod.GET)
 	public String downloadDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,
@@ -181,7 +181,7 @@ public class DocumentController {
 		return null;
 	}
 
-	@RequestMapping(value = "/{docId}/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/documents/{docId}/delete", method = RequestMethod.POST)
 	public @ResponseBody String deleteDocument(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("docId") Integer docId,

@@ -6,6 +6,8 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
 
     $scope.base = window.location.pathname;
 
+    $scope.currentUrl = $scope.$parent.currentUrl;
+
     $scope.showUploadForm = function() {
         $scope.$emit('dragOff');
         var modalInstance = $modal.open({
@@ -13,7 +15,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
             controller: 'UploadScanController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encodeRelative("/documents/upload");
+                    return tfEncoder.encode($scope.currentUrl + "/documents/upload");
                 },
                 files: function() {
                     return undefined;
@@ -26,7 +28,8 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
                 $scope.documents = [];
             }
             $scope.documents.push(document);
-            $scope.successMessage = "Successfully uploaded document" + application.name;
+            $scope.heading = $scope.documents.length + ' Files';
+            $scope.successMessage = "Successfully uploaded document" + document.name;
             $scope.$emit('dragOn');
 
         }, function () {
@@ -41,7 +44,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
         document.deleting = true;
 
         if (confirm('Are you sure you want to delete this file?')) {
-            $http.post(tfEncoder.encodeRelative('/documents/' + document.id + '/delete')).
+            $http.post(tfEncoder.encode($scope.currentUrl + '/documents/' + document.id + '/delete')).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {
@@ -54,6 +57,8 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
                         if ($scope.documents.length === 0) {
                             $scope.heading = '0 Files';
                             $scope.documents = undefined;
+                        } else {
+                            $scope.heading = $scope.documents.length + ' Files';
                         }
 
                     } else {
@@ -70,8 +75,8 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
         }
     };
 
-    $scope.downloadDocument = function(scan) {
-        $http.post(tfEncoder.encodeRelative('/documents/' + scan.id + '/delete')).
+    $scope.downloadDocument = function(document) {
+        $http.post(tfEncoder.encode($scope.currentUrl + '/documents/' + document.id + '/download')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -98,8 +103,8 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
                 $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
             });    };
 
-    $scope.viewDocument = function(scan) {
-        window.location.href = tfEncoder.encodeRelative('/scans/' + scan.id);
+    $scope.viewDocument = function(document) {
+        window.location.href = tfEncoder.encode($scope.currentUrl + '/documents/' + document.id);
     };
 
     $scope.$on('documents', function(event, documents) {

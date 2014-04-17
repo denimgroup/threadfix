@@ -104,6 +104,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "channelVulnerabilityId")
+    @JsonView(AllViews.TableRow.class)
 	public ChannelVulnerability getChannelVulnerability() {
 		return channelVulnerability;
 	}
@@ -133,6 +134,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "channelSeverityId")
+    @JsonView(AllViews.TableRow.class)
 	public ChannelSeverity getChannelSeverity() {
 		return channelSeverity;
 	}
@@ -143,6 +145,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "surfaceLocationId")
+    @JsonView(AllViews.TableRow.class)
 	public SurfaceLocation getSurfaceLocation() {
 		return surfaceLocation;
 	}
@@ -222,7 +225,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setNumberMergedResults(int numMergedResults) {
 		this.numberMergedResults = numMergedResults;
 	}
-	
+
+    @JsonView(AllViews.TableRow.class)
 	public int getNumberMergedResults() {
 		return numberMergedResults;
 	}
@@ -279,6 +283,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "dependencyId")
+    @JsonView(AllViews.TableRow.class)
 	public Dependency getDependency() {
 		return dependency;
 	}

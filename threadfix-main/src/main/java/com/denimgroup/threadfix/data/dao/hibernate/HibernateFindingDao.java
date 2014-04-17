@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -215,7 +216,7 @@ public class HibernateFindingDao implements FindingDao {
 		return criteria.createAlias("channelSeverity", "severity")
 				.createAlias("channelVulnerability", "vuln")
 				.createAlias("surfaceLocation", "surface")
-				.setFirstResult((page - 1) * 100).setMaxResults(100)
+				.setFirstResult((page - 1) * ControllerUtils.NUMBER_ITEM_PER_PAGE).setMaxResults(ControllerUtils.NUMBER_ITEM_PER_PAGE)
 				.addOrder(Order.desc("severity.numericValue"))
 				.addOrder(Order.asc("vuln.name"))
 				.addOrder(Order.asc("surface.path"));
