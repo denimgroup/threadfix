@@ -39,4 +39,7 @@ public interface DefaultConfigService {
 	 * @param model
 	 */
 	void saveConfiguration(DefaultConfiguration config);
+
+    boolean isReportCacheDirty();
+
 }

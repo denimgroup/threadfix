@@ -61,6 +61,29 @@
 					</select>
 				</td>
 			</tr>
+
+            <!-- TODO re-add this stuff -->
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Revision:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <input id="repositoryBranch" maxlength="250" name="repositoryBranch"/>
+                    <errors path="repositoryBranch" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code UserName:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <input id="repositoryUsername" maxlength="250" name="repositoryUserName"/>
+                    <errors path="repositoryUserName" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="right-align" style="padding:5px;">Source Code Password:</td>
+                <td class="left-align"  style="padding:5px;">
+                    <password id="repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
+                    <errors path="repositoryPassword" cssClass="errors" />
+                </td>
+            </tr>
 			<tr>
 				<td class="right-align">Application Type</td>
 				<td >

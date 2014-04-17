@@ -82,8 +82,8 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 Organization.class);
 	}
 	
-	public RestResponse<String> getRules(String wafId) {
-		return httpRestUtils.httpGet("/wafs/" + wafId + "/rules", String.class);
+	public RestResponse<String> getRules(String wafId, String appId) {
+		return httpRestUtils.httpGet("/wafs/" + wafId + "/rules" + "/app/" + appId, String.class);
 	}
 
 	public RestResponse<Waf> searchForWafByName(String name) {

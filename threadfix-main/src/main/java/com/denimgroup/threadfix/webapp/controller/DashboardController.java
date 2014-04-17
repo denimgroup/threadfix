@@ -23,13 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.VulnerabilityCommentService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -40,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author bbeverly
@@ -53,11 +51,15 @@ public class DashboardController {
 	public DashboardController(){}
 
     @Autowired
+    private DefaultConfigService defaultConfigService;
+    @Autowired
 	private VulnerabilityCommentService vulnerabilityCommentService;
     @Autowired
 	private ScanService scanService;
     @Autowired
 	private ReportsService reportsService;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
     @Autowired
 	private OrganizationService organizationService;
 
@@ -68,10 +70,22 @@ public class DashboardController {
 		
 		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecentFiltered(5));
 		model.addAttribute("recentScans", scanService.loadMostRecentFiltered(5));
-		
-		model.addAttribute("teams", organizationService.loadAllActiveFilter());
 
+        List<Organization> organizationList = organizationService.loadAllActiveFilter();
+
+		model.addAttribute("teams", organizationService.loadAllActiveFilter());
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
+
+        if (defaultConfigService.isReportCacheDirty()) {
+            for (Organization organization : organizationList) {
+                for (Application app : organization.getActiveApplications()) {
+                    vulnerabilityService.updateVulnerabilityReport(app);
+                }
+            }
+            DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+            config.setHasCachedData(true);
+            defaultConfigService.saveConfiguration(config);
+        }
 
 		return "dashboard/dashboard";
 	}

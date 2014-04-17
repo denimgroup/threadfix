@@ -24,10 +24,9 @@
 
 package com.denimgroup.threadfix.webapp.controller.rest;
 
-import com.denimgroup.threadfix.data.entities.SecurityEvent;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.LogParserService;
 import com.denimgroup.threadfix.service.WafService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +50,8 @@ public class WafRestController extends RestController {
 	private WafService wafService;
     @Autowired
 	private LogParserService logParserService;
+    @Autowired
+    private ApplicationService applicationService;
 	
 	private final static String INDEX = "wafIndex", 
 		DETAIL = "wafDetail", 
@@ -156,9 +157,10 @@ public class WafRestController extends RestController {
 	/**
 	 * Returns the current set of rules from the WAF, generating new ones if none are present.
 	 */
-	@RequestMapping(headers="Accept=application/json", value="/{wafId}/rules", method=RequestMethod.GET)
+	@RequestMapping(headers="Accept=application/json", value="/{wafId}/rules/app/{appId}", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<String> getRules(HttpServletRequest request,
-			@PathVariable("wafId") int wafId) {
+			@PathVariable("wafId") int wafId,
+            @PathVariable("appId") int wafAppId) {
 		log.info("Received REST request for rules from WAF with ID = " + wafId + ".");
 
 		String result = checkKey(request, RULES);
@@ -172,11 +174,23 @@ public class WafRestController extends RestController {
 			log.warn("Invalid WAF ID.");
 			return RestResponse.failure("Invalid WAF ID.");
 		}
-		wafService.generateWafRules(waf, waf.getLastWafRuleDirective());
-        String ruleStr = wafService.getAllRuleText(waf);
+
+        Application application = null;
+        if (wafAppId != -1) {
+            application = applicationService.loadApplication(wafAppId);
+            if (application == null
+                    || application.getWaf() == null
+                    || application.getWaf().getId() != wafId) {
+                log.warn("Invalid Application ID.");
+                return RestResponse.failure("Invalid Application ID.");
+            }
+        }
+
+        List<WafRule> ruleList = wafService.generateWafRules(waf, waf.getLastWafRuleDirective(), application);
+        String ruleStr = wafService.getRulesText(waf, ruleList);
         if (ruleStr == null || ruleStr.isEmpty())
             return RestResponse.failure("No Rules generated for WAF.");
-		else return RestResponse.success(wafService.getAllRuleText(waf));
+		else return RestResponse.success(ruleStr);
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)

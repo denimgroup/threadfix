@@ -23,14 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.ScanDeleteService;
-import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -48,7 +45,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -64,6 +60,10 @@ public class ScanController {
 	private ScanDeleteService scanDeleteService;
     @Autowired
 	private FindingService findingService;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private ApplicationService applicationService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -118,6 +118,8 @@ public class ScanController {
 			Scan scan = scanService.loadScan(scanId);
 			if (scan != null) {
 				scanDeleteService.deleteScan(scan);
+                vulnerabilityService.updateVulnerabilityReport(
+                        applicationService.loadApplication(appId));
 			}
 		}
 		
@@ -156,13 +158,6 @@ public class ScanController {
 			bean.setPage(1);
 		}
 				
-//		model.addAttribute("numPages", numPages);
-//		model.addAttribute("page", bean.getPage());
-//		model.addAttribute("numFindings", numFindings);
-//		model.addAttribute("findingList", findingService.getFindingTable(scanId, bean));
-//		model.addAttribute(scan);
-//		return "scans/table";
-
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("numPages", numPages);
         responseMap.put("page", bean.getPage());
@@ -205,13 +200,6 @@ public class ScanController {
 			bean.setPage(1);
 		}
 		
-//		model.addAttribute("numPages", numPages);
-//		model.addAttribute("page", bean.getPage());
-//		model.addAttribute("numFindings", numFindings);
-//		model.addAttribute("findingList", findingService.getUnmappedFindingTable(scanId, bean));
-//		model.addAttribute(scan);
-//		return "scans/unmappedTable";
-
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("numPages", numPages);
         responseMap.put("page", bean.getPage());

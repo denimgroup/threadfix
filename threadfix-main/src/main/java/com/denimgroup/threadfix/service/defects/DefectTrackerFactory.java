@@ -95,7 +95,11 @@ public final class DefectTrackerFactory {
 			return new JiraDefectTracker();
 		} else if (type.getName().equals(DefectTrackerType.MICROSOFT_TFS)) {
 			return new TFSDefectTracker();
-		} else {
+        } else if (type.getName().equals(DefectTrackerType.HP_QUALITYCENTER)) {
+            return new HPQualityCenterDefectTracker();
+        } else if (type.getName().equals(DefectTrackerType.VERSION_ONE)) {
+            return new VersionOneDefectTracker();
+        } else {
 			
 			// Must be a legitimate Java identifier
 			if (type.getFullClassName() != null && type.getName().matches("^[A-Za-z_][a-zA-Z0-9_]*$")) {

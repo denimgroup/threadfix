@@ -128,6 +128,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         return channelType;
     }
 
+    @Nullable
 	protected String inputFileName;
 	
 	protected ZipFile zipFile;
@@ -221,8 +222,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 *            The URL location of the vulnerability.
 	 * @param param
 	 *            The vulnerable parameter (optional)
-	 * @throws java.security.NoSuchAlgorithmException
-	 *             Thrown if the MD5 algorithm cannot be found.
 	 * @return The three strings concatenated, downcased, trimmed, and hashed.
 	 */
 	protected String hashFindingInfo(String type, String url, String param) {
@@ -338,37 +337,29 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		
 		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
-        // Create new Vulnerability Map
-        if ((channelVulnerability == null || channelVulnerability.getVulnerabilityMaps() == null)
-                && cweCode != null && !cweCode.isEmpty()) {
+        if (channelVulnerability == null) {
+            channelVulnerability = new ChannelVulnerability();
+            channelVulnerability.setChannelType(getChannelType());
+            channelVulnerability.setCode(channelVulnerabilityCode);
+            channelVulnerability.setName(channelVulnerabilityCode);
+            channelVulnerability.setFindings(Arrays.asList(finding));
+        }
 
+        // Create new Vulnerability Map
+        if ((channelVulnerability.getVulnerabilityMaps() == null || channelVulnerability.getVulnerabilityMaps().size() == 0)
+                && cweCode != null && !cweCode.isEmpty()) {
             GenericVulnerability genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(cweCode));
             if (genericVuln != null) {
-                // Create new Channel Vulnerability
-                if (channelVulnerability == null) {
-                    channelVulnerability = new ChannelVulnerability();
-                    channelVulnerability.setChannelType(getChannelType());
-                    channelVulnerability.setCode(channelVulnerabilityCode);
-                    channelVulnerability.setName(channelVulnerabilityCode);
-                    channelVulnerability.setFindings(Arrays.asList(finding));
-                }
                 // Create new Vulnerability Map and hook to Channel Vulnerability
                 VulnerabilityMap vulnMap = new VulnerabilityMap();
                 vulnMap.setChannelVulnerability(channelVulnerability);
                 vulnMap.setGenericVulnerability(genericVuln);
                 vulnMap.setMappable(true);
                 channelVulnerability.setVulnerabilityMaps(Arrays.asList(vulnMap));
-                channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
             }
-        } else if (channelVulnerability == null) {
-            channelVulnerability = new ChannelVulnerability();
-            channelVulnerability.setChannelType(getChannelType());
-            channelVulnerability.setCode(channelVulnerabilityCode);
-            channelVulnerability.setName(channelVulnerabilityCode);
-            channelVulnerability.setFindings(Arrays.asList(finding));
-            channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         }
 
+        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         finding.setChannelVulnerability(channelVulnerability);
 		
 		ChannelSeverity channelSeverity = null;
@@ -420,7 +411,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 * If the channelType is set and the vulnerability code is in the DB this
 	 * method will pull it up.
 	 * 
-	 * @param code
+	 * @param code channel vulnerability's code
 	 * @return vulnerability from the DB
 	 */
 
@@ -507,7 +498,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
 			out = new FileOutputStream(diskZipFile);
 			byte buf[] = new byte[1024];
-			int len = 0;
+			int len;
 
 			while ((len = inputStream.read(buf)) > 0) {
 				out.write(buf, 0, len);

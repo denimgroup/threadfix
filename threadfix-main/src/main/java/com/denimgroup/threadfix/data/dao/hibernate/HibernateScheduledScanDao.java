@@ -70,6 +70,9 @@ public class HibernateScheduledScanDao implements ScheduledScanDao {
     @Override
     public List<ScheduledScan> retrieveAll() {
         return (sessionFactory.getCurrentSession().createCriteria(ScheduledScan.class)
-                .add(Restrictions.eq("active", true)).list());
+                .add(Restrictions.eq("active", true))
+                .createAlias("application", "application")
+                .add(Restrictions.eq("application.active", true))
+                .list());
     }
 }

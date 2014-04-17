@@ -63,4 +63,10 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 	public void saveConfiguration(DefaultConfiguration config) {
 		defaultConfigurationDao.saveOrUpdate(config);
 	}
+
+    @Override
+    public boolean isReportCacheDirty() {
+        return !loadCurrentConfiguration().getHasCachedData();
+    }
+
 }

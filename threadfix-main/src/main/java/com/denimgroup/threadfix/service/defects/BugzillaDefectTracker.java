@@ -23,21 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClient;
+import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClientImpl;
+import org.apache.xmlrpc.XmlRpcException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
-
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
  * @author dcornell
@@ -46,12 +41,24 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 public class BugzillaDefectTracker extends AbstractDefectTracker {
 		
 	private static Map<String, String> versionMap = new HashMap<>();
-	
+
+    BugzillaClient bugzillaClient = BugzillaClientImpl.getInstance();
+
 	private List<String> statuses = new ArrayList<>();
 	private List<String> components = new ArrayList<>();
 	private List<String> severities = new ArrayList<>();
 	private List<String> versions = new ArrayList<>();
 	private List<String> priorities = new ArrayList<>();
+
+    private BugzillaClient.ConnectionStatus configureClientAndGetStatus() {
+
+        BugzillaClient.ConnectionStatus status = bugzillaClient.configure(getServerURLWithRpc(), username, password);
+
+        if (status != BugzillaClient.ConnectionStatus.VALID) {
+            log.error("Received Bugzilla connection status " + status + ", please fix the error before continuing.");
+        }
+        return status;
+    }
 
 	@Override
 	public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
@@ -59,24 +66,12 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 		// TODO Better handle error cases
 		try {
-			XmlRpcClient client = initializeClient();
-			if (client == null) {
-				return null;
-			}
 
-			String loginStatus = login(client);
-			if (loginStatus == null) {
-				return null;
-			}
+            if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+                return null;
+            }
 
-			// TODO Pass this information back to the user
-			if (loginStatus.equals(LOGIN_FAILURE) 
-					|| loginStatus.equals(BAD_CONFIGURATION)) {
-				log.warn("Login Failed, check credentials");
-				return null;
-			}
-
-			if (!projectExists(projectName, client)) {
+			if (!projectExists(projectName)) {
 				log.warn("The project name wasn't found on the server.");
 				return null;
 			}
@@ -89,6 +84,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			if (metadata.getDescription() == null    || metadata.getComponent() == null
 					|| metadata.getVersion() == null || metadata.getSeverity() == null 
 					|| metadata.getStatus() == null  || metadata.getPriority() == null) {
+                log.error("DefectMetadata was missing a field. Please fix this and try again.");
+
 				return null;
 			}
 
@@ -104,31 +101,21 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			bugMap.put("severity", metadata.getSeverity());
 			bugMap.put("status", metadata.getStatus());
 
-			Object[] bugArray = new Object[1];
-			bugArray[0] = bugMap;
+			Map<String, Integer> actualResult = bugzillaClient.createBug(bugMap);
 
-			Object createResult = client.execute("Bug.create", bugArray);
-			log.debug("Create result: " + createResult);
-
-			@SuppressWarnings("unchecked")
-			Map<String, Integer> actualResult = (HashMap<String, Integer>) createResult;
 			Integer returnId = actualResult.get("id");
 			bugzillaId = returnId.toString();
-		} catch (XmlRpcException e) {
-			log.debug("Exception occured while creating Defect: " + e.getMessage());
-			e.printStackTrace();
 		} catch (IllegalArgumentException e2) {
 			log.error("Got IllegalArgumentException.", e2);
-		}
+		} catch (XmlRpcException e) {
+            log.error("Got XmlRpcException.", e);
+        }
 
 		return bugzillaId;
 	}
 
 	/**
 	 * Retrieve all the variable fields that Bugzilla installations have.
-	 * 
-	 * @param productId
-	 * @return
 	 */
 	@Override
 	public ProjectMetadata getProjectMetadata() {
@@ -141,6 +128,9 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Defect, Boolean> getMultipleDefectStatus(List<Defect> defectList) {
+        if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+            return null;
+        }
 
 		Map<String, Defect> idDefectMap = new HashMap<>();
 		
@@ -154,9 +144,14 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		queryMap.put("ids", idDefectMap.keySet().toArray(
 				new Object[idDefectMap.keySet().size()]));
 
-		Object queryResult = executeMethod("Bug.get", new Object[] { queryMap });
-		
-		Map<Defect, Boolean> returnList = new HashMap<>();
+        Object queryResult = null;
+        try {
+            queryResult = bugzillaClient.executeMethod("Bug.get", queryMap);
+        } catch (XmlRpcException e) {
+            log.error("Encountered XmlRpcException while trying to get bug information", e);
+        }
+
+        Map<Defect, Boolean> returnList = new HashMap<>();
 
 		if (queryResult instanceof HashMap) {
 			Map<String,Object[]> returnedData = (HashMap<String, Object[]>) queryResult;
@@ -185,7 +180,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				}
 			}
 		} else {
-			log.error("Expected a HashMap return value, but got something else instead.");
+			log.error("Expected a HashMap return value, but got something else instead: " + queryResult);
 		}
 		
 		return returnList;
@@ -193,22 +188,11 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public String getTrackerError() {
-		XmlRpcClient client = initializeClient();
-		if (client == null) {
-			return null;
-		}
-		String loginStatus = login(client);
-		if (loginStatus == null) {
-			return null;
-		}
+        if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+            return null;
+        }
 
-		// TODO Pass this information back to the user
-		if (loginStatus.equals(LOGIN_FAILURE) 
-				|| loginStatus.equals(BAD_CONFIGURATION)) {
-			return "Bugzilla login failed, check your credentials.";
-		}
-
-		if (!projectExists(projectName, client)) {
+		if (!projectExists(projectName)) {
 			return "The project specified does not exist - please specify a different"
 					+ " one or create " + projectName + " in Bugzilla.";
 		}
@@ -216,52 +200,47 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		return null;
 	}
 	
-	private void getPermissibleBugFieldValues(){ 
-		client = initializeClient();
-		
-		String loginResponse = login(client);
-		if (loginResponse == null) {
-			return;
-		}
-		if (loginResponse.equals(LOGIN_FAILURE) 
-				|| loginResponse.equals(BAD_CONFIGURATION)) {
-			log.warn("Login Failed, check credentials");
-			return;
-		}
-		
-		Map<String, String> bugMap = new HashMap<>();
-		bugMap.put("field", "bug_severity");
-		Object[] bugArray = new Object[] { bugMap };
-		Object createResult = executeMethod("Bug.legal_values", bugArray);
-		severities.addAll(getValues(createResult));
-		
-		bugMap.put("field", "bug_status");
-		bugArray = new Object[] { bugMap }; // maybe useless line
-		createResult = executeMethod("Bug.legal_values", bugArray);
-		statuses.addAll(getValues(createResult));
-		
-		if (statuses.contains("UNCONFIRMED")) {
-			statuses.remove("UNCONFIRMED");
-		}
-		
-		bugMap.put("field", "priority");
-		bugArray = new Object[] { bugMap }; // maybe useless line
-		createResult = executeMethod("Bug.legal_values", bugArray);
-		priorities.addAll(getValues(createResult));
-		
-		projectId = getProjectIdByName();
-		
-		Map<String, String> queryMap = new HashMap<>();
-		queryMap.put("field", "version");
-		queryMap.put("product_id", projectId);
-		createResult = executeMethod("Bug.legal_values", new Object[] { queryMap });
-		versions.addAll(getValues(createResult));
-		
-		queryMap = new HashMap<>();
-		queryMap.put("field", "component");
-		queryMap.put("product_id", projectId);
-		createResult = executeMethod("Bug.legal_values", new Object[] { queryMap });
-		components.addAll(getValues(createResult));
+	private void getPermissibleBugFieldValues(){
+        if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+            return;
+        }
+
+        try {
+            Map<String, String> bugMap = new HashMap<>();
+            bugMap.put("field", "bug_severity");
+            Object[] bugArray = new Object[] { bugMap };
+            Object createResult = bugzillaClient.executeMethod("Bug.legal_values", bugArray);
+            severities.addAll(getValues(createResult));
+
+            bugMap.put("field", "bug_status");
+            bugArray = new Object[] { bugMap }; // maybe useless line
+            createResult = bugzillaClient.executeMethod("Bug.legal_values", bugArray);
+            statuses.addAll(getValues(createResult));
+
+            if (statuses.contains("UNCONFIRMED")) {
+                statuses.remove("UNCONFIRMED");
+            }
+
+            bugMap.put("field", "priority");
+            createResult = bugzillaClient.executeMethod("Bug.legal_values", bugMap);
+            priorities.addAll(getValues(createResult));
+
+            projectId = getProjectIdByName();
+
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("field", "version");
+            queryMap.put("product_id", projectId);
+            createResult = bugzillaClient.executeMethod("Bug.legal_values", queryMap);
+            versions.addAll(getValues(createResult));
+
+            queryMap = new HashMap<>();
+            queryMap.put("field", "component");
+            queryMap.put("product_id", projectId);
+            createResult = bugzillaClient.executeMethod("Bug.legal_values", queryMap);
+            components.addAll(getValues(createResult));
+        } catch (XmlRpcException e) {
+            log.error("Encountered XmlRpcException while trying to read fields from Bugzilla.", e);
+        }
 	}
 
 	/**
@@ -287,112 +266,20 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		}
 		return responseList;
 	}
-
-	/**
-	 * Set up the configuration
-	 * 
-	 * @return
-	 * @throws MalformedURLException
-	 */
-	private XmlRpcClient initializeClient() {
-		// Get the RPC client set up and ready to go
-		// The alternate TransportFactory stuff is required so that cookies
-		// work and the logins behave persistently
-		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-		try {
-			config.setServerURL(new URL(this.getServerURLWithRpc()));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-		// config.setEnabledForExtensions(true);
-		XmlRpcClient client = new XmlRpcClient();
-		client.setConfig(config);
-		XmlRpcCommonsTransportFactory factory = new XmlRpcCommonsTransportFactory(client);
-		factory.setHttpClient(new HttpClient());
-		client.setTransportFactory(factory);
-
-		return client;
-	}
-
-	/**
-	 * @param client
-	 * @throws XmlRpcException
-	 */
-	private String login(XmlRpcClient client) {
-
-		Map<String, String> loginMap = new HashMap<>();
-		loginMap.put("login", this.username);
-		loginMap.put("password", this.password);
-		loginMap.put("rememberlogin", "Bugzilla_remember");
-
-		Object[] loginArray = new Object[1];
-		loginArray[0] = loginMap;
-
-		Object loginResult = null;
-		try {
-			loginResult = client.execute("User.login", loginArray);
-		} catch (XmlRpcException e) {
-			if (e.getMessage().contains("The username or password you entered is not valid")) {
-				return LOGIN_FAILURE;
-			}
-			e.printStackTrace();
-		} catch (IllegalArgumentException e2) {
-			if (e2.getMessage().contains("Host name may not be null")) {
-				return BAD_CONFIGURATION;
-			} else {
-				e2.printStackTrace();
-				return BAD_CONFIGURATION;
-			}
-		}
-
-		if (loginResult == null) {
-			return null;
-		} else {
-			return loginResult.toString();
-		}
-	}
 	
-	private XmlRpcClient client = null;
-	private Object executeMethod(String method, Object[] params) {
-		if (method == null || params == null)
-			return null;
-		
-		if (client == null) {
-			client = initializeClient();
-			String loginResponse = login(client);
-			if (loginResponse == null) {
-				return null;
-			}
-			if (loginResponse.equals(LOGIN_FAILURE) 
-					|| loginResponse.equals(BAD_CONFIGURATION)) {
-				log.warn("Login Failed, check credentials");
-				return null;
-			}
-		}
-		
-		if (client == null) {
-			log.warn("There was an error initializing the Bugzilla client.");
-			return null;
-		}
-		
-		try {
-			return client.execute(method, params);
-		} catch (XmlRpcException e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
-
 	public String getVersion() {
 		if (versionMap.get(url) != null) {
 			return versionMap.get(url);
 		}
-		
-		Object createResult = executeMethod("Bugzilla.version", new Object[] {});
-				
-		if (createResult instanceof Map<?,?>) {
+
+        Object createResult = null;
+        try {
+            createResult = bugzillaClient.executeMethod("Bugzilla.version");
+        } catch (XmlRpcException e) {
+            log.error("Got XmlRpcException while trying to get the bugzilla version.", e);
+        }
+
+        if (createResult instanceof Map<?,?>) {
 			Map<?,?> item = (Map<?,?>) createResult;
 			if (item.get("version") != null) {
 				log.info("Bugzilla instance is version " + item.get("version"));
@@ -402,27 +289,18 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		return versionMap.get(url);
 	}
 
-	/**
-	 * @param projectName
-	 * @param client
-	 * @return
-	 */
-	public boolean projectExists(String projectName, XmlRpcClient client) {
+	public boolean projectExists(String projectName) {
 		this.projectName = projectName;
 		return getProjectIdByName() != null;
 	}
 
-	/**
-	 * @param client
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
-	private String getProducts(XmlRpcClient client) {
+	private String getProducts() {
 		String productList = "";
 
 		try {
-			Map<String,Object[]> productsMap = (HashMap<String, Object[]>) client.execute(
-					"Product.get_accessible_products", new Object[] {});
+			Map<String,Object[]> productsMap = (HashMap<String, Object[]>) bugzillaClient.executeMethod(
+                    "Product.get_accessible_products");
 			Object[] ids = productsMap.get("ids");
 
 			StringBuffer buffer = new StringBuffer();
@@ -430,8 +308,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			Map<String,Object[]> params = new HashMap<>();
 			params.put("ids", ids);
 
-			Map<String,Object[]> productMap = (HashMap<String, Object[]>) client.execute(
-					"Product.get", new Object[] { params });
+			Map<String,Object[]> productMap = (HashMap<String, Object[]>) bugzillaClient.executeMethod(
+					"Product.get", params);
 			Object[] products = productMap.get("products");
 			
 			for (Object item : products) {
@@ -479,26 +357,21 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	private String getProjectIdByNameVersion3() {
 		if (projectName == null)
 			return null;
-		
-		XmlRpcClient client = initializeClient();
-		String status = login(client);
-		
-		if (status == null || status.equals(LOGIN_FAILURE) || 
-				status.equals(BAD_CONFIGURATION)) {
-			log.warn(status);
-			return null;
-		}
+
+        if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+            return null;
+        }
 
 		try {
-			Map<String,Object[]> productsMap = (HashMap<String, Object[]>) client.execute(
-					"Product.get_enterable_products", new Object[] {});
+			Map<String,Object[]> productsMap = (HashMap<String, Object[]>) bugzillaClient.executeMethod(
+					"Product.get_enterable_products");
 			Object[] ids = productsMap.get("ids");
 
 			Map<String,Object[]> params = new HashMap<>();
 			params.put("ids", ids);
 
-			Map<String, Object[]> productMap = (HashMap<String, Object[]>) client.execute(
-					"Product.get", new Object[] { params });
+			Map<String, Object[]> productMap = (HashMap<String, Object[]>) bugzillaClient.executeMethod(
+					"Product.get", params);
 			Object[] products = productMap.get("products");
 			if (products == null)
 				return null;
@@ -520,25 +393,21 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	}
 	
 	private String getProjectIdByNameVersion4() {
-		if (client == null) {
-			client = initializeClient();
-		}
-		String status = login(client);
-		
-		if (status == null || status.equals(LOGIN_FAILURE) || 
-				status.equals(BAD_CONFIGURATION)) {
-			log.warn(status);
-			return null;
-		}
-		
+        if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+            return null;
+        }
+
 		// get Product info
 		Map<String, Object[]> bugMap = new HashMap<>();
-		Object[] names = new Object[] { projectName };
-		bugMap.put("names", names);
-		Object[] bugArray = new Object[] { bugMap };
+		bugMap.put("names", new Object[] { projectName });
 
-		Object createResult = executeMethod("Product.get", bugArray);
-		if (createResult != null && createResult instanceof Map<?, ?>) {
+        Object createResult = null;
+        try {
+            createResult = bugzillaClient.executeMethod("Product.get", bugMap);
+        } catch (XmlRpcException e) {
+            log.error("Encountered XmlRpcException while getting project information.", e);
+        }
+        if (createResult != null && createResult instanceof Map<?, ?>) {
 			Map<?, ?> mapVersion = (Map<?, ?>) createResult;
 			if (mapVersion.containsKey("products")) {
 				Object result = mapVersion.get("products");
@@ -561,34 +430,24 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public String getProductNames() {
-		XmlRpcClient client = initializeClient();
-		String status = login(client);
+        BugzillaClient.ConnectionStatus status = configureClientAndGetStatus();
 
-		if (LOGIN_FAILURE.equals(status) || BAD_CONFIGURATION.equals(status)) {
-			lastError = status;
+		if (status == BugzillaClient.ConnectionStatus.INVALID) {
+			lastError = status.toString();
 			return null;
 		} else {
-			return getProducts(client);
+			return getProducts();
 		}
 	}
 
 	@Override
 	public boolean hasValidCredentials() {
-		XmlRpcClient client = initializeClient();
-		String status = login(client);
-
-		return !LOGIN_FAILURE.equals(status) 
-				&& !BAD_CONFIGURATION.equals(status);
+		return configureClientAndGetStatus() == BugzillaClient.ConnectionStatus.VALID;
 	}
 
 	@Override
 	public boolean hasValidProjectName() {
-		if (projectName == null) {
-			return false;
-		}
-		
-		XmlRpcClient client = initializeClient();
-		return projectExists(projectName, client);
+		return projectName != null && projectExists(projectName);
 	}
 
 	@Override
@@ -610,37 +469,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	@Override
 	public boolean hasValidUrl() {
 		log.info("Checking Bugzilla URL.");
-		XmlRpcClient client = initializeClient();
-		
-		Map<String, String> loginMap = new HashMap<>();
-		loginMap.put("login", " ");
-		loginMap.put("password", " ");
-		loginMap.put("rememberlogin", "Bugzilla_remember");
-
-		Object[] loginArray = new Object[1];
-		loginArray[0] = loginMap;
-
-		try {
-			client.execute("User.login", loginArray);
-			log.warn("Shouldn't be here, we just logged into " +
-					 "Bugzilla with blank username / password.");
-			return true;
-		} catch (XmlRpcException e) {
-			if (e.getMessage().contains("The username or password you entered is not valid")) {
-				log.info("The URL was good, received an authentication warning.");
-				return true;
-			} else if (e.getMessage().contains(
-					"I/O error while communicating with HTTP server")) {
-				log.warn("Unable to retrieve a RPC response from that URL. Returning false.");
-				return false;
-			} else {
-				log.warn("Something went wrong. Check out the error. Returning false.", e);
-				return false;
-			}
-		} catch (IllegalArgumentException e2) {
-			log.warn("IllegalArgumentException was tripped. Returning false.");
-			return false;
-		}
+		return bugzillaClient.checkUrl(getServerURLWithRpc());
 	}
 	
 	public String getServerURLWithRpc() {
@@ -664,44 +493,38 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Defect> getDefectList() {		
-		
-		XmlRpcClient client = initializeClient();
-		if (client == null) {
-			return null;
-		}
+	public List<Defect> getDefectList() {
 
-		String loginStatus = login(client);
-		if (loginStatus == null) {
-			return null;
-		}
-
-		// TODO Pass this information back to the user
-		if (loginStatus.equals(LOGIN_FAILURE) 
-				|| loginStatus.equals(BAD_CONFIGURATION)) {
-			log.warn("Login Failed, check credentials");
-			return null;
-		}		
+        if (configureClientAndGetStatus() != BugzillaClient.ConnectionStatus.VALID) {
+            return null;
+        }
 		
 		List<Defect> returnList = new ArrayList<>();
 		Map<String, String> queryMap = new HashMap<>();
 		queryMap.put("product", projectName);
 
-		Object queryResult = executeMethod("Bug.search", new Object[] { queryMap });
-		if (queryResult instanceof HashMap) {
+        Object queryResult;
+
+        try {
+            queryResult = bugzillaClient.executeMethod("Bug.search", queryMap);
+        } catch (XmlRpcException e) {
+            log.error("Encountered XmlRpcException while getting defect information");
+            return new ArrayList<>(); // TODO see if this is the right thing
+        }
+
+        if (queryResult instanceof HashMap) {
 			Map<String,Object[]> returnedData = (HashMap<String, Object[]>) queryResult;
 			Object[] bugsArray = returnedData.get("bugs");
-			for (int i = 0; i < bugsArray.length; i++) {
-				Object currentBug = bugsArray[i];
-				Map<String,Object> currentBugHash = (HashMap<String, Object>) currentBug;
-				if (currentBugHash == null) {
-					continue;
-				}			
-				Integer id = (Integer) currentBugHash.get("id");
-				Defect d = new Defect();
-				d.setNativeId(String.valueOf(id));
-				returnList.add(d);				
-			}
+            for (Object currentBug : bugsArray) {
+                Map<String, Object> currentBugHash = (HashMap<String, Object>) currentBug;
+                if (currentBugHash == null) {
+                    continue;
+                }
+                Integer id = (Integer) currentBugHash.get("id");
+                Defect defect = new Defect();
+                defect.setNativeId(String.valueOf(id));
+                returnList.add(defect);
+            }
 		} else {
 			log.error("Expected a HashMap return value, but got something else instead.");
 		}

@@ -36,6 +36,17 @@ public class DefaultConfiguration extends BaseEntity {
 	private static final long serialVersionUID = 2584623185996706729L;
 	
 	private Boolean globalGroupEnabled = null;
+
+    @Column
+    public Boolean getHasCachedData() {
+        return hasCachedData != null && hasCachedData;
+    }
+
+    public void setHasCachedData(Boolean hasCachedData) {
+        this.hasCachedData = hasCachedData;
+    }
+
+    private Boolean hasCachedData = null;
 	private Integer defaultRoleId = null;
 	
 	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;

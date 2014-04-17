@@ -67,7 +67,7 @@
                             <options items="${ roleList }" itemValue="id" itemLabel="displayName" />
                         </select>
 
-                        <!-- TODO enterprise this shit up -->
+                        <!-- TODO enterprise this stuff up -->
                         <%--<c:if test="${ not user.hasGlobalGroupAccess }">--%>
                             <%--<script>$("#roleSelect<c:out value='${ status.count }'/>").attr("disabled","disabled");</script>--%>
                         <%--</c:if>--%>

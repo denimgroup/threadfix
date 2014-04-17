@@ -24,3 +24,16 @@ Exposed localstart.asp page,Exposed localstart.asp page,200
 Access restriction bypass via X-Forwarded-For,Access restriction bypass via X-Forwarded-For,285
 HTTP TRACE,HTTP TRACE,693
 Allowed HTTP methods,Allowed HTTP methods,16
+CAPTCHA protected form,CAPTCHA protected form,311
+Credit card number disclosure,Credit card number disclosure,200
+CVS/SVN user disclosure,CVS/SVN user disclosure,200
+E-mail address disclosure,E-mail address disclosure,200
+Form-based File Upload,Form-based File Upload,200
+HTML object,HTML object,200
+HttpOnly cookie,HttpOnly cookie,200
+Insecure cookie,Insecure cookie,200
+Mixed Resource,Mixed Resource,16
+Password field with auto-complete,Password field with auto-complete,311
+Private IP address disclosure,Private IP address disclosure,200
+Disclosed US Social Security Number (SSN),Disclosed US Social Security Number (SSN),200
+Unencrypted password form,Unencrypted password form,319

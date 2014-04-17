@@ -23,15 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import java.util.List;
 import java.util.Map;
-
-import com.denimgroup.threadfix.data.entities.ChannelType;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 /**
  * An abstract class providing a base implementation of a defect tracker. This
@@ -45,11 +41,10 @@ public abstract class AbstractDefectTracker {
 	
 	protected String url, username, password, projectName, projectId, lastError;
 
-	protected final static String LOGIN_FAILURE = "Invalid username / password combination";
-	protected final static String BAD_CONFIGURATION = "Your configuration is invalid: check your URL.";
-	public final static String INVALID_CERTIFICATE = "The indicated server has an invalid or self-signed certificate.";
-	public final static String BAD_URL = "The defect tracker URL is not valid.";
-	public final static String IO_ERROR = "There were problems communicating with the defect tracker server.";
+	public final static String LOGIN_FAILURE = "Invalid username / password combination",
+        BAD_CONFIGURATION = "Your configuration is invalid: check your URL.",
+	    INVALID_CERTIFICATE = "The indicated server has an invalid or self-signed certificate.",
+	    BAD_URL = "The defect tracker URL is not valid.";
 	
 	// Common log for all Defect Tracker Exporters.
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
@@ -132,7 +127,25 @@ public abstract class AbstractDefectTracker {
 	 * 
 	 * @return
 	 */
-	public abstract String getTrackerError();
+    public String getTrackerError() {
+        log.info("Attempting to find the reason that Defect Tracker integration failed.");
+
+        String reason;
+
+        if (!hasValidUrl()) {
+            reason =  "The Defect Tracker url was incorrect.";
+        } else if (!hasValidCredentials()) {
+            reason =  "The supplied credentials were incorrect.";
+        } else if (!hasValidProjectName()) {
+            reason =  "The project name was invalid.";
+        } else {
+            reason = "The Defect Tracker integration failed but the " +
+                    "cause is not the URL, credentials, or the Project Name.";
+        }
+
+        log.info(reason);
+        return reason;
+    }
 
 	/**
 	 * Check the username and password fields against the url field for valid credentials.

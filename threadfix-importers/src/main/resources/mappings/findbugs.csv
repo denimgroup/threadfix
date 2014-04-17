@@ -4,3 +4,6 @@ type.vulnerabilities,,
 XSS: Servlet reflected cross site scripting vulnerability,XSS_REQUEST_PARAMETER_TO_SERVLET_WRITER,79
 SQL: A prepared statement is generated from a nonconstant String,SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING,89
 SQL: Nonconstant string passed to execute method on an SQL statement,SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE,89
+PT: Absolute path traversal in servlet,PT_ABSOLUTE_PATH_TRAVERSAL_IN_SERVLET,36
+PT: Relative path traversal in servlet,PT_RELATIVE_PATH_TRAVERSAL_IN_SERVLET,23
+

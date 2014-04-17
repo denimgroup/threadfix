@@ -36,7 +36,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
  */
 public interface ThreadFixRestClient {
 
-    public RestResponse<String> getRules(String wafId);
+    public RestResponse<String> getRules(String wafId, String appId);
     public RestResponse<Waf> searchForWafByName(String name);
     public RestResponse<Waf> searchForWafById(String wafId);
     public RestResponse<Waf> createWaf(String name, String type);

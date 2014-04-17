@@ -21,7 +21,7 @@
 	</spring:url>
 
 	<ul class="breadcrumb">
-	    <li><a href="<spring:url value="/"/>">Applications Index</a><span class="divider">/</span></li>
+	    <li><a href="<spring:url value="/organizations"/>">Applications Index</a><span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(orgUrl) }">Team <c:out value="${ finding.scan.application.organization.name }"/></a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(appUrl) }">Application <c:out value="${ finding.scan.application.name }"/></a><span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(scanUrl) }"><fmt:formatDate value="${ finding.scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(finding.scan.applicationChannel.channelType.name) }"/> Scan</a><span class="divider">/</span></li>
@@ -65,6 +65,10 @@
 				<td class="bold">Severity</td>
 				<td class="inputValue"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 			</tr>
+            <tr>
+                <td class="bold">Description</td>
+                <td class="inputValue" style="max-width:500px;word-wrap: break-word;"><c:out value="${ finding.longDescription }"/></td>
+            </tr>
 			<c:if test="${ empty finding.dependency }">			
 				<tr>
 					<td class="bold">Path</td>

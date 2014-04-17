@@ -150,6 +150,13 @@ public class OptionsHolder {
                 .create("r");
         options.addOption(getRules);
 
+        Option getRulesForApp = OptionBuilder.withArgName("wafId> <applicationId")
+                .hasArgs(2)
+                .withLongOpt("rules-for-application")
+                .withDescription("Gets WAF Rules for an application and returns its JSON.")
+                .create("ra");
+        options.addOption(getRulesForApp);
+
         return options;
     }
 

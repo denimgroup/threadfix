@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ThreadFixPlugin
 Bundle-SymbolicName: com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView;singleton:=true
-Bundle-Version: 0.1
+Bundle-Version: 0.2
 Bundle-Vendor: Denim Group
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.google.gson,
@@ -27,5 +27,4 @@ Import-Package: com.google.gson,
  org.eclipse.ui.views.markers,
  org.osgi.service.prefs
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/threadfix-cli.jar,
- src/
+Bundle-ClassPath: lib/threadfix-cli.jar, bin/, lib/

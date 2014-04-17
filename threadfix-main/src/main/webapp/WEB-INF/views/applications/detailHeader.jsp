@@ -3,7 +3,7 @@
 </spring:url>
 
 <ul class="breadcrumb">
-    <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+    <li><a href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
     <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
     <li class="active">Application: <c:out value="${ application.name }"/></li>
 </ul>

@@ -58,26 +58,18 @@ public class ScanDeleteServiceImpl implements ScanDeleteService {
 	
 	private final SanitizedLogger log = new SanitizedLogger("ScanDeleteService");
 
-	private ScanDao scanDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
-	private VulnerabilityCommentDao vulnerabilityCommentDao = null;
-	private FindingDao findingDao = null;
-	private WafRuleDao wafRuleDao = null;
-	private DefectDao defectDao = null;
-
-	@Autowired
-	public ScanDeleteServiceImpl(ScanDao scanDao,
-			VulnerabilityDao vulnerabilityDao,
-			VulnerabilityCommentDao vulnerabilityCommentDao,
-			FindingDao findingDao, WafRuleDao wafRuleDao,
-			DefectDao defectDao) {
-		this.scanDao = scanDao;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.findingDao = findingDao;
-		this.wafRuleDao = wafRuleDao;
-		this.defectDao = defectDao;
-		this.vulnerabilityCommentDao = vulnerabilityCommentDao;
-	}
+    @Autowired
+	private ScanDao scanDao;
+    @Autowired
+	private VulnerabilityDao vulnerabilityDao;
+    @Autowired
+	private VulnerabilityCommentDao vulnerabilityCommentDao;
+    @Autowired
+	private FindingDao findingDao;
+    @Autowired
+	private WafRuleDao wafRuleDao;
+    @Autowired
+	private DefectDao defectDao;
 	
 	/**
 	 * Deleting a scan requires a lot of code to check and make sure that all mappings

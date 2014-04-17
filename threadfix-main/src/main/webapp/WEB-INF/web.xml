@@ -14,7 +14,15 @@
 			classpath:/applicationContext-scheduling.xml
 		</param-value>
 	</context-param>
-	<filter>
+    <filter>
+        <filter-name>EnterpriseFilter</filter-name>
+        <filter-class>com.denimgroup.threadfix.webapp.filter.EnterpriseFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EnterpriseFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
@@ -161,6 +169,7 @@
 		    	protected-regex ^/wafs/map$,
         		protected-regex ^/wafs/new/ajax$,
         		protected-regex ^/wafs/new/ajax/appPage$,
+                protected-regex ^/wafs/[0-9]+/rules$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/addComment$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/manual/[0-9]+/edit$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/getDefectsFromDefectTracker$,
