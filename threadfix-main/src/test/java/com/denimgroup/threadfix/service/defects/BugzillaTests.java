@@ -105,7 +105,7 @@ public class BugzillaTests implements TestConstants{
 
         bugzillaTracker.setUrl("http://fakeurl.com");
         bugzillaTracker.setUsername("usernameWrong");
-        bugzillaTracker.setPassword("usernameWrong");
+        bugzillaTracker.setPassword("passwordWrong");
 
         assertTrue("Credentials were supposed to be valid.", !bugzillaTracker.hasValidCredentials());
     }
@@ -128,11 +128,8 @@ public class BugzillaTests implements TestConstants{
 
     @Test
     public void testInvalidProjectName() {
-        AbstractDefectTracker bugzillaTracker = getTracker();
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
 
-        bugzillaTracker.setUrl(BUGZILLA_BASE_URL);
-        bugzillaTracker.setUsername(BUGZILLA_USERNAME);
-        bugzillaTracker.setPassword(BUGZILLA_PASSWORD);
         bugzillaTracker.setProjectName("Bad Project Name");
 
         assertFalse("Project name wasn't supposed to be valid.", bugzillaTracker.hasValidProjectName());
