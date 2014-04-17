@@ -23,14 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
+import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.BugzillaClientMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -178,19 +179,34 @@ public class BugzillaTests implements TestConstants{
         assertTrue("Expected ID to be 110 but was " + nativeId, "110".equals(nativeId));
     }
 
-    //TODO Copied from Jira, needs to be corrected for Bugzilla
-    @Ignore
     @Test
     public void testDefectStatusUpdateCloseDefect() {
         AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
 
+        List<Defect> defects = DefectUtils.getDefectList("1");
+
+        Map<Defect, Boolean> resultMap = bugzillaTracker.getMultipleDefectStatus(defects);
+
+        String status = defects.get(0).getStatus();
+
+        assertTrue("Expected 'RESOLVED', got '" + status + "'", "RESOLVED".equals(status));
+
+        assertFalse("Defect should have been closed.", resultMap.get(defects.get(0)));
     }
 
-    //TODO Copied from Jira, needs to be corrected for Bugzilla
-    @Ignore
     @Test
     public void testDefectStatusUpdateNoChange() {
+        AbstractDefectTracker bugzillaTracker = getConfiguredTracker();
 
+        List<Defect> defects = DefectUtils.getDefectList("2");
+
+        Map<Defect, Boolean> resultMap = bugzillaTracker.getMultipleDefectStatus(defects);
+
+        String status = defects.get(0).getStatus();
+
+        assertTrue("Expected 'CONFIRMED', got '" + status + "'", "CONFIRMED".equals(status));
+
+        assertTrue("Defect should have been open.", resultMap.get(defects.get(0)));
     }
 
 }

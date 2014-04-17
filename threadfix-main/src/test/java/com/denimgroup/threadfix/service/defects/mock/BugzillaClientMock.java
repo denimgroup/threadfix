@@ -55,7 +55,11 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
                 new HashMap<String, Object>(), new HashMap<String, Object>()});
         Object[] bugs = defectList.get("bugs");
         fillDefectList(bugs[0], "id", 1);
+        fillDefectList(bugs[0], "is_open", false);
+        fillDefectList(bugs[0], "status", "RESOLVED");
         fillDefectList(bugs[1], "id", 2);
+        fillDefectList(bugs[1], "is_open", true);
+        fillDefectList(bugs[1], "status", "CONFIRMED");
         fillDefectList(bugs[2], "id", 3);
         fillDefectList(bugs[3], "id", 4);
     }
@@ -137,7 +141,7 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
             }
         }
 
-        if (method.equals("Bug.search")) {
+        if (method.equals("Bug.search") || method.equals("Bug.get")) {
             if (params[0] instanceof  Map<?,?>) {
                 return defectList;
             }
