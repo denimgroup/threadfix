@@ -110,7 +110,7 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
@@ -126,7 +126,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
@@ -256,11 +256,7 @@
         <jacoco.version>0.7.0.201403182114</jacoco.version>
 
         <!-- Code Coverage Properties -->
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-        <sonar.jacoco.ITreportPath>${project.basedir}/../target/jacocoIT.exec</sonar.jacoco.ITreportPath>
-        <sonar.language>java</sonar.language>
+        <!--<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>-->
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>

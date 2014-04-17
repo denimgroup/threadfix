@@ -147,33 +147,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>
-                    <execution>
-                        <configuration>
-                            <destFile>${sonar.jacoco.ITreportPath}</destFile>
-                            <append>true</append>
-                            <propertyName>failsafeArgLine</propertyName>
-                        </configuration>
-                        <id>default-prepare-agent-integration</id>
-                        <goals>
-                            <goal>prepare-agent-integration</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>it-report</id>
-                        <goals>
-                            <goal>report-integration</goal>
-                        </goals>
-                        <configuration>
-                            <dataFile>${sonar.jacoco.ITreportPath}</dataFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 		</plugins>
 
 		<resources>
@@ -500,19 +473,19 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>${jacoco.version}</version>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--<dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.agent</artifactId>
             <version>${jacoco.version}</version>
             <type>jar</type>
             <classifier>runtime</classifier>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.apache.tomcat.maven</groupId>
             <artifactId>tomcat7-maven-plugin</artifactId>
@@ -695,7 +668,7 @@
             </activation>
             <build>
                 <plugins>
-                    <!--<plugin>
+                    <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
                         <version>1.4.8</version>
@@ -706,6 +679,11 @@
                                     <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
                                 </zipUrlInstaller>
                             </container>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>-javaagent:${jacoco.agent.path}=destfile=${sonar.jacoco.itReportPath},includes=*</cargo.jvmargs>
+                                </properties>
+                            </configuration>
                         </configuration>
                         <executions>
                             <execution>
@@ -723,8 +701,8 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>-->
-                    <plugin>
+                    </plugin>
+                    <!--<plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
                         <version>${tomcat.version}</version>
@@ -751,7 +729,7 @@
                                 <phase>post-integration-test</phase>
                             </execution>
                         </executions>
-                    </plugin>
+                    </plugin>-->
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe.version}</version>
@@ -772,7 +750,6 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <argLine>${failsafeArgLine}</argLine>
                                     <includes>
                                         <include>**/*.class</include>
                                     </includes>
