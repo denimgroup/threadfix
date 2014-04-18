@@ -9,7 +9,7 @@
             <tr class="left-align">
                 <td>Defect Tracker</td>
                 <td class="inputValue">
-                    <select ng-model="object.defectTrackerId" id="defectTrackerTypeSelect" name="defectTrackerType.id">
+                    <select ng-model="object.defectTracker.id" id="defectTrackerTypeSelect" name="defectTrackerType.id">
                         <option ng-repeat="tracker in config.defectTrackerList"
                                 ng-selected="object.defectTracker.id === tracker.id"
                                 value="{{ tracker.id }}">
@@ -24,6 +24,7 @@
                 </td>
                 <td colspan="2" >
                     <errors name="defectTracker.id" cssClass="errors" />
+                    <span class="errors" ng-show="object.defectTracker_id_error"> {{ object.defectTracker_id_error }}</span>
                 </td>
             </tr>
             <tr class="left-align">
@@ -33,6 +34,7 @@
                 </td>
                 <td colspan="2" >
                     <errors name="userName" cssClass="errors" />
+                    <span class="errors" ng-show="object.userName_error"> {{ object.userName_error }}</span>
                 </td>
             </tr>
             <tr class="left-align">
@@ -42,6 +44,8 @@
                 </td>
                 <td colspan="2" >
                     <errors name="password" cssClass="errors" />
+                    <span class="errors" ng-show="form.password.$dirty && form.password.$error.maxlength">Maximum length is 50.</span>
+                    <span class="errors" ng-show="object.password_error"> {{ object.password_error }}</span>
                 </td>
             </tr>
             <tr>
@@ -55,6 +59,10 @@
                             {{ name }}
                         </option>
                     </select>
+                </td>
+                <td colspan="2" >
+                    <errors name="productName" cssClass="errors" />
+                    <span class="errors" ng-show="object.projectName_error"> {{ object.projectName_error }}</span>
                 </td>
             </tr>
         </table>

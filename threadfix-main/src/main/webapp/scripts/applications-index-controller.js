@@ -147,13 +147,16 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         var modalInstance = $modal.open({
             templateUrl: 'newApplicationModal.html',
-            controller: 'GenericModalController',
+            controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/organizations/" + team.id + "/modalAddApp");
                 },
                 object: function () {
                     return application;
+                },
+                config: function() {
+                    return {};
                 },
                 buttonText: function() {
                     return "Add Application";

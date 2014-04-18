@@ -24,7 +24,7 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
         });
 
         modalInstance.result.then(function (document) {
-            if (!$scope.documents) {
+            if (!$scope.documents || $scope.documents.length === 0) {
                 $scope.documents = [];
             }
             $scope.documents.push(document);

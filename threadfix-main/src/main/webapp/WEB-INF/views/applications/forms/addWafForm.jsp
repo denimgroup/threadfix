@@ -15,6 +15,7 @@
                         </option>
                     <select>
                     <button class="btn" id="addWafButtonInModal" ng-click="switchTo('createWaf')">Create New WAF</button>
+                    <span class="errors" ng-show="object.waf_id_error"> {{ object.waf_id_error }}</span>
                 </td>
             </tr>
         </table>

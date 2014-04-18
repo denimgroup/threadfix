@@ -38,6 +38,7 @@ import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -183,8 +184,6 @@ public class TeamDetailPageController {
             return RestResponse.failure("Permissions Failure");
         }
 
-
-
         Organization team = organizationService.loadOrganization(orgId);
 
         if (team == null) {
@@ -201,7 +200,7 @@ public class TeamDetailPageController {
         } else {
             model.addAttribute("organization", team);
 
-            return RestResponse.failure(submitResult);
+            return FormRestResponse.failure(submitResult, result);
         }
     }
 

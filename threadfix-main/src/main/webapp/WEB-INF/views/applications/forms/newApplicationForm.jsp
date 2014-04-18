@@ -14,13 +14,15 @@
                     <td>
                         <input focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                        <span class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
                     </td>
                 </tr>
                 <tr class="left-align">
                     <td>URL</td>
                     <td>
-                        <input type='url' name='url' ng-model="object.url"/>
-                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 200.</span>
+                        <input type='url' name='url' ng-model="object.url" ng-maxlength="255"/>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 255.</span>
+                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
                     </td>
                 </tr>
                 <tr class="left-align">
@@ -29,6 +31,7 @@
                         <input name="uniqueId" type='text' style="margin-bottom:0px;"
                                ng-model="object.uniqueId"
                                id="uniqueIdInput{{ object.team.id }}" size="50" maxlength="255"/>
+                        <span class="errors" ng-show="form.uniqueId.$dirty && form.uniqueId.$error.maxlength">Maximum length is 255.</span>
                     </td>
                 </tr>
                 <tr class="left-align">
@@ -49,6 +52,7 @@
                                 </option>
                             </c:forEach>
                         </select>
+                        <span class="errors" ng-show="object.applicationCriticality_id_error"> {{ object.applicationCriticality_id_error }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -68,25 +72,30 @@
                     <td class="left-align" >
                         <input name="repositoryUrl"
                                 type='url' id="repositoryUrl{{ object.team.id }}"
-                                maxlength="250" ng-model="object.repositoryUrl"/>
+                                maxlength="255" ng-model="object.repositoryUrl"/>
+                        <span class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.maxlength">Maximum length is 255.</span>
+                        <span class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Source Code Revision</td>
                     <td>
                         <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="250" name="repositoryBranch"/>
+                        <span class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 250.</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Source Code UserName</td>
                     <td>
                         <input type="text" id="repositoryUsername" ng-model="object.repositoryUserName" maxlength="250" name="repositoryUserName"/>
+                        <span class="errors" ng-show="form.repositoryUserName.$dirty && form.repositoryUserName.$error.maxlength">Maximum length is 250.</span>
                     </td>
                 </tr>
                 <tr>
                     <td>Source Code Password</td>
                     <td>
-                        <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
+                        <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" name="repositoryPassword"/>
+                        <span class="errors" ng-show="form.repositoryPassword.$dirty && form.repositoryPassword.$error.maxlength">Maximum length is 250.</span>
                     </td>
                 </tr>
                 <tr>
@@ -95,6 +104,8 @@
                         <input name="repositoryFolder"
                                 type='text' id="repositoryFolder{{ object.team.id }}"
                                 maxlength="250" ng-model="object.repositoryFolder"/>
+                        <span class="errors" ng-show="form.repositoryFolder.$dirty && form.repositoryFolder.$error.maxlength">Maximum length is 250.</span>
+                        <span class="errors" ng-show="object.repositoryFolder_error"> {{ object.repositoryFolder_error }}</span>
                     </td>
                 </tr>
             </table>

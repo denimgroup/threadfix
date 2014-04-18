@@ -60,17 +60,11 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
         });
 
         modalInstance.result.then(function (editedTeam) {
-
             if (editedTeam) {
-            $scope.applications.push(editedTeam);
-
-            $scope.applications.sort(nameCompare);
-
-            $scope.successMessage = "Successfully added application " + editedTeam.name;
+            $scope.successMessage = "Successfully edited team";
             } else {
                 $window.location.href = tfEncoder.encode("/organizations");
             }
-
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -91,13 +85,16 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
         var modalInstance = $modal.open({
             templateUrl: 'newApplicationModal.html',
-            controller: 'GenericModalController',
+            controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/organizations/" + $scope.team.id + "/modalAddApp");
                 },
                 object: function () {
                     return application;
+                },
+                config: function() {
+                    return {};
                 },
                 buttonText: function() {
                     return "Add Application";
@@ -107,6 +104,9 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
         modalInstance.result.then(function (newApplication) {
 
+            if (!$scope.applications || $scope.applications.length === 0) {
+                $scope.applications = [];
+            }
             $scope.applications.push(newApplication);
 
             $scope.applications.sort(nameCompare);

@@ -4,6 +4,7 @@
 	<title><c:out value="${ organization.name }"/></title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/team-detail-page-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
 <body ng-controller="TeamDetailPageController"

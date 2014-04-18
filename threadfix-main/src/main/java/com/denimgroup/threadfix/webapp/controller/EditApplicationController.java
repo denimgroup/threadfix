@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +104,11 @@ public class EditApplicationController {
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model,
 			HttpServletRequest request) throws IOException {
-		
+
+        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return writer.writeValueAsString(RestResponse.failure("You don't have permission."));
 		}
 		
 		Application databaseApplication = applicationService.loadApplication(appId);
@@ -130,8 +133,6 @@ public class EditApplicationController {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
 
-        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
-		
 		if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
@@ -145,7 +146,7 @@ public class EditApplicationController {
 				application.setDefectTracker(null);
 			}
 
-			return writer.writeValueAsString(RestResponse.failure(result.getAllErrors().toString()));
+			return writer.writeValueAsString(FormRestResponse.failure("Errors", result));
 
 		} else {
 			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
@@ -208,11 +209,11 @@ public class EditApplicationController {
 			}
 		} else {
 			result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
-            return RestResponse.failure("Unable to retrieve the application.");
+            return FormRestResponse.failure("Unable to retrieve the application.", result);
 		}
 		
 		if (result.hasErrors() || waf == null) {
-            return RestResponse.failure("Unable to add the WAF. Try again.");
+            return FormRestResponse.failure("Unable to add the WAF. Try again.", result);
 		} else {
 		    return RestResponse.success(waf);
         }
@@ -239,7 +240,7 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
-            return RestResponse.failure("Invalid data.");
+            return FormRestResponse.failure("Invalid data.", result);
 			
 		} else {
 

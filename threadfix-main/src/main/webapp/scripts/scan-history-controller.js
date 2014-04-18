@@ -9,6 +9,7 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
 
     // since we need the csrfToken to make the request, we need to wait until it's initialized
     $scope.$on('rootScopeInitialized', function() {
+        $scope.loading = true;
         $http.post(tfEncoder.encode("/scans/table/" + $scope.pageNumber)).
             success(function(data, status, headers, config) {
                 $scope.initialized = true;
@@ -20,9 +21,11 @@ myAppModule.controller('ScanHistoryController', function($scope, $log, $http, $w
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
                 }
+                $scope.loading = false;
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.loading = false;
             });
     });
 

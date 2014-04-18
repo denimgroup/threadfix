@@ -14,7 +14,7 @@
 		This page lists all of the scans that have been uploaded to ThreadFix.
 	</div>
 		
-	<div ng-controller="ScanHistoryController">
+	<div ng-controller="ScanHistoryController" ng-init="loading = true">
         <!-- TODO re-add pagination -->
 		<table class="table">
 			<thead>
@@ -33,9 +33,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-hide="scans" class="bodyRow">
+				<tr ng-show="loading" class="bodyRow">
 					<td colspan="10" style="text-align: center;">Loading Scans.</td>
 				</tr>
+                <tr ng-hide="loading || scans" class="bodyRow">
+                    <td colspan="10" style="text-align: center;">No Scans found.</td>
+                </tr>
                 <tr ng-show="scans" ng-repeat="scan in scans">
                     <td>{{ scan.importTime | date:'medium' }}</td>
                     <td>{{ scan.app.name }}</td>

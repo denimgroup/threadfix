@@ -134,9 +134,13 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit/wafAjax");
                 },
                 object: function () {
+                    var id = null;
+                    if ($scope.config.application.waf) {
+                        id = $scope.config.application.waf.id;
+                    }
                     return {
                         waf: {
-                            id: $scope.config.application.waf.id
+                            id: id
                         }
                     };
                 },
@@ -188,7 +192,11 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (waf) {
-            $scope.config.wafs.push(waf);
+//            $scope.config.wafs.push(waf);
+            if (!$scope.config.wafList || $scope.config.wafList.length === 0) {
+                $scope.config.wafList = [];
+            }
+            $scope.config.wafList.push(waf);
             $scope.config.application.waf = waf;
             $scope.successMessage = "Successfully created waf " + waf.name;
             $scope.showEditModal();
@@ -240,7 +248,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     $scope.showCreateDefectTrackerModal = function() {
         var modalInstance = $modal.open({
-            templateUrl: 'createDefectTrackerModal.html',
+            templateUrl: 'newTrackerModal.html',
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
