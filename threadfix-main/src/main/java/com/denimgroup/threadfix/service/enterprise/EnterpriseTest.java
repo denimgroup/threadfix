@@ -25,7 +25,7 @@
 package com.denimgroup.threadfix.service.enterprise;
 
 import com.denimgroup.threadfix.service.LdapService;
-import com.denimgroup.threadfix.service.LicenseReader;
+import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -41,17 +41,26 @@ public class EnterpriseTest extends SpringBeanAutowiringSupport {
     @Autowired(required = false)
     PermissionService permissionService;
 
+    @Autowired(required = false)
+    LicenseService licenseService;
+
     public static boolean isEnterprise() {
         EnterpriseTest enterpriseTest = new EnterpriseTest();
 
-        return enterpriseTest.ldapService != null && enterpriseTest.permissionService != null;
+        return enterpriseTest.ldapService != null && enterpriseTest.permissionService != null &&
+                enterpriseTest.licenseService != null;
     }
 
     public static boolean hasValidLicense() {
-        return LicenseReader.getLicenseInformation().isValid();
+
+        EnterpriseTest enterpriseTest = new EnterpriseTest();
+
+        return enterpriseTest.licenseService != null && enterpriseTest.licenseService.hasValidLicense();
     }
 
     public static boolean isLicenseExpired() {
-        return LicenseReader.isLicenseExpired();
+        EnterpriseTest enterpriseTest = new EnterpriseTest();
+
+        return enterpriseTest.licenseService == null || enterpriseTest.licenseService.isLicenseExpired();
     }
 }

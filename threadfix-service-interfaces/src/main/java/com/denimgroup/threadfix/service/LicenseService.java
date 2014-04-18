@@ -30,6 +30,10 @@ public interface LicenseService {
 
     boolean canAddApps();
 
+    boolean hasValidLicense();
+
+    boolean isLicenseExpired();
+
     int getAppLimit();
 
 }
