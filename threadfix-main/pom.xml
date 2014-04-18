@@ -484,9 +484,6 @@
 		<!-- ================= Database Profiles ================= -->
         <profile>
             <id>mysql</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -514,9 +511,6 @@
         </profile>
         <profile>
             <id>hsqldb</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -556,9 +550,6 @@
         <!-- Testing Profiles -->
         <profile>
             <id>int</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -583,9 +574,6 @@
         </profile>
         <profile>
             <id>deployTomcat</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>

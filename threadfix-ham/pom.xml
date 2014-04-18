@@ -36,9 +36,6 @@
     <profiles>
         <profile>
             <id>int</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
