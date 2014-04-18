@@ -383,12 +383,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit-dep</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
@@ -428,12 +422,6 @@
             <type>jar</type>
             <classifier>runtime</classifier>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.maven</groupId>
-            <artifactId>tomcat7-maven-plugin</artifactId>
-            <version>${tomcat.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.cargo</groupId>
@@ -491,10 +479,6 @@
             <version>${project.version}</version>
         </dependency>
 	</dependencies>
-
-    <properties>
-        <regression.category>RegressionTests</regression.category>
-    </properties>
 
 	<profiles>
 		<!-- ================= Database Profiles ================= -->
@@ -568,9 +552,6 @@
                     <version>${project.version}</version>
                 </dependency>
             </dependencies>
-            <properties>
-                <regression.category>EnterpriseTests</regression.category>
-            </properties>
         </profile>
         <!-- Testing Profiles -->
         <profile>
@@ -596,11 +577,17 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <configuration>
-                            <skipTests>false</skipTests>
-                            <groups>${regression.category}</groups>
-                        </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deployTomcat</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
@@ -627,37 +614,6 @@
                                 <goals>
                                     <goal>stop</goal>
                                 </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>deployTomcat</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <version>${tomcat.version}</version>
-                        <configuration>
-                            <path>/threadfix</path>
-                            <update>true</update>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>deploy</id>
-                                <goals>
-                                    <goal>run-war</goal>
-                                </goals>
-                                <phase>pre-integration-test</phase>
-                                <configuration>
-                                    <fork>true</fork>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

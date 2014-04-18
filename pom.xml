@@ -155,12 +155,46 @@
                 <module>threadfix-cli-endpoints</module>
                 <module>threadfix-cli-importers</module>
             </modules>
+            <properties>
+                <regression.category>EnterpriseTests</regression.category>
+            </properties>
         </profile>
         <profile>
             <id>int</id>
             <build>
                 <pluginManagement>
                     <plugins>
+                        <!-- Runs unit tests-->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>${maven-surefire.version}</version>
+                            <configuration>
+                                <skipTests>false</skipTests>
+                            </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.apache.maven.surefire</groupId>
+                                    <artifactId>surefire-junit47</artifactId>
+                                    <version>${surefire-junit47.version}</version>
+                                </dependency>
+                            </dependencies>
+                            <executions>
+                                <execution>
+                                    <id>default-test</id>
+                                    <phase>test</phase>
+                                    <goals>
+                                        <goal>test</goal>
+                                    </goals>
+                                    <configuration>
+                                        <includes>
+                                            <include>**/*Test.class</include>
+                                            <include>**/*Tests.class</include>
+                                        </includes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
                         <!-- Provides code coverage for unit tests-->
                         <plugin>
                             <groupId>org.jacoco</groupId>
@@ -189,34 +223,6 @@
                                 </execution>
                             </executions>
                         </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <version>${maven-surefire.version}</version>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>org.apache.maven.surefire</groupId>
-                                    <artifactId>surefire-junit47</artifactId>
-                                    <version>${surefire-junit47.version}</version>
-                                </dependency>
-                            </dependencies>
-                            <executions>
-                                <execution>
-                                    <id>default-test</id>
-                                    <phase>test</phase>
-                                    <goals>
-                                        <goal>test</goal>
-                                    </goals>
-                                    <configuration>
-                                        <skipTests>false</skipTests>
-                                        <includes>
-                                            <include>**/*Test.class</include>
-                                            <include>**/*Tests.class</include>
-                                        </includes>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
                     </plugins>
                 </pluginManagement>
             </build>
@@ -237,12 +243,16 @@
                                     <version>${surefire-junit47.version}</version>
                                 </dependency>
                             </dependencies>
+                            <configuration>
+                                <skipTests>false</skipTests>
+                            </configuration>
                             <executions>
                                 <execution>
                                     <goals>
                                         <goal>integration-test</goal>
                                     </goals>
                                     <configuration>
+                                        <groups>${regression.category}</groups>
                                         <includes>
                                             <include>**/*.class</include>
                                         </includes>
@@ -340,11 +350,11 @@
         <maven-surefire.version>2.17</maven-surefire.version>
         <maven-failsafe.version>2.17</maven-failsafe.version>
         <surefire-junit47.version>2.17</surefire-junit47.version>
-        <tomcat.version>2.2</tomcat.version>
         <jacoco.version>0.7.0.201403182114</jacoco.version>
 
-        <!-- Code Coverage Properties -->
+        <!-- Testing Properties -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <regression.category>RegressionTests</regression.category>
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>
