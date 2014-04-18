@@ -11,7 +11,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
     }
 
     var loadReports = function() {
-        threadfixAPIService.loadReport("/dashboard/leftReport" + $scope.reportQuery).
+        threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
@@ -31,7 +31,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
                 $scope.loadingLeft = false;
             });
 
-        threadfixAPIService.loadReport("/dashboard/rightReport" + $scope.reportQuery).
+        threadfixAPIService.loadReport("/dashboard/rightReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
                 // TODO figure out Jasper better, it's a terrible way to access the report images.
                 var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);

@@ -43,9 +43,16 @@
             <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ $index }}">{{ team.infoVulnCount }}</td>
             <td ng-click="toggle(team)"></td>
             <td>
-                <a id="addApplicationModalButton{{ $index }}" ng-click="openAppModal(team)" class="btn btn-default">
-                    Add Application
-                </a>
+                <c:if test="${ canAddApps}">
+                    <a id="addApplicationModalButton{{ $index }}" ng-click="openAppModal(team)" class="btn btn-default">
+                        Add Application
+                    </a>
+                </c:if>
+                <c:if test="${ not canAddApps }">
+                    <button class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
+                        Add Application
+                    </button>
+                </c:if>
             <td>
                 <a style="text-decoration:none" id="organizationLink{{ $index }}" ng-click="goTo(team)">View Team</a>
             </td>

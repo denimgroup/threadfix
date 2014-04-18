@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.ScanService;
+import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -77,6 +78,8 @@ public class ApplicationsIndexController {
     private ScanService scanService;
     @Autowired
     private ScanMergeService scanMergeService;
+    @Autowired(required = false)
+    private LicenseService licenseService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -84,6 +87,13 @@ public class ApplicationsIndexController {
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
         model.addAttribute("applicationTypes", FrameworkType.values());
+
+        if (licenseService != null) {
+            model.addAttribute("canAddApps", licenseService.canAddApps());
+            model.addAttribute("appLimit", licenseService.getAppLimit());
+        } else {
+            model.addAttribute("canAddApps", true);
+        }
 		return "organizations/index";
 	}
 

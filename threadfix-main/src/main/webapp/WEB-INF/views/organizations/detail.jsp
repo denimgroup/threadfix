@@ -63,9 +63,16 @@
     <h3 style="padding-top:5px;">Applications</h3>
     <c:if test="${ canManageApplications }">
         <div style="margin-top:10px;margin-bottom:7px;">
-            <button class="btn" id="addApplicationModalButton${ organization.id }" ng-click="openAppModal()">
-                Add Application
-            </button>
+            <c:if test="${ canAddApps}">
+                <button class="btn" id="addApplicationModalButton${ organization.id }" ng-click="openAppModal()">
+                    Add Application
+                </button>
+            </c:if>
+            <c:if test="${ not canAddApps }">
+                <button class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
+                    Add Application
+                </button>
+            </c:if>
         </div>
     </c:if>
 
@@ -89,7 +96,7 @@
             </tr>
             <tr ng-show="applications"
                 ng-repeat="app in applications" class="bodyRow">
-                <td class="pointer" ng-click="goToPage(app)" style="max-width:200px;" class="ellipsis" id="appName{{ $index }}">
+                <td class="pointer ellipsis" ng-click="goToPage(app)" style="max-width:200px;" id="appName{{ $index }}">
                     <a id="appLink{{ $index }}"> {{ app.name }} </a>
                 </td>
                 <td class="ellipsis" style="max-width:200px;" id="appUrl{{ $index }}"> {{ app.url }} </td>

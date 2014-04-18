@@ -128,6 +128,10 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         });
     }
 
+    $scope.showAppLimitMessage = function(number) {
+        alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
+    }
+
     $scope.openAppModal = function (team) {
 
         var application = {

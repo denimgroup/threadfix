@@ -35,10 +35,10 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
         });
     };
 
-    threadfixAPIService.loadReport = function(url) {
+    threadfixAPIService.loadReport = function(url, query) {
         return $http({
             method: 'GET',
-            url: tfEncoder.encode(url)
+            url: tfEncoder.encode(url) + query
         });
     };
 

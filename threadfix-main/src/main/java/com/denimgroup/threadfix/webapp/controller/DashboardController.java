@@ -135,8 +135,9 @@ public class DashboardController {
 				log.warn("Non-numeric string was passed to DashboardController", e); // should never happen
 			}
 		} else {
-			log.warn("Non-numeric string was passed to DashboardController");
+			log.warn("Non-numeric string was passed to DashboardController: " + string);
 		}
+        assert false : "Non-integer values indicate a coding error: " + string;
 		return -1;
 	}
 

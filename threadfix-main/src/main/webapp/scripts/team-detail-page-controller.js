@@ -15,8 +15,12 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.teamId  = $window.location.pathname.match(/([0-9]+)$/)[0];
 
+    $scope.showAppLimitMessage = function(number) {
+        alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
+    }
+
     $scope.$on('rootScopeInitialized', function() {
-        $scope.reportQuery = $rootScope.csrfToken + "&orgId=" + $scope.teamId;
+        $scope.reportQuery = "&orgId=" + $scope.teamId;
         $http.get(tfEncoder.encodeRelative($scope.teamId + "/info")).
             success(function(data, status, headers, config) {
                 if (data.success) {

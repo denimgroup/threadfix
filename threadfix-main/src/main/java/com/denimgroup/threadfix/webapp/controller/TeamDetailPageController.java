@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -79,6 +80,8 @@ public class TeamDetailPageController {
     private ApplicationCriticalityService applicationCriticalityService;
     @Autowired
     private UserService userService;
+    @Autowired(required = false)
+    private LicenseService licenseService;
 
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView detail(@PathVariable("orgId") int orgId,
@@ -104,6 +107,14 @@ public class TeamDetailPageController {
                     Permission.CAN_MANAGE_USERS);
             mav.addObject("apps", apps);
             mav.addObject(organization);
+
+            if (licenseService != null) {
+                mav.addObject("canAddApps", licenseService.canAddApps());
+                mav.addObject("appLimit", licenseService.getAppLimit());
+            } else {
+                mav.addObject("canAddApps", true);
+            }
+
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());
             mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
@@ -171,6 +182,8 @@ public class TeamDetailPageController {
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
             return RestResponse.failure("Permissions Failure");
         }
+
+
 
         Organization team = organizationService.loadOrganization(orgId);
 

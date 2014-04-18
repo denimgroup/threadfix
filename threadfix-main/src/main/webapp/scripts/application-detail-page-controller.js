@@ -24,7 +24,7 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
 
 
     $scope.$on('rootScopeInitialized', function() {
-        $scope.reportQuery = $rootScope.csrfToken + "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
+        $scope.reportQuery = "&appId=" + $scope.appId + "&orgId=" + $scope.teamId;
     });
 
     $scope.rightReportTitle = "Top 10 Vulnerabilities";

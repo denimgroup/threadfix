@@ -25,11 +25,10 @@
 package com.denimgroup.threadfix.service.enterprise;
 
 import com.denimgroup.threadfix.service.LdapService;
+import com.denimgroup.threadfix.service.LicenseReader;
 import com.denimgroup.threadfix.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import java.io.InputStream;
 
 public class EnterpriseTest extends SpringBeanAutowiringSupport {
 

@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.enterprise;
+package com.denimgroup.threadfix.service;
 
 /**
  * Created by mac on 4/17/14.
