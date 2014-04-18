@@ -348,7 +348,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
                 },
                 config: function() {
                     return {
-                        vulns: filteredVulns
+                        vulns: filteredVulns,
+                        typeName: $scope.application.defectTracker.defectTrackerType.name
                     }
                 }
             }

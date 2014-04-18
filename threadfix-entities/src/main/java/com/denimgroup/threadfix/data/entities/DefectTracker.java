@@ -74,7 +74,8 @@ public class DefectTracker extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "defectTrackerTypeId")
-	public DefectTrackerType getDefectTrackerType() {
+    @JsonView(Object.class)
+    public DefectTrackerType getDefectTrackerType() {
 		return defectTrackerType;
 	}
 
