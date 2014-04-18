@@ -15,7 +15,7 @@
     <%@ include file="/WEB-INF/views/organizations/editTeamForm.jsp" %>
 
     <ul class="breadcrumb">
-        <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
+        <li><a href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
         <li class="active">Team: {{ team.name }}</li>
     </ul>
     <h2 id="name" style="padding-top:5px;">
