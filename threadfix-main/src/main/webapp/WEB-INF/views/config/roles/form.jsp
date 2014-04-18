@@ -1,4 +1,4 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="editRoleModal.html">
 
 <div class="modal-header">
 	<h4 id="myModalLabel">
@@ -292,3 +292,4 @@
 	</div>
 </form:form>
 
+</script>

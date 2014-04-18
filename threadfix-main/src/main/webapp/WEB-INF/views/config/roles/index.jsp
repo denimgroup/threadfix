@@ -2,28 +2,25 @@
 
 <head>
 	<title>Manage Roles</title>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/roles-page-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
-<body>
+<body ng-controller="RolesPageController">
 	<h2>Manage Roles</h2>
 
-	<c:if test="${ not empty error }">
-		<span class="errors"><c:out value="${ error }" /></span>
-	</c:if>
+    <%@ include file="/WEB-INF/views/config/roles/form.jsp" %>
+    <%@ include file="/WEB-INF/views/config/roles/newForm.jsp" %>
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-	<div id="helpText">
+    <div id="helpText">
 		ThreadFix Roles determine functional capabilities for associated users.<br/>
 	</div>
 	
-	<a id="createRoleModalLink" href="#createRoleModal" role="button" class="btn" data-toggle="modal">Create New Role</a>
+	<a id="createRoleModalLink" class="btn" ng-click="openNewRoleModal()">Create New Role</a>
 	
 	<div id="tableDiv">
 		<%@ include file="/WEB-INF/views/config/roles/rolesTable.jsp" %>
 	</div>
 		
-	<div id="createRoleModal" class="modal hide fade" tabindex="-1"
-			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<%@ include file="/WEB-INF/views/config/roles/newForm.jsp" %>
-	</div>
-	
 </body>

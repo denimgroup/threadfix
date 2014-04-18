@@ -1,24 +1,20 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="newRoleModal.html">
 
-<spring:url value="/configuration/roles/new" var="saveUrl"></spring:url>
-<form:form id="newRoleForm" modelAttribute="role" method="post"
-		action="${fn:escapeXml(saveUrl) }">
 	<div class="modal-header">
 		<h4 id="myModalLabel">New Role</h4>
 	</div>
 	
-	<div class="modal-body" id="newRoleModalBody">
+	<div class="modal-body" id="newRoleModalBody" ng-form="form">
 		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 
-	
+		{{ object | json }}
+
 		<table class="dataTable">
 			<tbody>
 				<tr>
 					<td>Name</td>
-					<td class="inputValue"><form:input path="displayName"
-							size="70" maxlength="255" value="${ displayName }" /></td>
-					<td style="padding-left: 5px"><form:errors path="displayName"
-							cssClass="errors" /></td>
+					<td class="inputValue"><input type="text" name="displayName" focus-on="focusInput" ng-model="object.displayName"
+                                                  size="70" maxlength="255" value="${ displayName }" /></td>
 				</tr>
 			</tbody>
 		</table>
@@ -35,217 +31,185 @@
 			<tbody>
 				<tr>
 					<td>Generate Reports</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateReportsTrue" path="canGenerateReports"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canGenerateReportsTrue" name="canGenerateReports" ng-model="object.canGenerateReports"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateReportsFalse" path="canGenerateReports"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canGenerateReportsFalse" name="canGenerateReports" ng-model="object.canGenerateReports"
 							value="false" /></td>
-					<td
-						style="border: 0px solid black; background-color: white; padding-left: 5px">
+					<td style="border: 0 solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canGenerateReportsError"
-							path="canGenerateReports" cssClass="errors" />
+							name="canGenerateReports" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Generate WAF Rules</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateWafRulesTrue" path="canGenerateWafRules"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canGenerateWafRulesTrue" name="canGenerateWafRules" ng-model="object.canGenerateWafRules"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canGenerateWafRulesFalse" path="canGenerateWafRules"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canGenerateWafRulesFalse" name="canGenerateWafRules" ng-model="object.canGenerateWafRules"
 							value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canGenerateWafRulesError"
-							path="canGenerateWafRules" cssClass="errors" />
+							name="canGenerateWafRules" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage API Keys</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApiKeysTrue" path="canManageApiKeys" value="true" />
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageApiKeys"
+							id="canManageApiKeysTrue" name="canManageApiKeys" value="true" />
 					</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApiKeysFalse" path="canManageApiKeys" value="false" />
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageApiKeys"
+							id="canManageApiKeysFalse" name="canManageApiKeys" value="false" />
 					</td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageApiKeysError" path="canManageApiKeys"
+						<form:errors id="canManageApiKeysError" name="canManageApiKeys"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage Applications</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApplicationsTrue" path="canManageApplications"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageApplicationsTrue" name="canManageApplications" ng-model="object.canManageApplications"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageApplicationsFalse" path="canManageApplications"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageApplicationsFalse" name="canManageApplications" ng-model="object.canManageApplications"
 							value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canManageApplicationsError"
-							path="canManageApplications" cssClass="errors" />
+							name="canManageApplications" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage Defect Trackers</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageDefectTrackersTrue" path="canManageDefectTrackers"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageDefectTrackersTrue" name="canManageDefectTrackers" ng-model="object.canManageDefectTrackers"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageDefectTrackersFalse" path="canManageDefectTrackers"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageDefectTrackersFalse" name="canManageDefectTrackers" ng-model="object.canManageDefectTrackers"
 							value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canManageDefectTrackersError"
-							path="canManageDefectTrackers" cssClass="errors" />
+							name="canManageDefectTrackers" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage Remote Providers</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRemoteProvidersTrue" path="canManageRemoteProviders"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageRemoteProvidersTrue" name="canManageRemoteProviders" ng-model="object.canManageRemoteProviders"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRemoteProvidersFalse"
-							path="canManageRemoteProviders" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageRemoteProvidersFalse" ng-model="object.canManageRemoteProviders"
+							name="canManageRemoteProviders" value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canManageRemoteProvidersError"
-							path="canManageRemoteProviders" cssClass="errors" />
+							name="canManageRemoteProviders" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage Roles</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRolesTrue" path="canManageRoles" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageRolesFalse" path="canManageRoles" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageRoles"
+							id="canManageRolesTrue" name="canManageRoles" value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageRoles"
+							id="canManageRolesFalse" name="canManageRoles" value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageRolesError" path="canManageRoles"
+						<form:errors id="canManageRolesError" name="canManageRoles"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage Teams</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageTeamsTrue" path="canManageTeams" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageTeamsFalse" path="canManageTeams" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTeams"
+							id="canManageTeamsTrue" name="canManageTeams" value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTeams"
+							id="canManageTeamsFalse" name="canManageTeams" value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageTeamsError" path="canManageTeams"
+						<form:errors id="canManageTeamsError" name="canManageTeams"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage Users</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageUsersTrue" path="canManageUsers" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageUsersFalse" path="canManageUsers" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageUsers"
+							id="canManageUsersTrue" name="canManageUsers" value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageUsers"
+							id="canManageUsersFalse" name="canManageUsers" value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageUsersError" path="canManageUsers"
+						<form:errors id="canManageUsersError" name="canManageUsers"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Manage WAFs</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageWafsTrue" path="canManageWafs" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canManageWafsFalse" path="canManageWafs" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageWafs"
+							id="canManageWafsTrue" name="canManageWafs" value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageWafs"
+							id="canManageWafsFalse" name="canManageWafs" value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canManageWafsError" path="canManageWafs"
+						<form:errors id="canManageWafsError" name="canManageWafs"
 							cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Modify Vulnerabilities</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canModifyVulnerabilitiesTrue" path="canModifyVulnerabilities"
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canModifyVulnerabilities"
+							id="canModifyVulnerabilitiesTrue" name="canModifyVulnerabilities"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canModifyVulnerabilitiesFalse"
-							path="canModifyVulnerabilities" value="false" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canModifyVulnerabilitiesFalse" ng-model="object.canModifyVulnerabilities"
+							name="canModifyVulnerabilities" value="false" /></td>
 					<td
 						style="border: 0px solid black; background-color: white; padding-left: 5px">
 						<form:errors id="canModifyVulnerabilitiesError"
-							path="canModifyVulnerabilities" cssClass="errors" />
+							name="canModifyVulnerabilities" cssClass="errors" />
 					</td>
 				</tr>
 				<tr>
 					<td>Submit Defects</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canSubmitDefectsTrue" path="canSubmitDefects" value="true" />
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canSubmitDefects"
+							id="canSubmitDefectsTrue" name="canSubmitDefects" value="true" />
 					</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canSubmitDefectsFalse" path="canSubmitDefects" value="false" />
-					</td>
-					<td
-						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canSubmitDefectsError" path="canSubmitDefects"
-							cssClass="errors" />
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canSubmitDefects"
+							id="canSubmitDefectsFalse" name="canSubmitDefects" value="false" />
 					</td>
 				</tr>
 				<tr>
 					<td>Upload Scans</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canUploadScansTrue" path="canUploadScans" value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canUploadScansFalse" path="canUploadScans" value="false" /></td>
-					<td
-						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canUploadScansError" path="canUploadScans"
-							cssClass="errors" />
-					</td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canUploadScans"
+							id="canUploadScansTrue" name="canUploadScans" value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canUploadScans"
+							id="canUploadScansFalse" name="canUploadScans" value="false" /></td>
 				</tr>
 				<tr>
 					<td>View Error Logs</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewErrorLogsTrue" path="canViewErrorLogs" value="true" />
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canViewErrorLogs"
+							id="canViewErrorLogsTrue" name="canViewErrorLogs" value="true" />
 					</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewErrorLogsFalse" path="canViewErrorLogs" value="false" />
-					</td>
-					<td
-						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canViewErrorLogsError" path="canViewErrorLogs"
-							cssClass="errors" />
+					<td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canViewErrorLogs"
+							id="canViewErrorLogsFalse" name="canViewErrorLogs" value="false" />
 					</td>
 				</tr>
 				<tr>
 					<td>View Job Statuses</td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewJobStatusesTrue" path="canViewJobStatuses"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canViewJobStatusesTrue" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"
 							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><form:radiobutton
-							id="canViewJobStatusesFalse" path="canViewJobStatuses"
+					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canViewJobStatusesFalse" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"
 							value="false" /></td>
-					<td
-						style="border: 0px solid black; background-color: white; padding-left: 5px">
-						<form:errors id="canViewJobStatusesError"
-							path="canViewJobStatuses" cssClass="errors" />
-					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="newRoleFormSubmitButton" class="modalSubmit btn btn-primary" data-success-div="tableDiv">Save Role</a>
-	</div>
-	<script>
-		$("#newRoleModalBody").keypress(function(e){
-		    if (e.which == 13){
-		        $("#newRoleFormSubmitButton").click();
-		    }
-		});
-	</script>
-</form:form>
-		
+    <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
+</script>
