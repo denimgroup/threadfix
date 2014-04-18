@@ -4,6 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.denimgroup.threadfix</groupId>
+        <artifactId>master-pom</artifactId>
+        <version>2.0FINAL-SNAPSHOT</version>
+    </parent>
+
     <artifactId>threadfix-entities</artifactId>
     <description>This module contains domain classes used by all of the other modules.</description>
 
@@ -12,7 +18,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -20,12 +25,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <parent>
-        <groupId>com.denimgroup.threadfix</groupId>
-        <artifactId>master-pom</artifactId>
-        <version>2.0FINAL-SNAPSHOT</version>
-    </parent>
 
     <dependencies>
         <dependency>
