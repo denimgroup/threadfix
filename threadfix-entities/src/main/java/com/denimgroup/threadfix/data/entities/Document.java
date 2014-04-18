@@ -110,6 +110,7 @@ public class Document extends AuditableEntity {
 		this.contentType = contentType;
 	}
 
+    @JsonIgnore
 	public Blob getFile() {
 		return file;
 	}
