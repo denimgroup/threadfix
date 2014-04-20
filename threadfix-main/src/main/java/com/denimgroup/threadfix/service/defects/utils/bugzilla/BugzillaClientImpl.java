@@ -71,7 +71,6 @@ public class BugzillaClientImpl implements BugzillaClient {
 
     @Override
     public ConnectionStatus configure(String url, String username, String password) {
-
         assert url != null;
 
         if (lastStatus == ConnectionStatus.VALID && url.equals(this.url) &&
@@ -127,6 +126,7 @@ public class BugzillaClientImpl implements BugzillaClient {
         if (client == null) {
             client = initializeClient();
             String loginResponse = login(client);
+            LOG.info(loginResponse);
             if (loginResponse == null) {
                 return null;
             }
@@ -160,6 +160,7 @@ public class BugzillaClientImpl implements BugzillaClient {
         loginArray[0] = loginMap;
 
         Object loginResult;
+
         try {
             loginResult = client.execute("User.login", loginArray);
         } catch (IllegalArgumentException e2) {

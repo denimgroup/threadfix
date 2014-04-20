@@ -1,4 +1,8 @@
 target
+threadfix-ide-plugin/intellij/intellij.zip
+database
+threadfix-main/src/main/resources/threadfix.license
+
 threadfix-scanagent/threadfix.log
 bin
 *.DS_Store

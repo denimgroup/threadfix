@@ -21,24 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.defects.util;
+package com.denimgroup.threadfix.service.enterprise;
 
 /**
- * Created by mac on 4/4/14.
+ * Created by mac on 4/17/14.
  */
-public interface TestConstants {
+public interface LicenseService {
 
-    static final String
-            JIRA_USERNAME = "threadfix",
-            JIRA_BASE_URL = "http://test.atlassian.net",
-            JIRA_PASSWORD = "password",
-            JIRA_PROJECT = "ThreadFixProject",
-            BUGZILLA_USERNAME = "threadfix@denimgroup.com",
-            BUGZILLA_PASSWORD = "password",
-            BUGZILLA_BASE_URL = "http://192.168.0.1/bugzilla",
-            BUGZILLA_PROJECT = "For ThreadFix",
-            TFS_USERNAME = "tfsuser",
-            TFS_PASSWORD = "password",
-            TFS_BASE_URL = "https://tfs.test.com:8080",
-            TFS_PROJECT = "ThreadFixProject";
+    boolean canAddApps();
+
+    int getAppLimit();
+
 }

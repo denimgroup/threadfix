@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.enterprise.LicenseService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -75,6 +76,8 @@ public class OrganizationsController {
 	private ChannelTypeService channelTypeService;
     @Autowired
 	private UserService userService;
+    @Autowired
+    private LicenseService licenseService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -139,6 +142,10 @@ public class OrganizationsController {
 			applicationService.generateVulnerabilityReports(organization);
 			mav.addObject("apps", apps);
 			mav.addObject(organization);
+
+            mav.addObject("canAddApps", licenseService.canAddApps());
+            mav.addObject("appLimit", licenseService.getAppLimit());
+
 			mav.addObject("application", new Application());
 			mav.addObject("applicationTypes", FrameworkType.values());
 			mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
@@ -173,6 +180,8 @@ public class OrganizationsController {
 	@RequestMapping("/teamTable")
 	public String teamTable(Model model, HttpServletRequest request) {
 		addModelObjects(model);
+        model.addAttribute("canAddApps", licenseService.canAddApps());
+        model.addAttribute("appLimit", licenseService.getAppLimit());
 		model.addAttribute("applicationTypes", FrameworkType.values());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("contentPage", "organizations/indexTeamTable.jsp");
@@ -203,7 +212,7 @@ public class OrganizationsController {
 			return "redirect:/organizations";
 		}
 	}
-	
+
 	@RequestMapping(value="/{orgId}/modalAddApp", method = RequestMethod.POST)
 	public String submitAppFromDetailPage(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application, BindingResult result,
@@ -211,7 +220,11 @@ public class OrganizationsController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
-		
+
+		if (!licenseService.canAddApps()) {
+            return "403";
+        }
+
 		Organization team = organizationService.loadOrganization(orgId);
 		
 		if (team == null) {

@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;

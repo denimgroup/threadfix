@@ -102,7 +102,12 @@
 	<h3 style="padding-top:5px;">Applications</h3>
 	<c:if test="${ canManageApplications }">
 		<div style="margin-top:10px;margin-bottom:7px;">
-			<a id="addApplicationModalButton" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
+            <c:if test="${ canAddApps }">
+			    <a id="addApplicationModalButton" href="#myAppModal${ organization.id }" role="button" class="btn" data-toggle="modal">Add Application</a>
+            </c:if>
+            <c:if test="${ not canAddApps }">
+                <a id="addApplicationModalButton" href="javascript:alert('You have reached the application limit of <c:out value="${ appLimit }"/> for your current license. To upgrade your license, please contact Denim Group.');" class="btn">Add Application</a>
+            </c:if>
 		</div>
 		<div id="myAppModal${ organization.id }" class="modal hide fade" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

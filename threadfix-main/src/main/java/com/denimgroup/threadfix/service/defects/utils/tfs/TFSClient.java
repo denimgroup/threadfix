@@ -21,27 +21,37 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service.defects.utils.tfs;
 
-package com.denimgroup.threadfix.service;
+import com.denimgroup.threadfix.service.defects.DefectMetadata;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import java.util.List;
+import java.util.Map;
 
-public class EnterpriseTest extends SpringBeanAutowiringSupport {
+/**
+ * Created by mac on 4/8/14.
+ */
+public interface TFSClient {
 
-    public static final String ENTERPRISE_FEATURE_ERROR =
-            "This feature is not enabled in the community edition of ThreadFix.";
+    // Passing two maps and using mutable state is gross but we don't have to define an object
+    void updateDefectIdMaps(String ids, Map<String, String> stringStatusMap, Map<String, Boolean> openStatusMap);
 
+    List<String> getPriorities();
 
-    @Autowired(required = false)
-    LdapService ldapService;
+    List<String> getDefectIds(String projectName);
 
-    @Autowired(required = false)
-    PermissionService permissionService;
-
-    public static boolean isEnterprise() {
-        EnterpriseTest enterpriseTest = new EnterpriseTest();
-
-        return enterpriseTest.ldapService != null && enterpriseTest.permissionService != null;
+    enum ConnectionStatus {
+        VALID, INVALID, INVALID_CERTIFICATE
     }
+
+    List<String> getProjectNames();
+
+    String getProjectId(String projectName);
+
+    ConnectionStatus configure(String url, String user, String password);
+
+    ConnectionStatus checkUrl(String url);
+
+    String createDefect(String projectName, DefectMetadata metadata, String description);
+
 }

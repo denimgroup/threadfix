@@ -58,7 +58,7 @@ public class JiraTests implements TestConstants {
         tracker.setUrl(JIRA_BASE_URL);
         tracker.setUsername(JIRA_USERNAME);
         tracker.setPassword(JIRA_PASSWORD);
-        tracker.setProjectName(JIRA_VALID_PROJECT);
+        tracker.setProjectName(JIRA_PROJECT);
 
         return tracker;
     }
@@ -101,6 +101,17 @@ public class JiraTests implements TestConstants {
         jiraTracker.setPassword(JIRA_PASSWORD);
 
         assertTrue("Credentials were supposed to be valid.", jiraTracker.hasValidCredentials());
+    }
+
+    @Test
+    public void testHasInvalidCredentials() {
+        AbstractDefectTracker jiraTracker = getTracker();
+
+        jiraTracker.setUrl("http://fakeurl.com");
+        jiraTracker.setUsername("usernameWrong");
+        jiraTracker.setPassword("passwordWrong");
+
+        assertTrue("Credentials were supposed to be valid.", !jiraTracker.hasValidCredentials());
     }
 
     @Test

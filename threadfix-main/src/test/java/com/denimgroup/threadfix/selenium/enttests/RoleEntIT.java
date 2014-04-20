@@ -94,6 +94,25 @@ public class RoleEntIT extends BaseIT {
 
 	}
 
+    @Test
+    public void testEditRoleNameLength() {
+        String roleNameLong = "rolename" + getRandomString(25);
+        String roleNameShort = "RolenameShort";
+
+        rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleNameShort, null)
+                .clickSaveRole(null);
+
+        rolesIndexPage.clickEditLink(roleNameShort)
+                .setRoleName(roleNameLong, roleNameShort)
+                .clickSaveRole(roleNameShort);
+
+        assertTrue("Name length error did not show.",
+                rolesIndexPage.getNameError().contains("This field has a maximum length of 25"));
+    }
+
 	@Test
 	public void testCreateRoleValidation() {
 		String emptyName = "";
