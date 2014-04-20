@@ -580,7 +580,7 @@
                                     <goal>replace</goal>
                                 </goals>
                                 <configuration>
-                                    <file>target/${project.artifactId}/WEB-INF/classes/jdbc.properties</file>
+                                    <file>target/classes/jdbc.properties</file>
                                     <replacements>
                                         <replacement>
                                             <token>update</token>
