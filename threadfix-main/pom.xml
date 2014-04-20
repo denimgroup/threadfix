@@ -569,6 +569,28 @@
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                     </plugin>
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>1.5.3</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>target/${project.artifactId}/WEB-INF/classes/jdbc.properties</file>
+                                    <replacements>
+                                        <replacement>
+                                            <token>update</token>
+                                            <value>create</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
