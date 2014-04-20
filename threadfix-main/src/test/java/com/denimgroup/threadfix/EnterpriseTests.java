@@ -1,3 +1,3 @@
-package com.denimgroup.threadfix.selenium;
+package com.denimgroup.threadfix;
 
 public interface EnterpriseTests extends RegressionTests{}

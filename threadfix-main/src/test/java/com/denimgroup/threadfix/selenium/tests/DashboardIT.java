@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.selenium.RegressionTests;
+import com.denimgroup.threadfix.RegressionTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;

@@ -24,10 +24,10 @@
 
 package com.denimgroup.threadfix.webservices.tests;
 
+import com.denimgroup.threadfix.WebServiceTests;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
-import com.denimgroup.threadfix.selenium.RegressionTests;
 import com.denimgroup.threadfix.webapp.controller.rest.ApplicationRestController;
 import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 import com.denimgroup.threadfix.webapp.controller.rest.TeamRestController;
@@ -45,7 +45,7 @@ import static org.junit.Assert.assertTrue;
  * @author mcollins
  * 
  */
-@Category(RegressionTests.class)
+@Category(WebServiceTests.class)
 public class RestApplicationIT extends BaseRestIT {
 
 	String[] channels = { ScannerType.APPSCAN_DYNAMIC.getFullName(), 

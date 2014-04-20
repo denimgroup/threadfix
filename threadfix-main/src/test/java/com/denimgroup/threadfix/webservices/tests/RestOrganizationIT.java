@@ -24,9 +24,9 @@
 
 package com.denimgroup.threadfix.webservices.tests;
 
+import com.denimgroup.threadfix.WebServiceTests;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
-import com.denimgroup.threadfix.selenium.RegressionTests;
 import com.denimgroup.threadfix.webapp.controller.rest.RestController;
 import com.denimgroup.threadfix.webapp.controller.rest.TeamRestController;
 import org.json.JSONArray;
@@ -43,7 +43,7 @@ import static org.junit.Assert.assertTrue;
  * @author mcollins
  *
  */
-@Category(RegressionTests.class)
+@Category(WebServiceTests.class)
 public class RestOrganizationIT extends BaseRestIT {
 	
 	@Test

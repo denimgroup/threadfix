@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.selenium.RegressionTests;
+import com.denimgroup.threadfix.RegressionTests;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 

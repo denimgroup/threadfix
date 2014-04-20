@@ -141,7 +141,7 @@
                 <module>threadfix-scanagent</module>
             </modules>
             <properties>
-                <regression.category>com.denimgroup.threadfix.selenium.EnterpriseTests</regression.category>
+                <regression.category>com.denimgroup.threadfix.EnterpriseTests</regression.category>
             </properties>
         </profile>
         <profile>
@@ -339,7 +339,7 @@
 
         <!-- Testing Properties -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-        <regression.category>com.denimgroup.threadfix.selenium.RegressionTests</regression.category>
+        <regression.category>com.denimgroup.threadfix.RegressionTests</regression.category>
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>
