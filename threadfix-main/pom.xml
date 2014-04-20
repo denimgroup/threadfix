@@ -580,7 +580,7 @@
                                     <goal>replace</goal>
                                 </goals>
                                 <configuration>
-                                    <file>${build.outputDirectory}/classes/jdbc.properties</file>
+                                    <file>${build.outputDirectory}/jdbc.properties</file>
                                     <replacements>
                                         <replacement>
                                             <token>update</token>
