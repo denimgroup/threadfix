@@ -12,7 +12,7 @@
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular-file-upload-shim.min.js"></script>
 
-    <script data-require="angular.js@*" data-semver="1.2.12" src="http://code.angularjs.org/1.2.12/angular.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular.min.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ui-bootstrap-tpls-0.10.0.min.js"></script>
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular-file-upload.min.js"></script>
