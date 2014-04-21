@@ -8,7 +8,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta http-equiv="X-FRAME-OPTIONS" content="DENY"/>
 	<title>ThreadFix</title>
-    <script data-require="angular.js@*" data-semver="1.2.12" src="http://code.angularjs.org/1.2.12/angular.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular.min.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/login-controller.js"></script>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/login.css"/>
 </head>
