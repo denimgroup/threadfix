@@ -2,7 +2,7 @@
     <div class="modal-header">
         <h4 id="myModalLabel">Edit Role {{ object.displayName }}
             <span class="delete-span">
-				<a class="btn btn-danger header-button" id="deleteLink" ng-click="showDeleteDialog('Role')">
+				<a class="btn btn-danger header-button" id="deleteLink" ng-click="showDeleteDialog(object)">
                     Delete
                 </a>
 			</span>
@@ -19,6 +19,10 @@
                 <td class="inputValue"><input type="text" name="displayName" focus-on="focusInput" ng-model="object.displayName"
                                               size="70" maxlength="255" value="${ displayName }" /></td>
             </tr>
+            <tr>
+                <td><a class="btn" ng-click="setAll('true')">Select All</a></td>
+                <td style="text-align:left; padding-left:10px;"><a class="btn" ng-click="setAll('false')">Select None</a></td>
+            </tr>
         </tbody>
     </table>
 
@@ -27,7 +31,7 @@
         <tr>
             <th class="long first">Permission</th>
             <th class="short" style="text-align: center;">Yes</th>
-            <th class="short last">No</th>
+            <th class="short last"" style="text-align: center;">No</th>
         </tr>
         </thead>
         <tbody>

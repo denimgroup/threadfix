@@ -8,7 +8,7 @@
                     <spring:param name="keyId" value="${ key.id }" />
                 </spring:url>
                 <a id="deleteButton"
-                        ng-click="showDeleteDialog('API Key')"
+                        ng-click="showDeleteDialog(object)"
                         class="apiKeyDeleteButton btn btn-danger header-button"
                         type="submit">Delete</a>
             </span>

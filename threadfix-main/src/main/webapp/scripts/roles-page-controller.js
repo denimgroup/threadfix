@@ -30,7 +30,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
 
         var modalInstance = $modal.open({
             templateUrl: 'newRoleModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'RoleEditModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/roles/new");
@@ -108,7 +108,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
     $scope.openEditModal = function(role) {
         var modalInstance = $modal.open({
             templateUrl: 'editRoleModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'RoleEditModalController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/roles/" + role.id + "/edit");

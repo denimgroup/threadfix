@@ -14,6 +14,10 @@
 					<td class="inputValue"><input type="text" name="displayName" focus-on="focusInput" ng-model="object.displayName"
                                                   size="70" maxlength="255" value="${ displayName }" /></td>
 				</tr>
+                <tr>
+                    <td><a class="btn" ng-click="setAll('true')">Select All</a></td>
+                    <td style="text-align:left; padding-left:10px;"><a class="btn" ng-click="setAll('false')">Select None</a></td>
+                </tr>
 			</tbody>
 		</table>
 
