@@ -40,11 +40,10 @@
                 <tr>
                     <td class="no-color">LDAP user</td>
                     <td class="no-color" style="text-align: left;">
-                        <checkbox class="ldapCheckbox"
-                            data-target-class="password${ status.count }"
-                            id="isLdapUserCheckbox${ status.count }"
-                            path="isLdapUser"
-                            data-value="${user.isLdapUser}" />
+                        <input type="checkbox" class="ldapCheckbox"
+                            id="isLdapUserCheckbox"
+                            name="isLdapUser"
+                            ng-model="user.isLdapUser"/>
                     </td>
                 </tr>
                 </c:if>
@@ -52,34 +51,25 @@
                 <tr>
                     <td class="no-color">Global Access</td>
                     <td class="no-color" style="text-align: left;">
-                        <checkbox onclick="toggleRoles('${ status.count }')"
-                            id="hasGlobalGroupAccessCheckbox${ status.count }"
+                        <input type="checkbox"
+                            id="hasGlobalGroupAccessCheckbox"
                             class="globalAccessCheckBox"
-                            path="hasGlobalGroupAccess"
-                            data-value="${user.hasGlobalGroupAccess}"/>
+                            name="hasGlobalGroupAccess"
+                            ng-model="user.hasGlobalGroupAccess"/>
                     </td>
                 </tr>
-                <tr>
-                    <td class="no-color">Role for Global Access</td>
+                <tr ng-show="user.hasGlobalGroupAccess">
+                    <td class="no-color">Global Role</td>
                     <td class="no-color" style="text-align: left;">
-                        <select id="roleSelect${ status.count }" path="globalRole.id">
+                        <select id="roleSelect" name="globalRole.id" ng-model="user.globalRole.id">
                             <option value="0" label="Read Access" />
-                            <options items="${ roleList }" itemValue="id" itemLabel="displayName" />
+                            <option ng-selected="role.id === user.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
+                                {{ role.displayName }}
+                            </option>
                         </select>
-
-                        <!-- TODO enterprise this stuff up -->
-                        <%--<c:if test="${ not user.hasGlobalGroupAccess }">--%>
-                            <%--<script>$("#roleSelect<c:out value='${ status.count }'/>").attr("disabled","disabled");</script>--%>
-                        <%--</c:if>--%>
-                        <%--<c:if test="${ user.hasGlobalGroupAccess }">--%>
-                            <%--<script>$("#roleSelect<c:out value='${ status.count }'/>").val(<c:out value='${ user.globalRole.id }'/>);</script>--%>
-                        <%--</c:if>--%>
-                        <%--<c:if test="${ empty user.globalRole }">--%>
-                            <%--<script>$("#roleSelect<c:out value='${ status.count }'/>").val(0);</script>--%>
-                        <%--</c:if>--%>
                     </td>
-                    <td class="no-color" style="border: 0px solid black; background-color: white; padding-left: 5px">
-                        <errors id="hasGlobalGroupAccessErrors${ status.count }" path="hasGlobalGroupAccess" cssClass="errors" />
+                    <td class="no-color" style="border: 0 solid black; background-color: white; padding-left: 5px">
+                        <errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
                     </td>
                 </tr>
                 </security:authorize>

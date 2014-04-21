@@ -13,13 +13,14 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
     var reloadList = function() {
         $scope.initialized = false;
 
-        $http.get(tfEncoder.encode('/configuration/users/list')).
+        $http.get(tfEncoder.encode('/configuration/users/map')).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
 
-                    if (data.object.length > 0) {
-                        $scope.users = data.object;
+                    if (data.object.users.length > 0) {
+                        $scope.users = data.object.users;
+                        $scope.roles = data.object.roles;
                         $scope.users.sort(nameCompare);
                     }
 
@@ -49,6 +50,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 },
                 user: function() {
                     return {};
+                },
+                roles: function() {
+                    return $scope.roles
                 }
             }
         });
@@ -82,6 +86,9 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 },
                 deleteUrl: function() {
                     return tfEncoder.encode("/configuration/users/" + user.id + "/delete");
+                },
+                roles: function() {
+                    return $scope.roles
                 }
             }
         });
@@ -89,7 +96,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         modalInstance.result.then(function (editedUser) {
 
             if (editedUser) {
-                $scope.users.sort(nameCompare);
+                reloadList();
                 $scope.successMessage = "Successfully edited user " + editedUser.name;
             } else {
                 $scope.successMessage = "Successfully deleted user " + user.name;

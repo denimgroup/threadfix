@@ -29,10 +29,10 @@ import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +44,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author dshannon
@@ -115,8 +117,8 @@ public class UsersController {
 		return "config/users/index";
 	}
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<List<User>> list() {
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> Map() {
         List<User> users = userService.loadAllUsers();
 
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -126,7 +128,12 @@ public class UsersController {
             user.setIsThisUser(currentUser != null && currentUser.equals(user.getName()));
         }
 
-        return RestResponse.success(users);
+        Map<String, Object> returnMap = new HashMap<>();
+
+        returnMap.put("users", users);
+        returnMap.put("roles", roleService.loadAll());
+
+        return RestResponse.success(returnMap);
     }
 
 	@RequestMapping("/{userId}/delete")

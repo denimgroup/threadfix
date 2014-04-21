@@ -4,9 +4,10 @@ var myAppModule = angular.module('threadfix')
 myAppModule.value('deleteUrl', null);
 
 
-myAppModule.controller('UserModalController', function ($scope, $modalInstance, $http, threadFixModalService, user, url, deleteUrl) {
+myAppModule.controller('UserModalController', function ($scope, $modalInstance, $http, threadFixModalService, user, url, deleteUrl, roles) {
 
     $scope.user = user;
+    $scope.roles = roles;
 
     if (user.id) {
         $scope.pageTitle = "Editing user " + $scope.user.name;
