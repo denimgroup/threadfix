@@ -38,8 +38,6 @@
 	</repositories>
 
 	<build>
-		<filters>
-		</filters>
 		<plugins>
 			<plugin>
 	            <groupId>org.apache.maven.plugins</groupId>
@@ -569,6 +567,7 @@
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                     </plugin>
+                    <!-- Need to address mysql create startup time
                     <plugin>
                         <groupId>com.google.code.maven-replacer-plugin</groupId>
                         <artifactId>replacer</artifactId>
@@ -590,7 +589,7 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
+                    </plugin>-->
                 </plugins>
             </build>
         </profile>
