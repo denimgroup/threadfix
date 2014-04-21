@@ -141,7 +141,7 @@
                 <module>threadfix-scanagent</module>
             </modules>
             <properties>
-                <regression.category>com.denimgroup.threadfix.EnterpriseTests</regression.category>
+                <regression.category>com.denimgroup.threadfix.RegressionTests</regression.category>
             </properties>
         </profile>
         <profile>
