@@ -497,8 +497,39 @@ public class ApplicationIT extends BaseIT {
         assertTrue("The application was not switched properly.", !appOnTeam1 && appOnTeam2);
 
     }
-	
-	public void sleep(int num) {
+
+    @Test
+    public void testAddManualFinding() {
+        String teamName = "Team" + getRandomString(5);
+        String appName = "App" + getRandomString(5);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String parameter = "testPara";
+        String desc = "Test description test";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage ap = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        ap.clickActionButton()
+                .clickManualFindingButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(desc)
+                .clickDynamicSubmit();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = ap.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding(1)
+                .clickViewVulnerability();
+
+        assertTrue("Description was not present", vulnerabilityDetailPage.isTextPresentOnPage(desc) );
+    }
+
+    public void sleep(int num) {
 		try {
 			Thread.sleep(num);
 		} catch (InterruptedException e) {

@@ -186,75 +186,27 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("Source File is not present.", ap.isURLStaticSearchPresent());
     }
 
-    //@Test
-    public void testGraphsPresent() {
-        buildTeamAppandScan();
-        //assert goes here
-        //destroyTeamAppandScan();
+
+    @Test
+    public void testApplicationTypeDefect() {
+        ApplicationDetailPage ap = buildTeamAppandScan();
+        ap.clickEditDeleteBtn();
+        assertTrue("Application Type is not set to Detect.", ap.isAppTypeDetect());
     }
-
-    //@Test
-    public void testVulnerabilityTab() {
-        buildTeamAppandScan();
-        //assert goes here
-        //destroyTeamAppandScan();
-    }
-
-    //@Test
-    public void testScansTab() {
-        buildTeamAppandScan();
-        //assert goes here
-        //destroyTeamAppandScan();
-    }
-
-    //@Test
-    public void testFilesTab() {
-        buildTeamAppandScan();
-        //assert goes here1
-        //destroyTeamAppandScan();
-    }
-
-    //@Test
-    public void testFooter() {
-        buildTeamAppandScan();
-        //assert goes here
-        //destroyTeamAppandScan();
-    }
-
-    /*
-
-    Helper methods to build and destroy Team information
-    This will not be of use once preemptive data is setup
-    with MySQL
-
-    */
-
 
     public ApplicationDetailPage buildTeamAppandScan() {
-        DatabaseUtils.createTeam(teamName);
 
         dashboardPage = loginPage.login("user", "password");
 
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         dashboardPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .addNewApplication(teamName, appName, "", "Low")
-                .saveApplication(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickUploadScanLink()
-                .setFileInput(appName,ScanContents.SCAN_FILE_MAP.get("Skipfish"))
-                .submitScan(appName);
+                .clickViewAppLink(appName, teamName);
         return new ApplicationDetailPage(driver);
     }
-/*
-    public void destroyTeamAppandScan() {
 
-        dashboardPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName)
-                .clickDeleteButton();
-        dashboardPage.clickOrganizationHeaderLink()
-                .logout();
-    }
-*/
 
 }

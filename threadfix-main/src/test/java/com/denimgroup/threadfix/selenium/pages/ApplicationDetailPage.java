@@ -804,6 +804,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByClassName("alert-error").getText().contains("No active Vulnerabilities found.");
     }
 
+    public boolean isAppTypeDetect() {
+        return driver.findElementById("frameworkType").getText().contains("Detect");
+    }
+
     public boolean isDuplicateScan() {
         sleep(1000);
         String s = "";
