@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.cli;
+package com.denimgroup.threadfix.webservices.tests;
 
 import junit.framework.TestCase;
 
@@ -33,7 +33,7 @@ import junit.framework.TestCase;
  * Time: 2:25 PM
  * To change this template use File | Settings | File Templates.
  */
-public class CommandLineParserTests extends TestCase {
+public class CommandLineParserIT extends TestCase {
 
 //    @Test
 //    public void testGetOptions() {

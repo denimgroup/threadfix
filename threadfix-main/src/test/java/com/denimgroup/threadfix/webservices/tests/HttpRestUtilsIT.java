@@ -22,14 +22,16 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.cli;
+package com.denimgroup.threadfix.webservices.tests;
 
+import com.denimgroup.threadfix.WebServiceTests;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import junit.framework.Assert;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -40,7 +42,8 @@ import static junit.framework.Assert.assertEquals;
  * Time: 2:45 PM
  * To change this template use File | Settings | File Templates.
  */
-public class HttpRestUtilsTests {
+@Category(WebServiceTests.class)
+public class HttpRestUtilsIT {
 
     private static final int APPLICATION_ID = 1;
     private static final String FILE_PATH = "C:\\Users\\stran\\Desktop\\CLIJTest\\export.xml";

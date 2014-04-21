@@ -22,8 +22,9 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.cli;
+package com.denimgroup.threadfix.webservices.tests;
 
+import com.denimgroup.threadfix.WebServiceTests;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
@@ -31,10 +32,12 @@ import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.*;
 
-public class ThreadFixRestClientTests {
+@Category(WebServiceTests.class)
+public class ThreadFixRestClientIT {
 
     String dummyUrl = "http://test.com";
 
