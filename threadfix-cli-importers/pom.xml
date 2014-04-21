@@ -41,18 +41,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -71,17 +59,16 @@
                                     <goal>test</goal>
                                 </goals>
                                 <configuration>
-                                    <skip>false</skip>
-                                    <includes>
-                                        <include>**/*Tests.java</include>
-                                        <include>**/*Test.java</include>
-                                    </includes>
                                     <excludes>
                                         <exclude>**/TransactionalTest.java</exclude>
                                     </excludes>
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
