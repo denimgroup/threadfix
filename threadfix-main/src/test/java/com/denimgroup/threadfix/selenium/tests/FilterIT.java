@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.RegressionTests;
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.FilterPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
@@ -35,7 +35,7 @@ import org.openqa.selenium.NoSuchElementException;
 
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTests.class)
+@Category(CommunityTests.class)
 public class FilterIT extends BaseIT {
     // TODO test if you can edit an existing filter and ensure the results are correct
 

@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.RegressionTests;
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
@@ -39,7 +39,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-@Category(RegressionTests.class)
+@Category(CommunityTests.class)
 public class WafIT extends BaseIT {
 	
 	@Test

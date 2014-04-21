@@ -339,7 +339,7 @@
 
         <!-- Testing Properties -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-        <regression.category>com.denimgroup.threadfix.RegressionTests</regression.category>
+        <regression.category>com.denimgroup.threadfix.CommunityTests</regression.category>
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>

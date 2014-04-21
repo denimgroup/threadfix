@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.RegressionTests;
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApiKeysIndexPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTests.class)
+@Category(CommunityTests.class)
 public class APIKeysIT extends BaseIT {
 	
     private ApiKeysIndexPage apiIndexPage;

@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.RegressionTests;
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@Category(RegressionTests.class)
+@Category(CommunityTests.class)
 public class DashboardPageIT extends BaseIT {
 
     private static final String API_KEY = System.getProperty("API_KEY");
