@@ -1,8 +1,3 @@
-<%@ include file="/common/taglibs.jsp"%>
-
-<%@ include file="/WEB-INF/views/successMessage.jspf" %>
-<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
-
 <table class="table table-striped">
 	<thead>
 		<tr>

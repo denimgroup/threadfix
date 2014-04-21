@@ -16,6 +16,9 @@
     <div id="helpText">
 		ThreadFix Roles determine functional capabilities for associated users.<br/>
 	</div>
+
+    <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 	
 	<a id="createRoleModalLink" class="btn" ng-click="openNewRoleModal()">Create New Role</a>
 	

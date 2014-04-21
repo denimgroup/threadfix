@@ -3,7 +3,7 @@ var module = angular.module('threadfix')
 module.controller('RolesPageController', function($scope, $http, $modal, $log, tfEncoder){
 
     var nameCompare = function(a,b) {
-        return a.name.localeCompare(b.name);
+        return a.displayName.localeCompare(b.displayName);
     };
 
     $scope.$on('rootScopeInitialized', function() {
@@ -12,6 +12,8 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
 
                 if (data.success) {
                     $scope.roles = data.object;
+                    $scope.roles.sort(nameCompare);
+
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -74,10 +76,33 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                 $scope.roles.sort(nameCompare);
             }
 
-            $scope.successMessage = "Successfully created role " + role.name;
+            $scope.successMessage = "Successfully created role " + role.displayName;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
+    }
+
+    var addKeys = function(role) {
+
+        if (!role.stringed) {
+            role.canGenerateReports = role.canGenerateReports === true ? "true" : "false";
+            role.canGenerateWafRules = role.canGenerateWafRules === true ? "true" : "false";
+            role.canManageApiKeys = role.canManageApiKeys === true ? "true" : "false";
+            role.canManageApplications = role.canManageApplications === true ? "true" : "false";
+            role.canManageDefectTrackers = role.canManageDefectTrackers === true ? "true" : "false";
+            role.canManageRemoteProviders = role.canManageRemoteProviders === true ? "true" : "false";
+            role.canManageRoles = role.canManageRoles === true ? "true" : "false";
+            role.canManageTeams = role.canManageTeams === true ? "true" : "false";
+            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
+            role.canViewErrorLogs = role.canViewErrorLogs === true ? "true" : "false";
+            role.canUploadScans = role.canUploadScans === true ? "true" : "false";
+            role.canSubmitDefects = role.canSubmitDefects === true ? "true" : "false";
+            role.canModifyVulnerabilities = role.canModifyVulnerabilities === true ? "true" : "false";
+            role.canManageWafs = role.canManageWafs === true ? "true" : "false";
+            role.canManageUsers = role.canManageUsers === true ? "true" : "false";
+
+            role.stringed = true;
+        }
     }
 
     $scope.openEditModal = function(role) {
@@ -89,6 +114,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                     return tfEncoder.encode("/configuration/roles/" + role.id + "/edit");
                 },
                 object: function() {
+                    addKeys(role);
                     return role;
                 },
                 buttonText: function() {
@@ -116,9 +142,9 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                 $scope.roles.push(editedRole);
 
                 $scope.roles.sort(nameCompare);
-                $scope.successMessage = "Successfully edited role " + editedRole.name;
+                $scope.successMessage = "Successfully edited role " + editedRole.displayName;
             } else {
-                $scope.successMessage = "Role deletion was successful for Role " + editedRole.name;
+                $scope.successMessage = "Role deletion was successful for Role " + editedRole.displayName;
             }
 
             if ($scope.roles.length === 0){

@@ -7,8 +7,6 @@
 	<div class="modal-body" id="newRoleModalBody" ng-form="form">
 		<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
 
-		{{ object | json }}
-
 		<table class="dataTable">
 			<tbody>
 				<tr>
@@ -18,8 +16,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<h3>Permissions</h3>
-	
+
 		<table class="table" style="margin-top: 5px">
 			<thead>
 				<tr>
