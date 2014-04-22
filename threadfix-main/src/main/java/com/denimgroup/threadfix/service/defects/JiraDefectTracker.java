@@ -60,6 +60,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	// not sure how that would work out with a non-atlassian hosted install.
 	private String getUrlWithRest() {
 		if (getUrl() == null || getUrl().trim().equals("")) {
+            assert false;
 			return null;
 		}
 		
@@ -101,6 +102,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			}
 			return names;
 		}
+        assert false : "This method should only be called with a valid connection.";
 		return null;
 	}
 	
@@ -108,6 +110,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
 		
 		if (result == null) {
+            assert false : "This method should only be called with a valid connection.";
 			return null;
 		}
 		
@@ -387,6 +390,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	private String getStatus(Defect defect) {
 		if (defect == null || defect.getNativeId() == null) {
 			log.warn("Bad defect passed to getStatus()");
+            assert false : "Stop passing null into getStatus()";
 			return null;
 		}
 		
@@ -411,8 +415,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				log.warn("JSON parsing failed when trying to get defect status.");
 			}
 		}
-		
-		return null;
+
+        assert false : "You should have a valid connection by this point.";
+        return null;
 	}
 	
 	@Override

@@ -69,8 +69,10 @@ public class HibernateFindingDao implements FindingDao {
 		Integer channelTypeId = (Integer) currentSession.createQuery(
 				"select id from ChannelType where name = 'Manual'")
 				.uniqueResult();
-		if (channelTypeId == null)
+		if (channelTypeId == null) {
+            assert false : "ThreadFix was unable to find the manual channel. This indicates an incomplete database connection.";
 			return null;
+        }
 		Integer applicationChannelId = (Integer) (currentSession
 				.createQuery(
 						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
