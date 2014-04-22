@@ -196,6 +196,8 @@ public class TeamDetailPageController {
         if (submitResult.equals("Success")) {
             log.info("Successfully created application " + application.getName() + " in team " + team.getName());
 
+            model.addAttribute("application", new Application());
+
             return RestResponse.success(application);
         } else {
             model.addAttribute("organization", team);

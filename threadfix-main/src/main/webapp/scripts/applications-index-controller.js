@@ -75,9 +75,9 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     if (matches !== null && matches[1] !== null) {
                         team.report = matches[1];
                     }
-//                    else {
-//                        team.reportFailed = true;
-//                    }
+                    else {
+                        team.report = true;
+                    }
                 }).
                 error(function(data, status, headers, config) {
 
@@ -176,6 +176,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
             team.expanded = true;
 //            loadGraph(team);
+            team.report = true;
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
