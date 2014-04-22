@@ -24,28 +24,19 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.denimgroup.threadfix.data.Option;
 import com.denimgroup.threadfix.data.dao.AccessControlMapDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.dao.RoleDao;
-import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
-import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Role;
-import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 @Service
 public class AccessControlMapServiceImpl implements AccessControlMapService {
@@ -150,10 +141,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 	}
 
 	@Override
-	public AccessControlTeamMap parseAccessControlTeamMap(
-			AccessControlMapModel map) {
+	public Option<AccessControlTeamMap> parseAccessControlTeamMap(
+            AccessControlMapModel map) {
 		if (map == null || map.getTeamId() == null) {
-			return null;
+            assert false : "This indicates a coding error or parameter tampering.";
+			return Option.failure();
 		}
 		
 		AccessControlTeamMap returnMap = new AccessControlTeamMap();
@@ -177,7 +169,11 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		Map<Integer, Integer> intMap = null;
 		
 		if (map.getRoleIdMapList() != null && map.getRoleIdMapList().size() > 0) {
-			intMap = getMap(map.getRoleIdMapList());
+			Option<Map<Integer, Integer>> optionMap = getMap(map.getRoleIdMapList());
+
+            if (optionMap.isValid()) {
+                intMap = optionMap.getValue();
+            }
 		}
 		
 		if (!returnMap.getAllApps() && map.getApplicationIds() != null) {
@@ -196,7 +192,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		}
 		
 		// TODO Auto-generated method stub
-		return returnMap;
+		return Option.success(returnMap);
 	}
 
 	@Override
@@ -204,9 +200,9 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		return accessControlMapDao.retrieveTeamMapById(id);
 	}
 
-	private Map<Integer,Integer> getMap(List<String> stringMaps) {
+	private Option<Map<Integer,Integer>> getMap(List<String> stringMaps) {
 		if (stringMaps == null || stringMaps.size() <= 0) {
-			return null;
+			return Option.failure();
 		}
 		
 		Map<Integer,Integer> intMap = new HashMap<>();
@@ -225,7 +221,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 			}
 		}
 		
-		return intMap;
+		return Option.success(intMap);
 	}
 	
 	@Override

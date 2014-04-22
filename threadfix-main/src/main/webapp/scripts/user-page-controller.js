@@ -40,6 +40,10 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         reloadList();
     });
 
+    $scope.goToEditPermissionsPage = function(user) {
+        window.location.href = tfEncoder.encode("/configuration/users/" + user.id + "/permissions");
+    }
+
     $scope.openNewModal = function() {
         var modalInstance = $modal.open({
             templateUrl: 'userForm.html',

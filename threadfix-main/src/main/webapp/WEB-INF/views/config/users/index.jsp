@@ -48,11 +48,8 @@
 					</a>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
-				<td id="name${ status.count }">
-					<spring:url value="/configuration/users/{userId}/permissions" var="editPermissionsUrl">
-						<spring:param name="userId" value="${ user.id }"/>
-					</spring:url>
-					<a id="editPermissions${ status.count }" class="btn" href="${ fn:escapeXml(editPermissionsUrl) }">Edit Permissions</a>
+				<td id="name{{ $index }}">
+					<a id="editPermissions{{ $index }}" class="btn" ng-click="goToEditPermissionsPage(user)">Edit Permissions</a>
 				</td>
 				</security:authorize>
 			</tr>

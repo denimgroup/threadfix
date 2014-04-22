@@ -22,6 +22,42 @@ threadfixModule.directive('tfBindHtmlUnsafe', function( $compile ) {
     };
 });
 
+var INTEGER_REGEXP = /^\-?\d+$/;
+threadfixModule.directive('notZero', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+
+            ctrl.$setValidity('notzero', false);
+            ctrl.$parsers.unshift(function(viewValue) {
+
+                if (typeof viewValue !== "string") {
+
+                    if (viewValue.id) {
+                        ctrl.$setValidity('notzero', viewValue.id > 0)
+                    } else {
+                        ctrl.$setValidity('notzero', false)
+                    }
+
+                    return viewValue;
+                } else if (INTEGER_REGEXP.test(viewValue)) {
+
+                    var intValue = parseInt(viewValue);
+                    var valid = intValue > 0;
+
+                    // it is valid
+                    ctrl.$setValidity('notzero', valid);
+                    return viewValue;
+                } else {
+                    // it is invalid, return undefined (no model update)
+                    ctrl.$setValidity('notzero', false);
+                    return undefined;
+                }
+            });
+        }
+    };
+});
+
 threadfixModule.directive('focusOn', function($timeout, $parse) {
     return {
         link: function(scope, element, attrs) {
