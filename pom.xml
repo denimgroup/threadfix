@@ -191,10 +191,6 @@
                                     <goals>
                                         <goal>prepare-agent</goal>
                                     </goals>
-                                    <configuration>
-                                        <destFile>${sonar.jacoco.reportPath}</destFile>
-                                        <append>true</append>
-                                    </configuration>
                                 </execution>
                                 <execution>
                                     <id>default-report</id>
@@ -202,9 +198,6 @@
                                     <goals>
                                         <goal>report</goal>
                                     </goals>
-                                    <configuration>
-                                        <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                                    </configuration>
                                 </execution>
                             </executions>
                         </plugin>
@@ -338,7 +331,6 @@
         <jacoco.version>0.7.0.201403182114</jacoco.version>
 
         <!-- Testing Properties -->
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
         <regression.category>com.denimgroup.threadfix.CommunityTests</regression.category>
     </properties>
 
