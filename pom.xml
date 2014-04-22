@@ -185,6 +185,10 @@
                             <groupId>org.jacoco</groupId>
                             <artifactId>jacoco-maven-plugin</artifactId>
                             <version>${jacoco.version}</version>
+                            <configuration>
+                                <destFile>${sonar.jacoco.reportPath}</destFile>
+                                <append>true</append>
+                            </configuration>
                             <executions>
                                 <execution>
                                     <id>default-prepare-agent</id>
@@ -332,6 +336,9 @@
 
         <!-- Testing Properties -->
         <regression.category>com.denimgroup.threadfix.CommunityTests</regression.category>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
 
     <url>http://www.denimgroup.com/threadfix/</url>
