@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false)
 	public User loadUser(String name) {
 		User user = userDao.retrieveByName(name);
 		if (user != null && user.getIsLdapUser()) {
@@ -113,10 +113,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void createUser(User user) {
+	public Integer createUser(User user) {
 		User newUser = getDefaultUser(user);
         encryptPassword(newUser);
 		userDao.saveOrUpdate(newUser);
+        return newUser.getId();
 	}
 
 	private void encryptPassword(User user) {

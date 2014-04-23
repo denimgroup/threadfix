@@ -24,33 +24,28 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
+import com.denimgroup.threadfix.data.Option;
 import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.AccessControlMapService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}")
@@ -83,7 +78,7 @@ public class AccessControlMapController {
 	}
 	
 	@RequestMapping(value="/permissions", method = RequestMethod.GET)
-	public ModelAndView editForm(@PathVariable("userId") int userId, Model model) {
+	public ModelAndView editForm(@PathVariable("userId") int userId) {
 		User user = userService.loadUser(userId);
 		
 		if (user == null){
@@ -103,6 +98,17 @@ public class AccessControlMapController {
 		mav.addObject("isThisUser", isThisUser);
 		return mav;
 	}
+
+	@RequestMapping(value="/permissions/map", method = RequestMethod.GET)
+	public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable("userId") int userId) {
+		Map<String, Object> returnMap = new HashMap<>();
+
+        returnMap.put("maps", accessControlMapService.loadAllMapsForUser(userId));
+        returnMap.put("teams", organizationService.loadAllActive());
+        returnMap.put("roles", roleService.loadAll());
+
+		return RestResponse.success(returnMap);
+	}
 	
 	private AccessControlMapModel getMapModel(Integer userId) {
 		AccessControlMapModel map = new AccessControlMapModel();
@@ -111,9 +117,8 @@ public class AccessControlMapController {
 	}
 	
 	@RequestMapping(value="/access/new", method = RequestMethod.POST)
-	public String createMapping(@PathVariable("userId") int userId, 
-			@ModelAttribute AccessControlMapModel accessControlModel,
-			Model model, HttpServletResponse response) {
+	public @ResponseBody RestResponse<AccessControlTeamMap> createMapping(@PathVariable("userId") int userId,
+			@ModelAttribute AccessControlMapModel accessControlModel) {
 
 		User user = userService.loadUser(userId);
 		if (user == null) {
@@ -121,51 +126,29 @@ public class AccessControlMapController {
 		}
 		
 		accessControlModel.setUserId(userId);
-		AccessControlTeamMap map =
+		Option<AccessControlTeamMap> mapOption =
 				accessControlMapService.parseAccessControlTeamMap(accessControlModel);
-		map.setUser(user);
-		
-		String error = accessControlMapService.validateMap(map, null);
-		if (error != null) {
-			writeResponse(response,error);
-		} else {
-			accessControlMapService.store(map);
-			return returnTable(model, userId);
-		}
-		return null;
-	}
-	
-	private String returnTable(Model model, Integer userId) {
-		model.addAttribute("user", userService.loadUser(userId));
-		model.addAttribute("maps", accessControlMapService.loadAllMapsForUser(userId));
-		model.addAttribute("contentPage", "config/users/permTable.jsp");
-		return "ajaxSuccessHarness";
-	}
-	
-	private void writeResponse(HttpServletResponse response, String error) {
-		if (error != null) {
-			response.setContentType("application/json");
-	        String json = "{\"error\": \"" + error + "\"}";
-	        PrintWriter out = null;
-			try {
-				out = response.getWriter();
-				out.write(json);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if (out != null) {
-					out.close();
-				}
-			}
-		}
+
+        if (mapOption.isValid()) {
+            AccessControlTeamMap map = mapOption.getValue();
+            map.setUser(user);
+
+            String error = accessControlMapService.validateMap(map, null);
+            if (error != null) {
+                return RestResponse.failure(error);
+            } else {
+                accessControlMapService.store(map);
+                return RestResponse.success(map);
+            }
+        } else {
+            return RestResponse.failure("The map was not parsable from the given www-url-formencoded form.");
+        }
 	}
 	
 	@RequestMapping(value="/access/{mapId}/edit", method = RequestMethod.POST)
-	public String editMapping(@ModelAttribute AccessControlMapModel accessControlModel,
+	public @ResponseBody RestResponse<AccessControlTeamMap> editMapping(@ModelAttribute AccessControlMapModel accessControlModel,
 			@PathVariable("userId") int userId, 
-			@PathVariable("mapId") int mapId, 
-			HttpServletResponse response,
-			Model model) {
+			@PathVariable("mapId") int mapId) {
 		
 		User user = userService.loadUser(userId);
 		if (user == null) {
@@ -173,36 +156,39 @@ public class AccessControlMapController {
 		}
 		
 		accessControlModel.setUserId(userId);
-		AccessControlTeamMap map =
+		Option<AccessControlTeamMap> mapOption =
 				accessControlMapService.parseAccessControlTeamMap(accessControlModel);
-		map.setUser(user);
 
-		String error = accessControlMapService.validateMap(map, mapId);
-		if (error != null) {
-			writeResponse(response,error);
-		} else {
-			
-			accessControlMapService.deactivate(accessControlMapService.loadAccessControlTeamMap(mapId));
-			accessControlMapService.store(map);
-			return returnTable(model, userId);
-		}
-		
-		return null;
+        if (mapOption.isValid()) {
+            AccessControlTeamMap map = mapOption.getValue();
+
+            map.setUser(user);
+
+            String error = accessControlMapService.validateMap(map, mapId);
+            if (error != null) {
+                return RestResponse.failure(error);
+            } else {
+
+                accessControlMapService.deactivate(accessControlMapService.loadAccessControlTeamMap(mapId));
+                accessControlMapService.store(map);
+                return RestResponse.success(map);
+            }
+        } else {
+    		return RestResponse.failure("Unable to parse HTML parameters.");
+        }
 	}
 	
 	@RequestMapping(value="/access/team/{mapId}/delete", method = RequestMethod.POST)
-	public String deleteTeamMapping(@PathVariable("userId") int userId, 
-			@PathVariable("mapId") int mapId, Model model) {
+	public @ResponseBody RestResponse<String> deleteTeamMapping(@PathVariable("mapId") int mapId) {
 		AccessControlTeamMap map = accessControlMapService.loadAccessControlTeamMap(mapId);
 		accessControlMapService.deactivate(map);
-		return returnTable(model, userId);
+		return RestResponse.success("Successfully deleted mapping.");
 	}
 	
 	@RequestMapping(value="/access/app/{mapId}/delete", method = RequestMethod.POST)
-	public String deleteAppMapping(@PathVariable("userId") int userId, 
-			@PathVariable("mapId") int mapId, Model model) {
+	public @ResponseBody RestResponse<String> deleteAppMapping(@PathVariable("mapId") int mapId) {
 		AccessControlApplicationMap map = accessControlMapService.loadAccessControlApplicationMap(mapId);
 		accessControlMapService.deactivate(map);
-		return returnTable(model, userId);
+		return RestResponse.success("Successfully deleted mapping.");
 	}
 }

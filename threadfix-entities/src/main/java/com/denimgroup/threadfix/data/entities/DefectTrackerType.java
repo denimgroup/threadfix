@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,6 +51,7 @@ public class DefectTrackerType extends BaseEntity {
 	private List<DefectTracker> defectTrackerList;
 
 	@Column(length = 25, nullable = false)
+    @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
 		return name;
 	}

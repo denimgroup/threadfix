@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -54,7 +55,8 @@ public class Organization extends AuditableEntity {
 	private List<SurveyResult> surveyResults;
 
 	@Column(length = NAME_LENGTH, nullable = false)
-	public String getName() {
+    @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
+    public String getName() {
 		return name;
 	}
 

@@ -24,8 +24,6 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -52,7 +50,6 @@ public class AccessControlTeamMap extends AuditableEntity {
 	}
 	
 	@OneToMany(mappedBy = "accessControlTeamMap", cascade = CascadeType.ALL)
-	@JsonIgnore
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {
 		return accessControlApplicationMaps;
 	}
@@ -63,7 +60,6 @@ public class AccessControlTeamMap extends AuditableEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "organizationId", nullable=false)
-	@JsonIgnore
 	public Organization getOrganization() {
 		return organization;
 	}

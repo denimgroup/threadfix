@@ -2,13 +2,16 @@
 
 <head>
 	<title>Dashboard</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard_page.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 </head>
 
 <body class="dashboard">
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+
 	<h2>Dashboard</h2>
 	
-	<spring:url value="/organizations/withModal" var="teamsUrl"/>
+	<spring:url value="/organizations" var="teamsUrl"/>
 	
 	<c:if test="${ empty teams }">
 		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
@@ -28,37 +31,10 @@
 			</div>
 		</security:authorize>
 	</c:if>
-	
-	<div class="container-fluid">
-		<c:if test="${ canGenerateReports }">
-			<div class="row-fluid">
-			    <div class="span6">
-			    	<spring:url value="/reports/9" var="reportsUrl"/>
-			    	<h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
-			    		<a id="leftViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
-			    	</h4>
-			    	<spring:url value="/dashboard/leftReport" var="reportsUrl"/>
-					<form id="leftReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-			    	<div id="leftTileReport">
-			    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
-			    	</div>
-			    </div>
-			    
-			     <div class="span6">
-			     	<spring:url value="/reports/10" var="reportsUrl"/>
-			    	<h4>Top 10 Vulnerable Applications <span style="font-size:12px;float:right;">
-			    		<a id="rightViewMore" style="display:none" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
-			    	</h4>
-			    	
-				    	<spring:url value="/dashboard/rightReport" var="reportsUrl"/>
-						<form id="rightReportForm" action="<c:out value="${ reportsUrl }"/>"></form>
-				    	<div id="rightTileReport">
-				    		<%@ include file="/WEB-INF/views/reports/loading.jspf" %>
-				    	</div>
-			    </div>
-			</div>
-		</c:if>
-	    
+
+    <div ng-controller="DashboardController" class="container-fluid">
+		<%@include file="/WEB-INF/views/applications/reports.jspf"%>
+
 	    <div class="row-fluid">
 	    	<div class="row-fluid" style="padding-top:20px;">
 			     <div class="span6">
@@ -108,7 +84,7 @@
 							<tr class="no-top-border">
 								<td class="thick-left" colspan="3">
 									<span style="font-weight:bold;color:red;"><c:out value="${ scan.numberTotalVulnerabilities }"/></span> Vulnerabilities from
-									<c:out value="${ scan.applicationChannel.channelType.name }"/> (<c:out value="${ scan.scannerType }"/>)
+									<c:out value="${ scan.applicationChannel.channelType.name }"/> <c:if test="${ not empty scan.scannerType }">(<c:out value="${ scan.scannerType }"/>)</c:if>
 								</td>
 							</tr>
 						</c:forEach>

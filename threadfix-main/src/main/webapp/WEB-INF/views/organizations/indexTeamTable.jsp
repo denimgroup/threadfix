@@ -57,6 +57,13 @@
 			<td class="centered expandableTrigger" id="numInfoVulns<c:out value="${ organization.name }"/>"><c:out value="${ organization.infoVulnCount }"/></td>
 			<td class="expandableTrigger"></td>
 			<td>
+
+                <%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+				<a id="addApplicationModalButton${ status.count }" href="#myAppModal${ organization.id }"
+						role="button" class="btn" data-toggle="modal">
+					Add Application
+				</a>
+			<td>
                 <c:if test="${ licenseService }">
                     <a id="addApplicationModalButton<c:out value="${ organization.name }"/>" href="#myAppModal${ organization.id }"
                             role="button" class="btn" data-toggle="modal">
@@ -127,8 +134,13 @@
 									<td class="centered" id="numLowVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.lowVulnCount }"/></td>
 									<td class="centered" id="numInfoVulns<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>"><c:out value="${ application.infoVulnCount }"/></td>
 									<td class="centered" style="padding:5px;">
+<<<<<<< HEAD
+                                        <%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+										<a id="uploadScanModalLink${ status.count }-${ innerStatus.count }" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
+=======
 										<a id="uploadScanModalLink<c:out value="${ organization.name }"/>-<c:out value="${ application.name }"/>" href="#uploadScan${ application.id }" role="button" class="btn" data-toggle="modal">Upload Scan</a>
 										<%@ include file="/WEB-INF/views/applications/modals/uploadScanModal.jsp" %>
+>>>>>>> 2.1
 									</td>
 								</tr>
 							</c:if>

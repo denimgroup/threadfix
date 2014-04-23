@@ -113,6 +113,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 	@Override
 	public List<Integer> loadVulnerabilityReport(Application application) {
 		if (application == null) {
+            assert false;
 			return null;
 		}
 		

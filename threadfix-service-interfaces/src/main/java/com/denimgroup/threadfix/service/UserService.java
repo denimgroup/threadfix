@@ -72,7 +72,7 @@ public interface UserService {
 	/**
 	 * @param user
 	 */
-	void createUser(User user);
+	Integer createUser(User user);
 
 	/**
 	 * 

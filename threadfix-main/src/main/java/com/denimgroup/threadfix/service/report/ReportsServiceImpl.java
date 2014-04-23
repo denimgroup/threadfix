@@ -122,7 +122,9 @@ public class ReportsServiceImpl implements ReportsService {
 		} catch (IOException e) {
 			log.error("IOException encountered while trying to generate report.", e);
 			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
-		}
+		} finally {
+            log.info("Finished generating report.");
+        }
 	}
 
 	@SuppressWarnings("resource")
@@ -296,25 +298,25 @@ public class ReportsServiceImpl implements ReportsService {
 	 */
 	private String getMapKey(String fileName, List<Integer> applicationIdList) {
 		StringBuilder appIdString = new StringBuilder();
-		
+
 		String shorterFileName = fileName;
 		if (fileName.indexOf('.') != -1) {
 			shorterFileName = fileName.substring(0, fileName.indexOf('.'));
 		}
-		
+
 		if (shorterFileName.length() > 10) {
 			appIdString.append(shorterFileName.substring(0, 10));
 		} else {
 			appIdString.append(shorterFileName);
 		}
-		
+
 		for (Integer id : applicationIdList) {
 			appIdString.append(id);
 			if (appIdString.length() > 20) {
 				break;
 			}
 		}
-		
+
 		return appIdString.toString();
 	}
 	

@@ -24,12 +24,15 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/filters")
@@ -52,23 +55,26 @@ public class ApplicationVulnFilterController extends AbstractVulnFilterControlle
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String submitNew(@PathVariable int appId,
+	public @ResponseBody RestResponse<VulnerabilityFilter> submitNew(@PathVariable int appId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
-			SessionStatus status,
-			Model model) {
-		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId);
+			SessionStatus status) {
+		return submitNewBackend(vulnerabilityFilter, bindingResult, status, -1, appId);
+	}
+
+	@RequestMapping(value = "/map", method = RequestMethod.GET)
+	public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable int appId, @PathVariable int orgId) {
+		return mapBackend(orgId, appId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
-	public String submitEdit(
+	public @ResponseBody RestResponse<VulnerabilityFilter> submitEdit(
 			@PathVariable int appId,
 			@PathVariable int filterId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
-			SessionStatus status,
-			Model model) {
-		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, -1, appId, filterId);
+			SessionStatus status) {
+		return submitEditBackend(vulnerabilityFilter, bindingResult, status, -1, appId, filterId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)

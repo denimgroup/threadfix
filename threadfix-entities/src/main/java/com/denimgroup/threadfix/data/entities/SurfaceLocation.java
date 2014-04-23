@@ -24,7 +24,9 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -99,6 +101,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PARAMETER_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getParameter() {
 		return parameter;
 	}
@@ -108,6 +111,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PATH_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getPath() {
 		return path;
 	}

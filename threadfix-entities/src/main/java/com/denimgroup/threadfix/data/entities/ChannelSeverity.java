@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import java.util.List;
@@ -54,7 +56,8 @@ public class ChannelSeverity extends BaseEntity {
 	}
 
 	@Column(length = 25, nullable = false)
-	public String getName() {
+    @JsonView(Object.class)
+    public String getName() {
 		return name;
 	}
 
@@ -91,6 +94,7 @@ public class ChannelSeverity extends BaseEntity {
 		this.findings = findings;
 	}
 
+    @JsonView(AllViews.TableRow.class)
 	public int getNumericValue() {
 		return numericValue;
 	}

@@ -24,12 +24,15 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.VulnerabilityFilter;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/filters")
@@ -52,23 +55,26 @@ public class OrganizationVulnFilterController extends AbstractVulnFilterControll
 	}
 	
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String submitNew(@PathVariable int orgId,
+	public @ResponseBody RestResponse<VulnerabilityFilter> submitNew(@PathVariable int orgId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
-			SessionStatus status,
-			Model model) {
-		return submitNewBackend(vulnerabilityFilter, bindingResult, status, model, orgId, -1);
+			SessionStatus status) {
+		return submitNewBackend(vulnerabilityFilter, bindingResult, status, orgId, -1);
 	}
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable int orgId) {
+        return mapBackend(orgId, -1);
+    }
 	
 	@RequestMapping(value = "/{filterId}/edit", method = RequestMethod.POST)
-	public String submitEdit(
+	public @ResponseBody RestResponse<VulnerabilityFilter> submitEdit(
 			@PathVariable int orgId,
 			@PathVariable int filterId,
 			VulnerabilityFilter vulnerabilityFilter,
 			BindingResult bindingResult,
-			SessionStatus status,
-			Model model) {
-		return submitEditBackend(vulnerabilityFilter, bindingResult, status, model, orgId, -1, filterId);
+			SessionStatus status) {
+		return submitEditBackend(vulnerabilityFilter, bindingResult, status, orgId, -1, filterId);
 	}
 	
 	@RequestMapping(value = "/{filterId}/delete", method = RequestMethod.POST)

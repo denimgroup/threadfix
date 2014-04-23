@@ -25,11 +25,10 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
-import com.denimgroup.threadfix.service.beans.ScanParametersBean;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -37,9 +36,13 @@ import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,10 +53,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
@@ -82,6 +83,8 @@ public class ApplicationsController {
 	private ChannelVulnerabilityService channelVulnerabilityService;
     @Autowired
     private ChannelTypeService channelTypeService;
+    @Autowired
+    private GenericVulnerabilityService genericVulnerabilityService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -101,9 +104,6 @@ public class ApplicationsController {
 			throw new ResourceNotFoundException();
 		}
 
-		Object successMessage = ControllerUtils.getSuccessMessage(request);
-		Object error = ControllerUtils.getErrorMessage(request);
-
 		TableSortBean falsePositiveBean = new TableSortBean();
 		falsePositiveBean.setFalsePositive(true);
 		
@@ -114,8 +114,6 @@ public class ApplicationsController {
 		TableSortBean hiddenBean = new TableSortBean();
 		hiddenBean.setHidden(true);
 		
-		long numHiddenVulns = applicationService.getCount(appId, hiddenBean);
-
         PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 				Permission.CAN_UPLOAD_SCANS,
 				Permission.CAN_MODIFY_VULNERABILITIES,
@@ -129,36 +127,16 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 
-		Object checkForRefresh = ControllerUtils.getItem(request, "checkForRefresh");
-		Object numScansBeforeUpload = ControllerUtils.getItem(request, "numScansBeforeUpload");
-		model.addAttribute("numScansBeforeUpload", numScansBeforeUpload);
-		model.addAttribute("checkForRefresh", checkForRefresh);
-		model.addAttribute("applicationCriticalityList", applicationCriticalityService.loadAll());
-		model.addAttribute("manualSeverities", findingService.getManualSeverities());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);
-		model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
-		model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 		model.addAttribute("defectTracker", new DefectTracker());
 		model.addAttribute("waf", new Waf());
-		model.addAttribute("createWafUrl", "wafs/new/ajax/appPage");
 		model.addAttribute("newWaf", new Waf());
-		model.addAttribute("wafList", wafService.loadAll());
-		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
-		model.addAttribute("numClosedVulns", numClosedVulns);
 		model.addAttribute(new VulnerabilityCollectionModel());
-		model.addAttribute("successMessage", successMessage);
-		model.addAttribute("errorMessage", error);
         model.addAttribute("activeTab", getActiveTab(request, falsePositiveCount, numClosedVulns));
 		model.addAttribute(application);
-		model.addAttribute("falsePositiveCount", falsePositiveCount);
-		model.addAttribute("numHiddenVulns", numHiddenVulns);
 		model.addAttribute("finding", new Finding());
 		model.addAttribute(new DefectViewModel());
-		model.addAttribute("scanParametersBean", ScanParametersBean.getScanParametersBean(application));
-		model.addAttribute("applicationTypes", FrameworkType.values());
-		model.addAttribute("sourceCodeAccessLevels", SourceCodeAccessLevel.values());
-		model.addAttribute("teamList", organizationService.loadAllActive());
         model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
 		if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,appId)) {
 			model.addAttribute("users", userService.getPermissibleUsers(orgId, appId));
@@ -167,6 +145,54 @@ public class ApplicationsController {
         addAttrForScheduledScanTab(model);
 		return "applications/detail";
 	}
+
+    private ObjectWriter getWriter() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
+
+        return mapper.writerWithView(AllViews.FormInfo.class);
+    }
+
+    @RequestMapping("{appId}/objects")
+    public @ResponseBody String getBaseObjects(@PathVariable("appId") Integer appId) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+
+        Application application = applicationService.loadApplication(appId);
+
+        // manual Finding form
+        map.put("manualSeverities", findingService.getManualSeverities());
+        map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
+        map.put("recentFileList", findingService.getRecentStaticPaths(appId));
+        map.put("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
+
+        // defect tracker add form
+        map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
+        map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackerTypes());
+
+        map.put("wafList", wafService.loadAll());
+        map.put("wafTypeList", wafService.loadAllWafTypes());
+
+        // basic information
+        map.put("application", application);
+
+        // scans tab
+        map.put("scans", application.getScans());
+
+        // doc tab
+        map.put("documents", application.getDocuments());
+
+        // edit form
+        map.put("applicationTypes", FrameworkType.values());
+        map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
+        map.put("teams", organizationService.loadAllActive());
+
+        return getSerializedMap(map);
+    }
+
+    private String getSerializedMap(Map<String, Object> map) throws IOException {
+        String data = getWriter().writeValueAsString(RestResponse.success(map));
+        return data;
+    }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
         String activeTab = ControllerUtils.getActiveTab(request);
@@ -196,9 +222,9 @@ public class ApplicationsController {
     }
 	
 	// TODO move this to a different spot so as to be less annoying
-	private void addDefectModelAttributes(Model model, int appId, int orgId) {
+	private Map<String, Object> addDefectModelAttributes(int appId, int orgId) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
-			return;
+			return null;
 		}
 		
 		Application application = applicationService.loadApplication(appId);
@@ -209,7 +235,7 @@ public class ApplicationsController {
 		
 		if (application.getDefectTracker() == null ||
 				application.getDefectTracker().getDefectTrackerType() == null) {
-			return;
+			return null;
 		}
 		
 		applicationService.decryptCredentials(application);
@@ -217,25 +243,33 @@ public class ApplicationsController {
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		ProjectMetadata data = null;
 
+        List<Defect> defectList = null;
 		if (dt != null) {
+            defectList = dt.getDefectList();
 			data = dt.getProjectMetadata();
 		}
-		
-		model.addAttribute("defectTrackerName",
-				application.getDefectTracker().getDefectTrackerType().getName());
-		model.addAttribute("projectMetadata", data);
-		model.addAttribute(new DefectViewModel());
+
+        Map<String, Object> map = new HashMap<>();
+
+		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());
+		map.put("defectList", defectList);
+		map.put("projectMetadata", data);
+
+		return map;
 	}
-	
+
 	@RequestMapping("/{appId}/defectSubmission")
-	public String getDefectSubmissionForm(@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId, SessionStatus status, Model model) {
-		
-		addDefectModelAttributes(model, appId, orgId);
-		
-		model.addAttribute("contentPage", "defects/submitDefectForm.jsp");
-		
-		return "ajaxSuccessHarness";
+	public @ResponseBody RestResponse<Map<String, Object>> getDefectSubmissionForm(
+            @PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId) {
+
+		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId);
+
+        if (returnMap == null) {
+            return RestResponse.failure("Unable to retrieve Defect Tracker information.");
+        } else {
+            return RestResponse.success(returnMap);
+        }
 	}
 	
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_APPLICATIONS')")
@@ -261,45 +295,36 @@ public class ApplicationsController {
 
 	// TODO move this elsewhere?
 	@RequestMapping(value = "/jsontest", method = RequestMethod.POST)
-	public @ResponseBody String readJson(@RequestBody DefectTrackerBean bean) {
+	public @ResponseBody RestResponse<? extends Object> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
 		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
 				bean.getUserName(), bean.getPassword());
 		if (dt == null) {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
-			return "Authentication failed";
+			return RestResponse.failure("Authentication failed.");
 		}
 		String result = dt.getProductNames();
 		if (result == null || result.equals("Authentication failed")) {
-			return "{ \"message\" : \"Authentication failed\", " +
-					"\"error\" : " + JSONObject.quote(dt.getLastError())  + "}";
+			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
 
-		return "{ \"message\" : \"Authentication success\", " +
-				"\"names\" : " + JSONObject.quote(productSort(result))  + "}";
+		return RestResponse.success(productSort(result));
 	}
 	
-	private String productSort(String products) {
+	private String[] productSort(String products) {
 		if (products == null) {
-			return "Authentication failed";
+			return null;
 		}
 		String[] splitArray = products.split(",", 0);
 		
 		if (splitArray.length == 0) {
-			return "Authentication failed";
+			return null;
 		}
 		
 		Arrays.sort(splitArray, String.CASE_INSENSITIVE_ORDER);
-		StringBuilder result = new StringBuilder();
-		
-		for (String product : splitArray) {
-			if (product != null && !product.trim().equals("")) {
-				result.append(',').append(product);
-			}
-		}
-		
-		return result.substring(1);
+
+		return splitArray;
 	}
 	
 	@RequestMapping("/{appId}/getDefectsFromDefectTracker")

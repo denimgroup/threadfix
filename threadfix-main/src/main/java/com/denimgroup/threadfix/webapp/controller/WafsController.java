@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -43,9 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/wafs")
@@ -60,18 +59,22 @@ public class WafsController {
 	private final SanitizedLogger log = new SanitizedLogger(WafsController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
-		List<Waf> wafs = wafService.loadAll();
-		model.addAttribute(wafs);
+	public String index(Model model) {
 		model.addAttribute("newWaf", new Waf());
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("waf", new Waf());
 		model.addAttribute("wafPage", true);
-		model.addAttribute("createWafUrl", "wafs/new/ajax");
-		model.addAttribute("wafTypeList", wafService.loadAllWafTypes());
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_WAFS);
 		return "wafs/index";
 	}
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> map() {
+        Map<String, Object> responseMap = new HashMap<>();
+
+        responseMap.put("wafs", wafService.loadAll());
+        responseMap.put("wafTypes", wafService.loadAllWafTypes());
+
+        return RestResponse.success(responseMap);
+    }
 
 	@RequestMapping("/{wafId}")
 	public ModelAndView detail(@PathVariable("wafId") int wafId,
@@ -202,7 +205,7 @@ public class WafsController {
                 return null;
             }
         }
-        List<WafRule> ruleList = new ArrayList<>();
+        List<WafRule> ruleList;
 		if (waf.getWafRules() == null)
             ruleList = wafService.generateWafRules(waf, new WafRuleDirective(), application);
 		else {

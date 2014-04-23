@@ -50,6 +50,9 @@ import java.util.List;
 @SessionAttributes("user")
 public class ChangePasswordController {
 
+    private static final String CURRENT_PASSWORD_FIELD_STR = "currentPassword",
+                                PASSWORD_FIELD_STR = "password";
+
 	private UserService userService = null;
 	private RoleService roleService = null;
 	
@@ -80,6 +83,7 @@ public class ChangePasswordController {
 		User user = null;
 		
 		Object successMessage = ControllerUtils.getSuccessMessage(request);
+        Object errorMessage = ControllerUtils.getErrorMessage(request);
 		
 		if (userName != null){
 			user = userService.loadUser(userName);
@@ -93,6 +97,9 @@ public class ChangePasswordController {
 		ModelAndView mav = new ModelAndView("config/users/password");
 		mav.addObject(user);
 		mav.addObject("successMessage", successMessage);
+        mav.addObject("errorMessage", errorMessage);
+        mav.addObject(CURRENT_PASSWORD_FIELD_STR, ControllerUtils.getItem(request, CURRENT_PASSWORD_FIELD_STR));
+        mav.addObject(PASSWORD_FIELD_STR, ControllerUtils.getItem(request, PASSWORD_FIELD_STR));
 		return mav;
 	}
 
@@ -101,13 +108,14 @@ public class ChangePasswordController {
 			BindingResult result, SessionStatus status, HttpServletRequest request) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
-			return "config/users/password";
+            ControllerUtils.addErrorMessage(request, "Error!!!");
+            return "redirect:/configuration/users/password";
 		} else {
 			
 			if (user.getUnencryptedPassword() == null || 
 					user.getUnencryptedPassword().trim().equals("")) {
-				result.rejectValue("password", null, "You must enter a new password.");
-				return "config/users/password";
+                ControllerUtils.addItem(request, PASSWORD_FIELD_STR, "You must enter a new password.");
+                return "redirect:/configuration/users/password";
 			}
 			
 			String currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -115,8 +123,8 @@ public class ChangePasswordController {
 			User databaseUser = userService.loadUser(user.getName());
 			if (databaseUser != null && !databaseUser.getId().equals(user.getId())) {
 				// TODO check this out
-				result.rejectValue("currentPassword", "The user has changed since starting this procedure.");
-				return "config/users/password";
+                ControllerUtils.addItem(request, CURRENT_PASSWORD_FIELD_STR, "The user has changed since starting this procedure.");
+                return "redirect:/configuration/users/password";
 			}
 			
 			if (userService.isCorrectPassword(databaseUser, user.getCurrentPassword())) {
@@ -135,8 +143,8 @@ public class ChangePasswordController {
 				
 			} else {
 				log.info("An incorrect password was submitted during a password change attempt.");
-				result.rejectValue("currentPassword", null,"That was not the correct password.");
-				return "config/users/password";
+                ControllerUtils.addItem(request, CURRENT_PASSWORD_FIELD_STR, "That was not the correct password.");
+                return "redirect:/configuration/users/password";
 			}
 		}
 	}

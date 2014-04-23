@@ -26,22 +26,21 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -90,30 +89,23 @@ public class AddUserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processNew(@Valid @ModelAttribute User user, BindingResult result, 
-			SessionStatus status, Model model, HttpServletRequest request) {
+	public @ResponseBody RestResponse<User> processNew(@Valid @ModelAttribute User user, BindingResult result) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "config/users/newUserForm.jsp");
-			return "ajaxFailureHarness";
+			return FormRestResponse.failure("Errors", result);
 		} else {
 			User databaseUser = userService.loadUser(user.getName().trim());
 			if (databaseUser != null) {
-				result.rejectValue("name", "errors.nameTaken");
-				model.addAttribute("contentPage", "config/users/newUserForm.jsp");
-				return "ajaxFailureHarness";
+				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
+                return FormRestResponse.failure("Errors", result);
 			}
 
-			userService.createUser(user);
+			Integer id = userService.createUser(user);
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug(currentUser + " has created a new User with the name " + user.getName() + 
-					", the ID " + user.getId());
-			status.setComplete();
-			ControllerUtils.addSuccessMessage(request,
-                    "User " + user.getName() + " has been created successfully.");
-			model.addAttribute("contentPage", "/configuration/users");
-			return "ajaxRedirectHarness";
+			log.debug(currentUser + " has created a new User with the name " + user.getName() +
+                    ", the ID " + user.getId());
+			return RestResponse.success(userService.loadUser(id));
 		}
 	}
 }

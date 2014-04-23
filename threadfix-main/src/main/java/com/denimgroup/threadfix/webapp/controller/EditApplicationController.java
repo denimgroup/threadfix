@@ -24,12 +24,15 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -41,6 +44,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -90,18 +94,21 @@ public class EditApplicationController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "userName",
                 "password", "waf.id", "projectName", "projectRoot", "applicationCriticality.id",
-                "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch", "repositoryUserName", "repositoryPassword", "repositoryFolder");
+                "uniqueId", "organization.id", "frameworkType", "repositoryUrl", "repositoryBranch",
+                "repositoryUserName", "repositoryPassword", "repositoryFolder");
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model,
-			HttpServletRequest request) {
-		
+			HttpServletRequest request) throws IOException {
+
+        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
+
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return writer.writeValueAsString(RestResponse.failure("You don't have permission."));
 		}
 		
 		Application databaseApplication = applicationService.loadApplication(appId);
@@ -125,7 +132,7 @@ public class EditApplicationController {
 				&& !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
-		
+
 		if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
 					Permission.CAN_MANAGE_WAFS);
@@ -138,55 +145,34 @@ public class EditApplicationController {
 					application.getDefectTracker().getId() == null) {
 				application.setDefectTracker(null);
 			}
-            model.addAttribute("applicationTypes", FrameworkType.values());
-			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
-			
-			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_WAFS, orgId, appId));
-			
-			model.addAttribute("contentPage", "applications/forms/editApplicationForm.jsp");
-			return "ajaxFailureHarness";
+
+			return writer.writeValueAsString(FormRestResponse.failure("Errors", result));
+
 		} else {
 			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
-//			applicationService.updateProjectRoot(application);
-			
+
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
 
-            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
-					Permission.CAN_UPLOAD_SCANS,
-					Permission.CAN_MODIFY_VULNERABILITIES,
-					Permission.CAN_SUBMIT_DEFECTS,
-					Permission.CAN_VIEW_JOB_STATUSES,
-					Permission.CAN_GENERATE_REPORTS,
-					Permission.CAN_MANAGE_DEFECT_TRACKERS,
-					Permission.CAN_MANAGE_USERS);
-			
-			model.addAttribute("application", application);
-			model.addAttribute("finding", new Finding());
-			model.addAttribute("applicationTypes", FrameworkType.values());
-			model.addAttribute("contentPage", "applications/detailHeader.jsp");
-			ControllerUtils.addSuccessMessage(request,
-                    "The application was edited successfully.");
-			
-			return "ajaxSuccessHarness";
+            return writer.writeValueAsString(RestResponse.success(application));
 		}
 	}
 	
 	@RequestMapping(value="/wafAjax", method = RequestMethod.POST)
-	public String processSubmitAjaxWaf(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<Waf> processSubmitAjaxWaf(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You don't have permission to set the WAF for this application.");
 		}
-		
-		if(application != null && application.getId() != null) {
+
+        Waf waf = null;
+
+        if(application != null && application.getId() != null) {
 			Application databaseApplication = applicationService.loadApplication(application.getId());
 			if (databaseApplication == null) {
 				result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
@@ -204,7 +190,7 @@ public class EditApplicationController {
 				}
 				
 				if (newWafId != null && newWafId != 0) {
-					Waf waf = wafService.loadWaf(newWafId);
+					waf = wafService.loadWaf(newWafId);
 					
 					if (waf == null) {
 						result.rejectValue("waf.id", "errors.invalid",
@@ -223,26 +209,24 @@ public class EditApplicationController {
 			}
 		} else {
 			result.rejectValue("waf.id", null, null, "We were unable to retrieve the application.");
+            return FormRestResponse.failure("Unable to retrieve the application.", result);
 		}
 		
-		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "applications/forms/addWafForm.jsp");
-			return "ajaxFailureHarness";
+		if (result.hasErrors() || waf == null) {
+            return FormRestResponse.failure("Unable to add the WAF. Try again.", result);
 		} else {
-			model.addAttribute("addedWaf", true);
-			model.addAttribute("contentPage", "applications/wafRow.jsp");
-			return "ajaxSuccessHarness";
-		}
+		    return RestResponse.success(waf);
+        }
 	}
 	
 	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)
-	public String processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<DefectTracker> processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
-			return "403";
+			return RestResponse.failure("You are not authorized to manage this application.");
 		}
 		
 		if(!result.hasErrors()) {
@@ -256,17 +240,7 @@ public class EditApplicationController {
 		}
 		
 		if (result.hasErrors()) {
-            PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_DEFECT_TRACKERS,
-					Permission.CAN_MANAGE_WAFS);
-			
-			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, appId));
-			
-			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_WAFS, orgId, appId));
-			
-			model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
-			return "ajaxFailureHarness";
+            return FormRestResponse.failure("Invalid data.", result);
 			
 		} else {
 
@@ -277,10 +251,8 @@ public class EditApplicationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
-			
-			model.addAttribute("addedDefectTracker", true);
-			model.addAttribute("contentPage", "applications/defectTrackerRow.jsp");
-			return "ajaxSuccessHarness";
+
+			return RestResponse.success(application.getDefectTracker());
 		}
 	}
 }

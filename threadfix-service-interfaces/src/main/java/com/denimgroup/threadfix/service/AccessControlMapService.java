@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.Option;
 import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
@@ -39,7 +40,7 @@ public interface AccessControlMapService {
 	 * @param map
 	 * @return
 	 */
-	AccessControlTeamMap parseAccessControlTeamMap(AccessControlMapModel map);
+	Option<AccessControlTeamMap> parseAccessControlTeamMap(AccessControlMapModel map);
 	
 	/**
 	 * Load the map with the given ID.

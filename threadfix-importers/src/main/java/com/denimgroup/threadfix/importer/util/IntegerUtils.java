@@ -42,6 +42,11 @@ public class IntegerUtils {
      * @return the parsed number, or -1 on failure
      */
     public static int getPrimitive(String input) {
+        if (!input.matches("^[0-9]+$")) {
+            log.warn("Non-numeric String encountered.");
+            return -1;
+        }
+
         try {
             return Integer.valueOf(input);
         } catch (NumberFormatException e) {
@@ -57,6 +62,12 @@ public class IntegerUtils {
      * @return the parsed number, or null on failure
      */
     public static Integer getIntegerOrNull(String input) {
+
+        if (!input.matches("^[0-9]+$")) {
+            log.warn("Non-numeric String encountered.");
+            return null;
+        }
+
         try {
             return Integer.valueOf(input);
         } catch (NumberFormatException e) {

@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
-import com.denimgroup.threadfix.service.enterprise.LicenseInformation;
-import com.denimgroup.threadfix.service.enterprise.LicenseReader;
-import com.denimgroup.threadfix.service.enterprise.Option;
+import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +56,8 @@ public class AddApplicationController {
 	private WafService wafService = null;
     @Autowired
 	private ApplicationCriticalityService applicationCriticalityService = null;
+    @Autowired(required = false)
+    private LicenseService licenseService;
 
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationController.class);
 	
@@ -98,8 +97,6 @@ public class AddApplicationController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
 			return "403";
 		}
-
-
 
 		if (application.getOrganization() == null) {
 			Organization org = organizationService.loadOrganization(orgId);

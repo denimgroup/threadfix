@@ -27,9 +27,12 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,16 +68,16 @@ public class EditWafController {
 		return wafService.loadAllWafTypes();
 	}
 	
-	@RequestMapping(value="ajax", method = RequestMethod.POST)
-	public String editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+	@RequestMapping(method = RequestMethod.POST)
+	public @ResponseBody RestResponse<Waf> editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		String editResult = editSubmit(wafId, waf, result, status, model);
 		
 		if (editResult.equals("Success")) {
-			return index(model, "The WAF " + waf.getName() + " has been successfully edited.");
+			return RestResponse.success(wafService.loadWaf(wafId)); // here we load the WAF to get the full data objects instead of just form bindings
 		} else {
-			return editResult;
+			return FormRestResponse.failure(editResult, result);
 		}
 	}
 	
@@ -106,14 +109,14 @@ public class EditWafController {
 			} else {
 				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
 				if (databaseWaf != null && !databaseWaf.getId().equals(waf.getId())) {
-					result.rejectValue("name", "errors.nameTaken");
+					result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 				}
 			}
 			
 			if (waf.getWafType() == null)
-				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
+				result.rejectValue("wafType.id", MessageConstants.ERROR_REQUIRED, new String [] { "WAF Type" }, null );
 			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
-				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
+				result.rejectValue("wafType.id", MessageConstants.ERROR_INVALID, new String [] { waf.getWafType().getId().toString() }, null );
 			
 			if (result.hasErrors()) {
 				model.addAttribute("contentPage", "wafs/forms/editWafForm.jsp");

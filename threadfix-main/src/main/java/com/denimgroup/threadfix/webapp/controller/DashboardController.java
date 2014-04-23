@@ -90,13 +90,13 @@ public class DashboardController {
 		return "dashboard/dashboard";
 	}
 	
-	@RequestMapping(value="/leftReport", method=RequestMethod.POST)
+	@RequestMapping(value="/leftReport", method=RequestMethod.GET)
 	public String leftReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
 		return report(model, request, ReportFormat.SIX_MONTH_SUMMARY);
 	}
 	
-	@RequestMapping(value="/rightReport", method=RequestMethod.POST)
+	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
 	public String rightReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
 		if (request.getParameter("appId") != null) {
@@ -135,8 +135,9 @@ public class DashboardController {
 				log.warn("Non-numeric string was passed to DashboardController", e); // should never happen
 			}
 		} else {
-			log.warn("Non-numeric string was passed to DashboardController");
+			log.warn("Non-numeric string was passed to DashboardController: " + string);
 		}
+        assert false : "Non-integer values indicate a coding error: " + string;
 		return -1;
 	}
 

@@ -6,30 +6,33 @@
 		<img src="<%=request.getContextPath()%>/images/TF_logo_w_arrow_strap.png" class="transparent_png" alt="Threadfix" />
 	</a>
 </div>
-<div id="menu">
+
+<div id="menu" ng-controller="HeaderController">
 	<table>
 		<tbody>
 			<tr>
 				<security:authorize ifNotGranted="ROLE_CAN_GENERATE_REPORTS">
 					<td id="tab-spaces" style="width:110px;background:none;"></td>
 				</security:authorize>
-				<td class="clickInsideLink" id="tab-dashboard" style="width: 130px;">
+
+                <spring:url value="/dashboard" htmlEscape="true" var="dashboardLink"/>
+				<td class="pointer" ng-click="goTo('/dashboard')" id="tab-dashboard" style="width: 130px;">
 					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
 				</td>
-				<td class="clickInsideLink" id="tab-apps" style="width: 120px;">
+				<td class="pointer" ng-click="goTo('/organizations')"  id="tab-apps" style="width: 120px;">
 					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Applications</a>
 				</td>
-				<td class="clickInsideLink" id="tab-scans" style="width: 90px;">
+				<td class="pointer" ng-click="goTo('/scans')" id="tab-scans" style="width: 90px;">
 					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-					<td class="clickInsideLink" id="tab-reports" style="width: 110px;">
+					<td class="pointer" ng-click="goTo('/reports')" id="tab-reports" style="width: 110px;">
 						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
 					</td>
 				</security:authorize>
 				<td id="tab-user" style="width: 130px;">
 					<div class="dropdown normalLinks">
-					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
+					<div class="dropdown-toggle" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
 						<a id="tabUserAnchor" href="#">
 							<i class="icon-user icon-white"></i> <security:authentication property="principal.username"/>
@@ -37,7 +40,7 @@
 						</a>
 						</div>
 				  	 </div>
-					<ul id="userConfigurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="userConfigurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;">
 						
 						<security:authentication var="principal" property="principal" />
 						<c:if test="${ not principal.isLdapUser }">
@@ -62,14 +65,14 @@
 				<td id="tab-config" style="width: 30px;padding-left:0;">
 					
 					<div class="dropdown normalLinks">
-					<div data-toggle="dropdown" data-target="#" style="height:32px;text-align:center;">
+					<div class="dropdown-toggle data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
 						<a id="tabConfigAnchor" href="#">
 							<i class="icon-cog icon-white"></i>
 						</a>
 						</div>
 				  	 </div>
-					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;" aria-labelledby="configurationHeader" role="menu">
+					<ul id="configurationHeader" class="dropdown-menu pull-right config-header" style="text-align:right;">
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_API_KEYS">
 						    <li class="normalLinks">
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>

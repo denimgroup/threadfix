@@ -41,6 +41,7 @@ public class AccessControlApplicationMap extends AuditableEntity {
 	private Role role;
 	
 	@ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "accessControlTeamMapId", nullable = false)
 	public AccessControlTeamMap getAccessControlTeamMap() {
 		return accessControlTeamMap;
@@ -52,7 +53,6 @@ public class AccessControlApplicationMap extends AuditableEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "applicationId", nullable = false)
-	@JsonIgnore
 	public Application getApplication() {
 		return application;
 	}

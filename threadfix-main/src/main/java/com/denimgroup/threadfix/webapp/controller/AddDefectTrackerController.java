@@ -23,15 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
-import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -91,44 +91,41 @@ public class AddDefectTrackerController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
-			BindingResult result, SessionStatus status, Model model,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<DefectTracker> processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
+			BindingResult result) {
 		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
 		
 		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "config/defecttrackers/forms/createDTForm.jsp");
-			return "ajaxFailureHarness";
+            return FormRestResponse.failure("Found some errors.",result);
 		} else {
 			
 			DefectTracker databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
 			if (databaseDefectTracker != null)
-				result.rejectValue("name", "errors.nameTaken");
+				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 
 			if (defectTracker.getDefectTrackerType() == null) {
-				result.rejectValue("defectTrackerType.id", "errors.invalid", 
+				result.rejectValue("defectTrackerType.id", MessageConstants.ERROR_INVALID,
 						new String [] { "Defect Tracker Type" }, null );
-			
 			} else if (defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()) == null) {
-				result.rejectValue("defectTrackerType.id", "errors.invalid", 
+				result.rejectValue("defectTrackerType.id", MessageConstants.ERROR_INVALID,
 						new String [] { defectTracker.getDefectTrackerType().getId().toString() }, null );
 			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
-				if (!result.hasFieldErrors("url")) {
-					result.rejectValue("url", "errors.invalid", new String [] { "URL" }, null);		
-				} else if (result.getFieldError("url").getDefaultMessage() != null &&
-						result.getFieldError("url").getDefaultMessage().equals(
-								AbstractDefectTracker.INVALID_CERTIFICATE)){
-					model.addAttribute("showKeytoolLink", true);
-				}
-			}
+                if (!result.hasFieldErrors("url")) {
+                    result.rejectValue("url", MessageConstants.ERROR_INVALID, new String [] { "URL" }, null);
+                } else if (result.getFieldError("url").getDefaultMessage() != null &&
+                        result.getFieldError("url").getDefaultMessage().equals(
+                                AbstractDefectTracker.INVALID_CERTIFICATE) ){
+                    result.rejectValue("url", null, null, MessageConstants.ERROR_SELF_CERTIFICATE);
+                }
+            }
 			
 			if (result.hasErrors()) {
-				model.addAttribute("contentPage", "config/defecttrackers/forms/createDTForm.jsp");
-				return "ajaxFailureHarness";
+                return FormRestResponse.failure("Found some errors.",result);
 			}
-			
+
+            defectTracker.setDefectTrackerType(defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()));
 			defectTrackerService.storeDefectTracker(defectTracker);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -136,40 +133,9 @@ public class AddDefectTrackerController {
 					", the URL " + defectTracker.getUrl() + 
 					", the type " + defectTracker.getDefectTrackerType().getName() + 
 					", and the ID " + defectTracker.getId());
-			
-			String referrer = request.getHeader("referer");
-			if (referrer.contains("configuration/defecttrackers")) {
-				model.addAttribute("contentPage", "/configuration/defecttrackers");
-				ControllerUtils.addSuccessMessage(request,
-                        "Defect Tracker " + defectTracker.getName() + " has been created successfully.");
-				return "ajaxRedirectHarness";
-			} else {
-			
-				Application application = null;
-				if (request.getParameter("applicationId") != null) {
-					Integer testId = null;
-					try {
-						testId = Integer.valueOf((String)request.getParameter("applicationId"));
-						application = applicationService.loadApplication(testId);
-					} catch (NumberFormatException e) {
-						log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
-					}
-				}
-				
-				model.addAttribute("application", application);
-				model.addAttribute("contentPage", "applications/forms/addDTForm.jsp");
-				
-				model.addAttribute("newDefectTracker", defectTracker);
-				model.addAttribute("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
-				model.addAttribute("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
-				model.addAttribute("defectTracker", new DefectTracker());
-                if (permissionService != null) {
-				    permissionService.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS);
-                } else {
-                    model.addAttribute(Permission.CAN_MANAGE_DEFECT_TRACKERS.getCamelCase(), true);
-                }
-				return "ajaxSuccessHarness";
-			}
-		}
+
+
+            return RestResponse.success(defectTracker);
+        }
 	}
 }

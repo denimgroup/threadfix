@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -68,8 +69,10 @@ public class HibernateFindingDao implements FindingDao {
 		Integer channelTypeId = (Integer) currentSession.createQuery(
 				"select id from ChannelType where name = 'Manual'")
 				.uniqueResult();
-		if (channelTypeId == null)
+		if (channelTypeId == null) {
+            assert false : "ThreadFix was unable to find the manual channel. This indicates an incomplete database connection.";
 			return null;
+        }
 		Integer applicationChannelId = (Integer) (currentSession
 				.createQuery(
 						"select id from ApplicationChannel where applicationId = :appId and channelTypeId = :channelTypeId")
@@ -215,7 +218,7 @@ public class HibernateFindingDao implements FindingDao {
 		return criteria.createAlias("channelSeverity", "severity")
 				.createAlias("channelVulnerability", "vuln")
 				.createAlias("surfaceLocation", "surface")
-				.setFirstResult((page - 1) * 100).setMaxResults(100)
+				.setFirstResult((page - 1) * ControllerUtils.NUMBER_ITEM_PER_PAGE).setMaxResults(ControllerUtils.NUMBER_ITEM_PER_PAGE)
 				.addOrder(Order.desc("severity.numericValue"))
 				.addOrder(Order.asc("vuln.name"))
 				.addOrder(Order.asc("surface.path"));

@@ -26,24 +26,21 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/organizations/{orgId}/modalEdit")
+@RequestMapping("/organizations/{orgId}/edit")
 @SessionAttributes("organization")
 public class EditOrganizationController {
 
@@ -63,38 +60,25 @@ public class EditOrganizationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String editSubmit(@PathVariable("orgId") int orgId, Model model,
-			@Valid @ModelAttribute Organization organization, BindingResult result,
-			SessionStatus status, HttpServletRequest request) {
+	public @ResponseBody RestResponse<Organization> editSubmit(@PathVariable("orgId") int orgId,
+			@Valid @ModelAttribute Organization organization, BindingResult result) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null) ||
 				!organization.isActive()) {
-			return "403";
-		}
+			return RestResponse.failure("You don't have permission to edit this team.");
+        }
 		
 		if (result.hasErrors()) {
-			model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
-			Organization dbOrg = organizationService.loadOrganization(orgId);
-			model.addAttribute("originalName", dbOrg.getName());
-			return "ajaxFailureHarness";
+            return RestResponse.failure("Errors: " + result.getAllErrors());
 		} else {
 			
 			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
-				result.rejectValue("name", null, null, "This field cannot be blank");
-				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
-				organization.setName(null);
-				Organization dbOrg = organizationService.loadOrganization(orgId);
-				model.addAttribute("originalName", dbOrg.getName());
-				return "ajaxFailureHarness";
+                return RestResponse.failure("Name cannot be blank.");
 			}
 			
 			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
 			if (databaseOrganization != null && !databaseOrganization.getId().equals(organization.getId())) {
-				result.rejectValue("name", "errors.nameTaken");
-				model.addAttribute("contentPage", "organizations/editTeamForm.jsp");
-				Organization dbOrg = organizationService.loadOrganization(orgId);
-				model.addAttribute("originalName", dbOrg.getName());
-				return "ajaxFailureHarness";
+                return RestResponse.failure("That name is already taken.");
 			}
 			
 			organizationService.storeOrganization(organization);
@@ -102,11 +86,7 @@ public class EditOrganizationController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
 			
-			ControllerUtils.addSuccessMessage(request,
-                    "Team " + organization.getName() + " has been edited successfully.");
-			
-			model.addAttribute("contentPage", "/organizations/" + String.valueOf(orgId));
-			return "ajaxRedirectHarness";
+			return RestResponse.success(organization);
 		}
 	}
 

@@ -71,6 +71,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Column(length = PASSWORD_LENGTH, nullable = false)
+    @JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -80,6 +81,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Column(length = PASSWORD_LENGTH, nullable = false)
+    @JsonIgnore
 	public String getSalt() {
 		return salt;
 	}
@@ -89,6 +91,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Column(nullable = false)
+    @JsonIgnore
 	public boolean isApproved() {
 		return approved;
 	}
@@ -98,6 +101,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Column(nullable = false)
+    @JsonIgnore
 	public boolean isLocked() {
 		return locked;
 	}
@@ -108,6 +112,7 @@ public class User extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore
 	public Date getLastPasswordChangedDate() {
 		return lastPasswordChangedDate;
 	}
@@ -118,6 +123,7 @@ public class User extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore
 	public Date getLastLoginDate() {
 		return lastLoginDate;
 	}
@@ -127,6 +133,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Column(nullable = false)
+    @JsonIgnore
 	public int getFailedPasswordAttempts() {
 		return failedPasswordAttempts;
 	}
@@ -137,6 +144,7 @@ public class User extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
+    @JsonIgnore
 	public Date getFailedPasswordAttemptWindowStart() {
 		return failedPasswordAttemptWindowStart;
 	}
@@ -146,6 +154,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Transient
+    @JsonIgnore
 	public String getUnencryptedPassword() {
 		return unencryptedPassword;
 	}
@@ -155,6 +164,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Transient
+    @JsonIgnore
 	public String getPasswordConfirm() {
 		return passwordConfirm;
 	}
@@ -164,7 +174,8 @@ public class User extends AuditableEntity {
 	}
 
 	@Transient
-	public String getCurrentPassword() {
+    @JsonIgnore
+    public String getCurrentPassword() {
 		return currentPassword;
 	}
 
@@ -174,6 +185,7 @@ public class User extends AuditableEntity {
 
 	//Hibernate naming conventions make this nasty although there may be a good way to do it
 	@Column
+    @JsonIgnore
 	public Boolean isHasChangedInitialPassword() {
 		return hasChangedInitialPassword;
 	}

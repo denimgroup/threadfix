@@ -340,7 +340,7 @@ public class FindingServiceImpl implements FindingService {
 		if (user != null)
 			userId = user.getId();
 		if (userName == null || userId == null)
-			return null;
+			return new ArrayList<>();
 		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
 		if(findings == null) return null;
 		List<String> pathList = new ArrayList<>();
@@ -361,7 +361,7 @@ public class FindingServiceImpl implements FindingService {
 		if (user != null)
 			userId = user.getId();
 		if (userName == null || userId == null)
-			return null;
+			return new ArrayList<>();
 		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
 		if(findings == null) return null;
 		List<String> pathList = new ArrayList<>();

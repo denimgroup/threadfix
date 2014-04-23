@@ -26,9 +26,11 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -80,16 +81,27 @@ public class RolesController {
 		
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
-		model.addAttribute("roleList", roles);
 		model.addAttribute("role", new Role());
 		model.addAttribute("editRole", new Role());
 		return "config/roles/index";
 	}
-	
+
+
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public @ResponseBody RestResponse<List<Role>> map() {
+
+		List<Role> roles = roleService.loadAll();
+
+		for (Role listRole : roles) {
+			listRole.setCanDelete(roleService.canDelete(listRole));
+		}
+
+        return RestResponse.success(roles);
+	}
+
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String newSubmit(Model model, @Valid @ModelAttribute Role role, 
-			BindingResult result, SessionStatus status,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<Role> newSubmit(Model model, @Valid @ModelAttribute Role role,
+			BindingResult result) {
 		role.setId(null);
 		
 		String resultString = roleService.validateRole(role, result);
@@ -99,7 +111,7 @@ public class RolesController {
 			}
 			model.addAttribute("editRole", role);
 			model.addAttribute("contentPage", "config/roles/newForm.jsp");
-			return "ajaxFailureHarness";
+			return FormRestResponse.failure("Validation failed.", "displayName", resultString);
 		}
 		
 		role.setDisplayName(role.getDisplayName().trim());
@@ -117,41 +129,32 @@ public class RolesController {
 		}
 		
 		model.addAttribute("roleList", roles);
-		ControllerUtils.addSuccessMessage(request, 
-				"Role " + role.getDisplayName() + " was created successfully.");
-		
-		model.addAttribute("contentPage","/configuration/roles");
-		return "ajaxRedirectHarness";
+
+		return RestResponse.success(role);
 	}
 	
 	@RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
-	public String delete(@PathVariable("roleId") int roleId,
-			HttpServletRequest request) {
+	public @ResponseBody RestResponse<String> delete(@PathVariable("roleId") int roleId) {
 		Role role = roleService.loadRole(roleId);
 		
 		if (role != null) {
 			String roleName = role.getDisplayName();
 			if (roleService.canDelete(role)) {
 				roleService.deactivateRole(roleId);
-				ControllerUtils.addSuccessMessage(request, 
-						"Role " + roleName + " was deleted successfully.");
+                return RestResponse.success("Role " + roleName + " was deleted successfully.");
 			} else {
-				ControllerUtils.addErrorMessage(request, 
-						"Role " + roleName + " was not deleted successfully.");
+				return RestResponse.failure("Role " + roleName + " was not deleted successfully.");
 			}
 		} else {
 			log.warn(ResourceNotFoundException.getLogMessage("Role", roleId));
 			throw new ResourceNotFoundException();
 		}
-		
-		return "redirect:/configuration/roles";
 	}
 	
 	@RequestMapping(value = "/{roleId}/edit", method = RequestMethod.POST)
-	public String saveEdit(@PathVariable("roleId") int roleId,
+	public @ResponseBody RestResponse<Role> saveEdit(@PathVariable("roleId") int roleId,
 			@Valid @ModelAttribute Role role,
-			BindingResult result, SessionStatus status,
-			ModelMap model, HttpServletRequest request) {
+			BindingResult result, ModelMap model) {
 		
 		role.setId(roleId);
 		
@@ -162,7 +165,7 @@ public class RolesController {
 			}
 			model.addAttribute("editRole", role);
 			model.addAttribute("contentPage", "config/roles/form.jsp");
-			return "ajaxFailureHarness";
+			return FormRestResponse.failure("Failed validation check.", "displayName", resultString);
 		}
 		
 		if (role.getDisplayName() != null) {
@@ -172,10 +175,6 @@ public class RolesController {
 			throw new ResourceNotFoundException();
 		}
 		
-		ControllerUtils.addSuccessMessage(request, 
-				"Role " + role.getDisplayName() + " was edited successfully.");
-		
-		model.addAttribute("contentPage","/configuration/roles");
-		return "ajaxRedirectHarness";
+		return RestResponse.success(role);
 	}
 }

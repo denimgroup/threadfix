@@ -26,11 +26,14 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -40,11 +43,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans")
 public class ScanController {
-	
+
+    private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
 	private final SanitizedLogger log = new SanitizedLogger(ScanController.class);
 
     @Autowired
@@ -98,13 +105,13 @@ public class ScanController {
 	
 	@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
-	public ModelAndView deleteScan(@PathVariable("orgId") Integer orgId,
+	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
 			@PathVariable("scanId") Integer scanId,
 			HttpServletRequest request) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
-			return new ModelAndView("403");
+			return RestResponse.failure("You do not have permission to delete scans.");
 		}
 		
 		if (scanId != null) {
@@ -116,17 +123,15 @@ public class ScanController {
 			}
 		}
 		
-		ControllerUtils.addSuccessMessage(request, "The scan was successfully deleted.");
-        ControllerUtils.setActiveTab(request, ControllerUtils.SCAN_TAB);
-		return new ModelAndView("redirect:/organizations/" + orgId + "/applications/" + appId);
+		return RestResponse.success("Successfully deleted scan.");
 	}
 	
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
-	public String scanTable(Model model,
-			@RequestBody TableSortBean bean,
+	public @ResponseBody String scanTable(Model model,
+			@ModelAttribute TableSortBean bean,
 			@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId) {
+			@PathVariable("scanId") Integer scanId) throws IOException {
 		
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
 			return "403";
@@ -139,9 +144,9 @@ public class ScanController {
 		}
 
 		long numFindings = scanService.getFindingCount(scanId);
-		long numPages = numFindings / 100;
+		long numPages = numFindings / ControllerUtils.NUMBER_ITEM_PER_PAGE;
 		
-		if (numFindings % 100 == 0) {
+		if (numFindings % ControllerUtils.NUMBER_ITEM_PER_PAGE == 0) {
 			numPages -= 1;
 		}
 		
@@ -153,20 +158,22 @@ public class ScanController {
 			bean.setPage(1);
 		}
 				
-		model.addAttribute("numPages", numPages);
-		model.addAttribute("page", bean.getPage());
-		model.addAttribute("numFindings", numFindings);
-		model.addAttribute("findingList", findingService.getFindingTable(scanId, bean));
-		model.addAttribute(scan);
-		return "scans/table";
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("numPages", numPages);
+        responseMap.put("page", bean.getPage());
+        responseMap.put("numFindings", numFindings);
+        responseMap.put("findingList", findingService.getFindingTable(scanId, bean));
+        responseMap.put("scan", scan);
+
+        return writer.writeValueAsString(RestResponse.success(responseMap));
 	}
 	
 	@RequestMapping(value = "/{scanId}/unmappedTable", method = RequestMethod.POST)
-	public String unmappedScanTable(Model model,
-			@RequestBody TableSortBean bean,
+	public @ResponseBody String unmappedScanTable(Model model,
+			@ModelAttribute TableSortBean bean,
 			@PathVariable("scanId") Integer scanId,
 			@PathVariable("appId") Integer appId,
-			@PathVariable("orgId") Integer orgId) {
+			@PathVariable("orgId") Integer orgId) throws IOException {
 		
 		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
 			return "403";
@@ -193,11 +200,13 @@ public class ScanController {
 			bean.setPage(1);
 		}
 		
-		model.addAttribute("numPages", numPages);
-		model.addAttribute("page", bean.getPage());
-		model.addAttribute("numFindings", numFindings);
-		model.addAttribute("findingList", findingService.getUnmappedFindingTable(scanId, bean));
-		model.addAttribute(scan);
-		return "scans/unmappedTable";
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("numPages", numPages);
+        responseMap.put("page", bean.getPage());
+        responseMap.put("numFindings", numFindings);
+        responseMap.put("findingList", findingService.getUnmappedFindingTable(scanId, bean));
+        responseMap.put("scan", scan);
+
+        return writer.writeValueAsString(RestResponse.success(responseMap));
 	}
 }

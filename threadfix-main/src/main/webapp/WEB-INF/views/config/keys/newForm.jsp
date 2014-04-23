@@ -1,39 +1,31 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="newKeyModal.html">
+    <div class="modal-header">
+        <h4 id="myModalLabel">
+            New API Key
+        </h4>
+    </div>
 
-<spring:url value="/configuration/keys/new" var="newKeyUrl"/>
-<form:form id="newKeyForm" style="margin-bottom:0px;" modelAttribute="apiKey" method="post" action="${ fn:escapeXml(newKeyUrl) }">
-	<div class="modal-body">
-	<table class="table noBorders">
-		<tbody>
-			<tr>
-				<td>Note (optional) </td>
-				<td class="inputValue">
-					<form:input path="note" 
-						cssClass="focus clear-after-submit" 
-						size="70" 
-						maxlength="255" 
-						value="${ note }" />
-				</td>
-				<td style="padding-left:5px">
-					<form:errors path="note" cssClass="errors" />
-				</td>
-			</tr>
-			<tr>
-				<td>Restricted?</td>
-				<td class="inputValue">
-					<form:checkbox cssClass="clear-after-submit" path="isRestrictedKey"/>
-				</td>
-				<td style="padding-left:5px">
-					<form:errors path="isRestrictedKey" cssClass="errors" />
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<div ng-form="form" class="modal-body">
+        <table class="modal-form-table">
+            <tbody>
+                <tr>
+                    <td>Note (optional) </td>
+                    <td class="inputValue">
+                        <input name="note" ng-model="object.note" type="text"
+                               focus-on="focusInput" size="70" ng-maxlength="255" />
+                    </td>
+                    <td>
+                        <span class="errors" ng-show="form.note.$dirty && form.note.$error.maxlength">Over 255 characters limit!</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Restricted?</td>
+                    <td class="inputValue">
+                        <input type="checkbox" ng-model="object.isRestrictedKey" name="isRestrictedKey"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 	</div>
-	<div class="modal-footer">
-		<button id="closeNewKeyFormButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<a id="submitKeyModalCreate" class="modalSubmit btn btn-primary" data-success-div="tableDiv">
-			Create Key
-		</a>
-	</div>
-</form:form>
+    <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
+</script>

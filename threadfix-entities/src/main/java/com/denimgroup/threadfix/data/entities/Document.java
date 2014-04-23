@@ -23,11 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.sql.Blob;
+import java.util.Date;
 
 @Entity
 @Table(name = "Document")
@@ -51,7 +54,8 @@ public class Document extends AuditableEntity {
 	private Blob file;
 
 	@Column(length = 50, nullable = false)
-	public String getName() {
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getName() {
 		return name;
 	}
 
@@ -59,7 +63,13 @@ public class Document extends AuditableEntity {
 		this.name = name;
 	}
 
-	@ManyToOne
+    @Transient
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public Date getUploadedDate() {
+        return super.getCreatedDate();
+    }
+
+    @ManyToOne
 	@JoinColumn(name = "vulnerabilityId")
 	@JsonIgnore
 	public Vulnerability getVulnerability() {
@@ -82,7 +92,8 @@ public class Document extends AuditableEntity {
 	}
 
 	@Column(length = 10, nullable = true)
-	public String getType() {
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getType() {
 		return type;
 	}
 
@@ -99,6 +110,7 @@ public class Document extends AuditableEntity {
 		this.contentType = contentType;
 	}
 
+    @JsonIgnore
 	public Blob getFile() {
 		return file;
 	}

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,6 +56,7 @@ public class BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Object.class)
 	public Integer getId() {
 		return id;
 	}

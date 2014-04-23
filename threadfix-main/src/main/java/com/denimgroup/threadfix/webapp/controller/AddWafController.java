@@ -28,11 +28,12 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import org.jetbrains.annotations.Nullable;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,23 +81,22 @@ public class AddWafController {
 	}
 
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
-	public String newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf, 
+	public @ResponseBody RestResponse<Waf> newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
 			BindingResult result,
 			SessionStatus status, Model model,
 			HttpServletRequest request) {
 		model.addAttribute("createWafUrl", "/wafs/new/ajax/appPage");
-		
+
 		String validationResult = newSubmit(waf,result,status,model,request);
 		
 		if (!validationResult.equals("SUCCESS")) {
-			return validationResult;
+			return FormRestResponse.failure(validationResult, result);
 		}
 		
 		Application application = null;
 		if (request.getParameter("applicationId") != null) {
-			Integer testId = null;
 			try {
-				testId = Integer.valueOf((String)request.getParameter("applicationId"));
+                Integer testId = Integer.valueOf(request.getParameter("applicationId"));
 				application = applicationService.loadApplication(testId);
 			} catch (NumberFormatException e) {
 				log.warn("Non-numeric value discovered in applicationId field. Someone is trying to tamper with it.");
@@ -109,11 +109,8 @@ public class AddWafController {
 			application.setWaf(waf);
 			applicationService.storeApplication(application);
 		}
-		model.addAttribute(application);
-		model.addAttribute("addedWaf", true);
-		model.addAttribute("contentPage", "applications/wafRow.jsp");
-		
-		return "ajaxSuccessHarness";
+
+        return RestResponse.success(waf);
 	}
 	
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
@@ -148,17 +145,18 @@ public class AddWafController {
 			} else {
 				Waf databaseWaf = wafService.loadWaf(waf.getName().trim());
 				if (databaseWaf != null) {
-					result.rejectValue("name", "errors.nameTaken");
+					result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 				}
 			}
 			
-			if (waf.getWafType() == null)
-				result.rejectValue("wafType.id", "errors.required", new String [] { "WAF Type" }, null );
-			else if (wafService.loadWafType(waf.getWafType().getId()) == null)
-				result.rejectValue("wafType.id", "errors.invalid", new String [] { waf.getWafType().getId().toString() }, null );
-			else 
+			if (waf.getWafType() == null) {
+				result.rejectValue("wafType.id", MessageConstants.ERROR_REQUIRED, new String [] { "WAF Type" }, null );
+            } else if (wafService.loadWafType(waf.getWafType().getId()) == null) {
+				result.rejectValue("wafType.id", MessageConstants.ERROR_INVALID, new String [] { waf.getWafType().getId().toString() }, null );
+            } else {
 				waf.setWafType(wafService.loadWafType(waf.getWafType().getId()));
-			
+            }
+
 			if (result.hasErrors()) {
 				model.addAttribute("contentPage", "wafs/forms/createWafForm.jsp");
 				return "ajaxFailureHarness";

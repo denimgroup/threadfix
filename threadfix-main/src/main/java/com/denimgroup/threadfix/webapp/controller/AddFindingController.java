@@ -25,12 +25,13 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -39,10 +40,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 @Controller
@@ -114,82 +112,45 @@ public class AddFindingController {
 	}
 
 	@RequestMapping(params = "group=static", method = RequestMethod.POST)
-	public String staticSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<String> staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
-			SessionStatus status, ModelMap model,
-            HttpServletRequest request) {
-		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
-			return "403";
-		}
-		
-		findingService.validateManualFinding(finding, result);
-		
-		if (result.hasErrors()) {
-			model.addAttribute("isStatic",true);
-			return returnForm(model, appId);
-			
-		} else {
-			finding.setIsStatic(true);
-			boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
-			
-			if (!mergeResult) {
-				log.warn("The merge failed. Returning the form again.");
-				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
-				model.addAttribute("static",true);
-				return returnForm(model, appId);
-			} else {
-				status.setComplete();
-                ControllerUtils.addSuccessMessage(request, "A new static manual finding has been added to application");
-				model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-				return "ajaxRedirectHarness";
-			}
-		}
+			SessionStatus status) {
+	    return submitBackend(appId, orgId, finding, result, status, true);
 	}
 	
 	@RequestMapping(params = "group=dynamic", method = RequestMethod.POST)
-	public String dynamicSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<String> dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
-			SessionStatus status, ModelMap model,
-            HttpServletRequest request) {
-		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
-			return "403";
-		}
-		
-		findingService.validateManualFinding(finding, result);
-		
-		if (result.hasErrors()) {
-			model.addAttribute("isStatic",false);
-			return returnForm(model, appId);
-		} else {
-			finding.setIsStatic(false);
+			SessionStatus status) {
+        return submitBackend(appId, orgId, finding, result, status, false);
+    }
 
-            if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null) {
-                try {
-                    URL resultURL = new URL(finding.getSurfaceLocation().getPath());
-                    finding.getSurfaceLocation().setUrl(resultURL);
-                } catch (MalformedURLException e) {
-                    log.info("Path of '" + finding.getSurfaceLocation().getPath() + "' was not given in URL format, leaving it as it was.");
-                }
+    private RestResponse<String> submitBackend(int appId, int orgId, Finding finding, BindingResult result, SessionStatus status, boolean isStatic) {
+        if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+            return RestResponse.failure("You don't have permission to upload scans.");
+        }
+
+        findingService.validateManualFinding(finding, result);
+
+        if (result.hasErrors()) {
+            return FormRestResponse.failure("Form Validation failed.", result);
+
+        } else {
+            finding.setIsStatic(isStatic);
+            boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
+
+            if (!mergeResult) {
+                log.warn("The merge failed. Returning the form again.");
+                result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
+                return FormRestResponse.failure("Form Validation failed.", result);
+            } else {
+                status.setComplete();
+                return RestResponse.success("A new static manual finding has been added to application");
             }
-			boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
-			
-			if (!mergeResult) {
-				log.warn("The merge failed. Returning the form again.");
-				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
-				model.addAttribute("static",false);
-				return returnForm(model, appId);
-			} else {
-				status.setComplete();
-                ControllerUtils.addSuccessMessage(request, "A new dynamic manual finding has been added to application");
-				model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId);
-				return "ajaxRedirectHarness";
-			}
-		}
-	}
+        }
+    }
 
 	@RequestMapping(value = "/ajax_cwe", method = RequestMethod.POST)
 	@ResponseBody

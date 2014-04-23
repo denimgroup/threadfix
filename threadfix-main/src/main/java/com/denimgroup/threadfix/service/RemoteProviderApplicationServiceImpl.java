@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
 import java.util.*;
 
@@ -83,7 +82,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-	public void updateApplications(RemoteProviderType remoteProviderType) {
+	public List<RemoteProviderApplication> updateApplications(RemoteProviderType remoteProviderType) {
 
 		List<RemoteProviderApplication> newApps =
                 remoteProviderFactory.fetchApplications(remoteProviderType);
@@ -121,6 +120,8 @@ public class RemoteProviderApplicationServiceImpl implements
 				}
 			}
 		}
+
+        return appsForType;
 	}
 	
 	@Override
@@ -185,19 +186,24 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-	public String processApp(BindingResult result,
-			RemoteProviderApplication remoteProviderApplication, Application application) {
+	public String processApp(int remoteProviderApplicationId, int applicationId) {
 
-		application = applicationDao.retrieveById(application.getId());
+		Application application = applicationDao.retrieveById(applicationId);
 
 		if (application == null) {
 			return "Application choice was invalid.";
 		}
 
+        RemoteProviderApplication remoteProviderApplication = remoteProviderApplicationDao.retrieveById(remoteProviderApplicationId);
+
+        if (remoteProviderApplication == null) {
+            return "Unable to find that Remote Provider application in the database.";
+        }
+
 		List<RemoteProviderApplication> rpApps = application.getRemoteProviderApplications();
 		for (RemoteProviderApplication rpa: rpApps ) {
 			if (rpa.getRemoteProviderType().getId().equals(remoteProviderApplication.getRemoteProviderType().getId())) {
-				return "Application already have Mapping for this Remote Provider Type. Please choose another application.";
+				return "Application already has a mapping for this Remote Provider Type. Please choose another application.";
 			}
 		}
 		
@@ -289,8 +295,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 
 	@Override
-	public String deleteMapping(BindingResult result,
-			RemoteProviderApplication remoteProviderApplication,
+	public String deleteMapping(RemoteProviderApplication remoteProviderApplication,
 			int appId) {
 
 		Application application = applicationDao.retrieveById(appId);

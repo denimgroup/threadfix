@@ -1,35 +1,42 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="mergeDefectForm.html">
+    <div class="modal-header">
+        <h4 id="myModalLabel">
+            Submit Defect
+        </h4>
+    </div>
+	<div ng-form="form" class="modal-body">
+        <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
-<spring:url value="/organizations/{orgId}/applications/{appId}/defects/merge" var="defectUrl">
-	<spring:param name="orgId" value="${ application.organization.id }"/>
-	<spring:param name="appId" value="${ application.id }"/>
-</spring:url>
+        <table ng-show="initialized" class="dataTable">
+            <tbody>
+                <tr class="left-align">
+                    <td style="padding:5px;">Select Defect</td>
+                    <td style="padding:5px;">
+                        <select style="margin-bottom:0;" ng-model="object.id" id="defectId" name="id" ng-options="defect for defect in config.defects">
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-<form:form id="mergeDefectForm"  modelAttribute="defectViewModel" data-has-metadata="${ empty projectMetadata ? '' : '1' }"
-		 method="post" action="${ fn:escapeXml(defectUrl) }">
-	<div class="modal-body">
-	<table class="dataTable">
-		<tbody>
-			<tr class="left-align">
-				<td style="padding:5px;">Select Defect: </td>
-				<td style="padding:5px;">
-					<form:select style="margin-bottom:0px;" id="defectId" path="id">
-						<form:options items="${defectList}" itemValue="nativeId" itemLabel="nativeId"/>
-					</form:select>
-				</td>
-				<td>
-					<c:if test="${ empty defectList || fn:length(defectList)==0 }">
-						<a><img src="<%=request.getContextPath()%>/images/loading.gif" class="transparent_png" alt="Threadfix" /></a>
-					</c:if>				
-				</td>														
-			</tr>						
-		</tbody>
-	</table>
+        <%@ include file="littleVulnTable.jspf" %>
 	</div>
-	<div class="modal-footer">
-		<button id="closeMergeDefectModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		<button onclick="javascript:submitDefect('#mergeDefectForm', '#mergeDefectFormDiv', '#teamTable', '#submitDefectFormModal');return false;" 
-				id="mergeDefectButton" class="btn btn-primary" 
-				<c:if test="${ empty defectList || fn:length(defectList)==0 }"> disabled="disabled"</c:if>>Merge Defect</button>
-	</div>
-</form:form>
+    <div class="modal-footer">
+        <span class="errors" style="float:left">{{ error }}</span>
+
+        <a class="btn" ng-click="cancel()">Close</a>
+        <button id="loadingButton"
+                disabled="disabled"
+                class="btn btn-primary"
+                ng-show="loading">
+            <span class="spinner"></span>
+            Submitting
+        </button>
+        <button id="submit"
+                ng-class="{ disabled : form.$invalid }"
+                class="btn btn-primary"
+                ng-mouseenter="form.summary.$dirty = true"
+                ng-hide="loading"
+                ng-click="ok(form.$valid)">Submit Defect</button>
+    </div>
+</script>

@@ -2,20 +2,20 @@
 
 <head>
 	<title>Scan History</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-history-controller.js"></script>
 </head>
 
 <body id="scans">
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+
 	<h2>Scans</h2>
 	
 	<div id="helpText">
 		This page lists all of the scans that have been uploaded to ThreadFix.
 	</div>
 		
-	<spring:url value="/scans/table" var="tableUrl" />
-	<spring:url value="/login.jsp" var="loginUrl" />
-	<div id="toReplace" class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>" 
-			data-login-url="<c:out value="${ loginUrl }"/>">
+	<div ng-controller="ScanHistoryController" ng-init="loading = true">
+        <!-- TODO re-add pagination -->
 		<table class="table">
 			<thead>
 				<tr>
@@ -32,10 +32,30 @@
 					<th></th>
 				</tr>
 			</thead>
-			<tbody id="wafTableBody">
-				<tr class="bodyRow">
+			<tbody>
+				<tr ng-show="loading" class="bodyRow">
 					<td colspan="10" style="text-align: center;">Loading Scans.</td>
 				</tr>
+                <tr ng-hide="loading || scans" class="bodyRow">
+                    <td colspan="10" style="text-align: center;">No Scans found.</td>
+                </tr>
+                <tr ng-show="scans" ng-repeat="scan in scans">
+                    <td>{{ scan.importTime | date:'medium' }}</td>
+                    <td>{{ scan.app.name }}</td>
+                    <td>{{ scan.team.name }}</td>
+                    <td>{{ scan.scannerName }}</td>
+                    <td>{{ scan.numberTotalVulnerabilities }}</td>
+                    <td>{{ scan.numberHiddenVulnerabilities }}</td>
+                    <td>{{ scan.numberCriticalVulnerabilities }}</td>
+                    <td>{{ scan.numberHighVulnerabilities }}</td>
+                    <td>{{ scan.numberMediumVulnerabilities }}</td>
+                    <td>{{ scan.numberLowVulnerabilities }}</td>
+                    <td class="pointer">
+                        <a id="importTime{{ $index }}" ng-click="goTo(scan)">
+                            View Scan
+                        </a>
+                    </td>
+                </tr>
 			</tbody>
 		</table>
 	</div>
