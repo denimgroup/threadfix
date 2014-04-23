@@ -38,8 +38,8 @@ import org.apache.commons.lang.RandomStringUtils;
  */
 public class TestUtils extends PropertiesManager {
 
-    public static final String URL = "http://localhost:8082/rest";
-    public static final String API_KEY = "xZ32iTkKAVVBUio2cR81mgqpLRw19EMAvxmkLHvkM";
+    public static final String URL = System.getProperty("REST_URL");
+    public static final String API_KEY = System.getProperty("API_KEY");
 
     @Override
     public String getUrl() {

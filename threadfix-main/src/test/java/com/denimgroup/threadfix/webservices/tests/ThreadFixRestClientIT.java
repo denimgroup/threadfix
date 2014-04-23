@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -54,7 +56,6 @@ public class ThreadFixRestClientIT {
     private ThreadFixRestClient getClient() {
         return new ThreadFixRestClientImpl(new TestUtils());
     }
-
 
     private RestResponse<Organization> createTeam(String name) {
         return getClient().createTeam(name);
@@ -154,6 +155,18 @@ public class ThreadFixRestClientIT {
         assertTrue("Didn't find the team in the teams list.", foundIt);
     }
 
+    @Ignore
+    @Test
+    public void testTeamsPrettyPrint() {
+        String name = TestUtils.getName();
+
+        createTeam(name);
+
+        RestResponse<String> response = getClient().getAllTeamsPrettyPrint();
+
+        assertTrue(response.toString() != null);
+    }
+
     @Test
     public void testCreateApplication() {
         String appName = TestUtils.getName(), teamName = TestUtils.getName();
@@ -166,7 +179,6 @@ public class ThreadFixRestClientIT {
                 " instead of " + appName, response.object.getName().equals(appName));
         assertTrue("Application URL was not correct.", response.object.getUrl().equals(dummyUrl));
     }
-
 
     @Test
     public void testSearchForApplicationById() {
@@ -196,6 +208,22 @@ public class ThreadFixRestClientIT {
 
         assertNotNull(appResponse.object);
         assertEquals("Names didn't match.", appResponse.object.getId().toString(), idString);
+    }
+
+    @Test
+    public void testAddAppUrl() {
+        String appName = TestUtils.getName(), teamName = TestUtils.getName();
+
+        String appId = getApplicationId(teamName, appName, dummyUrl).toString();
+
+        RestResponse<Application> appResponse = getClient().addAppUrl(appId, dummyUrl);
+
+        assertTrue("Rest Response was a failure. message was: " + appResponse.message,
+                appResponse.success);
+
+        assertNotNull(appResponse.object);
+
+        assertEquals("URL name did not match.", appResponse.object.getUrl().toString(), dummyUrl);
     }
 
     @Test
@@ -251,7 +279,6 @@ public class ThreadFixRestClientIT {
 
     @Test
     public void testAddWaf() {
-
         String wafName = TestUtils.getName(), appName = TestUtils.getName(), teamName = TestUtils.getName();
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
@@ -264,17 +291,30 @@ public class ThreadFixRestClientIT {
         assertEquals("WAF ID didn't match.", response.object.getWaf().getId().toString(), wafId);
     }
 
-    @Ignore
     @Test
-    public void testTask() {
-        String scannerList = "OWASP Zed Attack Proxy";
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(new TestUtils());
+    public void testGetRules() {
+        String wafName = TestUtils.getName(), appName = TestUtils.getName(), teamName = TestUtils.getName();
 
-        RestResponse<Task> response = client.requestTask(scannerList, "");
+        String appId = getApplicationId(teamName, appName, dummyUrl).toString();
+        String wafId = getWafId(wafName, WafType.MOD_SECURITY).toString();
 
-        assertTrue(response != null && response.object != null);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath());
+
+        RestResponse<Application> addResponse = getClient().addWaf(appId, wafId);
+        assertTrue("Response was a failure. Message: " + addResponse.message, addResponse.success);
+
+        RestResponse<String> rulesResponse = getClient().getRules(wafId, appId);
+        assertTrue("Rules should have been generated and returned.", rulesResponse.success);
     }
 
-    // TODO write tests for the scan agent methods.
+    @Test
+    public void testScanUpload() {
+        String appName = TestUtils.getName(), teamName = TestUtils.getName();
 
+        String appId = getApplicationId(teamName, appName, dummyUrl).toString();
+
+        RestResponse<Scan> uploadResponse = getClient().uploadScan(appId, ScanContents.getScanFilePath());
+
+        assertTrue("Scan should have been uploaded.", uploadResponse.success);
+    }
 }
