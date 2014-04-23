@@ -1,11 +1,15 @@
 package com.denimgroup.threadfix.webservices.tests;
 
 import com.denimgroup.threadfix.WebServiceTests;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.Task;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.webservices.tests.TestUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
