@@ -25,7 +25,7 @@
                 </a>
             </td>
             <td style="text-align:center">
-                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="delete(map)">
+                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="deleteTeam(map)">
                     Delete
                 </a>
             </td>
@@ -46,7 +46,7 @@
                 </a>
             </td>
             <td style="text-align:center">
-                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="delete(map)">
+                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="deleteApp(map)">
                     Delete
                 </a>
             </td>

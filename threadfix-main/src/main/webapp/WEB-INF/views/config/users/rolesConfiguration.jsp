@@ -12,7 +12,9 @@
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <%@ include file="/WEB-INF/views/config/users/permissionForm.jsp" %>
 
-	<h2>Edit User <c:out value="${ user.name }"/> Permissions</h2>
+    <h2>Edit User <c:out value="${ user.name }"/> Permissions</h2>
+
+    <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
 	<a id="addPermissionButton" class="btn" ng-click="openAddPermissionsModal()">
 		Add Permissions

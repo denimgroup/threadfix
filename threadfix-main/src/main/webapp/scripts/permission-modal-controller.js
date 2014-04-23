@@ -17,28 +17,41 @@ myAppModule.controller('PermissionModalController', function ($scope, $rootScope
     $scope.loading = false;
 
     var buildMap = function(object) {
-        object.roleIdMapList = [];
-        object.applicationIds = [];
+
+        var returnObject = {};
+
+        returnObject.roleIdMapList = [];
+        returnObject.applicationIds = [];
+
+        if (object.role) {
+            returnObject.roleId = object.role.id;
+        }
+
+        returnObject.teamId = object.team.id;
+        //returnObject.userId = object.user.id;
+        returnObject.allApps = object.allApps;
 
         $scope.config.appList.forEach(function(app) {
 
             if (app.role && app.role.id !== 0) {
-                object.applicationIds.push(app.id);
+                returnObject.applicationIds.push(app.id);
 
-                object.roleIdMapList.push(String(app.id) + "-" + String(app.role.id))
+                returnObject.roleIdMapList.push(String(app.id) + "-" + String(app.role.id))
             }
         });
+
+        return returnObject;
     };
 
     $scope.ok = function (valid) {
 
         if (valid) {
 
-            buildMap($scope.object);
+            var returnValue = buildMap($scope.object);
 
             $scope.loading = true;
 
-            threadFixModalService.post(url, $scope.object).
+            threadFixModalService.post(url, returnValue).
                 success(function(data, status, headers, config) {
                     $scope.loading = false;
 

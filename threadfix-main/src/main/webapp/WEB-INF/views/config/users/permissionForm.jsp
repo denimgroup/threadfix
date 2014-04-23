@@ -9,7 +9,7 @@
             <tr>
                 <td>Team</td>
                 <td>
-                    <select id="orgSelect" name="team" ng-model="object.team" not-zero
+                    <select id="orgSelect" name="team" ng-model="object.team" not-zero="{{ object.team.id }}"
                             ng-change="setApps(object.team.applications); object.teamId = object.team.id;"
                             ng-options="team.name for team in config.teams">
                     </select>
@@ -31,7 +31,7 @@
                     <td>
                         <select id="roleSelectTeam" name="roleId" ng-model="app.role.id">
                             <option value="0" label="No Role" />
-                            <option ng-repeat="role in config.roles" value="{{ role.id }}" >
+                            <option ng-selected="role.id === app.role.id" ng-repeat="role in config.roles" value="{{ role.id }}" >
                                 {{ role.displayName }}
                             </option>
                         </select>
@@ -43,7 +43,7 @@
                 <td>
                     <select id="roleSelectTeam" name="roleId" ng-show="object.allApps" ng-model="object.role.id" ng-change="object.roleId = object.role.id">
                         <option value="0" label="Select a role" />
-                        <option ng-repeat="role in config.roles" value="{{ role.id }}" >
+                        <option ng-selected="role.id === object.role.id" ng-repeat="role in config.roles" value="{{ role.id }}" >
                             {{ role.displayName }}
                         </option>
                     </select>

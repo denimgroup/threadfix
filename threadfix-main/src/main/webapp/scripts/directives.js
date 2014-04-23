@@ -28,7 +28,8 @@ threadfixModule.directive('notZero', function() {
         require: 'ngModel',
         link: function(scope, elm, attrs, ctrl) {
 
-            ctrl.$setValidity('notzero', false);
+            ctrl.$setValidity('notzero', attrs.notZero !== "0");
+
             ctrl.$parsers.unshift(function(viewValue) {
 
                 if (typeof viewValue !== "string") {

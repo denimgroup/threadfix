@@ -10,8 +10,7 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
 
     var defaultTeam = { id: 0, name: 'Select a Team'};
 
-    // TODO move to service
-    $scope.$on('rootScopeInitialized', function() {
+    var refreshTable = function() {
         $http.get(tfEncoder.encode('/configuration/users/' + $scope.userId + '/permissions/map')).
             success(function(data, status, headers, config) {
 
@@ -32,6 +31,11 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
+    }
+
+    // TODO move to service
+    $scope.$on('rootScopeInitialized', function() {
+        refreshTable();
     });
 
     $scope.openAddPermissionsModal = function() {
@@ -65,59 +69,97 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
             }
         });
 
-        modalInstance.result.then(function (newKey) {
+        modalInstance.result.then(function (permissions) {
 
-            if (!$scope.keys) {
-                $scope.keys = [];
-            }
+            refreshTable();
 
-            $scope.keys.push(newKey);
-
-            $scope.keys.sort(keyCompare);
-
-            $scope.successMessage = "Successfully created key " + newKey.apiKey;
+            $scope.successMessage = "Successfully added permissions.";
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
     }
 
-    $scope.edit = function(key) {
+    var doLookups = function(perms) {
+
+        var lastTeam = undefined;
+        var lastRole = undefined;
+
+        $scope.teams.forEach(function(team) {
+            if (team.id === perms.organization.id) {
+                lastTeam = team;
+            }
+        });
+
+        if (perms.role) {
+            $scope.roles.forEach(function(role) {
+                if (role.id === perms.role.id) {
+                    lastRole = role;
+                }
+            });
+        }
+
+        perms.role = lastRole;
+        perms.team = lastTeam;
+        var appList = lastTeam.applications;
+
+        var appMaps = perms.accessControlApplicationMaps;
+
+        appMaps.forEach(function(map) {
+            appList.forEach(function(app) {
+                if (map.role.id !== 0 && app.id === map.application.id) {
+                    app.role = { id: map.role.id };
+                }
+            });
+        });
+
+        appList.forEach(function(app) {
+            if (!app.role) {
+                app.role = { id: 0 };
+            }
+        });
+
+        return appList;
+    }
+
+    $scope.edit = function(permObject) {
+
+        var apps = doLookups(permObject);
+
         var modalInstance = $modal.open({
-            templateUrl: 'editKeyModal.html',
-            controller: 'GenericModalController',
+            templateUrl: 'permissionForm.html',
+            controller: 'PermissionModalController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode("/configuration/keys/" + key.id + "/edit");
+                    return tfEncoder.encode("/configuration/users/" + $scope.userId + "/access/" + permObject.id + "/edit");
                 },
                 object: function() {
-                    return key;
+                    return permObject;
                 },
                 buttonText: function() {
                     return "Save Edits";
                 },
                 deleteUrl: function() {
-                    return tfEncoder.encode("/configuration/keys/" + key.id + "/delete");
+                    return tfEncoder.encode("/configuration/users/" + $scope.userId + "/access/" + permObject.id + "/delete");
+                },
+                config: function() {
+                    return {
+                        teams: $scope.teams,
+                        roles: $scope.roles,
+                        appList: apps
+                    };
                 }
             }
         });
 
-        modalInstance.result.then(function (editedKey) {
+        modalInstance.result.then(function (editedPermissionsObject) {
 
-            if (editedKey) {
-                $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
-                $scope.keys.sort(keyCompare);
+            refreshTable();
+
+            if (editedPermissionsObject) {
+                $scope.successMessage = "Successfully edited permissions.";
             } else {
-                var index = $scope.keys.indexOf(key);
-
-                if (index > -1) {
-                    $scope.keys.splice(index, 1);
-                }
-
-                if ($scope.keys.length === 0) {
-                    $scope.keys = undefined;
-                }
-                $scope.successMessage = "API key was successfully deleted.";
+                $scope.successMessage = "Permissions object was successfully deleted.";
             }
 
         }, function () {
@@ -125,7 +167,11 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
         });
     }
 
-    $scope.delete = function(map) {
+    $scope.deleteApp = function(map) {
+        // TODO yo
+    }
+
+    $scope.deleteTeam = function(map) {
         // TODO yo
     }
 

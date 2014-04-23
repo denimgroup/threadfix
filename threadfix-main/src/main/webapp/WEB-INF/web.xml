@@ -107,7 +107,9 @@
 		    	protected-regex ^/configuration/roles/new$,
 		    	protected-regex ^/configuration/roles/[0-9]+/edit$,
 		    	protected-regex ^/configuration/roles/[0-9]+/map$,
+        		protected-regex ^/configuration/users/map$,
         		protected-regex ^/configuration/users/[0-9]+/access/[0-9]+/edit$,
+        		protected-regex ^/configuration/users/[0-9]+/permissions/map$,
         		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
