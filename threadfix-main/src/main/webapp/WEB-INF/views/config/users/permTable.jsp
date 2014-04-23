@@ -30,7 +30,7 @@
                 </a>
             </td>
         </tr>
-        <tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && map.active" class="bodyRow">
+        <tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && appMap.active" class="bodyRow">
             <td id="teamName{{ $index }}">
                 {{ map.organization.name }}
             </td>
@@ -46,7 +46,7 @@
                 </a>
             </td>
             <td style="text-align:center">
-                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="deleteApp(map)">
+                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="deleteApp(appMap)">
                     Delete
                 </a>
             </td>

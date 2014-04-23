@@ -167,12 +167,32 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
         });
     }
 
+    var makeDeleteRequest = function(url) {
+        if (confirm("Are you sure you want to delete this permission?")) {
+            $http.post(tfEncoder.encode('/configuration/users/' + $scope.userId + url)).
+                success(function(data, status, headers, config) {
+                    if (data.success) {
+                        refreshTable();
+                        $scope.successMessage = "Permission was successfully deleted.";
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
+
+                    $scope.initialized = true;
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.initialized = true;
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                });
+        }
+    }
+
     $scope.deleteApp = function(map) {
-        // TODO yo
+        makeDeleteRequest('/access/app/' + map.id + '/delete')
     }
 
     $scope.deleteTeam = function(map) {
-        // TODO yo
+        makeDeleteRequest('/access/team/' + map.id + '/delete')
     }
 
 });
