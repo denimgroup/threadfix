@@ -239,7 +239,7 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             // If it matched one of the regexes, don't generate any new nonces.
             // This way links still work with AJAX around.
             if (!skipNonceGeneration) {
-            	log.debug("Generating new nonce. Path: " + req.getServletPath());
+            	log.info("Generating new nonce. Path: " + req.getServletPath());
 	            String newNonce = generateNonce();
 	            nonceCache.add(newNonce);
 	            wResponse = new CsrfResponseWrapper(res, newNonce);

@@ -29,37 +29,37 @@
     <tbody>
         <tr ng-repeat-start="team in teams" id="teamRow{{ team.id }}" class="pointer" data-target-div="teamInfoDiv{{ team.id }}"
                 data-caret-div="caret{{ team.id }}" data-report-div="reportDiv{{ team.id }}">
-            <td id="teamCaret{{ team.id }}" ng-click="toggle(team)">
+            <td id="teamCaret{{ team.name }}" ng-click="toggle(team)">
                 <span ng-class="{ expanded: team.expanded }" class="caret-right"></span>
             </td>
             <td ng-click="toggle(team)" id="teamName{{ $index }}">
                 <div style="word-wrap: break-word;width:300px;text-align:left;">{{ team.name }}</div>
             </td>
-            <td class="centered" ng-click="toggle(team)" id="numTotalVulns{{ $index }}">{{ team.totalVulnCount }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numCriticalVulns{{ $index }}">{{ team.criticalVulnCount }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numHighVulns{{ $index }}">{{ team.highVulnCount }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numMediumVulns{{ $index }}">{{ team.mediumVulnCount }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numLowVulns{{ $index }}">{{ team.lowVulnCount }}</td>
-            <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ $index }}">{{ team.infoVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numTotalVulns{{ team.name }}">{{ team.totalVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numCriticalVulns{{ team.name }}">{{ team.criticalVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numHighVulns{{ team.name }}">{{ team.highVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numMediumVulns{{ team.name }}">{{ team.mediumVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numLowVulns{{ team.name }}">{{ team.lowVulnCount }}</td>
+            <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ team.name }}">{{ team.infoVulnCount }}</td>
             <td ng-click="toggle(team)"></td>
             <td>
-                <c:if test="${ canAddApps}">
-                    <a id="addApplicationModalButton{{ $index }}" ng-click="openAppModal(team)" class="btn btn-default">
+                <c:if test="${ canAddApps }">
+                    <a id="addApplicationModalButton{{ team.name }}" ng-click="openAppModal(team)" class="btn btn-default">
                         Add Application
                     </a>
                 </c:if>
                 <c:if test="${ not canAddApps }">
-                    <button class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
+                    <a id="addApplicationModalButton{{ team.name }}" class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
                         Add Application
-                    </button>
+                    </a>
                 </c:if>
             <td>
-                <a style="text-decoration:none" id="organizationLink{{ $index }}" ng-click="goTo(team)">View Team</a>
+                <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-click="goTo(team)">View Team</a>
             </td>
         </tr>
 
         <tr ng-file-drop-available="dropSupported=true"
-            ng-repeat-end class="grey-background" ng-init="teamIndex=$index">
+            ng-repeat-end class="grey-background" ng-init="teamIndex=team.name">
             <td colspan="11">
 
                 <div collapse="!team.expanded"
@@ -79,7 +79,7 @@
                         No applications were found for this team.
                     </div>
 
-                    <div ng-show='team.applications' id="teamAppTableDiv{{ $index }}">
+                    <div ng-show='team.applications'>
                         <table id="teamAppTable{{ $index }}">
                             <thead>
                                 <tr>
@@ -97,17 +97,17 @@
                                     ng-file-drop="onFileSelect(team, app, $files)">
                                 <td class="pointer" style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
-                                        <a id="applicationLink{{ teamIndex }}-{{ appIndex}}" ng-click="goToPage(team, app)">{{ app.name }}</a>
+                                        <a id="applicationLink{{ team.name }}-{{ app.name }}" ng-click="goToPage(team, app)">{{ app.name }}</a>
                                     </div>
                                 </td>
-                                <td class="centered" id="numTotalVulns{{ teamIndex }}-{{ appIndex}}">{{ app.totalVulnCount }}</td>
-                                <td class="centered" id="numCriticalVulns{{ teamIndex }}-{{ appIndex}}">{{ app.criticalVulnCount }}</td>
-                                <td class="centered" id="numHighVulns{{ teamIndex }}-{{ appIndex}}">{{ app.highVulnCount }}</td>
-                                <td class="centered" id="numMediumVulns{{ teamIndex }}-{{ appIndex}}">{{ app.mediumVulnCount }}</td>
-                                <td class="centered" id="numLowVulns{{ teamIndex }}-{{ appIndex}}">{{ app.lowVulnCount }}</td>
-                                <td class="centered" id="numInfoVulns{{ teamIndex }}-{{ appIndex}}">{{ app.infoVulnCount }}</td>
+                                <td class="centered" id="numTotalVulns{{ team.name }}-{{ app.name }}">{{ app.totalVulnCount }}</td>
+                                <td class="centered" id="numCriticalVulns{{ team.name }}-{{ app.name }}">{{ app.criticalVulnCount }}</td>
+                                <td class="centered" id="numHighVulns{{ team.name }}-{{ app.name }}">{{ app.highVulnCount }}</td>
+                                <td class="centered" id="numMediumVulns{{ team.name }}-{{ app.name }}">{{ app.mediumVulnCount }}</td>
+                                <td class="centered" id="numLowVulns{{ team.name }}-{{ app.name }}">{{ app.lowVulnCount }}</td>
+                                <td class="centered" id="numInfoVulns{{ team.name }}-{{ app.name }}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
-                                    <a id="uploadScanModalLink{{ teamIndex }}-{{ appIndex}}" class="btn"
+                                    <a id="uploadScanModalLink{{ team.name }}-{{ app.name }}" class="btn"
                                             ng-click="showUploadForm(team, app)">
                                         Upload Scan
                                     </a>

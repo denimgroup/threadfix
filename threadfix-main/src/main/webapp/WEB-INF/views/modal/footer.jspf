@@ -1,6 +1,6 @@
 <!-- For use in other modals -->
 <div class="modal-footer">
-    <span class="errors" style="float:left">{{ error }}</span>
+    <span id="errorSpan" class="errors" style="float:left">{{ error }}</span>
 
     <a class="btn" ng-click="cancel()">Close</a>
     <button id="loadingButton"

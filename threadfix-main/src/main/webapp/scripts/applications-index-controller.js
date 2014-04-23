@@ -73,7 +73,12 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     // TODO figure out Jasper better, it's a terrible way to access the report images.
                     var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
                     if (matches !== null && matches[1] !== null) {
-                        team.report = matches[1];
+
+                        var imageTagHtml = matches[1];
+
+                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' id="teamGraph' + team.name + '" alt=""/>';
+
+                        team.report = imageTagHtml;
                     }
                     else {
                         team.report = true;
