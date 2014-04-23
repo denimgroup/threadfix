@@ -12,17 +12,17 @@
                 <tr class="left-align">
                     <td>Name</td>
                     <td>
-                        <input focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
-                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
-                        <span class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
+                        <input id="applicationNameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
+                        <span id="applicationNameInputRequiredError" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                        <span id="applicationNameInputNameError" class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
                     </td>
                 </tr>
                 <tr class="left-align">
                     <td>URL</td>
                     <td>
-                        <input type='url' name='url' ng-model="object.url" ng-maxlength="255"/>
-                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 255.</span>
-                        <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
+                        <input id="applicationUrlInput" type='url' name='url' ng-model="object.url" ng-maxlength="255"/>
+                        <span id="applicationUrlInputLengthError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 255.</span>
+                        <span id="applicationUrlInputInvalidUrlError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
                     </td>
                 </tr>
                 <tr class="left-align">
@@ -30,13 +30,13 @@
                     <td>
                         <input name="uniqueId" type='text' style="margin-bottom:0px;"
                                ng-model="object.uniqueId"
-                               id="uniqueIdInput{{ object.team.id }}" size="50" maxlength="255"/>
-                        <span class="errors" ng-show="form.uniqueId.$dirty && form.uniqueId.$error.maxlength">Maximum length is 255.</span>
+                               id="uniqueIdInput" size="50" maxlength="255"/>
+                        <span id="uniqueIdLengthError" class="errors" ng-show="form.uniqueId.$dirty && form.uniqueId.$error.maxlength">Maximum length is 255.</span>
                     </td>
                 </tr>
                 <tr class="left-align">
                     <td>Team</td>
-                    <td>{{ object.team.name }}</td>
+                    <td id="teamNameLabel">{{ object.team.name }}</td>
                 </tr>
                 <tr class="left-align">
                     <td>Criticality</td>
@@ -44,7 +44,7 @@
                         <select name="applicationCriticality.id"
                                 style="margin-bottom:0px;"
                                 ng-model="object.applicationCriticality.id"
-                                id="criticalityId${organization.id}">
+                                id="criticalityIdSelect">
 
                             <c:forEach items="${applicationCriticalityList}" var="applicationCriticality">
                                 <option value="<c:out value='${applicationCriticality.id}'/>">
@@ -71,7 +71,7 @@
                     <td class="right-align">Source Code URL</td>
                     <td class="left-align" >
                         <input name="repositoryUrl"
-                                type='url' id="repositoryUrl{{ object.team.id }}"
+                                type='url' id="repositoryUrlInput"
                                 maxlength="255" ng-model="object.repositoryUrl"/>
                         <span class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.maxlength">Maximum length is 255.</span>
                         <span class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
@@ -102,7 +102,7 @@
                     <td class="right-align">Source Code Folder</td>
                     <td class="left-align" >
                         <input name="repositoryFolder"
-                                type='text' id="repositoryFolder{{ object.team.id }}"
+                                type='text' id="repositoryFolderInput"
                                 maxlength="250" ng-model="object.repositoryFolder"/>
                         <span class="errors" ng-show="form.repositoryFolder.$dirty && form.repositoryFolder.$error.maxlength">Maximum length is 250.</span>
                         <span class="errors" ng-show="object.repositoryFolder_error"> {{ object.repositoryFolder_error }}</span>

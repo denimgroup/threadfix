@@ -29,8 +29,8 @@
         <div class="pagination" ng-show="numVulns > 100" >
             <pagination class="no-margin" total-items="numVulns / 10" max-size="5" page="page"></pagination>
 
-            <input  ng-enter="goToPage()" style="width:50px" type="number" ng-model="pageInput"/>
-            <button class="btn" ng-click="goToPage()"> Go to Page </button>
+            <input id="pageInput" ng-enter="goToPage()" style="width:50px" type="number" ng-model="pageInput"/>
+            <button id="goToPageButton" class="btn" ng-click="goToPage()"> Go to Page </button>
         </div>
 
         <table class="table sortable table-hover tf-colors" style="table-layout: fixed;" id="anyid">
@@ -41,22 +41,22 @@
                     </c:if>
                     <th style="width:8px;"></th>
                     <th style="width:64px" class="pointer" ng-click="setSort('Severity')">
-                        Severity<span id="headerCaret2"
+                        Severity<span id="severityHeaderCaret"
                                       class="caret-down"
                                       ng-class="{ expanded: sortType === 'Severity'}"></span>
                     </th>
                     <th style="width:260px" class="pointer" ng-click="setSort('Type')">
-                        Type<span id="headerCaret1"
+                        Type<span id="vulnerabilityTypeHeaderCaret"
                                   class="caret-down"
                                   ng-class="{ expanded: sortType === 'Type'}"></span>
                     </th>
                     <th style="width:220px" class="pointer" ng-click="setSort('Path')">
-                        Path<span id="headerCaret3"
+                        Path<span id="pathHeaderCaret"
                                   class="caret-down"
                                   ng-class="{ expanded: sortType === 'Path'}"></span>
                     </th>
                     <th class="pointer" style="width:90px;" ng-click="setSort('Parameter')">
-                        Parameter<span id="headerCaret4"
+                        Parameter<span id="parameterHeaderCaret"
                                        class="caret-down"
                                        ng-class="{ expanded: sortType === 'Parameter'}"></span>
                     </th>
@@ -74,12 +74,12 @@
                         }">
                     <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
                         <td style="width:12px">
-                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ index }}" ng-click="setCheckedAll(vuln.checked)" type="checkbox" ng-model="vuln.checked">
+                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ $index }}" ng-click="setCheckedAll(vuln.checked)" type="checkbox" ng-model="vuln.checked">
                             <input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
                         </td>
                     </c:if>
                     <td ng-click="expand(vuln)" class="pointer">
-                        <span ng-class="{ expanded: vuln.expanded }" id="caret{{ vuln.id }}" class="caret-right"></span>
+                        <span ng-class="{ expanded: vuln.expanded }" id="caret{{ $index }}" class="caret-right"></span>
                     </td>
                     <td ng-click="expand(vuln)" class="pointer" id="severity{{ $index }}"> {{ vuln.severityName }} </td>
                     <td ng-click="expand(vuln)" class="pointer" id="type{{ $index }}">
@@ -107,7 +107,7 @@
                         </div>
                     </td>
                     <td>
-                        <a id="vulnName${index}" ng-click="goTo(vuln)">
+                        <a id="vulnName{{ $index }}" ng-click="goTo(vuln)">
                             View More
                         </a>
                     </td>
@@ -152,11 +152,11 @@
 
                             <div class="right-tile">
                                 <h4>Comments</h4>
-                                <div class="vuln-table-box" id="commentDiv{{ vuln.id }}" style="width:450px;margin-bottom:10px;">
+                                <div class="vuln-table-box" id="commentDiv{{ $index }}" style="width:450px;margin-bottom:10px;">
                                     <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
                                 </div>
                                 <br>
-                                <a class="btn margin-bottom" ng-click="showCommentForm(vuln)">Add Comment</a>
+                                <a id="addCommentButton{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vuln)">Add Comment</a>
                             </div>
                         </div>
                     </td>
