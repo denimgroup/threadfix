@@ -152,7 +152,7 @@ public interface FindingService {
 	 * @param finding
 	 * @param result
 	 */
-	void validateManualFinding(Finding finding, BindingResult result);
+	void validateManualFinding(Finding finding, BindingResult result, boolean isStatic);
 
 	List<String> getAllManualUrls(Integer appId);
 

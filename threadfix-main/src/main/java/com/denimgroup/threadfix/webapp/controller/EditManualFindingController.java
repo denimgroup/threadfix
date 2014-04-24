@@ -25,28 +25,29 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 
-import com.denimgroup.threadfix.data.entities.ChannelSeverity;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import sun.java2d.Surface;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -116,7 +117,7 @@ public class EditManualFindingController {
 	}
 	
     @RequestMapping(params = "group=static", method = RequestMethod.POST)
-	public String staticSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<String> staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
             @PathVariable("vulnerabilityId") int vulnerabilityId,
@@ -125,7 +126,7 @@ public class EditManualFindingController {
             HttpServletRequest request) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
+            return RestResponse.failure("You don't have permission to modify vulnerabilities.");
 		}
 
         Finding dbFinding = findingService.loadFinding(findingId);
@@ -133,45 +134,49 @@ public class EditManualFindingController {
         if (finding == null || dbFinding == null) {
             ControllerUtils.addErrorMessage(request, "Finding submitted is invalid");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
-            return "ajaxRedirectHarness";
+            return RestResponse.failure("Finding submitted is invalid.");
         }
 		if (isManual(dbFinding)) {
             ControllerUtils.addErrorMessage(request, "Finding submitted is not manual");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
-            return "ajaxRedirectHarness";
+            return RestResponse.failure("Finding submitted is not manual.");
 		} else if (!isAuthorizedForFinding(dbFinding)) {
-			return "403";
+            return RestResponse.failure("You don't have permission to modify finding.");
 		}
-		
-		findingService.validateManualFinding(finding, result);
-        finding.setId(findingId);
+
+		findingService.validateManualFinding(finding, result, true);
+//        finding.setId(findingId);
 		if (result.hasErrors()) {
             finding.setIsStatic(true);
-			return returnForm(model,appId, vulnerabilityId, finding);
+            return FormRestResponse.failure("Form Validation failed.", result);
 		} else {
 			finding.setIsStatic(true);
-			boolean mergeResult = manualFindingService.processManualFindingEdit(finding, appId);
+
+            copyFinding(finding, dbFinding);
+
+			boolean mergeResult = manualFindingService.processManualFindingEdit(dbFinding, appId);
 			
 			if (!mergeResult) {
 				log.warn("Merging failed for the dynamic manual finding submission.");
 				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
 				model.addAttribute("isStatic",true);
-				return returnForm(model,appId, vulnerabilityId, finding);
+                return FormRestResponse.failure("Form Validation failed.", result);
 			} else {
 				status.setComplete();
-                int newVulnId = finding.getVulnerability().getId();
-//                String msg = "Static finding has been modified" +
-//                        ((vulnerabilityId==newVulnId) ? "" :
-//                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
+                int newVulnId = dbFinding.getVulnerability().getId();
+                String msg = "Static finding has been modified" +
+                        ((vulnerabilityId==newVulnId) ? "" :
+                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
                 ControllerUtils.addSuccessMessage(request, "Static finding has been modified");
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
-                return "ajaxRedirectHarness";
+//                return RestResponse.success("A static manual finding has been modified to application");
+                return RestResponse.success(msg);
 			}
 		}
 	}
 	
     @RequestMapping(params = "group=dynamic", method = RequestMethod.POST)
-	public String dynamicSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<String> dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
             @PathVariable("vulnerabilityId") int vulnerabilityId,
@@ -180,28 +185,28 @@ public class EditManualFindingController {
             HttpServletRequest request) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
+            return RestResponse.failure("You don't have permission to modify vulnerabilities.");
 		}
         Finding dbFinding = findingService.loadFinding(findingId);
 
         if (finding == null || dbFinding == null) {
             ControllerUtils.addErrorMessage(request, "Finding submitted is invalid");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
-            return "ajaxRedirectHarness";
+            return RestResponse.failure("Finding submitted is invalid.");
         }
 		if (isManual(dbFinding)) {
             ControllerUtils.addErrorMessage(request, "Finding submitted is not manual");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
-            return "ajaxRedirectHarness";
+            return RestResponse.failure("Finding submitted is not manual.");
 		} else if (!isAuthorizedForFinding(dbFinding)) {
-			return "403";
+            return RestResponse.failure("You don't have permission to modify finding.");
 		}
 		
-		findingService.validateManualFinding(finding, result);
-        finding.setId(findingId);
+		findingService.validateManualFinding(finding, result, false);
+//        finding.setId(findingId);
 		if (result.hasErrors()) {
             finding.setIsStatic(false);
-			return returnForm(model, appId, vulnerabilityId, finding);
+            return FormRestResponse.failure("Form Validation failed.", result);
 		} else {
 			finding.setIsStatic(false);
 			if (finding.getSurfaceLocation() != null && finding.getSurfaceLocation().getPath() != null) {
@@ -212,35 +217,55 @@ public class EditManualFindingController {
 					log.info("Path of '" + finding.getSurfaceLocation().getPath() + "' was not given in URL format, leaving it as it was.");
 				}
 			}
-			
-			boolean mergeResult = manualFindingService.processManualFindingEdit(finding, appId);
+			copyFinding(finding, dbFinding);
+			boolean mergeResult = manualFindingService.processManualFindingEdit(dbFinding, appId);
 			if (!mergeResult) {
 				log.warn("Merging failed for the dynamic manual finding submission.");
 				result.rejectValue("channelVulnerability.code", null, null, "Merging failed.");
 				model.addAttribute("isStatic",false);
-				return returnForm(model,appId, vulnerabilityId, finding);
+                return FormRestResponse.failure("Form Validation failed.", result);
 			} else {
 				status.setComplete();
-                int newVulnId = finding.getVulnerability().getId();
-//                String msg = "Dynamic finding has been modified" +
-//                        ((vulnerabilityId==newVulnId) ? "" :
-//                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
+                int newVulnId = dbFinding.getVulnerability().getId();
+                String msg = "Dynamic finding has been modified" +
+                        ((vulnerabilityId==newVulnId) ? "" :
+                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
                 ControllerUtils.addSuccessMessage(request, "Dynamic finding has been modified");
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
-                return "ajaxRedirectHarness";
+                return RestResponse.success(msg);
 			}
 		}
 	}
 
-    public String returnForm(Model model, int appId, int vulnId, Finding finding) {
-        model.addAttribute("contentPage", "scans/finding/editManualFindingForm.jsp");
-        model.addAttribute("vulnerability", vulnerabilityService.loadVulnerability(vulnId));
-        model.addAttribute("manualSeverities", findingService.getManualSeverities());
-        model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
-        model.addAttribute("finding", finding);
-        model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
-        return "ajaxFailureHarness";
-	}
+    private void copyFinding(Finding finding, Finding dbFinding) {
+        dbFinding.setIsStatic(finding.getIsStatic());
+
+        dbFinding.setChannelVulnerability(finding.getChannelVulnerability());
+
+        SurfaceLocation surfaceLocation = dbFinding.getSurfaceLocation() == null ? new SurfaceLocation() : dbFinding.getSurfaceLocation();
+        if (finding.getSurfaceLocation() != null) {
+            surfaceLocation.setPath(finding.getSurfaceLocation().getPath());
+            surfaceLocation.setParameter(finding.getSurfaceLocation().getParameter());
+            dbFinding.setSurfaceLocation(surfaceLocation);
+        } else
+            dbFinding.setSurfaceLocation(null);
+
+
+        List<DataFlowElement> dataFlowElements = dbFinding.getDataFlowElements() == null ? new ArrayList<DataFlowElement>() : dbFinding.getDataFlowElements();
+        if (finding.getDataFlowElements() != null && finding.getDataFlowElements().size() > 0) {
+            DataFlowElement element = dataFlowElements.size()==0 ? new DataFlowElement() : dataFlowElements.get(0);
+            element.setSourceFileName(finding.getDataFlowElements().get(0).getSourceFileName());
+            element.setLineNumber(finding.getDataFlowElements().get(0).getLineNumber());
+            if (dataFlowElements.size()==0)
+                dataFlowElements.add(element);
+            dbFinding.setDataFlowElements(dataFlowElements);
+        } else
+            dbFinding.setDataFlowElements(null);
+
+        dbFinding.setChannelSeverity(finding.getChannelSeverity());
+        dbFinding.setLongDescription(finding.getLongDescription());
+    }
+
 
 	@ModelAttribute("channelSeverityList")
 	public List<ChannelSeverity> populateChannelSeverity() {

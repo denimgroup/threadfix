@@ -132,7 +132,7 @@ public class AddFindingController {
             return RestResponse.failure("You don't have permission to upload scans.");
         }
 
-        findingService.validateManualFinding(finding, result);
+        findingService.validateManualFinding(finding, result, isStatic);
 
         if (result.hasErrors()) {
             return FormRestResponse.failure("Form Validation failed.", result);

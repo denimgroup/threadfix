@@ -347,6 +347,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (result) {
             $scope.successMessage = result;
+            $rootScope.$broadcast('scanUploaded');
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

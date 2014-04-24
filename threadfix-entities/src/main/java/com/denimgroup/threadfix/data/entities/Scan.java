@@ -40,14 +40,14 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	private ApplicationChannel applicationChannel;
 	private Calendar importTime;
 	private Application application;
-	private Integer numberClosedVulnerabilities;
-	private Integer numberNewVulnerabilities;
-	private Integer numberOldVulnerabilities;
-	private Integer numberResurfacedVulnerabilities;
-	private Integer numberTotalVulnerabilities;
-	private Integer numberHiddenVulnerabilities;
-	private Integer numberRepeatResults;
-	private Integer numberRepeatFindings;
+	private Integer numberClosedVulnerabilities=0;
+	private Integer numberNewVulnerabilities=0;
+	private Integer numberOldVulnerabilities=0;
+	private Integer numberResurfacedVulnerabilities=0;
+	private Integer numberTotalVulnerabilities=0;
+	private Integer numberHiddenVulnerabilities=0;
+	private Integer numberRepeatResults=0;
+	private Integer numberRepeatFindings=0;
 	
 	private Long numberInfoVulnerabilities = 0L, numberLowVulnerabilities = 0L,
 			numberMediumVulnerabilities = 0L, numberHighVulnerabilities = 0L,

@@ -93,7 +93,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "scanId")
-	@JsonIgnore
+    @JsonIgnore
 	public Scan getScan() {
 		return scan;
 	}
@@ -124,6 +124,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = NATIVE_ID_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getDisplayId() {
 		return displayId;
 	}
@@ -204,6 +205,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 	
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public String getCalculatedUrlPath() {
 		return calculatedUrlPath;
 	}
@@ -213,6 +215,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public String getCalculatedFilePath() {
 		return calculatedFilePath;
 	}
@@ -245,7 +248,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	
 	@ManyToOne
 	@JoinColumn(name = "userId")
-    @JsonView(AllViews.TableRow.class)
+    @JsonIgnore
 	public User getUser() {
 		return user;
 	}
@@ -296,6 +299,12 @@ public class Finding extends AuditableEntity implements FindingLike {
     @JsonView(AllViews.TableRow.class)
     private String getScannerName() {
         return getScan().getApplicationChannel().getChannelType().getName();
+    }
+
+    @Transient
+    @JsonView(AllViews.TableRow.class)
+    private Integer getScanId() {
+        return getScan().getId();
     }
 
     @Transient
