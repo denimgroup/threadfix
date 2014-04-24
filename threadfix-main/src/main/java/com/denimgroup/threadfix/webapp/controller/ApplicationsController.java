@@ -181,6 +181,9 @@ public class ApplicationsController {
         // doc tab
         map.put("documents", application.getDocuments());
 
+        // scheduled scan tab
+        map.put("scheduledScans", application.getScheduledScans());
+
         // edit form
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
