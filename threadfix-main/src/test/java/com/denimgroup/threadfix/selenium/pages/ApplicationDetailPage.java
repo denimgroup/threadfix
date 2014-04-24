@@ -167,8 +167,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickActionButton() {
-        waitForElement(driver.findElementById("actionButton"));
-        driver.findElementById("actionButton").click();
+        waitForElement(driver.findElementById("actionButton1"));
+        driver.findElementById("actionButton1").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -186,7 +186,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickEditDeleteBtn() {
         clickActionButton();
         driver.findElementById("editApplicationModalButton").click();
-        waitForElement(driver.findElementById("editApplicationModal"));
+        waitForElement(driver.findElementById("deleteLink"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -439,7 +439,7 @@ public class ApplicationDetailPage extends BasePage {
         clickActionButton();
         driver.findElementById("uploadScanModalLink").click();
         sleep(4000);
-        waitForElement(driver.findElementById("uploadScan" + modalNumber()));
+        waitForElement(driver.findElementById("closeScanModalButton"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -840,11 +840,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isActionButtonPresent() {
-        return driver.findElementById("actionButton").isDisplayed();
+        return driver.findElementById("actionButton1").isDisplayed();
     }
 
     public boolean isActionButtonClickable() {
-        return isClickable("actionButton");
+        return isClickable("actionButton1");
     }
 
     public boolean isEditDeletePresent() {
