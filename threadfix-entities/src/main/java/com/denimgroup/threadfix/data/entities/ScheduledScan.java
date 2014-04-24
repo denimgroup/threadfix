@@ -25,9 +25,9 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name="ScheduledScan")
@@ -131,6 +131,7 @@ public class ScheduledScan extends AuditableEntity {
 	}
 
     @Column(nullable=false)
+    @JsonView(Object.class)
     public int getHour() {
         return hour;
     }
@@ -140,6 +141,7 @@ public class ScheduledScan extends AuditableEntity {
     }
 
     @Column(nullable=false)
+    @JsonView(Object.class)
     public int getMinute() {
         return minute;
     }
@@ -149,6 +151,7 @@ public class ScheduledScan extends AuditableEntity {
     }
 
     @Column(nullable=false)
+    @JsonView(Object.class)
     public String getPeriod() {
         return period;
     }
@@ -158,6 +161,7 @@ public class ScheduledScan extends AuditableEntity {
     }
 
     @Column(nullable=true)
+    @JsonView(Object.class)
     public String getDay() {
         return day;
     }
@@ -167,6 +171,7 @@ public class ScheduledScan extends AuditableEntity {
     }
 
     @Column(nullable=false)
+    @JsonView(Object.class)
     public String getFrequency() {
         return frequency;
     }
@@ -176,6 +181,7 @@ public class ScheduledScan extends AuditableEntity {
     }
 
     @Column(nullable=false)
+    @JsonView(Object.class)
     public String getScanner() {
         return scanner;
     }

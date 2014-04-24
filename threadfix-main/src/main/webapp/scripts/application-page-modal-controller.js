@@ -26,6 +26,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        $scope.config.recentPathList = [];
                    }
 
+                   $rootScope.$broadcast('scheduledScans', $scope.config.scheduledScans);
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);

@@ -10,7 +10,8 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-table-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scheduled-scan-tab-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document-form-controller.js"></script>
 </head>
 
@@ -24,17 +25,6 @@
 
     <div class="uploadable" style="padding-top:300px"><div style="opacity:1">Drop files anywhere to upload.</div></div>
     <div>
-
-        <%@ include file="forms/uploadScanForm.jsp"%>
-        <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
-        <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
-        <%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
-        <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
-        <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
-        <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
-        <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
-        <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
-        <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
 
         <div id="headerDiv">
             <%@ include file="/WEB-INF/views/applications/detailHeader.jsp" %>
@@ -63,11 +53,7 @@
                 ">
                     <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
                 </tab>
-                <tab heading="
-                    ${ fn:length(application.scans) }
-                            <c:if test="${ fn:length(application.scans) == 1 }">Scheduled Scan</c:if>
-                            <c:if test="${ fn:length(application.scans) != 1 }">Scheduled Scans</c:if>
-                ">
+                <tab ng-controller="ScheduledScanTabController" heading="{{ heading }}">
                     <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
                 </tab>
             </c:if>
@@ -75,4 +61,16 @@
 
 
     </div>
+
+    <%@ include file="forms/uploadScanForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/addWafForm.jsp" %>
+    <%@ include file="/WEB-INF/views/wafs/forms/createWafForm.jsp" %>
+    <%@ include file="/WEB-INF/views/applications/forms/addDTForm.jsp" %>
+    <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
+    <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
+    <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
+    <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>
 </body>
