@@ -19,7 +19,7 @@
             ThreadFix API Keys are used to access the REST interface.<br/>
         </div>
 
-        <button class="btn" ng-click="openNewModal()">Create New Key</button>
+        <button class="btn" ng-click="openNewModal()" id="createNewKeyModalButton">Create New Key</button>
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
