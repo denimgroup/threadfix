@@ -213,8 +213,8 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage setApplicationName(String appName, String teamName) {
-        driver.findElementById("nameInput" + teamName).clear();
-        driver.findElementById("nameInput" + teamName).sendKeys(appName);
+        driver.findElementById("applicationNameInput").clear();
+        driver.findElementById("applicationNameInput").sendKeys(appName);
         return setPage();
     }
 

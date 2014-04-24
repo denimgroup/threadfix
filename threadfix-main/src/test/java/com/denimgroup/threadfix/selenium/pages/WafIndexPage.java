@@ -79,10 +79,10 @@ public class WafIndexPage extends BasePage {
 	}
 
 	public WafIndexPage clickAddWafLink() {
-        waitForElement(driver.findElementById("addWafModalButton"));
+        waitForElement(driver.findElementById("createWafModalButton"));
         sleep(5000);
-		driver.findElementById("addWafModalButton").click();
-		waitForElement(driver.findElementById("submitWafModal"));
+		driver.findElementById("createWafModalButton").click();
+		waitForElement(driver.findElementById("submit"));
 		return new WafIndexPage(driver);
 	}
 	
