@@ -23,11 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApiKeysIndexPage extends BasePage {
 	private List<WebElement> notes = new ArrayList<>();
@@ -36,7 +36,7 @@ public class ApiKeysIndexPage extends BasePage {
 
 	public ApiKeysIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		createNewKeyLink = driver.findElementByLinkText("Create New Key");
+		createNewKeyLink = driver.findElementById("createNewKeyModalButton");
 		for (int i = 1; i <= getNumRows(); i++) {
 			notes.add(driver.findElementById("note" + i));
 		}
