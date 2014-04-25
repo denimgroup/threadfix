@@ -150,57 +150,10 @@
 			</c:if>
 
 			<c:if test="${ totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings != 0}">
-                <%--<div ng-show="loading">--%>
-                    <%--<div class="refreshOnLoad" data-source-url="<c:out value="${ tableUrl }"/>"--%>
-                        <%--data-login-url="<c:out value="${ loginUrl }"/>">--%>
-                    <%--<h4>Mapped Findings</h4>--%>
-                    <%--<table class="table table-striped" >--%>
-                        <%--<thead>--%>
-                            <%--<tr>--%>
-                                <%--<th class="first">Severity</th>--%>
-                                <%--<th>Vulnerability Type</th>--%>
-                                <%--<th>Path</th>--%>
-                                <%--<th>Parameter</th>--%>
-                                <%--<th class="last">Number Merged Results</th>--%>
-                            <%--</tr>--%>
-                        <%--</thead>--%>
-                        <%--<tbody>--%>
-                            <%--<tr class="bodyRow">--%>
-                                <%--<td colspan="6" style="text-align: center;">Loading Findings.</td>--%>
-                            <%--</tr>--%>
-                        <%--</tbody>--%>
-                    <%--</table>--%>
-				    <%--</div>--%>
-                <%--</div>--%>
-                <%--<div ng-show="mappedVulns" >--%>
                 <div>
                     <%@ include file="/WEB-INF/views/scans/table.jsp" %>
                 </div>
-
-                <%--<div ng-show="loading">--%>
-                    <%--<div class="refreshOnLoad" data-source-url="<c:out value="${ unmappedTableUrl }"/>"--%>
-                        <%--data-login-url="<c:out value="${ loginUrl }"/>">--%>
-                    <%--<h4>Unmapped Findings</h4>--%>
-                    <%--<table class="table table-striped" id="2">--%>
-                        <%--<thead>--%>
-                            <%--<tr>--%>
-                                <%--<th class="first">Severity</th>--%>
-                                <%--<th>Vulnerability Type</th>--%>
-                                <%--<th>Path</th>--%>
-                                <%--<th>Parameter</th>--%>
-                                <%--<th class="last">Number Merged Results</th>--%>
-                            <%--</tr>--%>
-                        <%--</thead>--%>
-                        <%--<tbody>--%>
-                            <%--<tr class="bodyRow">--%>
-                                <%--<td colspan="5" style="text-align: center;">Loading Findings.</td>--%>
-                            <%--</tr>--%>
-                        <%--</tbody>--%>
-                    <%--</table>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
                 <div>
-                <%--<div ng-show="mappedVulns" >--%>
                     <%@ include file="/WEB-INF/views/scans/unmappedTable.jsp" %>
                 </div>
 			</c:if>

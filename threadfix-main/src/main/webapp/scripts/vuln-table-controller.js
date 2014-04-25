@@ -102,8 +102,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.heading = '0 Vulnerabilities';
 
-    $scope.goToPage = function() {
-        $scope.page = $scope.pageInput;
+    $scope.goToPage = function(valid) {
+        if (valid) {
+            $scope.page = $scope.pageInput;
+        }
     }
 
     $scope.goTo = function(vuln) {
