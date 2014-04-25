@@ -118,7 +118,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage clickAddTeamButton() {
         driver.findElementById("addTeamModalButton").click();
-        waitForElement(driver.findElementById("myTeamModal"));
+        waitForElement(driver.findElementById("myModalLabel"));
         return setPage();
     }
 

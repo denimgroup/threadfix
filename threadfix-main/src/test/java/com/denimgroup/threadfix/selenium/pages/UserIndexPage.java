@@ -56,7 +56,7 @@ public class UserIndexPage extends BasePage {
 
 	public UserIndexPage clickAddUserLink() {
 		driver.findElementById("newUserModalLink").click();
-		waitForElement(driver.findElementById("nameAndPasswordForm"));
+		waitForElement(driver.findElementById("submit"));
 		return new UserIndexPage(driver);
 	}
 	

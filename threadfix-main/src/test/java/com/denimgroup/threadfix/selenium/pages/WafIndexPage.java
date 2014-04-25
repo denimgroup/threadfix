@@ -86,9 +86,9 @@ public class WafIndexPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 	
-	public WafIndexPage createNewWaf(String name,String Type){
+	public WafIndexPage createNewWaf(String name,String type){
 		setNewNameInput(name);
-		setType(null,Type);
+		setType(null, type);
 		return this;
 	}
 	

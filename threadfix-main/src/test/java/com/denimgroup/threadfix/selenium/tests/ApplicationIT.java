@@ -334,7 +334,7 @@ public class ApplicationIT extends BaseIT {
         WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, type)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
 		// Add Application with WAF
         ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
@@ -397,11 +397,11 @@ public class ApplicationIT extends BaseIT {
         WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName1, type1)
-                .clickCreateWaf()
+                .clickModalSubmit()
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName2, type2)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
         //Create team & application
         teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()

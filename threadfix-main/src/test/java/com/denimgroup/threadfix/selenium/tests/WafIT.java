@@ -52,7 +52,7 @@ public class WafIT extends BaseIT {
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(newWafName, type)
-                .clickCreateWaf();
+                .clickModalSubmit();
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
@@ -68,7 +68,7 @@ public class WafIT extends BaseIT {
 
         wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(wafName, wafType)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
         wafIndexPage = wafIndexPage.clickDeleteWaf(wafName)
                 .clickWafsHeaderLink();
@@ -86,7 +86,7 @@ public class WafIT extends BaseIT {
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(newWafName, type)
-                .clickCreateWaf();
+                .clickModalSubmit();
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
@@ -102,7 +102,7 @@ public class WafIT extends BaseIT {
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(newWafName, type)
-                .clickCreateWaf();
+                .clickModalSubmit();
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
@@ -118,7 +118,7 @@ public class WafIT extends BaseIT {
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(newWafName, type)
-                .clickCreateWaf();
+                .clickModalSubmit();
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
@@ -134,7 +134,7 @@ public class WafIT extends BaseIT {
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(newWafName, type)
-                .clickCreateWaf();
+                .clickModalSubmit();
 		
 		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
@@ -156,16 +156,16 @@ public class WafIT extends BaseIT {
 
 		// Test empty and whitespace input
 		wafIndexPage = wafIndexPage.setNewNameInput(emptyString)
-                .clickCreateWafInvalid();
+                .clickModalSubmitInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		wafIndexPage = wafIndexPage.setNewNameInput(whiteSpaceString)
-                .clickCreateWafInvalid();
+                .clickModalSubmitInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
 		wafIndexPage = wafIndexPage.setNewNameInput(longInput)
-                .clickCreateWaf();
+                .clickModalSubmit();
 		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
 		
 		// Test name duplication checking
@@ -174,7 +174,7 @@ public class WafIT extends BaseIT {
 		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .setNewNameInput(wafName)
-                .clickCreateWafInvalid();
+                .clickModalSubmitInvalid();
 		
 		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
 	}
@@ -192,7 +192,7 @@ public class WafIT extends BaseIT {
 
 		wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(originalWaf, type1)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
 		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
                 .clickEditWaf(originalWaf)
@@ -224,12 +224,12 @@ public class WafIT extends BaseIT {
 
         wafIndexPage = wafIndexPage.clickAddWafLink()
                 .createNewWaf(wafName,type1)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
         wafIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafNameDuplicateTest,type1)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
         // Test submission with no changes
         wafIndexPage = wafIndexPage.clickWafsHeaderLink()
@@ -274,7 +274,7 @@ public class WafIT extends BaseIT {
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, type)
-                .clickCreateWaf()
+                .clickModalSubmit(WafIndexPage.class)
                 .clickEditWaf(wafName.substring(0, 50));
         int width = wafIndexPage.getWafEditHeaderWidth(wafName.substring(0, 50));
 
@@ -300,7 +300,7 @@ public class WafIT extends BaseIT {
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, wafType)
-                .clickCreateWaf();
+                .clickModalSubmit();
 
 		//Add waf to application
 		ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()

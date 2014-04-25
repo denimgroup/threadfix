@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertTrue;
+
 public abstract class BasePage {
 	
 	public final static int NUM_SECONDS_TO_WAIT = 20;
@@ -451,5 +453,33 @@ public abstract class BasePage {
             throw new NoSuchElementException("Element not found.");
         }
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickModalSubmit() {
+        return (T) clickModalSubmit(this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickModalSubmit(Class<T> targetClass) {
+        driver.findElementById("submit").click();
+        sleep(2000);
+        assertTrue("Submit button still present.", driver.findElementsById("submit").size() == 0);
+
+        return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickModalSubmitInvalid() {
+        return (T) clickModalSubmitInvalid(this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickModalSubmitInvalid(Class<T> targetClass) {
+        driver.findElementById("submit").click();
+
+        assertTrue("Submit button wasn't still present.", driver.findElementsById("submit").size() != 0);
+
+        return (T) this;
     }
 }

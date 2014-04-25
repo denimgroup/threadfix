@@ -76,7 +76,7 @@ public class ApiKeysIndexPage extends BasePage {
 
 	public ApiKeysIndexPage clickNewLink() {
 		createNewKeyLink.click();
-		waitForElement(driver.findElementById("newKeyModalDiv"));
+		waitForElement(driver.findElementById("submit"));
 		return new ApiKeysIndexPage(driver);
 	}
 	
@@ -93,9 +93,8 @@ public class ApiKeysIndexPage extends BasePage {
 	public ApiKeysIndexPage clickSubmitButton(String oldNote){
 		int oldCnt;
 		int timer = 0;
-		if(oldNote == null){
-			driver.findElementById("submitKeyModalCreate").click();
-			sleep(2000);
+		if (oldNote == null) {
+            ApiKeysIndexPage page = clickModalSubmit();
 			oldCnt = getNumRows();
 			while(getNumRows()!=(oldCnt+1)){
 				if(timer >= 10){
@@ -104,11 +103,13 @@ public class ApiKeysIndexPage extends BasePage {
 				timer++;
 				sleep(100);
 			}
-		}else{
-			driver.findElementsById("submitKeyModal").get(getIndex(oldNote)).click();
-			sleep(1000);
+
+            return page;
+		} else {
+
+            return clickModalSubmit();
+
 		}
-		return new ApiKeysIndexPage(driver);
 	}
 	
 	public ApiKeysIndexPage setNote(String newNote,String oldNote){
