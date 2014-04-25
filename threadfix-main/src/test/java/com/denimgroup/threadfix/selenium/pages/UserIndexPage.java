@@ -68,33 +68,33 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage enterName(String name,String oldName){
 		if(oldName == null){
-			driver.findElementById("nameInput").clear();
-			driver.findElementById("nameInput").sendKeys(name);
+			driver.findElementById("name").clear();
+			driver.findElementById("name").sendKeys(name);
 		}else{
-			driver.findElementById("nameInput"+(oldName)).clear();
-			driver.findElementById("nameInput"+(oldName)).sendKeys(name);
+			driver.findElementById("name"+(oldName)).clear();
+			driver.findElementById("name"+(oldName)).sendKeys(name);
 		}
 		return new UserIndexPage(driver);
 	}
 	
 	public UserIndexPage enterPassword(String password,String oldName){
 		if(oldName == null){
-			driver.findElementById("passwordInput").clear();
-			driver.findElementById("passwordInput").sendKeys(password);
+			driver.findElementById("password").clear();
+			driver.findElementById("password").sendKeys(password);
 		}else{
-			driver.findElementById("passwordInput"+(oldName)).clear();
-			driver.findElementById("passwordInput"+(oldName)).sendKeys(password);
+			driver.findElementById("password"+(oldName)).clear();
+			driver.findElementById("password"+(oldName)).sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
 	
 	public UserIndexPage enterConfirmPassword(String password,String oldName){
 		if(oldName == null){
-			driver.findElementById("passwordConfirmInput").clear();
-			driver.findElementById("passwordConfirmInput").sendKeys(password);
+			driver.findElementById("confirm").clear();
+			driver.findElementById("confirm").sendKeys(password);
 		}else{
-			driver.findElementById("passwordConfirmInput"+(oldName)).clear();
-			driver.findElementById("passwordConfirmInput"+(oldName)).sendKeys(password);
+			driver.findElementById("confirm"+(oldName)).clear();
+			driver.findElementById("confirm"+(oldName)).sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -132,29 +132,29 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage clickAddNewUserBtn(){
-        waitForElement(driver.findElementById("addUserButton"));
-		driver.findElementById("addUserButton").click();
+        waitForElement(driver.findElementById("submit"));
+		driver.findElementById("submit").click();
 		sleep(5000);
 		return new UserIndexPage(driver);
 	}
 	
 	public UserIndexPage clickAddNewUserBtnInvalid(){
 		sleep(500);
-		driver.findElementById("addUserButton").click();
+		driver.findElementById("submit").click();
 		sleep(500);
 		return new UserIndexPage(driver);
 	}
 	
 	
 	public UserIndexPage clickUpdateUserBtn(String name){
-		driver.findElementById("addUserButton" + name).click();
+		driver.findElementById("submit").click();
 		sleep(1000);
 		return new UserIndexPage(driver);
 	}
 	
 	public UserIndexPage clickUpdateUserBtnInvalid(String name){
-		waitForElement(driver.findElementById("addUserButton"+name));
-		driver.findElementById("addUserButton"+name).click();
+		waitForElement(driver.findElementById("submit"));
+		driver.findElementById("submit").click();
 		return new UserIndexPage(driver);
 	}
 	
@@ -216,6 +216,6 @@ public class UserIndexPage extends BasePage {
 	}
 
     public boolean isSaveChangesButtonClickable(String name) {
-        return isClickable("addUserButton"+name);
+        return isClickable("submit");
     }
 }
