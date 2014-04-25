@@ -1,8 +1,8 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ScheduledScanTabController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
+myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window, $modal, $http, $log, $rootScope, tfEncoder) {
 
-    $scope.heading = 'Scheduled Scans';
+    $scope.heading = 'Scan Agent Tasks';
 
     $scope.base = window.location.pathname;
 
@@ -16,24 +16,20 @@ myAppModule.controller('ScheduledScanTabController', function ($scope, $window, 
         });
     }
 
-    $scope.openNewScheduledScanModal = function() {
+    $scope.openNewScanAgentTaskModal = function() {
         var modalInstance = $modal.open({
-            templateUrl: 'newScheduledScan.html',
+            templateUrl: 'newScanAgentTask.html',
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode($scope.currentUrl + "/scheduledScans/addScheduledScan");
+                    return tfEncoder.encode($scope.currentUrl + "/addScanQueueTask");
                 },
                 buttonText: function() {
-                    return "Add Scheduled Scan";
+                    return "Add Scan Queue Task";
                 },
                 object: function() {
                     return {
-                        frequency: 'Daily',
-                        hour: '6',
-                        minute: '0',
-                        period: 'AM',
-                        scanner: 'OWASP Zed Attack Proxy'
+                        scanQueueType: 'OWASP Zed Attack Proxy'
                     };
                 },
                 config: function() {
@@ -44,9 +40,9 @@ myAppModule.controller('ScheduledScanTabController', function ($scope, $window, 
             }
         });
 
-        modalInstance.result.then(function (scheduledScans) {
-            $scope.scheduledScans = scheduledScans;
-            addExtraZero($scope.scheduledScans);
+        modalInstance.result.then(function (scanAgentTasks) {
+            $scope.scanAgentTasks = scanAgentTasks;
+            addExtraZero($scope.scanAgentTasks);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
 
@@ -54,37 +50,37 @@ myAppModule.controller('ScheduledScanTabController', function ($scope, $window, 
     }
 
     var setHeader = function() {
-        if (!$scope.scheduledScans || !$scope.scheduledScans.length > 0) {
-            $scope.scheduledScans = undefined;
-            $scope.heading = "0 Scheduled Scans";
+        if (!$scope.scanAgentTasks || !$scope.scanAgentTasks.length > 0) {
+            $scope.scanAgentTasks = undefined;
+            $scope.heading = "0 Scan Queue Tasks";
         } else {
-            if ($scope.scheduledScans.length === 1) {
-                $scope.heading = '1 Scheduled Scan';
+            if ($scope.scanAgentTasks.length === 1) {
+                $scope.heading = '1 Scan Queue Task';
             } else {
-                $scope.heading = $scope.scheduledScans.length + ' Scheduled Scans';
+                $scope.heading = $scope.scanAgentTasks.length + ' Scan Queue Tasks';
             }
         }
     }
 
-    $scope.deleteScheduledScan = function(scan) {
+    $scope.deleteScanAgentTask = function(task) {
 
-        if (confirm('Are you sure you want to delete this scheduled scan?')) {
-            scan.deleting = true;
-            $http.post(tfEncoder.encode($scope.currentUrl + "/scheduledScans/scheduledScan/" + scan.id + "/delete")).
+        if (confirm('Are you sure you want to delete this scan queue task?')) {
+            task.deleting = true;
+            $http.post(tfEncoder.encode($scope.currentUrl + "/scanQueueTask/" + task.id + "/delete")).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {
-                        var index = $scope.scheduledScans.indexOf(scan);
+                        var index = $scope.scanAgentTasks.indexOf(task);
 
                         if (index > -1) {
-                            $scope.scheduledScans.splice(index, 1);
+                            $scope.scanAgentTasks.splice(index, 1);
                         }
 
                         setHeader();
                         $scope.$parent.successMessage = "Successfully deleted document " + document.name;
 
                     } else {
-                        scan.deleting = false;
+                        task.deleting = false;
                         $scope.errorMessage = "Something went wrong. " + data.message;
                     }
                 }).
@@ -97,9 +93,9 @@ myAppModule.controller('ScheduledScanTabController', function ($scope, $window, 
         }
     };
 
-    $scope.$on('scheduledScans', function(event, scheduledScans) {
-        $scope.scheduledScans = scheduledScans;
-        addExtraZero($scope.scheduledScans);
+    $scope.$on('scanAgentTasks', function(event, scanAgentTasks) {
+        $scope.scanAgentTasks = scanAgentTasks;
+        addExtraZero($scope.scanAgentTasks);
         setHeader();
     });
 });

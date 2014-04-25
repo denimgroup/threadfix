@@ -25,10 +25,10 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -153,6 +153,7 @@ public class ScanQueueTask extends AuditableEntity {
 	}
 	
 	@Column(nullable=false)
+    @JsonView(Object.class)
 	public String getScanner() {
 		return this.scanner;
 	}
@@ -162,6 +163,7 @@ public class ScanQueueTask extends AuditableEntity {
 	}
 	
 	@Column
+    @JsonView(Object.class)
 	public String getVersion() {
 		return this.version;
 	}
@@ -173,7 +175,7 @@ public class ScanQueueTask extends AuditableEntity {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable=false)
-    @JsonIgnore
+    @JsonView(Object.class)
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -184,7 +186,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
-    @JsonIgnore
+    @JsonView(Object.class)
 	public Date getStartTime() {
 		return startTime;
 	}
@@ -195,7 +197,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
-    @JsonIgnore
+    @JsonView(Object.class)
 	public Date getEndTime() {
 		return endTime;
 	}
@@ -206,7 +208,7 @@ public class ScanQueueTask extends AuditableEntity {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
-    @JsonIgnore
+    @JsonView(Object.class)
 	public Date getTimeoutTime() {
 		return timeoutTime;
 	}
@@ -233,7 +235,13 @@ public class ScanQueueTask extends AuditableEntity {
     public void setTaskStatus(ScanQueueTaskStatus status) {
         setStatus(status.getValue());
     }
-	
+
+    @Transient
+    @JsonView(Object.class)
+    public String getStatusString() {
+        return ScanQueueTaskStatus.getFromValue(status).description;
+    }
+
 	@Column
 	@Type(type="text")
 	public String getScanAgentInfo() {
@@ -243,6 +251,7 @@ public class ScanQueueTask extends AuditableEntity {
 	public void setScanAgentInfo(String scanAgentInfo) {
 		this.scanAgentInfo = scanAgentInfo;
 	}
+
 	@Column(length = 50)
 	public String getSecureKey() {
 		return secureKey;
