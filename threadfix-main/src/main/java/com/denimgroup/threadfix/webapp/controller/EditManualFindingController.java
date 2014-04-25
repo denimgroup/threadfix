@@ -132,12 +132,10 @@ public class EditManualFindingController {
         Finding dbFinding = findingService.loadFinding(findingId);
 
         if (finding == null || dbFinding == null) {
-            ControllerUtils.addErrorMessage(request, "Finding submitted is invalid");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is invalid.");
         }
 		if (isManual(dbFinding)) {
-            ControllerUtils.addErrorMessage(request, "Finding submitted is not manual");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is not manual.");
 		} else if (!isAuthorizedForFinding(dbFinding)) {
@@ -167,7 +165,6 @@ public class EditManualFindingController {
                 String msg = "Static finding has been modified" +
                         ((vulnerabilityId==newVulnId) ? "" :
                                 " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
-                ControllerUtils.addSuccessMessage(request, "Static finding has been modified");
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
 //                return RestResponse.success("A static manual finding has been modified to application");
                 return RestResponse.success(msg);
@@ -190,12 +187,10 @@ public class EditManualFindingController {
         Finding dbFinding = findingService.loadFinding(findingId);
 
         if (finding == null || dbFinding == null) {
-            ControllerUtils.addErrorMessage(request, "Finding submitted is invalid");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is invalid.");
         }
 		if (isManual(dbFinding)) {
-            ControllerUtils.addErrorMessage(request, "Finding submitted is not manual");
             model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId);
             return RestResponse.failure("Finding submitted is not manual.");
 		} else if (!isAuthorizedForFinding(dbFinding)) {
@@ -230,7 +225,6 @@ public class EditManualFindingController {
                 String msg = "Dynamic finding has been modified" +
                         ((vulnerabilityId==newVulnId) ? "" :
                                 " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
-                ControllerUtils.addSuccessMessage(request, "Dynamic finding has been modified");
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
                 return RestResponse.success(msg);
 			}
