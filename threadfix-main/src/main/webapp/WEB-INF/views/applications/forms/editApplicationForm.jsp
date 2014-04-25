@@ -15,7 +15,7 @@
             <tr>
                 <td>Name</td>
                 <td>
-                    <input focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
+                    <input id="nameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
                 </td>
                 <td>
                     <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
@@ -25,7 +25,7 @@
             <tr>
                 <td>URL</td>
                 <td>
-                    <input type='url' name='url' ng-model="object.url" ng-maxlength="255"/>
+                    <input id="urlInput" type='url' name='url' ng-model="object.url" ng-maxlength="255"/>
                     <span class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Maximum length is 255.</span>
                     <span class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
                 </td>
@@ -35,7 +35,7 @@
                 <td>
                     <input name="uniqueId" type='text'
                            ng-model="object.uniqueId"
-                           id="uniqueIdInput{{ object.team.id }}" size="50" maxlength="255"/>
+                           id="uniqueIdInput" size="50" maxlength="255"/>
                     <span class="errors" ng-show="form.uniqueId.$dirty && form.uniqueId.$error.maxlength">Maximum length is 255.</span>
                 </td>
             </tr>
@@ -89,7 +89,7 @@
 			<tr>
 				<td class="right-align">Application Type</td>
 				<td >
-					<select
+					<select id="frameworkType"
                             ng-model="object.frameworkType"
                             name="frameworkType">
                         <option ng-selected="type === object.frameworkType"
@@ -125,13 +125,13 @@
                 <td>WAF</td>
                 <!-- TODO make this a link -->
                 <td ng-show="object.waf">{{ object.waf.name }}</td>
-                <td><button class="btn" ng-click="switchTo('addWaf')">Set WAF</button></td>
+                <td><button class="btn" ng-click="switchTo('addWaf')" id="addWafButton">Set WAF</button></td>
 			</tr>
 			<tr id="appWafDiv">
                 <td>Defect Tracker</td>
                 <!-- TODO make this a link -->
                 <td ng-show="object.defectTracker">{{ object.defectTracker.name }}</td>
-                <td><button class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
+                <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
 			
 		</table>

@@ -14,7 +14,7 @@
                 <tr>
                     <td>User</td>
                     <td class="inputValue">
-                        <input ng-model="user.name" required type="text" name="name"/>
+                        <input ng-model="user.name" required type="text" name="name" id="name"/>
                         <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                         <span class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
                     </td>
@@ -22,7 +22,7 @@
                 <tr>
                     <td>Password</td>
                     <td class="inputValue">
-                        <input password-validate="{{ user.passwordConfirm }}" ng-model="user.unencryptedPassword" required type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
+                        <input password-validate="{{ user.passwordConfirm }}" id="password" ng-model="user.unencryptedPassword" required type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
                         <span class="errors" ng-show="lengthRemaining">{{ lengthRemaining }} characters needed</span>
                         <span class="errors" ng-show="form.unencryptedPassword.$dirty && form.unencryptedPassword.$error.matches">Passwords do not match.</span>
                         <span class="errors" ng-show="form.unencryptedPassword.$dirty && form.unencryptedPassword.$error.required && !lengthRemaining">Password is required.</span>
@@ -32,7 +32,7 @@
                 <tr>
                     <td>Confirm Password</td>
                     <td class="inputValue">
-                        <input ng-model="user.passwordConfirm" required type="password" style="margin-bottom:0px" id="passwordConfirmInput" name="passwordConfirm" size="30" />
+                        <input ng-model="user.passwordConfirm" id="confirm" required type="password" style="margin-bottom:0" id="passwordConfirmInput" name="passwordConfirm" size="30" />
                         <span class="errors" ng-show="form.passwordConfirm.$dirty && form.passwordConfirm.$error.required">Confirm Password is required.</span>
                     </td>
                 </tr>
