@@ -158,13 +158,6 @@ public class ApplicationDetailsPageIT extends BaseIT {
     }
 
     @Test
-    public void testActionButtonUploadScan() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
-        ap.clickUploadScanLink();
-        assertTrue("Did not generate upload scan dialog", ap.isSubmitScanLinkPresent(appName));
-    }
-
-    @Test
     public void testActionButtonAddManualFinding() {
         ApplicationDetailPage ap = buildTeamAppandScan();
         ap.clickActionButton()

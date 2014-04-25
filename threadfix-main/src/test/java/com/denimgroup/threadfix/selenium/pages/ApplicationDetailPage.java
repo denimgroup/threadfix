@@ -943,10 +943,6 @@ public class ApplicationDetailPage extends BasePage {
         return isClickable("submitAppModal");
     }
 
-    public boolean isSubmitScanLinkPresent(String appName) {
-        return driver.findElementById("submitScanModal-" + appName).isDisplayed();
-    }
-
     public boolean isDynamicRadioPresent() {
         return driver.findElementById("dynamicRadioButton").isDisplayed();
     }
