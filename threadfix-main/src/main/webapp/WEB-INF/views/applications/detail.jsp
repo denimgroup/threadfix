@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scheduled-scan-tab-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document-form-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-agent-tasks-tab-controller.js"></script>
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
@@ -46,11 +47,7 @@
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
             <c:if test="${isEnterprise}">
-                <tab heading="
-                    ${ fn:length(application.scans) }
-                            <c:if test="${ fn:length(application.scans) == 1 }">Scan Agent Task</c:if>
-                            <c:if test="${ fn:length(application.scans) != 1 }">Scan Agent Tasks</c:if>
-                ">
+                <tab ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
                     <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
                 </tab>
                 <tab ng-controller="ScheduledScanTabController" heading="{{ heading }}">
@@ -73,4 +70,5 @@
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>
+    <%@ include file="/WEB-INF/views/applications/forms/addScanQueueForm.jsp" %>
 </body>

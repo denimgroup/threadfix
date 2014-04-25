@@ -27,6 +27,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    }
 
                    $rootScope.$broadcast('scheduledScans', $scope.config.scheduledScans);
+                   $rootScope.$broadcast('scanAgentTasks', $scope.config.scanAgentTasks);
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);

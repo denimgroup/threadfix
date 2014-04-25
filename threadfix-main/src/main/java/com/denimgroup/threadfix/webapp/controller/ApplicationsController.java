@@ -181,6 +181,9 @@ public class ApplicationsController {
         // doc tab
         map.put("documents", application.getDocuments());
 
+        // scan agent tasks tab
+        map.put("scanAgentTasks", application.getScanQueueTasks());
+
         // scheduled scan tab
         map.put("scheduledScans", application.getScheduledScans());
 

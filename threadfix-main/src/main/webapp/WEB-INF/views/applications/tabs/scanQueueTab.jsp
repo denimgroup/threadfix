@@ -1,5 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
-<%@include file="/WEB-INF/views/applications/modals/addScanQueueModal.jsp"%>
+
+<c:if test="${ canManageApplications }">
+    <div style="margin-top:10px;margin-bottom:7px;">
+        <a id="addScanQueueLink" class="btn" ng-click="openNewScanAgentTaskModal()">Add New Task</a>
+    </div>
+</c:if>
 
 <div id="scanQueueDiv${ application.id }">
 	<table class="table">
@@ -17,38 +22,26 @@
 				</tr>
 			</thead>
 			<tbody>
-            <c:if test="${ empty application.scanQueueTasks }">
-                <tr class="bodyRow">
+                <tr ng-hide="scanAgentTasks" class="bodyRow">
                     <td colspan="7" style="text-align:center;">No Scan Agent Tasks found.</td>
                 </tr>
-            </c:if>
-				<c:forEach items="${application.scanQueueTasks}" var="scanQueueTask" varStatus="status">
-					<tr class="bodyRow">
-						<td>
-							<spring:url value="/configuration/scanqueue/{scanQueueTaskId}/detail" var="detailUrl">
-								<spring:param name="scanQueueTaskId" value="${ scanQueueTask.id }" />
-							</spring:url>
-							<a href='<c:out value="${detailUrl}" />'><c:out value="${scanQueueTask.id}" />
-							</a>
-						</td> 
-						<td><c:out value="${scanQueueTask.showStatusString()}" /></td>
-						<td id="scannerType${ status.count }"><c:out value="${scanQueueTask.scanner}" /></td>
-						<td><fmt:formatDate value="${ scanQueueTask.createTime }" type="both" dateStyle="short" timeStyle="short" /></td>
-						<td><fmt:formatDate value="${ scanQueueTask.startTime }" type="both" dateStyle="short" timeStyle="short" /></td>
-						<td><fmt:formatDate value="${ scanQueueTask.endTime }" type="both" dateStyle="short" timeStyle="short" /></td>	
-						<c:if test="${ canManageApplications }">
-							<td class="centered">
-								<spring:url value="/configuration/scanqueue/organizations/{orgId}/applications/{appId}/scanQueueTask/{taskId}/delete" var="deleteUrl">
-									<spring:param name="orgId" value="${ application.organization.id }"/>
-									<spring:param name="appId" value="${ application.id }"/>
-									<spring:param name="taskId" value="${ scanQueueTask.id }"/>
-								</spring:url>
-				                <a class="btn btn-danger scanQueueDelete" data-delete-form="deleteForm${ scanQueueTask.id }">Delete</a>
-								<form id="deleteForm${ scanQueueTask.id }" method="POST" action="${ fn:escapeXml(deleteUrl) }"></form>				
-							</td>
-						</c:if>				
-					</tr>
-				</c:forEach>
+                <tr class="bodyRow" ng-repeat="task in scanAgentTasks">
+                    <td>
+                        <a ng-click="goTo(task)">
+                            {{ task.id }}
+                        </a>
+                    </td>
+                    <td>{{ task.statusString }}</td>
+                    <td id="scannerType{{ $index }}"> {{ task.scanner }}</td>
+                    <td>{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
+                    <td>{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
+                    <td>{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
+                    <c:if test="${ canManageApplications }">
+                        <td class="centered">
+                            <a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
+                        </td>
+                    </c:if>
+                </tr>
 			</tbody>
 	</table>
 </div>
