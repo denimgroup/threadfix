@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -498,8 +499,9 @@ public class ApplicationIT extends BaseIT {
 
     }
 
+    @Ignore
     @Test
-    public void testAddManualFinding() {
+    public void testAddDynamicManualFinding() {
         String teamName = "Team" + getRandomString(5);
         String appName = "App" + getRandomString(5);
         String cwe = "Improper Validation of Certificate Expiration";
@@ -526,7 +528,92 @@ public class ApplicationIT extends BaseIT {
                 .clickViewFinding(1)
                 .clickViewVulnerability();
 
+        //TODO requires ElementIDs on VulnerabililtyDetailPage
         assertTrue("Description was not present", vulnerabilityDetailPage.isTextPresentOnPage(desc) );
+    }
+
+    @Ignore
+    @Test
+    public void testEditDynamicManualFindings() {
+        String teamName = "TeamName" + getRandomString(5);
+        String appName = "AppName" + getRandomString(5);
+        String cwe = "Improper Neutralization of Special Elements used in an SQL Command";
+        String parameter = "testParameter";
+        String desc = "Test Description: This is a test, this is only a test.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage ap = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        ap.clickActionButton()
+                .clickManualFindingButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(desc)
+                .clickDynamicSubmit();
+
+        ap.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding(1)
+                .clickEditVulnerability();
+
+        //TODO Bug in VulnerabilityDetailsPage, does not save changes.
+        // Continue to finish building test when bug is fixed.
+
+    }
+
+
+    @Test
+    public void deleteManualFindingScan() {
+        String teamName = "TeamName" + getRandomString(5);
+        String appName = "AppName" + getRandomString(5);
+        String CWE = "89";
+        String desc = "Test Description for deleting manual finding.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage ap = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        ap.clickActionButton()
+                .clickManualFindingButton()
+                .setCWE(CWE)
+                .setDescription(desc)
+                .clickDynamicSubmit();
+
+        ap.clickScansTab()
+            .clickDeleteScanButton();
+
+        assertTrue("Manual Finding was not deleted correctly.", ap.getAlert().contains("The scan was successfully deleted."));
+
+    }
+
+
+    @Test
+    public void deleteUploadedScan() {
+        String teamName = "TeamName" + getRandomString(5);
+        String appName = "AppName" + getRandomString(5);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage ap = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        ap.clickScansTab()
+                .clickDeleteScanButton();
+
+        assertTrue("Manual Finding was not deleted correctly.", ap.getAlert().contains("The scan was successfully deleted."));
     }
 
     public void sleep(int num) {

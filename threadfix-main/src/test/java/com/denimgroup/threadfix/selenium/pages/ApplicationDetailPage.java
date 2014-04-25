@@ -357,8 +357,8 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("url.errors").getText().trim();
     }
 
-    public ApplicationDetailPage clickDeleteScanButton(int i) {
-        driver.findElementsByClassName("scanDelete").get(i).click();
+    public ApplicationDetailPage clickDeleteScanButton() {
+        driver.findElementByLinkText("Delete Scan").click();
         handleAlert();
         return new ApplicationDetailPage(driver);
     }
