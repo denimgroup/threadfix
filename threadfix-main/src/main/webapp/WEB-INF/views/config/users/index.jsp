@@ -43,13 +43,13 @@
 					{{ user.name }}
 				</td>
 				<td>
-					<a id="editUserModal${ status.count }Link" class="btn" ng-click="openEditModal(user)">
+					<a id="editUserModal{{ user.name }}" class="btn" ng-click="openEditModal(user)">
 						Edit / Delete
 					</a>
 				</td>
 				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
-				<td id="name{{ $index }}">
-					<a id="editPermissions{{ $index }}" class="btn" ng-click="goToEditPermissionsPage(user)">Edit Permissions</a>
+				<td>
+					<a id="editPermissions{{ user.name }}" class="btn" ng-click="goToEditPermissionsPage(user)">Edit Permissions</a>
 				</td>
 				</security:authorize>
 			</tr>

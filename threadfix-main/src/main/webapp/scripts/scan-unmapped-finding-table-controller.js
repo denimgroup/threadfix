@@ -20,6 +20,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                         $scope.numPages = data.object.numPages;
                         $scope.page = data.object.page;
                         $scope.numFindings = data.object.numFindings;
+                        $scope.numberOfUnmappedPages = Math.ceil(data.object.numFindings/100);
                         $scope.findingList = data.object.findingList;
                         $scope.scan = data.object.scan;
                     } else {
@@ -44,9 +45,11 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         return object;
     }
 
-    $scope.goToPage = function() {
-        $scope.page = $scope.pageInput;
-    }
+    $scope.goToPage = function(valid) {
+        if (valid) {
+            $scope.page = $scope.pageInput;
+        }
+    };
 
     $scope.goTo = function(finding) {
         $window.location.href = tfEncoder.encode($scope.$parent.currentUrl + "/findings/" + finding.id);

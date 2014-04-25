@@ -18,7 +18,7 @@
     <%@ include file="filter.jspf" %>
 
     <div ng-show="empty && !filtered" class="empty-tab-drop-area">
-        <div>Drop a scan here to upload.</div>
+        <div>Drag and drop a scan file here to upload.</div>
     </div>
 
     <div ng-show="empty && filtered" class="alert alert-danger">
@@ -26,11 +26,13 @@
     </div>
 
     <div ng-show="vulns">
-        <div class="pagination" ng-show="numVulns > 100" >
+        <div ng-form="form" class="pagination" ng-show="numVulns > 100" ng-init = "max = ((numVulns / 100 | number:0) < numVulns / 100) ? ((numVulns / 100 | number:0) * 1 + 1) : ((numVulns / 100 | number:0) * 1)">
             <pagination class="no-margin" total-items="numVulns / 10" max-size="5" page="page"></pagination>
 
-            <input id="pageInput" ng-enter="goToPage()" style="width:50px" type="number" ng-model="pageInput"/>
-            <button id="goToPageButton" class="btn" ng-click="goToPage()"> Go to Page </button>
+            <input id="pageInput" name="pageInput" ng-enter="goToPage(form.$valid)" style="width:50px" type="number" ng-model="pageInput" max="{{max}}" min="1"/>
+            <button id="goToPageButton" class="btn" ng-class="{ disabled : form.$invalid }" ng-click="goToPage(form.$valid)"> Go to Page </button>
+            <span class="errors" ng-show="form.pageInput.$dirty && form.pageInput.$error.min || form.pageInput.$error.max">Input number from 1 to {{max}}</span>
+            <span class="errors" ng-show="form.pageInput.$dirty && form.pageInput.$error.number">Not a valid number</span>
         </div>
 
         <table class="table sortable table-hover tf-colors" style="table-layout: fixed;" id="anyid">
