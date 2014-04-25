@@ -66,58 +66,58 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat-start="vuln in vulns" class="bodyRow pointer" ng-class="{
-                        error: vuln.severityName === 'Critical',
-                        warning: vuln.severityName === 'High',
-                        success: vuln.severityName === 'Medium',
-                        info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
+                <tr ng-repeat-start="vulnerability in vulns" class="bodyRow pointer" ng-class="{
+                        error: vulnerability.severityName === 'Critical',
+                        warning: vulnerability.severityName === 'High',
+                        success: vulnerability.severityName === 'Medium',
+                        info: vulnerability.severityName === 'Info' || vulnerability.severityName === 'Low'
                         }">
                     <c:if test="${ (not hideCheckboxes) and (canModifyVulnerabilities || canSubmitDefects) }">
                         <td style="width:12px">
-                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ $index }}" ng-click="setCheckedAll(vuln.checked)" type="checkbox" ng-model="vuln.checked">
+                            <input class="vulnIdCheckbox" id="vulnerabilityIds{{ $index }}" ng-click="setCheckedAll(vulnerability.checked)" type="checkbox" ng-model="vulnerability.checked">
                             <input class="vulnIdCheckboxHidden" type="hidden" value="on" name="_vulnerabilityIds">
                         </td>
                     </c:if>
-                    <td ng-click="expand(vuln)" class="pointer">
-                        <span ng-class="{ expanded: vuln.expanded }" id="caret{{ $index }}" class="caret-right"></span>
+                    <td ng-click="expand(vulnerability)" class="pointer">
+                        <span ng-class="{ expanded: vulnerability.expanded }" id="caret{{ $index }}" class="caret-right"></span>
                     </td>
-                    <td ng-click="expand(vuln)" class="pointer" id="severity{{ $index }}"> {{ vuln.severityName }} </td>
-                    <td ng-click="expand(vuln)" class="pointer" id="type{{ $index }}">
-                        {{ vuln.vulnerabilityName }}
+                    <td ng-click="expand(vulnerability)" class="pointer" id="severity{{ $index }}"> {{ vulnerability.severityName }} </td>
+                    <td ng-click="expand(vulnerability)" class="pointer" id="type{{ $index }}">
+                        {{ vulnerability.vulnerabilityName }}
                     </td>
 
-                    <td ng-hide="vuln.dependency" ng-click="expand(vuln)" class="pointer" style="word-wrap: break-word; width:100px" id="path{{ $index }}"> {{ vuln.path }} </td>
-                    <td ng-hide="vuln.dependency" ng-click="expand(vuln)" class="pointer" id="parameter{{ $index }}"> {{ vuln.parameter }} </td>
+                    <td ng-hide="vulnerability.dependency" ng-click="expand(vulnerability)" class="pointer" style="word-wrap: break-word; width:100px" id="path{{ $index }}"> {{ vulnerability.path }} </td>
+                    <td ng-hide="vulnerability.dependency" ng-click="expand(vulnerability)" class="pointer" id="parameter{{ $index }}"> {{ vulnerability.parameter }} </td>
 
-                    <td ng-show="vuln.dependency" class="pointer" colspan="2">
-                        {{ vuln.dependency.cve }}
-                        (<a target="_blank" id="cve{{ $index }}" ng-href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vuln.dependency.cve }}">View</a>)
+                    <td ng-show="vulnerability.dependency" class="pointer" colspan="2">
+                        {{ vulnerability.dependency.cve }}
+                        (<a target="_blank" id="cve{{ $index }}" ng-href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vulnerability.dependency.cve }}">View</a>)
                     </td>
 
                     <td ng-show="application.defectTracker">
-                        <div ng-show="vuln.defect" class="tooltip-container" data-placement="left" ng-attr-title="{{ vuln.defect.nativeId }} ({{ vuln.defect.status }})" style="width:100%;text-align:right;">
-                            <a id="bugLink{{ $index }}" target="_blank" ng-href="{{ vuln.defect.defectURL }}">
-                                <img ng-src="<%=request.getContextPath()%>/images/{{ vuln.defect.bugImageName }}" class="transparent_png" alt="Threadfix"/>
+                        <div ng-show="vulnerability.defect" class="tooltip-container" data-placement="left" ng-attr-title="{{ vulnerability.defect.nativeId }} ({{ vulnerability.defect.status }})" style="width:100%;text-align:right;">
+                            <a id="bugLink{{ $index }}" target="_blank" ng-href="{{ vulnerability.defect.defectURL }}">
+                                <img ng-src="<%=request.getContextPath()%>/images/{{ vulnerability.defect.bugImageName }}" class="transparent_png" alt="Threadfix"/>
                             </a>
                         </div>
                     </td>
-                    <td ng-click="expand(vuln)" class="expandableTrigger">
-                        <div ng-show="vuln.findings.length > 1" id="findingIcon{{ $index }}" class="tooltip-container" data-placement="left" title="{{ vuln.findings.length }} Findings" style="text-align:left;">
+                    <td ng-click="expand(vulnerability)" class="expandableTrigger">
+                        <div ng-show="vulnerability.findings.length > 1" id="findingIcon{{ $index }}" class="tooltip-container" data-placement="left" title="{{ vulnerability.findings.length }} Findings" style="text-align:left;">
                             <img src="<%=request.getContextPath()%>/images/icn_fork_arrow25x25.png" class="transparent_png" alt="Threadfix" />
                         </div>
                     </td>
                     <td>
-                        <a id="vulnName{{ $index }}" ng-click="goTo(vuln)">
+                        <a id="vulnName{{ $index }}" ng-click="goTo(vulnerability)">
                             View More
                         </a>
                     </td>
                 </tr>
 
-                <tr ng-repeat-end ng-show="vuln.expanded" class="bodyRow expandable" ng-class="{
-                        error: vuln.severityName === 'Critical',
-                        warning: vuln.severityName === 'High',
-                        success: vuln.severityName === 'Medium',
-                        info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
+                <tr ng-repeat-end ng-show="vulnerability.expanded" class="bodyRow expandable" ng-class="{
+                        error: vulnerability.severityName === 'Critical',
+                        warning: vulnerability.severityName === 'High',
+                        success: vulnerability.severityName === 'Medium',
+                        info: vulnerability.severityName === 'Info' || vulnerability.severityName === 'Low'
                         }">
                     <c:set var="numColumns" value="8"/>
                     <c:if test="${ not empty application.defectTracker }">
@@ -137,7 +137,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="finding in vuln.findings" class="left-align bodyRow">
+                                            <tr ng-repeat="finding in vulnerability.findings" class="left-align bodyRow">
                                                 <td id="scan{{ $index }}ChannelType"> {{ finding.scannerName }} </td>
                                                 <td id="scan{{ $index }}ImportTime"> {{ finding.importTime }} </td>
                                                 <td id="scan{{ $index }}ChannelType{{ $index }}">
@@ -156,161 +156,13 @@
                                     <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
                                 </div>
                                 <br>
-                                <a id="addCommentButton{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vuln)">Add Comment</a>
+                                <a id="addCommentButton{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability)">Add Comment</a>
                             </div>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
-
-        <%--<c:if test="${ not empty application.scans and numVulns > 0 }"> --%>
-
-            <%--<spring:url value="{appId}/falsepositives/mark" var="markFPUrl">--%>
-                <%--<spring:param name="appId" value="${ application.id }" />--%>
-            <%--</spring:url>--%>
-            <%--<form:form modelAttribute="falsePositiveModel" method="post" action="${ fn:escapeXml(markFPUrl) }">--%>
-            <%----%>
-            <%--<spring:url value="{appId}/table" var="tableUrl">--%>
-                <%--<spring:param name="appId" value="${ application.id }"/>--%>
-            <%--</spring:url>--%>
-            <%----%>
-            <%--<spring:url value="{appId}/table/close" var="closeUrl">--%>
-                <%--<spring:param name="appId" value="${ application.id }"/>--%>
-            <%--</spring:url>--%>
-            <%----%>
-            <%--<spring:url value="{appId}/falsePositives/mark" var="fpUrl">--%>
-                <%--<spring:param name="appId" value="${ application.id }"/>--%>
-            <%--</spring:url>--%>
-            <%----%>
-            <%--<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">--%>
-                <%--<div id="btnDiv1" class="btn-group">--%>
-                    <%--<button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>--%>
-                    <%--<ul class="dropdown-menu">--%>
-                        <%--<li class="submitDefectActionLink"--%>
-                            <%--<c:if test="${ empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal" data-has-function="">--%>
-                                <%--Submit Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-                        <%--<li class="missingDefectTrackerMessage" id = "missingDefectTrackerMessage"--%>
-                            <%--<c:if test="${ not empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                            <%--<c:if test="${ empty application.defectTracker && !canManageApplications }">--%>
-                                <%--data-has-no-manage-app-permisson="true"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a class="missingDefectTrackerMessage" href="#">--%>
-                                <%--Submit Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-                        <%----%>
-                        <%--<li class="submitDefectActionLink"--%>
-                            <%--<c:if test="${ empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal" data-has-function="">--%>
-                                <%--Merge Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-                        <%--<li class="missingDefectTrackerMessage"--%>
-                            <%--<c:if test="${ not empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                            <%--<c:if test="${ empty application.defectTracker && !canManageApplications }">--%>
-                                <%--data-has-no-manage-app-permisson="true"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a class="missingDefectTrackerMessage" href="#" >--%>
-                                <%--Merge Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-                                    <%----%>
-                        <%--<c:if test="${ canModifyVulnerabilities}"><li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li></c:if>--%>
-                        <%--<c:if test="${ canModifyVulnerabilities}"><li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li></c:if>--%>
-                    <%--</ul>--%>
-                <%--</div>--%>
-            <%--</c:if>--%>
-            <%----%>
-            <%--<span style="float:right">--%>
-                <%--<a class="btn" id="expandAllVulns">Expand All</a>--%>
-                <%--<a class="btn" id="collapseAllVulns">Collapse All</a>--%>
-            <%--</span>--%>
-            <%----%>
-            <%--<%@ include file="/WEB-INF/views/applications/tabs/filter.jspf" %>--%>
-            <%----%>
-            <%--<%@ include file="/WEB-INF/views/applications/tabs/defaultTableDiv.jspf" %>--%>
-            <%----%>
-            <%--<c:if test="${ canModifyVulnerabilities || canSubmitDefects }">--%>
-                <%--<div id="btnDiv2" class="btn-group">--%>
-                    <%--<button id="actionButton2" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>--%>
-                    <%--<ul class="dropdown-menu">--%>
-                        <%--<li class="submitDefectActionLink"--%>
-                            <%--<c:if test="${ empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a id="submitDefectButton" href="#submitDefectModal" data-toggle="modal" data-has-function="">--%>
-                                <%--Submit Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-                        <%--<li class="missingDefectTrackerMessage"--%>
-                            <%--<c:if test="${ not empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                            <%--<c:if test="${ empty application.defectTracker && !canManageApplications }">--%>
-                                <%--data-has-no-manage-app-permisson="true"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a class="missingDefectTrackerMessage" href="#" >--%>
-                                <%--Submit Defect--%>
-                            <%--</a>--%>
-                        <%--</li>		--%>
-            <%----%>
-                        <%--<li class="submitDefectActionLink"--%>
-                            <%--<c:if test="${ empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a id="mergeDefectButton" href="#mergeDefectModal" data-toggle="modal" data-has-function="">--%>
-                                <%--Merge Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-                        <%--<li class="missingDefectTrackerMessage"--%>
-                            <%--<c:if test="${ not empty application.defectTracker }">--%>
-                                <%--style="display:none"--%>
-                            <%--</c:if>--%>
-                            <%--<c:if test="${ empty application.defectTracker && !canManageApplications }">--%>
-                                <%--data-has-no-manage-app-permisson="true"--%>
-                            <%--</c:if>--%>
-                        <%-->--%>
-                            <%--<a class="missingDefectTrackerMessage" href="#" >--%>
-                                <%--Merge Defect--%>
-                            <%--</a>--%>
-                        <%--</li>--%>
-            <%----%>
-                        <%--<c:if test="${ canModifyVulnerabilities}"><li><a id="markClosedButton" onclick="javascript:submitVulnTableOperation('${ closeUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark Closed</a></li></c:if>--%>
-                        <%--<c:if test="${ canModifyVulnerabilities}"><li><a id="markFalsePositiveButton" onclick="javascript:submitVulnTableOperation('${ fpUrl }', '#errorDiv', '#teamTable');return false;" href="#">Mark False Positive</a></li></c:if>--%>
-                    <%--</ul>--%>
-                <%--</div>--%>
-            <%--</c:if>--%>
-            <%----%>
-            <%--</form:form>--%>
-
-        <%--</c:if>--%>
-
-        <%--<c:if test="${ numVulns == 0 }">--%>
-            <%--<c:set var="notCloseable" value="true"/>--%>
-            <%--<c:set var="errorMessage" value="No active Vulnerabilities found."/>--%>
-            <%--<%@ include file="/WEB-INF/views/errorMessage.jsp" %>--%>
-        <%--</c:if>--%>
     </div>
-
     <%@ include file="actionButtons.jspf" %>
-
 </tab>
