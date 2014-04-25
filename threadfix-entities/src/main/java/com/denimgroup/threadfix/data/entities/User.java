@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -62,6 +64,7 @@ public class User extends AuditableEntity {
 	private List<AccessControlTeamMap> accessControlTeamMaps;
 
 	@Column(length = NAME_LENGTH, nullable = false)
+    @JsonView(AllViews.TableRow.class)
 	public String getName() {
 		return name;
 	}

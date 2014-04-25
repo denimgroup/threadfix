@@ -4,7 +4,7 @@ myAppModule.controller('ScanDetailPageController', function ($scope, $window, $h
 
     $scope.scanId  = $window.location.pathname.match(/([0-9]+)$/)[0];
     $scope.teamId = $window.location.pathname.match(/([0-9]+)/)[0];
-    $scope.appId = $window.location.pathname.match(/([0-9]+)/)[1];
+    $scope.appId = $window.location.pathname.match(/([0-9]+)/g)[1];
     $scope.currentUrl = "/organizations/" + $scope.teamId + "/applications/" + $scope.appId + "/scans/" + $scope.scanId;
 
 

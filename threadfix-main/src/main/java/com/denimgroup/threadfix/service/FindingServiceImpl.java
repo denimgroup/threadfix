@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,7 +73,7 @@ public class FindingServiceImpl implements FindingService {
 	}
 	
 	@Override
-	public void validateManualFinding(Finding finding, BindingResult result) {
+	public void validateManualFinding(Finding finding, BindingResult result, boolean isStatic) {
 		
 		
 		if (finding == null || ((finding.getChannelVulnerability() == null) || 
@@ -137,8 +138,20 @@ public class FindingServiceImpl implements FindingService {
 		if (originalError != null && originalError.getDefaultMessage()
 				.startsWith("Failed to convert property value of type " +
 						"'java.lang.String' to required type 'int'")) {
-			result.rejectValue("dataFlowElements[0]", "errors.invalid", new String [] { "Line number" }, null);
+			result.rejectValue("dataFlowElements", "errors.invalid", new String [] { "Line number" }, null);
 		}
+
+        if (isStatic && (finding.getSurfaceLocation() == null
+                || finding.getSurfaceLocation().getParameter() == null
+                || finding.getSurfaceLocation().getParameter().trim().isEmpty())) {
+            result.rejectValue("surfaceLocation.parameter", MessageConstants.ERROR_REQUIRED, new String [] { "Parameter" }, null);
+        } else if (!isStatic) {
+            if (finding.getSurfaceLocation() == null ||
+                    ( (finding.getSurfaceLocation().getParameter() == null || finding.getSurfaceLocation().getParameter().trim().isEmpty()) &&
+                            (finding.getSurfaceLocation().getPath() == null || finding.getSurfaceLocation().getPath().trim().isEmpty()) )) {
+                result.rejectValue("surfaceLocation.parameter", null, null, "Input at least URL or Parameter");
+            }
+        }
 	}
 
 	@Override

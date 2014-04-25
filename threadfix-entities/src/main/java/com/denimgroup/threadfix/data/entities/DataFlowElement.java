@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -63,6 +65,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Column(length = SOURCE_FILE_NAME_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getSourceFileName() {
 		return sourceFileName;
 	}
@@ -72,6 +75,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Basic
+    @JsonView(AllViews.TableRow.class)
 	public int getLineNumber() {
 		return lineNumber;
 	}
@@ -90,6 +94,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Column(length = LINE_TEXT_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getLineText() {
 		return lineText;
 	}

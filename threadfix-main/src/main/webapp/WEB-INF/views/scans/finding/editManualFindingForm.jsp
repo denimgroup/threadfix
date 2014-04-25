@@ -1,157 +1,101 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="editManualFindingForm.html">
 
 	<div class="modal-header">
 		<h4>Edit Finding</h4>
 	</div>
-<spring:url value="/organizations/{orgId}/applications/{appId}/vulnerabilities/{vulnerabilityId}/manual/{findingId}/edit" var="submitUrl">
-    <spring:param name="orgId" value="${ vulnerability.application.organization.id }" />
-    <spring:param name="appId" value="${ vulnerability.application.id }" />
-    <spring:param name="vulnerabilityId" value="${ vulnerability.id }" />
-    <spring:param name="findingId" value="${ finding.id }" />
-</spring:url>	
-<form:form id="manualFindingForm" style="margin-bottom:0px;" modelAttribute="finding" method="post" autocomplete="off" action="${ fn:escapeXml(submitUrl) }">
-	<div class="modal-body">
-	<table>
+    <div ng-form="form" class="modal-body" ng-init="object.group =  object.isStatic ? 'static' : 'dynamic'">
+	<table class="modal-form-table">
 		<tbody>
-			<tr>
-					<td style="padding:5px;">
-						<input id="dynamicRadioButton" type="radio" name="group" value="dynamic"
-                            <c:if test="${ not finding.isStatic }">
-                                checked
-                            </c:if> />Dynamic
-					</td>
-					<td style="padding:5px;">
-						<input id="staticRadioButton" type="radio" name="group" value="static"
-                                <c:if test="${ finding.isStatic }">
-                                    checked
-                                </c:if> />Static
-					</td>
-			</tr>
+        <tr>
+            <td>
+                <input style="margin-right:5px" ng-model="object.group" id="dynamicRadioButton" type="radio" name="group" value="dynamic">Dynamic
+            </td>
+            <td>
+                <input style="margin-right:5px" ng-model="object.group" id="staticRadioButton" type="radio" name="group" value="static">Static
+            </td>
+        </tr>
 			<tr>
 				<td style="padding:5px;">CWE</td>
-				<td style="padding:5px;" class="inputValue">
-					<c:set var="autocompleteJson" value='["'/>
-					<c:set var="quote" value='"'/>					
-					<c:forEach items="${ manualChannelVulnerabilities }" var="channelVulnerability">
-						<c:set var="autocompleteJson" 
-						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(channelVulnerability.name, '\\\\', '&#92;') } (CWE ${ channelVulnerability.genericVulnerability.id})"/>		
-					</c:forEach>
-					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
-                    <c:if test="${ not empty finding.channelVulnerability.code }">
-                        <c:set var="cwe" value="${finding.channelVulnerability.code} (CWE ${ finding.channelVulnerability.genericVulnerability.id})"/>
-                    </c:if>
-					<form:input style="width:350px"
-							class="addAutocomplete" 
-							path="channelVulnerability.code" 
-							data-provide="typeahead"
-							data-source ="${ autocompleteJson }"
-							id="txtSearch" name="txtSearch"
-                            value="${cwe}" />
-
-				</td>
-				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
-					<form:errors path="channelVulnerability.code" cssClass="errors" />
-				</td>				
+                <td class="inputValue">
+                    <input required
+                           type="text"
+                           ng-model="object.channelVulnerability.code"
+                           name="channelVulnerabilityCode"
+                           class="form-control"
+                           id="txtSearch"
+                           style="width:300px"
+                           typeahead="vulnerability.name for vulnerability in config.manualChannelVulnerabilities | filter:$viewValue | limitTo:10"/>
+                </td>
+                <td>
+                    <span class="errors" ng-show="form.channelVulnerabilityCode.$dirty && form.channelVulnerabilityCode.$error.required">CWE is required.</span>
+                    <span class="errors" ng-show="object.channelVulnerability_code_error">{{ object.channelVulnerability_code_error }}</span>
+                </td>
 			</tr>
-			<tr class="dynamic">
+			<tr ng-show="object.group === 'dynamic'">
 				<td style="padding:5px;">URL</td>
-				<td style="padding:5px;" class="inputValue">
-					<c:set var="autocompleteJson" value='["'/>
-					<c:set var="quote" value='"'/>					
-					<c:forEach items="${ urlManualList }" var="url">
-						<c:set var="autocompleteJson" 
-						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(url, '\\\\', '&#92;') }"/>		
-					</c:forEach>
-					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
-					<form:input style="width:350px"
-							class="addAutocomplete" 
-							path="surfaceLocation.path"
-							data-provide="typeahead"
-							data-source ="${ autocompleteJson }"
-							id="urlDynamicSearch" name="urlDynamicSearch"
-                            value="${finding.surfaceLocation.path}"/>
-				</td>			
-				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
-					<form:errors path="surfaceLocation.path" cssClass="errors" />
-				</td>
+                <td style="padding:5px;" class="inputValue">
+                    <input type="text"
+                           ng-model="object.surfaceLocation.path"
+                           name="surfaceLocationPath"
+                           class="form-control"
+                           id="txtSearch"
+                           style="width:300px"
+                           typeahead="string for string in config.recentPathList | filter:$viewValue | limitTo:10"/>
+                </td>
+                <td>
+                    <!--<span class="errors" ng-show="form.surfaceLocationPath.$dirty && form.surfaceLocationPath.$error.url">URL is invalid.</span>-->
+                </td>
 			</tr>
-			<tr class="static">
+			<tr ng-show="object.group === 'static'">
 				<td style="padding:5px;">Source File</td>
-				<td style="padding:5px;" class="inputValue">
-					<c:set var="autocompleteJson" value='["'/>
-					<c:set var="quote" value='"'/>					
-					<c:forEach items="${ urlManualList }" var="source">
-						<c:set var="autocompleteJson" 
-						value="${ autocompleteJson }${ quote }, ${ quote }${ fn:replace(source, '\\\\', '&#92;') }"/>		
-					</c:forEach>
-					<c:set var="autocompleteJson" value="${ autocompleteJson }${ quote }]"/>
-					<form:input style="width:350px"
-							class="addAutocomplete" 
-							path="dataFlowElements[0].sourceFileName" 
-							data-provide="typeahead"
-							data-source ="${ autocompleteJson }"
-							id="urlStaticSearch" name="urlStaticSearch"
-                            value="${finding.dataFlowElements[0].sourceFileName}"/>
-				</td>				
-				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
-					<form:errors path="dataFlowElements[0].sourceFileName" cssClass="errors" />
-				</td>
+                <td style="padding:5px;" class="inputValue">
+                    <input type="text"
+                           ng-model="object.dataFlowElements[0].sourceFileName"
+                           name="dataFlowElements[0].sourceFileName"
+                           class="form-control"
+                           id="txtSearch"
+                           typeahead="string for string in config.recentFileList | filter:$viewValue | limitTo:10"/>
+                </td>
 			</tr>
-			<tr class="static">
+			<tr ng-show="object.group === 'static'">
 				<td style="padding:5px;">Line Number</td>
-				<td style="padding:5px;" class="inputValue">
-					<form:input style="width:350px;" path="dataFlowElements[0].lineNumber" id="urlSearch" name="urlSearch" alt="Search Criteria" 
-							onkeyup="searchUrlSuggest(event);" autocomplete="off"  
-							onKeyPress = "return disableEnterKey(event);"
-							size="50" maxlength="255"
-                            value="${finding.dataFlowElements[0].lineNumber}"/>
-				</td>
-				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
-					<form:errors path="dataFlowElements[0]" cssClass="errors" />
-				</td>
+                <td class="inputValue">
+                    <input type="number" style="width:350px;" name="dataFlowElements[0].lineNumber" id="lineNumberInput" name="lineNumber"
+                           ng-model="object.dataFlowElements[0].lineNumber" size="50" maxlength="255"/>
+                </td>
+                <td>
+                    <span class="errors" ng-show="form.lineNumber.$dirty && form.lineNumber.$error.number">Not valid number.</span>
+                    <span class="errors" ng-show="object.dataFlowElements_error">{{ object.dataFlowElements_error }}</span>
+                </td>
 			</tr>
 			<tr>
 				<td style="padding:5px;">Parameter</td>
-				<td style="padding:5px;" class="inputValue">
-					<form:input style="width:350px;"
-                                id="parameterInput"
-                                path="surfaceLocation.parameter"
-                                size="50" maxlength="127"
-                                value="${finding.surfaceLocation.parameter}"/>
-				</td>
-				<td style="padding:5px;" style="padding-left:5px" colspan="2" >
-					<form:errors path="surfaceLocation.parameter" cssClass="errors" />
-				</td>
+                <td class="inputValue">
+                    <input type="text" style="width:350px;" id="parameterInput" name="surfaceLocation.parameter" ng-model="object.surfaceLocation.parameter" size="50" maxlength="127"/>
+                </td>
+                <td>
+                    <span class="errors" ng-show="object.surfaceLocation_parameter_error">{{ object.surfaceLocation_parameter_error }}</span>
+                </td>
 			</tr>
 			<tr>
 				<td style="padding:5px;">Severity</td>
-				<td style="padding:5px;" class="inputValue">
-					<form:select style="width:350px;" id="severityInput" path="channelSeverity.id">
-                        <c:forEach var="severity" items="${ manualSeverities }">
-                            <option value="${ severity.id }"
-                                    <c:if test="${ severity.code == finding.channelSeverity.code }">
-                                        selected=selected
-                                    </c:if>
-                                    ><c:out value="${ severity.code }"/></option>
-                        </c:forEach>
-					</form:select>
-				</td>
+                <td class="inputValue">
+                    <select style="width:350px;" id="severityInput" name="channelSeverity" ng-model="object.channelSeverity" ng-options="severity.name for severity in config.manualSeverities"/>
+                </td>
 				<td/>
 			</tr>
 			<tr>
 				<td style="padding:5px;">Description</td>
-				<td style="padding:5px;" class="inputValue">
-                    <textarea id="descriptionInput" name="longDescription" style="width:350px;" rows="5" cols="50"><c:out value="${ finding.longDescription }" /></textarea>
-				</td>
-				<td style="padding:5px;" colspan="2" >
-					<form:errors path="longDescription" cssClass="errors" />
-				</td>
+                <td class="inputValue">
+                    <textarea style="width:350px;" id="descriptionInput" name="longDescription" ng-model="object.longDescription" rows="5" cols="50" required></textarea>
+                </td>
+                <td>
+                    <span class="errors" ng-show="form.longDescription.$dirty && form.longDescription.$error.required">Description is required.</span>
+                    <span class="errors" ng-show="object.longDescription_error">{{ object.longDescription_error }}</span>
+                </td>
 			</tr>
 		</tbody>
 	</table>
 	</div>
-	<div class="modal-footer">
-		<button id="closeManualFindingModalButton" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <a id="dynamicSubmit" name="dynamicSubmit" data-success-div="modal-footer" class="modalSubmit btn btn-primary">Submit</a>
-	</div>
-</form:form>
+    <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
+</script>
