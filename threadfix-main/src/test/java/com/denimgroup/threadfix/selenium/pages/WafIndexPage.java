@@ -94,7 +94,7 @@ public class WafIndexPage extends BasePage {
 	
 	public WafIndexPage clickCreateWaf(){
         //sleep(4000);
-		driver.findElementById("submitWafModal").click();
+		driver.findElementById("submit").click();
         if (!(driver.findElementByClassName("alert-success").isDisplayed())) {
             sleep(4000);
         }
@@ -102,7 +102,7 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage clickCreateWafInvalid(){
-		driver.findElementById("submitWafModal").click();
+		driver.findElementById("submit").click();
 		return new WafIndexPage(driver);
 	}
 	

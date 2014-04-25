@@ -50,7 +50,7 @@ public class ApplicationIT extends BaseIT {
 
         teamIndexPage.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication(teamName);
+				.saveApplication();
 
         assertTrue("The application was not added properly.", teamIndexPage.isAppPresent(appName));
 	}
@@ -69,7 +69,7 @@ public class ApplicationIT extends BaseIT {
         //Create Team & Application
         teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, urlText, "Low")
-                .saveApplication(teamName);
+                .saveApplication();
 
         //Navigate to Application Detail Page
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
@@ -95,7 +95,7 @@ public class ApplicationIT extends BaseIT {
 		for (int i = 0; i < Application.URL_LENGTH + 50; i++) { stringBuilder.append('i'); }
 		String longInputUrl = "http://" + stringBuilder.toString();
 		
-		String emptyError = "This field cannot be blank";
+		String emptyError = "Name is required.";
         String notValidURl = "Not a valid URL";
 		
 		String emptyString = "";
@@ -109,7 +109,7 @@ public class ApplicationIT extends BaseIT {
 		//Team & Application set up...hopefully to be removed later
 		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, emptyString, emptyString, "Low")
-                .saveApplicationInvalid(teamName);
+                .saveApplicationInvalid();
 		
 		assertTrue("The correct error did not appear for the name field.",
                 teamIndexPage.getNameErrorMessage().contains(emptyError));
@@ -118,7 +118,7 @@ public class ApplicationIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, whiteSpace, whiteSpace, "Low")
-                .saveApplicationInvalid(teamName);
+                .saveApplicationInvalid();
 
 		assertTrue("The correct error did not appear for the name field.",
                 teamIndexPage.getNameErrorMessage().contains(emptyError));
@@ -131,7 +131,7 @@ public class ApplicationIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, "dummyApp", urlText, "Low")
-                .saveApplicationInvalid(teamName);
+                .saveApplicationInvalid();
 		
 		assertTrue("The correct error did not appear for the url field.", 
 				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
@@ -141,7 +141,7 @@ public class ApplicationIT extends BaseIT {
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, longInputName, longInputUrl, "Low")
-				.saveApplication(teamName)
+				.saveApplication()
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.clickViewAppLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",teamName);
@@ -155,7 +155,7 @@ public class ApplicationIT extends BaseIT {
 		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "http://dummyurl", "Low")
-                .saveApplicationInvalid(teamName);
+                .saveApplicationInvalid();
 
         //Is this even a good?
 		assertTrue("The duplicate message didn't appear correctly.", 
@@ -177,7 +177,7 @@ public class ApplicationIT extends BaseIT {
 
         teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, appName1, urlText1, "Low")
-				.saveApplication(teamName);
+				.saveApplication();
 
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -210,7 +210,7 @@ public class ApplicationIT extends BaseIT {
 
         teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName1, urlText1, "Low")
-                .saveApplication(teamName);
+                .saveApplication();
 
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -261,12 +261,12 @@ public class ApplicationIT extends BaseIT {
 		// and Test a submission with no changes
 		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName2, validUrlText, "Low")
-                .saveApplication(teamName)
+                .saveApplication()
                 .clickOrganizationHeaderLink();
 
         teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, validUrlText, "Low")
-                .saveApplication(teamName)
+                .saveApplication()
                 .clickOrganizationHeaderLink();
 
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
@@ -340,7 +340,7 @@ public class ApplicationIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, appUrl, "Low")
-                .saveApplication(teamName)
+                .saveApplication()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -407,7 +407,7 @@ public class ApplicationIT extends BaseIT {
         teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, appUrl, "Low")
-                .saveApplication(teamName)
+                .saveApplication()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
@@ -448,10 +448,10 @@ public class ApplicationIT extends BaseIT {
         //Add an app with same name to both teams
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
 				.addNewApplication(teamName1, appName, "", "Low")
-				.saveApplication(teamName1)
+				.saveApplication()
 				.expandTeamRowByName(teamName2)
 				.addNewApplication(teamName2, appName, "", "Low")
-				.saveApplication(teamName2)
+				.saveApplication()
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName1)
 				.clickViewAppLink(appName,teamName1);

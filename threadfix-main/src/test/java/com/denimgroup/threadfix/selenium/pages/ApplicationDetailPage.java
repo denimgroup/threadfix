@@ -330,7 +330,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickUpdateApplicationButton() {
-        driver.findElementById("submitAppModal").click();
+        driver.findElementById("submit").click();
         try {
             waitForInvisibleElement(driver.findElementById("editApplicationModal"));
         } catch (TimeoutException e) {
@@ -344,7 +344,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickUpdateApplicationButtonInvalid() {
         sleep(1000);
-        driver.findElementById("submitAppModal").click();
+        driver.findElementById("submit").click();
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
@@ -468,13 +468,13 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDynamicSubmit() {
-        driver.findElementById("dynamicSubmit").click();
+        driver.findElementById("submit").click();
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickStaticSubmit() {
-        driver.findElementById("staticSubmit").click();
+        driver.findElementById("submit").click();
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }

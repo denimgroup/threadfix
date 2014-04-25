@@ -190,7 +190,7 @@ public class RoleEntIT extends BaseIT {
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(teamName)
 					.addNewApplication(teamName, appName, "", "Low")
-				    .saveApplication(teamName)
+				    .saveApplication()
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(teamName)
 					.clickViewAppLink(appName, teamName);

@@ -218,25 +218,25 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-    public TeamIndexPage setApplicationUrl(String url, String teamName) {
-        driver.findElementById("urlInput" + teamName).clear();
-        driver.findElementById("urlInput" + teamName).sendKeys(url);
+    public TeamIndexPage setApplicationUrl(String url) {
+        driver.findElementById("applicationUrlInput").clear();
+        driver.findElementById("applicationUrlInput").sendKeys(url);
         return setPage();
     }
 
-    public TeamIndexPage setApplicationCriticality(String criticality, String teamName) {
-        new Select(driver.findElementById("criticalityId" + teamName)).selectByVisibleText(criticality);
+    public TeamIndexPage setApplicationCriticality(String criticality) {
+        new Select(driver.findElementById("criticalityIdSelect")).selectByVisibleText(criticality);
         return setPage();
     }
 
-    public TeamIndexPage saveApplication(String teamName) {
-        driver.findElementById("submitAppModal" + teamName).click();
+    public TeamIndexPage saveApplication() {
+        driver.findElementById("submit").click();
         sleep(3000);
         return new TeamIndexPage(driver);
     }
 
-    public TeamIndexPage saveApplicationInvalid(String teamName) {
-        driver.findElementById("submitAppModal" + teamName).click();
+    public TeamIndexPage saveApplicationInvalid() {
+        driver.findElementById("submit").click();
         return new TeamIndexPage(driver);
     }
 
@@ -259,13 +259,13 @@ public class TeamIndexPage extends BasePage {
     public TeamIndexPage addNewApplication(String teamName, String appName,String url, String criticality) {
         clickAddNewApplication(teamName);
         setApplicationName(appName, teamName);
-        setApplicationUrl(url, teamName);
-        setApplicationCriticality(criticality, teamName);
+        setApplicationUrl(url);
+        setApplicationCriticality(criticality);
         return setPage();
     }
 
     public String getNameErrorMessage() {
-        return driver.findElementById("name.errors").getText();
+        return driver.findElementById("applicationNameInputRequiredError").getText();
     }
 
     public String getUrlErrorMessage() {
