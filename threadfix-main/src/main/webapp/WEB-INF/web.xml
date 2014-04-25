@@ -114,6 +114,7 @@
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
 		    	protected-regex ^/organizations/modalAdd$,
+		    	protected-regex ^/organizations/scanqueue/list$,
 		    	protected-regex ^/organizations/severityFilter/set$,
 		    	protected-regex ^/organizations/teamTable$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+$,

@@ -48,6 +48,13 @@
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
             <c:if test="${isEnterprise}">
                 <tab ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
+                    <!-- TODO refactor this nesting -->
+                    <c:if test="${ canManageApplications }">
+                        <div style="margin-top:10px;margin-bottom:7px;">
+                            <a id="addScanQueueLink" class="btn" ng-click="openNewScanAgentTaskModal()">Add New Task</a>
+                        </div>
+                    </c:if>
+
                     <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
                 </tab>
                 <tab ng-controller="ScheduledScanTabController" heading="{{ heading }}">
