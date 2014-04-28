@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 public class UserIndexPage extends BasePage {
@@ -67,13 +68,9 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage enterName(String name,String oldName){
-		if(oldName == null){
-			driver.findElementById("name").clear();
-			driver.findElementById("name").sendKeys(name);
-		}else{
-			driver.findElementById("name").clear();
-			driver.findElementById("name").sendKeys(name);
-		}
+		WebElement nameField = driver.findElementById("name");
+        nameField.clear();
+        nameField.sendKeys(name);
 		return new UserIndexPage(driver);
 	}
 	
