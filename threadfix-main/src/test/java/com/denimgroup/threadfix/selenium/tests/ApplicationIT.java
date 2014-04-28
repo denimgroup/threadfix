@@ -245,7 +245,7 @@ public class ApplicationIT extends BaseIT {
 		for (int i = 0; i < Application.URL_LENGTH + 50; i++) { stringBuilder.append('i'); }
 		String longInputUrl = "http://" + stringBuilder.toString();
 		
-		String emptyError = "This field cannot be blank";
+		String emptyError = "Name is required.";
 		
 		String emptyString = "";
 		String whiteSpace = "     ";
@@ -397,11 +397,15 @@ public class ApplicationIT extends BaseIT {
         WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName1, type1)
-                .clickModalSubmit()
+                .clickCreateWaf();
+
+                wafIndexPage.clickOrganizationHeaderLink();
+
+        WafIndexPage wafIndexPage1 = teamIndexPage.clickWafsHeaderLink()
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName2, type2)
-                .clickModalSubmit();
+                .clickCreateWaf();
 
         //Create team & application
         teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
@@ -572,6 +576,7 @@ public class ApplicationIT extends BaseIT {
         String teamName = "TeamName" + getRandomString(5);
         String appName = "AppName" + getRandomString(5);
         String CWE = "89";
+        String parameter = "Test_Parameter";
         String desc = "Test Description for deleting manual finding.";
 
         DatabaseUtils.createTeam(teamName);
@@ -585,13 +590,14 @@ public class ApplicationIT extends BaseIT {
         ap.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(CWE)
+                .setParameter(parameter)
                 .setDescription(desc)
                 .clickDynamicSubmit();
 
         ap.clickScansTab()
             .clickDeleteScanButton();
 
-        assertTrue("Manual Finding was not deleted correctly.", ap.getAlert().contains("The scan was successfully deleted."));
+        assertTrue("Manual Finding was not deleted correctly.", ap.isScanDeleted());
 
     }
 
@@ -613,7 +619,7 @@ public class ApplicationIT extends BaseIT {
         ap.clickScansTab()
                 .clickDeleteScanButton();
 
-        assertTrue("Manual Finding was not deleted correctly.", ap.getAlert().contains("The scan was successfully deleted."));
+        assertTrue("Scan file was not deleted correctly.", ap.isScanDeleted());
     }
 
     public void sleep(int num) {

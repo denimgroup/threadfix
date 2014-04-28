@@ -272,8 +272,8 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickScansTab() {
         sleep(1000);
-        driver.findElementById("scanTabLink").click();
-        waitForElement(driver.findElementById("channelType1"));
+        driver.findElementByLinkText("1 Scan").click();
+        waitForElement(driver.findElementByLinkText("Delete Scan"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -350,7 +350,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameError() {
-        return driver.findElementById("name.errors").getText().trim();
+        return driver.findElementByClassName("errors").getText();
     }
 
     public String getUrlError() {
@@ -718,6 +718,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickManualFindingButton() {
         driver.findElementById("addManualFindingModalLink").click();
+        waitForElement(driver.findElementById("txtSearch"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -993,6 +994,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isManualFindingCloseButtonClickable() {
         return isClickable("closeManualFindingModalButton");
+    }
+
+    public boolean isScanDeleted() {
+        return driver.findElementByLinkText("0 Scans").isDisplayed();
     }
 
 }
