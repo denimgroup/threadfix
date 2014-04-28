@@ -225,7 +225,7 @@ public class UserIT extends BaseIT {
 								.clickAddNewUserBtn();
 
         sleep(5000);
-		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is a required field."));
+		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is required."));
     }
 
     @Test

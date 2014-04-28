@@ -71,8 +71,8 @@ public class UserIndexPage extends BasePage {
 			driver.findElementById("name").clear();
 			driver.findElementById("name").sendKeys(name);
 		}else{
-			driver.findElementById("name"+(oldName)).clear();
-			driver.findElementById("name"+(oldName)).sendKeys(name);
+			driver.findElementById("name").clear();
+			driver.findElementById("name").sendKeys(name);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -82,8 +82,8 @@ public class UserIndexPage extends BasePage {
 			driver.findElementById("password").clear();
 			driver.findElementById("password").sendKeys(password);
 		}else{
-			driver.findElementById("password"+(oldName)).clear();
-			driver.findElementById("password"+(oldName)).sendKeys(password);
+			driver.findElementById("password").clear();
+			driver.findElementById("password").sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -93,8 +93,8 @@ public class UserIndexPage extends BasePage {
 			driver.findElementById("confirm").clear();
 			driver.findElementById("confirm").sendKeys(password);
 		}else{
-			driver.findElementById("confirm"+(oldName)).clear();
-			driver.findElementById("confirm"+(oldName)).sendKeys(password);
+			driver.findElementById("confirm").clear();
+			driver.findElementById("confirm").sendKeys(password);
 		}
 		return new UserIndexPage(driver);
 	}
@@ -163,12 +163,12 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public boolean isUserNamePresent(String userName) {
-        return driver.findElementsById("editUserModal" + userName + "Link").size() != 0;
+        return driver.findElementsById("editUserModal" + userName).size() != 0;
 	}
 	
 	public UserIndexPage clickEditLink(String roleName) {
-        waitForElement(driver.findElementById("editUserModal"+roleName+"Link"));
-		driver.findElementById("editUserModal"+roleName+"Link").click();
+        waitForElement(driver.findElementById("editUserModal"+roleName));
+		driver.findElementById("editUserModal"+roleName).click();
 		sleep(1000);
 		return new UserIndexPage(driver);
 	}
@@ -188,7 +188,7 @@ public class UserIndexPage extends BasePage {
 	}
 
     public String getPasswordMatchError(){
-        return driver.findElementById("passwordInputError").getText().trim();
+        return driver.findElementById("password.error.match").getText().trim();
     }
 	
 	public UserIndexPage clickCancel(String name){
