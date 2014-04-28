@@ -123,13 +123,13 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage setTeamName(String name) {
-        driver.findElementById("teamNameInput").clear();
-        driver.findElementById("teamNameInput").sendKeys(name);
+        driver.findElementById("nameInput").clear();
+        driver.findElementById("nameInput").sendKeys(name);
         return setPage();
     }
 
     public TeamIndexPage addNewTeam() {
-        driver.findElementById("submitTeamModal").click();
+        driver.findElementById("addApplicationButton").click();
 
         String teamName = driver.findElementByClassName("alert-success").getText();
         teamName = teamName.substring(7,(teamName.length()-31));

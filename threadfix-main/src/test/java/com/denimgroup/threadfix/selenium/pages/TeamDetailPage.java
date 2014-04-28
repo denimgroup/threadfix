@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,24 +33,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
 public class TeamDetailPage extends BasePage {
     private List<String> apps = new ArrayList<>();
 
     //     private WebElement orgName;
     private WebElement applicationsTableBody;
     private WebElement lastItemFoundInApplicationsTableBodyLink;
-    private WebElement addApplicationLink;
+    //private WebElement addApplicationLink;
 
     public TeamDetailPage(WebDriver webdriver) {
         super(webdriver);
 
 //          orgName = driver.findElementById("name");
         applicationsTableBody = driver.findElementById("applicationsTableBody");
-        addApplicationLink = driver.findElementByLinkText("Add Application");
+        //addApplicationLink = driver.findElementByLinkText("Add Application");
     }
 
     public String getOrgName() {
@@ -169,7 +168,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public ApplicationAddPage clickAddApplicationLink() {
-        addApplicationLink.click();
+        driver.findElementByLinkText("Add Application").click();
         return new ApplicationAddPage(driver);
     }
 
