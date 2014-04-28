@@ -33,7 +33,7 @@
                             <input focus-on="focusInput" type='password' id="currentPasswordInput" name='currentPassword' ng-model="user.currentPassword" size="30" required/>
                             <span id="passwordRequiredError" class="errors" ng-show="form.currentPassword.$dirty && form.currentPassword.$error.required">Password is required.</span>
                             <c:if test="${ not empty currentPassword }">
-                                <span class="errors"> <c:out value="${ currentPassword }"/></span>
+                                <span id="currentPasswordMismatchError" class="errors"> <c:out value="${ currentPassword }"/></span>
                             </c:if>
                         </td>
                     </tr>
