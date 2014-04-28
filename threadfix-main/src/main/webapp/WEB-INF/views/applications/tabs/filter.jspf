@@ -1,9 +1,9 @@
 <button ng-hide="showFilters || !vulns || empty" ng-click="showFilters = true" class="btn">Show Filters</button>
+<button ng-show="showFilters" id="hideFiltersButton" ng-click="showFilters = false" class="btn">Hide Filters</button>
+<button ng-show="showFilters" id="refreshButton" ng-click="refresh(true, false)" class="btn">Refresh</button>
+<button ng-show="showFilters" id="clearButton" ng-click="clearFilters()" class="btn">Clear</button>
 
 <div ng-show="showFilters" style="padding-top: 10px" ng-enter="refresh(true, false)">
-    <button id="hideFiltersButton" ng-click="showFilters = false" class="btn">Hide Filters</button>
-    <button id="refreshButton" ng-click="refresh(true, false)" class="btn">Refresh</button>
-    <button id="clearButton" ng-click="clearFilters()" class="btn">Clear</button>
     <div class="filter-table">
         <div class="row">
             <div class="span2">Vulnerability Type</div>
