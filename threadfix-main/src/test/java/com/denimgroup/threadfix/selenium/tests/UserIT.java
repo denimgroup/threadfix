@@ -87,28 +87,24 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testCreateDuplicateUser(){
-        StringBuilder stringBuilder = new StringBuilder("");
-        for (int i = 0; i < 400; i++) { stringBuilder.append('i'); }
-
-        String longInput = stringBuilder.toString();
+        String userName = "testDuplicateUser" + getRandomString(3);
         // Create a user
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink();
-        userIndexPage.enterName(longInput,null);
-        userIndexPage.enterPassword(longInput,null);
-        userIndexPage.enterConfirmPassword(longInput,null);
+        userIndexPage.enterName(userName,null);
+        userIndexPage.enterPassword(userName,null);
+        userIndexPage.enterConfirmPassword(userName,null);
 
         userIndexPage = userIndexPage.clickAddNewUserBtn();
 
-        String userName = "iiiiiiiiiiiiiiiiiiiiiiiii";
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 
         DashboardPage dashboardPage = userIndexPage.logout()
-                .login(userName, longInput);
+                .login(userName, userName);
 
-        assertTrue("user: "+longInput+" was not logged in.",dashboardPage.isLoggedInUser(userName));
+        assertTrue("user: "+userName+" was not logged in.",dashboardPage.isLoggedInUser(userName));
 
         userIndexPage = dashboardPage.logout()
                 .login("user", "password")
@@ -163,8 +159,8 @@ public class UserIT extends BaseIT {
 
 	@Test 
 	public void testEditUserFieldValidation() {
-		String baseUserName = "testEditUser";
-		String userNameDuplicateTest = "duplicate-user";
+		String baseUserName = "testEditUser" + getRandomString(3);
+		String userNameDuplicateTest = "duplicate-user" + getRandomString(3);
 
 		// Set up the two User objects for the test
 
@@ -198,7 +194,7 @@ public class UserIT extends BaseIT {
 								.enterConfirmPassword("",baseUserName)
 								.clickUpdateUserBtnInvalid(baseUserName);
 
-		assertTrue("Name error not present", !userIndexPage.isSaveChangesButtonClickable(baseUserName));
+		assertTrue("Name error not present", userIndexPage.isSaveChangesButtonClickable(baseUserName));
 
         userIndexPage.clickManageUsersLink();
     }
@@ -225,7 +221,7 @@ public class UserIT extends BaseIT {
 								.clickAddNewUserBtn();
 
         sleep(5000);
-		assertTrue("Name error not present", userIndexPage.getNameError().equals("Name is required."));
+		assertTrue("Name error not present", userIndexPage.getRequiredNameError().equals("Name is required."));
     }
 
     @Test
@@ -261,7 +257,7 @@ public class UserIT extends BaseIT {
 									.clickAddNewUserBtn();
 
         sleep(5000);
-		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
+		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("8 characters needed"));
 
     }
 

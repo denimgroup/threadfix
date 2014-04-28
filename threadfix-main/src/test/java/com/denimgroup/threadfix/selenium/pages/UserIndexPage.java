@@ -179,9 +179,14 @@ public class UserIndexPage extends BasePage {
 		returnval = driver.findElementById("name.errors").getText().trim();
         return returnval;
 	}
+    public String getRequiredNameError(){
+        String returnval;
+        returnval = driver.findElementById("name.errors.required").getText().trim();
+        return returnval;
+    }
 	
 	public String getPasswordError(){
-		return driver.findElementById("passwordInputErrorSpan").getText().trim();
+		return driver.findElementById("password.error.length").getText().trim();
 	}
 
     public String getPasswordMatchError(){
