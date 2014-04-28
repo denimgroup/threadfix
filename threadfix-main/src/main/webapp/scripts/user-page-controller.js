@@ -62,13 +62,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         });
 
         modalInstance.result.then(function (newUser) {
-
-            if (!$scope.users) {
-                $scope.users = [];
-            }
-            $scope.users.push(newUser);
-
-            $scope.users.sort(nameCompare);
+            reloadList();
 
             $scope.successMessage = "Successfully created user " + newUser.name;
 
@@ -106,7 +100,6 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 $scope.successMessage = "Successfully deleted user " + user.name;
                 reloadList();
             }
-
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
