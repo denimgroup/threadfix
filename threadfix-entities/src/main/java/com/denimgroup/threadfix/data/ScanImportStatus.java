@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.interop;
+package com.denimgroup.threadfix.data;
 
 public enum ScanImportStatus {
 	SUCCESSFUL_SCAN("Valid Scan file."),

@@ -21,23 +21,12 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
 
-package com.denimgroup.threadfix.importer.parser;
+import org.apache.commons.httpclient.HttpClient;
 
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import org.springframework.transaction.annotation.Transactional;
+public interface ProxyService {
 
-import java.io.File;
-
-public interface ThreadFixBridge  {
-
-    public ScannerType getType(File file);
-
-    public ScanCheckResultBean testScan(ScannerType type, File inputFile);
-
-    @Transactional
-    public Scan getScan(ScannerType type, File inputFile);
+    HttpClient getClientWithProxyConfig();
 
 }

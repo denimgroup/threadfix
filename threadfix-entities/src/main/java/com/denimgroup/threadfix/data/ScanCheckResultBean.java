@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.interop;
+package com.denimgroup.threadfix.data;
 
 import java.util.Calendar;
 

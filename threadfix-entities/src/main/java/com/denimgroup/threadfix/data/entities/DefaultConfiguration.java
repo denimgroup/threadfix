@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.data.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Calendar;
 
 @Entity
@@ -50,6 +51,9 @@ public class DefaultConfiguration extends BaseEntity {
 	private Integer defaultRoleId = null;
 	
 	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
+
+    private String proxyHost, proxyUsername, proxyPassword, proxyUsernameEncrypted, proxyPasswordEncrypted;
+    private Integer proxyPort;
 	
 	private Calendar lastScannerMappingsUpdate;
 
@@ -136,5 +140,58 @@ public class DefaultConfiguration extends BaseEntity {
 	public void setLastScannerMappingsUpdate(Calendar lastScannerMappingsUpdate) {
 		this.lastScannerMappingsUpdate = lastScannerMappingsUpdate;
 	}
-	
+
+    @Transient
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public void setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+    }
+
+    @Transient
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
+    @Column
+    public Integer getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(Integer proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    @Column(length = 1024)
+    public String getProxyUsernameEncrypted() {
+        return proxyUsernameEncrypted;
+    }
+
+    public void setProxyUsernameEncrypted(String proxyUsernameEncrypted) {
+        this.proxyUsernameEncrypted = proxyUsernameEncrypted;
+    }
+
+    @Column(length = 1024)
+    public String getProxyPasswordEncrypted() {
+        return proxyPasswordEncrypted;
+    }
+
+    public void setProxyPasswordEncrypted(String proxyPasswordEncrypted) {
+        this.proxyPasswordEncrypted = proxyPasswordEncrypted;
+    }
+
+    @Column(length = 1024)
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
 }
