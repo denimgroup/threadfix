@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.data.entities;
 
 import javax.persistence.*;
-import java.beans.Transient;
 
 @Entity
 @Table(name = "SeverityFilter")
