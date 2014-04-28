@@ -26,10 +26,10 @@
     </div>
 
     <div ng-show="vulns">
-        <div ng-form="form" class="pagination" ng-show="numVulns > 100" ng-init = "max = ((numVulns / 100 | number:0) < numVulns / 100) ? ((numVulns / 100 | number:0) * 1 + 1) : ((numVulns / 100 | number:0) * 1)">
+        <div ng-form="form" class="pagination" ng-show="numVulns > 100">
             <pagination class="no-margin" total-items="numVulns / 10" max-size="5" page="page"></pagination>
 
-            <input id="pageInput" name="pageInput" ng-enter="goToPage(form.$valid)" style="width:50px" type="number" ng-model="pageInput" max="{{max}}" min="1"/>
+            <input id="pageInput" name="pageInput" ng-enter="goToPage(form.$valid)" style="width:50px" type="number" ng-model="pageInput" max="{{max * 1}}" min="1"/>
             <button id="goToPageButton" class="btn" ng-class="{ disabled : form.$invalid }" ng-click="goToPage(form.$valid)"> Go to Page </button>
             <span class="errors" ng-show="form.pageInput.$dirty && form.pageInput.$error.min || form.pageInput.$error.max">Input number from 1 to {{max}}</span>
             <span class="errors" ng-show="form.pageInput.$dirty && form.pageInput.$error.number">Not a valid number</span>
