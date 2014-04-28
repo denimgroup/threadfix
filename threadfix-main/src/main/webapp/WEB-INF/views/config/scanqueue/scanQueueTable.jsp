@@ -10,9 +10,12 @@
                 <th>Created Time</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <c:if test="${ canManageApplications }">
+                <%--<c:if test="${ canManageApplications }">--%>
+                    <%--<th class="centered last"></th>--%>
+                <%--</c:if>--%>
+                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
                     <th class="centered last"></th>
-                </c:if>
+                </security:authorize>
             </tr>
         </thead>
         <tbody>
@@ -30,11 +33,16 @@
                 <td>{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
                 <td>{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
                 <td>{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
-                <c:if test="${ canManageApplications }">
+                <%--<c:if test="${ canManageApplications }">--%>
+                    <%--<td class="centered">--%>
+                        <%--<a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>--%>
+                    <%--</td>--%>
+                <%--</c:if>--%>
+                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
                     <td class="centered">
                         <a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
                     </td>
-                </c:if>
+                </security:authorize>
             </tr>
         </tbody>
 	</table>

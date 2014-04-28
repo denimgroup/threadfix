@@ -33,7 +33,8 @@ myAppModule.controller('ScheduledScanTabController', function ($scope, $window, 
                         hour: '6',
                         minute: '0',
                         period: 'AM',
-                        scanner: 'OWASP Zed Attack Proxy'
+                        scanner: 'OWASP Zed Attack Proxy',
+                        day: 'Sunday'
                     };
                 },
                 config: function() {

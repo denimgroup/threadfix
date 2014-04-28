@@ -57,5 +57,8 @@ myAppModule.controller('ScanAgentTasksIndexController', function ($scope, $windo
                 });
         }
     };
+    $scope.goTo = function(task) {
+        window.location.href = tfEncoder.encode("/configuration/scanqueue/" + task.id + "/detail");
+    };
 
 });

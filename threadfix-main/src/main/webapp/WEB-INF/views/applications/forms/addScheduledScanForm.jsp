@@ -50,9 +50,9 @@
                     </select>
 
                     <select style="margin-bottom:0; width:110px;" name="selectedDay"
-                                 id="selectedDay" ng-model="object.selectedDay"
+                                 id="selectedDay" ng-model="object.day"
                                  ng-show="object.frequency !== 'Daily'"
-                                 name="day" disabled="true">
+                                 name="day">
                         <option value="Sunday">Sunday</option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
@@ -62,6 +62,7 @@
                         <option value="Saturday">Saturday</option>
                     </select>
                     <errors path="dateError" cssClass="errors" />
+                    <span class="errors" ng-show="object.dateError_error"> {{ object.dateError_error }}</span>
                 </td>
             </tr>
 
