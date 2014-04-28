@@ -22,7 +22,7 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode($scope.currentUrl + "/addScanQueueTask");
+                    return tfEncoder.encode("/configuration/scanqueue" + $scope.currentUrl + "/addScanQueueTask");
                 },
                 buttonText: function() {
                     return "Add Scan Queue Task";
@@ -52,12 +52,12 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
     var setHeader = function() {
         if (!$scope.scanAgentTasks || !$scope.scanAgentTasks.length > 0) {
             $scope.scanAgentTasks = undefined;
-            $scope.heading = "0 Scan Queue Tasks";
+            $scope.heading = "0 Scan Agent Tasks";
         } else {
             if ($scope.scanAgentTasks.length === 1) {
-                $scope.heading = '1 Scan Queue Task';
+                $scope.heading = '1 Scan Agent Task';
             } else {
-                $scope.heading = $scope.scanAgentTasks.length + ' Scan Queue Tasks';
+                $scope.heading = $scope.scanAgentTasks.length + ' Scan Agent Tasks';
             }
         }
     }
@@ -66,7 +66,7 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
 
         if (confirm('Are you sure you want to delete this scan queue task?')) {
             task.deleting = true;
-            $http.post(tfEncoder.encode($scope.currentUrl + "/scanQueueTask/" + task.id + "/delete")).
+            $http.post(tfEncoder.encode("/configuration/scanqueue" + $scope.currentUrl + "/scanQueueTask/" + task.id + "/delete")).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {
@@ -77,7 +77,6 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
                         }
 
                         setHeader();
-                        $scope.$parent.successMessage = "Successfully deleted document " + document.name;
 
                     } else {
                         task.deleting = false;
@@ -91,6 +90,10 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
                     $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
                 });
         }
+    };
+
+    $scope.goTo = function(task) {
+        window.location.href = tfEncoder.encode("/configuration/scanqueue/" + task.id + "/detail");
     };
 
     $scope.$on('scanAgentTasks', function(event, scanAgentTasks) {

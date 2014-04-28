@@ -86,13 +86,13 @@ public class ScheduledScan extends AuditableEntity {
     }
 
     public enum DayInWeek {
-        MON("Mon"),
-        TUE("Tue"),
-        WED("Wed"),
-        THU("Thu"),
-        FRI("Fri"),
-        SAT("Sat"),
-        SUN("Sun");
+        MON("Monday"),
+        TUE("Tuesday"),
+        WED("Wednesday"),
+        THU("Thursday"),
+        FRI("Friday"),
+        SAT("Saturday"),
+        SUN("Sunday");
 
         private String day;
 

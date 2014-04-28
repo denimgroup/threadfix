@@ -24,6 +24,6 @@
 		The scan queue is a list of scans ThreadFix has been asked to coordinate.<br/>
 	</div>
 
-    <%@ include file="../../applications/tabs/scanQueueTab.jsp" %>
+    <%@ include file="/WEB-INF/views/config/scanqueue/scanQueueTable.jsp" %>
 
 </body>
