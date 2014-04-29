@@ -362,12 +362,6 @@
             </exclusions>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.denimgroup.threadfix</groupId>
-            <artifactId>threadfix-importers</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 </project>

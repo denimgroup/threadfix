@@ -169,7 +169,10 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		InputStream responseStream = null;
 		
-		HttpClient client = new HttpClient();
+		HttpClient client = getConfiguredHttpClient();
+
+        client.getHostConfiguration().setProxy("localhost", 8082);
+
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {

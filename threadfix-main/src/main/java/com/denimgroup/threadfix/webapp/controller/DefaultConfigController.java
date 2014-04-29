@@ -61,7 +61,8 @@ public class DefaultConfigController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
-                    "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials");
+                    "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
+                    "proxyHost", "proxyPort", "proxyUsername", "proxyPassword");
 		} else {
 			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled");
 		}

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
@@ -30,8 +32,6 @@ import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
-import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringEscapeUtils;

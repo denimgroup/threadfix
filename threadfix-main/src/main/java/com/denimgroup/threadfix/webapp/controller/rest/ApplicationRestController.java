@@ -24,12 +24,12 @@
 
 package com.denimgroup.threadfix.webapp.controller.rest;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
-import com.denimgroup.threadfix.importer.interop.ScanImportStatus;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;

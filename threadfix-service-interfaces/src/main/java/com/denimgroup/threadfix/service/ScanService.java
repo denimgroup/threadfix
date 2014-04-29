@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
 
 import java.util.Calendar;
 import java.util.List;
