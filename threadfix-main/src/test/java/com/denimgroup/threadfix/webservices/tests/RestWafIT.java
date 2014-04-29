@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.webapp.controller.rest.WafRestController;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -45,9 +46,11 @@ import static org.junit.Assert.assertTrue;
 @Category(WebServiceTests.class)
 public class RestWafIT extends BaseRestIT {
 
+    //TODO There is no get index for wafs right now
+    @Ignore
 	@Test
 	public void indexTest() {
-		String indexUrl = BASE_URL + "/wafs?apiKey=" + GOOD_API_KEY;
+		String indexUrl = BASE_URL + "/wafs/?apiKey=" + GOOD_API_KEY;
 
 		String response = httpGet(indexUrl);
 		assertTrue(response != null);

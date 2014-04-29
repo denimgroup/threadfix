@@ -24,23 +24,6 @@
 
 package com.denimgroup.threadfix.webservices.tests;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
-
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import org.apache.commons.httpclient.HttpClient;
@@ -62,6 +45,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
 /**
  * This class provides methods for posting GET and POST requests with optional files,
  * as well as a place to put methods and data that would be useful for all REST testing.
@@ -72,7 +71,7 @@ public abstract class BaseRestIT {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	public static final String GOOD_API_KEY       = "mhD3Ek0mK04ejfxA7DTccrNiABXo3PAAzxYQZ25Ac";
+	public static final String GOOD_API_KEY       = System.getProperty("API_KEY");
 	public static final String BAD_API_KEY        = "U1otLaZxwQLbsHZ2ifYtbPwbD1H4kcNgedWVIWn0";
 	public static final String RESTRICTED_API_KEY = "PsjLL0KUXG8J9hkC2kpvFAGllJFPaZRskomeZiB9wSc";
 	public static final String BASE_URL           = "http://localhost:8080/threadfix/rest";
@@ -189,16 +188,16 @@ public abstract class BaseRestIT {
 		return "There was an error and the POST request was not finished.";
 	}
 
-	public String httpGet(String urlStr) {
+	public String httpGet(String url) {
 		
-		log.debug("Requesting " + urlStr);
+		log.debug("Requesting " + url);
 		
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
-		GetMethod get = new GetMethod(urlStr);
+		GetMethod get = new GetMethod(url);
 		
 		get.setRequestHeader("Accept", "application/json");
-		
-		HttpClient client = new HttpClient();
+
+        HttpClient client = new HttpClient();
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {

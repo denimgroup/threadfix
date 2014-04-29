@@ -111,7 +111,8 @@ public class ApiKeysIndexPage extends BasePage {
 
 		}
 	}
-	
+
+    @Deprecated
 	public ApiKeysIndexPage setNote(String newNote,String oldNote){
 		if(oldNote==null){
 			driver.findElementsById("note").get(getNumRows()).clear();
@@ -122,10 +123,16 @@ public class ApiKeysIndexPage extends BasePage {
 		}
 		return this;
 	}
+
+    public ApiKeysIndexPage setNoteByName(String newNote) {
+        driver.findElementByName("note").sendKeys(newNote);
+        return this;
+    }
 	
 	public ApiKeysIndexPage setRestricted(String oldNote){
 		if(oldNote==null){
-			driver.findElementById("isRestrictedKey"+(getNumRows()+1)).click();
+			//driver.findElementById("isRestrictedKey"+(getNumRows()+1)).click();
+            driver.findElementByName("isRestrictedKey").click();
 		}else{
 			driver.findElementById("isRestrictedKey"+(getIndex(oldNote)+1)).click();
 		}
