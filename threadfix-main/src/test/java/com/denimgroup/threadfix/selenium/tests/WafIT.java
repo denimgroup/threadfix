@@ -51,10 +51,11 @@ public class WafIT extends BaseIT {
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
-                .createNewWaf(newWafName, type)
+                .setWafName(newWafName)
+                .setWafType(type)
                 .clickModalSubmit();
 		
-		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
+		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
 
@@ -88,7 +89,7 @@ public class WafIT extends BaseIT {
                 .createNewWaf(newWafName, type)
                 .clickModalSubmit();
 		
-		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
+		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
 	
@@ -104,7 +105,7 @@ public class WafIT extends BaseIT {
                 .createNewWaf(newWafName, type)
                 .clickModalSubmit();
 		
-		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
+		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
 
@@ -120,7 +121,7 @@ public class WafIT extends BaseIT {
                 .createNewWaf(newWafName, type)
                 .clickModalSubmit();
 		
-		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
+		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
 
@@ -136,7 +137,7 @@ public class WafIT extends BaseIT {
                 .createNewWaf(newWafName, type)
                 .clickModalSubmit();
 		
-		assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(newWafName));
+		assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
 		assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
 	}
 	
@@ -155,25 +156,25 @@ public class WafIT extends BaseIT {
 		wafIndexPage = wafIndexPage.clickAddWafLink();
 
 		// Test empty and whitespace input
-		wafIndexPage = wafIndexPage.setNewNameInput(emptyString)
+		wafIndexPage = wafIndexPage.setWafName(emptyString)
                 .clickModalSubmitInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
-		wafIndexPage = wafIndexPage.setNewNameInput(whiteSpaceString)
+		wafIndexPage = wafIndexPage.setWafName(whiteSpaceString)
                 .clickModalSubmitInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 		
 		// Test browser length limit
-		wafIndexPage = wafIndexPage.setNewNameInput(longInput)
+		wafIndexPage = wafIndexPage.setWafName(longInput)
                 .clickModalSubmit();
-		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
+		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isWafPresent(longInput.substring(0, Waf.NAME_LENGTH)));
 		
 		// Test name duplication checking
 		String wafName = wafIndexPage.getNameText(1);
 		
 		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
-                .setNewNameInput(wafName)
+                .setWafName(wafName)
                 .clickModalSubmitInvalid();
 		
 		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
@@ -200,7 +201,7 @@ public class WafIT extends BaseIT {
                 .clickUpdateWaf(originalWaf)
                 .clickWafsHeaderLink();
 
-		assertTrue("Editing did not change the name.", wafIndexPage.isNamePresent(editedWaf));
+		assertTrue("Editing did not change the name.", wafIndexPage.isWafPresent(editedWaf));
 		assertTrue("Editing did not change the type.", wafIndexPage.isTextPresentInWafTableBody(type2));
 	}
 
@@ -236,7 +237,7 @@ public class WafIT extends BaseIT {
                 .clickEditWaf(wafName)
                 .clickUpdateWaf(wafName)
                 .clickWafsHeaderLink();
-        assertTrue("The waf was not present in the table.", wafIndexPage.isNamePresent(wafName));
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName));
 
         // Test empty and whitespace input
         wafIndexPage = wafIndexPage.clickWafsHeaderLink()
@@ -255,8 +256,7 @@ public class WafIT extends BaseIT {
                 .editWaf(wafName, longInput, type2)
                 .clickUpdateWaf(wafName);
 
-        wafName = wafIndexPage.getWafName(1);
-        assertTrue("The waf name was not cropped correctly.", wafIndexPage.isNamePresent(longInput.substring(0, Waf.NAME_LENGTH)));
+        assertTrue("The waf name was not cropped correctly.", wafIndexPage.isWafPresent(wafName));
 
         // Test name duplication checking
         wafIndexPage = wafIndexPage.clickEditWaf(wafName)
@@ -278,7 +278,7 @@ public class WafIT extends BaseIT {
                 .clickEditWaf(wafName.substring(0, 50));
         int width = wafIndexPage.getWafEditHeaderWidth(wafName.substring(0, 50));
 
-        wafIndexPage.clickCloseWafModal(wafName.substring(0,50)).clickDeleteWaf(wafName.substring(0,50));
+        wafIndexPage.clickCloseWafModal().clickDeleteWaf(wafName.substring(0,50));
 
         assertTrue("Waf edit header was too wide",width == 400);
     }
