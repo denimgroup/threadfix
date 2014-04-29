@@ -246,7 +246,7 @@ public class ReportsServiceImpl implements ReportsService {
 					return null;
 				}
 			}
-			
+
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 			exporter.setParameter(JRExporterParameter.OUTPUT_STRING_BUFFER,
 					report);
@@ -382,6 +382,7 @@ public class ReportsServiceImpl implements ReportsService {
 				for (ApplicationChannel applicationChannel : channel.getChannels()) {
 					if (applicationChannel.getApplication() != null
 							&& applicationChannel.getApplication().getId() != null
+                            && (applicationChannel.getScanList() != null && applicationChannel.getScanList().size()>0)
 							&& applicationIdList.contains(applicationChannel.getApplication().getId())) {
 						returnChannels.add(channel);
 						break;
