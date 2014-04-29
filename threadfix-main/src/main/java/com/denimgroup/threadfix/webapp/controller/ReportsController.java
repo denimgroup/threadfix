@@ -38,12 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -126,12 +124,28 @@ public class ReportsController {
 		ControllerUtils.addItem(request, "appId", appId);
 		return "redirect:/reports";
 	}
-	
-	@RequestMapping(value="/ajax/export", method = RequestMethod.POST)
-	public String processExportRequest(Model model, @ModelAttribute ReportParameters reportParameters,
-			BindingResult result, SessionStatus status, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		
+
+	@RequestMapping(value="/ajax/export/{applicationId}/{organizationId}/{reportId}/{formatId}", method = RequestMethod.GET)
+    public String processExportRequest(Model model, HttpServletRequest request,
+                                       @PathVariable int applicationId,
+                                       @PathVariable int organizationId,
+                                       @PathVariable int reportId,
+                                       @PathVariable int formatId,
+                                       HttpServletResponse response) throws IOException {
+
+        ReportParameters reportParameters = new ReportParameters();
+        reportParameters.setApplicationId(applicationId);
+        reportParameters.setOrganizationId(organizationId);
+        reportParameters.setFormatId(formatId);
+        reportParameters.setReportId(reportId);
+
+        return processExportRequest(model, reportParameters, request, response);
+    }
+
+	public String processExportRequest(Model model, ReportParameters reportParameters,
+                                       HttpServletRequest request,
+                                       HttpServletResponse response) throws IOException {
+
 		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,
 				request);
 		
@@ -194,8 +208,7 @@ public class ReportsController {
 
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
 	public String processSubmit(Model model, @ModelAttribute ReportParameters reportParameters,
-			BindingResult result, SessionStatus status, HttpServletRequest request, 
-			HttpServletResponse response) throws IOException {
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		// reroute if it's scanner comparison or portfolio report
 		if (reportParameters.getReportFormat() == ReportFormat.CHANNEL_COMPARISON_DETAIL) {
@@ -205,14 +218,14 @@ public class ReportsController {
 					model, request, reportParameters.getOrganizationId());
 		} else if (reportParameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
 			if (reportParameters.getFormatId() != 1) {
-				return processExportRequest(model, reportParameters, result, status, request, response);
+				return processExportRequest(model, reportParameters, request, response);
 			}
 			model.addAttribute("reportId",reportParameters.getReportId());
 			return reportsService.vulnerabilityList(model, reportParameters);
 		}
 		
 		if (reportParameters.getFormatId() != 1) {
-			return processExportRequest(model, reportParameters, result, status, request, response);
+			return processExportRequest(model, reportParameters, request, response);
 		}
 		
 		ReportCheckResultBean reportCheckResultBean = reportsService.generateReport(reportParameters,

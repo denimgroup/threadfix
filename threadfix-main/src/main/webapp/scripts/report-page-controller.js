@@ -6,6 +6,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         return a.name.localeCompare(b.name);
     };
 
+    $scope.base = window.location.pathname;
+
     $scope.tabs = [
         {
             title: "Trending",
@@ -36,11 +38,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         }
     ];
 
-    $scope.updateOptions = function(tab) {
-        $scope.options = tab.options;
-        $scope.reportId = tab.options[0].id;
-    }
-
     $scope.updateApplications = function() {
         if ($scope.team.id === -1) {
             $scope.application = {id: -1, name: "All"};
@@ -52,6 +49,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             }
             $scope.application = $scope.applications[0];
         }
+
+        loadReport();
     }
 
     $scope.clearApplications = function() {
@@ -100,9 +99,14 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         }
     };
 
-    $scope.$watch('application', loadReport);
-    $scope.$watch('formatId', loadReport);
-    $scope.$watch('reportId', loadReport);
+    $scope.loadReport = function() { loadReport(); }
+
+    $scope.updateOptions = function(tab) {
+        $scope.options = tab.options;
+        $scope.reportId = tab.options[0].id;
+
+        loadReport();
+    }
 
     $scope.$on('rootScopeInitialized', function() {
         threadfixAPIService.getTeams().
@@ -128,6 +132,16 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         loadReport();
     });
 
+    $scope.triggerCSVDownload = function() {
+        $scope.formatId = 2;
+        loadReport();
+        $scope.formatId = 1;
+    }
 
-    
+    $scope.triggerPDFDownload = function() {
+        $scope.formatId = 3;
+        loadReport();
+        $scope.formatId = 1;
+    }
+
 });

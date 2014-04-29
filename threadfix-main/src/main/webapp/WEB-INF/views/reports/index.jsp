@@ -18,7 +18,7 @@
         </tabset>
 
         <span ng-show="teams">
-            <select style="margin-bottom: 0" class="reportTypeSelect" id="reportSelect" ng-model="reportId">
+            <select ng-change="loadReport()" style="margin-bottom: 0" class="reportTypeSelect" id="reportSelect" ng-model="reportId">
                 <option ng-repeat="option in options" value="{{ option.id }}">
                     {{ option.name }}
                 </option>
@@ -31,14 +31,14 @@
             <select style="margin-bottom: 0" ng-hide="applications" disabled="disabled">
                 <option>All</option>
             </select>
-            <select style="margin-bottom: 0" ng-show="applications" id="applicationSelect" ng-model="application" ng-options="app.name for app in applications"></select>
+            <select style="margin-bottom: 0" ng-change="loadReport()" ng-show="applications" id="applicationSelect" ng-model="application" ng-options="app.name for app in applications"></select>
         </span>
         <span style="float:right" ng-show="loading" class="spinner dark"></span>
 
         <div style="margin-top: 10px" id="successDiv">
             <c:if test="${ not hasVulnerabilities }">
                 <div class="alert alert-danger" style="margin-top:10px">
-                    <button class="close" data-dismiss="alert" type="button">�</button>
+                    <button class="close" data-dismiss="alert" type="button">&times;</button>
                     <strong>No Vulnerabilities found.</strong> Upload a scan and try again.
                     <spring:url value="/organizations" var="teamsPageUrl"/>
                     <a href="${ teamsPageUrl }">Get Started</a>
