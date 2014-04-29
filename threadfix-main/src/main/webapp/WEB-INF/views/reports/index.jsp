@@ -9,7 +9,10 @@
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-    <div ng-controller="ReportPageController">
+    <div ng-controller="ReportPageController"
+         ng-init="firstReportId = '<c:out value="${ firstReport }"/>';
+                 firstAppId = '<c:out value="${ firstAppId }"/>';
+                 firstTeamId = '<c:out value="${ firstTeamId }"/>'">
 
         <h2>Reports</h2>
 
@@ -19,19 +22,31 @@
 
         <span ng-show="teams">
             <select ng-change="loadReport()" style="margin-bottom: 0" class="reportTypeSelect" id="reportSelect" ng-model="reportId">
-                <option ng-repeat="option in options" value="{{ option.id }}">
+                <option ng-selected="reportId === option.id" ng-repeat="option in options" value="{{ option.id }}">
                     {{ option.name }}
                 </option>
             </select>
 
             Team
-            <select style="margin-bottom: 0" id="teamSelect" ng-model="team" ng-change="updateApplications()" ng-options="team.name for team in teams"></select>
+            <select style="margin-bottom: 0" id="teamSelect" ng-model="teamId" ng-change="updateApplications()">
+                <option ng-selected="teamId === team.id" ng-repeat="team in teams" value="{{ team.id }}">
+                    {{ team.name }}
+                </option>
+            </select>
 
             Application
             <select style="margin-bottom: 0" ng-hide="applications" disabled="disabled">
                 <option>All</option>
             </select>
-            <select style="margin-bottom: 0" ng-change="loadReport()" ng-show="applications" id="applicationSelect" ng-model="application" ng-options="app.name for app in applications"></select>
+            <select style="margin-bottom: 0"
+                    ng-change="loadReport()"
+                    ng-show="applications"
+                    id="applicationSelect"
+                    ng-model="applicationId">
+                <option ng-selected="applicationId === application.id" ng-repeat="application in applications" value="{{ application.id }}">
+                    {{ application.name }}
+                </option>
+            </select>
         </span>
         <span style="float:right" ng-show="loading" class="spinner dark"></span>
 
