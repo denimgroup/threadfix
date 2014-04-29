@@ -52,8 +52,8 @@ public class DefaultConfiguration extends BaseEntity {
 	
 	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
 
-    private String proxyHost, proxyUsername, proxyPassword, proxyUsernameEncrypted, proxyPasswordEncrypted;
-    private Integer proxyPort;
+    private String proxyHost = null, proxyUsername = null, proxyPassword = null, proxyUsernameEncrypted = null, proxyPasswordEncrypted = null;
+    private Integer proxyPort = null;
 	
 	private Calendar lastScannerMappingsUpdate;
 
