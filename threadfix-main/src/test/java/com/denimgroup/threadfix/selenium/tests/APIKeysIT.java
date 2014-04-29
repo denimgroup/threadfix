@@ -54,8 +54,7 @@ public class APIKeysIT extends BaseIT {
 	public void createAPIKeyTest() {
         //Create API Key
         apiIndexPage = apiIndexPage.clickNewLink()
-                //.setNote("createAPIKey", null)
-                .setNoteByName("createAPIKey")
+                .setNote("createAPIKey", null)
                 .setRestricted(null)
                 .clickSubmitButton(null)
                 .waitModalDisappear();

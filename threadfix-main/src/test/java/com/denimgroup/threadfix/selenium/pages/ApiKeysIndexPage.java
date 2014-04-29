@@ -115,19 +115,16 @@ public class ApiKeysIndexPage extends BasePage {
     @Deprecated
 	public ApiKeysIndexPage setNote(String newNote,String oldNote){
 		if(oldNote==null){
-			driver.findElementsById("note").get(getNumRows()).clear();
-			driver.findElementsById("note").get(getNumRows()).sendKeys(newNote);	
+			//driver.findElementsById("note").get(getNumRows()).clear();
+			//driver.findElementsById("note").get(getNumRows()).sendKeys(newNote);
+            driver.findElementByName("note").clear();
+            driver.findElementByName("note").sendKeys(newNote);
 		}else{
 			driver.findElementsById("note").get(getIndex(oldNote)).clear();
 			driver.findElementsById("note").get(getIndex(oldNote)).sendKeys(newNote);	
 		}
 		return this;
 	}
-
-    public ApiKeysIndexPage setNoteByName(String newNote) {
-        driver.findElementByName("note").sendKeys(newNote);
-        return this;
-    }
 	
 	public ApiKeysIndexPage setRestricted(String oldNote){
 		if(oldNote==null){
