@@ -170,7 +170,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		InputStream responseStream = null;
 		
 		HttpClient client = getConfiguredHttpClient();
-
         client.getHostConfiguration().setProxy("localhost", 8082);
 
 		try {
@@ -343,11 +342,12 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		dateStatus = new DateStatus();
 	    		creatingVuln = true;
 	    		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", atts.getValue("tested"));
-	    		testedDate.set(Calendar.HOUR_OF_DAY, 0);
-	    		testedDate.set(Calendar.MINUTE, 0);
-	    		testedDate.set(Calendar.SECOND, 0);
-	    		testedDate.set(Calendar.MILLISECOND, 0);
-	    		
+                if (testedDate != null) {
+                    testedDate.set(Calendar.HOUR_OF_DAY, 0);
+                    testedDate.set(Calendar.MINUTE, 0);
+                    testedDate.set(Calendar.SECOND, 0);
+                    testedDate.set(Calendar.MILLISECOND, 0);
+                }
 	    		dateStatus.setDate(testedDate);
 	    		dateStatus.setStatus(atts.getValue("state"));
 	    		if (scanDateList != null && !scanDateList.contains(testedDate))
@@ -406,9 +406,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		public int compareTo(DateStatus other) {
 			return this.getDate().compareTo(other.getDate());
 		}
-		
-		
-		
 	}
 
 	
