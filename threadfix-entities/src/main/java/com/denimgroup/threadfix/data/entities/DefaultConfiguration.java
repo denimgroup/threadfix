@@ -194,4 +194,18 @@ public class DefaultConfiguration extends BaseEntity {
     public void setProxyHost(String proxyHost) {
         this.proxyHost = proxyHost;
     }
+
+    @Transient
+    public boolean hasConfiguredHostAndPort() {
+        return proxyHost != null && !proxyHost.equals("") &&
+                proxyPort != null && proxyPort > 0;
+    }
+
+    @Transient
+    public boolean hasConfiguredCredentials() {
+        return proxyUsername != null && !proxyUsername.equals("") &&
+                proxyPassword != null && !proxyPassword.equals("");
+    }
+
+
 }

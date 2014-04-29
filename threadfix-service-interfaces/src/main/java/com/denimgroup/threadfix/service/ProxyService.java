@@ -25,8 +25,14 @@ package com.denimgroup.threadfix.service;
 
 import org.apache.commons.httpclient.HttpClient;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+import java.net.URL;
+
 public interface ProxyService {
 
     HttpClient getClientWithProxyConfig();
+
+    HttpsURLConnection getConnectionWithProxyConfig(URL url) throws IOException;
 
 }
