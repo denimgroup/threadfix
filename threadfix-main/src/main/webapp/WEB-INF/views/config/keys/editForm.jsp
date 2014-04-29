@@ -21,6 +21,7 @@
 					<td>Note (optional)</td>
 					<td class="inputValue">
 						<input
+                            id="note"
                             ng-model="object.note"
 							name="note"
                             focus-on="focusInput"
@@ -29,13 +30,13 @@
 							maxlength="255"/>
 					</td>
                     <td>
-                        <span class="errors" ng-show="form.note.$dirty && form.note.$error.maxlength">Over 255 characters limit!</span>
+                        <span id="lengthLimitError" class="errors" ng-show="form.note.$dirty && form.note.$error.maxlength">Over 255 characters limit!</span>
                     </td>
 				</tr>
 				<tr>
 					<td>Restricted?</td>
 					<td class="inputValue">
-						<input type="checkbox" ng-model="object.isRestrictedKey" name="isRestrictedKey"/>
+						<input type="checkbox" id="restricted" ng-model="object.isRestrictedKey" name="isRestrictedKey"/>
 					</td>
 				</tr>
 			</tbody>

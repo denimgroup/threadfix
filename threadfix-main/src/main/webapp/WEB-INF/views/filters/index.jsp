@@ -15,13 +15,13 @@
     <div ng-show="initialized">
         <%@ include file="/WEB-INF/views/filters/form.jsp"%>
 
-        <ul ng-show="type !== 'Global'" class="breadcrumb">
+        <ul ng-show="originalType !== 'Global'" class="breadcrumb">
             <li><a href="<spring:url value="/"/>">Applications Index</a> <span class="divider">/</span></li>
 
-            <li ng-show="type === 'Application'"><a ng-click="goToTeam(organization)">Team: {{ application.team.name }}</a> <span class="divider">/</span></li>
-            <li ng-show="type === 'Application'"><a ng-click="goToTeam(organization)">Application: {{ application.name }}</a><span class="divider">/</span></li>
+            <li ng-show="originalType === 'Application'"><a class="pointer" ng-click="goToTeam(organization)">Team: {{ application.team.name }}</a> <span class="divider">/</span></li>
+            <li ng-show="originalType === 'Application'"><a class="pointer" ng-click="goToApp(organization, application)">Application: {{ application.name }}</a><span class="divider">/</span></li>
 
-            <li ng-show="type === 'Organization'"><a ng-click="goToTeam(organization)">Team: {{ organization.name }}</a> <span class="divider">/</span></li>
+            <li ng-show="originalType === 'Organization'"><a class="pointer" ng-click="goToTeam(organization)">Team: {{ organization.name }}</a> <span class="divider">/</span></li>
 
             <li class="active">Vulnerability Filters</li>
         </ul>
@@ -34,10 +34,10 @@
             ThreadFix Vulnerability Filters are used to sort data.<br/>
         </div>
 
-        <tabset ng-hide="type === 'Global'">
-            <tab ng-click="setTab('Applications')" ng-show="type === 'Application'" heading="Application Filters"></tab>
-            <tab ng-click="setTab('Organization')" heading="Team Filters"></tab>
-            <tab ng-click="setTab('Global')" heading="Global Filters"></tab>
+        <tabset ng-hide="originalType === 'Global'">
+            <tab ng-click="setTab('Application')" ng-show="originalType === 'Application'" heading="Application Filters" active="type==='Application'"></tab>
+            <tab ng-click="setTab('Organization')" heading="Team Filters" active="type==='Organization'"></tab>
+            <tab ng-click="setTab('Global')" heading="Global Filters" active="type==='Global'"></tab>
         </tabset>
 
         <div id="tabsDiv">
