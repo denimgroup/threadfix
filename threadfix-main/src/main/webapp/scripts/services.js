@@ -12,6 +12,8 @@ threadfixModule.factory('tfEncoder', function($rootScope, $location) {
         return $location.path() + path + $rootScope.csrfToken;
     }
 
+    tfEncoder.urlRoot = $rootScope.urlRoot;
+
     return tfEncoder;
 });
 

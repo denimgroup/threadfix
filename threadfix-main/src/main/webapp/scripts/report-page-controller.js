@@ -39,10 +39,19 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     ];
 
     $scope.updateApplications = function() {
-        if ($scope.team.id === -1) {
+        var teamIdInt = parseInt($scope.teamId);
+
+        if (teamIdInt === -1) {
             $scope.application = {id: -1, name: "All"};
             $scope.applications = [];
         } else {
+
+            $scope.teams.forEach(function(team) {
+                if (team.id === teamIdInt) {
+                    $scope.team = team;
+                }
+            });
+
             $scope.applications = $scope.team.applications;
             if ($scope.applications[0].id !== -1) {
                 $scope.applications.unshift({id: -1, name: "All"});
@@ -60,20 +69,12 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.applications = [];
     $scope.options = $scope.tabs[0].options;
 
-    $scope.team = {
-        id: -1
-    };
-    $scope.application = {
-        id: -1
-    };
-
-    $scope.reportId = 1;
     $scope.formatId = 1;
 
     $scope.getReportParameters = function() {
         return {
-            organizationId: $scope.team.id,
-            applicationId: $scope.application.id,
+            organizationId: $scope.teamId,
+            applicationId: $scope.applicationId,
             reportId: $scope.reportId,
             formatId: $scope.formatId
         };
@@ -88,6 +89,11 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 success(function(data, status, headers, config) {
                     $scope.reportHTML = data;
                     $scope.loading = false;
+
+                    if ($scope.firstReportId) {
+                        $scope.reportId = parseInt($scope.firstReportId);
+                        $scope.firstReportId = undefined;
+                    }
                 }).
                 error(function(data, status, headers, config) {
 
@@ -117,7 +123,48 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.teams.sort(nameCompare)
 
                     $scope.teams.unshift({id: -1, name: "All"});
-                    $scope.team = $scope.teams[0];
+                    $scope.teamId = -1;
+                    $scope.applicationId = -1;
+
+                    //teamId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
+                    //appId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
+
+                    if ($scope.firstTeamId) {
+                        $scope.teamId = parseInt($scope.firstTeamId);
+                        $scope.teams.forEach(function(team) {
+                            if (team.id === $scope.teamId) {
+                                $scope.team = team;
+                            }
+                        });
+
+                        if ($scope.firstAppId) {
+                            $scope.applications = $scope.team.applications;
+                            if ($scope.applications[0].id !== -1) {
+                                $scope.applications.unshift({id: -1, name: "All"});
+                            }
+
+                            $scope.applicationId = parseInt($scope.firstAppId);
+//                            $scope.applications.forEach(function(app) {
+//                                if (app.id === $scope.applicationId) {
+//                                    $scope.applicationId = app.id;
+//                                }
+//                            });
+
+                            if (!$scope.application) {
+                                $scope.application = $scope.applications[0];
+                            }
+                        }
+                    }
+
+                    $scope.initialized = true;
+
+                    if ($scope.firstReportId) {
+                        $scope.reportId = parseInt($scope.firstReportId);
+                    } else {
+                        $scope.reportId = 1;
+                    }
+
+                    loadReport();
 
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
@@ -126,10 +173,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
-
-        $scope.initialized = true;
-
-        loadReport();
     });
 
     $scope.triggerCSVDownload = function() {
