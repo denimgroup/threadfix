@@ -26,6 +26,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        $scope.config.recentPathList = [];
                    }
 
+                   $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
+
                    $rootScope.$broadcast('scheduledScans', $scope.config.scheduledScans);
                    $rootScope.$broadcast('scanAgentTasks', $scope.config.scanAgentTasks);
                    $rootScope.$broadcast('application', $scope.config.application);

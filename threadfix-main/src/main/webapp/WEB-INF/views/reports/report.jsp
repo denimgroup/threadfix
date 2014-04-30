@@ -20,7 +20,7 @@
         </c:if>
     </span>
 
-    <div id="reportDiv">
+    <div id="reportDiv" style="overflow: auto">
         <c:if test="${ showEmptyBox && empty jasperReport }">
             <%@include file="/WEB-INF/views/reports/emptyReport.jspf" %>
         </c:if>

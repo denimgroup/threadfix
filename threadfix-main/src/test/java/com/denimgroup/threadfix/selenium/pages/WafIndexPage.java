@@ -23,56 +23,55 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class WafIndexPage extends BasePage {
 
-	private List<WebElement> names = new ArrayList<>();
+	//private List<WebElement> names = new ArrayList<>();
 	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		//for (int i = 1; i <= getNumRows(); i++) {
-		//	names.add(driver.findElementById("wafName" + i));
-		//}
+//		for (int i = 1; i <= getNumRows(); i++) {
+//			names.add(driver.findElementById("wafName" + i));
+//		}
 	}
 	
-	public int getNumRows() {
-		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
-		
-		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().contains("No WAFs found.")) {
-			return 0;
-		}		
-		
-		return driver.findElementsByClassName("bodyRow").size();
-	}
+//	public int getNumRows() {
+//		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
+//
+//		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().contains("No WAFs found.")) {
+//			return 0;
+//		}
+//
+//		return driver.findElementsByClassName("bodyRow").size();
+//	}
 	
-	public int getIndex(String roleName) {
-		int i = -1;
-		for (int j = 1; j <= getNumRows(); j++) {
-			names.add(driver.findElementById("wafName" + j));
-		}
-		for (WebElement name : names) {
-			i++;
-			String text = name.getText().trim();
-			if (text.equals(roleName.trim())) {
-				return i;
-			}
-		}
-		return -1;
-	}
+//	public int getIndex(String roleName) {
+//		int i = -1;
+//		for (int j = 1; j <= getNumRows(); j++) {
+//			names.add(driver.findElementById("wafName" + j));
+//		}
+//		for (WebElement name : names) {
+//			i++;
+//			String text = name.getText().trim();
+//			if (text.equals(roleName.trim())) {
+//				return i;
+//			}
+//		}
+//		return -1;
+//	}
 	
 	public WafRulesPage clickRules(String wafName){
-		driver.findElementsByLinkText("Rules").get(getIndex(wafName)).click();
+		driver.findElementById("rulesButton" + wafName).click();
 		return new WafRulesPage(driver);
 	}
 
 	public WafIndexPage clickDeleteWaf(String wafName){
 		clickEditWaf(wafName);
-		driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)).click();
+		driver.findElementById("deleteWafbutton").click();
 		handleAlert();
 		sleep(1000);
 		return new WafIndexPage(driver);
@@ -80,20 +79,34 @@ public class WafIndexPage extends BasePage {
 
 	public WafIndexPage clickAddWafLink() {
         waitForElement(driver.findElementById("createWafModalButton"));
-        sleep(5000);
 		driver.findElementById("createWafModalButton").click();
 		waitForElement(driver.findElementById("submit"));
 		return new WafIndexPage(driver);
 	}
-	
+
 	public WafIndexPage createNewWaf(String name,String type){
-		setNewNameInput(name);
-		setType(null, type);
+		setWafName(name);
+		setWafType(type);
 		return this;
 	}
+
+    public WafIndexPage setWafName(String name){
+        driver.findElementById("wafCreateNameInput").clear();
+        driver.findElementById("wafCreateNameInput").sendKeys(name);
+        return this;
+    }
+
+    public WafIndexPage setWafType(String type){
+        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+        return this;
+    }
+
+    public boolean isWafPresent(String name){
+        boolean presence = driver.findElementsById("wafName" + name).size() == 1;
+        return presence;
+    }
 	
 	public WafIndexPage clickCreateWaf(){
-        //sleep(4000);
 		driver.findElementById("submit").click();
         if (!(driver.findElementByClassName("alert-success").isDisplayed())) {
             sleep(4000);
@@ -105,22 +118,11 @@ public class WafIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		return new WafIndexPage(driver);
 	}
-	
-	
+
+
 
 	public boolean isTextPresentInWafTableBody(String text) {
 		return driver.findElementById("wafTableBody").getText().contains(text);
-	}
-	
-	public boolean isNamePresent(String wafName){
-        //sleep(3000);
-		for (int j = 1; j <= getNumRows(); j++) {
-			if(driver.findElementById("wafName" + j).getText().trim().equals(wafName.trim())){
-				return true;
-			}
-		}
-
-		return false;
 	}
 	
 	public boolean isSuccessPresent(String wafName){
@@ -128,24 +130,23 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public WafIndexPage clickEditWaf(String wafName){
-        int temp = getIndex(wafName) + 1;
-		driver.findElementById("editWafModalButton"+temp).click();
-		waitForElement(driver.findElementById("deleteWaf"+ (getIndex(wafName) + 1)));
+		driver.findElementById("editWafModalButton"+wafName).click();
+		waitForElement(driver.findElementById("deleteWafbutton"));
 		return new WafIndexPage(driver);
 	}
 	
 	public WafIndexPage editWaf(String wafName, String newName, String type){
 		sleep(5000);
-		driver.findElementsById("nameInput").get(getIndex(wafName)).clear();
-		driver.findElementsById("nameInput").get(getIndex(wafName)).sendKeys(newName);
-		new Select(driver.findElementsById("typeSelect").get(getIndex(wafName))).selectByVisibleText(type);
+		driver.findElementById("nameInput").clear();
+		driver.findElementById("nameInput").sendKeys(newName);
+        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
 		return new WafIndexPage(driver);
 	}
 	
 	public WafIndexPage clickUpdateWaf(String oldWafName){
 		driver.findElementByLinkText("Update WAF").click();
 		try{
-			waitForInvisibleElement(driver.findElementById("deleteWaf"+(getIndex(oldWafName)+1)));
+			waitForInvisibleElement(driver.findElementById("deleteWaf"));
 		}catch(NoSuchElementException | StaleElementReferenceException e){
 			System.out.println("Waf name was updated.");
 		}
@@ -159,32 +160,6 @@ public class WafIndexPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 	
-	public String getWafName(int row){
-		return driver.findElementById("wafName" + row).getText();
-	}
-
-	public WafIndexPage setNewNameInput(String name){
-		driver.findElementById("wafCreateNameInput").clear();
-		driver.findElementById("wafCreateNameInput").sendKeys(name);
-		return new WafIndexPage(driver);
-	}
-	
-	public WafIndexPage setNameInput(String oldName,String newName){
-		driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
-		driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(newName);
-		return new WafIndexPage(driver);
-	}
-	
-	
-	public WafIndexPage setType(String oldName,String type){
-		if (oldName == null) {
-			new Select(driver.findElementsById("typeSelect").get(getNumRows())).selectByVisibleText(type);
-		} else {
-			new Select(driver.findElementsById("typeSelect").get(getIndex(oldName))).selectByVisibleText(type);
-		}
-		return new WafIndexPage(driver);
-	}
-	
 	public String getNameErrorsText(){
 		return driver.findElementById("name.errors").getText();
 	}
@@ -192,19 +167,14 @@ public class WafIndexPage extends BasePage {
 	public String getNameText(int row){
 		return  driver.findElementById("wafName" + row).getText();
 	}
-	
-	public WafIndexPage clickCloseCreateWafModal(){
-		driver.findElementById("createWaf").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
-		sleep(1000);
-		return new WafIndexPage(driver);
-	}
-	public WafIndexPage clickCloseWafModal(String wafName){
-		driver.findElementsByClassName("modal-footer").get(getIndex(wafName)).findElements(By.className("btn")).get(0).click();
+
+	public WafIndexPage clickCloseWafModal(){
+		driver.findElementById("closeModalButton").click();
 		sleep(1000);
 		return new WafIndexPage(driver);
 	}
 
 	public int getWafEditHeaderWidth(String wafName) {
-		return driver.findElementsByClassName("ellipsis").get(getIndex(wafName)).getSize().width;
+		return 0;
 	}
 }

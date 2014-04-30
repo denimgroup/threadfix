@@ -66,30 +66,9 @@
 				</td>
 			</tr>
             <tr>
-                <td>Source Code Revision</td>
-                <td>
-                    <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="250" name="repositoryBranch"/>
-                    <span class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 250.</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Source Code UserName</td>
-                <td>
-                    <input type="text" id="repositoryUsername" ng-model="object.repositoryUserName" maxlength="250" name="repositoryUserName"/>
-                    <span class="errors" ng-show="form.repositoryUserName.$dirty && form.repositoryUserName.$error.maxlength">Maximum length is 250.</span>
-                </td>
-            </tr>
-            <tr>
-                <td>Source Code Password</td>
-                <td>
-                    <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
-                    <span class="errors" ng-show="form.repositoryPassword.$dirty && form.repositoryPassword.$error.maxlength">Maximum length is 250.</span>
-                </td>
-            </tr>
-			<tr>
-				<td class="right-align">Application Type</td>
-				<td >
-					<select id="frameworkType"
+                <td class="right-align">Application Type</td>
+                <td >
+                    <select id="frameworkType"
                             ng-model="object.frameworkType"
                             name="frameworkType">
                         <option ng-selected="type === object.frameworkType"
@@ -98,9 +77,35 @@
                             {{ type }}
                         </option>
                     </select>
-				</td>
-			</tr>
+                </td>
+            </tr>
             <tr>
+                <td>
+                    <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
+                <td>Source Code Revision</td>
+                <td>
+                    <input type="text" id="repositoryBranch" ng-model="object.repositoryBranch" maxlength="250" name="repositoryBranch"/>
+                    <span class="errors" ng-show="form.repositoryBranch.$dirty && form.repositoryBranch.$error.maxlength">Maximum length is 250.</span>
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
+                <td>Source Code UserName</td>
+                <td>
+                    <input type="text" id="repositoryUsername" ng-model="object.repositoryUserName" maxlength="250" name="repositoryUserName"/>
+                    <span class="errors" ng-show="form.repositoryUserName.$dirty && form.repositoryUserName.$error.maxlength">Maximum length is 250.</span>
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
+                <td>Source Code Password</td>
+                <td>
+                    <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" path="repositoryPassword"/>
+                    <span class="errors" ng-show="form.repositoryPassword.$dirty && form.repositoryPassword.$error.maxlength">Maximum length is 250.</span>
+                </td>
+            </tr>
+            <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code URL</td>
                 <td >
                     <input name="repositoryUrl"
@@ -111,7 +116,7 @@
                     <span class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>
                 </td>
             </tr>
-            <tr>
+            <tr ng-show="sourceCodeDisplay">
                 <td class="right-align">Source Code Folder</td>
                 <td >
                     <input name="repositoryFolder"

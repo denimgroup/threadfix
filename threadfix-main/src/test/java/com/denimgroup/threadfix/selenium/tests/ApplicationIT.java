@@ -363,7 +363,7 @@ public class ApplicationIT extends BaseIT {
                 .clickDeleteWaf(wafName);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
-		wafDetailPage = wafIndexPage.clickCloseWafModal(wafName)
+		wafDetailPage = wafIndexPage.clickCloseWafModal()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickDeleteButton()
