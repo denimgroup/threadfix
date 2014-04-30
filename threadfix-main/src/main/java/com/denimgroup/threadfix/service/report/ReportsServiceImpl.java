@@ -590,6 +590,8 @@ public class ReportsServiceImpl implements ReportsService {
 						
 			for (ApplicationChannel channel : application.getChannelList()) {
 				if (channel == null || channel.getScanCounter() == null
+                        || channel.getScanList() == null
+                        || channel.getScanList().size() == 0
 						|| channel.getChannelType() == null
 						|| channel.getChannelType().getId() == null
 						|| channel.getChannelType().getName() == null) {
