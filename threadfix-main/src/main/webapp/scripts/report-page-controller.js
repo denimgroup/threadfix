@@ -85,10 +85,26 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     var loadReport = function() {
         if ($scope.initialized) {
             $scope.loading = true;
-            $http.post(tfEncoder.encode("/reports/ajax"), $scope.getReportParameters()).
+            var url = "/reports/ajax";
+            if ($scope.reportId === '6' || $scope.reportId === '11' ) {
+                url = "/reports/ajax/page";
+            }
+            $http.post(tfEncoder.encode(url), $scope.getReportParameters()).
                 success(function(data, status, headers, config) {
-                    $scope.reportHTML = data;
+
+                    $scope.reportHTML = undefined;
                     $scope.loading = false;
+
+                    if ($scope.reportId === '6') {
+                        $scope.headerList = data.object.headerList;
+                        $scope.listOfLists = data.object.listOfLists;
+                        $scope.columnCount = data.object.columnCount;
+
+                    } else if ($scope.reportId === '11') {
+                        $scope.listOfLists = data.object.listOfLists;
+                    } else {
+                        $scope.reportHTML = data;
+                    }
 
                     if ($scope.firstReportId) {
                         $scope.reportId = parseInt($scope.firstReportId);
@@ -185,6 +201,22 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.formatId = 3;
         loadReport();
         $scope.formatId = 1;
+    }
+
+    $scope.setSort = function(index) {
+        $scope.index = index;
+        $scope.reverse = !$scope.reverse;
+        $scope.listOfLists.sort(function(a, b) {
+            if ($scope.reverse) {
+                if (a[index] > b[index]) return 1;
+                if (a[index] < b[index]) return -1;
+                return 0;
+            } else {
+                if (a[index] < b[index]) return 1;
+                if (a[index] > b[index]) return -1;
+                return 0;
+            }
+        });
     }
 
 });

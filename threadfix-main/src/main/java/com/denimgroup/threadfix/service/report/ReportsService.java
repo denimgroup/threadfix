@@ -30,6 +30,8 @@ import org.springframework.ui.Model;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 
+import java.util.Map;
+
 
 /**
  * @author drivera
@@ -52,10 +54,10 @@ public interface ReportsService {
 	
 	ReportCheckResultBean generateReport(ReportParameters parameters, HttpServletRequest request);
 
-	String scannerComparisonByVulnerability(Model model,
+    Map<String, Object> scannerComparisonByVulnerability(Model model,
 			ReportParameters reportParameters);
 
-	String vulnerabilityList(Model model, ReportParameters reportParameters);
+    Map<String, Object> vulnerabilityList(Model model, ReportParameters reportParameters);
 
     String getExportFileName(ReportParameters reportParameters);
 

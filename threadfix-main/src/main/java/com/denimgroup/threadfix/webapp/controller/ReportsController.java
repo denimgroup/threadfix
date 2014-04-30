@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.report.ReportsService;
@@ -38,10 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +52,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/reports")
@@ -211,19 +210,11 @@ public class ReportsController {
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		// reroute if it's scanner comparison or portfolio report
-		if (reportParameters.getReportFormat() == ReportFormat.CHANNEL_COMPARISON_DETAIL) {
-			return reportsService.scannerComparisonByVulnerability(model, reportParameters);
-		} else if (reportParameters.getReportFormat() == ReportFormat.PORTFOLIO_REPORT) {
+        if (reportParameters.getReportFormat() == ReportFormat.PORTFOLIO_REPORT) {
 			return new PortfolioReportController(organizationService).index(
-					model, request, reportParameters.getOrganizationId());
-		} else if (reportParameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
-			if (reportParameters.getFormatId() != 1) {
-				return processExportRequest(model, reportParameters, request, response);
-			}
-			model.addAttribute("reportId",reportParameters.getReportId());
-			return reportsService.vulnerabilityList(model, reportParameters);
+                    model, request, reportParameters.getOrganizationId());
 		}
-		
+
 		if (reportParameters.getFormatId() != 1) {
 			return processExportRequest(model, reportParameters, request, response);
 		}
@@ -256,6 +247,22 @@ public class ReportsController {
 			return returnError(request, model, reportCheckResult);
 		}
 	}
+
+    @RequestMapping(value="/ajax/page", method = RequestMethod.POST)
+    public @ResponseBody
+    RestResponse<Map<String, Object>> processSubmitPage(Model model, @ModelAttribute ReportParameters reportParameters,
+                                HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		if (reportParameters.getReportFormat() == ReportFormat.CHANNEL_COMPARISON_DETAIL) {
+			return RestResponse.success(reportsService.scannerComparisonByVulnerability(model, reportParameters));
+		}
+        else if (reportParameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
+			model.addAttribute("reportId",reportParameters.getReportId());
+			return RestResponse.success(reportsService.vulnerabilityList(model, reportParameters));
+		}
+
+        return null;
+    }
 
 
 	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
