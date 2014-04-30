@@ -73,7 +73,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isAppPresent(String appName){
-        return driver.findElementById("applicationsTableBody").getText().contains(appName);
+        return driver.findElementByLinkText(appName).isDisplayed();
     }
 
     public int getEditModalHeaderWidth(){

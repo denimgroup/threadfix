@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
@@ -114,7 +114,7 @@ public class ApplicationIT extends BaseIT {
 		assertTrue("The correct error did not appear for the name field.",
                 teamIndexPage.getNameErrorMessage().contains(emptyError));
 		
-		teamIndexPage = teamIndexPage.clickCloseAddAppModal(teamName)
+		teamIndexPage = teamIndexPage.clickCloseAddAppModal()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, whiteSpace, whiteSpace, "Low")
@@ -127,7 +127,7 @@ public class ApplicationIT extends BaseIT {
 				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
 		
 		// Test URL format
-		teamIndexPage = teamIndexPage.clickCloseAddAppModal(teamName)
+		teamIndexPage = teamIndexPage.clickCloseAddAppModal()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, "dummyApp", urlText, "Low")
@@ -137,7 +137,7 @@ public class ApplicationIT extends BaseIT {
 				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
 
 		// Test browser field length limits
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickCloseAddAppModal(teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickCloseAddAppModal()
 				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName)
 				.addNewApplication(teamName, longInputName, longInputUrl, "Low")
@@ -379,62 +379,48 @@ public class ApplicationIT extends BaseIT {
 
 	@Test
 	public void testSwitchWafs() {
-		//TODO
 		String wafName1 = "firstWaf" + getRandomString(3);
 		String wafName2 = "secondWaf" + getRandomString(3);
 		String type1 = "Snort" ;
 		String type2 = "mod_security";
 		String teamName = "testSwitchWafs" + getRandomString(3);
 		String appName = "switchWafApp" + getRandomString(3);
-		String appUrl = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
-		
-		//Create two WAFs
-        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
+
+        WafIndexPage waf = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
-                .createNewWaf(wafName1, type1)
+                .setWafName(wafName1)
+                .setWafType(type1)
+                .clickCreateWaf()
+                .clickAddWafLink()
+                .setWafName(wafName2)
+                .setWafType(type2)
                 .clickCreateWaf();
 
-                wafIndexPage.clickOrganizationHeaderLink();
-
-        WafIndexPage wafIndexPage1 = teamIndexPage.clickWafsHeaderLink()
-                .clickWafsHeaderLink()
-                .clickAddWafLink()
-                .createNewWaf(wafName2, type2)
-                .clickCreateWaf();
-
-        //Create team & application
-        teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .addNewApplication(teamName, appName, appUrl, "Low")
-                .saveApplication()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        //Create second application
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
-                .clickEditDeleteBtn()
-				.clickAddWaf()
-				.addWaf(wafName1);
-
-        teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-				.clickEditWaf()
-                .addWaf(wafName2)
-                .clickOrganizationHeaderLink()
+        ApplicationDetailPage ap = waf.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName1)
+                .clickUpdateApplicationButton();
+
+        TeamIndexPage ti = ap.clickOrganizationHeaderLink();
+
+        ApplicationDetailPage apt = ti.expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName2)
+                .clickUpdateApplicationButton()
                 .clickEditDeleteBtn();
-								
-		assertTrue("The edit didn't change the application's WAF.",
-                applicationDetailPage.getWafText().contains(wafName2));
+
+        assertTrue("Did not properly save changing of Wafs.", apt.getWafText().contains(wafName2));
 	}
 
 	@Test

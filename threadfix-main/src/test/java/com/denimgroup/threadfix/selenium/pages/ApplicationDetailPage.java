@@ -159,10 +159,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage addWaf(String wafName) {
-        Select s = new Select(driver.findElementById("wafSelect"));
-        s.selectByVisibleText(wafName);
-        driver.findElementById("submitTeamModal").click();
-        sleep(1000);
+        new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
+        driver.findElementById("submit").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -185,6 +183,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickEditDeleteBtn() {
         clickActionButton();
+        waitForElement(driver.findElementById("editApplicationModalButton"));
         driver.findElementById("editApplicationModalButton").click();
         waitForElement(driver.findElementById("deleteLink"));
         return new ApplicationDetailPage(driver);
@@ -272,7 +271,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickScansTab() {
         sleep(1000);
-        driver.findElementByLinkText("1 Scan").click();
+        driver.findElementByLinkText("scanTabLink").click();
         waitForElement(driver.findElementByLinkText("Delete Scan"));
         return new ApplicationDetailPage(driver);
     }
@@ -298,16 +297,14 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickEditWaf() {
-        driver.findElementById("editWafButton").click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .id("addWaf")));
+        driver.findElementById("addWafButton").click();
+        waitForElement(driver.findElementById("wafSelect"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickAddWaf() {
         driver.findElementById("addWafButton").click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .id("addWafForm")));
+        waitForElement(driver.findElementById("wafSelect"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -331,14 +328,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickUpdateApplicationButton() {
         driver.findElementById("submit").click();
-        try {
-            waitForInvisibleElement(driver.findElementById("editApplicationModal"));
-        } catch (TimeoutException e) {
-            driver.findElementById("submitAppModal").click();
-            waitForInvisibleElement(driver.findElementById("editApplicationModal"));
-        } catch (StaleElementReferenceException e) {
-            e.printStackTrace();
-        }
+        sleep(3000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -350,7 +340,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameError() {
-        return driver.findElementByClassName("errors").getText();
+        return driver.findElementByClassName("name-errors").getText();
     }
 
     public String getUrlError() {

@@ -248,10 +248,8 @@ public class TeamIndexPage extends BasePage {
     }
 
 
-    public TeamIndexPage clickCloseAddAppModal(String teamName){
-        driver.findElementById(getAppModalId(teamName)).findElement(By.className("modal-footer"))
-                .findElements(By.className("btn")).get(0).click();
-        sleep(1000);
+    public TeamIndexPage clickCloseAddAppModal(){
+        driver.findElementByLinkText("Close").click();
         return new TeamIndexPage(driver);
     }
 
