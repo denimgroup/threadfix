@@ -31,46 +31,19 @@ import java.util.List;
 
 public class ApiKeysIndexPage extends BasePage {
 	private List<WebElement> notes = new ArrayList<>();
-	//private List<WebElement> restrictedBoxes = new ArrayList<WebElement>();
 	private WebElement createNewKeyLink;
 
 	public ApiKeysIndexPage(WebDriver webdriver) {
 		super(webdriver);
 		createNewKeyLink = driver.findElementById("createNewKeyModalButton");
-		for (int i = 1; i <= getNumRows(); i++) {
-			notes.add(driver.findElementById("note" + i));
-		}
-	}
-
-	public int getNumRows() {
-		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
-		
-		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().contains("No keys found.")) {
-			return 0;
-		}		
-		
-		return driver.findElementsByClassName("bodyRow").size();
-	}
-	
-	public int getIndex(String roleName) {
-		int i = -1;
-		for (WebElement note : notes) {
-			i++;
-			String text = note.getText().trim();
-			if (text.equals(roleName.trim())) {
-				return i;
-			}
-		}
-		return -1;
 	}
 
 	public String getKeyText(String note) {
-		return driver.findElementById("key"+getIndex(note)).getText();
+		return driver.findElementById("key" + note).getText();
 	}
 
 	public ApiKeysIndexPage clickEdit(String note) {
-		driver.findElementById("editKey"+(getIndex(note)+1)).click();
-		waitForElement(driver.findElementsByClassName("modal").get(getIndex(note)));
+		driver.findElementById("editKeyModal" + note).click();
 		return new ApiKeysIndexPage(driver);
 	}
 
@@ -79,91 +52,55 @@ public class ApiKeysIndexPage extends BasePage {
 		waitForElement(driver.findElementById("submit"));
 		return new ApiKeysIndexPage(driver);
 	}
-	
 
 	public ApiKeysIndexPage clickDelete(String note) {
 		clickEdit(note);
-		driver.findElementsById("deleteButton").get(getIndex(note)).click();
+		driver.findElementById("deleteButton").click();
 		handleAlert();
 		sleep(1000);
 
 		return new ApiKeysIndexPage(driver);
 	}
 
-	public ApiKeysIndexPage clickSubmitButton(String oldNote){
-		int oldCnt;
-		int timer = 0;
-		if (oldNote == null) {
-            ApiKeysIndexPage page = clickModalSubmit();
-			oldCnt = getNumRows();
-			while(getNumRows()!=(oldCnt+1)){
-				if(timer >= 10){
-					break;
-				}
-				timer++;
-				sleep(100);
-			}
+    public ApiKeysIndexPage clickSubmitButton() {
+        return clickModalSubmit();
+    }
 
-            return page;
-		} else {
+    public ApiKeysIndexPage setNote(String newNote){
+        driver.findElementById("note").clear();
+        driver.findElementById("note").sendKeys(newNote);
+        return this;
+    }
 
-            return clickModalSubmit();
+    public ApiKeysIndexPage setRestricted() {
+       driver.findElementById("restricted").click();
 
-		}
-	}
+        return new ApiKeysIndexPage(driver);
+    }
 
-    @Deprecated
-	public ApiKeysIndexPage setNote(String newNote,String oldNote){
-		if(oldNote==null){
-			//driver.findElementsById("note").get(getNumRows()).clear();
-			//driver.findElementsById("note").get(getNumRows()).sendKeys(newNote);
-            driver.findElementByName("note").clear();
-            driver.findElementByName("note").sendKeys(newNote);
-		}else{
-			driver.findElementsById("note").get(getIndex(oldNote)).clear();
-			driver.findElementsById("note").get(getIndex(oldNote)).sendKeys(newNote);	
-		}
-		return this;
-	}
-	
-	public ApiKeysIndexPage setRestricted(String oldNote){
-		if(oldNote==null){
-			//driver.findElementById("isRestrictedKey"+(getNumRows()+1)).click();
-            driver.findElementByName("isRestrictedKey").click();
-		}else{
-			driver.findElementById("isRestrictedKey"+(getIndex(oldNote)+1)).click();
-		}
-		return new ApiKeysIndexPage(driver);
-	}
-	
-	public ApiKeysIndexPage waitModalDisappear(){
-		sleep(2000);
-		waitForInvisibleElement(driver.findElementById("newKeyModalDiv"));
-		return new ApiKeysIndexPage(driver);
-	}
-	
 	public boolean isCreationSuccessAlertPresent(){
-		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully created.");
+		return driver.findElementByClassName("alert-success").getText().contains("Successfully created key");
 	}
 	
 	public boolean isEditSuccessAlertPresent(){
-		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully edited.");
+		return driver.findElementByClassName("alert-success").getText().contains("Successfully edited key");
 	}
 	
 	public boolean isDeleteSuccessAlertPresent(){
 		return driver.findElementByClassName("alert-success").getText().contains("API key was successfully deleted.");
 	}
-	
-	public boolean isAPINotePresent(String note){
-		return getIndex(note) != -1;
-	}
+
+    public boolean isAPINotePresent(String note) {
+        WebElement element  = driver.findElementById("note" + note);
+        return element != null;
+    }
 	
 	public boolean isAPIRestricted(String note){
-		return driver.findElementById("restricted"+(getIndex(note)+1)).getText().trim().contains("true");
+		return driver.findElementById("restricted" + note).getText().trim().contains("true");
 	}
 	
 	public boolean isCorrectLength(String note){
-		return notes.get(getIndex(note)).getText().trim().length()<=255;
+		return driver.findElementById("note" + note).getText().trim().length()<=255;
 	}
 	
 	public int getTableWidth(){
