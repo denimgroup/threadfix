@@ -12,7 +12,7 @@
 		<spring:url value="/configuration/logs/{logId}" var="logUrl">
 			<spring:param name="logId" value="${ logId }"/>	
 		</spring:url>
-		<a href="${ logUrl }"> View Error Log</a>
+		<a href="<c:out value="${ logUrl }"/>"> View Error Log</a>
 	</security:authorize>
 </c:if>
 
@@ -23,4 +23,4 @@
 <br/><br/>
 
 <spring:url value="/" var="homeUrl"/>
-<a href="<c:out value="${homeUrl}"/>">Back to Home Page</a>
+<a href="<c:out value="${ homeUrl }"/>">Back to Home Page</a>

@@ -45,34 +45,22 @@
 
 package com.denimgroup.threadfix.webapp.filter;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import java.util.*;
 
 /**
  * Provides basic CSRF protection for a web application. The filter assumes
@@ -209,11 +197,18 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             LruCache<String> nonceCache =
                 (LruCache<String>) req.getSession(true).getAttribute(
                     CSRF_NONCE_SESSION_ATTR_NAME);
+
+            // generate a new cache if one is not found.
+            if (nonceCache == null) {
+                nonceCache = new LruCache<>(nonceCacheSize);
+                req.getSession().setAttribute(
+                        CSRF_NONCE_SESSION_ATTR_NAME, nonceCache);
+            }
             
             // if it matches one of the patterns for GET requests, don't check.
             String previousNonce = req.getParameter(CSRF_NONCE_REQUEST_PARAM);
             
-            if (!skipNonceCheck && nonceCache != null && !nonceCache.contains(previousNonce)) {
+            if (!skipNonceCheck && !nonceCache.contains(previousNonce)) {
             	
             	String nonceStatus = previousNonce == null ? "Missing nonce" : "Incorrect nonce";
             	
@@ -227,13 +222,6 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
 
             	res.sendError(HttpServletResponse.SC_NO_CONTENT);
             	return;
-            }
-        
-            // generate a new cache if one is not found.
-            if (nonceCache == null) {
-                nonceCache = new LruCache<>(nonceCacheSize);
-                req.getSession().setAttribute(
-                        CSRF_NONCE_SESSION_ATTR_NAME, nonceCache);
             }
             
             // If it matched one of the regexes, don't generate any new nonces.
@@ -334,7 +322,6 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
          * Return the specified URL with the nonce added to the query string
          *
          * @param url URL to be modified
-         * @param nonce The nonce to add
          */
         private String addNonce(String url) {
             if (url == null || nonce == null) {
@@ -351,7 +338,12 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
             sb.append('?');
             sb.append(CSRF_NONCE_REQUEST_PARAM);
             sb.append('=');
-            sb.append(nonce);
+            try {
+                sb.append(URLEncoder.encode(nonce, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                // we should make threadfix die at this point
+                throw new RuntimeException("UTF-8 was not supported.", e);
+            }
             return sb.toString();
         }
     }
