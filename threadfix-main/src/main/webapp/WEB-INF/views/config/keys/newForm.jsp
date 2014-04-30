@@ -11,7 +11,7 @@
                 <tr>
                     <td>Note (optional) </td>
                     <td class="inputValue">
-                        <input id="note" name="note" ng-model="object.note" type="text"
+                        <input id="note" name="modalNote" ng-model="object.note" type="text"
                                focus-on="focusInput" size="70" ng-maxlength="255" />
                     </td>
                     <td>
@@ -21,7 +21,7 @@
                 <tr>
                     <td>Restricted?</td>
                     <td class="inputValue">
-                        <input id="restricted" type="checkbox" ng-model="object.isRestrictedKey" name="isRestrictedKey"/>
+                        <input id="modalRestricted" type="checkbox" ng-model="object.isRestrictedKey" name="isRestrictedKey"/>
                     </td>
                 </tr>
             </tbody>
