@@ -4,13 +4,13 @@
             Edit WAF {{ object.name }}
             <span class="delete-span">
                 <a ng-show="waf.applications"
-                   id="deleteWafbutton"
+                   id="deleteWafButtonUnsuccessful"
                    class="btn btn-danger header-button"
                    ng-click="alert('WAFs with applications cannot be deleted.')">
                     Delete
                 </a>
                 <a ng-hide="waf.applications"
-                   id="deleteWafbutton"
+                   id="deleteWafButton"
                    class="btn btn-danger header-button"
                    ng-click="showDeleteDialog('WAF')">
                     Delete
