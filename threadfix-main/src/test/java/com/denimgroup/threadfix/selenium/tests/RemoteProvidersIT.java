@@ -58,7 +58,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat();
+                .clickModalSubmit();
 
 		assertTrue("WhiteHat Sentinel was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
@@ -77,7 +77,9 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI("This should't Work!")
-                .saveWhiteHatInvalid();
+                .clickModalSubmitInvalid();
+
+        remoteProvidersIndexPage.sleep(1000);
 
 		assertTrue("Incorrect credentials accepted",
                 remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
@@ -90,7 +92,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera();
+                .clickModalSubmit();
 
         sleep(5000);
         assertTrue("Veracode was not configured properly",
@@ -110,7 +112,9 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureVeracode()
                 .setVeraUsername("No Such User")
                 .setVeraPassword("Password Bad")
-                .saveVeraInvalid();
+                .clickModalSubmitInvalid();
+
+        remoteProvidersIndexPage.sleep(1000);
 
 		assertTrue("Incorrect credentials accepted", remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
@@ -124,7 +128,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
-                .saveQualys();
+                .clickModalSubmit();
 	}
 	
 	@Test
@@ -135,7 +139,9 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureQualys()
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
-                .saveQualysInvalid();
+                .clickModalSubmitInvalid();
+
+        remoteProvidersIndexPage.sleep(1000);
 		
 		assertTrue("Incorrect credentials accepted",
                 remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
@@ -153,7 +159,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat()
+                .clickModalSubmit(RemoteProvidersIndexPage.class)
                 .mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
@@ -181,7 +187,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera()
+                .clickModalSubmit(RemoteProvidersIndexPage.class)
                 .mapVeracodeToTeamAndApp(3, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);

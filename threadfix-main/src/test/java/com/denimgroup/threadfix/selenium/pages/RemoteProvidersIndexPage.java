@@ -81,31 +81,26 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	/*-------------- click functions ---------------*/
 	public RemoteProvidersIndexPage clickConfigureQualys(){
-		driver.findElementById("configure1").click();
-		waitForElement(driver.findElementById("remoteProviderEditModal3"));
+		driver.findElementById("configure0").click();
+		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureVeracode(){
-		driver.findElementById("configure2").click();
-		waitForElement(driver.findElementById("remoteProviderEditModal2"));
+		driver.findElementById("configure1").click();
+		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		driver.findElementById("configure3").click();
-		waitForElement(driver.findElementById("remoteProviderEditModal1"));
+		driver.findElementById("configure2").click();
+		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage saveQualys(){
 		driver.findElementById("submitRemoteProviderFormButton3").click();
 		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
-	public RemoteProvidersIndexPage saveQualysInvalid(){
-		driver.findElementById("submitRemoteProviderFormButton3").click();
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
@@ -123,11 +118,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public RemoteProvidersIndexPage saveVeraInvalid(){
-		driver.findElementById("submitRemoteProviderFormButton2").click();
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
 	public RemoteProvidersIndexPage saveWhiteHat(){
 		driver.findElementById("submitRemoteProviderFormButton1").click();
 		sleep(5000);
@@ -135,12 +125,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		sleep(5000);
 		return new RemoteProvidersIndexPage(driver);
 	}
-	
-	public RemoteProvidersIndexPage saveWhiteHatInvalid(){
-		driver.findElementById("submitRemoteProviderFormButton1").click();
-		return new RemoteProvidersIndexPage(driver);
-	}
-	
+
 	public RemoteProvidersIndexPage clickEditMapping(String appName){
 		int ids[] = getAppProviderandAppId(appName);
 		if(ids[0] == -1 ||  ids[1] == -1 ){
@@ -190,14 +175,14 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	/*-------------- set functions ---------------*/
 	public RemoteProvidersIndexPage setQualysUsername(String user){
-		driver.findElementsById("usernameInput").get(0).clear();
-		driver.findElementsById("usernameInput").get(0).sendKeys(user);
+		driver.findElementById("usernameInput").clear();
+		driver.findElementById("usernameInput").sendKeys(user);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage setQualysPassword(String password){
-		driver.findElementsById("passwordInput").get(0).clear();
-		driver.findElementsById("passwordInput").get(0).sendKeys(password);
+		driver.findElementById("passwordInput").clear();
+		driver.findElementById("passwordInput").sendKeys(password);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
@@ -212,21 +197,21 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage setVeraUsername(String user){
-		driver.findElementsById("usernameInput").get(1).clear();
-		driver.findElementsById("usernameInput").get(1).sendKeys(user);
-		return new RemoteProvidersIndexPage(driver);
+		driver.findElementById("usernameInput").clear();
+		driver.findElementById("usernameInput").sendKeys(user);
+		return this;
 	}
 	
 	public RemoteProvidersIndexPage setVeraPassword(String password){
-		driver.findElementsById("passwordInput").get(1).clear();
-		driver.findElementsById("passwordInput").get(1).sendKeys(password);
-		return new RemoteProvidersIndexPage(driver);
+		driver.findElementById("passwordInput").clear();
+		driver.findElementById("passwordInput").sendKeys(password);
+		return this;
 	}
 	
 	public RemoteProvidersIndexPage setWhiteHatAPI(String api){
 		driver.findElementById("apiKeyInput").clear();
 		driver.findElementById("apiKeyInput").sendKeys(api);
-		return new RemoteProvidersIndexPage(driver);
+		return this;
 	}
 	
 	public RemoteProvidersIndexPage setTeamMapping(String mappingAppName, String teamName){
@@ -369,7 +354,9 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
 	public String getErrorMessage(){
-		return driver.findElementByClassName("alert-error").getText();
+        String error = driver.findElementById("errorSpan").getText();
+        System.out.println(error);
+		return driver.findElementById("errorSpan").getText();
 	}
 	
 	public RemoteProvidersIndexPage clearWhiteHat(){
