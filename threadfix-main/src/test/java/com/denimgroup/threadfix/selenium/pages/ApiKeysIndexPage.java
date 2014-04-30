@@ -67,13 +67,13 @@ public class ApiKeysIndexPage extends BasePage {
     }
 
     public ApiKeysIndexPage setNote(String newNote){
-        driver.findElementById("note").clear();
-        driver.findElementById("note").sendKeys(newNote);
+        driver.findElementById("modalnote").clear();
+        driver.findElementById("modalnote").sendKeys(newNote);
         return this;
     }
 
     public ApiKeysIndexPage setRestricted() {
-       driver.findElementById("restricted").click();
+       driver.findElementById("modalrestricted").click();
 
         return new ApiKeysIndexPage(driver);
     }
