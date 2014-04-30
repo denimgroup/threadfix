@@ -71,7 +71,8 @@ public class WafIndexPage extends BasePage {
 
 	public WafIndexPage clickDeleteWaf(String wafName){
 		clickEditWaf(wafName);
-		driver.findElementById("deleteWafbutton").click();
+        waitForElement(driver.findElementById("deleteWafButton"));
+		driver.findElementById("deleteWafButton").click();
 		handleAlert();
 		sleep(1000);
 		return new WafIndexPage(driver);
@@ -131,14 +132,14 @@ public class WafIndexPage extends BasePage {
 	
 	public WafIndexPage clickEditWaf(String wafName){
 		driver.findElementById("editWafModalButton"+wafName).click();
-		waitForElement(driver.findElementById("deleteWafbutton"));
+		waitForElement(driver.findElementById("myModalLabel"));
 		return new WafIndexPage(driver);
 	}
 	
 	public WafIndexPage editWaf(String wafName, String newName, String type){
-		sleep(5000);
-		driver.findElementById("nameInput").clear();
-		driver.findElementById("nameInput").sendKeys(newName);
+        waitForElement(driver.findElementById("myModalLabel"));
+		driver.findElementById("wafCreateNameInput").clear();
+		driver.findElementById("wafCreateNameInput").sendKeys(newName);
         new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
 		return new WafIndexPage(driver);
 	}
