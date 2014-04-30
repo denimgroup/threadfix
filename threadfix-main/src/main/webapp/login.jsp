@@ -14,7 +14,7 @@
 </head>
 
 <body ng-app="threadfix">
-	<spring:url value="j_spring_security_check" var="loginUrl" ></spring:url>
+	<spring:url value="j_spring_security_check" var="loginUrl"/>
 	<div style="position:absolute;left:50%;top:50%;margin-top:-100px;margin-left:-250px;width:500px;height:220px">
 	<table style="width:500px;height:200px;border-width:1px;border-collapse:collapse;border-color:black;border-style:solid;">
 		<tr style="width:500px;height:20px;background:#43678b;"><td></td></tr>
@@ -46,11 +46,6 @@
             </div>
             <div style="position:absolute;left:50%;top:50%;margin-left:-63px; margin-top:9px;">
                 <input type="password" style="width:200px" class="textbox" id="password" name="j_password" required/>
-            </div>
-            <div style="position:absolute;left:50%;top:50%;margin-left:-110px; margin-top:90px;">
-                <input type="checkbox" name="_spring_security_remember_me"/></div>
-            <div style="position:absolute;left:50%;top:50%;margin-left:-86px; margin-top:88px;color:black;">
-                Remember me on this computer.
             </div>
             <div style="position:absolute;left:50%;top:50%;margin-left:-65px; margin-top:51px;">
                 <button ng-class="{ disabled : form.$invalid }" id="login" style="width:130px;">Login</button>
