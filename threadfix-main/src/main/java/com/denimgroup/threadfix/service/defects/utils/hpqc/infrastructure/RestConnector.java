@@ -1,5 +1,10 @@
 package com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure;
 
+import com.denimgroup.threadfix.service.ProxyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +25,11 @@ import java.util.Set;
  * Some simple methods are implemented to get commonly used paths.
  *
  */
-public class RestConnector {
+@Component
+public class RestConnector extends SpringBeanAutowiringSupport {
+
+    @Autowired(required = false)
+    private ProxyService proxyService;
 
     protected Map<String, String> cookies;
     /**
@@ -165,8 +174,15 @@ public class RestConnector {
             url += "?" + queryString;
         }
 
-        HttpURLConnection con =
-                (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection con;
+
+        if (proxyService != null) {
+            con = proxyService.getConnectionWithProxyConfig(new URL(url));
+        } else {
+            con = (HttpURLConnection) new URL(url).openConnection();
+        }
+
+        assert con != null;
 
         con.setRequestMethod(type);
         String cookieString = getCookieString();
