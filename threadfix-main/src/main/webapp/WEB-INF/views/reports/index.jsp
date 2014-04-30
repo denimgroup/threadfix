@@ -66,6 +66,8 @@
             <div ng-show="reportHTML" tf-bind-html-unsafe="reportHTML">
 
             </div>
+            <%@ include file="/WEB-INF/views/reports/scannerComparisonByVulnerability.jsp"%>
+            <%@ include file="/WEB-INF/views/reports/vulnerabilityList.jsp"%>
         </div>
 
     </div>
