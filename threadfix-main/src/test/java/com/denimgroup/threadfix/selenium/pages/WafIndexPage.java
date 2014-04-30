@@ -162,7 +162,7 @@ public class WafIndexPage extends BasePage {
 	}
 	
 	public String getNameErrorsText(){
-		return driver.findElementById("name.errors").getText();
+		return driver.findElementById("nameRequiredError").getText();
 	}
 
 	public String getNameText(int row){

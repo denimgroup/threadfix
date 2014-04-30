@@ -235,7 +235,7 @@ public class WafIT extends BaseIT {
         // Test submission with no changes
         wafIndexPage = wafIndexPage.clickWafsHeaderLink()
                 .clickEditWaf(wafName)
-                .clickUpdateWaf(wafName)
+                .clickModalSubmit()
                 .clickWafsHeaderLink();
         assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName));
 
@@ -243,25 +243,25 @@ public class WafIT extends BaseIT {
         wafIndexPage = wafIndexPage.clickWafsHeaderLink()
                 .clickEditWaf(wafName)
                 .editWaf(wafName, emptyString, type2)
-                .clickUpdateWafInvalid();
+                .clickModalSubmitInvalid();
         assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 
         wafIndexPage = wafIndexPage
                 .editWaf(wafName, whiteSpaceString, type2)
-                .clickUpdateWafInvalid();
+                .clickModalSubmitInvalid();
         assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
 
         // Test browser length limit
         wafIndexPage = wafIndexPage
                 .editWaf(wafName, longInput, type2)
-                .clickUpdateWaf(wafName);
+                .clickModalSubmit();
 
         assertTrue("The waf name was not cropped correctly.", wafIndexPage.isWafPresent(wafName));
 
         // Test name duplication checking
         wafIndexPage = wafIndexPage.clickEditWaf(wafName)
                 .editWaf(wafName, wafNameDuplicateTest, type2)
-                .clickUpdateWafInvalid();
+                .clickModalSubmitInvalid();
 
         assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
     }
