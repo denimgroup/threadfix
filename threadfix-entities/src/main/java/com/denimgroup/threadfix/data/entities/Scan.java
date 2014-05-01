@@ -84,7 +84,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
             ScannerType.WEBINSPECT.getFullName(),
             ScannerType.ZAPROXY.getFullName(),
             ScannerType.QUALYSGUARD_WAS.getFullName(),
-            ScannerType.APPSCAN_DYNAMIC.getFullName());
+            ScannerType.APPSCAN_DYNAMIC.getFullName(),
+            ScannerType.CENZIC_HAILSTORM.getFullName());
 	
 	private static final List<String> STATIC_TYPES = Arrays.asList(
             ScannerType.APPSCAN_SOURCE.getFullName(),

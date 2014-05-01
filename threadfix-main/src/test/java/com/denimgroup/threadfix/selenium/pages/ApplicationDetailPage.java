@@ -24,8 +24,10 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -41,12 +43,6 @@ public class ApplicationDetailPage extends BasePage {
         super(webdriver);
     }
 
-    public ApplicationDetailPage clickShowDetails() {
-        driver.findElementById("showDetailsLink").click();
-        waitForElement(driver.findElementById("appInfoDiv"));
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickAddDefectTrackerButton() {
         driver.findElementById("addDefectTrackerButton").click();
         sleep(1000);
@@ -56,11 +52,6 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setUsername(String dtName) {
         driver.findElementById("username").clear();
         driver.findElementById("username").sendKeys(dtName);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage testClickApp(int num) {
-        driver.findElementById("appLink" + num).click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -138,26 +129,6 @@ public class ApplicationDetailPage extends BasePage {
 
     }
 
-    public ApplicationDetailPage addNewWaf(String Name, String Type) {
-        clickShowDetails();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .id("appInfoDiv")));
-        // TODO should be switched to id
-        driver.findElementByLinkText("Add WAF").click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .id("addWafForm")));
-        driver.findElementByLinkText("Create New WAF").click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .id("createWaf")));
-        driver.findElementById("nameInput").sendKeys(Name);
-        new Select(driver.findElementById("typeSelect"))
-                .selectByVisibleText(Type);
-        driver.findElementById("submitTeamModal").click();
-        // TODO currently does not allow you to add a waf from application
-        // detail page
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage addWaf(String wafName) {
         new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
         driver.findElementById("submit").click();
@@ -189,47 +160,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public int getNameWidth() {
-        return driver.findElementById("nameText").getSize().getWidth();
-    }
-
-    public ApplicationDetailPage addManualFinding(Boolean stat, String cwe,
-                                                  String url, String sourceFile, String lineNum, String Parameter,
-                                                  String Severity, String description) {
-        driver.findElementById("addManualFindinModalLink").click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .id("addManualFinding")));
-        if (stat) {
-            driver.findElementById("staticRadioButton").click();
-        }
-        driver.findElementById("txtSearch").sendKeys(cwe);
-        driver.findElementById("urlDynamicSearch").sendKeys(url);
-        driver.findElementById("urlStaticSearch").sendKeys(sourceFile);
-        driver.findElementById("urlSearch").sendKeys(lineNum);
-        driver.findElementById("parameterInput").sendKeys(Parameter);
-        new Select(driver.findElementById("severityInput"))
-                .selectByVisibleText(Severity);
-        driver.findElementById("descriptionInput").sendKeys(description);
-        driver.findElementById("submitDTModal").click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By
-                .id("addManualFinding")));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public String getElementText(String id) {
-        return driver.findElementById(id).getText();
-    }
-
-    public ApplicationDetailPage clickRefreshLink() {
-        driver.findElementById("refreshLink").click();
-        return new ApplicationDetailPage(driver);
-    }
-
-    public VulnerabilityPage clickVulnLink(int indexFromOne) {
-        driver.findElementById("vulnName" + indexFromOne).click();
-        return new VulnerabilityPage(driver);
-    }
-
     public String getWafText() {
         waitForElement(driver.findElementById("wafText"));
         return driver.findElementById("wafText").getText();
@@ -243,62 +173,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("urlInput").getAttribute("value");
     }
 
-    public String getDefectTrackerText() {
-        return driver.findElementById("defectTrackerText").getText().trim();
-    }
-
-    public TeamDetailPage clickTeamLink() {
-        driver.findElementById("organizationText").click();
-        sleep(300);
-        return new TeamDetailPage(driver);
-    }
-
-    public TeamDetailPage clickDeleteLink() {
-        clickEditDeleteBtn();
-        sleep(1000);
-        driver.findElementById("deleteLink").click();
-        handleAlert();
-
-        return new TeamDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickDetailsLink() {
-        clickEditDeleteBtn();
-        driver.findElementById("showDetailsLink").click();
-        waitForElement(driver.findElementById("appInfoDiv"));
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickScansTab() {
         sleep(1000);
-        driver.findElementByLinkText("scanTabLink").click();
+        driver.findElementByLinkText("scanTab").click();
         waitForElement(driver.findElementByLinkText("Delete Scan"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ManualUploadPage clickAddFindingManuallyLink() {
-        driver.findElementById("addFindingManuallyLink").click();
-        return new ManualUploadPage(driver);
-    }
-
-    public ApplicationDetailPage clickCloseManualFindingButton() {
-        driver.findElementById("closeManualFindingModalButton").click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By
-                .id("closeManualFindingModalButton")));
-        return new ApplicationDetailPage(driver);
-    }
-
-
-    public ApplicationDetailPage clickVulnTab() {
-        driver.findElementById("vulnTabLink").click();
-        sleep(1000);
-        waitForElement(driver.findElementById("expandAllVulns"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickEditWaf() {
-        driver.findElementById("addWafButton").click();
-        waitForElement(driver.findElementById("wafSelect"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -320,12 +198,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setAppCritic(String critic) {
-        new Select(driver.findElementById("criticalityId"))
-                .selectByVisibleText(critic);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickUpdateApplicationButton() {
         driver.findElementById("submit").click();
         sleep(3000);
@@ -340,74 +212,16 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameError() {
-        return driver.findElementByClassName("name-errors").getText();
+        return driver.findElementByClassName("applicationNameInputNameError").getText();
     }
 
     public String getUrlError() {
-        return driver.findElementById("url.errors").getText().trim();
+        return driver.findElementById("applicationUrlInputInvalidUrlError").getText().trim();
     }
 
     public ApplicationDetailPage clickDeleteScanButton() {
         driver.findElementByLinkText("Delete Scan").click();
         handleAlert();
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setFileInput(String appName, String file) {
-        driver.findElementById("fileInput-" + appName).sendKeys(file);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage submitScan(String appName) {
-        driver.findElementById("submitScanModal-" + appName).click();
-        waitForScanUpload(0);
-        sleep(15000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage submitDefect() {
-        driver.findElementById("submitDefectForm").findElement(By.id("submitScanModal")).click();
-        sleep(1000);
-        waitForInvisibleElement(driver.findElementById("submitDefectForm"));
-        sleep(3000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    @Deprecated
-    public void waitForScanUpload(int timer) {
-        if (timer == 20) {
-            throw new NoSuchElementException("Unable to locate element: {\"method\":\"id\",\"selector\":\"scanTabLink\"}");
-        }
-        try {
-            driver.findElementById("scanTabLink");
-        } catch (NoSuchElementException e) {
-            sleep(1000);
-            waitForScanUpload(timer + 1);
-        }
-    }
-
-    public int scanCount() {
-        WebElement scanTab;
-        try {
-//			scanTab = driver.findElementById("scanTabLink");
-            driver.findElementById("scanTabLink").isDisplayed();
-        } catch (NoSuchElementException e) {
-            return 0;
-        }
-
-//		String scanText = scanTab.getText().trim();
-        String scanText = driver.findElementById("scanTabLink").getText().trim();
-        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
-        Matcher matcher = pattern.matcher(scanText);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return -1;
-    }
-
-    public ApplicationDetailPage submitScanInvalid() {
-        driver.findElementById("submitScanModal" + modalNumber()).click();
-        sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -425,52 +239,8 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText();
     }
 
-    public ApplicationDetailPage clickUploadScanLink() {
-        clickActionButton();
-        driver.findElementById("uploadScanModalLink").click();
-        sleep(4000);
-        waitForElement(driver.findElementById("closeScanModalButton"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickCloseScanUploadModal() {
-        driver.findElementById("closeScanModalButton").click();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage fillAllClickSaveDynamic(Boolean dynamicRadioButton, String cwe, String url,
-                                                         String param, String severity, String description) {
-        fillRequiredManual(cwe, url, param, severity, description);
-        clickDynamicSubmit();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage fillRequiredManual(String cwe, String url, String param, String severity, String description) {
-        setCWE(cwe);
-        setURL(url);
-        setParameter(param);
-        selectSeverityList(severity);
-        setDescription(description);
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickDynamicSubmit() {
         driver.findElementById("submit").click();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickStaticSubmit() {
-        driver.findElementById("submit").click();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickDynamicSubmitInvalid() {
-        driver.findElementById("dynamicSubmit").click();
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
@@ -505,97 +275,9 @@ public class ApplicationDetailPage extends BasePage {
         return severity.getFirstSelectedOption().getText();
     }
 
-    public ApplicationDetailPage clickExpandAllVulns() {
-        sleep(15000); //sleep is required for javascript to load
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("expandAllVulns")));
-        driver.findElementById("expandAllVulns").click();
-        waitForElement(driver.findElementById("vulnName1"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickVulnCheckBox(int num) {
-        driver.findElementsByClassName("vulnIdCheckbox").get(num).click();
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickCloseAppModal() {
         driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
         sleep(2500);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public int getNumOfSubmitedDefects() {
-        int temp;
-        temp = driver.findElementById("anyid").findElements(By.className("transparent_png")).size();
-        return temp;
-    }
-
-    public ApplicationDetailPage clickDefectActionBtn() {
-        waitForElement(driver.findElementById("actionButton1"));
-        driver.findElementById("actionButton1").click();
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickSubmitDefectLink() {
-        clickDefectActionBtn();
-        driver.findElementById("submitDefectButton").click();
-        sleep(2000);
-        waitForElement(driver.findElementById("submitDefectForm"));
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickMergeDefectLink() {
-        clickDefectActionBtn();
-        driver.findElementById("mergeDefectButton").click();
-        sleep(12000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    // TODO find a better way to wait for list to populate
-    public ApplicationDetailPage selectMergeDefect(String defect) {
-        sleep(35000);
-        new Select(driver.findElementById("defectId")).selectByVisibleText(defect);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickMergeDefectSubmit() {
-        driver.findElementsById("mergeDefectButton").get(2).click();
-        sleep(6000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickMarkClosedLink() {
-        clickDefectActionBtn();
-        driver.findElementById("markClosedButton").click();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickMarkFalsePositiveLink() {
-        clickDefectActionBtn();
-        driver.findElementById("markFalsePositiveButton").click();
-        sleep(1000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage addCommentToFirstVuln(String comment) {
-        clickExpandAllVulns();
-        expandFirstVuln();
-        driver.findElementsByLinkText("Add Comment").get(0).click();
-        sleep(1000);
-        driver.findElementsById("commentInputBox").get(0).clear();
-        driver.findElementsById("commentInputBox").get(0).sendKeys(comment);
-        for (int i = 0; i < driver.findElementsByClassName("modal").size(); i++) {
-            if (driver.findElementsByClassName("modal").get(i).getAttribute("id").contains("commentModal")) {
-                driver.findElementsByClassName("modal").get(i).findElement(By.linkText("Add Comment")).click();
-            }
-        }
-        sleep(3000);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage expandFirstVuln() {
-        driver.findElementsByClassName("expandableTrigger").get(1).click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -641,7 +323,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickDocumentTab() {
-        driver.findElementById("docsTabLink").click();
+        driver.findElementById("documentsTab").click();
         sleep(1000);
         waitForElement(driver.findElementById("uploadDocModalLink" + modalNumber()));
         return new ApplicationDetailPage(driver);
@@ -650,7 +332,7 @@ public class ApplicationDetailPage extends BasePage {
     public int docsCount() {
         WebElement scanQueueTab;
         try {
-            scanQueueTab = driver.findElementById("docsTabLink");
+            scanQueueTab = driver.findElementById("documentsTab");
         } catch (NoSuchElementException e) {
             return 0;
         }
@@ -736,16 +418,6 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByLinkText("Team: " + applicationName).isDisplayed();
     }
 
-    public boolean isDocPresent(String docName) {
-        int rowCnt = driver.findElementsByClassName("bodyRow").size();
-        for (int i = 1; i <= rowCnt; i++) {
-            if (driver.findElementById("docName" + i).getText().trim().equals(docName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean vulnerabilitiesFiltered(String level, String expected) {
         return specificVulnerabilityCount(level).equals(expected);
     }
@@ -769,28 +441,6 @@ public class ApplicationDetailPage extends BasePage {
         return false;
     }
 
-    public boolean getVulnCount(int cnt) {
-        int i = 0;
-        if (!driver.findElementById("vulnTabLink").getText().contains(Integer.toString(cnt))) {
-            System.out.println("tab");
-            return false;
-        }
-        i += driver.findElementsByClassName("expandable").size();
-        if (i != cnt && cnt <= 100) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public boolean isScanPresent(String scan) {
-        return driver.findElementById("wafTableBody").getText().contains(scan);
-    }
-
-    public boolean isScanCountCorrect(int cnt) {
-        return driver.findElementById("scanTabLink").getText().contains(Integer.toString(cnt));
-    }
-
     public boolean remoteProvidersScansUploaded() {
         return driver.findElementByClassName("alert-error").getText().contains("No active Vulnerabilities found.");
     }
@@ -799,34 +449,9 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("frameworkType").getText().contains("Detect");
     }
 
-    public boolean isDuplicateScan() {
-        sleep(1000);
-        String s = "";
-        for (int i = 0; i < 10; i++) {
-            try {
-                s = driver.findElementByClassName("in").findElements(By.className("alert-error")).get(1).getText();
-            } catch (IndexOutOfBoundsException e) {
-                sleep(500);
-                continue;
-            }
-            break;
-        }
-        return s.contains("Scan file has already been uploaded.");
-    }
-
     public boolean isDefectTrackerAttached() {
         if (driver.findElementById("defectTrackerText").isEnabled())
             return true;
-        return false;
-    }
-
-    public boolean isScanChannelPresent(String channel) {
-        int rowCnt = driver.findElementsByClassName("bodyRow").size();
-        for (int i = 1; i <= rowCnt; i++) {
-            if (driver.findElementById("channelType" + i).getText().trim().equals(channel)) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -971,11 +596,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isSubmitManualFindingPresent() {
-        return driver.findElementById("dynamicSubmit").isDisplayed();
+        return driver.findElementById("submit").isDisplayed();
     }
 
     public boolean isSubmitManualFindingClickable() {
-        return isClickable("dynamicSubmit");
+        return isClickable("submit");
     }
 
     public boolean isManualFindingCloseButtonPresent() {

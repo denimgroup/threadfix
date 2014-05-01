@@ -91,8 +91,8 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
     public boolean isAPINotePresent(String note) {
-        WebElement element  = driver.findElementById("note" + note);
-        return element != null;
+        List<WebElement> elements  = driver.findElementsById("note" + note);
+        return elements != null && elements.size() > 0;
     }
 	
 	public boolean isAPIRestricted(String note){

@@ -23,47 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class WafIndexPage extends BasePage {
 
-	//private List<WebElement> names = new ArrayList<>();
-	
 	public WafIndexPage(WebDriver webdriver) {
 		super(webdriver);
-//		for (int i = 1; i <= getNumRows(); i++) {
-//			names.add(driver.findElementById("wafName" + i));
-//		}
 	}
-	
-//	public int getNumRows() {
-//		List<WebElement> bodyRows = driver.findElementsByClassName("bodyRow");
-//
-//		if (bodyRows != null && bodyRows.size() == 1 && bodyRows.get(0).getText().trim().contains("No WAFs found.")) {
-//			return 0;
-//		}
-//
-//		return driver.findElementsByClassName("bodyRow").size();
-//	}
-	
-//	public int getIndex(String roleName) {
-//		int i = -1;
-//		for (int j = 1; j <= getNumRows(); j++) {
-//			names.add(driver.findElementById("wafName" + j));
-//		}
-//		for (WebElement name : names) {
-//			i++;
-//			String text = name.getText().trim();
-//			if (text.equals(roleName.trim())) {
-//				return i;
-//			}
-//		}
-//		return -1;
-//	}
-	
+
 	public WafRulesPage clickRules(String wafName){
 		driver.findElementById("rulesButton" + wafName).click();
 		return new WafRulesPage(driver);
@@ -113,14 +81,7 @@ public class WafIndexPage extends BasePage {
             sleep(4000);
         }
 		return new WafIndexPage(driver);
-	}
-	
-	public WafIndexPage clickCreateWafInvalid(){
-		driver.findElementById("submit").click();
-		return new WafIndexPage(driver);
-	}
-
-
+    }
 
 	public boolean isTextPresentInWafTableBody(String text) {
 		return driver.findElementById("wafTableBody").getText().contains(text);
@@ -141,23 +102,6 @@ public class WafIndexPage extends BasePage {
 		driver.findElementById("wafCreateNameInput").clear();
 		driver.findElementById("wafCreateNameInput").sendKeys(newName);
         new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
-		return new WafIndexPage(driver);
-	}
-	
-	public WafIndexPage clickUpdateWaf(String oldWafName){
-		driver.findElementByLinkText("Update WAF").click();
-		try{
-			waitForInvisibleElement(driver.findElementById("deleteWaf"));
-		}catch(NoSuchElementException | StaleElementReferenceException e){
-			System.out.println("Waf name was updated.");
-		}
-		sleep(1000);
-		return new WafIndexPage(driver);
-	}
-	
-	public WafIndexPage clickUpdateWafInvalid(){
-		driver.findElementByLinkText("Update WAF").click();
-		sleep(2000);
 		return new WafIndexPage(driver);
 	}
 	

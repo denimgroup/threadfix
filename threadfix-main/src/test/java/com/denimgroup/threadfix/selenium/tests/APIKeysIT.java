@@ -57,7 +57,6 @@ public class APIKeysIT extends BaseIT {
                 .setNote("createAPIKey")
                 .setRestricted()
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
 		assertTrue("Api note was not present.", apiIndexPage.isAPINotePresent("createAPIKey"));
 		assertTrue("Api was not marked restricted as it should have been.",apiIndexPage.isAPIRestricted("createAPIKey"));
@@ -70,13 +69,11 @@ public class APIKeysIT extends BaseIT {
 		apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("editAPIKeyNote")
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
         //Edit API Key
         apiIndexPage =	apiIndexPage.clickEdit("editAPIKeyNote")
                 .setNote("editAPIKeyNote-Edited")
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
 		assertTrue("API note was not edited properly.", apiIndexPage.isAPINotePresent("editAPIKeyNote-Edited"));
 		assertFalse("Previous API note still present.", apiIndexPage.isAPINotePresent("editAPIKeyNote"));
@@ -89,13 +86,11 @@ public class APIKeysIT extends BaseIT {
         apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("markRestricted")
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
         //Mark the API restricted
 		apiIndexPage =	apiIndexPage.clickEdit("markRestricted")
                 .setRestricted()
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
 		assertTrue("Api was not marked restricted.", apiIndexPage.isAPIRestricted("markRestricted"));
 	}
@@ -106,7 +101,6 @@ public class APIKeysIT extends BaseIT {
 		apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("toDeleteAPIKey")
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
         apiIndexPage = apiIndexPage.clickDelete("toDeleteAPIKey");
 
@@ -125,7 +119,6 @@ public class APIKeysIT extends BaseIT {
 		apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote(shortNote)
 				.clickSubmitButton();
-				//.waitModalDisappear();
 
 		width = apiIndexPage.getTableWidth();
 
@@ -133,7 +126,6 @@ public class APIKeysIT extends BaseIT {
 		apiIndexPage = apiIndexPage.clickNewLink()
 				   .setNote(longNoteA)
 				   .clickSubmitButton();
-				   //.waitModalDisappear();
 
 		newWidth = apiIndexPage.getTableWidth();
 
@@ -143,7 +135,6 @@ public class APIKeysIT extends BaseIT {
         apiIndexPage = apiIndexPage.clickEdit(shortNote)
                 .setNote(longNoteB)
                 .clickSubmitButton();
-                //.waitModalDisappear();
 
         newWidth = apiIndexPage.getTableWidth();
 

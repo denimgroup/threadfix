@@ -36,8 +36,6 @@ public class ApplicationDetailsPageIT extends BaseIT {
     *   of Application Detail Page
     */
 
-
-
     @Test
     public void testHeaderNavigation() {
         buildTeamAppandScan();

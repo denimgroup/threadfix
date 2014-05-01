@@ -28,7 +28,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
@@ -71,31 +70,5 @@ public class LoginPageIT extends BaseIT {
 	public void loginButtonClickableTest(){
 		assertTrue("Login button is not clickable",loginPage.isLoginButtonClickable());
 	}
-
-    //The check box these tests are looking for no longer exists
-
-    @Ignore
-	@Test
-	public void rememberCheckBoxPresentTest(){
-		assertTrue("Remember me checkbox was not present on the page",loginPage.isRememberMeCheckBoxPresent());
-	}
-
-    @Ignore
-	@Test
-	public void rememberCheckBoxSelectableTest(){
-		loginPage = loginPage.checkRememberCheckbox();
-		
-		assertTrue("Remember me checkbox did not select properly",loginPage.isRememeberMeCheckBoxSelected());
-	}
-
-    @Ignore
-	@Test
-	public void rememberCheckBoxUnSelectableTest(){
-		loginPage = loginPage.checkRememberCheckbox()
-							.checkRememberCheckbox();
-		
-		assertFalse("Remember me checkbox did not unselect properly",loginPage.isRememeberMeCheckBoxSelected());
-	}
-	
 	
 }

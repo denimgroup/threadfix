@@ -318,28 +318,28 @@ public class WafIT extends BaseIT {
                 .setWafDirectiveSelect("deny")
                 .clickGenerateWafRulesButton();
 
-        String PageText = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", PageText.contains("SecRule"));
+        String pageText = wafRulesPage.tryGetText(By.id("wafrule"));
+		assertTrue("Waf rule not generated", pageText.contains("SecRule"));
 
 		// Generate pass Waf Rules
 		wafRulesPage = wafRulesPage.setWafDirectiveSelect("pass")
                 .clickGenerateWafRulesButton();
 
-		String PageText2 = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", PageText2.contains("SecRule"));
+		String pageText2 = wafRulesPage.tryGetText(By.id("wafrule"));
+		assertTrue("Waf rule not generated", pageText2.contains("SecRule"));
 
 		// Generate drop Waf Rules
 		wafRulesPage = wafRulesPage.setWafDirectiveSelect("drop")
                 .clickGenerateWafRulesButton();
 
-        String PageText5 = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", PageText5.contains("SecRule"));
+        String pageText5 = wafRulesPage.tryGetText(By.id("wafrule"));
+		assertTrue("Waf rule not generated", pageText5.contains("SecRule"));
 
 		// Generate allow Waf Rules
 		wafRulesPage = wafRulesPage.setWafDirectiveSelect("allow")
                 .clickGenerateWafRulesButton();
 
-        String PageText6 = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", PageText6.contains("SecRule"));
+        String pageText6 = wafRulesPage.tryGetText(By.id("wafrule"));
+		assertTrue("Waf rule not generated", pageText6.contains("SecRule"));
 	}
 }

@@ -23,30 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class TeamDetailPage extends BasePage {
-    private List<String> apps = new ArrayList<>();
-
-    //     private WebElement orgName;
-    private WebElement applicationsTableBody;
-    private WebElement lastItemFoundInApplicationsTableBodyLink;
-    //private WebElement addApplicationLink;
 
     public TeamDetailPage(WebDriver webdriver) {
         super(webdriver);
-
-//          orgName = driver.findElementById("name");
-        applicationsTableBody = driver.findElementById("applicationsTableBody");
-        //addApplicationLink = driver.findElementByLinkText("Add Application");
+        driver.findElementById("applicationsTableBody");
     }
 
     public String getOrgName() {
@@ -68,7 +54,7 @@ public class TeamDetailPage extends BasePage {
     public TeamDetailPage clickEditOrganizationLink() {
         clickActionButton();
         driver.findElementById("teamModalButton").click();
-        waitForElement(driver.findElementById("teamModal"));
+        waitForElement(driver.findElementById("deleteTeamButton"));
         return new TeamDetailPage(driver);
     }
 
@@ -93,26 +79,14 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage clickUpdateButtonValid() {
-        driver.findElementById("submitTeamModal").click();
-        //          try{
-        //               waitForInvisibleElement(driver.findElementById("editFormDiv"));
-        //          }catch(TimeoutException e){
-        //               driver.findElementById("submitTeamModal").click();
-        //      }
+        clickModalSubmit();
         sleep(1000);
         return new TeamDetailPage(driver);
     }
 
     public TeamDetailPage clickUpdateButtonInvalid() {
-        driver.findElementById("submitTeamModal").click();
-        return new TeamDetailPage(driver);
+        return clickModalSubmit();
     }
-
-    public TeamDetailPage clickShowMore(){
-        driver.findElementById("showDetailsLink").click();
-        return new TeamDetailPage(driver);
-    }
-
 
     public TeamIndexPage clickDeleteButton() {
         clickEditOrganizationLink();
@@ -124,118 +98,8 @@ public class TeamDetailPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-
-    public TeamIndexPage clickExpandAll(){
-        driver.findElementById("expandAllButton").click();
-        return new TeamIndexPage(driver);
-    }
-
-    public TeamIndexPage clickCollapseAll(){
-        driver.findElementById("collapseAllButton").click();
-        return new TeamIndexPage(driver);
-    }
-
-    public ApplicationDetailPage clickTextLinkInApplicationsTableBody(String text) {
-        if (isTextPresentInApplicationsTableBody(text)) {
-            lastItemFoundInApplicationsTableBodyLink.click();
-            return new ApplicationDetailPage(driver);
-        } else {
-            return null;
-        }
-    }
-
-    //TODO possible deletion, not being used and there might be better alternative methods
-    public Map<String, Integer> getVulnCountForApps() {
-        Map<String, Integer> map = new HashMap<>();
-
-        // get app names
-        List<WebElement> appLinks = applicationsTableBody.findElements(By.xpath(".//tr/td/a"));
-        List<WebElement> counts   = applicationsTableBody.findElements(By.id("vulnCountCell"));
-
-        if (appLinks.size() != counts.size()) {
-            return null;
-        }
-
-        for (int i = 0; i < appLinks.size(); i++) {
-            try {
-                map.put(appLinks.get(i).getText(), Integer.valueOf(counts.get(i).getText()));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return map;
-    }
-
-    public ApplicationAddPage clickAddApplicationLink() {
-        driver.findElementByLinkText("Add Application").click();
-        return new ApplicationAddPage(driver);
-    }
-
     public String getErrorText() {
         return driver.findElementById("name.errors").getText().trim();
-    }
-
-    public String getAppModalId(){
-        String s = driver.findElementByLinkText("Add Application").getAttribute("href");
-        Pattern pattern = Pattern.compile("#(myAppModal[0-9] )$");
-        Matcher matcher = pattern.matcher(s);
-        if(matcher.find()){
-            return  matcher.group(1);
-        }
-        return "";
-    }
-
-    public void populateAppList(){
-        int i = 1;
-        if (apps.isEmpty()){
-            try {
-                while(driver.findElementById("appLink"+ i).isDisplayed()){
-                    apps.add(driver.findElementById("appLink" + i).getText());
-                    i++;
-                }
-            }catch(NoSuchElementException e) {
-                System.out.println("Done getting app list.");
-            }
-        }
-    }
-
-    public int getAppIndex(String appName) {
-        int i = 0;
-        for (String app : apps) {
-            i++;
-            if (app.equals(appName)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public int getIndex(String teamName) {
-        int i = -1;
-        List<WebElement> names = new ArrayList<WebElement>();
-        for (int j = 1; j <= getNumTeamRows(); j++) {
-            names.add(driver.findElementById("teamName" + j));
-        }
-        for (WebElement name : names) {
-            i++;
-            String text = name.getText().trim();
-            if (text.equals(teamName.trim())) {
-                return i;
-            }
-        }
-        names = new ArrayList<WebElement>();
-        for (int j = 1; j <= getNumTeamRows(); j++) {
-            names.add(driver.findElementById("teamName" + j));
-        }
-        for (WebElement name : names) {
-            i++;
-            String text = name.getText().trim();
-            if (text.equals(teamName.trim())) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     public int getNumTeamRows() {
@@ -243,16 +107,6 @@ public class TeamDetailPage extends BasePage {
             return driver.findElementsByClassName("pointer").size();
         }
         return 0;
-    }
-
-    public boolean isTextPresentInApplicationsTableBody(String text) {
-        for (WebElement element : applicationsTableBody.findElements(By.xpath(".//tr/td/a"))) {
-            if (element.getText().contains(text)) {
-                lastItemFoundInApplicationsTableBodyLink = element;
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean applicationVulnerabilitiesFiltered(String appName, String level, String expected) {
@@ -267,10 +121,6 @@ public class TeamDetailPage extends BasePage {
         return isClickable("actionButton");
     }
 
-    public boolean isActionDropDownPresnt(){
-        return driver.findElementByClassName("dropdown-menu").isDisplayed();
-    }
-
     public boolean isEditDeleteLinkPresent(){
         return driver.findElementById("teamModalButton").isDisplayed();
     }
@@ -280,7 +130,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isEditDeleteModalPresent(){
-        return driver.findElementById("teamModal").isDisplayed();
+        return driver.findElementById("deleteTeamButton").isDisplayed();
     }
 
     public boolean isDeleteTeamButtonPresent(){
@@ -292,19 +142,19 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean EDClosePresent(){
-        return driver.findElementById("closeTeamModalButton").isDisplayed();
+        return driver.findElementById("closeModalButton").isDisplayed();
     }
 
     public boolean EDCloseClickable(){
-        return isClickable("closeTeamModalButton");
+        return isClickable("closeModalButton");
     }
 
     public boolean EDSavePresent(){
-        return driver.findElementById("submitTeamModal").isDisplayed();
+        return driver.findElementById("submit").isDisplayed();
     }
 
     public boolean EDSaveClickable(){
-        return isClickable("submitTeamModal");
+        return isClickable("submit");
     }
 
     public boolean EDNamePresent(){
@@ -315,18 +165,6 @@ public class TeamDetailPage extends BasePage {
         String pageName = driver.findElementById("name").getText();
         pageName = pageName.replaceAll("(.*) Action$", "$1");
         return teamName.equals(pageName);
-    }
-
-    public boolean ispermUsersLinkPresent(){
-        return driver.findElementById("userListModelButton").isDisplayed();
-    }
-
-    public boolean ispermUsersLinkClickable(){
-        return isClickable("userListModelButton");
-    }
-
-    public boolean isPermUserModalPresent(){
-        return driver.findElementById("usersModal").isDisplayed();
     }
 
     public boolean isPUEditPermLinkPresent(){
@@ -361,10 +199,6 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("leftTileReport").isDisplayed();
     }
 
-    public boolean isrightViewMoreLinkPresent(){
-        return driver.findElementById("rightViewMore").isDisplayed();
-    }
-
     public boolean isrightViewMoreLinkClickable(){
         return isClickable("rightViewMore");
     }
@@ -389,98 +223,10 @@ public class TeamDetailPage extends BasePage {
         return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
     }
 
-    public boolean isAddAppModalPresent(){
-        return driver.findElementById(getAppModalId()).isDisplayed();
-    }
-
-    public boolean isAPNameFieldPresent(){
-        return driver.findElementById(getAppModalId()).findElement(By.id("nameInput")).isDisplayed();
-    }
-
-    public boolean isAPNameFieldFunctional(){
-        int limit = Integer.parseInt(
-                driver.findElementById(getAppModalId()).findElement(By.id("nameInput")).getAttribute("maxlength"));
-
-        String s = getRandomString(limit+10);
-        driver.findElementById(getAppModalId()).findElement(By.id("nameInput")).sendKeys(s);
-        String v = driver.findElementById(getAppModalId()).findElement(By.id("nameInput")).getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isURLFieldPresent(){
-        return driver.findElementById(getAppModalId()).findElement(By.id("urlInput")).isDisplayed();
-    }
-
-    public boolean isURlFieldFunctional(){
-        int limit = Integer.parseInt(
-                driver.findElementById(getAppModalId()).findElement(By.id("urlInput")).getAttribute("maxlength"));
-
-        String s = getRandomString(limit+10);
-        driver.findElementById(getAppModalId()).findElement(By.id("urlInput")).sendKeys(s);
-        String v = driver.findElementById(getAppModalId()).findElement(By.id("urlInput")).getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isAPIDFieldPresent(){
-        return driver.findElementById(getAppModalId()).findElement(By.id("uniqueIdInput")).isDisplayed();
-    }
-
-    public boolean isAPIDFieldFunctional(){
-        int limit = Integer.parseInt(
-                driver.findElementById(getAppModalId()).findElement(By.id("uniqueIdInput")).getAttribute("maxlength"));
-
-        String s = getRandomString(limit+10);
-        driver.findElementById(getAppModalId()).findElement(By.id("uniqueIdInput")).sendKeys(s);
-        String v = driver.findElementById(getAppModalId()).findElement(By.id("uniqueIdInput")).getAttribute("value");
-        return v.equals(s.substring(0, limit));
-    }
-
-    public boolean isAPCriticalityPresent(){
-        return driver.findElementById(getAppModalId()).findElement(By.id("criticalityId")).isDisplayed();
-    }
-
-    public boolean isAPCriticalityCorrect(){
-        //          Select sel = new Select(driver.findElementById(getAppModalId()).findElement(By.id("criticalityId")));
-        //          for(int i=0; i<sel.getOptions().size(); i++)
-        //               System.out.println("option"+i+" "+sel.getOptions().get(i));
-        //          return sel.getOptions().contains("Low") && sel.getOptions().contains("Medium") && sel.getOptions().contains("High") && sel.getOptions().contains("Critical");
-        //TODO
-        return true;
-    }
-
-    public boolean isCloseAPButtonPresent(){
-        return driver.findElementById(getAppModalId())
-                .findElement(By.className("modal-footer"))
-                .findElements(By.className("btn")).get(0).isDisplayed();
-    }
-
-    //needs to be fixed with expectedConditions
-    @SuppressWarnings("static-access")
-    public boolean isCloseAPButtonClickable(){
-        driver.findElementById(getAppModalId())
-                .findElement(By.className("modal-footer"))
-                .findElements(By.className("btn")).get(0);
-        return ExpectedConditions.elementToBeClickable(By.id(getAppModalId()).className("modal-footer").className("btn")) != null;
-    }
-
-    public boolean isAddTeamAPButtonPresent(){
-        return driver.findElementById(getAppModalId()).isDisplayed();
-    }
-
-    public boolean isAddTeamAPButtonClickable(){
-        return isClickable(getAppModalId());
-    }
-
     public TeamDetailPage clickUserPermLink() {
         clickActionButton();
         sleep(3000);
         driver.findElementById("userListModelButton").click();
-        sleep(2000);
-        return new TeamDetailPage(driver);
-    }
-
-    public TeamDetailPage clickCloseUserPermModal() {
-        driver.findElementById("usersModal").findElement(By.className("btn")).click();
         sleep(2000);
         return new TeamDetailPage(driver);
     }
