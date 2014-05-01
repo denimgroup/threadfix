@@ -79,13 +79,15 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage clickUpdateButtonValid() {
-        clickModalSubmit();
-        sleep(1000);
-        return new TeamDetailPage(driver);
+        return clickModalSubmit();
+        //sleep(1000);
+        //return new TeamDetailPage(driver);
     }
 
     public TeamDetailPage clickUpdateButtonInvalid() {
-        return clickModalSubmit();
+        driver.findElementById("submit").click();
+        sleep(1000);
+        return new TeamDetailPage(driver);
     }
 
     public TeamIndexPage clickDeleteButton() {

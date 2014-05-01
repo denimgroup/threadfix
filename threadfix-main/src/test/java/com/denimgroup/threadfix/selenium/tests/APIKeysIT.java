@@ -112,7 +112,7 @@ public class APIKeysIT extends BaseIT {
 	public void longApiKeyNoteDisplayTest(){
 		String shortNote = getRandomString(8);
 		String longNoteA = getRandomString(2056);
-        String longNoteB = getRandomString(2056);
+        String longNoteB = getRandomString(254);
 		int width, newWidth;
 
         //Create API Key with a short note
@@ -125,7 +125,13 @@ public class APIKeysIT extends BaseIT {
         //Create API Key with a really long note
 		apiIndexPage = apiIndexPage.clickNewLink()
 				   .setNote(longNoteA)
-				   .clickSubmitButton();
+				   .clickInvalidSubmitButton();
+
+        assertTrue("Character limit error message should have shown.",
+                apiIndexPage.getNoteError().equals("Over 255 characters limit!"));
+
+        apiIndexPage.setNote(longNoteB)
+                .clickSubmitButton();
 
 		newWidth = apiIndexPage.getTableWidth();
 

@@ -66,6 +66,12 @@ public class ApiKeysIndexPage extends BasePage {
         return clickModalSubmit();
     }
 
+    public ApiKeysIndexPage clickInvalidSubmitButton() {
+        driver.findElementById("submit").click();
+        sleep(1000);
+        return new ApiKeysIndexPage(driver);
+    }
+
     public ApiKeysIndexPage setNote(String newNote){
         driver.findElementById("modalNote").clear();
         driver.findElementById("modalNote").sendKeys(newNote);
@@ -102,6 +108,10 @@ public class ApiKeysIndexPage extends BasePage {
 	public boolean isCorrectLength(String note){
 		return driver.findElementById("note" + note).getText().trim().length()<=255;
 	}
+
+    public String getNoteError() {
+        return driver.findElementById("lengthLimitError").getText();
+    }
 	
 	public int getTableWidth(){
 		return driver.findElementById("table").getSize().width;
