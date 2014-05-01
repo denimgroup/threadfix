@@ -96,7 +96,7 @@ public class ApplicationIT extends BaseIT {
 		String longInputUrl = "http://" + stringBuilder.toString();
 		
 		String emptyError = "Name is required.";
-        String notValidURl = "Not a valid URL";
+        String notValidURl = "URL is invalid.";
 		
 		String emptyString = "";
 		String whiteSpace = "     ";

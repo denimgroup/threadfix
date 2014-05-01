@@ -229,7 +229,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public String getUrlErrorMessage() {
-        return driver.findElementById("url.errors").getText();
+        return driver.findElementById("applicationUrlInputInvalidUrlError").getText();
     }
 
     public boolean isAppPresent(String appName) {
