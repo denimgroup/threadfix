@@ -71,8 +71,8 @@ public class UserIT extends BaseIT {
                 userIndexPage.getRequiredNameError().equals("Name is required."));
         assertTrue("Password is required error was not present.",
                 userIndexPage.getPasswordRequiredError().equals("Password is required."));
-        assertTrue("Confirm Password is required erro was not present.",
-                userIndexPage.getConfirmPasswordRequiredError().equals("Confrim Password is required."));
+        assertTrue("Confirm Password is required error was not present.",
+                userIndexPage.getConfirmPasswordRequiredError().equals("Confirm Password is required."));
 
         // Test length
         userIndexPage.enterName("Test User",null);
@@ -397,7 +397,7 @@ public class UserIT extends BaseIT {
 	@Test
 	public void testPasswordChangeValidation(){
 		String baseUserName = "passwordChangeValidation";
-		DashboardPage dashboardPage = loginPage.login("user", "TestPassword")
+		DashboardPage dashboardPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
 				.enterName(baseUserName,null)
