@@ -79,7 +79,8 @@ public class UserChangePasswordPage extends BasePage {
 	}
 	
 	public String getErrorText(String path) {
-		return driver.findElementById(path + ".errors").getText();
+        String toReturn = driver.findElementById(path).getText();
+		return toReturn;
 	}
 
     public String getPasswordRequiredError() {
