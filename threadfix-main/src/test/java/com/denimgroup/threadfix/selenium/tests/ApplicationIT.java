@@ -52,7 +52,7 @@ public class ApplicationIT extends BaseIT {
 				.addNewApplication(teamName, appName, urlText, "Low")
 				.saveApplication();
 
-        assertTrue("The application was not added properly.", teamIndexPage.isAppPresent(appName));
+        assertTrue("The application was not added properly.", teamIndexPage.isAppPresent(teamName, appName));
 	}
 
     @Test
@@ -225,7 +225,7 @@ public class ApplicationIT extends BaseIT {
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(appName2));
+        assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(teamName,appName2));
     }
 
 	//Validation Test
