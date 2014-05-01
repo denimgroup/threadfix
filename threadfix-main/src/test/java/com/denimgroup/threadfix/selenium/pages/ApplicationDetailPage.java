@@ -214,7 +214,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameError() {
-        return driver.findElementByClassName("applicationNameInputNameError").getText();
+        return driver.findElementById("applicationNameInputNameError").getText();
     }
 
     public String getUrlError() {
@@ -606,11 +606,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isManualFindingCloseButtonPresent() {
-        return driver.findElementById("closeManualFindingModalButton").isDisplayed();
+        return driver.findElementById("closeModalButton").isDisplayed();
     }
 
     public boolean isManualFindingCloseButtonClickable() {
-        return isClickable("closeManualFindingModalButton");
+        return isClickable("closeModalButton");
     }
 
     public boolean isScanDeleted() {

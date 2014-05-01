@@ -104,7 +104,7 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 	
 	public int getTableWidth(){
-		return driver.findElementById("tableDiv").getSize().width;
+		return driver.findElementById("table").getSize().width;
 	}
 	
 

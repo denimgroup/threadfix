@@ -482,4 +482,18 @@ public abstract class BasePage {
 
         return (T) this;
     }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickModalCancel() {
+        return (T) clickModalSubmitInvalid(this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickModalCancel(Class<T> targetClass) {
+        driver.findElementById("closeModalButton").click();
+
+        assertTrue("Close button wasn't present.", driver.findElementsById("closeModalbutton").size() != 0);
+
+        return (T) this;
+    }
 }
