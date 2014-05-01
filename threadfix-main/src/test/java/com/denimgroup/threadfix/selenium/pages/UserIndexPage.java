@@ -185,12 +185,20 @@ public class UserIndexPage extends BasePage {
         return returnval;
     }
 	
-	public String getPasswordError(){
+	public String getPasswordLengthError(){
 		return driver.findElementById("password.error.length").getText().trim();
 	}
 
     public String getPasswordMatchError(){
         return driver.findElementById("password.error.match").getText().trim();
+    }
+
+    public String getPasswordRequiredError() {
+        return driver.findElementById("password.error.required").getText().trim();
+    }
+
+    public String getConfirmPasswordRequiredError() {
+        return driver.findElementById("confirmPassword.error").getText().trim();
     }
 	
 	public UserIndexPage clickCancel(String name){

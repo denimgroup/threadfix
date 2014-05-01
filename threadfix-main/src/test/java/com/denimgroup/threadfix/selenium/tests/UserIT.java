@@ -65,7 +65,13 @@ public class UserIT extends BaseIT {
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         sleep(5000);
-        assertTrue("Password error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
+
+        assertTrue("Name is required error was not present.",
+                userIndexPage.getRequiredNameError().equals("Name is required."));
+        assertTrue("Password is required error was not present.",
+                userIndexPage.getPasswordRequiredError().equals("Password is required."));
+        assertTrue("Confirm Password is required erro was not present.",
+                userIndexPage.getConfirmPasswordRequiredError().equals("Confrim Password is required."));
 
         // Test length
         userIndexPage.enterName("Test User",null);
@@ -75,7 +81,7 @@ public class UserIT extends BaseIT {
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 
-        assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("Password has a minimum length of 12."));
+        assertTrue("Password length error not present", userIndexPage.getPasswordLengthError().equals("8 characters needed"));
 
         // Test non-matching passwords
         userIndexPage.enterName("new name",null);
@@ -257,7 +263,7 @@ public class UserIT extends BaseIT {
 									.clickAddNewUserBtn();
 
         sleep(5000);
-		assertTrue("Password length error not present", userIndexPage.getPasswordError().equals("8 characters needed"));
+		assertTrue("Password length error not present", userIndexPage.getPasswordLengthError().equals("8 characters needed"));
 
     }
 
@@ -305,10 +311,8 @@ public class UserIT extends BaseIT {
 				.setConfirmPassword("password1234")
 				.clickUpdateInvalid();
 
-		assertTrue("Incorrect password error not present",
-				changePasswordPage.getErrorText("currentPassword")
-				.contains("That was not the correct password."));
-
+        assertTrue("Password is required error was not present.",
+                changePasswordPage.getPasswordRequiredError().equals("Password is required."));
 		// New Pwd
 		changePasswordPage = changePasswordPage.setCurrentPassword("password")
 				.setNewPassword("                     ")

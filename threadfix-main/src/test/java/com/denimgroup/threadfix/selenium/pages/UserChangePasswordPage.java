@@ -81,6 +81,10 @@ public class UserChangePasswordPage extends BasePage {
 	public String getErrorText(String path) {
 		return driver.findElementById(path + ".errors").getText();
 	}
+
+    public String getPasswordRequiredError() {
+        return driver.findElementById("passwordRequiredError").getText();
+    }
 	
 	public boolean isSaveSuccessful(){
 		return driver.findElementByClassName("alert-success").getText().trim().contains("The password change was successful");
