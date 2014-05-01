@@ -12,15 +12,6 @@
 
 	<h2>Applications</h2>
 
-    <%--<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">--%>
-        <%--<div id="myTeamModal" class="modal hide fade" tabindex="-1"--%>
-                 <%--role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-            <%--<div ng-show='teams' id="formDiv">--%>
-                <%--<%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</security:authorize>--%>
-
     <div ng-controller="ApplicationsIndexController">
 
         <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>

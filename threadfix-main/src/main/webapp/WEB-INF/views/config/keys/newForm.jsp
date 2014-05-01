@@ -11,7 +11,7 @@
                 <tr>
                     <td>Note (optional) </td>
                     <td class="inputValue">
-                        <input id="note" name="modalNote" ng-model="object.note" type="text"
+                        <input id="modalNote" name="note" ng-model="object.note" type="text"
                                focus-on="focusInput" size="70" ng-maxlength="255" />
                     </td>
                     <td>
