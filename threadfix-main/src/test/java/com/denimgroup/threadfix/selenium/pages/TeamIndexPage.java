@@ -127,7 +127,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage addNewTeam() {
-        driver.findElementById("addApplicationButton").click();
+        driver.findElementById("addTeamButton").click();
 
         String teamName = driver.findElementByClassName("alert-success").getText();
         teamName = teamName.substring(7,(teamName.length()-31));
@@ -138,7 +138,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage addNewTeamInvalid() {
-        driver.findElementById("submitTeamModal").click();
+        driver.findElementById("addTeamButton").click();
         sleep(1000);
         return setPage();
     }
