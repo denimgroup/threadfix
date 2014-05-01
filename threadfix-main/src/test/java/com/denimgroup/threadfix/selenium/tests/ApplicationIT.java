@@ -185,7 +185,7 @@ public class ApplicationIT extends BaseIT {
 
 		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(appName2)
-				.setUrlInput(urlText2)
+				//.setUrlInput(urlText2)
 				.clickUpdateApplicationButton();
 		
 		assertTrue("The name was not preserved correctly on Application Detail Page.",

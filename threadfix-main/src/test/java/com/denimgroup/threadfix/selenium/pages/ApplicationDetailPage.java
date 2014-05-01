@@ -177,7 +177,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickScansTab() {
         sleep(1000);
-        driver.findElementByLinkText("scanTab").click();
+        driver.findElementByLinkText("1 Scan").click();
         waitForElement(driver.findElementByLinkText("Delete Scan"));
         return new ApplicationDetailPage(driver);
     }
