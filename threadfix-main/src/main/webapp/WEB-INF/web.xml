@@ -77,7 +77,7 @@
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
         		/configuration/defaults,/configuration/filters,/configuration/scanqueue,/scanplugin/index,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/jasper/*,/rest/*,
-        		regex ^/rest/,
+        		regex ^/rest/[a-zA-Z0-9/]*$,
         		regex ^/jasperimage/[0-9a-zA-Z=]+/[0-9a-zA-Z_]+$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_cwe$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_url$,
