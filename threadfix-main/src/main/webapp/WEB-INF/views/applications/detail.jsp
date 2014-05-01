@@ -47,7 +47,7 @@
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
             <c:if test="${isEnterprise}">
-                <tab ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
+                <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
                     <!-- TODO refactor this nesting -->
                     <c:if test="${ canManageApplications }">
                         <div style="margin-top:10px;margin-bottom:7px;">
@@ -57,13 +57,11 @@
 
                     <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
                 </tab>
-                <tab ng-controller="ScheduledScanTabController" heading="{{ heading }}">
+                <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}">
                     <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
                 </tab>
             </c:if>
         </tabset>
-
-
     </div>
 
     <%@ include file="forms/uploadScanForm.jsp"%>
