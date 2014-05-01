@@ -90,7 +90,7 @@
                 <td class="right-align">Source Code URL</td>
                 <td class="left-align" >
                     <input name="repositoryUrl"
-                           type='url' id="repositoryUrlInput"
+                           type='url' id="repositoryUrl"
                            maxlength="255" ng-model="object.repositoryUrl"/>
                     <span id="sourceUrlLengthError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.maxlength">Maximum length is 255.</span>
                     <span id="sourceUrlValidError" class="errors" ng-show="form.repositoryUrl.$dirty && form.repositoryUrl.$error.url">URL is invalid.</span>

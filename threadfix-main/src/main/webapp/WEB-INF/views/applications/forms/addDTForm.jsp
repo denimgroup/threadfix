@@ -9,7 +9,7 @@
             <tr class="left-align">
                 <td>Defect Tracker</td>
                 <td class="inputValue">
-                    <select ng-model="object.defectTracker.id" id="defectTrackerTypeSelect" name="defectTrackerType.id">
+                    <select ng-model="object.defectTracker.id" id="defectTrackerId" name="defectTrackerType.id">
                         <option ng-repeat="tracker in config.defectTrackerList"
                                 ng-selected="object.defectTracker.id === tracker.id"
                                 value="{{ tracker.id }}">
