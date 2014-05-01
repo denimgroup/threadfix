@@ -24,7 +24,7 @@
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
-        <table ng-hide="loading" class="table table-striped">
+        <table id="defectTrackerTableBody" ng-hide="loading" class="table table-striped">
             <thead>
                 <tr>
                     <th class="medium first">Name</th>

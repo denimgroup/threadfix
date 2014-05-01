@@ -33,46 +33,46 @@
             <tr>
                 <td>Critical</td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="true"/>
+                    <input id="showCritical1" type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="true"/>
                 </td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="false"/>
+                    <input id="showCritical2" type="radio" ng-model="severityFilter.showCritical" ng-disabled="!severityFilter.enabled" name="showCritical" value="false"/>
                 </td>
             </tr>
             <tr>
                 <td>High</td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="true"/>
+                    <input id="showHigh1" type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="true"/>
                 </td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="false"/>
+                    <input id="showHigh2" type="radio" ng-model="severityFilter.showHigh" ng-disabled="!severityFilter.enabled" name="showHigh" value="false"/>
                 </td>
             </tr>
             <tr>
                 <td>Medium</td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="true"/>
+                    <input id="showMedium1" type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="true"/>
                 </td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="false"/>
+                    <input id="showMedium2" type="radio" ng-model="severityFilter.showMedium" ng-disabled="!severityFilter.enabled" name="showMedium" value="false"/>
                 </td>
             </tr>
             <tr>
                 <td>Low</td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="true"/>
+                    <input id="showLow1" type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="true"/>
                 </td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="false"/>
+                    <input id="showLow2" type="radio" ng-model="severityFilter.showLow" ng-disabled="!severityFilter.enabled" name="showLow" value="false"/>
                 </td>
             </tr>
             <tr>
                 <td>Info</td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showInfo" ng-disabled="!severityFilter.enabled" name="showInfo" value="true"/>
+                    <input id="showInfo1" type="radio" ng-model="severityFilter.showInfo" ng-disabled="!severityFilter.enabled" name="showInfo" value="true"/>
                 </td>
                 <td class="centered">
-                    <input type="radio" ng-model="severityFilter.showInfo"  ng-disabled="!severityFilter.enabled" name="showInfo" value="false"/>
+                    <input id="showInfo2" type="radio" ng-model="severityFilter.showInfo"  ng-disabled="!severityFilter.enabled" name="showInfo" value="false"/>
                 </td>
             </tr>
         </tbody>

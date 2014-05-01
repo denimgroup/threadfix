@@ -18,7 +18,8 @@
             <tr>
                 <td>Source Vulnerability Type</td>
                 <td>
-                    <input required style="z-index:4000;width:320px"
+                    <input id="sourceGenericVulnerability.name"
+                           required style="z-index:4000;width:320px"
                            type="text"
                            name = "sourceGenericVulnerabilityName"
                            ng-model="object.sourceGenericVulnerability.name"
@@ -33,7 +34,7 @@
                     Target Severity Type
                 </td>
                 <td>
-                    <select required style="width:320px" name="targetGenericSeverityId" ng-model="object.targetGenericSeverity.id">
+                    <select id="targetGenericSeverity.id" required style="width:320px" name="targetGenericSeverityId" ng-model="object.targetGenericSeverity.id">
                         <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="{{ severity.id }}"> {{ severity.name }} </option>
                     </select>
                     <span class="errors" ng-show="form.targetGenericSeverityId.$dirty && form.targetGenericSeverityId.$error.required">Severity is required.</span>
