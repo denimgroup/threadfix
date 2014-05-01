@@ -1,5 +1,5 @@
 
-<tab ng-controller="DocumentFormController" heading="{{ heading }}">
+<tab id="documentsTab" ng-controller="DocumentFormController" heading="{{ heading }}">
 
     <c:if test="${ canManageApplications }">
         <div style="margin-top:10px;margin-bottom:7px;">

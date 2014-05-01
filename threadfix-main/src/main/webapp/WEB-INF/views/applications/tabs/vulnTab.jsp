@@ -1,4 +1,5 @@
-<tab ng-controller="VulnTableController"
+<tab id='vulnTab'
+     ng-controller="VulnTableController"
      ng-init="numVulns = <c:out value="${numVulns}"/>"
      heading="{{ heading }}">
 
