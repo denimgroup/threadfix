@@ -163,7 +163,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getWafText() {
-        waitForElement(driver.findElementById("wafText"));
+        waitForElement(driver.findElementById("wafName"));
         return driver.findElementById("wafText").getText();
     }
 
@@ -368,6 +368,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage setTeam(String team) {
         new Select(driver.findElementById("organizationId")).selectByVisibleText(team);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -452,7 +453,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isDefectTrackerAttached() {
-        if (driver.findElementById("defectTrackerText").isEnabled())
+        if (driver.findElementById("defectTrackerName").isEnabled())
             return true;
         return false;
     }
