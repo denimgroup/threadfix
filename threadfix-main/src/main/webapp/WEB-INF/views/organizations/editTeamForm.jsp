@@ -19,7 +19,7 @@
                     <td>Name</td>
                     <td>
                         <input id="teamNameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
-                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                        <span id="requiredError" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                     </td>
                 </tr>
             </table>
