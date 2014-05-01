@@ -67,13 +67,13 @@ public class ApiKeysIndexPage extends BasePage {
     }
 
     public ApiKeysIndexPage setNote(String newNote){
-        driver.findElementById("modalnote").clear();
-        driver.findElementById("modalnote").sendKeys(newNote);
+        driver.findElementById("modalNote").clear();
+        driver.findElementById("modalNote").sendKeys(newNote);
         return this;
     }
 
     public ApiKeysIndexPage setRestricted() {
-       driver.findElementById("modalrestricted").click();
+       driver.findElementById("modalRestricted").click();
 
         return new ApiKeysIndexPage(driver);
     }
@@ -91,8 +91,8 @@ public class ApiKeysIndexPage extends BasePage {
 	}
 
     public boolean isAPINotePresent(String note) {
-        WebElement element  = driver.findElementById("note" + note);
-        return element != null;
+        List<WebElement> elements  = driver.findElementsById("note" + note);
+        return elements != null && elements.size() > 0;
     }
 	
 	public boolean isAPIRestricted(String note){

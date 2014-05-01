@@ -25,10 +25,8 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
@@ -145,17 +143,6 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-    @Deprecated
-    public TeamIndexPage expandTeamRowByIndex(String teamName) {
-        driver.findElementById("teamName" + teamName).click();
-        try{
-            populateAppList(teamName);
-        }catch(NoSuchElementException e){
-            e.printStackTrace();
-        }
-        return setPage();
-    }
-
     public TeamIndexPage expandTeamRowByName(String teamName) {
         driver.findElementById("teamCaret" + teamName).click();
         return setPage();
@@ -186,11 +173,6 @@ public class TeamIndexPage extends BasePage {
         }
     }
 
-
-    public boolean teamAddedToTable(String name) {
-        return driver.findElementById("teamName" + name) != null;
-    }
-
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
         driver.findElementById("applicationLink" + teamName + "-" + appName).click();
         return new ApplicationDetailPage(driver);
@@ -199,17 +181,6 @@ public class TeamIndexPage extends BasePage {
     public TeamIndexPage clickAddNewApplication(String teamName) {
         driver.findElementById("addApplicationModalButton" + teamName).click();
         return setPage();
-    }
-
-    public String getAppModalId(String teamName) {
-        String appModalIdHref = driver.findElementById("addApplicationModalButton" + teamName).getAttribute("href");
-        return appModalIdHref.replaceAll(".*#(myAppModal[0-9]+)$","$1");
-    }
-
-    public String getAppModalIdNumber(String index) {
-        String appModalIdHref = driver.findElementById("addApplicationModalButton" + index).getAttribute("href");
-        String appModalIdNumber = appModalIdHref.replaceAll(".*#myAppModal([0-9]+)$","$1");
-        return appModalIdNumber;
     }
 
     public TeamIndexPage setApplicationName(String appName, String teamName) {
@@ -240,19 +211,10 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-
-    public TeamIndexPage clickCloseAddTeamModal(){
-        driver.findElementById("closeTeamModalButton").click();
-        sleep(1000);
-        return new TeamIndexPage(driver);
-    }
-
-
     public TeamIndexPage clickCloseAddAppModal(){
         driver.findElementByLinkText("Close").click();
         return new TeamIndexPage(driver);
     }
-
 
     public TeamIndexPage addNewApplication(String teamName, String appName,String url, String criticality) {
         clickAddNewApplication(teamName);
@@ -274,27 +236,11 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByLinkText(appName).isDisplayed();
     }
 
-    public TeamIndexPage clickUploadScan(String teamName,String appName) {
-        driver.findElementById("uploadScanModalLink" + teamName + "-" + appName).click();
-        waitForElement(driver.findElementById("submitScanModal" + teamName + "-" + appName));
-        return setPage();
-    }
-
     public TeamIndexPage setPage(){
         TeamIndexPage page = new TeamIndexPage(driver);
         page.modalNum = modalNum;
         page.appModalId = appModalId;
         return page;
-    }
-
-    public TeamIndexPage setFileInput(String teamName, String appName, String file) {
-        driver.findElementById("fileInput" + teamName + "-" + appName).sendKeys(file);
-        return setPage();
-    }
-
-    public ApplicationDetailPage clickUploadScanButton(String teamName, String appName) {
-        driver.findElementById("submitScanModal" + teamName + "-" + appName).click();
-        return new ApplicationDetailPage(driver);
     }
 
     public boolean isTeamPresent(String teamName) {
@@ -368,157 +314,12 @@ public class TeamIndexPage extends BasePage {
 	public boolean isCollapseAllBtnClickable(){
         return isClickable("collapseAllButton");
 	}
-	
-	public boolean isAddAppBtnPresent(String teamName){
-        return driver.findElementById("addApplicationModalButton" + teamName).isDisplayed();
-	}
-	
-	public boolean isAddAppBtnClickable(String teamName){
-		return isClickable("addApplicationModalButton" + teamName);
-	}
-	
-	public boolean isViewTeamLinkPresent(String teamName){
-		return driver.findElementById("organizationLink" + teamName).isDisplayed();
-	}
-	
-	public boolean isViewTeamLinkClickable(String teamName){
-		return isClickable("organizationLink" + teamName);
-	}
-	
-	public boolean isAppLinkPresent(String appName){
-		return driver.findElementByLinkText(appName).isDisplayed();
-	}
-	
-	public boolean isAppLinkClickable(String appName){
-		return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
-	}
-	
-	public boolean isUploadScanPresent(String teamName, String appName){
-		return driver.findElementById("uploadScanModalLink"+ teamName + "-" + appName).isDisplayed();
-	}
-	
-	public boolean isUploadScanClickable(String teamName, String appName){
-		return ExpectedConditions.elementToBeClickable(By.linkText("uploadScanModalLink"+ teamName + "-" + appName)) != null;
-	}
 
     // TODO this needs to be changed so that it will use the img id and not a path
     public boolean isGraphDisplayed(String teamName, String appName) {
         modalNum = modalNumber(teamName, appName);
         String temp = "/threadfix/jasperimage/pointInTim" + modalNum + "/img_0_0_0";
         return driver.findElementByXPath(temp).isDisplayed();
-    }
-	
-	public boolean isAddTeamModalPresent(){
-		return driver.findElementById("myTeamModal").isDisplayed();
-	}
-	
-	public boolean isTeamModalNameFieldPresent(){
-		return driver.findElementById("teamNameInput").isDisplayed();
-	}
-	
-	public boolean isTeamModalNameFieldFunctional(){
-		int limit = Integer.parseInt(driver.findElementById("teamNameInput").getAttribute("maxlength"));
-		String s = getRandomString(limit+10);
-		driver.findElementById("teamNameInput").sendKeys(s);
-		String v = driver.findElementById("teamNameInput").getAttribute("value");
-		return v.equals(s.substring(0, limit));
-	}
-	
-	public boolean isCloseTeamModalButtonPresent(){
-		return driver.findElementById("closeTeamModalButton").isDisplayed();
-	}
-	
-	public boolean isCloseTeamModalButtonClickable(){
-        return isClickable("closeTeamModalButton");
-	}
-	
-	public boolean isAddTeamButtonPresent(){
-		return driver.findElementById("submitTeamModal").isDisplayed();
-	}
-	
-	public boolean isAddTeamButtonClickable(){
-        return isClickable("submitTeamModal");
-	}
-	
-	public boolean isAddAppModalPresent(String teamName){
-		return driver.findElementById(getAppModalId(teamName)).isDisplayed();
-	}
-	
-	public boolean isAppNameFieldPresent(String teamName){
-		return driver.findElementById("nameInput" + getAppModalIdNumber(teamName)).isDisplayed();   //get app modal
-	}
-	
-	public boolean isAPNameFieldFunctional(String teamName){
-		int limit = Integer.parseInt(driver.findElementById("nameInput" + getAppModalIdNumber(teamName))
-                .getAttribute("maxlength"));
-		
-		String s = getRandomString(limit+10);
-        driver.findElementById("nameInput" + getAppModalIdNumber(teamName)).sendKeys(s);
-		String v = driver.findElementById("nameInput" + getAppModalIdNumber(teamName)).getAttribute("value");
-		return v.equals(s.substring(0, limit));
-	}
-	
-	public boolean isUrlFieldPresent(String teamName){
-        return driver.findElementById("urlInput" + getAppModalIdNumber(teamName)).isDisplayed();
-	}
-	
-	public boolean isUrlFieldFunctional(String teamName){
-		int limit = Integer.parseInt(driver.findElementById("urlInput" + getAppModalIdNumber(teamName))
-                .getAttribute("maxlength"));
-		
-		String s = getRandomString(limit+10);
-        driver.findElementById("urlInput" + getAppModalIdNumber(teamName)).sendKeys(s);
-		String v = driver.findElementById("urlInput" + getAppModalIdNumber(teamName)).getAttribute("value");
-		return v.equals(s.substring(0, limit));
-	}
-	
-	public boolean isAPIDFieldPresent(String teamName){
-        return driver.findElementById("uniqueIdInput" + getAppModalIdNumber(teamName)).isDisplayed();
-	}
-	
-	public boolean isApplicationModalTeamIDFieldFunctional(String teamName){
-		int limit = Integer.parseInt(driver.findElementById("uniqueIdInput" + getAppModalIdNumber(teamName))
-                .getAttribute("maxlength"));
-		
-		String s = getRandomString(limit+10);
-        driver.findElementById("uniqueIdInput" + getAppModalIdNumber(teamName)).sendKeys(s);
-		String valueString = driver.findElementById("uniqueIdInput" + getAppModalIdNumber(teamName)).getAttribute("value");
-		return valueString.equals(s.substring(0, limit));
-	}
-	
-	public boolean isApplicationModalCriticalityPresent(String teamName){
-        return driver.findElementById("criticalityId" + getAppModalIdNumber(teamName)).isDisplayed();
-	}
-	
-	public boolean isApplicationModalCriticalityCorrect(String teamName){
-//		Select sel = new Select(driver.findElementById(getAppModalId(teamName)).findElement(By.id("criticalityId")));
-//		for(int i=0; i<sel.getOptions().size(); i++)
-//			System.out.println("option"+i+" "+sel.getOptions().get(i));
-//		return sel.getOptions().contains("Low") && sel.getOptions().contains("Medium") && sel.getOptions().contains("High") && sel.getOptions().contains("Critical");
-        //TODO
-        return true;
-    }
-
-    public boolean isCloseApplicationModalButtonPresent(String teamName){
-        return driver.findElementById(getAppModalId(teamName))
-                .findElement(By.className("modal-footer"))
-                .findElements(By.className("btn")).get(0).isDisplayed();
-    }
-
-    // The static warning here means something is wrong
-    public boolean isCloseApplicationModalButtonClickable(String teamName){
-        driver.findElementById(getAppModalId(teamName))
-                .findElement(By.className("modal-footer"))
-                .findElements(By.className("btn")).get(0);
-        return ExpectedConditions.elementToBeClickable(By.id(getAppModalId(teamName)).className("modal-footer").className("btn")) != null;
-    }
-
-    public boolean isAddTeamAPButtonPresent(String teamName) {
-        return driver.findElementById(getAppModalId(teamName)).isDisplayed();
-    }
-
-    public boolean isAddTeamAPButtonClickable(String teamName){
-        return ExpectedConditions.elementToBeClickable(By.id(getAppModalId(teamName))) != null;
     }
 
     public boolean teamVulnerabilitiesFiltered(String teamName, String level, String expected) {

@@ -55,8 +55,7 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage clickAddFilter() {
-        driver.findElementById("submitFilterModalCreate").click();
-        return new FilterPage(driver);
+        return clickModalSubmit();
     }
 
     public FilterPage addVulnerabilityFilter(String vulnerabilityType, String severity) {

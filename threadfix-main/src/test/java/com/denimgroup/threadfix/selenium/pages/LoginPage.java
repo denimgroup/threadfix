@@ -23,14 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 
 public class LoginPage extends BasePage {
 
@@ -108,17 +104,7 @@ public class LoginPage extends BasePage {
 	public boolean isLoginButtonClickable(){
         return isClickable("login");
 	}
-	
-	public boolean isRememberMeCheckBoxPresent(){
-		return driver.findElementByName("_spring_security_remember_me").isDisplayed();
-	}
-	
-	public boolean isRememeberMeCheckBoxSelected(){
-		return driver.findElementByName("_spring_security_remember_me").isSelected();
-	}
-	
-	
-	
+
 	/*----------------set functions----------------*/
 	public LoginPage setUsername(String user) {
 		driver.findElementById("username").sendKeys(user);
@@ -142,9 +128,5 @@ public class LoginPage extends BasePage {
 		waitForElement(driver.findElementById("main-content"));
 		return new DashboardPage(driver);
 	}
-	
-	public LoginPage checkRememberCheckbox() {
-		driver.findElementByName("_spring_security_remember_me").click();
-		return this;
-	}
+
 }
