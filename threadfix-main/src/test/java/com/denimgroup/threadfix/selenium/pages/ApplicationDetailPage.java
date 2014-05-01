@@ -131,6 +131,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage addWaf(String wafName) {
         new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
+        sleep(2000);
         driver.findElementById("submit").click();
         return new ApplicationDetailPage(driver);
     }
@@ -154,6 +155,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickEditDeleteBtn() {
         clickActionButton();
+        sleep(2000);
         waitForElement(driver.findElementById("editApplicationModalButton"));
         driver.findElementById("editApplicationModalButton").click();
         waitForElement(driver.findElementById("deleteLink"));

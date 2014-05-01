@@ -114,7 +114,7 @@ public class WafIndexPage extends BasePage {
 	}
 
 	public WafIndexPage clickCloseWafModal(){
-		driver.findElementById("closeModalButton").click();
+		driver.findElementByLinkText("Close").click();
 		sleep(1000);
 		return new WafIndexPage(driver);
 	}

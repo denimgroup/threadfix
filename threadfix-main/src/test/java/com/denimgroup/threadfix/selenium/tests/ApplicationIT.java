@@ -346,7 +346,9 @@ public class ApplicationIT extends BaseIT {
                 .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .clickAddWaf()
-                .addWaf(wafName);
+                .addWaf(wafName)
+                .clickUpdateApplicationButton();
+
 
 		// Check that it also appears on the WAF page.
         WafRulesPage wafDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
@@ -363,8 +365,7 @@ public class ApplicationIT extends BaseIT {
                 .clickDeleteWaf(wafName);
 		
 		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
-		wafDetailPage = wafIndexPage.clickCloseWafModal()
-                .clickOrganizationHeaderLink()
+		wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickDeleteButton()
                 .clickWafsHeaderLink()

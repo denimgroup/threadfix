@@ -91,7 +91,7 @@ public class TeamDetailPage extends BasePage {
     public TeamIndexPage clickDeleteButton() {
         clickEditOrganizationLink();
         sleep(500);
-        driver.findElementById("deleteLink").click();
+        driver.findElementById("deleteTeamButton").click();
         Alert alert = driver.switchTo().alert();
         alert.accept();
         sleep(1000);
