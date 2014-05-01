@@ -32,7 +32,7 @@
             <td id="teamCaret{{ team.name }}" ng-click="toggle(team)">
                 <span ng-class="{ expanded: team.expanded }" class="caret-right"></span>
             </td>
-            <td ng-click="toggle(team)" id="teamName{{ $index }}">
+            <td ng-click="toggle(team)" id="teamName{{ team.name }}">
                 <div style="word-wrap: break-word;width:300px;text-align:left;">{{ team.name }}</div>
             </td>
             <td class="centered" ng-click="toggle(team)" id="numTotalVulns{{ team.name }}">{{ team.totalVulnCount }}</td>
