@@ -136,11 +136,11 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isDeleteTeamButtonPresent(){
-        return driver.findElementById("deleteLink").isDisplayed();
+        return driver.findElementById("deleteTeamButton").isDisplayed();
     }
 
     public boolean EDDeleteClickable(){
-        return isClickable("deleteLink");
+        return isClickable("deleteTeamButton");
     }
 
     public boolean EDClosePresent(){

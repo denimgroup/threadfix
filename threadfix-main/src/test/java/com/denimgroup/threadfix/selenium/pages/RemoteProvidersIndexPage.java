@@ -97,6 +97,12 @@ public class RemoteProvidersIndexPage extends BasePage {
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public RemoteProvidersIndexPage clickSubmitWait() {
+        driver.findElementById("submit").click();
+        sleep(6000);
+        return new RemoteProvidersIndexPage(driver);
+    }
 	
 	public RemoteProvidersIndexPage saveQualys(){
 		driver.findElementById("submitRemoteProviderFormButton3").click();
