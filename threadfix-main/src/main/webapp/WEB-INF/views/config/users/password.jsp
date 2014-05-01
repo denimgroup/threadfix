@@ -40,7 +40,7 @@
                     <tr>
                         <td>New Password</td>
                         <td class="inputValue">
-                            <input password-validate="{{ user.passwordConfirm }}" ng-model="user.unencryptedPassword" required type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
+                            <input ng-trim="false" password-validate="{{ user.passwordConfirm }}" ng-model="user.unencryptedPassword" required type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
                             <span id="charactersRequiredError" class="errors" ng-show="lengthRemaining">{{ lengthRemaining }} characters needed</span>
                             <span id="passwordMatchError" class="errors" ng-show="form.unencryptedPassword.$dirty && form.unencryptedPassword.$error.matches">Passwords do not match.</span>
                             <c:if test="${ not empty password }">
