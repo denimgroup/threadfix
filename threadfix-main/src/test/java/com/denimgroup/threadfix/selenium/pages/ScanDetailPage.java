@@ -95,7 +95,7 @@ public class ScanDetailPage extends BasePage{
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
 	public FindingDetailPage clickViewFinding(int row){
-		driver.findElementById("mappedVulnType"+row).click();
+		driver.findElementById("mappedVulnType").click();
 		return new FindingDetailPage(driver);
 	}
 	
