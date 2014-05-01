@@ -92,11 +92,11 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
-                .clickModalSubmit();
+                .saveVera();
 
         sleep(5000);
         assertTrue("Veracode was not configured properly",
-                remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
 

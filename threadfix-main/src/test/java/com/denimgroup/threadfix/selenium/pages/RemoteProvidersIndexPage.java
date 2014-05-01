@@ -117,9 +117,9 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage saveVera(){
-		driver.findElementById("submitRemoteProviderFormButton2").click();
+		driver.findElementById("submit").click();
         sleep(6000);
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		waitForElement(driver.findElementById("configure1"));
         sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
