@@ -84,21 +84,12 @@ public class ApplicationIT extends BaseIT {
 	@Test 
 	public void testCreateBasicApplicationValidation() {
         String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
-		String appName;
-		String urlText = "htnotaurl.com";
-
-		StringBuilder stringBuilder = new StringBuilder("");
-		for (int i = 0; i < Application.NAME_LENGTH + 50; i++) { stringBuilder.append('i'); }
-		String longInputName = stringBuilder.toString();
-		
-		stringBuilder = new StringBuilder("");
-		for (int i = 0; i < Application.URL_LENGTH + 50; i++) { stringBuilder.append('i'); }
-		String longInputUrl = "http://" + stringBuilder.toString();
 		
 		String emptyError = "Name is required.";
         String notValidURl = "URL is invalid.";
 		
 		String emptyString = "";
+        String brokenURL = "asdckjn.com";
 		String whiteSpace = "     ";
 
         DatabaseUtils.createTeam(teamName);
@@ -117,7 +108,7 @@ public class ApplicationIT extends BaseIT {
 		teamIndexPage = teamIndexPage.clickCloseAddAppModal()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .addNewApplication(teamName, whiteSpace, whiteSpace, "Low")
+                .addNewApplication(teamName, whiteSpace, brokenURL, "Low")
                 .saveApplicationInvalid();
 
 		assertTrue("The correct error did not appear for the name field.",
@@ -125,41 +116,26 @@ public class ApplicationIT extends BaseIT {
 
 		assertTrue("The correct error did not appear for the url field.", 
 				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
-		
-		// Test URL format
-		teamIndexPage = teamIndexPage.clickCloseAddAppModal()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .addNewApplication(teamName, "dummyApp", urlText, "Low")
-                .saveApplicationInvalid();
-		
-		assertTrue("The correct error did not appear for the url field.", 
-				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
 
-		// Test browser field length limits
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickCloseAddAppModal()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.addNewApplication(teamName, longInputName, longInputUrl, "Low")
-				.saveApplication()
-				.clickOrganizationHeaderLink()
-				.expandTeamRowByName(teamName)
-				.clickViewAppLink("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",teamName);
+    }
 
-		assertTrue("The length limit was incorrect for name.",
-				applicationDetailPage.getNameText().length() == Application.NAME_LENGTH);
-		
-		appName = applicationDetailPage.getNameText();
-		
-		// Test name duplication check
-		teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
+    @Test
+    public void testEditApplicationNameDuplication() {
+        String teamName = "teamName" + getRandomString(3);
+        String appName = "appName" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "http://dummyurl", "Low")
                 .saveApplicationInvalid();
 
         //Is this even a good?
 		assertTrue("The duplicate message didn't appear correctly.", 
-				teamIndexPage.getNameErrorMessage().contains("That name is already taken."));
+				teamIndexPage.getNameTakenErrorMessage().contains("That name is already taken."));
 	}
 
 	@Test
@@ -185,7 +161,7 @@ public class ApplicationIT extends BaseIT {
 
 		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(appName2)
-				//.setUrlInput(urlText2)
+				.setUrlInput(urlText2)
 				.clickUpdateApplicationButton();
 		
 		assertTrue("The name was not preserved correctly on Application Detail Page.",

@@ -232,6 +232,10 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById("applicationNameInputRequiredError").getText();
     }
 
+    public String getNameTakenErrorMessage() {
+        return driver.findElementById("applicationNameInputNameError").getText();
+    }
+
     public String getUrlErrorMessage() {
         return driver.findElementById("applicationUrlInputInvalidUrlError").getText();
     }

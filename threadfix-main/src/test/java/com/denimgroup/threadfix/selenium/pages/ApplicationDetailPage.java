@@ -207,9 +207,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickUpdateApplicationButton() {
-        sleep(3000);
+        sleep(5000);
         driver.findElementById("submit").click();
-        sleep(3000);
+        sleep(5000);
         return new ApplicationDetailPage(driver);
     }
 
