@@ -73,10 +73,6 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementById("closeDTModalButton").click();
 		return new DefectTrackerIndexPage(driver);
 	}
-	
-	public String getDefectTrackerName(int row){
-		return driver.findElementById("defectTrackerName"+row).getText();
-	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
@@ -102,22 +98,10 @@ public class DefectTrackerIndexPage extends BasePage {
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
 
-	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
+	public DefectTrackerIndexPage clickSaveDefectTracker() {
 		driver.findElementById("submit").click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage clickUpdateDefectTrackerButton(){
-		driver.findElementByLinkText("Update Defect Tracker").click();
-//		waitForInvisibleElement(driver.findElementByClassName("in"));
-		sleep(3000);
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage clickUpdateDefectTrackerButtonInvalid(){
-		driver.findElementByLinkText("Update Defect Tracker").click();
 		return new DefectTrackerIndexPage(driver);
 	}
 

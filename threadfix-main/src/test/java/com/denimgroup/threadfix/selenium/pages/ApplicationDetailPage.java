@@ -83,6 +83,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage selectDefectTracker(String defectTracker) {
+        waitForElement(driver.findElementById("defectTrackerId"));
         new Select(driver.findElementById("defectTrackerId"))
                 .selectByVisibleText(defectTracker);
         return new ApplicationDetailPage(driver);
