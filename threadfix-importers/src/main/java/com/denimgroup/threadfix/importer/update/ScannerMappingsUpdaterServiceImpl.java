@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -41,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@Transactional(readOnly = true)
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
 
     private ChannelVulnerabilityDao channelVulnerabilityDao;
@@ -81,8 +83,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     public List<String[]> updateChannelVulnerabilities() throws IOException, URISyntaxException {
         List<String[]> resultList = updateAllScanners();
 
-        updateUpdatedDate();
-
+//        updateUpdatedDate();
         return resultList;
     }
 
@@ -103,6 +104,77 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         return scanners;
     }
 
+    @Override
+    public List<String[]> updateGenericVulnerabilities() throws IOException, URISyntaxException {
+        List<String[]> genericResults = new ArrayList<>();
+
+        String filePath = "/mappings/genericVuln.csv";
+
+        try (InputStream genericStream = ResourceUtils.getResourceAsStream(filePath)) {
+
+            if (genericStream != null) {
+                log.info("Updating file " + filePath);
+                genericResults = updateGenericVuln(genericStream);
+            }
+        } catch (IOException e) {
+            log.error("Encountered IOException while trying to read the generic Vulnerability file");
+        }
+
+        return genericResults;
+    }
+
+    private List<String[]> updateGenericVuln(InputStream is) {
+        List<String[]> genericResults = new ArrayList<>();
+        int updatedNo = 0, addedNewNo = 0;
+        String updatedList = "", addedNewList = "";
+        try {
+            if (is != null) {
+                State state = State.NONE;
+
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
+                    String line = "";
+                    ChannelType manualChannel = channelTypeDao.retrieveByName("Manual");
+                    while ((line = br.readLine()) != null) {
+                        if (line.startsWith("type.info")) {
+                            state = State.TYPE;
+                        } else if (line.startsWith("type.vulnerabilities")) {
+                            state = State.VULNS;
+                        } else {
+                            if (state == State.VULNS) {
+                                String[] elements = line.split(CSV_SPLIT_CHARACTER);
+                                if (elements.length < 2)
+                                    log.warn("Line " + line + " information is incorrect.");
+                                else {
+                                    Integer genericIdInt = IntegerUtils.getIntegerOrNull(elements[0]);
+
+                                    if (genericIdInt == null)
+                                        log.warn("Failed to parse generic ID " + elements[0]);
+                                    else {
+
+                                        if (!isUpdateGenericVuln(genericIdInt, elements[1], manualChannel)) {
+                                            addedNewNo++;
+                                            addedNewList += (addedNewList.isEmpty()? "" : ", ") + genericIdInt;
+                                        } else {
+                                            updatedNo++;
+                                            updatedList += (updatedList.isEmpty()? "" : ", ") + genericIdInt;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    log.info("Number of generic vulnerabilites added new : " + addedNewNo + ", include " + addedNewList);
+                    log.info("Number of generic vulnerabilites updated : " + updatedNo + ", include " + updatedList);
+                }
+            }
+        } catch (IOException e) {
+            log.error("IOException thrown while attempting to search csv file.", e);
+        }
+        genericResults.add(new String[]{"New Added Vulnerability", String.valueOf(addedNewNo), addedNewList});
+        genericResults.add(new String[]{"Updated Vulnerability", String.valueOf(updatedNo), updatedList});
+        return genericResults;
+    }
+
     private DefaultConfiguration getDefaultConfiguration() {
         List<DefaultConfiguration> configurationList = defaultConfigurationDao.retrieveAll();
         DefaultConfiguration config;
@@ -115,8 +187,16 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         return config;
     }
 
-    private void updateUpdatedDate() {
-        DefaultConfiguration config = getDefaultConfiguration();
+    @Override
+    public void updateUpdatedDate() {
+//        DefaultConfiguration config = getDefaultConfiguration();
+        List<DefaultConfiguration> configurationList = defaultConfigurationDao.retrieveAll();
+        DefaultConfiguration config;
+        if (configurationList.size() == 0) {
+            config = DefaultConfiguration.getInitialConfig();
+        } else {
+            config = configurationList.get(0);
+        }
 
         config.setLastScannerMappingsUpdate(getPluginTimestamp());
 
@@ -221,7 +301,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         if (genericIdInt == null) {
             log.warn("Failed to parse generic ID " + genericId);
         } else {
-            GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(genericIdInt);
+            GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveByDisplayId(genericIdInt);
 
             if (genericVulnerability == null) {
                 log.warn("Unable to find Generic Vulnerability for GenericId " + genericId);
@@ -238,6 +318,46 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         }
 
         return changed;
+    }
+
+//    @Transactional(readOnly = false)
+    private boolean isUpdateGenericVuln(int genericIdInt, String genericNewName, ChannelType manualType) {
+
+        GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveByDisplayId(genericIdInt);
+
+        boolean isUpdate = genericVulnerability != null;
+        String oldName = null;
+        if (genericVulnerability == null) {
+            log.info("Add new Generic Vulnerability with CWE Id " + genericIdInt);
+            genericVulnerability = new GenericVulnerability();
+            genericVulnerability.setDisplayId(genericIdInt);
+        } else {
+            log.info("Update Generic Vulnerability with Id " + genericIdInt);
+            oldName = genericVulnerability.getName();
+        }
+
+        genericVulnerability.setName(genericNewName);
+        genericVulnerabilityDao.saveOrUpdate(genericVulnerability);
+
+        updateManualVuln(genericVulnerability,oldName, genericNewName, manualType);
+
+        return isUpdate;
+    }
+
+    private void updateManualVuln(GenericVulnerability genericVulnerability, String oldName, String newName, ChannelType channelType) {
+        if (channelType == null) return;
+
+        ChannelVulnerability vulnerability = null;
+        if (oldName != null) {
+            log.info("Update Manual Vulnerability: " + oldName + " to: " + newName);
+            vulnerability = channelVulnerabilityDao.retrieveByName(channelType, oldName);
+            vulnerability.setCode(newName);
+            vulnerability.setName(newName);
+            channelVulnerabilityDao.saveOrUpdate(vulnerability);
+        } else {
+            log.info("Create new Manual Vulnerability: " + newName);
+            createNewChannelVulnerability(newName, newName, genericVulnerability, channelType);
+        }
     }
 
     private boolean updateChannelVulnerability(ChannelVulnerability channelVulnerability,

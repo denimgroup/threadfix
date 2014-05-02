@@ -72,4 +72,14 @@ public interface ScannerMappingsUpdaterService {
      */
     List<String> getSupportedScanners();
 
+    /**
+     * Update generic vulnerabilities
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
+    List<String[]> updateGenericVulnerabilities() throws IOException, URISyntaxException;
+
+    void updateUpdatedDate();
+
 }

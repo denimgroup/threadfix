@@ -154,7 +154,7 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
                     // This code works because of the 1-1 correspondence of manual channel text and cwe text
                     if (integerId != null) {
                         GenericVulnerability genericVulnerability =
-                                genericVulnerabilityDao.retrieveById(integerId);
+                                genericVulnerabilityDao.retrieveByDisplayId(integerId);
                         if (genericVulnerability != null) {
                             findingMap.put(FindingKey.VULN_CODE, genericVulnerability.getName());
                         }

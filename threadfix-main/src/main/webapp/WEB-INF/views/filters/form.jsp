@@ -23,7 +23,7 @@
                            type="text"
                            name = "sourceGenericVulnerabilityName"
                            ng-model="object.sourceGenericVulnerability.name"
-                           typeahead="(vulnerability.name + ' (CWE ' + vulnerability.id + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
+                           typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
                            class="form-control"/>
                     <span class="errors" ng-show="form.sourceGenericVulnerabilityName.$dirty && form.sourceGenericVulnerabilityName.$error.required">Vulnerability is required.</span>
                     <span class="errors" ng-show="object.sourceGenericVulnerability_name_error"> {{ object.sourceGenericVulnerability_name_error }}</span>

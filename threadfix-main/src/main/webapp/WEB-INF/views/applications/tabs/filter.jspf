@@ -11,7 +11,7 @@
                 <input id="vulnerabilityTypeFilterInput" type="text"
                       class="form-control"
                       ng-model="cweFilter"
-                      typeahead="(vulnerability.name + ' (CWE ' + vulnerability.id + ')') for vulnerability in genericVulnerabilities | filter:$viewValue | limitTo:10"/>
+                      typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in genericVulnerabilities | filter:$viewValue | limitTo:10"/>
             </div>
         </div>
         <div class="row">

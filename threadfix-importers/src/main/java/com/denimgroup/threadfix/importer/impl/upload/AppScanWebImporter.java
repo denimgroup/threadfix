@@ -102,7 +102,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    		
 	    		GenericVulnerability genericVuln = null;
 	    		if (genericVulnMap.get(key).matches("[0-9]+"))
-		    		genericVuln = genericVulnerabilityDao.retrieveById(Integer.valueOf(genericVulnMap.get(key)));
+		    		genericVuln = genericVulnerabilityDao.retrieveByDisplayId(Integer.valueOf(genericVulnMap.get(key)));
 	    		
 	    		if (genericVuln != null)
 	    			createVulnRelationship(channelVuln, genericVuln);

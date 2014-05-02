@@ -151,7 +151,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 			// TODO also write support for vulns entered into the short description field.
 			if (id != null && id.matches("[0-9]+")) {
 				GenericVulnerability genericVulnerability =
-						genericVulnerabilityDao.retrieveById(Integer.valueOf(id));
+						genericVulnerabilityDao.retrieveByDisplayId(Integer.valueOf(id));
 				
 				if (genericVulnerability != null && genericVulnerability.getName() != null) {
 					findingMap.put(FindingKey.VULN_CODE, genericVulnerability.getName());

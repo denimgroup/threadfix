@@ -35,7 +35,42 @@
 		<a href="${ fn:escapeXml(updateUrl) }" class="btn btn-primary">Update Mappings</a>
 	</c:if>
 
+    <%--TODO adding display for updated generic vulnerabilities--%>
+    <c:if test="${ not empty genericVulnUpdateResults }">
+        <h3 style="padding-bottom: 15px;">Generic Vulnerabilities</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th class="long first"></th>
+                <th class="centered">Quantity</th>
+                <th class="last">CWE IDs</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:if test="${ empty genericVulnUpdateResults }">
+                <tr class="bodyRow">
+                    <td colspan="3" style="text-align:center;">No Generic Vulnerabilities updated.</td>
+                </tr>
+            </c:if>
+            <c:forEach var="genericItem" items="${ genericVulnUpdateResults }" varStatus="status">
+                <tr class="bodyRow">
+                    <td class="details">
+                        <c:out value="${ genericItem[0] }"/>
+                    </td>
+                    <td class="centered">
+                        <c:out value="${ genericItem[1] }"/>
+                    </td>
+                    <td class="last">
+                        <c:out value="${ genericItem[2] }"/>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
+
 	<c:if test="${ not empty resultList }">
+        <h3 style="padding-bottom: 15px;">Channel Vulnerabilities</h3>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -67,7 +102,7 @@
 		</table>
 	</c:if>
 
-    <h2 style="padding-bottom: 15px;">Supported Scanners</h2>
+    <h3 style="padding-bottom: 15px;">Supported Scanners</h3>
     <c:if test="${ not empty supportedScanners }">
         <ul>
             <c:forEach var="supporterScanner" items="${ supportedScanners }" varStatus="status">
