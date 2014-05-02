@@ -127,10 +127,10 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage addNewTeam() {
-        driver.findElementById("addTeamButton").click();
+        driver.findElementById("submit").click();
 
-        String teamName = driver.findElementByClassName("alert-success").getText();
-        teamName = teamName.substring(7,(teamName.length()-31));
+        String teamName = driver.findElementByClassName("alert-success").getText().trim();
+        teamName = teamName.substring(26,teamName.length());
         waitForElement(driver.findElementById("teamName"+teamName));
 
         sleep(1000);
@@ -248,11 +248,8 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean isCreateValidationPresent(String teamName) {
-        return driver
-                .findElementByClassName("alert-success")
-                .getText()
-                .contains(
-                        "Team " + teamName + " has been created successfully.");
+        return driver.findElementByClassName("alert-success").getText()
+                .contains("Successfully added team " + teamName);
     }
 
     public TeamDetailPage clickViewTeamLink(String teamName) {
