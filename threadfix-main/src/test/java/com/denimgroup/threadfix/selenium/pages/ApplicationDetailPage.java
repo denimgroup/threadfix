@@ -450,8 +450,8 @@ public class ApplicationDetailPage extends BasePage {
         return false;
     }
 
-    public boolean remoteProvidersScansUploaded() {
-        return driver.findElementByClassName("alert-error").getText().contains("No active Vulnerabilities found.");
+    public String remoteProvidersScansUploaded() {
+        return driver.findElementByClassName("alert-error").getText();
     }
 
     public boolean isAppTypeDetect() {

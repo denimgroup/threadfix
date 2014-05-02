@@ -164,7 +164,7 @@ public class RemoteProvidersIT extends BaseIT {
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
 
-        assertFalse("WhiteHat scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded());
+        assertFalse("WhiteHat scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded() == "No active Vulnerabilities found.");
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 
@@ -192,7 +192,7 @@ public class RemoteProvidersIT extends BaseIT {
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
 
-        assertFalse("Veracode scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded());
+        assertFalse("Veracode scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded() == "No active Vulnerabilities found.");
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 

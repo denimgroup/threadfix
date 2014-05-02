@@ -298,7 +298,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public UserIndexPage selectWhiteHatTeamMapping(String teamName){
-		WebElement a = driver.findElementById("teamSelect");
+		WebElement a = driver.findElementById("orgSelect1");
 		new Select(a).selectByVisibleText(teamName);
 		return new UserIndexPage(driver);
 	}
@@ -348,7 +348,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickUpdateMappings(){
         //driver.findElementById("submitRemoteProviderFormButton").click();
-        driver.findElementByLinkText("Save").click();
+        driver.findElementById("submit").click();
         return new RemoteProvidersIndexPage(driver);
     }
 
