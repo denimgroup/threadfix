@@ -45,11 +45,6 @@
 		<div style="position:absolute;left:50%;top:50%;margin-left:-63px; margin-top:9px;">
 			<input type="password" style="width:200px" class="textbox" id="password" name="j_password" />
 		</div>
-		<div style="position:absolute;left:50%;top:50%;margin-left:-110px; margin-top:90px;">
-			<input type="checkbox" name="_spring_security_remember_me"/></div>
-		<div style="position:absolute;left:50%;top:50%;margin-left:-86px; margin-top:88px;color:black;">
-			Remember me on this computer.
-		</div>
 		<div style="position:absolute;left:50%;top:50%;margin-left:-65px; margin-top:51px;">
 			<input id="login" type="submit" value="Login" style="width:130px;"/>
 		</div>

@@ -15,11 +15,6 @@
 		<property name="userPropertyToUse" value="salt"/>
 	</bean>
   
-	<bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
-		<property name="userDetailsService" ref="CustomUserDetailService"/>
-		<property name="key" value="threadfix"/>
-	</bean>
-	
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
 	<bean class="com.denimgroup.threadfix.webapp.config.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
@@ -39,7 +34,6 @@
                 login-page="/login.jsp"
                 default-target-url="/dashboard"
                 always-use-default-target="true"/>
-		<security:remember-me services-ref="rememberMeServices" key="threadfix" use-secure-cookie="true"/> 
 		<security:logout success-handler-ref="customLogoutSuccessHandler"/>
 	</security:http>
 	
