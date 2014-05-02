@@ -224,6 +224,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("applicationNameInputNameError").getText();
     }
 
+    public String getNameRequiredError() {
+        return driver.findElementById("applicationNameInputRequiredError").getText();
+    }
+
     public String getUrlError() {
         return driver.findElementById("applicationUrlInputInvalidUrlError").getText().trim();
     }
@@ -287,6 +291,11 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickCloseAppModal() {
         driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
         sleep(2500);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickCloseAppInvalid() {
+        driver.findElementByLinkText("Close").click();
         return new ApplicationDetailPage(driver);
     }
 
