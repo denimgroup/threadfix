@@ -138,7 +138,7 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage addNewTeamInvalid() {
-        driver.findElementById("addTeamButton").click();
+        driver.findElementById("submit").click();
         sleep(1000);
         return setPage();
     }
@@ -222,6 +222,10 @@ public class TeamIndexPage extends BasePage {
         setApplicationUrl(url);
         setApplicationCriticality(criticality);
         return setPage();
+    }
+
+    public String getErrorMessage(String key) {
+        return driver.findElementById(key).getText();
     }
 
     public String getNameErrorMessage() {

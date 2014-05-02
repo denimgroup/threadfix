@@ -105,6 +105,10 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("name.errors").getText().trim();
     }
 
+    public String getErrorMessage(String key) {
+        return driver.findElementById(key).getText().trim();
+    }
+
     public int getNumTeamRows() {
         if (!(driver.findElementById("teamTable").getText().equals("Add Team"))) {
             return driver.findElementsByClassName("pointer").size();
