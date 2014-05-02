@@ -159,7 +159,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .clickModalSubmit(RemoteProvidersIndexPage.class)
+                .saveWhiteHat()
                 .mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
@@ -187,7 +187,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
                 .setVeraPassword(VERACODE_PASSWORD)
-                .clickModalSubmit(RemoteProvidersIndexPage.class)
+                .saveVera()
                 .mapVeracodeToTeamAndApp(3, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);

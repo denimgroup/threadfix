@@ -409,6 +409,7 @@ public class ApplicationIT extends BaseIT {
                 .clickEditDeleteBtn()
                 .clickAddWaf()
                 .addWaf(wafName1)
+                .saveWafAdd()
                 .clickUpdateApplicationButton();
 
         TeamIndexPage ti = ap.clickOrganizationHeaderLink();
@@ -418,6 +419,7 @@ public class ApplicationIT extends BaseIT {
                 .clickEditDeleteBtn()
                 .clickAddWaf()
                 .addWaf(wafName2)
+                .saveWafAdd()
                 .clickUpdateApplicationButton()
                 .clickEditDeleteBtn();
 

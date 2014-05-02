@@ -130,8 +130,13 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage addWaf(String wafName) {
-        new Select(driver.findElementById("wafSelect")).selectByVisibleText(wafName);
-        sleep(2000);
+        Select s = new Select(driver.findElementById("wafSelect"));
+        s.selectByVisibleText(wafName);
+        sleep(4000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage saveWafAdd() {
         driver.findElementById("submit").click();
         return new ApplicationDetailPage(driver);
     }
@@ -164,7 +169,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public String getWafText() {
         waitForElement(driver.findElementById("wafName"));
-        return driver.findElementById("wafText").getText();
+        return driver.findElementById("wafName").getText();
     }
 
     public String getNameText() {
@@ -201,6 +206,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickUpdateApplicationButton() {
+        sleep(3000);
         driver.findElementById("submit").click();
         sleep(3000);
         return new ApplicationDetailPage(driver);
