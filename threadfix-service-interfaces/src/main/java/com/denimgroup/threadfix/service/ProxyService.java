@@ -21,30 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
 
-package com.denimgroup.threadfix.importer.interop;
+import org.apache.commons.httpclient.HttpClient;
 
-import java.util.Calendar;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-public class ScanCheckResultBean {
+public interface ProxyService {
 
-	private ScanImportStatus scanCheckResult;
-	private Calendar testDate;
-	
-	public ScanCheckResultBean(ScanImportStatus scanCheckResult, Calendar testDate) {
-		this.scanCheckResult = scanCheckResult;
-		this.testDate = testDate;
-	}
-	
-	public ScanCheckResultBean(ScanImportStatus scanCheckResult) {
-		this.scanCheckResult = scanCheckResult;
-	}
+    HttpClient getClientWithProxyConfig();
 
-	public Calendar getTestDate() {
-		return testDate;
-	}
-	
-	public ScanImportStatus getScanCheckResult() {
-		return scanCheckResult;
-	}
+    HttpsURLConnection getSSLConnectionWithProxyConfig(URL url) throws IOException;
+
+    HttpURLConnection getConnectionWithProxyConfig(URL url) throws IOException;
+
+
+
 }

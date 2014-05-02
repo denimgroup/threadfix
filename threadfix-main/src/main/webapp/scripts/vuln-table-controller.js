@@ -102,8 +102,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.heading = '0 Vulnerabilities';
 
-    $scope.goToPage = function() {
-        $scope.page = $scope.pageInput;
+    $scope.goToPage = function(valid) {
+        if (valid) {
+            $scope.page = $scope.pageInput;
+        }
     }
 
     $scope.goTo = function(vuln) {
@@ -156,6 +158,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         $scope.vulns = data.object.vulnerabilities;
         $scope.genericVulnerabilities = data.object.genericVulnerabilities;
         $scope.numVulns = data.object.numVulns;
+        $scope.max = Math.ceil(data.object.numVulns/100);
         $scope.numClosed = data.object.numClosed;
         $scope.numOpen = data.object.numOpen;
         $scope.numHidden = data.object.numHidden;

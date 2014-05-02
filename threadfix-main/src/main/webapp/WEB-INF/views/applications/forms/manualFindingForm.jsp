@@ -37,7 +37,7 @@
                            ng-model="object.surfaceLocation.path"
                            name="surfaceLocationPath"
                            class="form-control"
-                           id="txtSearch"
+                           id="urlDynamicSearch"
                            style="width:300px"
                            typeahead="string for string in config.recentPathList | filter:$viewValue | limitTo:10"/>
                     </td>
@@ -52,7 +52,7 @@
                            ng-model="object.dataFlowElements[0].sourceFileName"
                            name="dataFlowElements[0].sourceFileName"
                            class="form-control"
-                           id="txtSearch"
+                           id="urlStaticSearch"
                            typeahead="string for string in config.recentFileList | filter:$viewValue | limitTo:10"/>
                     </td>
                 </tr>

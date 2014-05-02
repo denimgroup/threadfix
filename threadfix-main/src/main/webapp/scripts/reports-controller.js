@@ -10,6 +10,10 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         $scope.loadingRight = true;
     }
 
+    $scope.$on('seeMoreExtension', function(event, extension) {
+        $scope.seeMoreExtension = extension;
+    });
+
     var loadReports = function() {
         threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {

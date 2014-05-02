@@ -13,29 +13,12 @@
                     <td>Name</td>
                     <td>
                         <input id="nameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
-                        <span class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                        <span id="requiredError" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                     </td>
                 </tr>
             </table>
 
         </div>
-        <div class="modal-footer">
-            <span class="errors" style="float:left">{{ error }}</span>
-
-            <a class="btn" ng-click="cancel()">Close</a>
-            <button id="loadingButton"
-                    disabled="disabled"
-                    class="btn btn-primary"
-                    ng-show="loading">
-                <span class="spinner"></span>
-                Submitting
-            </button>
-            <button id="addApplicationButton"
-                    ng-class="{ disabled : form.$invalid }"
-                    class="btn btn-primary"
-                    ng-mouseenter="form.name.$dirty = true"
-                    ng-hide="loading"
-                    ng-click="ok(form.$valid)">Add Team</button>
-        </div>
+        <%@ include file="/WEB-INF/views/modal/footer.jspf" %>
     </form>
 </script>

@@ -246,7 +246,7 @@ public class ReportsServiceImpl implements ReportsService {
 					return null;
 				}
 			}
-			
+
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 			exporter.setParameter(JRExporterParameter.OUTPUT_STRING_BUFFER,
 					report);
@@ -382,6 +382,7 @@ public class ReportsServiceImpl implements ReportsService {
 				for (ApplicationChannel applicationChannel : channel.getChannels()) {
 					if (applicationChannel.getApplication() != null
 							&& applicationChannel.getApplication().getId() != null
+                            && (applicationChannel.getScanList() != null && applicationChannel.getScanList().size()>0)
 							&& applicationIdList.contains(applicationChannel.getApplication().getId())) {
 						returnChannels.add(channel);
 						break;
@@ -562,7 +563,7 @@ public class ReportsServiceImpl implements ReportsService {
 	// TODO rethink some of this - it's a little slow at a few hundred vulns.
 	// The emphasis on genericism through the design makes it harder to pull channel-specific info from vulns.
 	@Override
-	public String scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {
+    public Map<String, Object> scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {
 		
 		List<List<String>> tableListOfLists = new ArrayList<>();
 		List<String> headerList = new ArrayList<>(); // this facilitates headers
@@ -589,6 +590,8 @@ public class ReportsServiceImpl implements ReportsService {
 						
 			for (ApplicationChannel channel : application.getChannelList()) {
 				if (channel == null || channel.getScanCounter() == null
+                        || channel.getScanList() == null
+                        || channel.getScanList().size() == 0
 						|| channel.getChannelType() == null
 						|| channel.getChannelType().getId() == null
 						|| channel.getChannelType().getName() == null) {
@@ -645,24 +648,24 @@ public class ReportsServiceImpl implements ReportsService {
 				tableListOfLists.add(tempList);
 			}
 		}
-		
-		model.addAttribute("headerList", headerList);
-		model.addAttribute("listOfLists", tableListOfLists);
-		model.addAttribute("columnCount", columnCount);
-		model.addAttribute("contentPage", "reports/scannerComparisonByVulnerability.jsp");
-				
-		return "ajaxSuccessHarness";
+
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("headerList", headerList);
+        map.put("listOfLists", tableListOfLists);
+        map.put("columnCount", columnCount);
+        map.put("reportHTML", "");
+
+        return map;
 	}
 
 	@Override
-	public String vulnerabilityList(Model model,
+	public Map<String, Object> vulnerabilityList(Model model,
 			ReportParameters reportParameters) {
 		List<Integer> applicationIdList = getApplicationIdList(reportParameters);
-		
-		model.addAttribute("listOfLists", getListofRowParams(applicationIdList));
-		model.addAttribute("contentPage", "reports/vulnerabilityList.jsp");
-				
-		return "ajaxSuccessHarness";
+        Map<String, Object> map = new HashMap<>();
+        map.put("listOfLists", getListofRowParams(applicationIdList));
+        return map;
 	}
 
     @Override

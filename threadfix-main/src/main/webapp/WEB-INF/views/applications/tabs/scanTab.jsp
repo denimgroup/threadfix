@@ -1,5 +1,4 @@
-
-<tab ng-controller="ScanTableController"
+<tab id="scanTab" ng-controller="ScanTableController"
      heading="{{ heading }}">
 
     <div ng-hide="scans" class="empty-tab-drop-area">

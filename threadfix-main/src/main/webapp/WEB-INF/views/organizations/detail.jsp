@@ -65,12 +65,12 @@
     <c:if test="${ canManageApplications }">
         <div style="margin-top:10px;margin-bottom:7px;">
             <c:if test="${ canAddApps}">
-                <button class="btn" id="addApplicationModalButton${ organization.id }" ng-click="openAppModal()">
+                <button class="btn" id="addApplicationModalButton" ng-click="openAppModal()">
                     Add Application
                 </button>
             </c:if>
             <c:if test="${ not canAddApps }">
-                <button class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
+                <button class="btn" id="addApplicationModalButton" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
                     Add Application
                 </button>
             </c:if>

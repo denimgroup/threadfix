@@ -33,19 +33,23 @@ import com.microsoft.tfs.core.clients.workitem.fields.FieldDefinitionCollection;
 import com.microsoft.tfs.core.clients.workitem.project.Project;
 import com.microsoft.tfs.core.clients.workitem.project.ProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.query.WorkItemCollection;
+import com.microsoft.tfs.core.config.ConnectionAdvisor;
+import com.microsoft.tfs.core.config.ConnectionInstanceData;
+import com.microsoft.tfs.core.config.DefaultConnectionAdvisor;
 import com.microsoft.tfs.core.exceptions.TECoreException;
 import com.microsoft.tfs.core.exceptions.TFSUnauthorizedException;
 import com.microsoft.tfs.core.httpclient.Credentials;
+import com.microsoft.tfs.core.httpclient.HttpException;
+import com.microsoft.tfs.core.httpclient.ProxyClient;
 import com.microsoft.tfs.core.httpclient.UsernamePasswordCredentials;
 import com.microsoft.tfs.core.ws.runtime.exceptions.UnauthorizedException;
+import com.microsoft.tfs.util.GUID;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TFSClientImpl implements TFSClient {
 
@@ -266,8 +270,26 @@ public class TFSClientImpl implements TFSClient {
             e.printStackTrace();
         }
 
+        ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.CANADA, TimeZone.getTimeZone(""));
+
+        try {
+
+            ProxyClient client = new ProxyClient();
+
+            ProxyClient.ConnectResponse connect = client.connect();
+
+            advisor.getTFProxyServerSettingsFactory(new ConnectionInstanceData(new URI("test"), new GUID("Test")));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (HttpException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials);
         try {
+            projects.getTFProxyServerSettings();
             client = projects.getWorkItemClient();
             lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
         } catch (UnauthorizedException | TFSUnauthorizedException e) {

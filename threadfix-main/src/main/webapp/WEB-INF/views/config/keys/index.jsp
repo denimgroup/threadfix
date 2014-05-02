@@ -19,11 +19,11 @@
             ThreadFix API Keys are used to access the REST interface.<br/>
         </div>
 
-        <button class="btn" ng-click="openNewModal()" id="createNewKeyModalButton">Create New Key</button>
+        <button class="btn" ng-click="openNewModal()" id="createNewKeyModalButton">Create New K\ey</button>
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
-        <table ng-hide="loading" class="table table-striped" style="table-layout:fixed;">
+        <table id="table" ng-hide="loading" class="table table-striped" style="table-layout:fixed;">
             <thead>
                 <tr>
                     <th class="long first">Key</th>
@@ -37,12 +37,12 @@
                     <td colspan="4" style="text-align:center;">No API Keys found.</td>
                 </tr>
                 <tr ng-repeat="key in keys">
-                    <td id="key{{ $index }}" style="max-width:300px;word-wrap: break-word;">{{ key.apiKey }}</td>
-                    <td id="note{{ $index }}" style="max-width:300px;word-wrap: break-word;">{{ key.note }}</td>
-                    <td class="centered" id="editKeyModal{{ $index }}">
-                        <button class="btn" ng-click="openEditModal(key)">Edit / Delete</button>
+                    <td id="key{{ key.note }}" style="max-width:300px;word-wrap: break-word;">{{ key.apiKey }}</td>
+                    <td id="note{{ key.note }}" style="max-width:300px;word-wrap: break-word;">{{ key.note }}</td>
+                    <td class="centered">
+                        <button class="btn" id="editKeyModal{{ key.note }}" ng-click="openEditModal(key)">Edit / Delete</button>
                     </td>
-                    <td id="restricted{{ $index }}">{{ key.isRestrictedKey }}</td>
+                    <td id="restricted{{ key.note }}">{{ key.isRestrictedKey }}</td>
                 </tr>
             </tbody>
         </table>

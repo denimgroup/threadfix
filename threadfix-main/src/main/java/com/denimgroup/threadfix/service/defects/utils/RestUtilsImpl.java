@@ -24,16 +24,19 @@
 package com.denimgroup.threadfix.service.defects.utils;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ProxyService;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * This class holds code for more easily interacting with HTTP-authenticated REST services.
@@ -43,7 +46,11 @@ import java.net.*;
  * @author mcollins
  *
  */
-public class RestUtilsImpl implements RestUtils {
+public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUtils {
+
+    @Autowired(required = false)
+    private ProxyService proxyService;
+
     private static boolean WRITE_REQUESTS_TO_FILE = true;
 
 	private RestUtilsImpl() {} // intentional, we shouldn't be instantiating this class.
@@ -68,7 +75,11 @@ public class RestUtilsImpl implements RestUtils {
 		}
 		HttpURLConnection httpConnection;
 		try {
-			httpConnection = (HttpURLConnection) url.openConnection();
+            if (proxyService == null) {
+			    httpConnection = (HttpURLConnection) url.openConnection();
+            } else {
+                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+            }
 
 			setupAuthorization(httpConnection, username, password);
 			
@@ -133,7 +144,11 @@ public class RestUtilsImpl implements RestUtils {
 		HttpURLConnection httpConnection = null;
 		OutputStreamWriter outputWriter = null;
 		try {
-			httpConnection = (HttpURLConnection) url.openConnection();
+            if (proxyService == null) {
+                httpConnection = (HttpURLConnection) url.openConnection();
+            } else {
+                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+            }
 
 			setupAuthorization(httpConnection, username, password);
 			
@@ -189,7 +204,7 @@ public class RestUtilsImpl implements RestUtils {
 	}
 	
 	public String postUrlAsString(String urlString, String data, String username, String password, String contentType) {
-		InputStream responseStream = postUrl(urlString,data,username,password, contentType);
+		InputStream responseStream = postUrl(urlString, data, username, password, contentType);
 		
 		if (responseStream == null) {
 			return null;
@@ -234,26 +249,22 @@ public class RestUtilsImpl implements RestUtils {
 
         boolean retVal;
 
-        CloseableHttpClient httpClient = null;
+        HttpClient httpClient = null;
         try {
-
-            httpClient = HttpClients.custom().build();
-
-            HttpGet httpGet = new HttpGet(urlString);
-
-            HttpResponse response = httpClient.execute(httpGet);
-
-            if (WRITE_REQUESTS_TO_FILE) {
-                String responseString = IOUtils.toString(response.getEntity().getContent());
-                IOUtils.write(responseString, new FileOutputStream(new File("/Users/mac/scratch/401error" + System.currentTimeMillis())));
+            if (proxyService == null) {
+                httpClient = new HttpClient();
+            } else {
+                httpClient = proxyService.getClientWithProxyConfig();
             }
 
-            int statusCode = response.getStatusLine().getStatusCode();
+            GetMethod get = new GetMethod(urlString);
 
-            retVal = statusCode == HttpURLConnection.HTTP_UNAUTHORIZED;
+            int responseCode = httpClient.executeMethod(get);
+
+            retVal = responseCode == HttpURLConnection.HTTP_UNAUTHORIZED;
 
             if (!retVal) {
-                LOG.info("Got a non-401 HTTP response code of: " + statusCode);
+                LOG.info("Got a non-401 HTTP response code of: " + responseCode);
             }
 
         } catch (MalformedURLException e) {
@@ -265,14 +276,6 @@ public class RestUtilsImpl implements RestUtils {
         } catch (IOException e) {
             LOG.warn("IOException encountered while trying to find the response code: " + e.getMessage(), e);
             retVal = false;
-        } finally {
-            if (httpClient != null) {
-                try {
-                    httpClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         LOG.info("Return value will be " + retVal);
@@ -291,7 +294,13 @@ public class RestUtilsImpl implements RestUtils {
         }
 
         try {
-            HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection httpConnection;
+
+            if (proxyService == null) {
+                httpConnection = (HttpURLConnection) url.openConnection();
+            } else {
+                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+            }
 
             setupAuthorization(httpConnection, username, password);
 

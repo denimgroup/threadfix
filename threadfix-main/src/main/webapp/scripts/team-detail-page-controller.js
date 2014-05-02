@@ -25,6 +25,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.team = data.object.team;
+                    $scope.$broadcast('seeMoreExtension', "/" + $scope.team.id);
                     $scope.applications = data.object.applications;
                 } else {
                     var error = "Error encountered. Message was " + $scope.message;

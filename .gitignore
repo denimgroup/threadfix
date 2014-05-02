@@ -1,4 +1,6 @@
 target
+threadfix-cli.log*
+threadfix-cli.log
 threadfix-ide-plugin/intellij/intellij.zip
 database
 threadfix-main/src/main/resources/threadfix.license

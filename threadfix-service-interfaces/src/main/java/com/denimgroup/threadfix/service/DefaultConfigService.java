@@ -36,7 +36,6 @@ public interface DefaultConfigService {
 	
 	/**
 	 * Save new system settings
-	 * @param model
 	 */
 	void saveConfiguration(DefaultConfiguration config);
 

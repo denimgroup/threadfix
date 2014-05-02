@@ -2,9 +2,8 @@
     <c:if test="${ canGenerateReports }">
         <div class="row-fluid">
             <div class="span6">
-                <spring:url value="/reports/9" var="reportsUrl"/>
                 <h4>6 Month Vulnerability Burndown<span style="font-size:12px;float:right;">
-                        <a id="leftViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+                    <a id="leftViewMore" ng-href="{{ urlRoot }}/reports/9{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="leftTileReport">
                     <div ng-show="leftReport" tf-bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>
@@ -25,9 +24,8 @@
             </div>
 
             <div class="span6">
-                <spring:url value="/reports/10" var="reportsUrl"/>
                 <h4>{{ rightReportTitle }}<span style="font-size:12px;float:right;">
-                    <a id="rightViewMore" href="<c:out value="${ reportsUrl }"/>">View More</a></span>
+                    <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="rightTileReport">
                     <div ng-show="rightReport" tf-bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>

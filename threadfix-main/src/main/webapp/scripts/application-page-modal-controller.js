@@ -26,6 +26,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        $scope.config.recentPathList = [];
                    }
 
+                   $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
+
+                   $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
+
                    $rootScope.$broadcast('scheduledScans', $scope.config.scheduledScans);
                    $rootScope.$broadcast('scanAgentTasks', $scope.config.scanAgentTasks);
                    $rootScope.$broadcast('application', $scope.config.application);
@@ -225,7 +229,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     }
 
                     return {
-                        defectTrackerId: id
+                        defectTracker: $scope.config.defectTrackerList[0],
+                        defectTrackerId: $scope.config.defectTrackerList[0].id
                     };
                 },
                 config: function() {
@@ -258,9 +263,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 },
                 object: function () {
                     return {
-                        defectTrackerType: {
-                            id: 1
-                        },
+                        defectTrackerType: $scope.config.trackerTypes[0],
                         applicationId: $scope.config.application.id
                     };
                 },

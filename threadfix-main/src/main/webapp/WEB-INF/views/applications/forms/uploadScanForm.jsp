@@ -16,7 +16,7 @@
             <div>
                 <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
-            Drag scan file here.
+            Drag and drop scan file here.
         </div>
 
         <progressbar ng-show="uploading" animate="false" value="dynamic" type="success"><b>{{uploadedPercent}}%</b></progressbar>

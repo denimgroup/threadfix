@@ -6,6 +6,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         return a.name.localeCompare(b.name);
     };
 
+    $scope.base = window.location.pathname;
+
     $scope.tabs = [
         {
             title: "Trending",
@@ -36,22 +38,28 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         }
     ];
 
-    $scope.updateOptions = function(tab) {
-        $scope.options = tab.options;
-        $scope.reportId = tab.options[0].id;
-    }
-
     $scope.updateApplications = function() {
-        if ($scope.team.id === -1) {
+        var teamIdInt = parseInt($scope.teamId);
+
+        if (teamIdInt === -1) {
             $scope.application = {id: -1, name: "All"};
             $scope.applications = [];
         } else {
+
+            $scope.teams.forEach(function(team) {
+                if (team.id === teamIdInt) {
+                    $scope.team = team;
+                }
+            });
+
             $scope.applications = $scope.team.applications;
             if ($scope.applications[0].id !== -1) {
                 $scope.applications.unshift({id: -1, name: "All"});
             }
             $scope.application = $scope.applications[0];
         }
+
+        loadReport();
     }
 
     $scope.clearApplications = function() {
@@ -61,20 +69,12 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.applications = [];
     $scope.options = $scope.tabs[0].options;
 
-    $scope.team = {
-        id: -1
-    };
-    $scope.application = {
-        id: -1
-    };
-
-    $scope.reportId = 1;
     $scope.formatId = 1;
 
     $scope.getReportParameters = function() {
         return {
-            organizationId: $scope.team.id,
-            applicationId: $scope.application.id,
+            organizationId: $scope.teamId,
+            applicationId: $scope.applicationId,
             reportId: $scope.reportId,
             formatId: $scope.formatId
         };
@@ -85,10 +85,31 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     var loadReport = function() {
         if ($scope.initialized) {
             $scope.loading = true;
-            $http.post(tfEncoder.encode("/reports/ajax"), $scope.getReportParameters()).
+            var url = "/reports/ajax";
+            if ($scope.reportId === '6' || $scope.reportId === '11' ) {
+                url = "/reports/ajax/page";
+            }
+            $http.post(tfEncoder.encode(url), $scope.getReportParameters()).
                 success(function(data, status, headers, config) {
-                    $scope.reportHTML = data;
+
+                    $scope.reportHTML = undefined;
                     $scope.loading = false;
+
+                    if ($scope.reportId === '6') {
+                        $scope.headerList = data.object.headerList;
+                        $scope.listOfLists = data.object.listOfLists;
+                        $scope.columnCount = data.object.columnCount;
+
+                    } else if ($scope.reportId === '11') {
+                        $scope.listOfLists = data.object.listOfLists;
+                    } else {
+                        $scope.reportHTML = data;
+                    }
+
+                    if ($scope.firstReportId) {
+                        $scope.reportId = parseInt($scope.firstReportId);
+                        $scope.firstReportId = undefined;
+                    }
                 }).
                 error(function(data, status, headers, config) {
 
@@ -100,9 +121,14 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         }
     };
 
-    $scope.$watch('application', loadReport);
-    $scope.$watch('formatId', loadReport);
-    $scope.$watch('reportId', loadReport);
+    $scope.loadReport = function() { loadReport(); }
+
+    $scope.updateOptions = function(tab) {
+        $scope.options = tab.options;
+        $scope.reportId = tab.options[0].id;
+
+        loadReport();
+    }
 
     $scope.$on('rootScopeInitialized', function() {
         threadfixAPIService.getTeams().
@@ -113,7 +139,48 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.teams.sort(nameCompare)
 
                     $scope.teams.unshift({id: -1, name: "All"});
-                    $scope.team = $scope.teams[0];
+                    $scope.teamId = -1;
+                    $scope.applicationId = -1;
+
+                    //teamId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
+                    //appId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
+
+                    if ($scope.firstTeamId) {
+                        $scope.teamId = parseInt($scope.firstTeamId);
+                        $scope.teams.forEach(function(team) {
+                            if (team.id === $scope.teamId) {
+                                $scope.team = team;
+                            }
+                        });
+
+                        if ($scope.firstAppId) {
+                            $scope.applications = $scope.team.applications;
+                            if ($scope.applications[0].id !== -1) {
+                                $scope.applications.unshift({id: -1, name: "All"});
+                            }
+
+                            $scope.applicationId = parseInt($scope.firstAppId);
+//                            $scope.applications.forEach(function(app) {
+//                                if (app.id === $scope.applicationId) {
+//                                    $scope.applicationId = app.id;
+//                                }
+//                            });
+
+                            if (!$scope.application) {
+                                $scope.application = $scope.applications[0];
+                            }
+                        }
+                    }
+
+                    $scope.initialized = true;
+
+                    if ($scope.firstReportId) {
+                        $scope.reportId = parseInt($scope.firstReportId);
+                    } else {
+                        $scope.reportId = 1;
+                    }
+
+                    loadReport();
 
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
@@ -122,12 +189,34 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
-
-        $scope.initialized = true;
-
-        loadReport();
     });
 
+    $scope.triggerCSVDownload = function() {
+        $scope.formatId = 2;
+        loadReport();
+        $scope.formatId = 1;
+    }
 
-    
+    $scope.triggerPDFDownload = function() {
+        $scope.formatId = 3;
+        loadReport();
+        $scope.formatId = 1;
+    }
+
+    $scope.setSort = function(index) {
+        $scope.index = index;
+        $scope.reverse = !$scope.reverse;
+        $scope.listOfLists.sort(function(a, b) {
+            if ($scope.reverse) {
+                if (a[index] > b[index]) return 1;
+                if (a[index] < b[index]) return -1;
+                return 0;
+            } else {
+                if (a[index] < b[index]) return 1;
+                if (a[index] > b[index]) return -1;
+                return 0;
+            }
+        });
+    }
+
 });

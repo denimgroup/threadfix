@@ -27,6 +27,8 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +63,28 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 
 	@Override
 	public void saveConfiguration(DefaultConfiguration config) {
-		defaultConfigurationDao.saveOrUpdate(config);
+		defaultConfigurationDao.saveOrUpdate(encrypt(config));
 	}
+
+    private DefaultConfiguration encrypt(DefaultConfiguration config) {
+        assert config != null;
+
+        try {
+            if (config.getProxyPassword() != null && !config.getProxyPassword().trim().equals("")) {
+               config.setProxyPasswordEncrypted(ESAPI.encryptor().encrypt(config.getProxyPassword()));
+            }
+
+            if (config.getProxyUsername() != null && !config.getProxyPassword().trim().equals("")) {
+                config.setProxyUsernameEncrypted(ESAPI.encryptor().encrypt(config.getProxyPassword()));
+            }
+        } catch (EncryptionException e) {
+            log.error("Encountered encryption exception, ESAPI configuration is probably incorrect. " +
+                    "Check that ESAPI.properties is on the classpath.", e);
+            assert false;
+        }
+
+        return config;
+    }
 
     @Override
     public boolean isReportCacheDirty() {

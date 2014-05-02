@@ -24,19 +24,26 @@
 package com.denimgroup.threadfix.service.defects.utils.bugzilla;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BugzillaClientImpl implements BugzillaClient {
+public class BugzillaClientImpl extends SpringBeanAutowiringSupport implements BugzillaClient {
+
+    @Autowired(required = false)
+    private ProxyService proxyService;
 
     protected final static SanitizedLogger LOG = new SanitizedLogger(BugzillaClientImpl.class);
 
@@ -196,11 +203,15 @@ public class BugzillaClientImpl implements BugzillaClient {
             e.printStackTrace();
         }
 
+
         // config.setEnabledForExtensions(true);
         XmlRpcClient client = new XmlRpcClient();
         client.setConfig(config);
         XmlRpcCommonsTransportFactory factory = new XmlRpcCommonsTransportFactory(client);
-        factory.setHttpClient(new HttpClient());
+
+        HttpClient httpClient = proxyService == null ? new HttpClient() : proxyService.getClientWithProxyConfig();
+        factory.setHttpClient(httpClient);
+
         client.setTransportFactory(factory);
 
         return client;

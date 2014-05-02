@@ -66,6 +66,43 @@
 					<form:errors path="activeDirectoryURL" cssClass="errors" />
 				</td>
 			</tr>
+
+            <tr>
+                <td class="no-color">Proxy Host</td>
+                <td class="no-color">
+                    <form:input id="proxyHost" path="proxyHost" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyHost }"/>
+                </td>
+                <td class="no-color" style="padding-left: 5px" >
+                    <form:errors path="activeDirectoryUsername" id="proxyHostErrors" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="no-color">Proxy Port</td>
+                <td class="no-color">
+                    <form:input id="proxyPort" path="proxyPort" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyPort }"/>
+                </td>
+                <td class="no-color" style="padding-left: 5px">
+                    <form:errors path="proxyPort" id="proxyPortErrors" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="no-color">Proxy Username</td>
+                <td class="no-color">
+                    <form:input id="proxyUsername" path="proxyUsername" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyUsername }"/>
+                </td>
+                <td class="no-color" style="padding-left: 5px">
+                    <form:errors path="proxyUsername" id="proxyUsernameErrors" cssClass="errors" />
+                </td>
+            </tr>
+            <tr>
+                <td class="no-color">Proxy Password</td>
+                <td class="no-color">
+                    <form:input id="proxyPassword" path="proxyPassword" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyPassword }"/>
+                </td>
+                <td class="no-color" style="padding-left: 5px">
+                    <form:errors path="proxyPassword" id="proxyPasswordErrors" cssClass="errors" />
+                </td>
+            </tr>
 			</c:if>
 		</table>
 		<br/>

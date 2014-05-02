@@ -482,6 +482,11 @@
             <artifactId>threadfix-ham</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.sourceclear.headlines</groupId>
+            <artifactId>complete</artifactId>
+            <version>0.1.6</version>
+        </dependency>
 	</dependencies>
 
 	<profiles>

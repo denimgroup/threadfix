@@ -20,11 +20,11 @@
             vulnerabilities from an Application to a Defect Tracker.
         </div>
 
-        <button class="btn" ng-click="openNewModal()">Create New Tracker</button>
+        <button class="btn" id="addNewDTButton" ng-click="openNewModal()">Create New Tracker</button>
 
         <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
 
-        <table ng-hide="loading" class="table table-striped">
+        <table id="defectTrackerTableBody" ng-hide="loading" class="table table-striped">
             <thead>
                 <tr>
                     <th class="medium first">Name</th>
@@ -40,18 +40,18 @@
                     <td colspan="5" style="text-align:center;">No Defect Trackers found.</td>
                 </tr>
                 <tr ng-repeat="tracker in trackers">
-                    <td id="defectTrackerName{{ $index }}">
+                    <td id="defectTrackerName{{ tracker.name }}">
                         {{ tracker.name }}
                     </td>
-                    <td id="defectTrackerUrl{{ $index }}">
+                    <td id="defectTrackerUrl{{ tracker.name }}">
                         {{ tracker.url }}
                     </td>
-                    <td id="defectTrackerType{{ $index }}">
+                    <td id="defectTrackerType{{ tracker.name }}">
                         {{ tracker.defectTrackerType.name }}
                     </td>
                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
                         <td class="centered">
-                            <a id="editDefectTracker{{ $index }}Button" class="btn" ng-click="openEditModal(tracker)">Edit / Delete</a>
+                            <a id="editDefectTrackerButton{{ tracker.name }}" class="btn" ng-click="openEditModal(tracker)">Edit / Delete</a>
                         </td>
                     </security:authorize>
                 </tr>

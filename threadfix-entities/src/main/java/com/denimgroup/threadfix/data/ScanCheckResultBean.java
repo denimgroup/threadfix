@@ -22,22 +22,29 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.parser;
+package com.denimgroup.threadfix.data;
 
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Calendar;
 
-import java.io.File;
+public class ScanCheckResultBean {
 
-public interface ThreadFixBridge  {
+	private ScanImportStatus scanCheckResult;
+	private Calendar testDate;
+	
+	public ScanCheckResultBean(ScanImportStatus scanCheckResult, Calendar testDate) {
+		this.scanCheckResult = scanCheckResult;
+		this.testDate = testDate;
+	}
+	
+	public ScanCheckResultBean(ScanImportStatus scanCheckResult) {
+		this.scanCheckResult = scanCheckResult;
+	}
 
-    public ScannerType getType(File file);
-
-    public ScanCheckResultBean testScan(ScannerType type, File inputFile);
-
-    @Transactional
-    public Scan getScan(ScannerType type, File inputFile);
-
+	public Calendar getTestDate() {
+		return testDate;
+	}
+	
+	public ScanImportStatus getScanCheckResult() {
+		return scanCheckResult;
+	}
 }

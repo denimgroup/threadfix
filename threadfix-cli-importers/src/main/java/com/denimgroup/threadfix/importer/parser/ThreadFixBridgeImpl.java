@@ -35,7 +35,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
-import com.denimgroup.threadfix.importer.interop.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
