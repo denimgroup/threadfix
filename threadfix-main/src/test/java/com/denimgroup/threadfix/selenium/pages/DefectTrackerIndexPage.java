@@ -24,120 +24,48 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class DefectTrackerIndexPage extends BasePage { 
-
-	private WebElement nameInput;
-	private WebElement urlInput;
-	private Select defectTrackerTypeSelect;
-
-	private List<WebElement> editButtons = new ArrayList<>();
-	private List<WebElement> names = new ArrayList<>();
+public class DefectTrackerIndexPage extends BasePage {
 
 	public static String DT_URL = "http://10.2.10.145/bugzilla";
 	public static String JIRA_URL = "https://threadfix.atlassian.net/";
 
 	public DefectTrackerIndexPage(@NotNull WebDriver webdriver) {
 		super(webdriver);
-		//nameInput = driver.findElementById("nameInput");
-		//urlInput = driver.findElementById("urlInput");
-		//defectTrackerTypeSelect = new Select(driver.findElementById("defectTrackerTypeSelect"));
-		
-		for (int i = 1; i <= getNumRows(); i++) {
-			editButtons.add(driver.findElementById("editDefectTracker" + i + "Button"));
-//			deleteButtons.add(driver.findElementById("deleteButton" + i));
-			names.add(driver.findElementById("defectTrackerName" + i));
-		}
-	}
-
-	
-	public int getNumRows() {
-		int size = driver.findElementsByClassName("bodyRow").size();
-		if(isTextPresentInDefectTrackerTableBody("No Defect Trackers found")){
-			return 0;
-		}
-		return size;
-	}
-	
-	private int getIndex(String roleName) {
-		int i = -1;
-		for (WebElement name : names) {
-			i++;
-			String text = name.getText().trim();
-			if (text.equals(roleName.trim())) {
-				return i;
-			}
-		}
-		return -1;
 	}
 
 	public DefectTrackerIndexPage clickEditLink(String roleName) {
-		sleep(5000);
-		editButtons.get(getIndex(roleName)).click();
-		sleep(1000);
-		return new DefectTrackerIndexPage(driver);
-	}
-	/*
-	public DefectTrackerIndexPage clickDeleteButton(String roleName) {
-		//deleteButtons.get((getIndex(roleName)+1)).click();
-		System.out.println("Deleting " + (getIndex(roleName)+1));
-		driver.findElementById("deleteButton" + (getIndex(roleName)+1)).click();
-		return new DefectTrackerIndexPage(driver);
-	}
-	*/
-	
-	public DefectTrackerIndexPage enterName(String oldName,String newName){
-		if(oldName==null){
-			driver.findElementsById("nameInput").get(names.size()).clear();
-			driver.findElementsById("nameInput").get(names.size()).sendKeys(newName);
-		}else{
-			driver.findElementsById("nameInput").get(getIndex(oldName)).clear();
-			driver.findElementsById("nameInput").get(getIndex(oldName)).sendKeys(newName);
-		}
+		waitForElement(driver.findElementById("editDefectTrackerButton" + roleName));
+        driver.findElementById("editDefectTrackerButton" + roleName).click();
+        waitForElement(driver.findElementById("myModalLabel"));
 		return new DefectTrackerIndexPage(driver);
 	}
 	
-	public DefectTrackerIndexPage enterType(String oldName, String newType){
-		if(oldName==null){
-			new Select(driver.findElementsById("defectTrackerTypeSelect").get(names.size())).selectByVisibleText(newType);
-		}else{
-			new Select(driver.findElementsById("defectTrackerTypeSelect").get(getIndex(oldName))).selectByVisibleText(newType);
-		}
-		return new DefectTrackerIndexPage(driver);
+	public DefectTrackerIndexPage enterName(String newName){
+        driver.findElementById("nameInput").clear();
+        driver.findElementById("nameInput").sendKeys(newName);
+		return this;
 	}
 	
-	
-	public DefectTrackerIndexPage enterURL(String oldName, String newURL){
-		if(oldName==null){
-			driver.findElementsById("urlInput").get(names.size()).clear();
-			driver.findElementsById("urlInput").get(names.size()).sendKeys(newURL);
-		}else{
-			driver.findElementsById("urlInput").get(getIndex(oldName)).clear();
-			driver.findElementsById("urlInput").get(getIndex(oldName)).sendKeys(newURL);
-		}
-		return new DefectTrackerIndexPage(driver);
+	public DefectTrackerIndexPage enterType(String newType){
+		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(newType);
+		return this;
 	}
 	
-	public DefectTrackerIndexPage clickDeleteButton(String name){
-		clickEditLink(name);
-		sleep(500);
-		driver.findElementById("deleteButton"+(getIndex(name)+1)).click();
+	public DefectTrackerIndexPage enterURL(String newURL){
+			driver.findElementById("urlInput").clear();
+			driver.findElementById("urlInput").sendKeys(newURL);
+		return this;
+	}
+	
+	public DefectTrackerIndexPage clickDeleteButton(){
+		driver.findElementById("deleteButton").click();
 		handleAlert();
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage clickCloseCreateDT(){
-		driver.findElementById("createDefectTracker").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
+        sleep(1000);
 		return new DefectTrackerIndexPage(driver);
 	}
 	
@@ -150,56 +78,8 @@ public class DefectTrackerIndexPage extends BasePage {
 		return driver.findElementById("defectTrackerName"+row).getText();
 	}
 
-	public String getNameInput(){
-		return nameInput.getText();
-	}
-
-	public DefectTrackerIndexPage setNameInput(String text){
-        driver.findElementsById("nameInput").get(names.size()).clear();
-        driver.findElementsById("nameInput").get(names.size()).sendKeys(text);
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage setNameInput(String text,int row){
-		driver.findElementsById("nameInput").get(row).clear();
-		driver.findElementsById("nameInput").get(row).sendKeys(text);
-		return new DefectTrackerIndexPage(driver);
-	}
-
-	public String getUrlInput(){
-		return urlInput.getText();
-	}
-
-	public DefectTrackerIndexPage setUrlInput(String text){
-		driver.findElementById("urlInput").clear();
-		driver.findElementById("urlInput").sendKeys(text);
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage setUrlInput(String text,int row){
-		driver.findElementsById("urlInput").get(row).clear();
-		driver.findElementsById("urlInput").get(row).sendKeys(text);
-		return new DefectTrackerIndexPage(driver);
-	}
-
-	public String getDefectTrackerTypeSelect(){
-		return defectTrackerTypeSelect.getFirstSelectedOption().getText();
-	}
-
-	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code){
-        sleep(2000);
-		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(code);
-		return new DefectTrackerIndexPage(driver);
-	}
-	
-	public DefectTrackerIndexPage setDefectTrackerTypeSelect(String code, int row){
-		new Select(driver.findElementsById("defectTrackerTypeSelect").get(row)).selectByVisibleText(code);
-		return new DefectTrackerIndexPage(driver);
-	}
-
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
-		sleep(2000);
 		waitForElement(driver.findElementById("submit"));
 		return new DefectTrackerIndexPage(driver);
 	}
@@ -222,29 +102,11 @@ public class DefectTrackerIndexPage extends BasePage {
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
 
-	public DefectTrackerIndexPage clickDeleteButton(int row) {
-		driver.findElementById("deleteButton"+row).click();
-		handleAlert();
-		return new DefectTrackerIndexPage(driver);
-	}
-
 	public DefectTrackerIndexPage clickSaveNewDefectTracker() {
 		driver.findElementById("submit").click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
 		return new DefectTrackerIndexPage(driver);
-	}
-
-	public String getNameText(int i) {
-		return driver.findElementById("defectTrackerName"+i).getText();
-	}
-	
-	public String getTypeText(int i) {
-		return driver.findElementById("defectTrackerType"+i).getText();
-	}
-
-	public String getUrlText(int i) {
-		return driver.findElementById("defectTrackerUrl"+i).getText();
 	}
 	
 	public DefectTrackerIndexPage clickUpdateDefectTrackerButton(){
@@ -258,39 +120,5 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementByLinkText("Update Defect Tracker").click();
 		return new DefectTrackerIndexPage(driver);
 	}
-	
-	public boolean doesNameExist(String name){
-		for(int i = 1; i <= getNumRows(); i ++){
-			try{
-				if(name.equals(getNameText(i))){
-					return true;
-				}
-			}catch(NoSuchElementException e){
-				return false;
-			}
-		}
-		return false;
-	}
-	
-	public boolean doesTypeExistForName(String name, String type){
-		for(int i = 1; i <= getNumRows(); i ++){
-			if(name.equals(getNameText(i))){
-				if(driver.findElementById("defectTrackerType" + i).getText().equals(type)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public boolean doesURLExistForName(String name, String url){
-		for(int i = 1; i <= getNumRows(); i ++){
-			if(name.equals(getNameText(i))){
-				if(driver.findElementById("defectTrackerUrl" + i).getText().equals(url)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+
 }
