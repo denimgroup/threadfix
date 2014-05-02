@@ -57,15 +57,6 @@ public abstract class BasePage {
 		sleep(6000);
 		waitForElement(driver.findElementById("login"));
         sleep(3000);
-        /*
-        sleep(3000);
-		driver.navigate().refresh();
-        sleep(15000);
-		System.out.println("refreshed");
-		driver.get(LoginPage.url + "j_spring_security_logout");
-		//sleep(2000);
-		waitForElement(driver.findElementById("login"));
-		*/
 		return new LoginPage(driver);
 	}
 

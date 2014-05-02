@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -303,8 +302,6 @@ public class UserIT extends BaseIT {
         assertTrue("Could not navigate to User Index Page.",driver.findElements(By.id("newUserModalLink")).size() != 0);
 		}
 
-    //TODO WAIT FOR MAC TO PUSH CHANGES FIXING ERROR MESSAGES
-    @Ignore
 	@Test
 	public void testChangePasswordValidation() {
         UserChangePasswordPage changePasswordPage = loginPage.login("user", "password")
@@ -316,35 +313,30 @@ public class UserIT extends BaseIT {
 
         assertTrue("Password is required error was not present.",
                 changePasswordPage.getPasswordRequiredError().equals("Password is required."));
-		// New Pwd
+
 		changePasswordPage = changePasswordPage.setCurrentPassword("password")
 				.setNewPassword("                     ")
 				.setConfirmPassword("password1234")
 				.clickUpdateInvalid();
 
 		assertTrue("Password match error not present",
-				changePasswordPage.getErrorText("password")
-				.contains("Passwords do not match."));
+                changePasswordPage.getErrorText("passwordMatchError").contains("Passwords do not match."));
 
-		// Confirm Pwd
 		changePasswordPage = changePasswordPage.setCurrentPassword("password")
 				.setConfirmPassword("                  ")
 				.setNewPassword("password1234")
 				.clickUpdateInvalid();
 
 		assertTrue("Password match error not present",
-				changePasswordPage.getErrorText("password")
-				.contains("Passwords do not match."));
+				changePasswordPage.getErrorText("passwordMatchError").contains("Passwords do not match."));
 
-		// PwdLength
 		changePasswordPage = changePasswordPage.setCurrentPassword("password")
 				.setConfirmPassword("      ")
 				.setNewPassword("password124")
 				.clickUpdateInvalid();
 
-		assertTrue("Length error missing",
-				changePasswordPage.getErrorText("password")
-				.contains("Password has a minimum length of 12."));
+		assertTrue("Field required error missing",
+				changePasswordPage.getErrorText("confirmRequiredError").contains("This field is required."));
 
         changePasswordPage.logout();
 	}
@@ -454,7 +446,7 @@ public class UserIT extends BaseIT {
 		assertTrue("Password change did not save",passwordChangePage.isSaveSuccessful());
 
         //TODO FIGURE OUT HOW TO GET THE ERRORS FROM PAGE
-//		loginPage = passwordChangePage.logout()
+		loginPage = passwordChangePage.logout();
 //						.loginInvalid(baseUserName, "");
 //
 //		assertTrue("blank password allowed login",loginPage.isloginError());

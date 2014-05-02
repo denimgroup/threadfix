@@ -100,6 +100,7 @@ public class TeamDetailPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    //TODO When ids are added change this!
     public String getErrorText() {
         return driver.findElementById("name.errors").getText().trim();
     }
