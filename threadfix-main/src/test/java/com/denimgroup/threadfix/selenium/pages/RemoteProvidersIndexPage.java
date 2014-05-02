@@ -125,10 +125,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage saveWhiteHat(){
-		driver.findElementById("submitRemoteProviderFormButton1").click();
-		sleep(5000);
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
-		sleep(5000);
+		driver.findElementById("submit").click();
+        sleep(1000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -288,8 +286,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	/*-------------- action functions ---------------*/
 	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String teamName, String appName){
 		clickEditWhiteHatButton(appRow);
-		selectWhiteHatTeamMapping(teamName, appRow);
-		selectWhiteHatAppMapping(appName, appRow);
+		selectWhiteHatTeamMapping(teamName);
+		selectWhiteHatAppMapping(appName);
 		clickUpdateMappings();
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -299,14 +297,14 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public UserIndexPage selectWhiteHatTeamMapping(String teamName, int appRow){
-		WebElement a = driver.findElementById("orgSelect1-" + appRow);
+	public UserIndexPage selectWhiteHatTeamMapping(String teamName){
+		WebElement a = driver.findElementById("teamSelect");
 		new Select(a).selectByVisibleText(teamName);
 		return new UserIndexPage(driver);
 	}
 
-	public UserIndexPage selectWhiteHatAppMapping(String appName, int appRow){
-		WebElement a = driver.findElementById("appSelect1-" + appRow);
+	public UserIndexPage selectWhiteHatAppMapping(String appName){
+		WebElement a = driver.findElementById("appSelect1");
 		new Select(a).selectByVisibleText(appName);
 		return new UserIndexPage(driver);
 	}

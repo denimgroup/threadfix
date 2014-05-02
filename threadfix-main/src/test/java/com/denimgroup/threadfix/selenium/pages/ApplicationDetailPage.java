@@ -333,8 +333,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickDocumentTab() {
         driver.findElementById("documentsTab").click();
-        sleep(1000);
-        waitForElement(driver.findElementById("uploadDocModalLink" + modalNumber()));
+        waitForElement(driver.findElementById("uploadDocModalLink"));
         return new ApplicationDetailPage(driver);
     }
 

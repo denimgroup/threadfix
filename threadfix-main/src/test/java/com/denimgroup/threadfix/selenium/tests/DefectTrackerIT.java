@@ -23,12 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -114,6 +113,7 @@ public class DefectTrackerIT extends BaseIT {
 				.enterType(defectTrackerType)
                 .enterURL(TEST_BUGZILLA_URL)
                 .clickSaveDefectTracker();
+        sleep(5000);
 
 		assertTrue("The defectTracker was not present in the table.",
 				defectTrackerIndexPage.isElementPresent("defectTackerName" + newDefectTrackerName));
@@ -140,7 +140,7 @@ public class DefectTrackerIT extends BaseIT {
                 defectTrackerIndexPage.isElementPresent("defectTackerName" + newDefectTrackerName));
     }
 
-    @Ignore
+
 	@Test
 	public void testCreateDefectTrackerFieldValidation() {
 		String emptyString = "";
@@ -231,7 +231,7 @@ public class DefectTrackerIT extends BaseIT {
 //        assertTrue("Edit did not change url.",
 //                defectTrackerIndexPage.doesURLExistForName(editedDefectTrackerName, TEST_BUGZILLA_URL));
 //	}
-    @Ignore
+
 	@Test
 	public void testEditDefectTrackerFieldValidation() {                            //this one!!!!!!!!!!
         String emptyString = "";
@@ -410,7 +410,7 @@ public class DefectTrackerIT extends BaseIT {
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .enterName(replacementName)
                 .clickModalSubmit();
-        sleep(1000);
+        sleep(5000);
 
 		assertTrue("DefectTracker page did not edit bugzilla tracker correctly.",
 				defectTrackerIndexPage.isElementPresent("defectTackerName" + replacementName));
