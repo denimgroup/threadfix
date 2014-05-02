@@ -167,7 +167,7 @@ public class ApplicationsController {
 
         // defect tracker add form
         map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackers());
-        map.put("defectTrackerList", defectTrackerService.loadAllDefectTrackerTypes());
+        map.put("defectTrackerTypeList", defectTrackerService.loadAllDefectTrackerTypes());
 
         map.put("wafList", wafService.loadAll());
         map.put("wafTypeList", wafService.loadAllWafTypes());

@@ -9,6 +9,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
     $scope.loading = false;
 
     $scope.getProductNames = function() {
+        $scope.loading = true;
 
         var app = $scope.config.application;
         var url = tfEncoder.encode("/organizations/" + app.team.id + "/applications/jsontest");
@@ -19,6 +20,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
 
                 if (data.success) {
                     $scope.productNames = data.object;
+                    $scope.object.projectName = $scope.productNames[0];
                 } else {
                     $scope.error = "Failure. Message was : " + data.message;
                 }

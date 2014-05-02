@@ -9,7 +9,7 @@
             <tr class="left-align">
                 <td>Defect Tracker</td>
                 <td class="inputValue">
-                    <select ng-model="object.defectTracker.id" id="defectTrackerId" name="defectTrackerType.id">
+                    <select ng-model="object.defectTrackerId" id="defectTrackerId" name="defectTrackerTypeId">
                         <option ng-repeat="tracker in config.defectTrackerList"
                                 ng-selected="object.defectTracker.id === tracker.id"
                                 value="{{ tracker.id }}">
@@ -74,7 +74,7 @@
         <button id="loadingButton"
                 disabled="disabled"
                 class="btn btn-primary"
-                ng-show="loading">
+                ng-show="loading && productNames">
             <span class="spinner"></span>
             Submitting
         </button>
@@ -84,11 +84,19 @@
                 ng-mouseenter="form.name.$dirty = true"
                 ng-hide="loading || !productNames"
                 ng-click="ok(form.$valid)">Add Defect Tracker</button>
+
+        <button id="loadingProductNamesButton"
+                disabled="disabled"
+                class="btn btn-primary"
+                ng-show="loading && !productNames">
+            <span class="spinner"></span>
+            Loading Product Names
+        </button>
         <button id="submit"
                 ng-class="{ disabled : form.$invalid }"
                 class="btn btn-primary"
                 ng-mouseenter="form.name.$dirty = true"
-                ng-hide="productNames"
+                ng-hide="loading || productNames"
                 ng-click="getProductNames()">Get Product Names</button>
     </div>
 </script>
