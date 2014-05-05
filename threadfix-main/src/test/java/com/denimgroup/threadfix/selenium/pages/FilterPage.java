@@ -100,7 +100,7 @@ public class FilterPage extends BasePage {
 
     public FilterPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
-        waitForElement(driver.findElementByClassName("alert-success"));
+        //waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
     }
 

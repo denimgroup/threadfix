@@ -52,18 +52,16 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Remote Provider Page not found",pageHeader.contains("Remote Providers"));
 	}
 
-    //TODO WhiteHat Key seems to be invalid
-    @Ignore
 	@Test
 	public void configureSentinel() {
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .clickSubmitWait();
+                .saveWhiteHat();
 
 		assertTrue("WhiteHat Sentinel was not configured properly",
-                remoteProvidersIndexPage.successAlert().contains("Applications successfully updated"));
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
 		
 		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 		
@@ -147,6 +145,7 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
+    //TODO Update when new ids are added
     @Test
     public void importWhiteHatScan() {
         String teamName = "importWhiteHatTeam" + getRandomString(3);
