@@ -34,7 +34,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Scanner Comparison Summary]]></text>
+				<text><![CDATA[Scan Comparison Summary]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="40" width="600" height="20"/>

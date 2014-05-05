@@ -31,9 +31,9 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         {
             title: "Comparison",
             options: [
-                { name: "Comparison By Vulnerability", id: 4 },
-                { name: "Comparison Summary", id: 5 },
-                { name: "Comparison Detail", id: 6 }
+                { name: "Scan Comparison By Vulnerability", id: 4 },
+                { name: "Scan Comparison Summary", id: 5 },
+                { name: "Scan Comparison Detail", id: 6 }
             ]
         }
     ];

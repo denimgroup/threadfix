@@ -20,7 +20,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[12 Month Vulnerability Breakdown]]></text>
+				<text><![CDATA[12 Month Vulnerability Burndown]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="222" y="40" width="309" height="20"/>
