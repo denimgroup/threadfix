@@ -68,6 +68,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private ApplicationCriticalityDao applicationCriticalityDao;
 	@Autowired private DefectDao defectDao;
 	@Autowired private ScanMergeService scanMergeService;
+    @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
 
     @Nullable
 	@Autowired(required = false)
@@ -567,7 +568,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 	private Integer getCweId(TableSortBean bean) {
 		if (bean.getCweFilter() != null && !bean.getCweFilter().trim().equals("")) {
 			String cwe = bean.getCweFilter().trim();
-			return IntegerUtils.getIntegerOrNull(cwe);
+
+			Integer cweId = IntegerUtils.getIntegerOrNull(cwe);
+            if (cweId != null) {
+                GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveByDisplayId(cweId);
+                if (genericVulnerability != null)
+                    return genericVulnerability.getId();
+            }
 		}
 		
 		return null;

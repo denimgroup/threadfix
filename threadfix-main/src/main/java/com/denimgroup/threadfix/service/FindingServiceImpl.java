@@ -99,7 +99,7 @@ public class FindingServiceImpl implements FindingService {
                     wasNumeric = true;
                     String cweName = null;
                     ChannelType manualType = null;
-                    GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById(requestedId);
+                    GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveByDisplayId(requestedId);
                     if (genericVulnerability != null) {
                         cweName = genericVulnerability.getName();
                         if (cweName != null) {

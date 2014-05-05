@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,25 +63,30 @@ public class ScanPluginController {
 	public String doUpdate(Model model) {
 		log.info("Start updating Channel Vulnerabilities");
 		List<String[]> channelVulnUpdateResults = new ArrayList<>();
+        List<String[]> genericVulnUpdateResults = new ArrayList<>();
 		
 		try {
-			channelVulnUpdateResults = scannerMappingsUpdaterService.updateChannelVulnerabilities();
+            genericVulnUpdateResults = scannerMappingsUpdaterService.updateGenericVulnerabilities();
+            channelVulnUpdateResults = scannerMappingsUpdaterService.updateChannelVulnerabilities();
+            scannerMappingsUpdaterService.updateUpdatedDate();
+
 		} catch (URISyntaxException e) {
             String message = "There was error when reading files.";
 			model.addAttribute("errorMessage", message);
             log.warn(message, e);
 		} catch (IOException e) {
-            String message = "There was error when updating Channel Vulnerabilities from the scanners jar.";
+            String message = "There was error when updating Vulnerabilities.";
             model.addAttribute("errorMessage", message);
             log.warn(message, e);
 		}
 		
 		model.addAttribute("successMessage", "Vulnerability mappings were successfully updated.");
 		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
-		model.addAttribute("resultList", channelVulnUpdateResults);
+        model.addAttribute("resultList", channelVulnUpdateResults);
+        model.addAttribute("genericVulnUpdateResults", genericVulnUpdateResults);
         model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
 
-		log.info("Ended updating Channel Vulnerabilities");
+		log.info("Ended updating Vulnerabilities");
 		return "scanplugin/channelVulnUpdate";
 	}
 	
