@@ -266,23 +266,6 @@ public class WafIT extends BaseIT {
         assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
     }
 
-    @Test
-    public void longWafNameEditModalHeaderTest(){
-        String wafName = getRandomString(1024);
-        String type = "Imperva SecureSphere";
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
-                .clickWafsHeaderLink()
-                .clickAddWafLink()
-                .createNewWaf(wafName, type)
-                .clickModalSubmit(WafIndexPage.class)
-                .clickEditWaf(wafName.substring(0, 50));
-        int width = wafIndexPage.getWafEditHeaderWidth(wafName.substring(0, 50));
-
-        wafIndexPage.clickCloseWafModal().clickDeleteWaf(wafName.substring(0,50));
-
-        assertTrue("Waf edit header was too wide",width == 400);
-    }
-
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
 		String teamName = "attachModSecTeam" + getRandomString(3);
