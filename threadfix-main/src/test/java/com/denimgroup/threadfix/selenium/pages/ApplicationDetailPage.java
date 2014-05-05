@@ -422,6 +422,12 @@ public class ApplicationDetailPage extends BasePage {
         return new ScanDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickSourceInfo(){
+        waitForElement(driver.findElementByLinkText("Source Code Information"));
+        driver.findElementByLinkText("Source Code Information");
+        return new ApplicationDetailPage(driver);
+    }
+
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {
@@ -464,7 +470,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isAppTypeDetect() {
-        return driver.findElementById("frameworkType").getText().contains("Detect");
+        return driver.findElementById("frameworkType").getText().contains("DETECT");
     }
 
     public boolean isDefectTrackerAttached() {
@@ -598,7 +604,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isLineNumberInputPresent() {
-        return driver.findElementById("urlSearch").isDisplayed();
+        return driver.findElementById("lineNumberInput").isDisplayed();
     }
 
     public boolean isParameterPresent() {

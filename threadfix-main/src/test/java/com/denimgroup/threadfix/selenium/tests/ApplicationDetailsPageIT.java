@@ -129,6 +129,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     public void testActionButtonEditDeleteButton() {
         ApplicationDetailPage ap = buildTeamAppandScan();
         ap.clickEditDeleteBtn();
+        ap.clickSourceInfo();
         assertTrue("Delete Button is not present", ap.isDeleteButtonPresent());
         assertTrue("Delete Button is not clickable", ap.isDeletebuttonClickable());
         assertTrue("App Name Input is not present.", ap.isNameInputPresent());
