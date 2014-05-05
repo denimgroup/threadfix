@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Home</title>
+	<title>Applications</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applications-index-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
