@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -38,6 +39,6 @@ public interface ProxyService {
 
     HttpURLConnection getConnectionWithProxyConfig(URL url) throws IOException;
 
-
+    DefaultConfiguration getDefaultConfigurationWithProxyCredentials();
 
 }
