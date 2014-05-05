@@ -200,15 +200,15 @@
 							id="canViewErrorLogsFalse" name="canViewErrorLogs" value="false" />
 					</td>
 				</tr>
-				<tr>
-					<td>View Job Statuses</td>
-					<td class="inputValue" style="text-align: center;"><input type="radio" 
-							id="canViewJobStatusesTrue" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"
-							value="true" /></td>
-					<td class="inputValue" style="text-align: center;"><input type="radio" 
-							id="canViewJobStatusesFalse" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"
-							value="false" /></td>
-				</tr>
+				<!--<tr>-->
+					<!--<td>View Job Statuses</td>-->
+					<!--<td class="inputValue" style="text-align: center;"><input type="radio" -->
+							<!--id="canViewJobStatusesTrue" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"-->
+							<!--value="true" /></td>-->
+					<!--<td class="inputValue" style="text-align: center;"><input type="radio" -->
+							<!--id="canViewJobStatusesFalse" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"-->
+							<!--value="false" /></td>-->
+				<!--</tr>-->
 			</tbody>
 		</table>
 	</div>

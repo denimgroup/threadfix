@@ -34,7 +34,7 @@ import com.denimgroup.threadfix.service.JobStatusService;
 
 @Controller
 @RequestMapping("/jobs")
-@PreAuthorize("hasRole('ROLE_CAN_VIEW_JOB_STATUSES')")
+//@PreAuthorize("hasRole('ROLE_CAN_VIEW_JOB_STATUSES')")
 public class JobStatusController {
 	
 	public JobStatusController(){}

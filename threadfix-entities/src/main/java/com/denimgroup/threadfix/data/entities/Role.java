@@ -49,7 +49,8 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs,
-			canViewJobStatuses,enterprise;
+    //			canViewJobStatuses,enterprise;
+            enterprise;
 	
 	public static final String[] PROTECTED_PERMISSIONS = new String[]{
 			"canManageRoles", "canManageUsers"
@@ -59,7 +60,8 @@ public class Role extends AuditableEntity {
 		"canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
 		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
 		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-		"canGenerateReports", "canViewJobStatuses", "canManageApplications", "enterprise"
+		"canGenerateReports", "canManageApplications", "enterprise"
+//            "canGenerateReports", "canViewJobStatuses", "canManageApplications", "enterprise"
 	};
 	
 	@NotEmpty(message = "{errors.required}")
@@ -201,14 +203,14 @@ public class Role extends AuditableEntity {
 		this.canViewErrorLogs = canViewErrorLogs;
 	}
 
-	@Column
-	public Boolean getCanViewJobStatuses() {
-		return canViewJobStatuses != null && canViewJobStatuses;
-	}
-
-	public void setCanViewJobStatuses(Boolean canViewJobStatuses) {
-		this.canViewJobStatuses = canViewJobStatuses;
-	}
+//	@Column
+//	public Boolean getCanViewJobStatuses() {
+//		return canViewJobStatuses != null && canViewJobStatuses;
+//	}
+//
+//	public void setCanViewJobStatuses(Boolean canViewJobStatuses) {
+//		this.canViewJobStatuses = canViewJobStatuses;
+//	}
 	
 	@Column
 	public Boolean getEnterprise(){
@@ -265,8 +267,8 @@ public class Role extends AuditableEntity {
 		if (getCanViewErrorLogs())
 			permissions.add(Permission.CAN_VIEW_ERROR_LOGS);
 
-		if (getCanViewJobStatuses())
-			permissions.add(Permission.CAN_VIEW_JOB_STATUSES);
+//		if (getCanViewJobStatuses())
+//			permissions.add(Permission.CAN_VIEW_JOB_STATUSES);
 		
 		if (getEnterprise())
 			permissions.add(Permission.ENTERPRISE);
