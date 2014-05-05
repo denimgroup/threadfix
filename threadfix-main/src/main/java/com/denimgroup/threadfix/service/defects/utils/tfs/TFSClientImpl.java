@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
@@ -34,24 +36,25 @@ import com.microsoft.tfs.core.clients.workitem.project.Project;
 import com.microsoft.tfs.core.clients.workitem.project.ProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.query.WorkItemCollection;
 import com.microsoft.tfs.core.config.ConnectionAdvisor;
-import com.microsoft.tfs.core.config.ConnectionInstanceData;
 import com.microsoft.tfs.core.config.DefaultConnectionAdvisor;
 import com.microsoft.tfs.core.exceptions.TECoreException;
 import com.microsoft.tfs.core.exceptions.TFSUnauthorizedException;
 import com.microsoft.tfs.core.httpclient.Credentials;
-import com.microsoft.tfs.core.httpclient.HttpException;
-import com.microsoft.tfs.core.httpclient.ProxyClient;
 import com.microsoft.tfs.core.httpclient.UsernamePasswordCredentials;
+import com.microsoft.tfs.core.httpclient.auth.AuthScope;
 import com.microsoft.tfs.core.ws.runtime.exceptions.UnauthorizedException;
-import com.microsoft.tfs.util.GUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
-public class TFSClientImpl implements TFSClient {
+public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSClient {
+
+    @Autowired(required = false)
+    private ProxyService proxyService;
 
     protected static final SanitizedLogger LOG = new SanitizedLogger("TFSClientImpl");
 
@@ -270,26 +273,12 @@ public class TFSClientImpl implements TFSClient {
             e.printStackTrace();
         }
 
-        ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.CANADA, TimeZone.getTimeZone(""));
+        ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
+
+        TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
+        addProxy(projects.getHTTPClient());
 
         try {
-
-            ProxyClient client = new ProxyClient();
-
-            ProxyClient.ConnectResponse connect = client.connect();
-
-            advisor.getTFProxyServerSettingsFactory(new ConnectionInstanceData(new URI("test"), new GUID("Test")));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (HttpException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials);
-        try {
-            projects.getTFProxyServerSettings();
             client = projects.getWorkItemClient();
             lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
         } catch (UnauthorizedException | TFSUnauthorizedException e) {
@@ -299,6 +288,25 @@ public class TFSClientImpl implements TFSClient {
 
         return lastStatus;
     }
+
+    private void addProxy(com.microsoft.tfs.core.httpclient.HttpClient client) {
+
+        if (proxyService != null) {
+
+            DefaultConfiguration config = proxyService.getDefaultConfigurationWithProxyCredentials();
+
+            if (config.hasConfiguredHostAndPort()) {
+                client.getHostConfiguration().setProxy(config.getProxyHost(), config.getProxyPort());
+
+                if (config.hasConfiguredCredentials()) {
+                    client.getState().setProxyCredentials(AuthScope.ANY,
+                            new UsernamePasswordCredentials(config.getProxyUsername(), config.getProxyPassword()));
+                }
+            }
+        }
+    }
+
+
 
     @Override
     public String createDefect(String projectName, DefectMetadata metadata, String description) {
@@ -344,10 +352,6 @@ public class TFSClientImpl implements TFSClient {
         }
     }
 
-    private void close() {
-
-    }
-
     @Override
     public ConnectionStatus checkUrl(String url) {
         Credentials credentials = new UsernamePasswordCredentials("", "");
@@ -363,8 +367,13 @@ public class TFSClientImpl implements TFSClient {
         TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri,
                 credentials);
 
+        projects.getHTTPClient().getHostConfiguration().setProxy("localhost", 3129);
+
+        projects.getHTTPClient().getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials("user1", "user1"));
+
         try {
             projects.getWorkItemClient().getProjects();
+            //projects.getWorkItemClient();
             LOG.info("No UnauthorizedException was thrown when attempting to connect with blank credentials.");
             return ConnectionStatus.VALID;
         } catch (UnauthorizedException | TFSUnauthorizedException e) {
