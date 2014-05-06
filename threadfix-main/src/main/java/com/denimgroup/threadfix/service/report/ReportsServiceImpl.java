@@ -709,7 +709,7 @@ public class ReportsServiceImpl implements ReportsService {
 			applicationList.add(application);
 		}
 		
-		SimpleDateFormat formatter=new SimpleDateFormat("dd-MMM-yyyy");
+		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
 		
 		for (Application application : applicationList) {
 			for (Vulnerability vuln : application.getVulnerabilities()) {

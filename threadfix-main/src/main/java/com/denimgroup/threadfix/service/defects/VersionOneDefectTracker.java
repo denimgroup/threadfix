@@ -42,7 +42,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     private static final String CONTENT_TYPE = "application/xml";
 
-    RestUtils restUtils = RestUtilsImpl.getInstance();
+    RestUtils restUtils = RestUtilsImpl.getInstance(VersionOneDefectTracker.class);
 
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {

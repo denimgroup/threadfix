@@ -1080,3 +1080,7 @@ body.dragover.drag-enabled .uploadable {
 .filter-table .span2 {
     margin-top:7px;
 }
+
+.even-sized-rows td {
+    height:40px;
+}

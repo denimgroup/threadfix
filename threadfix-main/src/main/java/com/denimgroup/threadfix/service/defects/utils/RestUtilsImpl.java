@@ -46,7 +46,7 @@ import java.net.URL;
  * @author mcollins
  *
  */
-public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUtils {
+public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements RestUtils {
 
     @Autowired(required = false)
     private ProxyService proxyService;
@@ -54,14 +54,16 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
     private static boolean WRITE_REQUESTS_TO_FILE = true;
 
 	private RestUtilsImpl() {} // intentional, we shouldn't be instantiating this class.
-	
+
+    Class<T> classToProxy = null;
+
 	private static final SanitizedLogger LOG = new SanitizedLogger(RestUtilsImpl.class);
     private String postErrorResponse;
 
-    private static RestUtilsImpl INSTANCE = new RestUtilsImpl();
-
-    public static RestUtilsImpl getInstance() {
-        return INSTANCE;
+    public static <T> RestUtilsImpl getInstance(Class<T> classToProxy) {
+        RestUtilsImpl impl = new RestUtilsImpl();
+        impl.classToProxy = classToProxy;
+        return impl;
     }
 
 	//The following methods help with REST interfaces.
@@ -78,7 +80,7 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
             if (proxyService == null) {
 			    httpConnection = (HttpURLConnection) url.openConnection();
             } else {
-                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+                httpConnection = proxyService.getConnectionWithProxyConfig(url, classToProxy);
             }
 
 			setupAuthorization(httpConnection, username, password);
@@ -147,7 +149,7 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
             if (proxyService == null) {
                 httpConnection = (HttpURLConnection) url.openConnection();
             } else {
-                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+                httpConnection = proxyService.getConnectionWithProxyConfig(url, classToProxy);
             }
 
 			setupAuthorization(httpConnection, username, password);
@@ -249,12 +251,12 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
 
         boolean retVal;
 
-        HttpClient httpClient = null;
+        HttpClient httpClient;
         try {
             if (proxyService == null) {
                 httpClient = new HttpClient();
             } else {
-                httpClient = proxyService.getClientWithProxyConfig();
+                httpClient = proxyService.getClientWithProxyConfig(classToProxy);
             }
 
             GetMethod get = new GetMethod(urlString);
@@ -287,7 +289,7 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
     public boolean hasXSeraphLoginReason(String urlString, String username, String password) {
         URL url;
         try {
-            url = new URL(urlString);//getUrlWithRest() + "user?username=" + getUsername());
+            url = new URL(urlString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return false;
@@ -299,7 +301,7 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
             if (proxyService == null) {
                 httpConnection = (HttpURLConnection) url.openConnection();
             } else {
-                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+                httpConnection = proxyService.getConnectionWithProxyConfig(url, classToProxy);
             }
 
             setupAuthorization(httpConnection, username, password);

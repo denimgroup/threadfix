@@ -15,8 +15,8 @@
 	
 	<c:if test="${ empty teams }">
 		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
-		    <div class="alert">
-			    <button type="button" class="close" data-dismiss="alert">&times;</button>
+		    <div class="alert" ng-show="!dismissNoTeamsFound">
+			    <button type="button" class="close" ng-click="dismissNoTeamsFound = true">&times;</button>
 			    <strong>No teams found!</strong> To upload scans, first you need to create teams and applications.  
 			    <a href="<c:out value="${ teamsUrl }"/>#myTeamModal">
 			    	Get started
