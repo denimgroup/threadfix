@@ -82,4 +82,6 @@ public interface ScannerMappingsUpdaterService {
 
     void updateUpdatedDate();
 
+    void updateMappings();
+
 }

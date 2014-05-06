@@ -82,7 +82,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="2">
                     <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>
                 </td>
             </tr>
