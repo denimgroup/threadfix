@@ -156,6 +156,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     var refreshSuccess = function(data) {
         $scope.vulns = data.object.vulnerabilities;
+        $scope.vulns.forEach(sortFindings);
         $scope.genericVulnerabilities = data.object.genericVulnerabilities;
         $scope.numVulns = data.object.numVulns;
         $scope.max = Math.ceil(data.object.numVulns/100);
@@ -180,6 +181,14 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         $scope.loading = false;
 
         calculateShowTypeSelect();
+    }
+
+    var sortFindings = function(vuln) {
+        vuln.findings.sort(function(a, b) {
+            if (a.importTime < b.importTime) return 1;
+            if (a.importTime > b.importTime) return -1;
+            return 0;
+        });
     }
 
     // Listeners / refresh stuff
