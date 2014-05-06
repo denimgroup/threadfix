@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -68,7 +69,9 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 		private Boolean getParamValueText	  = false;
 		private Boolean getRequestText		  = false;
 		private Boolean getResponseText       = false;
-		
+		private boolean inFinding		  = false;
+		 		
+		private StringBuffer currentRawFinding	  = new StringBuffer();		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
@@ -111,7 +114,14 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	} else if ("netsparker".equals(qName)) {
 //	    		date = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
                 date = getCalendar(atts.getValue("generated"));
+	    	} else if ("vulnerability".equals(qName)){
+	    		inFinding = true;
 	    	}
+	    	// in a finding, build the tag
+	    	if (inFinding){
+	    		currentRawFinding.append(makeTag(name, qName , atts));
+	    	}
+
 	    }
 
 	    public void endElement (String uri, String name, String qName)
@@ -141,10 +151,15 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
 	    	}
+	    	if (inFinding){
+	    		currentRawFinding.append("</").append(qName).append(">");
+	    	}
 	    	
 	    	if ("vulnerability".equals(qName)) {
+	    		
+	    	
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode, null, currentParameterValue, currentRequest, currentResponse);
+	    				currentChannelVulnCode, currentSeverityCode, null, currentParameterValue, currentRequest, currentResponse, null, null, currentRawFinding.toString());
 	    		
 	    		// The old XML format didn't include severities. As severities are required
 	    		// for vulnerabilities to show on the application page, let's assign medium 
@@ -163,6 +178,8 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    		currentParameterValue  = null;
 	    		currentRequest         = null;
 	    		currentResponse        = null;
+	    		inFinding 			   = false;
+	    		currentRawFinding.setLength(0);
 	    	}
 	    }
 
@@ -171,6 +188,8 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getParamValueText || getRequestText || getResponseText) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+	    	if (inFinding)
+	    		currentRawFinding.append(ch,start,length);
 	    }
 	}
 

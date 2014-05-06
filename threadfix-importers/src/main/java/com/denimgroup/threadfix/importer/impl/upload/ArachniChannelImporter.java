@@ -55,7 +55,12 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 		tagMap.put("injected",   FindingKey.VALUE);
 		tagMap.put("request", 	    FindingKey.REQUEST);
 		tagMap.put("html",	    FindingKey.RESPONSE);
+		tagMap.put("description", FindingKey.DETAIL);
+		tagMap.put("remedy_guidance", FindingKey.RECOMMENDATION);
+		tagMap.put("rawfinding", FindingKey.RAWFINDING);
 	}
+	
+	private StringBuffer currentRawFinding = new StringBuffer();
 	
 	// Since the severity mappings are static and not included in the XML output,
 	// these have been reverse engineered from the code
@@ -139,6 +144,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
+		private boolean inRequest = false; //for accumulating request headers
 		
 		private FindingKey itemKey = null;
 	
@@ -166,6 +172,19 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
+	    		if ("request".equals(qName)){
+	    			inRequest=true;
+	    		}
+	    	} else if (inRequest && "field".equals(qName)){
+	    		String header = atts.getValue("name") + ": " + atts.getValue("value") + "\n";
+	    		if (! findingMap.containsKey(FindingKey.REQUEST)){
+	    			findingMap.put(FindingKey.REQUEST,header);
+		    	} else {
+		    		findingMap.put(FindingKey.REQUEST, findingMap.get(FindingKey.REQUEST) + header);
+		    	}
+	    	}
+	    	if (inFinding){
+	    		currentRawFinding.append(makeTag(name, qName, atts));
 	    	}
 	    }
 	    
@@ -184,23 +203,37 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		if (! findingMap.containsKey(FindingKey.SEVERITY_CODE) || findingMap.get(FindingKey.SEVERITY_CODE) == null)
 	    			findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
 
+	    		currentRawFinding.append("</").append(qName).append(">");
+	    		findingMap.put(FindingKey.RAWFINDING,currentRawFinding.toString());
 	    		Finding finding = constructFinding(findingMap);
 	    		
 	    		add(finding);
 	    		findingMap = null;
 	    		inFinding = false;
+	    		currentRawFinding.setLength(0);
+	    		
 	    	} else if (inFinding && itemKey != null) {
 	    		String currentItem = getBuilderText();
 	    		
 	    		if (currentItem != null && "RESPONSE".equals(itemKey.toString())){
 	    			//these are base64 encoded in the xml
-	    			currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
+	    			try {
+	    				currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
+	    			} catch (Exception ignored){
+	    				//if it can't be decoded just pass as-is
+	    			}	
+	    		}
+	    		
+	    		if ("request".equals(qName)){
+	    			inRequest=false;
 	    		}
 	    		
 	    		if (currentItem != null && findingMap.get(itemKey) == null) {
 	    			findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
+	    		
+	    		currentRawFinding.append("</").append(qName).append(">");
 	    	} 
 	    	
 	    	if (getDate) {
@@ -216,6 +249,9 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    public void characters (char ch[], int start, int length) {
 	    	if (getDate || itemKey != null) {
 	    		addTextToBuilder(ch, start, length);
+	    	}	    
+	    	if (inFinding){
+	    		currentRawFinding.append(ch, start, length);
 	    	}
 	    }
 	}

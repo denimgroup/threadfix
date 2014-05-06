@@ -80,7 +80,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
 	protected enum FindingKey {
-		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE
+		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL, RECOMMENDATION, RAWFINDING
 	}
 	
 	// A stream pointing to the scan's contents. Set with either setFile or
@@ -270,7 +270,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 				findingMap.get(FindingKey.CWE),
 				findingMap.containsKey(FindingKey.VALUE) ? findingMap.get(FindingKey.VALUE) : null,
 				findingMap.containsKey(FindingKey.REQUEST) ? findingMap.get(FindingKey.REQUEST) : null,
-				findingMap.containsKey(FindingKey.RESPONSE) ? findingMap.get(FindingKey.RESPONSE) : null);
+				findingMap.containsKey(FindingKey.RESPONSE) ? findingMap.get(FindingKey.RESPONSE) : null,
+				findingMap.containsKey(FindingKey.DETAIL) ? findingMap.get(FindingKey.DETAIL) : null,
+				findingMap.containsKey(FindingKey.RECOMMENDATION) ? findingMap.get(FindingKey.RECOMMENDATION) : null,
+				findingMap.containsKey(FindingKey.RAWFINDING) ? findingMap.get(FindingKey.RAWFINDING) : null);
 	}
 
 	/**
@@ -292,8 +295,15 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
 		   		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
-    	return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, cweCode, null, null, null);
+    	return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, cweCode, null, null, null, null, null, null);
 	}
+    
+    @Nullable
+	protected Finding constructFinding(String url, String parameter,
+		   		String channelVulnerabilityCode, String channelSeverityCode, String cweCode, String parameterValue, String request, String response) {
+    	return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, cweCode, parameterValue, request, response, null, null, null);
+	}
+  
 	/**
 	 *
 	 * This method can be used to construct a finding out of the 
@@ -310,7 +320,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 */
      protected Finding constructFinding(String url, String parameter, 
 		    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode, String parameterValue,
-		    		String request, String response) {
+		    		String request, String response, String detail, String recommendation, String rawFinding) {
     	 
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
 			return null;
@@ -359,18 +369,28 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		finding.setSurfaceLocation(location);
 
 		if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
-			parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n<truncated>\n";
+			parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
 		finding.setAttackString(parameterValue);
 		
 		if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
-			request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n<truncated>\n";
-		
+			request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";		
 		finding.setAttackRequest(request);
 			
 		if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
-			response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n<truncated>\n";
+			response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
 		finding.setAttackResponse(response);
 						
+		if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH)
+			detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setScannerDetail(detail);
+		
+		if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH)
+			recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setScannerRecommendation(recommendation);
+		
+		if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
+			rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setRawFinding(rawFinding);
 		
 		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 

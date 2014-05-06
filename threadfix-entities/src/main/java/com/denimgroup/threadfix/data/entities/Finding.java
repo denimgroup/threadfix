@@ -43,6 +43,9 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public static final int ATTACK_STRING_LENGTH = 65535;
 	public static final int ATTACK_REQUEST_LENGTH = 65535;
 	public static final int ATTACK_RESPONSE_LENGTH = 1048575;
+	public static final int SCANNER_DETAIL_LENGTH = 65535;
+	public static final int SCANNER_RECOMMENDATION_LENGTH = 65535;
+	public static final int RAW_FINDING_LENGTH = 1048575;
 	public static final int NATIVE_ID_LENGTH = 50;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
 
@@ -65,6 +68,18 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@Size(max = ATTACK_RESPONSE_LENGTH, message = "{errors.maxlength} "
 			+ ATTACK_RESPONSE_LENGTH + ".")
 	private String attackResponse;
+
+	@Size(max = SCANNER_DETAIL_LENGTH, message = "{errors.maxlength} "
+			+ SCANNER_DETAIL_LENGTH + ".")
+	private String scannerDetail;
+
+	@Size(max = SCANNER_RECOMMENDATION_LENGTH, message = "{errors.maxlength} "
+			+ SCANNER_RECOMMENDATION_LENGTH + ".")
+	private String scannerRecommendation;
+
+	@Size(max = RAW_FINDING_LENGTH, message = "{errors.maxlength} "
+			+ RAW_FINDING_LENGTH + ".")
+	private String rawFinding;
 
 	private ChannelVulnerability channelVulnerability;
 
@@ -287,33 +302,60 @@ public class Finding extends AuditableEntity implements FindingLike {
 		return longDescription;
 	}
 
-	@Column(length = ATTACK_STRING_LENGTH)
 	public String getAttackString() {
 		return attackString;
 	}
 
+	@Column(length = ATTACK_STRING_LENGTH)
 	public void setAttackString(String attackString) {
 		this.attackString = attackString;
 	}
 
-	@Column(length = ATTACK_REQUEST_LENGTH)
 	public String getAttackRequest() {
 		return attackRequest;
 	}
 
+	@Column(length = ATTACK_REQUEST_LENGTH)
 	public void setAttackRequest(String attackRequest) {
 		this.attackRequest = attackRequest;
 	}
 
-	@Column(length = ATTACK_RESPONSE_LENGTH)
 	public String getAttackResponse() {
 		return attackResponse;
 	}
 
+	@Column(length = ATTACK_RESPONSE_LENGTH)
 	public void setAttackResponse(String attackResponse) {
 		this.attackResponse = attackResponse;
 	}
 
+	public String getScannerDetail() {
+		return scannerDetail;
+	}
+
+	@Column(length = SCANNER_DETAIL_LENGTH)
+	public void setScannerDetail(String scannerDetail) {
+		this.scannerDetail = scannerDetail;
+	}
+
+	public String getScannerRecommendation() {
+		return scannerRecommendation;
+	}
+
+	@Column(length = SCANNER_RECOMMENDATION_LENGTH)
+	public void setScannerRecommendation(String scannerRecommendation) {
+		this.scannerRecommendation = scannerRecommendation;
+	}
+
+	public String getRawFinding() {
+		return rawFinding;
+	}
+
+	@Column(length = RAW_FINDING_LENGTH)
+	public void setRawFinding(String rawFinding) {
+		this.rawFinding = rawFinding;
+	}
+	
 	@Column(nullable = false)
 	public boolean isFirstFindingForVuln() {
 		return isFirstFindingForVuln;
@@ -370,5 +412,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 			return getUser();
 		}
 	}
+
+
 
 }
