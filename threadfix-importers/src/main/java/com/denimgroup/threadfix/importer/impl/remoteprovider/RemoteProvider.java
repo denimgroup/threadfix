@@ -68,12 +68,12 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 
     private HttpClient instance = null;
 
-    protected HttpClient getConfiguredHttpClient() {
+    protected <T> HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
         if (instance == null) {
             if (proxyService == null) {
                 instance = new HttpClient();
             } else {
-                instance = proxyService.getClientWithProxyConfig();
+                instance = proxyService.getClientWithProxyConfig(classToProxy);
             }
         }
 

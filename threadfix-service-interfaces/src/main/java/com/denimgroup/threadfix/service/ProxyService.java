@@ -33,12 +33,14 @@ import java.net.URL;
 
 public interface ProxyService {
 
-    HttpClient getClientWithProxyConfig();
+    <T> HttpClient getClientWithProxyConfig(Class<T> classToProxy);
 
-    HttpsURLConnection getSSLConnectionWithProxyConfig(URL url) throws IOException;
+    <T> HttpsURLConnection getSSLConnectionWithProxyConfig(URL url, Class<T> classToProxy) throws IOException;
 
-    HttpURLConnection getConnectionWithProxyConfig(URL url) throws IOException;
+    <T> HttpURLConnection getConnectionWithProxyConfig(URL url, Class<T> classToProxy) throws IOException;
 
     DefaultConfiguration getDefaultConfigurationWithProxyCredentials();
+
+    <T> boolean shouldUseProxy(Class<T> classToProxy);
 
 }

@@ -29,6 +29,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name="DefaultConfiguration")
@@ -206,6 +208,108 @@ public class DefaultConfiguration extends BaseEntity {
         return proxyUsername != null && !proxyUsername.equals("") &&
                 proxyPassword != null && !proxyPassword.equals("");
     }
+
+    @Transient
+    public <T> boolean shouldUseProxy(Class<T> classToProxy) {
+        return true;//getProxySupportMap().get(classToProxy.toString());
+    }
+
+    @Transient
+    private Map<String, Boolean> getProxySupportMap() {
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
+        map.put("BugzillaDefectTracker", getShouldProxyBugzilla());
+        map.put("JiraDefectTracker", getShouldProxyJira());
+        map.put("TFSDefectTracker", getShouldProxyTFS());
+        map.put("VersionOneDefectTracker", getShouldProxyVersionOne());
+        map.put("HPQualityCenterDefectTracker", getShouldProxyHPQC());
+        map.put("WhiteHatRemoteProvider", getShouldProxyWhiteHat());
+        map.put("VeracodeRemoteProvider", getShouldProxyVeracode());
+        map.put("QualysRemoteProvider", getShouldProxyQualys());
+        return map;
+    }
+
+    Boolean shouldProxyWhiteHat = false;
+
+    @Column
+    public Boolean getShouldProxyWhiteHat() {
+        return shouldProxyWhiteHat == null || shouldProxyWhiteHat;
+    }
+
+    public void setShouldProxyWhiteHat(Boolean shouldProxyWhiteHat) {
+        this.shouldProxyWhiteHat = shouldProxyWhiteHat;
+    }
+
+    @Column
+    public Boolean getShouldProxyVeracode() {
+        return shouldProxyVeracode == null || shouldProxyVeracode;
+    }
+
+    public void setShouldProxyVeracode(Boolean shouldProxyVeracode) {
+        this.shouldProxyVeracode = shouldProxyVeracode;
+    }
+
+    @Column
+    public Boolean getShouldProxyQualys() {
+        return shouldProxyQualys == null || shouldProxyQualys;
+    }
+
+    public void setShouldProxyQualys(Boolean shouldProxyQualys) {
+        this.shouldProxyQualys = shouldProxyQualys;
+    }
+
+    @Column
+    public Boolean getShouldProxyTFS() {
+        return shouldProxyTFS == null || shouldProxyTFS;
+    }
+
+    public void setShouldProxyTFS(Boolean shouldProxyTFS) {
+        this.shouldProxyTFS = shouldProxyTFS;
+    }
+
+    @Column
+    public Boolean getShouldProxyBugzilla() {
+        return shouldProxyBugzilla == null || shouldProxyBugzilla;
+    }
+
+    public void setShouldProxyBugzilla(Boolean shouldProxyBugzilla) {
+        this.shouldProxyBugzilla = shouldProxyBugzilla;
+    }
+
+    @Column
+    public Boolean getShouldProxyJira() {
+        return shouldProxyJira == null || shouldProxyJira;
+    }
+
+    public void setShouldProxyJira(Boolean shouldProxyJira) {
+        this.shouldProxyJira = shouldProxyJira;
+    }
+
+    @Column
+    public Boolean getShouldProxyVersionOne() {
+        return shouldProxyVersionOne == null || shouldProxyVersionOne;
+    }
+
+    public void setShouldProxyVersionOne(Boolean shouldProxyVersionOne) {
+        this.shouldProxyVersionOne = shouldProxyVersionOne;
+    }
+
+    @Column
+    public Boolean getShouldProxyHPQC() {
+        return shouldProxyHPQC == null || shouldProxyHPQC;
+    }
+
+    public void setShouldProxyHPQC(Boolean shouldProxyHPQC) {
+        this.shouldProxyHPQC = shouldProxyHPQC;
+    }
+
+    Boolean shouldProxyVeracode = false;
+    Boolean shouldProxyQualys = false;
+    Boolean shouldProxyTFS = false;
+    Boolean shouldProxyBugzilla = false;
+    Boolean shouldProxyJira = false;
+    Boolean shouldProxyVersionOne = false;
+    Boolean shouldProxyHPQC = false;
+
 
 
 }

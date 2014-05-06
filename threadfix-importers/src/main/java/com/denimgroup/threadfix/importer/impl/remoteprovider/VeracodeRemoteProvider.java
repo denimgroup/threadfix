@@ -176,7 +176,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
             if (proxyService == null) {
                 m_connect = (HttpsURLConnection) url.openConnection();
             } else {
-                m_connect = proxyService.getSSLConnectionWithProxyConfig(url);
+                m_connect = proxyService.getSSLConnectionWithProxyConfig(url, VeracodeRemoteProvider.class);
             }
 
 			setupAuthorization(m_connect, username, password);

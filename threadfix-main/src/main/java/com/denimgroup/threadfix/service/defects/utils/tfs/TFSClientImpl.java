@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
+import com.denimgroup.threadfix.service.defects.TFSDefectTracker;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.WorkItemClient;
@@ -291,7 +292,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
 
     private void addProxy(com.microsoft.tfs.core.httpclient.HttpClient client) {
 
-        if (proxyService != null) {
+        if (proxyService != null && proxyService.shouldUseProxy(TFSDefectTracker.class)) {
 
             DefaultConfiguration config = proxyService.getDefaultConfigurationWithProxyCredentials();
 
@@ -305,8 +306,6 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             }
         }
     }
-
-
 
     @Override
     public String createDefect(String projectName, DefectMetadata metadata, String description) {

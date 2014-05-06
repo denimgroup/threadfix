@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.defects.utils.bugzilla;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.service.defects.BugzillaDefectTracker;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.xmlrpc.XmlRpcException;
@@ -202,13 +203,12 @@ public class BugzillaClientImpl extends SpringBeanAutowiringSupport implements B
             e.printStackTrace();
         }
 
-
         // config.setEnabledForExtensions(true);
         XmlRpcClient client = new XmlRpcClient();
         client.setConfig(config);
         XmlRpcCommonsTransportFactory factory = new XmlRpcCommonsTransportFactory(client);
 
-        HttpClient httpClient = proxyService == null ? new HttpClient() : proxyService.getClientWithProxyConfig();
+        HttpClient httpClient = proxyService == null ? new HttpClient() : proxyService.getClientWithProxyConfig(BugzillaDefectTracker.class);
         factory.setHttpClient(httpClient);
 
         client.setTransportFactory(factory);
