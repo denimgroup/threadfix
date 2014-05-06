@@ -211,7 +211,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Transient
     public <T> boolean shouldUseProxy(Class<T> classToProxy) {
-        return true;//getProxySupportMap().get(classToProxy.toString());
+        return getProxySupportMap().get(classToProxy.toString());
     }
 
     @Transient
@@ -227,8 +227,6 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("QualysRemoteProvider", getShouldProxyQualys());
         return map;
     }
-
-    Boolean shouldProxyWhiteHat = false;
 
     @Column
     public Boolean getShouldProxyWhiteHat() {
@@ -309,7 +307,5 @@ public class DefaultConfiguration extends BaseEntity {
     Boolean shouldProxyJira = false;
     Boolean shouldProxyVersionOne = false;
     Boolean shouldProxyHPQC = false;
-
-
-
+    Boolean shouldProxyWhiteHat = false;
 }

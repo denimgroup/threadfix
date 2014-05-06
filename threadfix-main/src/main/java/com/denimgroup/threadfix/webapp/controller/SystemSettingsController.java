@@ -62,7 +62,9 @@ public class SystemSettingsController {
 		if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
                     "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
-                    "proxyHost", "proxyPort", "proxyUsername", "proxyPassword");
+                    "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
+                    "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
+                    "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though

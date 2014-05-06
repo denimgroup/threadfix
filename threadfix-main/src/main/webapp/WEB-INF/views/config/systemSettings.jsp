@@ -175,6 +175,38 @@
                                 <form:errors path="proxyPassword" id="proxyPasswordErrors" cssClass="errors" />
                             </td>
                         </tr>
+                        <tr>
+                            <td>Qualys</td>
+                            <td><form:checkbox path="shouldProxyQualys" value="${ defaultConfiguration.shouldProxyQualys }"/></td>
+                        </tr>
+                        <tr>
+                            <td>Veracode</td>
+                            <td><form:checkbox path="shouldProxyVeracode" value="${ defaultConfiguration.shouldProxyVeracode }"/></td>
+                        </tr>
+                        <tr>
+                            <td>WhiteHat Sentinel</td>
+                            <td><form:checkbox path="shouldProxyWhiteHat" value="${ defaultConfiguration.shouldProxyWhiteHat }"/></td>
+                        </tr>
+                        <tr>
+                            <td>TFS</td>
+                            <td><form:checkbox path="shouldProxyTFS" value="${ defaultConfiguration.shouldProxyTFS }"/></td>
+                        </tr>
+                        <tr>
+                            <td>Bugzilla</td>
+                            <td><form:checkbox path="shouldProxyBugzilla" value="${ defaultConfiguration.shouldProxyBugzilla }"/></td>
+                        </tr>
+                        <tr>
+                            <td>Jira</td>
+                            <td><form:checkbox path="shouldProxyJira" value="${ defaultConfiguration.shouldProxyJira }"/></td>
+                        </tr>
+                        <tr>
+                            <td>Version One</td>
+                            <td><form:checkbox path="shouldProxyVersionOne" value="${ defaultConfiguration.shouldProxyVersionOne }"/></td>
+                        </tr>
+                        <tr>
+                            <td>HP Quality Center</td>
+                            <td><form:checkbox path="shouldProxyHPQC" value="${ defaultConfiguration.shouldProxyHPQC }"/></td>
+                        </tr>
                     </table>
                 </div>
             </div>
