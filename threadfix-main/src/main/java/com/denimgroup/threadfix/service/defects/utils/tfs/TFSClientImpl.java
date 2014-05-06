@@ -366,9 +366,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri,
                 credentials);
 
-        projects.getHTTPClient().getHostConfiguration().setProxy("localhost", 3129);
-
-        projects.getHTTPClient().getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials("user1", "user1"));
+        addProxy(projects.getHTTPClient());
 
         try {
             projects.getWorkItemClient().getProjects();

@@ -211,7 +211,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Transient
     public <T> boolean shouldUseProxy(Class<T> classToProxy) {
-        return getProxySupportMap().get(classToProxy.toString());
+        return getProxySupportMap().get(classToProxy.getSimpleName());
     }
 
     @Transient
