@@ -46,22 +46,22 @@
                     <th style="width:64px" class="pointer" ng-click="setSort('Severity')">
                         Severity<span id="severityHeaderCaret"
                                       class="caret-down"
-                                      ng-class="{ expanded: sortType === 'Severity'}"></span>
+                                      ng-class="{ expanded: sort == 1 && sortType === 'Severity'}"></span>
                     </th>
                     <th style="width:260px" class="pointer" ng-click="setSort('Type')">
                         Type<span id="vulnerabilityTypeHeaderCaret"
                                   class="caret-down"
-                                  ng-class="{ expanded: sortType === 'Type'}"></span>
+                                  ng-class="{ expanded: sort == 1 && sortType === 'Type'}"></span>
                     </th>
                     <th style="width:220px" class="pointer" ng-click="setSort('Path')">
                         Path<span id="pathHeaderCaret"
                                   class="caret-down"
-                                  ng-class="{ expanded: sortType === 'Path'}"></span>
+                                  ng-class="{ expanded: sort == 1 && sortType === 'Path'}"></span>
                     </th>
                     <th class="pointer" style="width:90px;" ng-click="setSort('Parameter')">
                         Parameter<span id="parameterHeaderCaret"
                                        class="caret-down"
-                                       ng-class="{ expanded: sortType === 'Parameter'}"></span>
+                                       ng-class="{ expanded: sort == 1 && sortType === 'Parameter'}"></span>
                     </th>
                     <th style="width:24px;"></th>
                     <th ng-show="application.defectTracker" style="width:24px;"></th>

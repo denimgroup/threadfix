@@ -10,8 +10,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.vulnType = 'Open';
 
-    $scope.sortType = 'Type';
-    $scope.sort = 1;
+    $scope.sortType = 'Severity';
+    $scope.sort = 2;
 
     var getCweFilter = function() {
         if ($scope.cweFilter) {
