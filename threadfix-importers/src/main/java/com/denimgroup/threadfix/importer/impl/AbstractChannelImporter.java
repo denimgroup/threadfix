@@ -80,7 +80,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
 	protected enum FindingKey {
-		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE
+		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE
 	}
 	
 	// A stream pointing to the scan's contents. Set with either setFile or
@@ -267,7 +267,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 				findingMap.get(FindingKey.PARAMETER),
 				findingMap.get(FindingKey.VULN_CODE),
 				findingMap.get(FindingKey.SEVERITY_CODE),
-				findingMap.get(FindingKey.CWE));
+				findingMap.get(FindingKey.CWE),
+				findingMap.containsKey(FindingKey.VALUE) ? findingMap.get(FindingKey.VALUE) : null,
+				findingMap.containsKey(FindingKey.REQUEST) ? findingMap.get(FindingKey.REQUEST) : null,
+				findingMap.containsKey(FindingKey.RESPONSE) ? findingMap.get(FindingKey.RESPONSE) : null);
 	}
 
 	/**
@@ -288,7 +291,27 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 */
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
-    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
+		   		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
+    	return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, cweCode, null, null, null);
+	}
+	/**
+	 *
+	 * This method can be used to construct a finding out of the 
+	 * important common information that findings have.
+	 * @param url
+	 * @param parameter
+	 * @param channelVulnerabilityCode
+	 * @param channelSeverityCode
+	 * @param cweCode 
+	 * @param parameterValue
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+     protected Finding constructFinding(String url, String parameter, 
+		    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode, String parameterValue,
+		    		String request, String response) {
+    	 
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
 			return null;
 		}
@@ -334,6 +357,20 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		}
 		
 		finding.setSurfaceLocation(location);
+
+		if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
+			parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n<truncated>\n";
+		finding.setAttackString(parameterValue);
+		
+		if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
+			request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n<truncated>\n";
+		
+		finding.setAttackRequest(request);
+			
+		if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
+			response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n<truncated>\n";
+		finding.setAttackResponse(response);
+						
 		
 		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
@@ -646,9 +683,9 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 					int result = scan.getImportTime().compareTo(testDate);
 					if (result == 0) {
 						return ScanImportStatus.DUPLICATE_ERROR;
-					} else if (result > 0) {
-						return ScanImportStatus.OLD_SCAN_ERROR;
-					}
+					} //else if (result > 0) {
+					//	return ScanImportStatus.OLD_SCAN_ERROR;
+					//}
 				}
 			}
 		}

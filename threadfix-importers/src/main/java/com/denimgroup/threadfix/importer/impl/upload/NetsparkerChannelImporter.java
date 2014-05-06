@@ -65,11 +65,17 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 		private Boolean getUrlText            = false;
 		private Boolean getParamText          = false;
 		private Boolean getSeverityText       = false;
+		private Boolean getParamValueText	  = false;
+		private Boolean getRequestText		  = false;
+		private Boolean getResponseText       = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
+		private String currentParameterValue  = null;
+		private String currentRequest         = null;
+		private String currentResponse        = null;
 				
 		private String host = null;
 	    
@@ -96,6 +102,12 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    		getParamText = true;
 	    	} else if ("severity".equals(qName)) {
 	    		getSeverityText = true;
+	       	} else if("vulnerableparametervalue".equals(qName)){
+	     		getParamValueText = true;
+	       	} else if("rawrequest".equals(qName)){
+	       		getRequestText = true;
+	       	} else if("rawresponse".equals(qName)){
+	       		getResponseText = true;
 	    	} else if ("netsparker".equals(qName)) {
 //	    		date = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
                 date = getCalendar(atts.getValue("generated"));
@@ -116,6 +128,15 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	} else if (getParamText) {
 	    		currentParameter = getBuilderText();
 	    		getParamText = false;
+	    	} else if (getParamValueText) {
+	    		currentParameterValue = getBuilderText();
+	    		getParamValueText = false;
+	    	} else if (getRequestText) {
+	    		currentRequest = getBuilderText();
+	    		getRequestText = false;
+	    	} else if (getResponseText) {
+	    		currentResponse = getBuilderText();
+	    		getResponseText = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
@@ -123,7 +144,7 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	
 	    	if ("vulnerability".equals(qName)) {
 	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
+	    				currentChannelVulnCode, currentSeverityCode, null, currentParameterValue, currentRequest, currentResponse);
 	    		
 	    		// The old XML format didn't include severities. As severities are required
 	    		// for vulnerabilities to show on the application page, let's assign medium 
@@ -139,12 +160,15 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    		currentSeverityCode    = null;
 	    		currentParameter       = null;
 	    		currentUrlText         = null;
+	    		currentParameterValue  = null;
+	    		currentRequest         = null;
+	    		currentResponse        = null;
 	    	}
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText) {
+	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getParamValueText || getRequestText || getResponseText) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }

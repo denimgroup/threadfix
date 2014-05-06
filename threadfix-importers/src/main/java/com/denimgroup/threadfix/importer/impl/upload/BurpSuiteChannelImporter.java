@@ -23,24 +23,27 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.importer.util.DateUtils;
-import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import com.denimgroup.threadfix.importer.util.RegexUtils;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 
 /**
  * 
@@ -53,6 +56,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
 	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<>();
+	private static Pattern pattern = Pattern.compile("The payload <b>(.*)</b> was submitted");
 	static {
 		SEVERITY_MAP.put("deformation", "Information");
 		SEVERITY_MAP.put("eddium", "Medium");
@@ -68,7 +72,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public Scan parseInput() {
-		cleanInputStream();
+		//cleanInputStream();
 		return parseSAXInput(new BurpSuiteSAXParser());
 	}
 	
@@ -109,7 +113,13 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private boolean getHostText           = false;
 		private boolean getBackupParameter    = false;
 		private boolean getSerialNumber       = false;
-		
+		private Boolean getParamValueText	  = false;
+		private Boolean getRequestText		  = false;
+		private Boolean getResponseText       = false;
+		 		
+		private String currentParameterValue  = null;
+		private String currentRequest         = null;
+		private String currentResponse        = null;
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
@@ -153,6 +163,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", atts.getValue("exportTime"));
 	    	} else if ("request".equals(qName)) {
 	    		getBackupParameter = true;
+	    		getRequestText = true;
+	    	} else if ("response".equals(qName)) {
+	    		getResponseText = true;
+	    	} else if ("issueDetail".equals(qName)) {
+	    		getParamValueText = true;
 	    	}
 	    }
 
@@ -179,6 +194,25 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if (getSerialNumber) {
 	    		currentSerialNumber = getBuilderText();
 	    		getSerialNumber = false;
+	    	} else if (getParamValueText) {
+    		    currentParameterValue = getBuilderText();
+    		    Matcher m = pattern.matcher(currentParameterValue);
+	    		if (m.find()){
+	    			currentParameterValue = m.group(1);
+	    		} else {
+	    			currentParameterValue = "";
+	    		}
+	    		getParamValueText = false;
+	    	} else if (getRequestText) {
+	    		currentRequest = getBuilderText();
+	    		if (currentRequest != null)
+	    			currentRequest = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentRequest));	    		
+	    		getRequestText = false;
+	    	} else if (getResponseText) {
+	    		currentResponse = getBuilderText();
+	    		if (currentResponse != null)
+	    			currentResponse = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentResponse));
+	    		getResponseText = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
@@ -210,11 +244,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    			currentParameter = "";
 	    		}
 	    		
-	    		if (SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
+	    		if (currentSeverityCode != null && SEVERITY_MAP.containsKey(currentSeverityCode.toLowerCase()) && SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
 	    			currentSeverityCode = SEVERITY_MAP.get(currentSeverityCode.toLowerCase());
 	    		}
 	    		Finding finding = constructFinding(currentHostText + currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
+	    				currentChannelVulnCode, currentSeverityCode, null, currentParameterValue, currentRequest, currentResponse);
 	    		
 	    		add(finding);
 	    		
@@ -224,13 +258,17 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		currentUrlText         = null;
 	    		currentSerialNumber    = null;
 	    		currentBackupParameter = null;
+	    		currentParameterValue  = null;
+	    		currentRequest         = null;
+	    		currentResponse        = null;	
 	    	}
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (getChannelVulnText || getHostText || getUrlText || getParamText || 
-	    			getSeverityText || getBackupParameter || getSerialNumber) {
+	    			getSeverityText || getBackupParameter || getSerialNumber ||
+	    			getParamValueText || getRequestText || getResponseText) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
 	    }

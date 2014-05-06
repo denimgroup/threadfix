@@ -38,34 +38,53 @@ import java.util.List;
 public class Finding extends AuditableEntity implements FindingLike {
 
 	private static final long serialVersionUID = 5978786078427181952L;
-	
+
 	public static final int LONG_DESCRIPTION_LENGTH = 2047;
+	public static final int ATTACK_STRING_LENGTH = 65535;
+	public static final int ATTACK_REQUEST_LENGTH = 65535;
+	public static final int ATTACK_RESPONSE_LENGTH = 1048575;
 	public static final int NATIVE_ID_LENGTH = 50;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
-	
+
 	private Vulnerability vulnerability;
-	
+
 	private Scan scan;
-	
-	@Size(max = LONG_DESCRIPTION_LENGTH, message = "{errors.maxlength} " + LONG_DESCRIPTION_LENGTH + ".")
+
+	@Size(max = LONG_DESCRIPTION_LENGTH, message = "{errors.maxlength} "
+			+ LONG_DESCRIPTION_LENGTH + ".")
 	private String longDescription;
 
+	@Size(max = ATTACK_STRING_LENGTH, message = "{errors.maxlength} "
+			+ ATTACK_STRING_LENGTH + ".")
+	private String attackString;
+
+	@Size(max = ATTACK_REQUEST_LENGTH, message = "{errors.maxlength} "
+			+ ATTACK_REQUEST_LENGTH + ".")
+	private String attackRequest;
+
+	@Size(max = ATTACK_RESPONSE_LENGTH, message = "{errors.maxlength} "
+			+ ATTACK_RESPONSE_LENGTH + ".")
+	private String attackResponse;
+
 	private ChannelVulnerability channelVulnerability;
-	
-	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
+
+	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} "
+			+ NATIVE_ID_LENGTH + ".")
 	private String nativeId;
-	
-	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
+
+	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} "
+			+ NATIVE_ID_LENGTH + ".")
 	private String displayId;
-	
+
 	private ChannelSeverity channelSeverity;
 	private SurfaceLocation surfaceLocation;
 	private StaticPathInformation staticPathInformation;
-	
+
 	private int numberMergedResults = 1;
 	private Integer entryPointLineNumber = -1;
-	
-	@Size(max = SOURCE_FILE_LOCATION_LENGTH, message = "{errors.maxlength} " + SOURCE_FILE_LOCATION_LENGTH + ".")
+
+	@Size(max = SOURCE_FILE_LOCATION_LENGTH, message = "{errors.maxlength} "
+			+ SOURCE_FILE_LOCATION_LENGTH + ".")
 	private String sourceFileLocation;
 	private boolean isStatic;
 	private boolean isFirstFindingForVuln;
@@ -75,7 +94,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
-	
+
 	private String calculatedUrlPath, calculatedFilePath;
 	private Dependency dependency;
 
@@ -93,7 +112,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "scanId")
-    @JsonIgnore
+	@JsonIgnore
 	public Scan getScan() {
 		return scan;
 	}
@@ -104,7 +123,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "channelVulnerabilityId")
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public ChannelVulnerability getChannelVulnerability() {
 		return channelVulnerability;
 	}
@@ -124,7 +143,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = NATIVE_ID_LENGTH)
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public String getDisplayId() {
 		return displayId;
 	}
@@ -135,7 +154,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "channelSeverityId")
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public ChannelSeverity getChannelSeverity() {
 		return channelSeverity;
 	}
@@ -146,7 +165,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "surfaceLocationId")
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public SurfaceLocation getSurfaceLocation() {
 		return surfaceLocation;
 	}
@@ -154,19 +173,20 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setSurfaceLocation(SurfaceLocation surfaceLocation) {
 		this.surfaceLocation = surfaceLocation;
 	}
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "staticPathInformationId")
 	public StaticPathInformation getStaticPathInformation() {
 		return staticPathInformation;
 	}
 
-	public void setStaticPathInformation(StaticPathInformation staticPathInformation) {
+	public void setStaticPathInformation(
+			StaticPathInformation staticPathInformation) {
 		this.staticPathInformation = staticPathInformation;
 	}
-	
+
 	@OneToMany(mappedBy = "finding")
-	@Cascade( { org.hibernate.annotations.CascadeType.ALL } )
+	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
 	@OrderBy("sequence DESC")
 	public List<DataFlowElement> getDataFlowElements() {
 		return dataFlowElements;
@@ -180,18 +200,19 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public boolean getIsStatic() {
 		return isStatic;
 	}
-	
+
 	public void setIsStatic(boolean isStatic) {
 		this.isStatic = isStatic;
 	}
-	
+
 	@OneToMany(mappedBy = "finding", cascade = CascadeType.ALL)
 	@JsonIgnore
 	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
 		return scanRepeatFindingMaps;
 	}
 
-	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
+	public void setScanRepeatFindingMaps(
+			List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
 		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
 	}
 
@@ -203,9 +224,9 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setSourceFileLocation(String sourceFileLocation) {
 		this.sourceFileLocation = sourceFileLocation;
 	}
-	
+
 	@Column
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public String getCalculatedUrlPath() {
 		return calculatedUrlPath;
 	}
@@ -215,7 +236,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public String getCalculatedFilePath() {
 		return calculatedFilePath;
 	}
@@ -223,17 +244,17 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setCalculatedFilePath(String calculatedFilePath) {
 		this.calculatedFilePath = calculatedFilePath;
 	}
-	
+
 	@Column
 	public void setNumberMergedResults(int numMergedResults) {
 		this.numberMergedResults = numMergedResults;
 	}
 
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public int getNumberMergedResults() {
 		return numberMergedResults;
 	}
-	
+
 	@Column
 	public Integer getEntryPointLineNumber() {
 		if (entryPointLineNumber == null) {
@@ -245,10 +266,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setEntryPointLineNumber(Integer entryPointLineNumber) {
 		this.entryPointLineNumber = entryPointLineNumber;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "userId")
-    @JsonIgnore
+	@JsonIgnore
 	public User getUser() {
 		return user;
 	}
@@ -256,7 +277,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	@Column(length = LONG_DESCRIPTION_LENGTH)
 	public void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
@@ -265,7 +286,34 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public String getLongDescription() {
 		return longDescription;
 	}
-	
+
+	@Column(length = ATTACK_STRING_LENGTH)
+	public String getAttackString() {
+		return attackString;
+	}
+
+	public void setAttackString(String attackString) {
+		this.attackString = attackString;
+	}
+
+	@Column(length = ATTACK_REQUEST_LENGTH)
+	public String getAttackRequest() {
+		return attackRequest;
+	}
+
+	public void setAttackRequest(String attackRequest) {
+		this.attackRequest = attackRequest;
+	}
+
+	@Column(length = ATTACK_RESPONSE_LENGTH)
+	public String getAttackResponse() {
+		return attackResponse;
+	}
+
+	public void setAttackResponse(String attackResponse) {
+		this.attackResponse = attackResponse;
+	}
+
 	@Column(nullable = false)
 	public boolean isFirstFindingForVuln() {
 		return isFirstFindingForVuln;
@@ -286,7 +334,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "dependencyId")
-    @JsonView(AllViews.TableRow.class)
+	@JsonView(AllViews.TableRow.class)
 	public Dependency getDependency() {
 		return dependency;
 	}
@@ -295,33 +343,32 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.dependency = dependency;
 	}
 
-    @Transient
-    @JsonView(AllViews.TableRow.class)
-    private String getScannerName() {
-        return getScan().getApplicationChannel().getChannelType().getName();
-    }
+	@Transient
+	@JsonView(AllViews.TableRow.class)
+	private String getScannerName() {
+		return getScan().getApplicationChannel().getChannelType().getName();
+	}
 
-    @Transient
-    @JsonView(AllViews.TableRow.class)
-    private Integer getScanId() {
-        return getScan().getId();
-    }
+	@Transient
+	@JsonView(AllViews.TableRow.class)
+	private Integer getScanId() {
+		return getScan().getId();
+	}
 
-    @Transient
-    @JsonView(AllViews.TableRow.class)
-    private Calendar getImportTime() {
-        return getScan().getImportTime();
-    }
+	@Transient
+	@JsonView(AllViews.TableRow.class)
+	private Calendar getImportTime() {
+		return getScan().getImportTime();
+	}
 
-    @Transient
-    @JsonView(AllViews.TableRow.class)
-    private User getScanOrManualUser() {
-        if (getScan().getUser() != null) {
-            return getScan().getUser();
-        } else {
-            return getUser();
-        }
-    }
-
+	@Transient
+	@JsonView(AllViews.TableRow.class)
+	private User getScanOrManualUser() {
+		if (getScan().getUser() != null) {
+			return getScan().getUser();
+		} else {
+			return getUser();
+		}
+	}
 
 }

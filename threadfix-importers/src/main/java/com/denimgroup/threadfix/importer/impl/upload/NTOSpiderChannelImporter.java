@@ -50,6 +50,9 @@ class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
 		tagMap.put("parametername", FindingKey.PARAMETER);
 		tagMap.put("normalizedurl", FindingKey.PATH);
+		tagMap.put("attackvalue",   FindingKey.VALUE);
+		tagMap.put("request", 	    FindingKey.REQUEST);
+		tagMap.put("response",	    FindingKey.RESPONSE);
 	}
 
 	private static final String VULN_TAG = "vuln", SCAN_DATE = "scandate",
@@ -115,8 +118,16 @@ class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		inFinding = false;
 	    	} else if (inFinding && itemKey != null) {
 	    		String currentItem = getBuilderText();
-	    		if (currentItem != null && findingMap.get(itemKey) == null) {
-	    			findingMap.put(itemKey, currentItem);
+	    		if (currentItem != null && 
+    				("REQUEST".equals(itemKey.toString()) || "RESPONSE".equals(itemKey.toString()))){
+    				//these are base64 encoded in the xml
+    				currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
+    			}
+    					    		
+	    		//NTO vulnerabilities have multiple attack details per vulnerability, with an extra attackvalue sent at the beginning
+	    		//because of this we allow them to be overwritten in the findingMap to grab the last instance
+	    		if (currentItem != null ){ // && findingMap.get(itemKey) == null) {
+    					  findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
 	    	} else if (getDate) {

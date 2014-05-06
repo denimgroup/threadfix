@@ -23,20 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 
@@ -47,10 +48,13 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
 		tagMap.put("name", FindingKey.VULN_CODE);
-		tagMap.put("code", FindingKey.SEVERITY_CODE);
+		tagMap.put("severity", FindingKey.SEVERITY_CODE);
 		tagMap.put("variable", FindingKey.PARAMETER);
 		tagMap.put("var", FindingKey.PARAMETER);
 		tagMap.put("url", FindingKey.PATH);
+		tagMap.put("injected",   FindingKey.VALUE);
+		tagMap.put("request", 	    FindingKey.REQUEST);
+		tagMap.put("html",	    FindingKey.RESPONSE);
 	}
 	
 	// Since the severity mappings are static and not included in the XML output,
@@ -176,7 +180,9 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    					"Cross-Site Scripting in HTML &quot;script&quot; tag.");
 	    		}
 	    		
-	    		findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
+	    		//left in place for old versions of Arachni
+	    		if (! findingMap.containsKey(FindingKey.SEVERITY_CODE) || findingMap.get(FindingKey.SEVERITY_CODE) == null)
+	    			findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
 
 	    		Finding finding = constructFinding(findingMap);
 	    		
@@ -185,6 +191,11 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		inFinding = false;
 	    	} else if (inFinding && itemKey != null) {
 	    		String currentItem = getBuilderText();
+	    		
+	    		if (currentItem != null && "RESPONSE".equals(itemKey.toString())){
+	    			//these are base64 encoded in the xml
+	    			currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
+	    		}
 	    		
 	    		if (currentItem != null && findingMap.get(itemKey) == null) {
 	    			findingMap.put(itemKey, currentItem);

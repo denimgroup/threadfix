@@ -716,6 +716,11 @@ public class ReportsServiceImpl implements ReportsService {
 				if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive())) {
 					continue;
 				}
+				Finding finding = null;
+				if ( vuln.getFindings() != null && vuln.getFindings().size() > 0){
+					finding = vuln.getFindings().get(0);
+				}
+				
 				String openedDate = formatter.format(vuln.getOpenTime().getTime());
 				// Orders of positions: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID
 				rowParamsList.add(Arrays.asList(vuln.getGenericVulnerability().getId().toString(),
@@ -724,7 +729,12 @@ public class ReportsServiceImpl implements ReportsService {
 						vuln.getSurfaceLocation().getParameter(),
 						vuln.getGenericSeverity().getName(),
 						openedDate,
-						(vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
+						(vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString(),
+								(finding == null) ? "" : finding.getAttackString(),
+								(finding == null) ? "" : finding.getChannelVulnerability().getChannelType().getName(),
+								(finding == null) ? "" : finding.getNativeId()
+						)
+				);
 			}
 		}
 		return rowParamsList;
