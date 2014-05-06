@@ -94,6 +94,10 @@ public class DefectTrackerIndexPage extends BasePage {
 		return driver.findElementById("url.errors").getText();
 	}
 
+    public String getSuccessMessage(){
+        return driver.findElementByClassName("alert-success").getText();
+    }
+
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
@@ -102,7 +106,8 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
-		return new DefectTrackerIndexPage(driver);
+		sleep(5000);
+        return new DefectTrackerIndexPage(driver);
 	}
 
 }

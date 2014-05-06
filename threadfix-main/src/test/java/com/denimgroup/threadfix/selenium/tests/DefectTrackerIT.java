@@ -113,10 +113,8 @@ public class DefectTrackerIT extends BaseIT {
 				.enterType(defectTrackerType)
                 .enterURL(TEST_BUGZILLA_URL)
                 .clickSaveDefectTracker();
-        sleep(5000);
-
-		assertTrue("The defectTracker was not present in the table.",
-				defectTrackerIndexPage.isElementPresent("defectTackerName" + newDefectTrackerName));
+        assertTrue("Success message error.",defectTrackerIndexPage.getSuccessMessage().contains("Successfully created defect tracker " + newDefectTrackerName));
+		assertTrue("The defectTracker was not present in the table.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 	}
 
     @Test
@@ -233,12 +231,12 @@ public class DefectTrackerIT extends BaseIT {
 //	}
 
 	@Test
-	public void testEditDefectTrackerFieldValidation() {                            //this one!!!!!!!!!!
+	public void testEditDefectTrackerFieldValidation() {       //Needs validation message ID updates.
         String emptyString = "";
         String whiteSpaceString = "           ";
 
-		String newDefectTrackerName = "testEditDefectTracker";
-		String defectTrackerNameDuplicateTest = "testEditDefectTracker-edit";
+		String newDefectTrackerName = "testValidation" + getRandomString(3);
+		String defectTrackerNameDuplicateTest = "testValidationEdit" + getRandomString(3);
 
 		String defectTrackerType = "Bugzilla";
 
@@ -351,28 +349,28 @@ public class DefectTrackerIT extends BaseIT {
 //                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
 //    }
 //
-//	@Test
-//	public void jiraEdit() {
-//		String defectTrackerName = "jiraEdit" + getRandomString(3);
-//        String replacementName = "jiraEditNew" + getRandomString(3);
-//		String defectTrackerType = "Jira";
-//
-//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
-//                .clickDefectTrackersLink();
-//
-//        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-//                .enterName(null, defectTrackerName)
-//                .enterType(null, defectTrackerType)
-//                .enterURL(null, TEST_JIRA_URL)
-//                .clickSaveDefectTracker();
-//
-//		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
-//                .enterName(defectTrackerName, replacementName)
-//                .clickUpdateDefectTrackerButton();
-//
-//		assertTrue("DefectTracker page did not edit jira tracker correctly.",
-//				defectTrackerIndexPage.doesNameExist(replacementName));
-//	}
+	@Test
+	public void jiraEdit() {
+		String defectTrackerName = "jiraEdit" + getRandomString(3);
+        String replacementName = "jiraEditNew" + getRandomString(3);
+		String defectTrackerType = "Jira";
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
+                .clickDefectTrackersLink();
+
+        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(defectTrackerName)
+                .enterType(defectTrackerType)
+                .enterURL(TEST_JIRA_URL)
+                .clickSaveDefectTracker();
+
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
+                .enterName(replacementName)
+                .clickSaveDefectTracker();
+
+		assertTrue("DefectTracker page did not edit jira tracker correctly.",
+				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(replacementName));
+	}
 
     @Test
     public void bugzillaCreate() {
@@ -401,20 +399,19 @@ public class DefectTrackerIT extends BaseIT {
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
-        defectTrackerIndexPage= defectTrackerIndexPage.clickAddDefectTrackerButton()
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .enterName(defectTrackerName)
                 .enterType(defectTrackerType)
                 .enterURL("http://10.2.10.145/bugzilla/")
                 .clickSaveDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
+		defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .enterName(replacementName)
-                .clickModalSubmit();
-        sleep(5000);
+                .clickSaveDefectTracker();
 
-		assertTrue("DefectTracker page did not edit bugzilla tracker correctly.",
-				defectTrackerIndexPage.isElementPresent("defectTackerName" + replacementName));
-	}
+		assertTrue("Success message error.",defectTrackerIndexPage.getSuccessMessage().contains("Successfully edited tracker " + replacementName));
+        assertTrue("The defectTracker was not present in the table.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(replacementName));
+    }
 
 	@Test
 	public void testAttachToAppBugzillaTracker() {
