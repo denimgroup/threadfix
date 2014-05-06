@@ -97,14 +97,7 @@
                                     ng-file-drop="onFileSelect(team, app, $files)">
                                 <td class="pointer" style="padding:5px;word-wrap: break-word;">
                                     <div style="word-wrap: break-word;width:120px;text-align:left;">
-<<<<<<< Updated upstream
                                         <a id="applicationLink{{ team.name }}-{{ app.name }}" ng-click="goToPage(team, app)">{{ app.name }}</a>
-=======
-                                        <a id="applicationLink{{ teamIndex }}-{{ appIndex}}"
-                                           href="organizations/{{ team.id }}/applications/{{ app.id }}{{ csrfToken }}">
-                                            {{ app.name }}
-                                        </a>
->>>>>>> Stashed changes
                                     </div>
                                 </td>
                                 <td class="centered" id="numTotalVulns{{ team.name }}-{{ app.name }}">{{ app.totalVulnCount }}</td>
