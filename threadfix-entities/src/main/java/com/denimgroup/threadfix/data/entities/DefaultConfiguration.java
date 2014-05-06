@@ -205,7 +205,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Transient
     public boolean hasConfiguredCredentials() {
-        return proxyUsername != null && !proxyUsername.equals("") &&
+        return shouldUseProxyCredentials && proxyUsername != null && !proxyUsername.equals("") &&
                 proxyPassword != null && !proxyPassword.equals("");
     }
 
@@ -300,6 +300,15 @@ public class DefaultConfiguration extends BaseEntity {
         this.shouldProxyHPQC = shouldProxyHPQC;
     }
 
+    @Column
+    public Boolean getShouldUseProxyCredentials() {
+        return shouldUseProxyCredentials;
+    }
+
+    public void setShouldUseProxyCredentials(Boolean shouldUseProxyCredentials) {
+        this.shouldUseProxyCredentials = shouldUseProxyCredentials;
+    }
+
     Boolean shouldProxyVeracode = false;
     Boolean shouldProxyQualys = false;
     Boolean shouldProxyTFS = false;
@@ -308,4 +317,5 @@ public class DefaultConfiguration extends BaseEntity {
     Boolean shouldProxyVersionOne = false;
     Boolean shouldProxyHPQC = false;
     Boolean shouldProxyWhiteHat = false;
+    Boolean shouldUseProxyCredentials = false;
 }
