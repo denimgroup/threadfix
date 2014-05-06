@@ -42,7 +42,7 @@ public class PointInTimeChartCustomizer implements JRChartCustomizer {
 	public void customize(JFreeChart chart, JRChart jasperChart) {
 		
 		PiePlot plot = (PiePlot) chart.getPlot();
-		plot.setSectionPaint(4, new Color(0, 70, 120));
+		plot.setSectionPaint(4, new Color(22, 158, 255));
 		plot.setSectionPaint(3, new Color(0, 70, 120));
 		plot.setSectionPaint(2, new Color(189, 216, 77));
 		plot.setSectionPaint(1, new Color(253, 224, 94));

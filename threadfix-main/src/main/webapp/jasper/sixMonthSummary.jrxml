@@ -48,7 +48,7 @@
 				</categoryDataset>
 				<barPlot>
 					<plot labelRotation="45.0">
-						<seriesColor seriesOrder="0" color="#004678"/>
+						<seriesColor seriesOrder="0" color="#169eff"/>
 						<seriesColor seriesOrder="1" color="#004678"/>
 						<seriesColor seriesOrder="2" color="#BDD84D"/>
 						<seriesColor seriesOrder="3" color="#FDE05E"/>
