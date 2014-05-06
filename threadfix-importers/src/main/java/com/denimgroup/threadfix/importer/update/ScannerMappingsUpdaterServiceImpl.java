@@ -203,6 +203,27 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         defaultConfigurationDao.saveOrUpdate(config);
     }
 
+    @Override
+    @Transactional
+    public void updateMappings() {
+        log.info("Start updating Scanner mapping from startup");
+
+        try {
+            updateGenericVulnerabilities();
+            updateChannelVulnerabilities();
+            updateUpdatedDate();
+
+        } catch (URISyntaxException e) {
+            String message = "There was error when reading files.";
+            log.warn(message, e);
+        } catch (IOException e) {
+            String message = "There was error when updating mappings.";
+            log.warn(message, e);
+        }
+
+        log.info("Ended updating Scanner mapping from startup");
+    }
+
     private List<String[]> updateAllScanners() {
 
         List<String[]> scannerResults = new ArrayList<>();

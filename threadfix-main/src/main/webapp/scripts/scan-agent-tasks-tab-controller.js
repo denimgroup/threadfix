@@ -43,6 +43,7 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
         modalInstance.result.then(function (scanAgentTasks) {
             $scope.scanAgentTasks = scanAgentTasks;
             addExtraZero($scope.scanAgentTasks);
+            setHeader();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
 

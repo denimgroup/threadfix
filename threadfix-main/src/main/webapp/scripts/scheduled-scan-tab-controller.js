@@ -48,6 +48,7 @@ myAppModule.controller('ScheduledScanTabController', function ($scope, $window, 
         modalInstance.result.then(function (scheduledScans) {
             $scope.scheduledScans = scheduledScans;
             addExtraZero($scope.scheduledScans);
+            setHeader();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
 

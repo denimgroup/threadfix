@@ -21,26 +21,40 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
-import org.apache.commons.httpclient.HttpClient;
+package com.denimgroup.threadfix.service.scannermapping;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public interface ProxyService {
+import javax.annotation.PostConstruct;
 
-    <T> HttpClient getClientWithProxyConfig(Class<T> classToProxy);
 
-    <T> HttpsURLConnection getSSLConnectionWithProxyConfig(URL url, Class<T> classToProxy) throws IOException;
+/**
+ * Created with IntelliJ IDEA.
+ * User: stran
+ * Date: 5/5/14
+ * Time: 5:03 PM
+ * To change this template use File | Settings | File Templates.
+ */
+@Component
+public class ScannerMappingUpdater {
 
-    <T> HttpURLConnection getConnectionWithProxyConfig(URL url, Class<T> classToProxy) throws IOException;
+    private static final SanitizedLogger log = new SanitizedLogger(ScannerMappingUpdater.class);
 
-    DefaultConfiguration getDefaultConfigurationWithProxyCredentials();
+    @Autowired
+    private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
 
-    <T> boolean shouldUseProxy(Class<T> classToProxy);
+    @PostConstruct
+    public void update() {
+
+        log.info("Checking if scanner mapping update is required");
+        if (scannerMappingsUpdaterService.checkPluginJar().canUpdate) {
+            scannerMappingsUpdaterService.updateMappings();
+        }
+
+    }
 
 }

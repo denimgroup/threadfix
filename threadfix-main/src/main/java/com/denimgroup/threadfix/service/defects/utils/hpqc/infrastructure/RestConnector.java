@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure;
 
 import com.denimgroup.threadfix.service.ProxyService;
+import com.denimgroup.threadfix.service.defects.HPQualityCenterDefectTracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -177,7 +178,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         HttpURLConnection con;
 
         if (proxyService != null) {
-            con = proxyService.getConnectionWithProxyConfig(new URL(url));
+            con = proxyService.getConnectionWithProxyConfig(new URL(url), HPQualityCenterDefectTracker.class);
         } else {
             con = (HttpURLConnection) new URL(url).openConnection();
         }

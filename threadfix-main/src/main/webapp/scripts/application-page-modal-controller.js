@@ -278,11 +278,17 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (waf) {
-            $scope.config.wafs.push(waf);
-            $scope.config.application.waf = waf;
-            $scope.successMessage = "Successfully created waf " + waf.name;
-            $scope.showEditModal();
+        modalInstance.result.then(function (dt) {
+
+            if (!$scope.config.defectTrackerList || $scope.config.defectTrackerList.length === 0) {
+                $scope.config.defectTrackerList = [];
+            }
+
+            $scope.config.defectTrackerList.push(dt);
+            $scope.config.application.defectTracker = dt;
+            $scope.successMessage = "Successfully created waf " + dt.name;
+//            $scope.showEditModal();
+            $scope.showAddDefectTrackerModal();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
