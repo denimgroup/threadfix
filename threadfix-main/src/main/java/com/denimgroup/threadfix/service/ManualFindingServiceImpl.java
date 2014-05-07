@@ -170,7 +170,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		applicationMerger.applicationMerge(tempScan, applicationId, null);
 
 		scan.getFindings().add(finding);
-		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
+//		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
 		finding.setScan(scan);
 		ScanCleanerUtils.clean(scan);
 		scanDao.saveOrUpdate(scan);
@@ -184,7 +184,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		return true;
 	}
 
-	private Scan getManualScan(Integer applicationId) {
+    private Scan getManualScan(Integer applicationId) {
 		if (applicationId == null)
 			return null;
 

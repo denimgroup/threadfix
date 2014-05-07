@@ -106,9 +106,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit");
                 },
                 object: function () {
+                    var appCopy = angular.copy($scope.config.application);
                     var app = $scope.config.application;
                     app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete")
-                    return $scope.config.application;
+                    return appCopy;
                 },
                 config: function() {
                     return $scope.config;

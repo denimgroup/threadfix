@@ -69,13 +69,13 @@ public class EditWafController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Waf> editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
+	public @ResponseBody RestResponse<List<Waf>> editSubmitFromTable(@PathVariable("wafId") int wafId, @Valid @ModelAttribute Waf waf,
 			BindingResult result, SessionStatus status, Model model) {
 		
 		String editResult = editSubmit(wafId, waf, result, status, model);
 		
 		if (editResult.equals("Success")) {
-			return RestResponse.success(wafService.loadWaf(wafId)); // here we load the WAF to get the full data objects instead of just form bindings
+			return RestResponse.success(wafService.loadAll());
 		} else {
 			return FormRestResponse.failure(editResult, result);
 		}

@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('DefectTrackersController', function($scope, $http, $modal, $log, tfEncoder) {
+module.controller('DefectTrackersController', function($scope, $http, $modal, $log, tfEncoder, threadFixModalService) {
 
     $scope.trackers = [];
 
@@ -84,7 +84,8 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
                     return tfEncoder.encode("/configuration/defecttrackers/" + tracker.id + "/edit");
                 },
                 object: function() {
-                    return tracker;
+                    var trackerCopy = angular.copy(tracker);
+                    return trackerCopy;
                 },
                 buttonText: function() {
                     return "Save Edits";
@@ -103,16 +104,15 @@ module.controller('DefectTrackersController', function($scope, $http, $modal, $l
         modalInstance.result.then(function (editedTracker) {
 
             if (editedTracker) {
+                threadFixModalService.deleteElement($scope.trackers, tracker);
+                threadFixModalService.addElement($scope.trackers, editedTracker);
+
                 $scope.successMessage = "Successfully edited tracker " + editedTracker.name;
                 $scope.trackers.sort(nameCompare);
             } else {
-                var index = $scope.trackers.indexOf(tracker);
 
-                if (index > -1) {
-                    $scope.trackers.splice(index, 1);
-                }
-
-                $scope.empty = $scope.trackers.length === 0;
+                threadFixModalService.deleteElement($scope.trackers, tracker);
+                $scope.empty = $scope.trackers.length === 0 || $scope.trackers == undefined;
                 $scope.successMessage = "Defect tracker was successfully deleted.";
             }
 

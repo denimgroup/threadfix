@@ -65,6 +65,9 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                         teams: $scope.teams,
                         roles: $scope.roles
                     };
+                },
+                headerText: function() {
+                    return "Add Permissions Mapping";
                 }
             }
         });
@@ -148,6 +151,9 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                         roles: $scope.roles,
                         appList: apps
                     };
+                },
+                headerText: function() {
+                    return "Edit Permissions Mapping";
                 }
             }
         });

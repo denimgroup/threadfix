@@ -178,8 +178,6 @@ public class WafsController {
 		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);
 			status.setComplete();
-			ControllerUtils.addSuccessMessage(request, 
-					"The WAF deletion was successful for WAF" + waf.getName() + ".");
 			return "redirect:/wafs";
 		} else {
 			
