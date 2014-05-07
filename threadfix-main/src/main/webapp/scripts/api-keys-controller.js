@@ -1,6 +1,6 @@
 var module = angular.module('threadfix')
 
-module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfEncoder){
+module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfEncoder, threadFixModalService){
 
     $scope.keys = [];
 
@@ -76,7 +76,8 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
                     return tfEncoder.encode("/configuration/keys/" + key.id + "/edit");
                 },
                 object: function() {
-                    return key;
+                    var keyCopy = angular.copy(key);
+                    return keyCopy;
                 },
                 buttonText: function() {
                     return "Save Edits";
@@ -90,18 +91,13 @@ module.controller('ApiKeysController', function($scope, $http, $modal, $log, tfE
         modalInstance.result.then(function (editedKey) {
 
             if (editedKey) {
+                threadFixModalService.deleteElement($scope.keys, key);
+                threadFixModalService.addElement($scope.keys, editedKey);
+
                 $scope.successMessage = "Successfully edited key " + editedKey.apiKey;
                 $scope.keys.sort(keyCompare);
             } else {
-                var index = $scope.keys.indexOf(key);
-
-                if (index > -1) {
-                    $scope.keys.splice(index, 1);
-                }
-
-                if ($scope.keys.length === 0) {
-                    $scope.keys = undefined;
-                }
+                threadFixModalService.deleteElement($scope.keys, key);
                 $scope.successMessage = "API key was successfully deleted.";
             }
 

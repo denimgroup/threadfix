@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="permissionForm.html">
     <div class="modal-header">
-        <h4 id="myModalLabel">Add Permissions Mapping</h4>
+        <h4 id="myModalLabel">{{ headerText }}</h4>
     </div>
 
     <div class="modal-body" ng-form="form">

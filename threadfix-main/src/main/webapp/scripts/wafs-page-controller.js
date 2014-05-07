@@ -59,16 +59,17 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (waf) {
-            if (!$scope.wafs) {
-                $scope.wafs = [ waf ];
-            } else {
-                $scope.wafs.push(waf);
+        modalInstance.result.then(function (wafs) {
+//            if (!$scope.wafs) {
+//                $scope.wafs = [ waf ];
+//            } else {
+//                $scope.wafs.push(waf);
+//
+//                $scope.wafs.sort(nameCompare);
+//            }
+            $scope.wafs = wafs;
 
-                $scope.wafs.sort(nameCompare);
-            }
-
-            $scope.successMessage = "Successfully created waf " + waf.name;
+            $scope.successMessage = "Successfully created new waf";
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -83,7 +84,8 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
                     return tfEncoder.encode("/wafs/" + waf.id + "/edit");
                 },
                 object: function() {
-                    return waf;
+                    var wafCopy = angular.copy(waf);
+                    return wafCopy;
                 },
                 buttonText: function() {
                     return "Save Edits";
@@ -99,24 +101,28 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
             }
         });
 
-        modalInstance.result.then(function (editedWaf) {
-            var index = $scope.wafs.indexOf(waf);
+        modalInstance.result.then(function (wafs) {
 
-            if (index > -1) {
-                $scope.wafs.splice(index, 1);
-            }
-
-            if (editedWaf) {
-                $scope.wafs.push(editedWaf);
-
+            if (wafs) {
+                $scope.wafs = wafs;
                 $scope.wafs.sort(nameCompare);
-                $scope.successMessage = "Successfully edited waf " + editedWaf.name;
+                $scope.errorMessage = "";
+                $scope.successMessage = "Successfully edited waf " + waf.name;
             } else {
-                $scope.successMessage = "The WAF deletion was successful for WAF " + waf.name;
-            }
-
-            if ($scope.wafs.length === 0){
-                $scope.wafs = undefined;
+                if (waf.canDelete) {
+                    var index = $scope.wafs.indexOf(waf);
+                    if (index > -1) {
+                        $scope.wafs.splice(index, 1);
+                    }
+                    if ($scope.wafs.length === 0) {
+                        $scope.wafs = undefined;
+                    }
+                    $scope.successMessage = "The WAF deletion was successful for WAF " + waf.name;
+                    $scope.errorMessage = "";
+                } else {
+                    $scope.successMessage = "";
+                    $scope.errorMessage = "Failed to delete a WAF with application mappings.";
+                }
             }
 
         }, function () {

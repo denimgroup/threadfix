@@ -48,6 +48,7 @@ import javax.validation.Valid;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -161,19 +162,23 @@ public class EditManualFindingController {
                 return FormRestResponse.failure("Form Validation failed.", result);
 			} else {
 				status.setComplete();
+
+                Vulnerability oldVuln = vulnerabilityService.loadVulnerability(vulnerabilityId);
+                if (oldVuln.getFindings() == null || oldVuln.getFindings().size() == 0) {
+                    vulnerabilityService.closeAll(Arrays.asList(vulnerabilityId));
+                }
+
                 int newVulnId = dbFinding.getVulnerability().getId();
                 String msg = "Static finding has been modified" +
                         ((vulnerabilityId==newVulnId) ? "" :
                                 " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
-                model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
-//                return RestResponse.success("A static manual finding has been modified to application");
                 return RestResponse.success(msg);
 			}
 		}
 	}
 	
     @RequestMapping(params = "group=dynamic", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> dynamicSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<Vulnerability> dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
             @PathVariable("vulnerabilityId") int vulnerabilityId,
@@ -222,11 +227,20 @@ public class EditManualFindingController {
 			} else {
 				status.setComplete();
                 int newVulnId = dbFinding.getVulnerability().getId();
+
+                if (newVulnId != vulnerabilityId) {
+                    Vulnerability oldVuln = vulnerabilityService.loadVulnerability(vulnerabilityId);
+                    if (oldVuln.getFindings() == null || oldVuln.getFindings().size() == 0 ||
+                            (oldVuln.getFindings().size() == 1 && oldVuln.getFindings().get(0).getId() == dbFinding.getId() )) {
+                        vulnerabilityService.closeAll(Arrays.asList(vulnerabilityId));
+                    }
+
+                }
                 String msg = "Dynamic finding has been modified" +
                         ((vulnerabilityId==newVulnId) ? "" :
                                 " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
-                return RestResponse.success(msg);
+                return RestResponse.success(vulnerabilityService.loadVulnerability(newVulnId));
 			}
 		}
 	}
