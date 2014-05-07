@@ -158,11 +158,11 @@ public class WafIT extends BaseIT {
 		// Test empty and whitespace input
 		wafIndexPage = wafIndexPage.setWafName(emptyString)
                 .clickModalSubmitInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
+        assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("nameRequiredError"));
 		
 		wafIndexPage = wafIndexPage.setWafName(whiteSpaceString)
                 .clickModalSubmitInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
+        assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("nameRequiredError"));
 		
 		// Test browser length limit
 		wafIndexPage = wafIndexPage.setWafName(longInput)
@@ -244,26 +244,29 @@ public class WafIT extends BaseIT {
                 .clickEditWaf(wafName)
                 .editWaf(wafName, emptyString, type2)
                 .clickModalSubmitInvalid();
-        assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
+        assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("nameRequiredError"));
 
         wafIndexPage = wafIndexPage
                 .editWaf(wafName, whiteSpaceString, type2)
                 .clickModalSubmitInvalid();
-        assertTrue("The correct error text was not present", emptyInputError.equals(wafIndexPage.getNameErrorsText()));
+        assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("nameRequiredError"));
 
         // Test browser length limit
         wafIndexPage = wafIndexPage
                 .editWaf(wafName, longInput, type2)
-                .clickModalSubmit();
+                .clickModalSubmitInvalid();
 
-        assertTrue("The waf name was not cropped correctly.", wafIndexPage.isWafPresent(wafName));
+        assertTrue("Name length error was not displayed", wafIndexPage.isElementVisible("characterLimitError"));
+
+        wafIndexPage.clickModalCancel();
+        driver.navigate().refresh();
 
         // Test name duplication checking
         wafIndexPage = wafIndexPage.clickEditWaf(wafName)
                 .editWaf(wafName, wafNameDuplicateTest, type2)
                 .clickModalSubmitInvalid();
 
-        assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
+        assertTrue("Duplicate name error was not displayed", wafIndexPage.isElementVisible("otherNameError"));
     }
 
 	@Test
