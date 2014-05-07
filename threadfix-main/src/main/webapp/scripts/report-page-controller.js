@@ -130,6 +130,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadReport = function() { loadReport(); }
 
     $scope.updateOptions = function(tab) {
+        $scope.vulnSearch = false;
         $scope.options = tab.options;
         $scope.reportId = tab.options[0].id;
 
@@ -265,6 +266,11 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 return 0;
             }
         });
+    }
+
+    $scope.loadVulnSearch = function() {
+        $scope.vulnSearch = true;
+
     }
 
 });

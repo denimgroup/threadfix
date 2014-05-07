@@ -1084,3 +1084,7 @@ body.dragover.drag-enabled .uploadable {
 .even-sized-rows td {
     height:40px;
 }
+
+.vuln-search-filter-control {
+    margin-top: 10px;
+}
