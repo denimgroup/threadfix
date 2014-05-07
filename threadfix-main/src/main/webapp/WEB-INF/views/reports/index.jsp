@@ -20,7 +20,7 @@
         <tabset>
             <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled" ng-click="updateOptions(tab)"></tab>
             <tab heading="Vulnerability Search" ng-click="loadVulnSearch()">
-                <%@ include file="vulnSearchControls.jsp" %>
+                <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
             </tab>
         </tabset>
 
