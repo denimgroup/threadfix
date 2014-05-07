@@ -92,7 +92,7 @@
             <span class="spinner"></span>
             Loading Product Names
         </button>
-        <button id="submit"
+        <button id="getProductNames"
                 ng-class="{ disabled : form.$invalid }"
                 class="btn btn-primary"
                 ng-mouseenter="form.name.$dirty = true"
