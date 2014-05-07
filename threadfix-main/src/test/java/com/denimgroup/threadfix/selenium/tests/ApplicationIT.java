@@ -170,7 +170,7 @@ public class ApplicationIT extends BaseIT {
 		assertTrue("The name was not preserved correctly on Application Detail Page.",
                 appName2.equals(applicationDetailPage.getNameText()));
 
-        applicationDetailPage = applicationDetailPage.clickEditDeleteBtn();
+        applicationDetailPage.clickEditDeleteBtn();
 	    assertTrue("The URL was not edited correctly.", applicationDetailPage.getUrlText().contains(urlText2));
 	}
 
