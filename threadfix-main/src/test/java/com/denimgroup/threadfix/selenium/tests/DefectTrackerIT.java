@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
@@ -51,15 +50,6 @@ public class DefectTrackerIT extends BaseIT {
     private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
     private static final String TFS_URL = System.getProperty("TFS_URL");
     private static final String TFS_PROJECTNAME = ("Vulnerability Manager Demo");
-
-	String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-			+ "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
     static {
         if (TEST_BUGZILLA_URL == null) {
@@ -145,8 +135,7 @@ public class DefectTrackerIT extends BaseIT {
 		String whiteSpaceString = "           ";
 		String urlFormatString = "asdfwe";
 
-		String emptyInputError = "This field cannot be blank";
-		String urlError = "Not a valid URL";
+		String longInput = getRandomString(55);
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink()
@@ -156,47 +145,21 @@ public class DefectTrackerIT extends BaseIT {
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(emptyString)
                 .enterURL(emptyString)
 				.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The correct error text was not present",emptyInputError.equals(defectTrackerIndexPage.getNameErrorsText()));
-		assertTrue("The correct error text was not present",emptyInputError.equals(defectTrackerIndexPage.getUrlErrorsText()));
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
+        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
 
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(whiteSpaceString)
 				.enterURL(whiteSpaceString)
 				.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The correct error text was not present",emptyInputError.equals(defectTrackerIndexPage.getNameErrorsText()));
-		assertTrue("The correct error text was not present",urlError.equals(defectTrackerIndexPage.getUrlErrorsText()));
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
+        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
 
 		// Test URL format checking
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName("normal name")
                 .enterURL(urlFormatString)
 				.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The URL format check error text was not present.",defectTrackerIndexPage.getUrlErrorsText().equals(urlError));
-
-		// Test url validation
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(longInput)
-				.enterURL("http://" + longInput)
-				.clickAddDefectTrackerButtonInvalid();
-		assertTrue("The Defect Tracker URL was not validated correctly.",defectTrackerIndexPage.getUrlErrorsText().equals("URL is invalid."));
-
-        String testLongInput = longInput.substring(0, DefectTracker.NAME_LENGTH);
-
+		assertTrue("The URL format check error text was not present.",defectTrackerIndexPage.isElementVisible("urlInvalidError"));
 		// Test browser length limit
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(longInput)
-                .enterURL(TEST_BUGZILLA_URL)
-                .clickSaveDefectTracker();
-
-		assertTrue("The Defect Tracker name was not cropped correctly.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(testLongInput));
-
-		// Test name duplication checking
-		String orgName = testLongInput;
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
-                .clickAddDefectTrackerButton()
-                .enterName(orgName)
-                .enterURL(TEST_BUGZILLA_URL)
-				.clickAddDefectTrackerButtonInvalid();
-
-		assertTrue(defectTrackerIndexPage.getNameErrorsText().equals(
-				"That name is already taken."));
 	}
 
 //	@Test
@@ -230,8 +193,8 @@ public class DefectTrackerIT extends BaseIT {
 //                defectTrackerIndexPage.doesURLExistForName(editedDefectTrackerName, TEST_BUGZILLA_URL));
 //	}
 
-	@Test
-	public void testEditDefectTrackerFieldValidation() {       //Needs validation message ID updates.
+    @Test
+	public void testEditDefectTrackerFieldValidation() {       //Needs to cover all validation messages... They're static so only need to assert visibility of message id
         String emptyString = "";
         String whiteSpaceString = "           ";
 
@@ -239,8 +202,7 @@ public class DefectTrackerIT extends BaseIT {
 		String defectTrackerNameDuplicateTest = "testValidationEdit" + getRandomString(3);
 
 		String defectTrackerType = "Bugzilla";
-
-		String emptyInputError = "This field cannot be blank";
+        String longInput = getRandomString(55);
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
@@ -256,56 +218,34 @@ public class DefectTrackerIT extends BaseIT {
                 .enterType(defectTrackerType)
 				.enterURL(TEST_BUGZILLA_URL)
 				.clickSaveDefectTracker()
-                .clickOrganizationHeaderLink()
-                .clickDefectTrackersLink()
                 .clickEditLink(newDefectTrackerName);
 
 		// Test empty and whitespace input
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(emptyString)
                 .clickModalSubmitInvalid();
-		assertTrue("The correct error text was not present",emptyInputError.equals(defectTrackerIndexPage.getNameErrorsText()));
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
+		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(whiteSpaceString)
                 .clickModalSubmitInvalid();
-		assertTrue("The correct error text was not present",emptyInputError.equals(defectTrackerIndexPage.getNameErrorsText()));
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
+		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
 
 		// Test browser length limit
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(longInput)
-				               .clickModalSubmit();
+				               .clickModalSubmitInvalid();
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameCharacterLimitError"));
 
-        String testLongInput = longInput.substring(0, DefectTracker.NAME_LENGTH);
-
-        assertTrue("The Defect Tracker name was not cropped correctly.",
-                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(testLongInput));
-
-        newDefectTrackerName = testLongInput;
+        defectTrackerIndexPage.clickModalCancel(DefectTrackerIndexPage.class);
+        driver.navigate().refresh();
 
 		// Test name duplication checking
 		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
                 .clickEditLink(newDefectTrackerName)
                 .enterName(defectTrackerNameDuplicateTest)
                 .clickModalSubmitInvalid();
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError")); //NO VALIDATION MESSAGE IS DISPLAYED RIGHT NOW
 		assertTrue(defectTrackerIndexPage.getNameErrorsText().equals("That name is already taken."));
 	}
-
-//	@Test
-//	public void TFSCreate() {
-//		String newDefectTrackerName = "tfsCreate" + getRandomString(3);
-//		String defectTrackerURL = "https://tfs.denimgroup.com:8080";
-//		String defectTrackerType = "Microsoft TFS";
-//
-//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-//                .clickDefectTrackersLink();
-//
-//		defectTrackerIndexPage = defectTrackerIndexPage
-//				.clickAddDefectTrackerButton()
-//                .enterName(null,newDefectTrackerName)
-//                .enterType(null, defectTrackerType)
-//                .enterURL(null, defectTrackerURL)
-//                .clickSaveDefectTracker();
-//
-//		assertTrue("DefectTracker Page did not create a TFS tracker correctly.",
-//				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
-//	}
 
 //	@Test
 //	public void TFSEdit() {
@@ -318,17 +258,17 @@ public class DefectTrackerIT extends BaseIT {
 //                .clickDefectTrackersLink();
 //
 //		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-//                .enterName(null, defectTrackerName)
-//                .enterType(null, defectTrackerType)
-//                .enterURL(null, defectTrackerURL)
+//                .enterName(defectTrackerName)
+//                .enterType(defectTrackerType)
+//                .enterURL(defectTrackerURL)
 //                .clickSaveDefectTracker();
 //
 //		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(defectTrackerName)
-//                .enterName(defectTrackerName,replacementName)
-//                .clickUpdateDefectTrackerButton();
+//                .enterName(replacementName)
+//                .clickModalSubmit();
 //
 //		assertTrue("DefectTracker Page did not edit TFS tracker correctly.",
-//				defectTrackerIndexPage.doesNameExist(replacementName));
+//				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(replacementName));
 //	}
 
 //    @Test
@@ -372,23 +312,23 @@ public class DefectTrackerIT extends BaseIT {
 				defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(replacementName));
 	}
 
-    @Test
-    public void bugzillaCreate() {
-        String defectTrackerName = "testEditDefectTracker" + getRandomString(3);
-        String defectTrackerUrl = "http://10.2.10.145/bugzilla/";
-        String defectTrackerType = "Bugzilla";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-                .clickDefectTrackersLink();
-
-        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(defectTrackerName)
-                .enterType(defectTrackerType)
-                .enterURL(defectTrackerUrl)
-                .clickSaveDefectTracker();
-
-        assertTrue("DefectTracker Page did not create correctly.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
-    }
+//    @Test
+//    public void bugzillaCreate() {
+//        String defectTrackerName = "testEditDefectTracker" + getRandomString(3);
+//        String defectTrackerUrl = "http://10.2.10.145/bugzilla/";
+//        String defectTrackerType = "Bugzilla";
+//
+//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+//                .clickDefectTrackersLink();
+//
+//        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+//                .enterName(defectTrackerName)
+//                .enterType(defectTrackerType)
+//                .enterURL(defectTrackerUrl)
+//                .clickSaveDefectTracker();
+//
+//        assertTrue("DefectTracker Page did not create correctly.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
+//    }
 
 	@Test
 	public void bugzillaEdit() {
@@ -404,6 +344,8 @@ public class DefectTrackerIT extends BaseIT {
                 .enterType(defectTrackerType)
                 .enterURL("http://10.2.10.145/bugzilla/")
                 .clickSaveDefectTracker();
+
+        assertTrue("DefectTracker Page did not create correctly.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
 
 		defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .enterName(replacementName)
@@ -532,8 +474,9 @@ public class DefectTrackerIT extends BaseIT {
 		
 		assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+        //assertTrue("Defect Tracker wasn't attached correctly",applicationDetailPage.getDefectTrackerName().contains(defectTracker1));
 		
-		applicationDetailPage = applicationDetailPage.clickCloseAppModal();
+		applicationDetailPage = applicationDetailPage.clickModalCancel();
 
 		sleep(2000);
 		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
@@ -543,5 +486,6 @@ public class DefectTrackerIT extends BaseIT {
 
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+        //assertTrue("Defect Tracker wasn't attached correctly",applicationDetailPage.getDefectTrackerName().contains(defectTracker2));
 	}
 }

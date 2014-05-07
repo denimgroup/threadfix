@@ -68,16 +68,15 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickTestConnection() {
-        waitForElement(driver.findElementById("jsonLink"));
-        driver.findElementById("jsonLink").click();
-        sleep(8000);
-        waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
+        waitForElement(driver.findElementById("getProductNames"));
+        driver.findElementById("getProductNames").click();
+        sleep(5000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage selectProduct(String product) {
         sleep(4000);
-        new Select(driver.findElementById("projectList"))
+        new Select(driver.findElementById("productNameSelect"))
                 .selectByVisibleText(product);
         return new ApplicationDetailPage(driver);
     }
@@ -86,11 +85,6 @@ public class ApplicationDetailPage extends BasePage {
         waitForElement(driver.findElementById("defectTrackerId"));
         new Select(driver.findElementById("defectTrackerId"))
                 .selectByVisibleText(defectTracker);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickSubmitTrackerButton() {
-        driver.findElementById("submitDTModal").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -103,9 +97,9 @@ public class ApplicationDetailPage extends BasePage {
                 .setPassword(password)
                 .clickTestConnection()
                 .selectProduct(productName)
-                .clickSubmitTrackerButton();
+                .clickUpdateApplicationButton()
+                .clickUpdateApplicationButton();
 
-        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
         sleep(2000);
 
         return new ApplicationDetailPage(driver);
@@ -121,9 +115,9 @@ public class ApplicationDetailPage extends BasePage {
                 .setPassword(password)
                 .clickTestConnection()
                 .selectProduct(productName)
-                .clickSubmitTrackerButton();
+                .clickUpdateApplicationButton()
+                .clickUpdateApplicationButton();
 
-        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
         sleep(2000);
 
         return new ApplicationDetailPage(driver);
@@ -288,12 +282,6 @@ public class ApplicationDetailPage extends BasePage {
         return severity.getFirstSelectedOption().getText();
     }
 
-    public ApplicationDetailPage clickCloseAppModal() {
-        driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
-        sleep(2500);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickCloseAppInvalid() {
         driver.findElementByLinkText("Close").click();
         return new ApplicationDetailPage(driver);
@@ -426,6 +414,10 @@ public class ApplicationDetailPage extends BasePage {
         waitForElement(driver.findElementByLinkText("Source Code Information"));
         driver.findElementByLinkText("Source Code Information");
         return new ApplicationDetailPage(driver);
+    }
+
+    public String getDefectTrackerName(){
+        return driver.findElementById("defectTrackerName").getText();
     }
 
     /*________________ Boolean Functions ________________*/

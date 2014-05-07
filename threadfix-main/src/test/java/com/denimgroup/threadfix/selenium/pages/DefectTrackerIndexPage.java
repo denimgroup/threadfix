@@ -68,11 +68,6 @@ public class DefectTrackerIndexPage extends BasePage {
         sleep(1000);
 		return new DefectTrackerIndexPage(driver);
 	}
-	
-	public DefectTrackerIndexPage clickCloseButton() {
-		driver.findElementById("closeDTModalButton").click();
-		return new DefectTrackerIndexPage(driver);
-	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
@@ -86,7 +81,7 @@ public class DefectTrackerIndexPage extends BasePage {
 	}
 	
 	public String getNameErrorsText() {
-		return driver.findElementById("name.errors").getText();
+		return driver.findElementById("nameRequiredError").getText();
 	}
 	
 	public String getUrlErrorsText() {

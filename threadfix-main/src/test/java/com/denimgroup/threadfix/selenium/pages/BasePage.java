@@ -368,6 +368,11 @@ public abstract class BasePage {
 
     }
 
+    public boolean isElementVisible(String elementID){
+        ExpectedCondition<WebElement> condition = ExpectedConditions.visibilityOf(driver.findElementById(elementID));
+        return condition.apply(driver) != null;
+    }
+
 
     /*--------------helper functions--------------*/
 	public void sleep(int num) {
@@ -476,14 +481,14 @@ public abstract class BasePage {
 
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalCancel() {
-        return (T) clickModalSubmitInvalid(this.getClass());
+        return (T) clickModalCancel(this.getClass());
     }
 
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalCancel(Class<T> targetClass) {
         driver.findElementById("closeModalButton").click();
-
-        assertTrue("Close button wasn't present.", driver.findElementsById("closeModalbutton").size() != 0);
+        sleep(500);
+        assertTrue("Close button wasn't still present.", driver.findElementsById("closeModalbutton").size() == 0);
 
         return (T) this;
     }
