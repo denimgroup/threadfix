@@ -86,6 +86,7 @@ public class TeamIndexPageIT extends BaseIT {
     @Test
     public void testAddExpandCollapseButtons() {
         TeamIndexPage ti = setupDatabase();
+        sleep(1000);
         assertTrue("Add Team Button is not present", ti.isAddTeamBtnPresent());
         assertTrue("Add TeamB Button is not clickable", ti.isAddTeamBtnClickable());
         assertTrue("Expand All button is not present", ti.isExpandAllBtnPresent());
