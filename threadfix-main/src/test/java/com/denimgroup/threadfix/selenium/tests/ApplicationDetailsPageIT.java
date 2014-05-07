@@ -144,8 +144,6 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("Defect Tracker add button is not clickable.", ap.isDefectTrackerAddClickable());
         assertTrue("Waf add button is not present.", ap.isWAFAddButtonPresent());
         assertTrue("Waf add button is not clickable.", ap.isWAFAddButtonClickable());
-        assertTrue("Save Changes button is not present.", ap.isSaveChangesButtonPresent());
-        assertTrue("Save Changes button is not clickable.", ap.isSaveChangesButtonClickable());
     }
 
     @Test
@@ -153,7 +151,8 @@ public class ApplicationDetailsPageIT extends BaseIT {
         ApplicationDetailPage ap = buildTeamAppandScan();
         ap.clickActionButton();
         FilterPage filterPage = ap.clickEditVulnerabilityFilters();
-        assertTrue("Did not navigate to FilterPage.", filterPage.isCreateNewFilterPresent());
+        sleep(1000);
+        assertTrue("Did not navigate to FilterPage.", filterPage.isElementVisible("createNewKeyModalButton"));
     }
 
     @Test

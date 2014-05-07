@@ -412,7 +412,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickSourceInfo(){
         waitForElement(driver.findElementByLinkText("Source Code Information"));
-        driver.findElementByLinkText("Source Code Information");
+        driver.findElementByLinkText("Source Code Information").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -548,7 +548,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isSourceFolderPresent() {
-        return driver.findElementById("repositoryFolder").isDisplayed();
+        return driver.findElementById("repositoryFolderInput").isDisplayed();
     }
 
     public boolean isDefectTrackerAddPresent() {
