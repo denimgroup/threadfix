@@ -96,7 +96,30 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
     $scope.setNumberVulnerabilities = function(number) {
         $scope.parameters.numberVulnerabilities = number;
         $scope.refresh();
+    }
 
+    $scope.setDaysOldModifier = function(modifier) {
+        if ($scope.parameters.daysOldModifier === modifier) {
+            $scope.parameters.daysOldModifier = undefined;
+            $scope.refresh();
+        } else {
+            $scope.parameters.daysOldModifier = modifier;
+            if ($scope.parameters.daysOld) {
+                $scope.refresh();
+            }
+        }
+    }
+
+    $scope.setDaysOld = function(days) {
+        if ($scope.parameters.daysOld === days) {
+            $scope.parameters.daysOld = undefined;
+            $scope.refresh();
+        } else {
+            $scope.parameters.daysOld = days;
+            if ($scope.parameters.daysOldModifier) {
+                $scope.refresh();
+            }
+        }
     }
 
 });
