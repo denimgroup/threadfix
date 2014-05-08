@@ -28,6 +28,13 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
         });
     };
 
+    threadfixAPIService.getVulnSearchParameters = function() {
+        return $http({
+            method: 'GET',
+            url: tfEncoder.encode('/reports/parameters')
+        });
+    };
+
     threadfixAPIService.loadAppTableReport = function(id) {
         var url = '/organizations/' + id + '/getReport';
 

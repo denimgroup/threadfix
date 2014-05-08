@@ -12,6 +12,16 @@
     </div>
 
     <div class="vuln-search-filter-control">
+        Scanners
+        <br>
+        <div ng-repeat="filteredScanner in parameters.scanners">
+            <input typeahead="scanner.name for scanner in scanners | filter:$viewValue | limitTo:8" type="text" ng-model="filteredScanner.name" name="team" typeahead-on-select="refresh()"/>
+            <span class="pointer icon icon-plus-sign" ng-click="addScanner()"></span>
+            <span ng-show="parameters.scanners.length > 1" class="pointer icon icon-minus-sign" ng-click="removeScanner($index)"></span>
+        </div>
+    </div>
+
+    <div class="vuln-search-filter-control">
         Severity
         <div class="btn-group">
             <label class="btn" ng-change="refresh()" ng-model="parameters.severities.info" btn-checkbox>Info</label>

@@ -3,6 +3,7 @@ var module = angular.module('threadfix');
 module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
     $scope.parameters = {
         teams: [{}],
+        scanners: [{}],
         severities: [],
         numberVulnerabilities: 10
     };
@@ -36,6 +37,17 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
                 }
             });
         });
+
+        $scope.parameters.channelTypes = $scope.parameters.scanners;
+
+        // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
+        $scope.scanners.forEach(function(scanner) {
+            $scope.parameters.channelTypes.forEach(function(filteredScanner) {
+                if (scanner.name === filteredScanner.name) {
+                    filteredScanner.id = scanner.id;
+                }
+            });
+        });
     }
 
     $scope.refresh = function() {
@@ -65,6 +77,15 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
 
     $scope.removeTeam = function(index) {
         $scope.parameters.teams.splice(index, 1);
+        $scope.refresh();
+    }
+
+    $scope.addScanner = function() {
+        $scope.parameters.scanners.push({ name: '' })
+    }
+
+    $scope.removeScanner = function(index) {
+        $scope.parameters.scanners.splice(index, 1);
         $scope.refresh();
     }
 

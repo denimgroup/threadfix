@@ -138,10 +138,12 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.$on('rootScopeInitialized', function() {
-        threadfixAPIService.getTeams().
+        threadfixAPIService.getVulnSearchParameters().
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.teams = data.object;
+                    $scope.teams = data.object.teams;
+                    $scope.scanners = data.object.scanners;
+                    $scope.vulnTypes = data.object.vulnTypes;
 
                     $scope.teams.sort(nameCompare)
 
