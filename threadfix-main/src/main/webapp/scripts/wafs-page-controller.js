@@ -59,17 +59,16 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (wafs) {
-//            if (!$scope.wafs) {
-//                $scope.wafs = [ waf ];
-//            } else {
-//                $scope.wafs.push(waf);
-//
-//                $scope.wafs.sort(nameCompare);
-//            }
-            $scope.wafs = wafs;
+        modalInstance.result.then(function (waf) {
+            if (!$scope.wafs) {
+                $scope.wafs = [ waf ];
+            } else {
+                $scope.wafs.push(waf);
 
-            $scope.successMessage = "Successfully created new waf";
+                $scope.wafs.sort(nameCompare);
+            }
+
+            $scope.successMessage = "Successfully created waf " + waf.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

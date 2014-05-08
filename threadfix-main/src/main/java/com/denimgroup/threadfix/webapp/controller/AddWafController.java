@@ -81,7 +81,7 @@ public class AddWafController {
 	}
 
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<List<Waf>> newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
+	public @ResponseBody RestResponse<Waf> newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
 			BindingResult result,
 			SessionStatus status, Model model,
 			HttpServletRequest request) {
@@ -110,7 +110,7 @@ public class AddWafController {
 			applicationService.storeApplication(application);
 		}
 
-        return RestResponse.success(wafService.loadAll());
+        return RestResponse.success(waf);
 	}
 	
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
