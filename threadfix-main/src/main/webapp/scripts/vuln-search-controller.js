@@ -3,26 +3,29 @@ var module = angular.module('threadfix');
 module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
     $scope.parameters = {
         teams: [{}],
-        severities: []
+        severities: [],
+        numberVulnerabilities: 10
     };
+
+    $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);
 
     // glue code to make angular and spring play nice
     var updateParameters = function() {
         $scope.parameters.genericSeverities = [];
         if ($scope.parameters.severities.info) {
-            $scope.parameters.genericSeverities.push({ id: 1 });
+            $scope.parameters.genericSeverities.push({ intValue: 1 });
         }
         if ($scope.parameters.severities.low) {
-            $scope.parameters.genericSeverities.push({ id: 2 });
+            $scope.parameters.genericSeverities.push({ intValue: 2 });
         }
         if ($scope.parameters.severities.medium) {
-            $scope.parameters.genericSeverities.push({ id: 3 });
+            $scope.parameters.genericSeverities.push({ intValue: 3 });
         }
         if ($scope.parameters.severities.high) {
-            $scope.parameters.genericSeverities.push({ id: 4 });
+            $scope.parameters.genericSeverities.push({ intValue: 4 });
         }
         if ($scope.parameters.severities.critical) {
-            $scope.parameters.genericSeverities.push({ id: 5 });
+            $scope.parameters.genericSeverities.push({ intValue: 5 });
         }
 
         // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
@@ -62,5 +65,13 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
 
     $scope.removeTeam = function(index) {
         $scope.parameters.teams.splice(index, 1);
+        $scope.refresh();
     }
+
+    $scope.setNumberVulnerabilities = function(number) {
+        $scope.parameters.numberVulnerabilities = number;
+        $scope.refresh();
+
+    }
+
 });
