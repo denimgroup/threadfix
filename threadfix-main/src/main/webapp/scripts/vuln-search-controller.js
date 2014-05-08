@@ -4,6 +4,7 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
     $scope.parameters = {
         teams: [{}],
         scanners: [{}],
+        genericVulnerabilities: [{}],
         severities: [],
         numberVulnerabilities: 10
     };
@@ -48,6 +49,18 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
                 }
             });
         });
+
+        var numberRegex = /^([0-9]+)$/;
+        var autocompleteRegex = /.* ([0-9]+)\)$/;
+
+        $scope.parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
+            if (numberRegex.test(genericVulnerability.text)) {
+                genericVulnerability.id = numberRegex;
+            } else if (autocompleteRegex.test(genericVulnerability.text)) {
+                var matches = autocompleteRegex.exec(genericVulnerability.text);
+                genericVulnerability.id = matches[1];
+            }
+        });
     }
 
     $scope.refresh = function() {
@@ -71,21 +84,12 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
             });
     }
 
-    $scope.addTeam = function() {
-        $scope.parameters.teams.push({ name: '' })
+    $scope.add = function(collection) {
+        collection.push({ name: '' })
     }
 
-    $scope.removeTeam = function(index) {
-        $scope.parameters.teams.splice(index, 1);
-        $scope.refresh();
-    }
-
-    $scope.addScanner = function() {
-        $scope.parameters.scanners.push({ name: '' })
-    }
-
-    $scope.removeScanner = function(index) {
-        $scope.parameters.scanners.splice(index, 1);
+    $scope.remove = function(collection, index) {
+        collection.splice(index, 1);
         $scope.refresh();
     }
 

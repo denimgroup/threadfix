@@ -1085,6 +1085,6 @@ body.dragover.drag-enabled .uploadable {
     height:40px;
 }
 
-.vuln-search-filter-control {
+.vuln-search-filter-control > div {
     margin-top: 10px;
 }

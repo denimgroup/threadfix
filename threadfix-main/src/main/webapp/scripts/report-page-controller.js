@@ -143,7 +143,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 if (data.success) {
                     $scope.teams = data.object.teams;
                     $scope.scanners = data.object.scanners;
-                    $scope.vulnTypes = data.object.vulnTypes;
+                    $scope.genericVulnerabilities = data.object.vulnTypes;
 
                     $scope.teams.sort(nameCompare)
 
