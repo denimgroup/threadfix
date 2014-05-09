@@ -3,6 +3,7 @@ var module = angular.module('threadfix');
 module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
     $scope.parameters = {
         teams: [{}],
+        applications: [{}],
         scanners: [{}],
         genericVulnerabilities: [{}],
         severities: [],
@@ -34,7 +35,9 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
             $scope.parameters.genericSeverities.push({ intValue: 5 });
         }
 
-        // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
+        $scope.parameters.teams.forEach(function(filteredTeam) {
+            filteredTeam.id = undefined;
+        });
         $scope.teams.forEach(function(team) {
             $scope.parameters.teams.forEach(function(filteredTeam) {
                 if (team.name === filteredTeam.name) {
@@ -43,9 +46,23 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
             });
         });
 
+        // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
+        $scope.parameters.applications.forEach(function(filteredApp) {
+            filteredApp.id = undefined;
+        });
+        $scope.applications.forEach(function(app) {
+            $scope.parameters.applications.forEach(function(filteredApp) {
+                if (filteredApp.name === (app.team.name + " / " + app.name)) {
+                    filteredApp.id = app.id;
+                }
+            });
+        });
+
         $scope.parameters.channelTypes = $scope.parameters.scanners;
 
-        // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
+        $scope.parameters.channelTypes.forEach(function(filteredScanner) {
+            filteredScanner.id = undefined;
+        });
         $scope.scanners.forEach(function(scanner) {
             $scope.parameters.channelTypes.forEach(function(filteredScanner) {
                 if (scanner.name === filteredScanner.name) {
@@ -63,6 +80,8 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
             } else if (autocompleteRegex.test(genericVulnerability.text)) {
                 var matches = autocompleteRegex.exec(genericVulnerability.text);
                 genericVulnerability.id = matches[1];
+            } else {
+                genericVulnerability.id = undefined;
             }
         });
     }

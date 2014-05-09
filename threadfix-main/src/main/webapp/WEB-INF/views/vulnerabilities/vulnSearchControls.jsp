@@ -12,6 +12,16 @@
     </div>
 
     <div>
+        Applications
+        <br>
+        <div ng-repeat="filteredApplication in parameters.applications">
+            <input typeahead="(application.team.name + ' / ' + application.name) for application in applications| filter:$viewValue | limitTo:8" type="text" ng-model="filteredApplication.name" typeahead-on-select="refresh()"/>
+            <span class="pointer icon icon-plus-sign" ng-click="add(parameters.applications)"></span>
+            <span ng-show="parameters.applications.length > 1" class="pointer icon icon-minus-sign" ng-click="remove(parameters.applications, $index)"></span>
+        </div>
+    </div>
+
+    <div>
         Vulnerability Type
         <br>
         <div ng-repeat="filteredType in parameters.genericVulnerabilities">
