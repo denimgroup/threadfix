@@ -95,7 +95,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             object.closed = true;
         } else if ($scope.vulnType === 'False Positive') {
             object.falsePositive = true;
+        } else if ($scope.vulnType === 'Hidden') {
+            object.hidden = true;
         }
+
 
         return object;
     }
