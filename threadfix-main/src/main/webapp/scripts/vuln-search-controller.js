@@ -6,7 +6,11 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
         scanners: [{}],
         genericVulnerabilities: [{}],
         severities: [],
-        numberVulnerabilities: 10
+        numberVulnerabilities: 10,
+        showOpen: true,
+        showClosed: false,
+        showFalsePositive: false,
+        showHidden: false
     };
 
     $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);

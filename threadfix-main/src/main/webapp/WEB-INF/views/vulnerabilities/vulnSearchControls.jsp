@@ -58,6 +58,17 @@
     </div>
 
     <div>
+        Status
+        <br>
+        <div class="btn-group">
+            <label class="btn" ng-change="refresh()" ng-model="parameters.showOpen" btn-checkbox>Open</label>
+            <label class="btn" ng-change="refresh()" ng-model="parameters.showClosed" btn-checkbox>Closed</label>
+            <label class="btn" ng-change="refresh()" ng-model="parameters.showFalsePositive" btn-checkbox>False Positive</label>
+            <label class="btn" ng-change="refresh()" ng-model="parameters.showHidden" btn-checkbox>Hidden</label>
+        </div>
+    </div>
+
+    <div>
         Days Old
         <ul class="nav nav-pills">
             <li ng-class="{ active: parameters.daysOldModifier === 'Less' }"><a ng-click="setDaysOldModifier('Less')">Less Than</a></li>
