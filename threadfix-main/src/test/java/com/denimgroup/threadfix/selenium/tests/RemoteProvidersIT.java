@@ -155,12 +155,11 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickRemoteProvidersLink()
-                .clickConfigureWhiteHat()
-                .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat()
-                .mapWhiteHatToTeamAndApp(1, teamName, appName);
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        remoteProvidersIndexPage.clickConfigureWhiteHat();
+        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
+        remoteProvidersIndexPage.saveWhiteHat();
+        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
 

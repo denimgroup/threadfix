@@ -106,24 +106,6 @@ public class ApplicationDetailPage extends BasePage {
 
     }
 
-    public ApplicationDetailPage editDefectTracker(String defectTracker, String username,
-                                                   String password, String productName) {
-        clickEditDeleteBtn()
-                .clickEditDefectTrackerButton()
-                .selectDefectTracker(defectTracker)
-                .setUsername(username)
-                .setPassword(password)
-                .clickTestConnection()
-                .selectProduct(productName)
-                .clickUpdateApplicationButton()
-                .clickUpdateApplicationButton();
-
-        sleep(2000);
-
-        return new ApplicationDetailPage(driver);
-
-    }
-
     public ApplicationDetailPage addWaf(String wafName) {
         Select s = new Select(driver.findElementById("wafSelect"));
         s.selectByVisibleText(wafName);
