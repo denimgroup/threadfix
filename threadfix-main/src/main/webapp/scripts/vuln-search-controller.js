@@ -122,4 +122,14 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
         }
     }
 
+    $scope.setNumberMerged = function(numberMerged) {
+        if ($scope.parameters.numberMerged === numberMerged) {
+            $scope.parameters.numberMerged = undefined;
+            $scope.refresh();
+        } else {
+            $scope.parameters.numberMerged = numberMerged;
+            $scope.refresh();
+        }
+    }
+
 });

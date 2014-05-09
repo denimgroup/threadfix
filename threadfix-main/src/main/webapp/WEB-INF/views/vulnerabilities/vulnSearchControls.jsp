@@ -26,6 +26,16 @@
     </div>
 
     <div>
+        Path
+        <input type="text" placeholder="Example: /login.jsp" ng-model="parameters.path"/>
+    </div>
+
+    <div>
+        Parameter
+        <input type="text" placeholder="Example: username" ng-model="parameters.parameter"/>
+    </div>
+
+    <div>
         Scanners
         <br>
         <div ng-repeat="filteredScanner in parameters.scanners">
@@ -37,6 +47,7 @@
 
     <div>
         Severity
+        <br>
         <div class="btn-group">
             <label class="btn" ng-change="refresh()" ng-model="parameters.severities.info" btn-checkbox>Info</label>
             <label class="btn" ng-change="refresh()" ng-model="parameters.severities.low" btn-checkbox>Low</label>
@@ -67,6 +78,16 @@
             <li ng-class="{ active: parameters.numberVulnerabilities === 25 }"><a ng-click="setNumberVulnerabilities(25)">25</a></li>
             <li ng-class="{ active: parameters.numberVulnerabilities === 50 }"><a ng-click="setNumberVulnerabilities(50)">50</a></li>
             <li ng-class="{ active: parameters.numberVulnerabilities === 100 }"><a ng-click="setNumberVulnerabilities(100)">100</a></li>
+        </ul>
+    </div>
+
+    <div>
+        Number Merged Findings
+        <ul class="nav nav-pills">
+            <li ng-class="{ active: parameters.numberMerged === 2 }"><a ng-click="setNumberMerged(2)">2+</a></li>
+            <li ng-class="{ active: parameters.numberMerged === 3 }"><a ng-click="setNumberMerged(3)">3+</a></li>
+            <li ng-class="{ active: parameters.numberMerged === 4 }"><a ng-click="setNumberMerged(4)">4+</a></li>
+            <li ng-class="{ active: parameters.numberMerged === 5 }"><a ng-click="setNumberMerged(5)">5+</a></li>
         </ul>
     </div>
 
