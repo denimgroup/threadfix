@@ -23,9 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.tests;
 
-import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
 import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
@@ -146,10 +146,6 @@ public class WafIT extends BaseIT {
 		String emptyString = "";
 		String whiteSpaceString = "           ";
 		
-		String emptyInputError = "This field cannot be blank";
-		
-		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-		
 		WafIndexPage wafIndexPage = loginPage.login("user", "password")
                 .clickWafsHeaderLink();
 		
@@ -165,19 +161,10 @@ public class WafIT extends BaseIT {
         assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("nameRequiredError"));
 		
 		// Test browser length limit
-		wafIndexPage = wafIndexPage.setWafName(longInput)
-                .clickModalSubmit();
-		assertTrue("The waf name was not cropped correctly.", wafIndexPage.isWafPresent(longInput.substring(0, Waf.NAME_LENGTH)));
-		
-		// Test name duplication checking
-		String wafName = wafIndexPage.getNameText(1);
-		
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
-                .clickAddWafLink()
-                .setWafName(wafName)
+		wafIndexPage = wafIndexPage.setWafName(getRandomString(65))
                 .clickModalSubmitInvalid();
-		
-		assertTrue(wafIndexPage.getNameErrorsText().equals("That name is already taken."));
+        sleep(500);
+        assertTrue("The correct error text was not present", wafIndexPage.isElementVisible("characterLimitError"));
 	}
 
 	@Test
@@ -289,13 +276,16 @@ public class WafIT extends BaseIT {
                 .clickModalSubmit();
 
 		//Add waf to application
-		ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
-                 .expandTeamRowByName(teamName)
-                 .clickViewAppLink(appName, teamName)
-                 .clickEditDeleteBtn()
-                 .clickAddWaf()
-                 .addWaf(wafName);
-
+		TeamIndexPage teamIndexPage = wafIndexPage.clickOrganizationHeaderLink();
+        teamIndexPage.expandTeamRowByName(teamName);
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+        applicationDetailPage.clickEditDeleteBtn();
+        applicationDetailPage.clickAddWaf();
+        applicationDetailPage.addWaf(wafName);
+        applicationDetailPage.clickDynamicSubmit();
+        assertTrue("waf was not added.", driver.findElement(By.id("wafName")).getText().contains(wafName));
+        applicationDetailPage.clickModalSubmit();
+        sleep(500);
 		//Generating  Deny waf Rules
 		WafRulesPage wafRulesPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .clickWafsHeaderLink()
@@ -304,8 +294,7 @@ public class WafIT extends BaseIT {
                 .setWafDirectiveSelect("deny")
                 .clickGenerateWafRulesButton();
 
-        String pageText = wafRulesPage.tryGetText(By.id("wafrule"));
-		assertTrue("Waf rule not generated", pageText.contains("SecRule"));
+		assertTrue("Waf rule not generated", driver.findElement(By.id("wafrule")).getText().contains("SecRule"));
 
 		// Generate pass Waf Rules
 		wafRulesPage = wafRulesPage.setWafDirectiveSelect("pass")

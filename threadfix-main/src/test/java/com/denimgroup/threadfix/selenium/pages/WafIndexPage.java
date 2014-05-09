@@ -89,7 +89,7 @@ public class WafIndexPage extends BasePage {
 
     //todo replace with wafName once success message is fixed.
 	public boolean isSuccessPresent(String wafName){
-		return driver.findElementByClassName("alert-success").getText().contains("Successfully created");
+		return driver.findElementByClassName("alert-success").getText().contains(wafName);
 	}
 	
 	public WafIndexPage clickEditWaf(String wafName){

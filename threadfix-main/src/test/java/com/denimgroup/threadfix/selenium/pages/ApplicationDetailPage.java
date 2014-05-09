@@ -128,7 +128,7 @@ public class ApplicationDetailPage extends BasePage {
         Select s = new Select(driver.findElementById("wafSelect"));
         s.selectByVisibleText(wafName);
         sleep(4000);
-        return new ApplicationDetailPage(driver);
+        return this;
     }
 
     public ApplicationDetailPage saveWafAdd() {
