@@ -249,6 +249,7 @@ public class QueueSenderImpl implements QueueSender {
         MapMessage scheduledScanMap = new ActiveMQMapMessage();
 
         try {
+            scheduledScanMap.setInt("appId", -1);
             scheduledScanMap.setString("type", QueueConstants.STATISTICS_UPDATE);
         } catch (JMSException e) {
             log.error(jmsErrorString);
