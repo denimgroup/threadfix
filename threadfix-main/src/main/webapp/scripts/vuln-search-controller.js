@@ -84,7 +84,42 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder) {
                 genericVulnerability.id = undefined;
             }
         });
+
+        $scope.parameters.endDate = undefined;
+        $scope.parameters.startDate = undefined;
+
+        var date;
+
+        if ($scope.endDate) {
+            date = new Date($scope.endDate);
+            if (date) {
+                $scope.parameters.endDate = date.getTime();
+            }
+        }
+        if ($scope.startDate) {
+            date = new Date($scope.startDate)
+            if (date) {
+                $scope.parameters.startDate = date.getTime();
+            }
+        }
+
     }
+
+    $scope.maxDate = new Date();
+
+    $scope.openEndDate = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.endDateOpened = true;
+    };
+
+    $scope.openStartDate = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.startDateOpened = true;
+    };
 
     $scope.refresh = function() {
         $scope.loading = true;

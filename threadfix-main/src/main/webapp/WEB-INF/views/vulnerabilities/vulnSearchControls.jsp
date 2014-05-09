@@ -92,6 +92,30 @@
         </ul>
     </div>
 
+    <h4>Start Date</h4>
+    <div>
+        <div class="col-md-6">
+            <p class="input-group">
+                <input type="text" class="form-control" ng-model="startDate" style="margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate" is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="icon icon-calendar"></i></button>
+              </span>
+            </p>
+        </div>
+    </div>
+
+    <h4>End Date</h4>
+    <div>
+        <div class="col-md-6">
+            <p class="input-group">
+                <input type="text" class="form-control" ng-model="endDate" style="margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="endDate" is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="icon icon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+    </div>
+
     <div>
         Number Vulnerabilities
         <ul class="nav nav-pills">
