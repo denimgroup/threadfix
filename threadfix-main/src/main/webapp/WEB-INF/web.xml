@@ -175,6 +175,7 @@
 		    	protected-regex ^/organizations/jsonList$,
         		protected-regex ^/reports/ajax$,
         		protected-regex ^/reports/search$,
+        		protected-regex ^/reports/tree,
         		protected-regex ^/reports/parameters,
         		protected-regex ^/scans/table$,
 		    	protected-regex ^/wafs/[0-9]+/edit/ajax$,
