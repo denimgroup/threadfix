@@ -180,3 +180,42 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
     return updater;
 });
+
+threadfixModule.factory('vulnTreeTransformer', function() {
+    var transformer = {};
+
+    var getCategory = function(name, intValue) {
+        return {
+            total: 0,
+            entries: [],
+            name: name,
+            intValue: intValue
+        }
+    }
+
+    transformer.transform = function(serverResponse) {
+        var initialCategories = [getCategory('Critical', 5), getCategory('High', 4), getCategory('Medium', 3), getCategory('Low', 2), getCategory('Info', 1)];
+
+        serverResponse.forEach(function(element) {
+            var newTreeCategory = initialCategories[5 - element.intValue]; // use the int value backwards to get the index
+            newTreeCategory.total = newTreeCategory.total + element.numResults;
+            newTreeCategory.entries.push(element);
+        });
+
+        var newTree = [];
+
+        initialCategories.forEach(function(category) {
+            if (category.total > 0) {
+                newTree.push(category);
+            }
+        });
+
+        if (newTree.length === 1) {
+            newTree[0].expanded = true;
+        }
+
+        return newTree;
+    }
+
+    return transformer;
+});

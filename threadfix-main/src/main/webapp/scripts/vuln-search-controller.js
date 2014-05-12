@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $http, tfEncoder, vulnSearchParameterService) {
+module.controller('VulnSearchController', function($scope, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer) {
     $scope.parameters = {
         teams: [{}],
         applications: [{}],
@@ -57,7 +57,7 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.initialized = true;
 
                 if (data.success) {
-                    $scope.vulnTree = data.object;
+                    $scope.vulnTree = vulnTreeTransformer.transform(data.object);
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }

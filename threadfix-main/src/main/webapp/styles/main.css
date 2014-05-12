@@ -1089,6 +1089,10 @@ body.dragover.drag-enabled .uploadable {
     margin-top: 10px;
 }
 
+.vuln-search-filter-control .filter-controls h3, .vuln-search-filter-control .vuln-tree h3 {
+    margin:0;
+}
+
 .filter-controls {
     width: 300px;
     float:left;

@@ -1,6 +1,8 @@
 <div class="vuln-search-filter-control" ng-controller="VulnSearchController">
 
     <div class="filter-controls">
+        <h3>Filters</h3>
+
         <div>
             Teams
             <br>
