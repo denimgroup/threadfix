@@ -31,7 +31,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
@@ -159,11 +158,13 @@ public class RemoteProvidersIT extends BaseIT {
         remoteProvidersIndexPage.clickConfigureWhiteHat();
         remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
         remoteProvidersIndexPage.saveWhiteHat();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
         remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
-
-        assertFalse("WhiteHat scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded() == "No active Vulnerabilities found.");
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().accept();
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 
@@ -191,7 +192,8 @@ public class RemoteProvidersIT extends BaseIT {
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
 
-        assertFalse("Veracode scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded() == "No active Vulnerabilities found.");
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().accept();
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 

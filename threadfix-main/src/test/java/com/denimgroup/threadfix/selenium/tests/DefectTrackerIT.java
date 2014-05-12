@@ -194,7 +194,7 @@ public class DefectTrackerIT extends BaseIT {
 //	}
 
     @Test
-	public void testEditDefectTrackerFieldValidation() {       //Needs to cover all validation messages... They're static so only need to assert visibility of message id
+	public void testEditDefectTrackerFieldValidation() {       //Waiting on issue #259
         String emptyString = "";
         String whiteSpaceString = "           ";
 
