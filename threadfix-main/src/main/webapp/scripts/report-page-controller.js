@@ -273,6 +273,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
+        $scope.$broadcast('loadVulnerabilitySearchTable');
 
     }
 

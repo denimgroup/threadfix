@@ -32,15 +32,19 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         $scope.startDateOpened = true;
     };
 
+    $scope.$on('loadVulnerabilitySearchTable', function(event) {
+        $scope.refresh();
+    });
+
     $scope.refresh = function() {
         $scope.loading = true;
-        vulnSearchParameterService.updateParameters($scope);
+        vulnSearchParameterService.updateParameters($scope, $scope.parameters);
         $http.post(tfEncoder.encode("/reports/search"), $scope.parameters).
             success(function(data, status, headers, config) {
                 $scope.initialized = true;
 
                 if (data.success) {
-                    $scope.vulns = data.object;
+                    $scope.vulns = data.object.vulns;
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -58,6 +62,25 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
 
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object);
+                    $scope.badgeWidth = 0;
+
+                    if ($scope.vulnTree) {
+                        $scope.vulnTree.forEach(function(treeElement) {
+                            var size = 7;
+                            var test = treeElement.total;
+                            while (test > 10) {
+                                size = size + 7;
+                                test = test / 10;
+                            }
+
+                            if (size > $scope.badgeWidth) {
+                                $scope.badgeWidth = size;
+                            }
+                        });
+                    }
+
+                    $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
+
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
@@ -117,5 +140,35 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
             $scope.refresh();
         }
     }
+
+    $scope.expandAndRetrieveTable = function(element) {
+        var parameters = angular.copy($scope.parameters);
+
+        vulnSearchParameterService.updateParameters($scope, parameters);
+        parameters.genericSeverities.push({ intValue: element.intValue });
+        parameters.genericVulnerabilities = [ element.genericVulnerability ];
+
+        $http.post(tfEncoder.encode("/reports/search"), parameters).
+        success(function(data, status, headers, config) {
+            $scope.initialized = true;
+
+            element.expanded = true;
+
+            if (data.success) {
+                element.vulns = data.object.vulns;
+                element.totalVulns = data.object.vulnCount;
+                element.max = Math.ceil(data.object.vulnCount/100);
+            } else {
+                $scope.errorMessage = "Failure. Message was : " + data.message;
+            }
+
+            $scope.loading = false;
+        }).
+        error(function(data, status, headers, config) {
+            $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+            $scope.loading = false;
+        });
+    }
+
 
 });

@@ -1,4 +1,4 @@
-<div class="vuln-search-filter-control" ng-controller="VulnSearchController">
+<div class="vuln-search-filter-control" style="width:900px;" ng-controller="VulnSearchController">
 
     <div class="filter-controls">
         <h3>Filters</h3>

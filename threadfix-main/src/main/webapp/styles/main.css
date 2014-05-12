@@ -1095,11 +1095,14 @@ body.dragover.drag-enabled .uploadable {
 
 .filter-controls {
     width: 300px;
-    float:left;
+    float:right;
 }
 
 .vuln-tree {
     width:550px;
-    float:right;
+    float:left;
 }
 
+.vuln-tree table td {
+    padding-left: 5px;
+}
