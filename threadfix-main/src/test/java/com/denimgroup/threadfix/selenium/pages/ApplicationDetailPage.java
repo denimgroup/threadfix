@@ -269,8 +269,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScanAgentTasksTab() {
-        driver.findElementById("scanQueueTabLink").click();
+    public ApplicationDetailPage clickScanAgentTasksTab(int count) {
+        driver.findElementById( count + " Scan Agent Tasks").click();
         sleep(1000);
         waitForElement(driver.findElementById("scanQueueTable"));
         return new ApplicationDetailPage(driver);
@@ -294,8 +294,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickAddNewScanTask() {
-        driver.findElementById("addScanQueueLink" + modalNumber()).click();
-        waitForElement(driver.findElementById("addScanQueue" + modalNumber()));
+        driver.findElementById("addScanQueueLink").click();
+        waitForElement(driver.findElementById("submit"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -305,7 +305,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage submitScanQueue() {
-        driver.findElementById("addScanQueueButton" + modalNumber()).click();
+        driver.findElementById("submit").click();
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
@@ -340,7 +340,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setScanQueueType(String scanQueueType) {
-        new Select(driver.findElementById("scanQueueType"))
+        new Select(driver.findElementById("scanner"))
                 .selectByVisibleText(scanQueueType);
         return new ApplicationDetailPage(driver);
     }

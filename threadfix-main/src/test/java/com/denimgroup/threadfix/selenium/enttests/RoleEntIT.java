@@ -281,6 +281,8 @@ public class RoleEntIT extends BaseIT {
 		 				.chooseRoleForGlobalAccess(admin, null)
 		 				.clickAddNewUserBtn()
 		 				.clickEditLink("user")
+                        .enterPassword("passwordpassword", null)
+                        .enterConfirmPassword("passwordpassword", null)
 		 				.chooseRoleForGlobalAccess("Read Access", "user")
 		 				.clickUpdateUserBtn("user");
 		 

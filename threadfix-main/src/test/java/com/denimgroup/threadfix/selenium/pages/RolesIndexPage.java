@@ -43,7 +43,7 @@ public class RolesIndexPage extends BasePage {
 		super(webdriver);
 		createNewRoleLink = driver.findElementById("createRoleModalLink");
 		
-		for (int i = 1; i <= getNumRows(); i++) {
+		for (int i = 0; i <= getNumRows(); i++) {
 //			names.add(driver.findElementById("role" + i));
 			editLinks.add(driver.findElementById("editModalLink" + i));
 //			deleteButtons.add(driver.findElementById("delete" + i));
@@ -66,7 +66,7 @@ public class RolesIndexPage extends BasePage {
 	
 	public int getIndex(String roleName) {
 		int i = -1;
-		for (int j = 1; j <= getNumRows(); j++) {
+		for (int j = 0; j <= getNumRows(); j++) {
 			names.add(driver.findElementById("role" + j));
 		}
 		for (WebElement name : names) {
@@ -95,7 +95,7 @@ public class RolesIndexPage extends BasePage {
 	
 	public RolesIndexPage clickCreateRole(){
 		driver.findElementById("createRoleModalLink").click();
-		waitForElement(driver.findElementById("createRoleModal"));
+		waitForElement(driver.findElementById("submit"));
 		return new RolesIndexPage(driver);
 	}
 	
@@ -113,13 +113,12 @@ public class RolesIndexPage extends BasePage {
 	
 	public RolesIndexPage clickSaveRole(String oldName){ 
 		if(oldName == null){
-			driver.findElementById("newRoleFormSubmitButton").click();
+			driver.findElementById("submit").click();
             sleep(2000);
 			waitForInvisibleElement(driver.findElementById("createRoleModal"));
 		}else{
-			driver.findElementsById("submitRemoteProviderFormButton").get(getIndex(oldName)).click();
+			driver.findElementsById("submit").get(getIndex(oldName)).click();
 			sleep(1000);
-//			waitForInvisibleElement(driver.findElementById("roleEditForm"+(getIndex(oldName)+1)));
 		}
 		return new RolesIndexPage(driver);
 	}
@@ -143,7 +142,7 @@ public class RolesIndexPage extends BasePage {
 		
 	public RolesIndexPage clickEditLink(String oldName) {
 		editLinks.get(getIndex(oldName)).click();
-		waitForElement(driver.findElementById("editRoleModal"+(getIndex(oldName)+1)));
+		waitForElement(driver.findElementById("submit"));
 		return new RolesIndexPage(driver);
 	}
 
@@ -156,10 +155,7 @@ public class RolesIndexPage extends BasePage {
 	}
 	
 	public boolean getPermissionValue(String permissionName, String oldName) {
-		if(oldName == null){
-			return driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + "True")).isSelected();
-		}
-		return driver.findElementById("editRoleModal"+(getIndex(oldName)+1)).findElement(By.id(permissionName + "True")).isSelected();
+		return driver.findElement(By.id(permissionName + "True")).isSelected();
 	}
 		
 	public RolesIndexPage setPermissionValue(String permissionName, boolean value,String oldName) {

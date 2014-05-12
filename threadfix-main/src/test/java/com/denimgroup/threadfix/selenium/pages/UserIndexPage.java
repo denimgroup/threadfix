@@ -121,9 +121,10 @@ public class UserIndexPage extends BasePage {
 	
 	public UserIndexPage chooseRoleForGlobalAccess(String role,String oldName){
 		if(oldName == null){
+            driver.findElementById("hasGlobalGroupAccessCheckbox").click();
 			new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
 		}else{
-			new Select(driver.findElementById("roleSelect" + oldName)).selectByVisibleText(role);
+			new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
 		}
 		return new UserIndexPage(driver);
 	}
