@@ -203,4 +203,24 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
 
     }
+//
+//    @Test
+//    public void invalidImportVeracodeScan() {
+//        String teamName = "importVeracodeTeam" + getRandomString(3);
+//        String appName = "importVeracodeApp" + getRandomString(3);
+//
+//        DatabaseUtils.createTeam(teamName);
+//        DatabaseUtils.createApplication(teamName, appName);
+//
+//        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+//        remoteProvidersIndexPage.clickConfigureVeracode();
+//        remoteProvidersIndexPage.setVeraUsername(VERACODE_USER);
+//        remoteProvidersIndexPage.setVeraPassword(VERACODE_PASSWORD);
+//        remoteProvidersIndexPage.saveVera();
+//        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(3, teamName, appName);
+//        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
+//        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
+//        //assert error message displayed
+//        assertTrue("Error was not displayed", driver.findElement(By.className("alert-danger")).isDisplayed());
+//    }
 }

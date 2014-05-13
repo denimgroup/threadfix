@@ -398,10 +398,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public String getDefectTrackerName(){
-        return driver.findElementById("defectTrackerName").getText();
-    }
-
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {
