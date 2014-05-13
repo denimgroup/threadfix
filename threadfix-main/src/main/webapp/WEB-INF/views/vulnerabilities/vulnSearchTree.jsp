@@ -48,7 +48,7 @@
             </tr>
             <tr ng-show="category.expanded && element.expanded" ng-repeat-end>
                 <td></td>
-                <td colspan="3" class="vuln-tree-vuln-list">
+                <td colspan="4" class="vuln-tree-vuln-list">
                     <div class="accordion-group">
                         <div class="accordion-header" style="height:40px;padding: 8px 1px 4px 10px;" ng-show="element.totalVulns > 10">
                             <span>

@@ -1118,6 +1118,10 @@ body.dragover.drag-enabled .uploadable {
     padding-left: 5px;
 }
 
+.vuln-tree table {
+    table-layout:fixed
+}
+
 .vuln-tree-label {
     font-weight: bold;
     width: 80px;
