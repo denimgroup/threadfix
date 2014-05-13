@@ -188,9 +188,9 @@ public class RemoteProvidersIT extends BaseIT {
         remoteProvidersIndexPage.setVeraUsername(VERACODE_USER);
         remoteProvidersIndexPage.setVeraPassword(VERACODE_PASSWORD);
         remoteProvidersIndexPage.saveVera();
-        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(3, teamName, appName);
+        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
-        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(0);
         sleep(15000);
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
