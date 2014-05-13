@@ -2,10 +2,10 @@ var module = angular.module('threadfix');
 
 module.controller('VulnSearchController', function($scope, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer) {
     $scope.parameters = {
-        teams: [{}],
-        applications: [{}],
-        scanners: [{}],
-        genericVulnerabilities: [{}],
+        teams: [],
+        applications: [],
+        scanners: [],
+        genericVulnerabilities: [],
         severities: [],
         numberVulnerabilities: 10,
         showOpen: true,
@@ -68,7 +68,7 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                         $scope.vulnTree.forEach(function(treeElement) {
                             var size = 7;
                             var test = treeElement.total;
-                            while (test > 10) {
+                            while (test >= 10) {
                                 size = size + 7;
                                 test = test / 10;
                             }
@@ -96,6 +96,21 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
     $scope.add = function(collection) {
         collection.push({ name: '' })
     }
+
+    $scope.addNew = function(collection, name) {
+        var found = false;
+
+        collection.forEach(function(item) {
+            if (item && item.name === name) {
+                found = true;
+            }
+        });
+
+        if (!found) {
+            collection.push({name: name});
+            $scope.refresh();
+        }
+    };
 
     $scope.remove = function(collection, index) {
         collection.splice(index, 1);
@@ -179,6 +194,4 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.loading = false;
             });
     }
-
-
 });

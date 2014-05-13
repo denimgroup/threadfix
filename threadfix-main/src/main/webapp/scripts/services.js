@@ -149,10 +149,10 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         var autocompleteRegex = /.* ([0-9]+)\)$/;
 
         parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
-            if (numberRegex.test(genericVulnerability.text)) {
+            if (numberRegex.test(genericVulnerability.name)) {
                 genericVulnerability.id = numberRegex;
-            } else if (autocompleteRegex.test(genericVulnerability.text)) {
-                var matches = autocompleteRegex.exec(genericVulnerability.text);
+            } else if (autocompleteRegex.test(genericVulnerability.name)) {
+                var matches = autocompleteRegex.exec(genericVulnerability.name);
                 genericVulnerability.id = matches[1];
             } else {
                 genericVulnerability.id = undefined;

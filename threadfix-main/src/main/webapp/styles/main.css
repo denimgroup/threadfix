@@ -1094,8 +1094,9 @@ body.dragover.drag-enabled .uploadable {
 }
 
 .filter-controls {
-    width: 300px;
+    width: 345px;
     float:right;
+    font-size:14px;
 }
 
 .vuln-tree {
@@ -1103,6 +1104,22 @@ body.dragover.drag-enabled .uploadable {
     float:left;
 }
 
+.filter-controls .accordion-heading {
+    padding:10px 14px;
+    background-color: rgb(245,245,245);
+    cursor: pointer;
+}
+
+.filter-controls .icon {
+    cursor: pointer;
+}
+
 .vuln-tree table td {
     padding-left: 5px;
+}
+
+.filter-group-header {
+}
+
+.filter-group {
 }
