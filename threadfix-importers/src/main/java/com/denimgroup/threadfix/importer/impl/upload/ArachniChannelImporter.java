@@ -47,10 +47,11 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
 		tagMap.put("name", FindingKey.VULN_CODE);
-		tagMap.put("code", FindingKey.SEVERITY_CODE);
+		tagMap.put("severity", FindingKey.SEVERITY_CODE);
 		tagMap.put("variable", FindingKey.PARAMETER);
 		tagMap.put("var", FindingKey.PARAMETER);
 		tagMap.put("url", FindingKey.PATH);
+        tagMap.put("cwe", FindingKey.CWE);
 	}
 	
 	// Since the severity mappings are static and not included in the XML output,
@@ -176,8 +177,12 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    					"Cross-Site Scripting in HTML &quot;script&quot; tag.");
 	    		}
 	    		
-	    		findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
+	    		if (findingMap.get(FindingKey.SEVERITY_CODE) == null || findingMap.get(FindingKey.SEVERITY_CODE).isEmpty())
+                    findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
 
+                // Set CWE 16 Configuration if there no CWE in scan file
+                if (findingMap.get(FindingKey.CWE) == null || findingMap.get(FindingKey.CWE).isEmpty())
+                    findingMap.put(FindingKey.CWE, "16");
 	    		Finding finding = constructFinding(findingMap);
 	    		
 	    		add(finding);
