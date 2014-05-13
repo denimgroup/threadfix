@@ -37,3 +37,9 @@ Password field with auto-complete,Password field with auto-complete,311
 Private IP address disclosure,Private IP address disclosure,200
 Disclosed US Social Security Number (SSN),Disclosed US Social Security Number (SSN),200
 Unencrypted password form,Unencrypted password form,319
+type.severities,,,
+Informational,Informational,1,1
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2
+
