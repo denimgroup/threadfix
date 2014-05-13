@@ -160,6 +160,38 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         $scope.updateElementTable(element, 10, 1);
     }
 
+    $scope.loadFilter = function() {
+        $scope.parameters = JSON.parse($scope.selectedFilter.json);
+        $scope.refresh();
+    }
+
+    $scope.saveCurrentFilters = function() {
+        console.log("Saving filters");
+
+        var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
+
+        submissionObject.name = $scope.currentFilterNameInput;
+
+        $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
+            success(function(data, status, headers, config) {
+                console.log("Successfully saved filters.");
+                $scope.initialized = true;
+
+                if (data.success) {
+                    console.log(data.object);
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+
+                $scope.loading = false;
+            }).
+            error(function(data, status, headers, config) {
+                console.log("Failed to save filters.");
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.loading = false;
+            });
+    }
+
     $scope.updateElementTable = function(element, numToShow, page) {
         console.log('Updating element table');
 

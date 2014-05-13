@@ -178,6 +178,17 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         }
     }
 
+    updater.serialize = function($scope, parameters) {
+
+        var myParameters = angular.copy(parameters)
+
+        updater.updateParameters($scope, myParameters);
+
+        return {
+            json: JSON.stringify(myParameters)
+        };
+    }
+
     return updater;
 });
 

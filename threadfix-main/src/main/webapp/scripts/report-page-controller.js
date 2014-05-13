@@ -145,6 +145,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.scanners = data.object.scanners;
                     $scope.genericVulnerabilities = data.object.vulnTypes;
                     $scope.applications = data.object.applications;
+                    $scope.savedFilters = data.object.savedFilters;
 
                     $scope.teams.sort(nameCompare)
 

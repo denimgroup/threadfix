@@ -2,9 +2,26 @@
 
     <div class="filter-controls">
         <h3>Filters</h3>
+
+        <div class="accordion-group">
+            <div class="accordion-heading" ng-click="showSaveAndLoadControls = !showSaveAndLoadControls">
+                <span class="icon" ng-class="{ 'icon-minus': showSaveAndLoadControls, 'icon-plus': !showSaveAndLoadControls }"></span> Save and Load
+            </div>
+            <div ng-show="showSaveAndLoadControls" class="filter-group-body">
+                <div class="accordion-inner">
+                    <input ng-model="currentFilterNameInput" type="text"/>
+                    <a class="btn btn-primary" ng-disabled="!currentFilterNameInput" ng-click="saveCurrentFilters()">Save</a>
+                </div>
+                <div ng-show="savedFilters" class="accordion-inner">
+                    <select ng-model="selectedFilter" ng-options="filter.name for filter in savedFilters"></select>
+                    <a class="btn" ng-disabled="!selectedFilter" ng-click="loadFilter()">Load</a>
+                </div>
+            </div>
+        </div>
+
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
-                Team And Application Controls
+                <span class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Team And Application Controls
             </div>
             <div ng-show="showTeamAndApplicationControls" class="filter-group-body">
                 <div class="accordion-inner">
@@ -47,7 +64,7 @@
 
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showTypeAndMergedControls = !showTypeAndMergedControls">
-                Type and # Merged Controls
+                <span class="icon" ng-class="{ 'icon-minus': showTypeAndMergedControls, 'icon-plus': !showTypeAndMergedControls }"></span> Type and # Merged Controls
             </div>
             <div class="filter-group-body" ng-show="showTypeAndMergedControls">
                 <div class="accordion-inner" ng-hide="true">
@@ -112,7 +129,7 @@
 
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showDetailsControls = !showDetailsControls">
-                Details Controls
+                <span class="icon" ng-class="{ 'icon-minus': showDetailsControls, 'icon-plus': !showDetailsControls }"></span> Details Controls
             </div>
             <div class="filter-group-body" ng-show="showDetailsControls">
                 <div class="accordion-inner">
@@ -154,7 +171,7 @@
 
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
-                Date Controls
+                <span class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Date Controls
             </div>
             <div class="filter-group-body" ng-show="showDateControls">
                 <div class="accordion-inner">

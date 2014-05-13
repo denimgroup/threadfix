@@ -24,18 +24,27 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.map.annotate.JsonView;
-import org.hibernate.annotations.Entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
-/**
- * Created by mac on 5/13/14.
- */
 @Entity
-public class FilterJsonBlob extends AuditableEntity{
+@Table(name = "FilterJsonBlob")
+public class FilterJsonBlob extends AuditableEntity {
 
-    private String json;
+    private String json, name;
+
+    @JsonView(Object.class)
+    @Column(length = 2048)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @JsonView(Object.class)
     @Column(length = 102400)

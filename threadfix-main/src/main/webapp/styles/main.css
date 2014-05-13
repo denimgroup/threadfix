@@ -1114,6 +1114,10 @@ body.dragover.drag-enabled .uploadable {
     cursor: pointer;
 }
 
+.filter-controls select, .filter-controls input {
+    margin-bottom:0;
+}
+
 .vuln-tree table td {
     padding-left: 5px;
 }
