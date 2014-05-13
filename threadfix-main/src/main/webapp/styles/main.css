@@ -1118,8 +1118,12 @@ body.dragover.drag-enabled .uploadable {
     padding-left: 5px;
 }
 
-.filter-group-header {
+.vuln-tree-label {
+    font-weight: bold;
+    width: 80px;
+    display: inline-block;
 }
 
-.filter-group {
+.vuln-tree-vuln-list {
+    padding: 4px;
 }

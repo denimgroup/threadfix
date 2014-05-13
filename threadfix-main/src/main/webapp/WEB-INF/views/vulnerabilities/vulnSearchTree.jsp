@@ -46,38 +46,40 @@
                     {{ element.genericVulnerability.name | shortCweNames }}
                 </td>
             </tr>
-            <tr ng-show="element.expanded" ng-repeat-end>
+            <tr ng-show="category.expanded && element.expanded" ng-repeat-end>
                 <td></td>
-                <td colspan="3">
-                    <div style="height:34px;padding-top:5px;">
-                        <span>
-                            <ul style="width:190px; float:left" class="nav nav-pills">
-                                <li ng-class="{ active: element.numberToShow === 10 }"> <a ng-click="updateElementTable(element, 10, 1)">10</a></li>
-                                <li ng-class="{ active: element.numberToShow === 25 }"> <a ng-click="updateElementTable(element, 25, 1)">25</a></li>
-                                <li ng-class="{ active: element.numberToShow === 50 }"> <a ng-click="updateElementTable(element, 50, 1)">50</a></li>
-                                <li ng-class="{ active: element.numberToShow === 100 }"><a ng-click="updateElementTable(element, 100, 1)">100</a></li>
-                            </ul>
-                        </span>
-                        <span style="margin:2px;float:left;" ng-form="form" class="pagination" ng-show="element.totalVulns > element.numberToShow">
-                            <pagination class="no-margin"
-                                        total-items="element.totalVulns / element.numberToShow * 10"
-                                        max-size="5"
-                                        ng-model="element.page"
-                                        page="element.page"
-                                        direction-links="false"
-                                        boundary-links="true"
-                                        ng-click="updateElementTable(element, element.numberToShow, element.page)"></pagination>
-                        </span>
-                    </div>
-                    <div ng-repeat="vuln in element.vulns">
-                        <hr>
-                        {{ vuln.path }}
-                        <br>
-                        {{ vuln.parameter }}
+                <td colspan="3" class="vuln-tree-vuln-list">
+                    <div class="accordion-group">
+                        <div class="accordion-header" style="height:40px;padding: 8px 1px 4px 10px;" ng-show="element.totalVulns > 10">
+                            <span>
+                                <ul style="width:190px; float:left" class="nav nav-pills">
+                                    <li ng-class="{ active: element.numberToShow === 10 }"> <a ng-click="updateElementTable(element, 10, 1)">10</a></li>
+                                    <li ng-class="{ active: element.numberToShow === 25 }"> <a ng-click="updateElementTable(element, 25, 1)">25</a></li>
+                                    <li ng-class="{ active: element.numberToShow === 50 }"> <a ng-click="updateElementTable(element, 50, 1)">50</a></li>
+                                    <li ng-class="{ active: element.numberToShow === 100 }"><a ng-click="updateElementTable(element, 100, 1)">100</a></li>
+                                </ul>
+                            </span>
+                            <span style="margin:2px;float:left;" ng-form="form" class="pagination" ng-show="element.totalVulns > element.numberToShow">
+                                <pagination class="no-margin"
+                                            total-items="element.totalVulns / element.numberToShow * 10"
+                                            max-size="5"
+                                            ng-model="element.page"
+                                            page="element.page"
+                                            direction-links="false"
+                                            boundary-links="true"
+                                            ng-click="updateElementTable(element, element.numberToShow, element.page)"></pagination>
+                            </span>
+                        </div>
+                        <div class="accordion-inner" ng-repeat="vuln in element.vulns">
+                            <div class="vuln-tree-label">Path</div>{{ vuln.path }}
+                            <br>
+                            <div class="vuln-tree-label">Parameter</div>{{ vuln.parameter }}
+                            <br>
+                            <span ng-repeat="finding in vuln.findings" class="badge">{{ finding.channelVulnerability.channelType.name }}</span>
+                        </div>
                     </div>
                 </td>
             </tr>
-
         </tbody>
     </table>
 
