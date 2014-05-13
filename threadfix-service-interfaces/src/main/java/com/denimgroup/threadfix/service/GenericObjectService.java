@@ -38,4 +38,6 @@ public interface GenericObjectService<T> {
 
     void saveOrUpdate(T object);
 
+    void markInactive(T object);
+
 }

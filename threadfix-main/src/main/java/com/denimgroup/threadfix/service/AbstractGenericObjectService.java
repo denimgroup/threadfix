@@ -24,6 +24,8 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.GenericObjectDao;
+import com.denimgroup.threadfix.data.entities.AuditableEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +42,7 @@ public abstract class AbstractGenericObjectService<T> implements GenericObjectSe
     }
 
     @Override
+    @Transactional
     public List<T> loadAllActive() {
         return getDao().retrieveAllActive();
     }
@@ -52,5 +55,16 @@ public abstract class AbstractGenericObjectService<T> implements GenericObjectSe
     @Override
     public void saveOrUpdate(T object) {
         getDao().saveOrUpdate(object);
+    }
+
+    @Override
+    public void markInactive(T object) {
+        if (!(object instanceof AuditableEntity)) {
+            throw new IllegalArgumentException("This method should only be used with subclasses of AuditableEntity");
+        }
+
+        ((AuditableEntity) object).setActive(false);
+
+        saveOrUpdate(object);
     }
 }

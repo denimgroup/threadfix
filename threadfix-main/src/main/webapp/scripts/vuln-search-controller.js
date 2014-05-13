@@ -160,6 +160,28 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         $scope.updateElementTable(element, 10, 1);
     }
 
+    $scope.deleteFilter = function() {
+        $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
+            success(function(data, status, headers, config) {
+                console.log("Successfully deleted filter.");
+                $scope.initialized = true;
+
+                if (data.success) {
+                    $scope.selectedFilter = undefined;
+                    $scope.savedFilters = data.object;
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+
+                $scope.loading = false;
+            }).
+            error(function(data, status, headers, config) {
+                console.log("Failed to save filters.");
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.loading = false;
+            });
+    }
+
     $scope.loadFilter = function() {
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
         $scope.refresh();
@@ -178,7 +200,7 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.initialized = true;
 
                 if (data.success) {
-                    console.log(data.object);
+                    $scope.savedFilters = data.object;
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
