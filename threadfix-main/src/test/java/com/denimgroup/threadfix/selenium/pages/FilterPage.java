@@ -69,7 +69,7 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage deleteFilter() {
-        driver.findElementById("edit1").findElement(By.className("btn")).click();
+        driver.findElementById("edit0").findElement(By.className("btn")).click();
         driver.findElementById("deleteButton").click();
 
         Alert alert = driver.switchTo().alert();
@@ -100,7 +100,8 @@ public class FilterPage extends BasePage {
 
     public FilterPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
-        waitForElement(driver.findElementByClassName("alert-success"));
+        sleep(4000);
+        //waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
     }
 

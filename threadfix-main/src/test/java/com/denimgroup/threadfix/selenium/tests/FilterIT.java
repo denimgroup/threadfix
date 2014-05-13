@@ -42,8 +42,8 @@ public class FilterIT extends BaseIT {
     @Test
     public void testApplicationFilters() {
         String teamName = getRandomString(8);
-        String appName1 = getRandomString(8);
-        String appName2 = getRandomString(8);
+        String appName1 = "AppnameOne" + getRandomString(8);
+        String appName2 = "AppnameTwo" + getRandomString(8);
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
@@ -83,11 +83,7 @@ public class FilterIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName1, teamName);
 
         assertTrue("Vulnerabilities were not filtered properly on application detail page.",
-                applicationDetailPage.vulnerabilitiesFiltered("High", "2"));
-        assertTrue("Vulnerabilities were not filtered properly on application detail page.",
-                applicationDetailPage.vulnerabilitiesFiltered("Medium", "0"));
-        assertTrue("Vulnerabilities were not filtered properly on application detail page.",
-                applicationDetailPage.vulnerabilitiesFiltered("Info", "0"));
+                applicationDetailPage.vulnsFilteredOpen(10));
     }
 
     @Test
@@ -138,10 +134,10 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void testGlobalFilters() {
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName1 = getRandomString(8);
-        String appName2 = getRandomString(8);
+        String teamName1 = "teamOne" + getRandomString(8);
+        String teamName2 = "teamTwo" + getRandomString(8);
+        String appName1 = "appOne" + getRandomString(8);
+        String appName2 = "appTwo" + getRandomString(8);
         String file = ScanContents.getScanFilePath();
         TeamIndexPage teamIndexPage;
 
@@ -244,9 +240,9 @@ public class FilterIT extends BaseIT {
         assertTrue("Team filter of showing 'Medium' was not implemented correctly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "6"));
         assertTrue("Global filter of hiding 'Low' was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "4"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "0"));
         assertTrue("Application filter of showing 'Info' was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "10"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "0"));
 
         loginPage = teamIndexPage.logout();
         clearGlobalFilter();

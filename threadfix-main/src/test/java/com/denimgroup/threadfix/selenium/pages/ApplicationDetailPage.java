@@ -270,7 +270,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickScanAgentTasksTab(int count) {
-        driver.findElementById( count + " Scan Agent Tasks").click();
+        driver.findElementById(count + " Scan Agent Tasks").click();
         sleep(1000);
         waitForElement(driver.findElementById("scanQueueTable"));
         return new ApplicationDetailPage(driver);
@@ -369,6 +369,14 @@ public class ApplicationDetailPage extends BasePage {
         }
 
         return "0";
+    }
+
+    public boolean vulnsFilteredHidden(int count) {
+        return driver.findElementByLinkText( count + " Hidden").isDisplayed();
+    }
+
+    public boolean vulnsFilteredOpen(int count) {
+        return driver.findElementByLinkText( count + " Open Vulnerabilities").isDisplayed();
     }
 
     public FilterPage clickEditVulnerabilityFilters() {
