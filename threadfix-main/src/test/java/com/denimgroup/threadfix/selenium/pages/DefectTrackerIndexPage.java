@@ -79,11 +79,15 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		return new DefectTrackerIndexPage(driver);
 	}
-	
-	public String getNameErrorsText() {
+
+	public String getNameRequiredErrorsText() {
 		return driver.findElementById("nameRequiredError").getText();
 	}
-	
+
+    public String getNameDuplicateErrorsText() {
+        return driver.findElementById("nameServerError").getText();
+    }
+
 	public String getUrlErrorsText() {
 		sleep(2000);
 		return driver.findElementById("url.errors").getText();

@@ -146,13 +146,13 @@ public class DefectTrackerIT extends BaseIT {
                 .enterURL(emptyString)
 				.clickAddDefectTrackerButtonInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
-        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
+        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameRequiredErrorsText().contains("Name is required."));
 
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName(whiteSpaceString)
 				.enterURL(whiteSpaceString)
 				.clickAddDefectTrackerButtonInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
-        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
+        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameRequiredErrorsText().contains("Name is required."));
 
 		// Test URL format checking
 		defectTrackerIndexPage = defectTrackerIndexPage.enterName("normal name")
@@ -194,7 +194,7 @@ public class DefectTrackerIT extends BaseIT {
 //	}
 
     @Test
-	public void testEditDefectTrackerFieldValidation() {       //Waiting on issue #259
+	public void testEditDefectTrackerFieldValidation() {
         String emptyString = "";
         String whiteSpaceString = "           ";
 
@@ -207,44 +207,45 @@ public class DefectTrackerIT extends BaseIT {
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
 
-        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(defectTrackerNameDuplicateTest)
-                .enterType(defectTrackerType)
-                .enterURL(TEST_BUGZILLA_URL)
-                .clickSaveDefectTracker();
+        defectTrackerIndexPage.clickAddDefectTrackerButton();
+        defectTrackerIndexPage.enterName(defectTrackerNameDuplicateTest);
+        defectTrackerIndexPage.enterType(defectTrackerType);
+        defectTrackerIndexPage.enterURL(TEST_BUGZILLA_URL);
+        defectTrackerIndexPage.clickSaveDefectTracker();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-				.enterName(newDefectTrackerName)
-                .enterType(defectTrackerType)
-				.enterURL(TEST_BUGZILLA_URL)
-				.clickSaveDefectTracker()
-                .clickEditLink(newDefectTrackerName);
+		defectTrackerIndexPage.clickAddDefectTrackerButton();
+        defectTrackerIndexPage.enterName(newDefectTrackerName);
+        defectTrackerIndexPage.enterType(defectTrackerType);
+        defectTrackerIndexPage.enterURL(TEST_BUGZILLA_URL);
+        defectTrackerIndexPage.clickSaveDefectTracker();
+        defectTrackerIndexPage.clickEditLink(newDefectTrackerName);
 
 		// Test empty and whitespace input
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(emptyString)
-                .clickModalSubmitInvalid();
+		defectTrackerIndexPage.enterName(emptyString);
+        defectTrackerIndexPage.clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
-		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(whiteSpaceString)
-                .clickModalSubmitInvalid();
+		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameRequiredErrorsText().contains("Name is required."));
+
+		defectTrackerIndexPage.enterName(whiteSpaceString);
+        defectTrackerIndexPage.clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
-		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameErrorsText().contains("Name is required."));
+		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameRequiredErrorsText().contains("Name is required."));
 
 		// Test browser length limit
-		defectTrackerIndexPage = defectTrackerIndexPage.enterName(longInput)
-				               .clickModalSubmitInvalid();
+		defectTrackerIndexPage.enterName(longInput);
+        defectTrackerIndexPage.clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameCharacterLimitError"));
 
-        defectTrackerIndexPage.clickModalCancel(DefectTrackerIndexPage.class);
+        defectTrackerIndexPage.clickModalCancel();
         driver.navigate().refresh();
 
 		// Test name duplication checking
-		defectTrackerIndexPage = defectTrackerIndexPage.clickDefectTrackersLink()
-                .clickEditLink(newDefectTrackerName)
-                .enterName(defectTrackerNameDuplicateTest)
-                .clickModalSubmitInvalid();
-        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError")); //NO VALIDATION MESSAGE IS DISPLAYED RIGHT NOW
-		assertTrue(defectTrackerIndexPage.getNameErrorsText().equals("That name is already taken."));
+		defectTrackerIndexPage.clickDefectTrackersLink();
+        defectTrackerIndexPage.clickEditLink(newDefectTrackerName);
+        defectTrackerIndexPage.enterName(defectTrackerNameDuplicateTest);
+        defectTrackerIndexPage.clickModalSubmitInvalid();
+        assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameServerError"));
+        assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameDuplicateErrorsText().contains("That name is already taken."));
 	}
 
 //	@Test
