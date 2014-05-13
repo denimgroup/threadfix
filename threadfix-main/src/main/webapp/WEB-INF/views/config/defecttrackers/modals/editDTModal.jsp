@@ -21,7 +21,7 @@
                                ng-maxlength="50"
                                ng-model="object.name" required/>
                     </td>
-                    <td ng-show="form.name.$dirty && form.name.$invalid">
+                    <td>
                         <span id="nameRequiredError" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                         <span id="nameCharacterLimitError" class="errors" ng-show="form.name.$dirty && form.name.$error.maxlength">Over 50 characters limit!</span>
                         <span id="nameServerError" class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
