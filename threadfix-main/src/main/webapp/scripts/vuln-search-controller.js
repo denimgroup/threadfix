@@ -142,32 +142,42 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
     }
 
     $scope.expandAndRetrieveTable = function(element) {
+        $scope.updateElementTable(element, 10, 1);
+    }
+
+    $scope.updateElementTable = function(element, numToShow, page) {
+        console.log('Updating element table');
+
         var parameters = angular.copy($scope.parameters);
 
         vulnSearchParameterService.updateParameters($scope, parameters);
         parameters.genericSeverities.push({ intValue: element.intValue });
         parameters.genericVulnerabilities = [ element.genericVulnerability ];
+        parameters.page = page;
+        parameters.numberVulnerabilities = numToShow;
 
         $http.post(tfEncoder.encode("/reports/search"), parameters).
-        success(function(data, status, headers, config) {
-            $scope.initialized = true;
+            success(function(data, status, headers, config) {
+                $scope.initialized = true;
 
-            element.expanded = true;
+                element.expanded = true;
 
-            if (data.success) {
-                element.vulns = data.object.vulns;
-                element.totalVulns = data.object.vulnCount;
-                element.max = Math.ceil(data.object.vulnCount/100);
-            } else {
-                $scope.errorMessage = "Failure. Message was : " + data.message;
-            }
+                if (data.success) {
+                    element.vulns = data.object.vulns;
+                    element.totalVulns = data.object.vulnCount;
+                    element.max = Math.ceil(data.object.vulnCount/100);
+                    element.numberToShow = numToShow;
+                    element.page = page;
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
 
-            $scope.loading = false;
-        }).
-        error(function(data, status, headers, config) {
-            $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-            $scope.loading = false;
-        });
+                $scope.loading = false;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.loading = false;
+            });
     }
 
 

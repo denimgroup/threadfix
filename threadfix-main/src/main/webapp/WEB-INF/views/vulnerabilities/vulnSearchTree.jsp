@@ -49,14 +49,25 @@
             <tr ng-show="element.expanded" ng-repeat-end>
                 <td></td>
                 <td colspan="3">
-                    <div class="pagination">
-                        <div ng-form="form" class="pagination" ng-show="totalVulns > numberVulnerabilities">
-                            <pagination class="no-margin" total-items="totalVulns / numResults" max-size="5" page="page"></pagination>
-
-                            <input id="pageInput" name="pageInput" ng-enter="goToPage(form.$valid)" style="width:50px" type="number" ng-model="pageInput" max="{{ element.max }}" min="1"/>
-                            <span class="errors" ng-show="form.pageInput.$dirty && form.pageInput.$error.min || form.pageInput.$error.max">Input number from 1 to {{ max }}</span>
-                            <span class="errors" ng-show="form.pageInput.$dirty && form.pageInput.$error.number">Not a valid number</span>
-                        </div>
+                    <div style="height:34px;padding-top:5px;">
+                        <span>
+                            <ul style="width:190px; float:left" class="nav nav-pills">
+                                <li ng-class="{ active: element.numberToShow === 10 }"> <a ng-click="updateElementTable(element, 10, 1)">10</a></li>
+                                <li ng-class="{ active: element.numberToShow === 25 }"> <a ng-click="updateElementTable(element, 25, 1)">25</a></li>
+                                <li ng-class="{ active: element.numberToShow === 50 }"> <a ng-click="updateElementTable(element, 50, 1)">50</a></li>
+                                <li ng-class="{ active: element.numberToShow === 100 }"><a ng-click="updateElementTable(element, 100, 1)">100</a></li>
+                            </ul>
+                        </span>
+                        <span style="margin:2px;float:left;" ng-form="form" class="pagination" ng-show="element.totalVulns > element.numberToShow">
+                            <pagination class="no-margin"
+                                        total-items="element.totalVulns / element.numberToShow * 10"
+                                        max-size="5"
+                                        ng-model="element.page"
+                                        page="element.page"
+                                        direction-links="false"
+                                        boundary-links="true"
+                                        ng-click="updateElementTable(element, element.numberToShow, element.page)"></pagination>
+                        </span>
                     </div>
                     <div ng-repeat="vuln in element.vulns">
                         <hr>
