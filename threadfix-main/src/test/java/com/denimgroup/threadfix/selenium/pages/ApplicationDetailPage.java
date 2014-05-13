@@ -300,7 +300,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage setDocFileInput(String file) {
-        driver.findElementById("docInput" + modalNumber()).sendKeys(file);
+        driver.findElementById("docFileInput").sendKeys(file);
         return new ApplicationDetailPage(driver);
     }
 
@@ -310,9 +310,9 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickDocumentTab() {
-        driver.findElementById("documentsTab").click();
-        waitForElement(driver.findElementById("uploadDocModalLink"));
+    public ApplicationDetailPage clickDocumentTab(int count) {
+        driver.findElementByLinkText( count + " Files").click();
+        waitForElement(driver.findElementByLinkText("Add File"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -334,8 +334,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickUploadDocLink() {
-        driver.findElementById("uploadDocModalLink" + modalNumber()).click();
-        waitForElement(driver.findElementById("uploadDoc" + modalNumber()));
+        driver.findElementByLinkText("Add File").click();
+        waitForElement(driver.findElementById("docFileInput"));
         return new ApplicationDetailPage(driver);
     }
 
