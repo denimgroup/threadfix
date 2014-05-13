@@ -113,9 +113,10 @@ public class RemoteProvidersIT extends BaseIT {
                 .setVeraPassword("Password Bad")
                 .clickModalSubmitInvalid();
 
-        remoteProvidersIndexPage.sleep(1000);
-
-		assertTrue("Incorrect credentials accepted", remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+        remoteProvidersIndexPage.sleep(15000);
+        String error = remoteProvidersIndexPage.getErrorMessage();
+        System.out.println(error);
+		assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
     //TODO need valid QualysGuard credentials
@@ -139,11 +140,10 @@ public class RemoteProvidersIT extends BaseIT {
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
                 .clickModalSubmitInvalid();
-
-        remoteProvidersIndexPage.sleep(1000);
-		
-		assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+        sleep(15000);
+        String error = remoteProvidersIndexPage.getErrorMessage();
+		System.out.println(error);
+		assertTrue("Expected failure", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
     @Test
@@ -163,6 +163,7 @@ public class RemoteProvidersIT extends BaseIT {
         remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
+        sleep(15000);
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 
@@ -182,16 +183,15 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickRemoteProvidersLink()
-                .clickConfigureVeracode()
-                .setVeraUsername(VERACODE_USER)
-                .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera()
-                .mapVeracodeToTeamAndApp(3, teamName, appName);
-
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        remoteProvidersIndexPage.clickConfigureVeracode();
+        remoteProvidersIndexPage.setVeraUsername(VERACODE_USER);
+        remoteProvidersIndexPage.setVeraPassword(VERACODE_PASSWORD);
+        remoteProvidersIndexPage.saveVera();
+        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(3, teamName, appName);
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
-
+        sleep(15000);
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 
