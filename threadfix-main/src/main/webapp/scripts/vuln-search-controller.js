@@ -228,8 +228,8 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         }
     }
 
+    // collapse duplicates: [arachni, arachni, appscan] => [arachni (2), appscan]
     var updateChannelNames = function(vulnerability) {
-        console.log("coming in : " + vulnerability.channelNames)
         if (vulnerability.channelNames.length > 1 ) {
             var holder = {};
             vulnerability.channelNames.forEach(function(name) {
@@ -251,7 +251,6 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 }
             }
         }
-        console.log("going out : " + vulnerability.channelNames)
     }
 
     $scope.updateElementTable = function(element, numToShow, page) {

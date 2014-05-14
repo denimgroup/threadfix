@@ -19,10 +19,10 @@
                     <span ng-hide="category.expanded" ng-click="category.expanded = true" class="icon icon-plus-sign"></span>
                     <span ng-show="category.expanded" ng-click="category.expanded = false" class="icon icon-minus-sign"></span>
                 </td>
-                <td>
+                <td style="width:50px">
                     {{ category.name }}
                 </td>
-                <td>
+                <td ng-style="badgeWidth">
                     <span ng-style="badgeWidth" class="badge" ng-class="{
                                             'badge-important': category.intValue === 5,
                                             'badge-warning': category.intValue === 4,
@@ -85,6 +85,17 @@
                             <div class="vuln-tree-label">Parameter</div>{{ vuln.parameter }}
                             <br>
                             <span ng-repeat="name in vuln.channelNames" class="badge">{{ name }}</span>
+                            <br>
+                            <span ng-click="vuln.showComments = !vuln.showComments">
+                                {{ vuln.vulnerabilityComments.length }} <span class="icon icon-comment"></span>
+                            </span>
+                            <div ng-show="vuln.showComments">
+                                <h4>Comments</h4>
+                                <div class="vuln-table-box" id="commentDiv{{ $index }}" style="width:450px;margin-bottom:10px;">
+                                    <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
+                                </div>
+                                <a id="addCommentButton{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability)">Add Comment</a>
+                            </div>
                         </div>
                     </div>
                 </td>

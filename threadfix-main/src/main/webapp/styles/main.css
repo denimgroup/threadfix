@@ -1100,13 +1100,12 @@ body.dragover.drag-enabled .uploadable {
 }
 
 .filter-controls {
-    width: 345px;
+    width: 225px;
     float:right;
-    font-size:14px;
 }
 
 .vuln-tree {
-    width:550px;
+    width:670px;
     float:left;
 }
 
@@ -1120,8 +1119,8 @@ body.dragover.drag-enabled .uploadable {
     cursor: pointer;
 }
 
-.filter-controls select, .filter-controls input {
-    margin-bottom:0;
+.vuln-tree-vuln-list .accordion-inner {
+    width:610px;
 }
 
 .vuln-tree table td {
@@ -1145,4 +1144,8 @@ body.dragover.drag-enabled .uploadable {
 .filter-controls .icon.icon-trash {
     padding-top:2px;
     padding-bottom:2px;
+}
+
+.filter-group-body input[type='checkbox'] {
+    margin-right:2px;
 }
