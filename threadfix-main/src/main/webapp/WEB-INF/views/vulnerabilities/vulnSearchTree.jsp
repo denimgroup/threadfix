@@ -1,11 +1,18 @@
-<div ng-show="vulnTree" class="vuln-tree">
-    <h3>Results</h3>
+<div class="vuln-tree">
+    <h3>
+        <span style="float:left">
+            Results
+        </span>
+        <span class="spinner-div">
+            <span ng-show="loadingTree" class="spinner dark"></span>
+        </span>
+    </h3>
 
-    <div ng-hide="vulnTree && vulnTree.length > 0">
+    <div ng-hide="!vulnTree || vulnTree.length > 0">
         No results found.
     </div>
 
-    <table>
+    <table ng-show="vulnTree">
         <tbody ng-repeat="category in vulnTree" ng-show="category.total > 0">
             <tr>
                 <td>

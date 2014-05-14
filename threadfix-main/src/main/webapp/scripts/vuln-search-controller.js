@@ -56,10 +56,10 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
     }
 
     var refreshVulnTree = function(parameters) {
+        $scope.loadingTree = true;
+
         $http.post(tfEncoder.encode("/reports/tree"), parameters).
             success(function(data, status, headers, config) {
-                $scope.initialized = true;
-
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object);
                     $scope.badgeWidth = 0;
@@ -80,16 +80,15 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                     }
 
                     $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
-
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
 
-                $scope.loading = false;
+                $scope.loadingTree = false;
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                $scope.loading = false;
+                $scope.loadingTree = false;
             });
     }
 
@@ -266,10 +265,10 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         parameters.page = page;
         parameters.numberVulnerabilities = numToShow;
 
+        $scope.loadingTree = true;
+
         $http.post(tfEncoder.encode("/reports/search"), parameters).
             success(function(data, status, headers, config) {
-                $scope.initialized = true;
-
                 element.expanded = true;
 
                 if (data.success) {
@@ -283,11 +282,11 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
 
-                $scope.loading = false;
+                $scope.loadingTree = false;
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                $scope.loading = false;
+                $scope.loadingTree = false;
             });
     }
 });

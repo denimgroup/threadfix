@@ -935,6 +935,12 @@ div.box-shadow {
     padding-left:435px;
     width:70px;
 }
+
+h3 .spinner-div .spinner.dark {
+    margin-top:13px;
+    margin-left:10px;
+}
+
 .modal-spinner-div {
     padding-left:300px;
     width:70px;
