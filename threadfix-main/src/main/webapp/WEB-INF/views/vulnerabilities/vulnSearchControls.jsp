@@ -9,12 +9,33 @@
             </div>
             <div ng-show="showSaveAndLoadControls" class="filter-group-body">
                 <div class="accordion-inner">
+                    <div ng-show="saveFilterSuccessMessage" class="alert alert-success">
+                        <button class="close" ng-click="saveFilterSuccessMessage = undefined" type="button">&times;</button>
+                        {{ saveFilterSuccessMessage }}
+                    </div>
+                    <div ng-show="saveFilterErrorMessage" class="alert alert-success">
+                        <button class="close" ng-click="saveFilterErrorMessage = undefined" type="button">&times;</button>
+                        {{ saveFilterErrorMessage }}
+                    </div>
                     <input style="width: 193px;" placeholder="Put a name for the filter here." ng-model="currentFilterNameInput" type="text"/>
-                    <a class="btn btn-primary" ng-disabled="!currentFilterNameInput" ng-click="saveCurrentFilters()">Save</a>
+                    <a class="btn btn-primary" ng-hide="savingFilter" ng-disabled="!currentFilterNameInput" ng-click="saveCurrentFilters()">Save</a>
+                    <button id="loadingButton"
+                            ng-show="savingFilter"
+                            disabled="disabled"
+                            class="btn btn-primary">
+                        <span class="spinner"></span>
+                        Saving
+                    </button>
                 </div>
                 <div ng-show="savedFilters" class="accordion-inner">
-                    <select style="width: 207px;" ng-model="selectedFilter" ng-options="filter.name for filter in savedFilters"></select>
-                    <a class="btn" ng-disabled="!selectedFilter" ng-click="loadFilter()">Load</a>
+                    <div ng-show="deleteFilterSuccessMessage" class="alert alert-success">
+                        <button class="close" ng-click="deleteFilterSuccessMessage = undefined" type="button">&times;</button>
+                        {{ deleteFilterSuccessMessage }}
+                    </div>
+                    <select style="width: 207px;" ng-model="selectedFilter" ng-options="filter.name for filter in savedFilters">
+                        <option>Select a Filter</option>
+                    </select>
+                    <a class="btn" ng-disabled="!selectedFilter || lastLoadedFilterName === selectedFilter.name" ng-click="loadFilter()">Load</a>
                     <a class="btn btn-danger" ng-disabled="!selectedFilter" ng-click="deleteFilter()"><span class="icon icon-white icon-trash"></span></a>
                 </div>
             </div>

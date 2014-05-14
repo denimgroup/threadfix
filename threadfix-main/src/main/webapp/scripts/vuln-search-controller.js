@@ -36,10 +36,8 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         $scope.refresh();
     });
 
-    $scope.refresh = function() {
-        $scope.loading = true;
-        vulnSearchParameterService.updateParameters($scope, $scope.parameters);
-        $http.post(tfEncoder.encode("/reports/search"), $scope.parameters).
+    var refreshVulnTable = function(parameters) {
+        $http.post(tfEncoder.encode("/reports/search"), parameters).
             success(function(data, status, headers, config) {
                 $scope.initialized = true;
 
@@ -55,8 +53,10 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                 $scope.loading = false;
             });
+    }
 
-        $http.post(tfEncoder.encode("/reports/tree"), $scope.parameters).
+    var refreshVulnTree = function(parameters) {
+        $http.post(tfEncoder.encode("/reports/tree"), parameters).
             success(function(data, status, headers, config) {
                 $scope.initialized = true;
 
@@ -91,6 +91,14 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                 $scope.loading = false;
             });
+    }
+
+    $scope.refresh = function() {
+        $scope.loading = true;
+        vulnSearchParameterService.updateParameters($scope, $scope.parameters);
+        refreshVulnTable($scope.parameters);
+        refreshVulnTree($scope.parameters);
+        $scope.lastLoadedFilterName = undefined;
     }
 
     $scope.add = function(collection) {
@@ -167,6 +175,7 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.initialized = true;
 
                 if (data.success) {
+                    $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
                     $scope.selectedFilter = undefined;
                     $scope.savedFilters = data.object;
                 } else {
@@ -185,33 +194,39 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
     $scope.loadFilter = function() {
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
         $scope.refresh();
+        $scope.lastLoadedFilterName = $scope.selectedFilter.name;
     }
 
     $scope.saveCurrentFilters = function() {
         console.log("Saving filters");
 
-        var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
+        if ($scope.currentFilterNameInput) {
+            $scope.savingFilter = true;
 
-        submissionObject.name = $scope.currentFilterNameInput;
+            var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
 
-        $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
-            success(function(data, status, headers, config) {
-                console.log("Successfully saved filters.");
-                $scope.initialized = true;
+            submissionObject.name = $scope.currentFilterNameInput;
 
-                if (data.success) {
-                    $scope.savedFilters = data.object;
-                } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                }
+            $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
+                success(function(data, status, headers, config) {
+                    console.log("Successfully saved filters.");
+                    $scope.savingFilter = false;
 
-                $scope.loading = false;
-            }).
-            error(function(data, status, headers, config) {
-                console.log("Failed to save filters.");
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                $scope.loading = false;
-            });
+                    if (data.success) {
+                        $scope.savedFilters = data.object;
+                        $scope.currentFilterNameInput = '';
+                        $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
+                    } else {
+                        $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
+                    }
+
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("Failed to save filters.");
+                    $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
+                    $scope.savingFilter = false;
+                });
+        }
     }
 
     $scope.updateElementTable = function(element, numToShow, page) {

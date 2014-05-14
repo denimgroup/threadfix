@@ -1135,3 +1135,8 @@ body.dragover.drag-enabled .uploadable {
 .vuln-tree-vuln-list {
     padding: 4px;
 }
+
+.filter-controls .icon.icon-trash {
+    padding-top:2px;
+    padding-bottom:2px;
+}

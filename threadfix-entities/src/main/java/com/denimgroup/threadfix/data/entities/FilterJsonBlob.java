@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonMethod;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.Column;
@@ -32,11 +35,12 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "FilterJsonBlob")
+@JsonAutoDetect(value = { JsonMethod.NONE })
 public class FilterJsonBlob extends AuditableEntity {
 
     private String json, name;
 
-    @JsonView(Object.class)
+    @JsonProperty
     @Column(length = 2048)
     public String getName() {
         return name;
@@ -48,6 +52,7 @@ public class FilterJsonBlob extends AuditableEntity {
 
     @JsonView(Object.class)
     @Column(length = 102400)
+    @JsonProperty
     public String getJson() {
         return json;
     }
