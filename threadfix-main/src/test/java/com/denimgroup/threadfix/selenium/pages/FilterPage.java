@@ -55,7 +55,8 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage clickAddFilter() {
-        return clickModalSubmit();
+        driver.findElementById("submit").click();
+        return new FilterPage(driver);
     }
 
     public FilterPage addVulnerabilityFilter(String vulnerabilityType, String severity) {
@@ -100,8 +101,7 @@ public class FilterPage extends BasePage {
 
     public FilterPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
-        sleep(4000);
-        //waitForElement(driver.findElementByClassName("alert-success"));
+        sleep(5000);
         return new FilterPage(driver);
     }
 

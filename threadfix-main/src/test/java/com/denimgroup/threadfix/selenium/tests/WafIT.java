@@ -294,7 +294,7 @@ public class WafIT extends BaseIT {
                 .setWafDirectiveSelect("deny")
                 .clickGenerateWafRulesButton();
 
-		assertTrue("Waf rule not generated", driver.findElement(By.id("wafrule")).getText().contains("SecRule"));
+		assertTrue("Waf rule not generated", driver.findElement(By.linkText("Download Waf Rules")).isDisplayed());
 
 		// Generate pass Waf Rules
 		wafRulesPage = wafRulesPage.setWafDirectiveSelect("pass")
