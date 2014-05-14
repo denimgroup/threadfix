@@ -64,6 +64,8 @@ public class EditApplicationController {
 	private ApplicationCriticalityService applicationCriticalityService;
     @Autowired
 	private OrganizationService organizationService;
+    @Autowired
+    private VulnerabilityService vulnerabilityService;
 
 	@ModelAttribute("defectTrackerList")
 	public List<DefectTracker> populateDefectTrackers() {
@@ -151,7 +153,7 @@ public class EditApplicationController {
 		} else {
 			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
-
+            vulnerabilityService.updateOrgsVulnerabilityReport();
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			
 			log.debug("The Application " + application.getName() + " (id=" + application.getId() + ") has been edited by user " + user);
