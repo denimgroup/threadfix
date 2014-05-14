@@ -71,11 +71,13 @@
                             </span>
                         </div>
                         <div class="accordion-inner" ng-repeat="vuln in element.vulns">
+                            <div class="vuln-tree-label">Application</div>{{ vuln.teamName }} / {{ vuln.applicationName }}
+                            <br>
                             <div class="vuln-tree-label">Path</div>{{ vuln.path }}
                             <br>
                             <div class="vuln-tree-label">Parameter</div>{{ vuln.parameter }}
                             <br>
-                            <span ng-repeat="finding in vuln.findings" class="badge">{{ finding.channelVulnerability.channelType.name }}</span>
+                            <span ng-repeat="name in vuln.channelNames" class="badge">{{ name }}</span>
                         </div>
                     </div>
                 </td>

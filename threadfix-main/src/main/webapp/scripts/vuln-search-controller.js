@@ -229,6 +229,32 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
         }
     }
 
+    var updateChannelNames = function(vulnerability) {
+        console.log("coming in : " + vulnerability.channelNames)
+        if (vulnerability.channelNames.length > 1 ) {
+            var holder = {};
+            vulnerability.channelNames.forEach(function(name) {
+                if (holder[name]) {
+                    holder[name] = holder[name] + 1;
+                } else {
+                    holder[name] = 1;
+                }
+            });
+
+            vulnerability.channelNames = [];
+            for (var key in holder) {
+                if (holder.hasOwnProperty(key)){
+                    if (holder[key] === 1) {
+                        vulnerability.channelNames.push(key)
+                    } else {
+                        vulnerability.channelNames.push(key + " (" + holder[key] + ")")
+                    }
+                }
+            }
+        }
+        console.log("going out : " + vulnerability.channelNames)
+    }
+
     $scope.updateElementTable = function(element, numToShow, page) {
         console.log('Updating element table');
 
@@ -248,6 +274,7 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
 
                 if (data.success) {
                     element.vulns = data.object.vulns;
+                    element.vulns.forEach(updateChannelNames)
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
                     element.numberToShow = numToShow;
