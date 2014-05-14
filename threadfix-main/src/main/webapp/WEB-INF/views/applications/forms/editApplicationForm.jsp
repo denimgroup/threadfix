@@ -45,7 +45,7 @@
 			<tr>
 				<td>Team</td>
 				<td>
-					<select ng-model="object.team.id" id="organizationId" name="organization.id">
+					<select ng-model="object.organization.id" id="organizationId" name="organization.id">
 						<option ng-selected="team.id === object.team.id"
                                 ng-repeat="team in config.teams"
                                 value="{{ team.id }}">
