@@ -438,13 +438,14 @@ public class ApplicationIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        TeamDetailPage teamDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
-                .clickViewAppLink(appName, teamName1)
-                .clickEditDeleteBtn()
-                .setTeam(teamName2)
-                .clickUpdateApplicationButton()
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName1);
+        teamIndexPage.expandTeamRowByName(teamName1);
+        ApplicationDetailPage applicationDetailpage = teamIndexPage.clickViewAppLink(appName, teamName1);
+        applicationDetailpage.clickEditDeleteBtn();
+        applicationDetailpage.setTeam(teamName2);
+        applicationDetailpage.clickUpdateApplicationButton();
+
+        applicationDetailpage.clickOrganizationHeaderLink();
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
 
         Boolean appOnTeam1 = teamDetailPage.isAppPresent(appName);
 
