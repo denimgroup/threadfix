@@ -162,4 +162,12 @@ public class WafRule extends AuditableEntity {
 	public void setWafRuleDirective(WafRuleDirective wafRuleDirective) {
 		this.wafRuleDirective = wafRuleDirective;
 	}
+
+    @Transient
+    public int getSecurityEventsCount() {
+        if (securityEvents != null)
+            return securityEvents.size();
+
+        return 0;
+    }
 }
