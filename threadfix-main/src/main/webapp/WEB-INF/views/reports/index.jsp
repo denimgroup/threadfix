@@ -4,11 +4,13 @@
 	<title>Reports</title>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
 </head>
 
 <body id="reports">
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="../applications/forms/vulnCommentForm.jsp"%>
 
     <div ng-controller="ReportPageController"
          ng-init="firstReportId = '<c:out value="${ firstReport }"/>';

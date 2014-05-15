@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer) {
+module.controller('VulnSearchController', function($scope, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer) {
     $scope.parameters = {
         teams: [],
         applications: [],
@@ -287,5 +287,32 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, vul
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
+    }
+
+    $scope.showCommentForm = function(vuln) {
+        var modalInstance = $modal.open({
+            templateUrl: 'vulnCommentForm.html',
+            controller: 'GenericModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id + "/addComment");
+                },
+                object: function () {
+                    return {};
+                },
+                buttonText: function() {
+                    return "Add Comment";
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (comments) {
+            vuln.vulnerabilityComments = comments
+            $log.info("Successfully added comment.");
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
     }
 });

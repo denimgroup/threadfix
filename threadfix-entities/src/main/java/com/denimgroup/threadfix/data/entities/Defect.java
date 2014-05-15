@@ -44,8 +44,8 @@ public class Defect extends AuditableEntity {
 	public static final int URL_LENGTH = 255;
 	
 	// TODO make this smarter
-	public final static Set<String> OPEN_CODES   = new HashSet<String>(Arrays.asList(new String[] { "Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen", "Future", "In Progress", "Accepted" }));
-	public final static Set<String> CLOSED_CODES = new HashSet<String>(Arrays.asList(new String[] { "Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done" }));
+	public final static Set<String> OPEN_CODES   = new HashSet<String>(Arrays.asList("Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen", "Future", "In Progress", "Accepted"));
+	public final static Set<String> CLOSED_CODES = new HashSet<String>(Arrays.asList("Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done"));
 
 	public enum TrackerType {
 		BUGZILLA, JIRA
@@ -68,7 +68,7 @@ public class Defect extends AuditableEntity {
 	 * @return
 	 */
 	@Column(length = 50, nullable = false)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
 	public String getNativeId() {
 		return nativeId;
 	}
@@ -78,7 +78,7 @@ public class Defect extends AuditableEntity {
 	}
 	
 	@Column(length = 255, nullable = false)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
 	public String getStatus() {
 		return status;
 	}
@@ -94,7 +94,7 @@ public class Defect extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
     public String getDefectURL() {
 		return defectURL;
 	}
@@ -129,7 +129,7 @@ public class Defect extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
     private String getBugImageName() {
         String color = OPEN_CODES.contains(status) ? "red" :
                 CLOSED_CODES.contains(status) ? "grn" :

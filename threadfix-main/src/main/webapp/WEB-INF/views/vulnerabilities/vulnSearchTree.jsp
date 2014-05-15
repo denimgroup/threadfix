@@ -77,19 +77,28 @@
                                             ng-click="updateElementTable(element, element.numberToShow, element.page)"></pagination>
                             </span>
                         </div>
-                        <div class="accordion-inner" ng-repeat="vuln in element.vulns">
-                            <div class="vuln-tree-label">Application</div>{{ vuln.teamName }} / {{ vuln.applicationName }}
+                        <div class="accordion-inner" ng-repeat="vulnerability in element.vulns">
+                            <div class="vuln-tree-label">Application</div>{{ vulnerability.team.name }} / {{ vulnerability.app.name }}
                             <br>
-                            <div class="vuln-tree-label">Path</div>{{ vuln.path }}
+                            <div class="vuln-tree-label">Path</div>{{ vulnerability.path }}
                             <br>
-                            <div class="vuln-tree-label">Parameter</div>{{ vuln.parameter }}
+                            <div class="vuln-tree-label">Parameter</div>{{ vulnerability.parameter }}
                             <br>
-                            <span ng-repeat="name in vuln.channelNames" class="badge">{{ name }}</span>
+                            <span ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
                             <br>
-                            <span ng-click="vuln.showComments = !vuln.showComments">
-                                {{ vuln.vulnerabilityComments.length }} <span class="icon icon-comment"></span>
+                            <a ng-href="{{ vulnerability.defect.defectURL }}"
+                               target="_blank"
+                               ng-show="vulnerability.defect"
+                               ng-class="{ 'badge-important': vulnerability.defect.bugImageName === 'icn_bug_red_stroke.png' }"
+                               class="badge">
+                                Issue {{ vulnerability.defect.nativeId }} ({{ vulnerability.defect.status }})
+                            </a>
+                            <br ng-show="vulnerability.defect">
+                            <span ng-click="vulnerability.showComments = !vuln.showComments">
+                                {{ vulnerability.vulnerabilityComments.length ? vulnerability.vulnerabilityComments.length : 0 }} <span class="icon icon-comment"></span>
                             </span>
-                            <div ng-show="vuln.showComments">
+                            <br>
+                            <div ng-show="vulnerability.showComments" style="display:inline-block">
                                 <h4>Comments</h4>
                                 <div class="vuln-table-box" id="commentDiv{{ $index }}" style="width:450px;margin-bottom:10px;">
                                     <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>

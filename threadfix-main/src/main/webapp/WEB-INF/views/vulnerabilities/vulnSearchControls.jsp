@@ -239,7 +239,6 @@
     </div>
 
     <%@ include file="vulnSearchTree.jsp" %>
-    <%@ include file="vulnerabilityTable.jsp" %>
+    <%--<%@ include file="vulnerabilityTable.jsp" %>--%>
 
-    {{ vulns | json }}
 </div>
