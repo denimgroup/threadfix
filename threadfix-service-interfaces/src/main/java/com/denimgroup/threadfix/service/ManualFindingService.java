@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
 
 public interface ManualFindingService {
 	
@@ -47,5 +48,7 @@ public interface ManualFindingService {
 	 * @return
 	 */
 	boolean processManualFinding(Finding finding, Integer applicationId);
+
+    public Scan getManualScan(Integer applicationId);
 
 }

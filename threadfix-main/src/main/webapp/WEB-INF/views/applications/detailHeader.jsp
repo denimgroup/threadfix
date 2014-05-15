@@ -54,9 +54,6 @@
 
     </h2>
 </div>
-<%--<%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>--%>
-<%--<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>--%>
-<%--<%@ include file="/WEB-INF/views/applications/modals/scanParametersModal.jsp" %>--%>
 
 <div id="editApplicationModal" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -64,18 +61,6 @@
 		<%@ include file="/WEB-INF/views/applications/forms/editApplicationForm.jsp" %>
 	</div>
 </div> 
-<%--<div id="viewApplicationModal" class="modal hide fade" tabindex="-1"--%>
-	<%--role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-	<%--<div id="viewAppFormDiv">--%>
-		<%--<%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>--%>
-	<%--</div>--%>
-<%--</div>--%>
-<%--<div id="usersModal" class="modal hide fade" tabindex="-1"--%>
-		<%--role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-		<%--<div id="editFormDiv">--%>
-			<%--<%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>--%>
-		<%--</div>--%>
-<%--</div>--%>
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
-<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
+<%@ include file="/WEB-INF/views/errorMessage.jspf"%>

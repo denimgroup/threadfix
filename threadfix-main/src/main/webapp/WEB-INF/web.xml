@@ -187,6 +187,7 @@
                 protected-regex ^/wafs/[0-9]+/generateRules/[0-9]+/[a-zA-Z0-9/]*$,
                 protected-regex ^/wafs/[0-9]+/getRules$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/addComment$,
+                protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/table$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/manual/[0-9]+/edit$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/getDefectsFromDefectTracker$,
                 protected-regex ^/configuration/scanqueue/scanQueueTask/[0-9]+/delete$,
