@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer) {
+module.controller('VulnSearchController', function($scope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer) {
     $scope.parameters = {
         teams: [],
         applications: [],
@@ -288,6 +288,10 @@ module.controller('VulnSearchController', function($scope, $http, tfEncoder, $mo
                 $scope.loadingTree = false;
             });
     }
+
+    $scope.goTo = function(vuln) {
+        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id);
+    };
 
     $scope.showCommentForm = function(vuln) {
         var modalInstance = $modal.open({

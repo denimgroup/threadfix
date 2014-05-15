@@ -94,9 +94,10 @@
                                 Issue {{ vulnerability.defect.nativeId }} ({{ vulnerability.defect.status }})
                             </a>
                             <br ng-show="vulnerability.defect">
-                            <span ng-click="vulnerability.showComments = !vuln.showComments">
+                            <span class="pointer" ng-click="vulnerability.showComments = !vuln.showComments">
                                 {{ vulnerability.vulnerabilityComments.length ? vulnerability.vulnerabilityComments.length : 0 }} <span class="icon icon-comment"></span>
                             </span>
+                            <span class="pointer"><a ng-click="goTo(vulnerability)">View More</a></span>
                             <br>
                             <div ng-show="vulnerability.showComments" style="display:inline-block">
                                 <h4>Comments</h4>
