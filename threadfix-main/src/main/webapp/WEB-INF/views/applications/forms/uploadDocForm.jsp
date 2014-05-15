@@ -7,7 +7,9 @@
 	<div ng-form="form" class="modal-body" ng-file-drop="onFileSelect($files)">
 
         <div ng-show="waiting" class="modal-loading"><div><span class="spinner dark"></span>Processing...</div></div><br>
-
+        <div>
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
         <progressbar ng-show="uploading" animate="false" value="dynamic" type="success"><b>{{uploadedPercent}}%</b></progressbar>
 
         <table ng-hide="waiting || uploading">
