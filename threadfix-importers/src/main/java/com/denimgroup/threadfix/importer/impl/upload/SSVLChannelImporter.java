@@ -53,7 +53,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
 
 	public SSVLChannelImporter() {
-		super(ScannerType.MANUAL);
+		super(ScannerType.SSVL);
 	}
 
 	@Override

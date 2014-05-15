@@ -104,6 +104,7 @@ class NTOSpiderChannelImporter extends AbstractChannelImporter {
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName.toLowerCase())) {
 	    		itemKey = tagMap.get(qName.toLowerCase());
+	    		getBuilderText(); //resets the stringbuffer
 	    	}
 	    	if (inFinding){
 	    		currentRawFinding.append(makeTag(name, qName, atts));

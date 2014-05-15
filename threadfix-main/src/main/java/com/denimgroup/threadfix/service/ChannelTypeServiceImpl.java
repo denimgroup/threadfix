@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class ChannelTypeServiceImpl implements ChannelTypeService {
 
 	private ChannelTypeDao channelTypeDao = null;

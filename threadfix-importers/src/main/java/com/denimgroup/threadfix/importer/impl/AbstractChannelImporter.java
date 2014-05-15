@@ -72,7 +72,7 @@ import java.util.zip.ZipFile;
  * @author mcollins
  * 
  */
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public abstract class AbstractChannelImporter extends SpringBeanAutowiringSupport implements ChannelImporter {
 	
 	// this.getClass() will turn into the individual importer name at runtime.

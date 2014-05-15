@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import java.net.URL;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,11 +58,13 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 		tagMap.put("html",	    FindingKey.RESPONSE);
 		tagMap.put("description", FindingKey.DETAIL);
 		tagMap.put("remedy_guidance", FindingKey.RECOMMENDATION);
+		tagMap.put("cwe", FindingKey.CWE);
 		tagMap.put("rawfinding", FindingKey.RAWFINDING);
 	}
 	
 	private StringBuffer currentRawFinding = new StringBuffer();
-	
+	String requestMethod = null;
+	boolean getMethodText = false;
 	// Since the severity mappings are static and not included in the XML output,
 	// these have been reverse engineered from the code
 	private static Map<String, String> severityMap = new HashMap<>();
@@ -169,17 +172,38 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		getDate = true;
 	    	} else if ("issue".equals(qName)) {
 	    		findingMap = new EnumMap<>(FindingKey.class);
+	    		// set the inFinding flag to accumulate elements and character info for raw xml synthesis
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
+	    		//the Arachni finding request is stored in a list of header element 'field' tags rather than the raw request itself
+	    		//so we need to rebuild it.  we start tracking 'field' elements when we hit the request element
 	    		if ("request".equals(qName)){
-	    			inRequest=true;
+	    			inRequest = true;
+	    			// this will be the first line of the request
+	    			String requestLine = findingMap.get(FindingKey.PATH); //sane default
+	    			try {//mimicry
+	    				requestLine = requestMethod + " " +  (new URL(findingMap.get(FindingKey.PATH))).getPath() + " HTTP/1.x (computed)\n";
+	    			} catch (Exception ignored){}
+	    			//store this first line
+	    			findingMap.put(FindingKey.REQUEST,requestMethod + " " + requestLine );
+	    		} else {
+	    			//ensure that we stop recording these so we don't pick up response headers
+	    			inRequest = false;
 	    		}
+	    		getBuilderText(); //resets the stringbuffer so we aren't pulling in data from unrelated elements
+	    	} else if ("method".equals(qName)){
+	    		getMethodText = true;
+	    		getBuilderText(); //empty out buffer so we get the method alone for request header rebuilding above
+	    		
 	    	} else if (inRequest && "field".equals(qName)){
+	    		//this is where we accumulate request headers.  start by forming a line from the element attributes
 	    		String header = atts.getValue("name") + ": " + atts.getValue("value") + "\n";
+	    		
 	    		if (! findingMap.containsKey(FindingKey.REQUEST)){
-	    			findingMap.put(FindingKey.REQUEST,header);
+	    			findingMap.put(FindingKey.REQUEST,header);  //this should never hit b/c the request line was formed above
 		    	} else {
+		    		//append the new header line to the existing string.  a stringbuffer would probably be better
 		    		findingMap.put(FindingKey.REQUEST, findingMap.get(FindingKey.REQUEST) + header);
 		    	}
 	    	}
@@ -190,6 +214,14 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    
 	    public void endElement (String uri, String name, String qName)
 	    {
+	    	if (inFinding)
+	    		currentRawFinding.append("</").append(qName).append(">");
+	    	
+	    	if ("method".equals(qName)){
+	    		requestMethod = getBuilderText();
+	    		getMethodText = false;
+	    	}
+	    
 	    	if ("issue".equals(qName)) {
 	    		// TODO instead look into why this error occurs
 	    		
@@ -203,7 +235,6 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		if (! findingMap.containsKey(FindingKey.SEVERITY_CODE) || findingMap.get(FindingKey.SEVERITY_CODE) == null)
 	    			findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
 
-	    		currentRawFinding.append("</").append(qName).append(">");
 	    		findingMap.put(FindingKey.RAWFINDING,currentRawFinding.toString());
 	    		Finding finding = constructFinding(findingMap);
 	    		
@@ -233,7 +264,6 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		itemKey = null;
 	    		
-	    		currentRawFinding.append("</").append(qName).append(">");
 	    	} 
 	    	
 	    	if (getDate) {
@@ -247,7 +277,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || itemKey != null) {
+	    	if (getDate || itemKey != null || getMethodText) {
 	    		addTextToBuilder(ch, start, length);
 	    	}	    
 	    	if (inFinding){

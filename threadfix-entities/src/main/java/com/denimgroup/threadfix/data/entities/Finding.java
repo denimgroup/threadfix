@@ -40,11 +40,11 @@ public class Finding extends AuditableEntity implements FindingLike {
 	private static final long serialVersionUID = 5978786078427181952L;
 
 	public static final int LONG_DESCRIPTION_LENGTH = 2047;
-	public static final int ATTACK_STRING_LENGTH = 65535;
-	public static final int ATTACK_REQUEST_LENGTH = 65535;
+	public static final int ATTACK_STRING_LENGTH = 1048575;
+	public static final int ATTACK_REQUEST_LENGTH = 1048575;
 	public static final int ATTACK_RESPONSE_LENGTH = 1048575;
-	public static final int SCANNER_DETAIL_LENGTH = 65535;
-	public static final int SCANNER_RECOMMENDATION_LENGTH = 65535;
+	public static final int SCANNER_DETAIL_LENGTH = 1048575;
+	public static final int SCANNER_RECOMMENDATION_LENGTH = 1048575;
 	public static final int RAW_FINDING_LENGTH = 1048575;
 	public static final int NATIVE_ID_LENGTH = 50;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;

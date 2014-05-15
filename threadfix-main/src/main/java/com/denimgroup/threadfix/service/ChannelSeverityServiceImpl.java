@@ -34,7 +34,7 @@ import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class ChannelSeverityServiceImpl implements ChannelSeverityService {
 
 	private ChannelSeverityDao channelSeverityDao;

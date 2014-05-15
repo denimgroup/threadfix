@@ -116,7 +116,8 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat-end ng-show="vulnerability.expanded" class="bodyRow expandable" ng-class="{
+<%--                 <tr ng-repeat-end ng-show="vulnerability.expanded" class="bodyRow expandable" ng-class="{ --%>
+                <tr ng-repeat-end class="bodyRow expandable" ng-class="{
                         error: vulnerability.severityName === 'Critical',
                         warning: vulnerability.severityName === 'High',
                         success: vulnerability.severityName === 'Medium',
@@ -130,37 +131,39 @@
                         <div id="vulnInfoDiv">
                             <div class="left-tile">
                                 <h4>Scan History</h4>
-                                <div class="vuln-table-box" style="width:422px;margin-bottom:20px;background-color:#FFF;padding:0px;">
+                                <div class="vuln-table-box" style="width:800px;margin-bottom:20px;background-color:#FFF;padding:0px;">
                                     <table class="table" style="margin-bottom:0px;">
                                         <thead class="table">
                                             <tr class="left-align">
                                                 <th class="first">Channel</th>
                                                 <th>Scan Date</th>
-                                                <th class="last">User</th>
+                                                <th>Channel Vulnerability</th>
+                                                <th>Channel Severity</th>
+                                                <th>Attack String</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="finding in vulnerability.findings" class="left-align bodyRow">
                                                 <td id="scan{{ $index }}ChannelType"> {{ finding.scannerName }} </td>
                                                 <td id="scan{{ $index }}ImportTime"> {{ finding.importTime }} </td>
-                                                <td id="scan{{ $index }}ChannelType{{ $index }}">
-                                                    <div ng-show="finding.scanOrManualUser"> {{ finding.scanOrManualUser.name }}</div>
-                                                    <div ng-hide="finding.scanOrManualUser"> No user found. Probably a remote scan.</div>
-                                                </td>
+                                                <td id="scan{{ $index }}Name"> {{ finding.channelVulnerability.name }} </td>
+                                                <td id="scan{{ $index }}Severity"> {{ finding.channelSeverity.name }} </td>
+                                                <td id="scan{{ $index }}AttackString"></td>                                                
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-
+							<%--                             
                             <div class="right-tile">
                                 <h4>Comments</h4>
-                                <div class="vuln-table-box" id="commentDiv{{ $index }}" style="width:450px;margin-bottom:10px;">
+                                <div class="vuln-table-box" id="commentDiv{{ $index }}" style="width:800px;margin-bottom:10px;">
                                     <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
                                 </div>
                                 <br>
                                 <a id="addCommentButton{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability)">Add Comment</a>
                             </div>
+                             --%>
                         </div>
                     </td>
                 </tr>

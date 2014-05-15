@@ -732,7 +732,9 @@ public class ReportsServiceImpl implements ReportsService {
 						(vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString(),
 								(finding == null) ? "" : finding.getAttackString(),
 								(finding == null) ? "" : finding.getChannelVulnerability().getChannelType().getName(),
-								(finding == null) ? "" : finding.getNativeId()
+								(finding == null) ? "" : finding.getNativeId(),
+								(finding == null) ? "" : finding.getChannelVulnerability().getName(),
+								(finding == null) ? "" : finding.getLongDescription()
 						)
 				);
 			}

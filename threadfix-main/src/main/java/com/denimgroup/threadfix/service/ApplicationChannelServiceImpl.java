@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class ApplicationChannelServiceImpl implements ApplicationChannelService {
 	
 	private ApplicationChannelDao applicationChannelDao = null;

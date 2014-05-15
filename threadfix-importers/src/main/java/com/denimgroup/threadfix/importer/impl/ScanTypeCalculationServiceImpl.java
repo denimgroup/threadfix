@@ -151,7 +151,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ScannerType.ACUNETIX_WVS.getFullName(),  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
 		addToMap(ScannerType.FINDBUGS.getFullName(), "BugCollection", "Project", "BugInstance", "Class");
 		addToMap(ScannerType.APPSCAN_SOURCE.getFullName(), "AssessmentRun", "AssessmentStats" );
-		addToMap(ScannerType.MANUAL.getFullName(), "Vulnerabilities", "Vulnerability");
+		addToMap(ScannerType.SSVL.getFullName(), "Vulnerabilities", "Vulnerability");
 		addToMap(ScannerType.NTO_SPIDER.getFullName(), "VULNS", "VULNLIST");
 		addToMap(ScannerType.NTO_SPIDER.getFullName(), "VulnSummary");
 		addToMap(ScannerType.APPSCAN_ENTERPRISE.getFullName(), "report", "control", "row");

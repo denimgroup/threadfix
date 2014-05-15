@@ -48,7 +48,8 @@ public enum ScannerType {
 	QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS"),
 	SENTINEL("whitehat", "WhiteHat Sentinel"),
 	VERACODE("veracode", "Veracode"),
-	MANUAL("manual", "Manual");
+	MANUAL("manual", "Manual"),
+	SSVL("ssvl","SSVL");
 
 
 	private String fullName;
