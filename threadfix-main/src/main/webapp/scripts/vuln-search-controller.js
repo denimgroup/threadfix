@@ -290,7 +290,11 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     }
 
     $scope.goTo = function(vuln) {
-        $window.location.href = tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id);
+        $window.location.href = tfEncoder.encode($scope.getUrlBase(vuln));
+    };
+
+    $scope.getUrlBase = function(vuln) {
+        return "/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id;
     };
 
     $scope.showCommentForm = function(vuln) {
@@ -299,7 +303,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode("/organizations/" + vuln.team.id + "/applications/" + vuln.app.id + "/vulnerabilities/" + vuln.id + "/addComment");
+                    return tfEncoder.encode($scope.getUrlBase(vuln) + "/addComment");
                 },
                 object: function () {
                     return {};
@@ -318,5 +322,9 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
+    }
+
+    $scope.getDocumentUrl = function(vulnerability, document) {
+        return tfEncoder.encode($scope.getUrlBase(vulnerability) + "/documents/" + document.id + "/view");
     }
 });

@@ -54,7 +54,7 @@ public class Document extends AuditableEntity {
 	private Blob file;
 
 	@Column(length = 50, nullable = false)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearch.class})
     public String getName() {
 		return name;
 	}
@@ -64,7 +64,7 @@ public class Document extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearch.class})
     public Date getUploadedDate() {
         return super.getCreatedDate();
     }
@@ -92,7 +92,7 @@ public class Document extends AuditableEntity {
 	}
 
 	@Column(length = 10, nullable = true)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearch.class})
     public String getType() {
 		return type;
 	}
