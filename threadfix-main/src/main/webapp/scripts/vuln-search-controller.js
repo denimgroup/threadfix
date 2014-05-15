@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer) {
+module.controller('VulnSearchController', function($scope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
     $scope.parameters = {
         teams: [],
         applications: [],
@@ -32,28 +32,32 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
         $scope.startDateOpened = true;
     };
 
+    $scope.$on('application', function($event, application) {
+        $scope.treeApplication = application;
+        $scope.parameters.applications = [ application ];
+    })
+
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
-        $scope.refresh();
+        if (!$scope.teams) {
+            threadfixAPIService.getVulnSearchParameters()
+                .success(function(data, status, headers, config) {
+                    if (data.success) {
+                        $scope.teams = data.object.teams;
+                        $scope.scanners = data.object.scanners;
+                        $scope.genericVulnerabilities = data.object.vulnTypes;
+                        $scope.applications = data.object.applications;
+                        $scope.savedFilters = data.object.savedFilters;
+                    }
+                    $scope.refresh();
+                }).
+                error(function(data, status, headers, config) {
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                    $scope.loadingTree = false;
+                });
+        } else {
+            $scope.refresh();
+        }
     });
-
-    var refreshVulnTable = function(parameters) {
-        $http.post(tfEncoder.encode("/reports/search"), parameters).
-            success(function(data, status, headers, config) {
-                $scope.initialized = true;
-
-                if (data.success) {
-                    $scope.vulns = data.object.vulns;
-                } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                }
-
-                $scope.loading = false;
-            }).
-            error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                $scope.loading = false;
-            });
-    }
 
     var refreshVulnTree = function(parameters) {
         $scope.loadingTree = true;
@@ -95,7 +99,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     $scope.refresh = function() {
         $scope.loading = true;
         vulnSearchParameterService.updateParameters($scope, $scope.parameters);
-        refreshVulnTable($scope.parameters);
+//        refreshVulnTable($scope.parameters);
         refreshVulnTree($scope.parameters);
         $scope.lastLoadedFilterName = undefined;
     }

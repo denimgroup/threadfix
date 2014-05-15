@@ -36,6 +36,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);
 
+                   $rootScope.$broadcast('loadVulnerabilitySearchTable');
+
                    $scope.config.application.organization = $scope.config.application.team;
                } else {
                    $log.info("HTTP request for form objects failed. Error was " + data.message);

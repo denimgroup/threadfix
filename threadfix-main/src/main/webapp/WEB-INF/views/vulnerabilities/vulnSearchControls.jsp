@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="accordion-group">
+        <div class="accordion-group" ng-hide="treeApplication">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
                 <span class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
             </div>

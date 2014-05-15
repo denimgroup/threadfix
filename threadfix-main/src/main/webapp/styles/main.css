@@ -1149,3 +1149,7 @@ body.dragover.drag-enabled .uploadable {
 .filter-group-body input[type='checkbox'] {
     margin-right:2px;
 }
+
+.filter-group-body input[type='text'] {
+    width:180px;
+}
