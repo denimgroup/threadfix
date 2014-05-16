@@ -51,8 +51,6 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
     @Autowired(required = false)
     private ProxyService proxyService;
 
-    private static boolean WRITE_REQUESTS_TO_FILE = true;
-
 	private RestUtilsImpl() {} // intentional, we shouldn't be instantiating this class.
 
     Class<T> classToProxy = null;
@@ -84,19 +82,11 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
             }
 
 			setupAuthorization(httpConnection, username, password);
-			
+
 			httpConnection.addRequestProperty("Content-Type", "application/json");
 			httpConnection.addRequestProperty("Accept", "application/json");
 
 			InputStream stream = httpConnection.getInputStream();
-
-            if (WRITE_REQUESTS_TO_FILE) {
-                String responseString = IOUtils.toString(stream);
-                OutputStream out = new FileOutputStream(new File("/Users/mac/scratch/" + System.currentTimeMillis()));
-                IOUtils.write(urlString + "\n", out);
-                IOUtils.write(responseString, out);
-                stream = new ByteArrayInputStream(responseString.getBytes());
-            }
 
             return stream;
 		} catch (IOException e) {
@@ -104,14 +94,14 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 		    return null;
 		}
 	}
-	
+
 	public String getUrlAsString(String urlString, String username, String password) {
 		InputStream responseStream = getUrl(urlString,username,password);
-		
+
 		if (responseStream == null) {
 			return null;
 		}
-		
+
 		String test = null;
 		try {
 			test = IOUtils.toString(responseStream);
@@ -120,10 +110,10 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 		} finally {
 			closeInputStream(responseStream);
 		}
-		
+
 		return test;
 	}
-	
+
 	public void closeInputStream(InputStream stream) {
 		if (stream != null) {
 			try {
@@ -142,7 +132,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 			LOG.warn("URL used for POST was bad: '" + urlString + "'");
 			return null;
 		}
-		
+
 		HttpURLConnection httpConnection = null;
 		OutputStreamWriter outputWriter = null;
 		try {
@@ -153,10 +143,10 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
             }
 
 			setupAuthorization(httpConnection, username, password);
-			
+
 			httpConnection.addRequestProperty("Content-Type", contentType);
 			httpConnection.addRequestProperty("Accept", contentType);
-			
+
 			httpConnection.setDoOutput(true);
 			outputWriter = new OutputStreamWriter(httpConnection.getOutputStream());
 		    outputWriter.write(data);
@@ -164,14 +154,6 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 
 			InputStream is = httpConnection.getInputStream();
 
-            if (WRITE_REQUESTS_TO_FILE) {
-                String responseString = IOUtils.toString(is);
-                OutputStream out = new FileOutputStream(new File("/Users/mac/scratch/" + System.currentTimeMillis()));
-                IOUtils.write(urlString + "\n", out);
-                IOUtils.write(responseString, out);
-                is = new ByteArrayInputStream(responseString.getBytes());
-            }
-			
 			return is;
 		} catch (IOException e) {
 			LOG.warn("IOException encountered trying to post to URL with message: " + e.getMessage());

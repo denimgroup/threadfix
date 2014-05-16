@@ -18,8 +18,9 @@
                 <tr class="left-align">
                     <td>Name</td>
                     <td>
-                        <input id="teamNameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
+                        <input id="teamNameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" ng-maxlength="60" required/>
                         <span id="requiredError" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                        <span id="lengthError" class="errors" ng-show="form.name.$dirty && form.name.$error.maxlength">Maximum length is 60.</span>
                     </td>
                 </tr>
             </table>

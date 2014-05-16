@@ -63,20 +63,39 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
 
 threadfixModule.factory('threadFixModalService', function($http) {
 
-        var threadFixModalService = {};
+    var threadFixModalService = {};
 
-        threadFixModalService.post = function(url, data) {
-            return $http({
-                method: 'POST',
-                url: url,
-                data : data,
-                contentType : "application/x-www-form-urlencoded",
-                dataType : "text"
-            });
-        };
+    threadFixModalService.post = function(url, data) {
+        return $http({
+            method: 'POST',
+            url: url,
+            data : data,
+            contentType : "application/x-www-form-urlencoded",
+            dataType : "text"
+        });
+    };
 
-        return threadFixModalService;
-    });
+    threadFixModalService.deleteElement = function(elementList, element) {
+        var index = elementList.indexOf(element);
+
+        if (index > -1) {
+            elementList.splice(index, 1);
+        }
+
+        if (elementList.length === 0) {
+            elementList = undefined;
+        }
+    };
+
+    threadFixModalService.addElement = function(elementList, element) {
+        if (!elementList) {
+            elementList = [];
+        }
+        elementList.push(element);
+    };
+
+    return threadFixModalService;
+});
 
 threadfixModule.factory('focus', function ($rootScope, $timeout) {
     return function(name) {

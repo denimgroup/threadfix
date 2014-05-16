@@ -49,7 +49,8 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                     return tfEncoder.encode("/organizations/" + $scope.team.id + "/edit");
                 },
                 object: function () {
-                    return $scope.team;
+                    var teamCopy = angular.copy($scope.team);
+                    return teamCopy;
                 },
                 buttonText: function() {
                     return "Save Changes";

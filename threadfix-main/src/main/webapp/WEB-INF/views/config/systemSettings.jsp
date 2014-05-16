@@ -127,13 +127,15 @@
                         </tr>
                         <tr>
                             <td>Use Proxy Credentials</td>
-                            <td><form:checkbox ng-model="enableCredentials" path="shouldUseProxyCredentials" value="${ defaultConfiguration.shouldUseProxyCredentials }"/></td>
+                            <td ng-init="shouldUseProxyCredentials = <c:out value="${ defaultConfiguration.shouldUseProxyCredentials }"/>">
+                                <form:checkbox path="shouldUseProxyCredentials" ng-model="shouldUseProxyCredentials" value="${ defaultConfiguration.shouldUseProxyCredentials }"/>
+                            </td>
                         </tr>
                         <tr>
                             <td class="no-color">Proxy Username</td>
                             <td class="no-color">
                                 <c:if test="${ empty defaultConfiguration.proxyUsernameEncrypted }">
-                                    <form:input ng-disabled="!enableCredentials"
+                                    <form:input ng-disabled="!shouldUseProxyCredentials"
                                                 id="proxyUsername"
                                                 path="proxyUsername"
                                                 cssClass="focus"
@@ -142,7 +144,7 @@
                                                 value="${ defaultConfiguration.proxyUsername }"/>
                                 </c:if>
                                 <c:if test="${ not empty defaultConfiguration.proxyUsernameEncrypted }">
-                                    <form:input ng-disabled="!enableCredentials"
+                                    <form:input ng-disabled="!shouldUseProxyCredentials"
                                                 id="proxyUsername"
                                                 path="proxyUsername"
                                                 cssClass="focus"
@@ -160,7 +162,7 @@
                             <td class="no-color">Proxy Password</td>
                             <td class="no-color">
                                 <c:if test="${ empty defaultConfiguration.proxyPasswordEncrypted }">
-                                    <form:input ng-disabled="!enableCredentials"
+                                    <form:input ng-disabled="!shouldUseProxyCredentials"
                                                 id="proxyPassword"
                                                 path="proxyPassword"
                                                 cssClass="focus"
@@ -169,7 +171,7 @@
                                                 value="${ defaultConfiguration.proxyPassword }"/>
                                 </c:if>
                                 <c:if test="${ not empty defaultConfiguration.proxyPasswordEncrypted }">
-                                    <form:input ng-disabled="!enableCredentials"
+                                    <form:input ng-disabled="!shouldUseProxyCredentials"
                                                 id="proxyPassword"
                                                 path="proxyPassword"
                                                 cssClass="focus"
