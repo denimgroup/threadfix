@@ -19,7 +19,7 @@
                 <td>Source Vulnerability Type</td>
                 <td>
                     <input id="sourceGenericVulnerability.name"
-                           required style="z-index:4000;width:320px"
+                           required style="z-index:4000;width:500px"
                            type="text"
                            name = "sourceGenericVulnerabilityName"
                            ng-model="object.sourceGenericVulnerability.name"
