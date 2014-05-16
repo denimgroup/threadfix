@@ -1,8 +1,13 @@
 <div class="accordion-inner" ng-repeat="vulnerability in element.vulns">
-                            <span ng-hide="treeApplication">
-                                <div class="vuln-tree-label">Application</div>{{ vulnerability.team.name }} / {{ vulnerability.app.name }}
-                                <br>
-                            </span>
+    <span ng-hide="treeApplication">
+        <div class="vuln-tree-label">Application</div>{{ vulnerability.team.name }} / {{ vulnerability.app.name }}
+        <br>
+    </span>
+
+    <span ng-show="treeApplication" class="vuln-tree-checkbox">
+        <input type="checkbox" ng-model="vulnerability.checked"/>
+    </span>
+
     <div class="vuln-tree-label">Path</div>{{ vulnerability.path }}
     <br>
     <div class="vuln-tree-label">Parameter</div>{{ vulnerability.parameter }}

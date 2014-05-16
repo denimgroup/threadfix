@@ -6,7 +6,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
         applications: [],
         scanners: [],
         genericVulnerabilities: [],
-        severities: [],
+        severities: {},
         numberVulnerabilities: 10,
         showOpen: true,
         showClosed: false,

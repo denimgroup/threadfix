@@ -1,5 +1,7 @@
 <div class="vuln-search-filter-control" style="width:900px;" ng-controller="VulnSearchController">
 
+    {{ parameters | json }}
+
     <div class="filter-controls">
         <h3>Filters</h3>
 

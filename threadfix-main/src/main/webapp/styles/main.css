@@ -1153,3 +1153,8 @@ body.dragover.drag-enabled .uploadable {
 .filter-group-body input[type='text'] {
     width:180px;
 }
+
+.vuln-tree-checkbox {
+    float: right;
+    vertical-align: middle;
+}
