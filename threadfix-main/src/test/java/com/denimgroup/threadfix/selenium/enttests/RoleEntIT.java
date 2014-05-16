@@ -115,27 +115,19 @@ public class RoleEntIT extends BaseIT {
 
 	@Test
 	public void testCreateRoleValidation() {
-		String emptyName = "";
 		String whiteSpaceName = "     ";
 		String normalName = getRandomString(15);
 
-		// Test empty string
-		
-		rolesIndexPage = loginPage.login("user", "password")
-				.clickManageRolesLink()
-				.clickCreateRole()
-				.setRoleName(emptyName,null)
-				.clickSaveRoleInvalid(null);
-
-		assertTrue("Blank field error didn't show correctly.", 
-				rolesIndexPage.getNameError().contains("This field cannot be blank"));
-
 		// Test whitespace
 
-		rolesIndexPage = rolesIndexPage.setRoleName(whiteSpaceName,null).clickSaveRoleInvalid(null);
+        rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(whiteSpaceName,null)
+                .clickSaveRoleInvalid(null);
 
 		assertTrue("Blank field error didn't show correctly.", 
-				rolesIndexPage.getNameError().contains("This field cannot be blank"));
+				rolesIndexPage.getNameError().contains("Name is required."));
 
 		// Test duplicates
 
@@ -149,7 +141,7 @@ public class RoleEntIT extends BaseIT {
 				.clickSaveRoleInvalid(null);
 
 		assertTrue("Duplicate name error did not show correctly.",
-				rolesIndexPage.getDisplayNameError().contains("A role with this name already exists."));
+				rolesIndexPage.getDupNameError().contains("That name is already taken."));
 
 		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal().clickDeleteButton(normalName);
 
@@ -196,15 +188,6 @@ public class RoleEntIT extends BaseIT {
 					.clickViewAppLink(appName, teamName);
 		
 		Boolean add  = applicationDetailPage.getNameText().contains(appName);
-		
-		applicationDetailPage.logout()
-							.login("user", "password")
-							.clickOrganizationHeaderLink()
-							.clickViewTeamLink(teamName)
-							.clickDeleteButton()
-							.clickManageRolesLink()
-							.clickDeleteButton(roleName)
-							.logout();
 		
 		assertTrue("new role user was not able to add an application",add);
 	}
