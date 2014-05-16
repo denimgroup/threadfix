@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.scannermapping;
 
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,12 +47,15 @@ public class ScannerMappingUpdater {
 
     @Autowired
     private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
+    @Autowired
+    private GenericVulnerabilityService genericVulnerabilityService;
 
     @PostConstruct
     public void update() {
 
         log.info("Checking if scanner mapping update is required");
-        if (scannerMappingsUpdaterService.checkPluginJar().canUpdate) {
+        if (scannerMappingsUpdaterService.checkPluginJar().canUpdate &&
+                genericVulnerabilityService.loadAll() != null && genericVulnerabilityService.loadAll().size()>0) {
             scannerMappingsUpdaterService.updateMappings();
         }
 

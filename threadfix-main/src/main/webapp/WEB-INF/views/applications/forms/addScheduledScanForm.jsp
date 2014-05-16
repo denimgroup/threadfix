@@ -18,7 +18,7 @@
             <tr class="left-align">
                 <td style="padding:5px;">Time</td>
                 <td style="padding:5px;">
-                    <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour" name="hour">
+                    <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour">
                         <option value="0" label="0"/>
                         <option value="1" label="1"/>
                         <option value="2" label="2"/>
@@ -33,7 +33,7 @@
                         <option value="11" label="11"/>
                     </select>
                      :
-                    <select name="minute" ng-model="object.minute" style="margin-bottom:0; width:52px;" id="minute" name="minute">
+                    <select name="minute" ng-model="object.minute" style="margin-bottom:0; width:52px;" id="minute">
                         <option value="0" label="00"/>
                         <option value="15" label="15"/>
                         <option value="30" label="30"/>

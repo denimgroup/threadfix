@@ -111,7 +111,7 @@ public class RolesController {
 			}
 			model.addAttribute("editRole", role);
 			model.addAttribute("contentPage", "config/roles/newForm.jsp");
-			return FormRestResponse.failure("Validation failed.", "displayName", resultString);
+			return FormRestResponse.failure("Found some errors", result);
 		}
 		
 		role.setDisplayName(role.getDisplayName().trim());
@@ -165,7 +165,7 @@ public class RolesController {
 			}
 			model.addAttribute("editRole", role);
 			model.addAttribute("contentPage", "config/roles/form.jsp");
-			return FormRestResponse.failure("Failed validation check.", "displayName", resultString);
+			return FormRestResponse.failure("Failed validation check.", result);
 		}
 		
 		if (role.getDisplayName() != null) {

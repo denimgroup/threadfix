@@ -17,10 +17,11 @@
             <tr>
                 <td>Name</td>
                 <td>
-                    <input id="nameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" required/>
+                    <input id="nameInput" focus-on="focusInput" type='text' name='name' ng-model="object.name" ng-maxlength="60" required/>
                 </td>
                 <td>
                     <span id="applicationNameInputRequiredError" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
+                    <span id="applicationNameInputLengthError" class="errors" ng-show="form.name.$dirty && form.name.$error.maxlength">Maximum length is 60.</span>
                     <span id="applicationNameInputNameError" class="errors" ng-show="object.name_error"> {{ object.name_error }}</span>
                 </td>
             </tr>
@@ -44,7 +45,7 @@
 			<tr>
 				<td>Team</td>
 				<td>
-					<select ng-model="object.team.id" id="organizationId" name="organization.id">
+					<select ng-model="object.organization.id" id="organizationId" name="organization.id">
 						<option ng-selected="team.id === object.team.id"
                                 ng-repeat="team in config.teams"
                                 value="{{ team.id }}">

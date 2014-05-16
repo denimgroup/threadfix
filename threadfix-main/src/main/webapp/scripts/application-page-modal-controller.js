@@ -37,6 +37,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('documents', $scope.config.documents);
 
                    $scope.config.application.organization = $scope.config.application.team;
+                   $scope.$parent.application = $scope.config.application;
                } else {
                    $log.info("HTTP request for form objects failed. Error was " + data.message);
                }
@@ -106,9 +107,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit");
                 },
                 object: function () {
+                    var appCopy = angular.copy($scope.config.application);
                     var app = $scope.config.application;
                     app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete")
-                    return $scope.config.application;
+                    return appCopy;
                 },
                 config: function() {
                     return $scope.config;
@@ -123,7 +125,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (application) {
             $scope.config.application = application;
-            $scope.successMessage = "Successfully edited application " + application.name;
+            $scope.$parent.application = application;
+            $scope.$parent.successMessage = "Successfully edited application " + application.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

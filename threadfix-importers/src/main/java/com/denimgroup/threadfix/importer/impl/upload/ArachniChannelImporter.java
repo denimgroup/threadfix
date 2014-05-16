@@ -53,6 +53,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 		tagMap.put("variable", FindingKey.PARAMETER);
 		tagMap.put("var", FindingKey.PARAMETER);
 		tagMap.put("url", FindingKey.PATH);
+<<<<<<< HEAD
 		tagMap.put("injected",   FindingKey.VALUE);
 		tagMap.put("request", 	    FindingKey.REQUEST);
 		tagMap.put("html",	    FindingKey.RESPONSE);
@@ -60,6 +61,9 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 		tagMap.put("remedy_guidance", FindingKey.RECOMMENDATION);
 		tagMap.put("cwe", FindingKey.CWE);
 		tagMap.put("rawfinding", FindingKey.RAWFINDING);
+=======
+        tagMap.put("cwe", FindingKey.CWE);
+>>>>>>> branch '2.1M1' of https://github.com/denimgroup/threadfix.git
 	}
 	
 	private StringBuffer currentRawFinding = new StringBuffer();
@@ -231,11 +235,22 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    					"Cross-Site Scripting in HTML &quot;script&quot; tag.");
 	    		}
 	    		
+<<<<<<< HEAD
 	    		//left in place for old versions of Arachni
 	    		if (! findingMap.containsKey(FindingKey.SEVERITY_CODE) || findingMap.get(FindingKey.SEVERITY_CODE) == null)
 	    			findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
+=======
+	    		if (findingMap.get(FindingKey.SEVERITY_CODE) == null || findingMap.get(FindingKey.SEVERITY_CODE).isEmpty())
+                    findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
+>>>>>>> branch '2.1M1' of https://github.com/denimgroup/threadfix.git
 
+<<<<<<< HEAD
 	    		findingMap.put(FindingKey.RAWFINDING,currentRawFinding.toString());
+=======
+                // Set CWE 16 Configuration if there no CWE in scan file
+                if (findingMap.get(FindingKey.CWE) == null || findingMap.get(FindingKey.CWE).isEmpty())
+                    findingMap.put(FindingKey.CWE, "16");
+>>>>>>> branch '2.1M1' of https://github.com/denimgroup/threadfix.git
 	    		Finding finding = constructFinding(findingMap);
 	    		
 	    		add(finding);
@@ -263,7 +278,6 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    			findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
-	    		
 	    	} 
 	    	
 	    	if (getDate) {

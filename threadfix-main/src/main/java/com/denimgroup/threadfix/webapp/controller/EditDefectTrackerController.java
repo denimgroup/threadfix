@@ -120,7 +120,10 @@ public class EditDefectTrackerController {
 							databaseDefectTracker.getDefectTrackerType().getId())) {
 				defectService.deleteByDefectTrackerId(defectTrackerId);
 			}
-			
+
+            defectTracker.getDefectTrackerType().setName(
+                    defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()).getName());
+
 			defectTrackerService.storeDefectTracker(defectTracker);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();

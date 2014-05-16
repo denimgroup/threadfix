@@ -117,8 +117,10 @@ public class APIKeyController {
 	public @ResponseBody RestResponse<APIKey> saveEdit(HttpServletRequest request,
 			@PathVariable("keyId") int keyId, @RequestParam(required = false) String note) {
 		APIKey apiKey = apiKeyService.loadAPIKey(keyId);
+
+        String isRestrictedKeyStr= request.getParameter("isRestrictedKey");
 		
-		boolean restricted = request.getParameter("isRestrictedKey") != null;
+		boolean restricted = (isRestrictedKeyStr != null && isRestrictedKeyStr.equalsIgnoreCase("true")) ? true : false ;
 		
 		if (note != null) {
 			apiKey.setNote(note);
