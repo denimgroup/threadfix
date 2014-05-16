@@ -7,7 +7,7 @@ jdbc.url=jdbc:mysql://localhost:3306/threadfix?autoReconnect=true&createDatabase
 jdbc.username=threadfix
 jdbc.password=tfpassword
 hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
-hibernate.hbm2ddl.auto=update
+hibernate.hbm2ddl.auto=create
 
 hibernate.show_sql=false
 hibernate.format_sql=true
