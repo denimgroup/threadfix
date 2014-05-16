@@ -120,17 +120,21 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             });
         });
 
-        // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
-        parameters.applications.forEach(function(filteredApp) {
-            filteredApp.id = undefined;
-        });
-        $scope.applications.forEach(function(app) {
+        if ($scope.treeApplication) {
+            $scope.parameters.applications = [ { id: $scope.treeApplication.id } ];
+        } else {
+            // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
             parameters.applications.forEach(function(filteredApp) {
-                if (filteredApp.name === (app.team.name + " / " + app.name)) {
-                    filteredApp.id = app.id;
-                }
+                filteredApp.id = undefined;
             });
-        });
+            $scope.applications.forEach(function(app) {
+                parameters.applications.forEach(function(filteredApp) {
+                    if (filteredApp.name === (app.team.name + " / " + app.name)) {
+                        filteredApp.id = app.id;
+                    }
+                });
+            });
+        }
 
         parameters.channelTypes = parameters.scanners;
 

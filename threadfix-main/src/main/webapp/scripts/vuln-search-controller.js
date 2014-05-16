@@ -84,14 +84,15 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
                     }
 
                     $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
-                } else {
+                } else if (data.message) {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
 
                 $scope.loadingTree = false;
             }).
             error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                console.log("Got " + status + " back.");
+                $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
     }
@@ -99,6 +100,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     $scope.refresh = function() {
         $scope.loading = true;
         vulnSearchParameterService.updateParameters($scope, $scope.parameters);
+
 //        refreshVulnTable($scope.parameters);
         refreshVulnTree($scope.parameters);
         $scope.lastLoadedFilterName = undefined;
