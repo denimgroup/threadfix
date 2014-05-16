@@ -158,7 +158,7 @@ public class RemoteProvidersController {
 		} else {
 			String errorMsg;
 			if (response.equals(ResponseCode.ERROR_NO_SCANS_FOUND)) {
-				errorMsg = "No scans were found for this Remote Provider.";
+				errorMsg = "No scans were found for this Remote Provider application.";
 			} else if (response.equals(ResponseCode.ERROR_NO_NEW_SCANS)) {
 				errorMsg = "Application already imported scans from this Remote Provider, no newer scans were found. You have to delete old scans before adding new ones.";
 			} else {
