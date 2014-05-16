@@ -138,11 +138,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		
 		private void add(Finding finding) {
 			if (finding != null) {
-				if (currentSerialNumber != null) {
-					finding.setNativeId(currentSerialNumber);
-				} else {
+//				if (currentSerialNumber != null) {
+//					finding.setNativeId(currentSerialNumber);
+//				} else {
 					finding.setNativeId(getNativeId(finding));
-				}
+//				}
 				
 	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);

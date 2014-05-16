@@ -45,7 +45,7 @@ import java.util.Map;
 class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
-	static {
+	static { 
 		tagMap.put("vulntype",      FindingKey.VULN_CODE);
 		tagMap.put("attackscore",   FindingKey.SEVERITY_CODE);
 		tagMap.put("parametername", FindingKey.PARAMETER);
@@ -55,6 +55,7 @@ class NTOSpiderChannelImporter extends AbstractChannelImporter {
 		tagMap.put("response",	    FindingKey.RESPONSE);
 		tagMap.put("description",   FindingKey.DETAIL);
 		tagMap.put("recommendation", FindingKey.RECOMMENDATION);
+		tagMap.put("cweid",			FindingKey.CWE);
 		tagMap.put("rawfinding",    FindingKey.RAWFINDING);  //there is no element rawfinding, this is just a placeholder
 	}
 

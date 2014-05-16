@@ -246,7 +246,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
-			return new BigInteger(1, messageDigest.digest()).toString(16);
+			log.error("REMOVEME: To be hashed (not including quotes):'" + toHash+"'");
+			String hash = new BigInteger(1, messageDigest.digest()).toString(16);
+			log.error("Hash: " + hash);
+			return hash;
 		} catch (NoSuchAlgorithmException e) {
 			log.error("Can't find MD5 hash function to hash finding info", e);
 			return null;
@@ -328,6 +331,19 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     	
     	Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
+		
+		// unify URLs 
+		Map<String,String> patterns = new HashMap<String,String>();
+		patterns.put(";jsessionid=.*",";jsessionid=[removed]");
+		patterns.put("/_ns:.*?/","/_ns:[removed]/");
+		patterns.put("=[^/]*","=[removed]");
+		
+		for ( String match : patterns.keySet()){
+			if (url.matches(".*"+match+".*")){
+				url = url.replaceAll(match, patterns.get(match));
+			}
+		}
+		
 		
 		if (url != null && !url.isEmpty()) {
 			try {
