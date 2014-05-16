@@ -128,16 +128,20 @@
                     <span id="sourceFolderOtherError" class="errors" ng-show="object.repositoryFolder_error"> {{ object.repositoryFolder_error }}</span>
                 </td>
             </tr>
-			<tr id="appDTDiv" data-json-test-url="<c:out value="${ testUrl }"/>">
+			<tr id="appDTDiv">
                 <td>WAF</td>
-                <!-- TODO make this a link -->
-                <td id="wafName" ng-show="object.waf">{{ object.waf.name }}</td>
+                <td id="wafName" ng-show="object.waf" class="pointer">
+                    <a id="wafNameText" ng-click="switchTo('goToWaf')">
+                        {{ object.waf.name }}
+                    </a>
+                </td>
                 <td><button class="btn" ng-click="switchTo('addWaf')" id="addWafButton">Set WAF</button></td>
 			</tr>
 			<tr id="appWafDiv">
                 <td>Defect Tracker</td>
-                <!-- TODO make this a link -->
-                <td id="defectTrackerName" ng-show="object.defectTracker">{{ object.defectTracker.name }}</td>
+                <td id="defectTrackerName" ng-show="object.defectTracker">
+                    <a id="linkDT" ng-href="{{object.defectTracker.url}}" class="pointer" target='_blank'>{{ object.defectTracker.name }}</a>
+                </td>
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
 			

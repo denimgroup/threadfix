@@ -93,6 +93,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         } else if (name === 'createDefectTracker') {
             $scope.showCreateDefectTrackerModal();
+        } else if (name === 'goToWaf') {
+            $scope.goToWaf();
         }
     });
 
@@ -365,6 +367,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $log.info('Modal dismissed at: ' + new Date());
         });
 
-    }
+    };
+
+    $scope.goToWaf = function() {
+        window.location.href = tfEncoder.encode("/wafs/" + $scope.config.application.waf.id);
+    };
 
 })

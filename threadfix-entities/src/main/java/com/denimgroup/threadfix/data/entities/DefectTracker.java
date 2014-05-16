@@ -64,6 +64,7 @@ public class DefectTracker extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
+    @JsonView(Object.class)
 	public String getUrl() {
 		return url;
 	}
