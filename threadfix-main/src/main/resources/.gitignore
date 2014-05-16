@@ -1,0 +1,4 @@
+/jdbc.properties
+/jdbc.properties.deploy
+/jdbc.properties.hsqldb
+/threadfix-backup.script
