@@ -157,7 +157,10 @@ public class RolesIndexPage extends BasePage {
 	}
 	
 	public boolean getPermissionValue(String permissionName, String oldName) {
-		return driver.findElement(By.id(permissionName + "True")).isSelected();
+        if(oldName == null){
+            return driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + "True")).isSelected();
+        }
+        return driver.findElementById("editRoleModal"+(getIndex(oldName)+1)).findElement(By.id(permissionName + "True")).isSelected();
 	}
 		
 	public RolesIndexPage setPermissionValue(String permissionName, boolean value,String oldName) {

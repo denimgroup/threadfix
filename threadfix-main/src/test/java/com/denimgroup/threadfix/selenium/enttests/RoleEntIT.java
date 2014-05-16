@@ -105,7 +105,9 @@ public class RoleEntIT extends BaseIT {
                 .setRoleName(roleNameShort, null)
                 .clickSaveRole(null);
 
-        rolesIndexPage.clickEditLink(roleNameShort)
+        rolesIndexPage =  rolesIndexPage.clickOrganizationHeaderLink()
+                .clickManageRolesLink()
+                .clickEditLink(roleNameShort)
                 .setRoleName(roleNameLong, roleNameShort)
                 .clickSaveRole(roleNameShort);
 
