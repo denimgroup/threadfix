@@ -1119,7 +1119,7 @@ body.dragover.drag-enabled .uploadable {
     cursor: pointer;
 }
 
-.vuln-tree a {
+.vuln-tree a, .filter-controls a {
     text-decoration: none;
 }
 

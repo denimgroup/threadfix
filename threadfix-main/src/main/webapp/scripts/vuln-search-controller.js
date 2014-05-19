@@ -1,18 +1,23 @@
 var module = angular.module('threadfix');
 
 module.controller('VulnSearchController', function($scope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
-    $scope.parameters = {
-        teams: [],
-        applications: [],
-        scanners: [],
-        genericVulnerabilities: [],
-        severities: {},
-        numberVulnerabilities: 10,
-        showOpen: true,
-        showClosed: false,
-        showFalsePositive: false,
-        showHidden: false
-    };
+
+    $scope.resetFilters = function() {
+        $scope.parameters = {
+            teams: [],
+            applications: [],
+            scanners: [],
+            genericVulnerabilities: [],
+            severities: {},
+            numberVulnerabilities: 10,
+            showOpen: true,
+            showClosed: false,
+            showFalsePositive: false,
+            showHidden: false
+        };
+
+        $scope.refresh();
+    }
 
     $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);
 
@@ -48,14 +53,14 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
                         $scope.applications = data.object.applications;
                         $scope.savedFilters = data.object.savedFilters;
                     }
-                    $scope.refresh();
+                    $scope.resetFilters();
                 }).
                 error(function(data, status, headers, config) {
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loadingTree = false;
                 });
         } else {
-            $scope.refresh();
+            $scope.resetFilters();
         }
     });
 

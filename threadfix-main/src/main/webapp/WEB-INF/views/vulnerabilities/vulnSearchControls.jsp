@@ -47,6 +47,7 @@
                     </div>
                     <input style="width: 180px;" placeholder="Enter a name for the filter" ng-model="currentFilterNameInput" type="text"/>
                     <a class="btn btn-primary" ng-hide="savingFilter" ng-disabled="!currentFilterNameInput" ng-click="saveCurrentFilters()">Create</a>
+                    <a class="btn" ng-hide="savingFilter" ng-click="resetFilters()">Clear Filters</a>
                     <button id="loadingButton"
                             ng-show="savingFilter"
                             disabled="disabled"
