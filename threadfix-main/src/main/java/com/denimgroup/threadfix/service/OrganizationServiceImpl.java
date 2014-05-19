@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class OrganizationServiceImpl implements OrganizationService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(OrganizationService.class);

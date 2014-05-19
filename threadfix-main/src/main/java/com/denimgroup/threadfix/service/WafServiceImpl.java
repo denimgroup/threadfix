@@ -42,7 +42,7 @@ import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
 import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class WafServiceImpl implements WafService {
 	
 	private final SanitizedLogger log = new SanitizedLogger("WafService");

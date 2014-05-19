@@ -47,7 +47,7 @@ import com.denimgroup.threadfix.data.entities.SurveyResult;
 import com.denimgroup.threadfix.data.entities.SurveySection;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class SurveyServiceImpl implements SurveyService {
 
 	private SurveyDao surveyDao;

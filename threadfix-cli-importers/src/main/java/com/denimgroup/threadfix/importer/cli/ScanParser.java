@@ -50,7 +50,7 @@ public class ScanParser {
      * @param filePath path to a file. Will throw exceptions if not valid
      * @return the String output
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false) // used to be true
     public String readFile(@NotNull String filePath) {
         if (bridge == null) {
             throw new IllegalStateException("Spring configuration is broken, please fix autowiring.");
@@ -67,12 +67,12 @@ public class ScanParser {
     }
 
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false) // used to be true
     public Scan getScan(@NotNull String filePath) throws TypeParsingException, ScanTestingException {
         return getScan(new File(filePath));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false) // used to be true
     public Scan getScan(@NotNull File file) throws TypeParsingException, ScanTestingException, ScanFileNotFoundException {
 
         if (!file.exists()) {

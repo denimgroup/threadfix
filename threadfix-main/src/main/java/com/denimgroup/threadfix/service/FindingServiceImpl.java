@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class FindingServiceImpl implements FindingService {
 
 	private FindingDao findingDao = null;

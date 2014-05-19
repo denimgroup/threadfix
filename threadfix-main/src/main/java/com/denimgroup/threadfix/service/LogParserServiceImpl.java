@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.service.waflog.WafLogParser;
 import com.denimgroup.threadfix.service.waflog.WafLogParserFactory;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class LogParserServiceImpl implements LogParserService {
 	
 	private final SanitizedLogger log = new SanitizedLogger(LogParserService.class);

@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public User loadUser(int userId) {
 		return userDao.retrieveById(userId);
 	}
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public boolean isCorrectPassword(User user, String password) {
 		if (user.getPassword() != null && user.getSalt() != null 
 				&& password != null) {
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public Set<Permission> getGlobalPermissions(Integer userId) {
 		Set<Permission> returnList = new HashSet<>();
 
@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public boolean canDelete(User user) {
 		boolean canDelete = true;
 		
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public boolean canSetRoles(int userId, List<Integer> objectIds) {
 		boolean canSetRoles = true;
 		
@@ -217,7 +217,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public Map<Integer, Set<Permission>> getApplicationPermissions(
 			Integer userId) {
 		
@@ -245,7 +245,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public Map<Integer, Set<Permission>> getOrganizationPermissions(
 			Integer userId) {
 		Map<Integer, Set<Permission>> organizationPermissions = new HashMap<>();
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public boolean hasRemovedAdminPermissions(User user) {
 		
 		if (user == null || user.getId() == null) {
@@ -300,7 +300,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public User loadLdapUser(String name) {
 		return userDao.retrieveLdapUser(name);
 	}
