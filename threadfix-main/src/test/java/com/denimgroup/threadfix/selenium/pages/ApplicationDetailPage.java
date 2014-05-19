@@ -270,7 +270,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickScanAgentTasksTab(int count) {
-        driver.findElementById(count + " Scan Agent Tasks").click();
+        driver.findElementByLinkText(count + " Scan Agent Tasks").click();
         sleep(1000);
         waitForElement(driver.findElementById("scanQueueTable"));
         return new ApplicationDetailPage(driver);
