@@ -2,6 +2,8 @@ var module = angular.module('threadfix');
 
 module.controller('VulnSearchController', function($scope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
 
+    $scope.parameters = {};
+
     $scope.resetFilters = function() {
         $scope.parameters = {
             teams: [],
