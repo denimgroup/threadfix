@@ -162,20 +162,20 @@ public class FilterIT extends BaseIT {
                 .saveFilterChanges();
 
         teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
-        sleep(3000);
+        sleep(7000);
 
-        assertTrue("The global filter for team1 was not implemented correctly.",
+        assertTrue("The global filter for team1 was not implemented correctly - medium should be 0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Medium", "0"));
-        assertTrue("The global filter for team1 was not implemented correctly.",
+        assertTrue("The global filter for team1 was not implemented correctly - Info should be  0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Info","0"));
-        assertTrue("The global severity filter for team1 was not set properly.",
+        assertTrue("The global severity filter for team1 was not set properly - High should be 2.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "High", "2"));
 
-        assertTrue("The global filter for team2 was not implemented correctly.",
+        assertTrue("The global filter for team2 was not implemented correctly - medium should be 0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "Medium", "0"));
-        assertTrue("The global filter for team2 was not implemented correctly.",
+        assertTrue("The global filter for team2 was not implemented correctly - Info should be 0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "Info","0"));
-        assertTrue("The global severity filter for team2 was not set properly.",
+        assertTrue("The global severity filter for team2 was not set properly - High should be 2.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "High", "2"));
 
         loginPage = teamIndexPage.logout();
