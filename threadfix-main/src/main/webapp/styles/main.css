@@ -1119,6 +1119,10 @@ body.dragover.drag-enabled .uploadable {
     cursor: pointer;
 }
 
+.vuln-tree a {
+    text-decoration: none;
+}
+
 .vuln-tree-vuln-list .accordion-inner {
     width:610px;
 }
@@ -1157,4 +1161,8 @@ body.dragover.drag-enabled .uploadable {
 .vuln-tree-checkbox {
     float: right;
     vertical-align: middle;
+}
+
+.accordion-header .vuln-tree-checkbox {
+    padding: 9px 15px;
 }

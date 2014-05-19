@@ -333,4 +333,26 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     $scope.getDocumentUrl = function(vulnerability, document) {
         return tfEncoder.encode($scope.getUrlBase(vulnerability) + "/documents/" + document.id + "/view");
     }
+
+    $scope.applyElementChecked = function(element) {
+        element.vulns.forEach(function(vuln) {
+            vuln.checked = element.checked;
+        });
+    }
+
+    $scope.applyVulnerabilityChecked = function(element, vulnerability) {
+        if (!vulnerability.checked) {
+            element.checked = false;
+        } else {
+            var checked = true;
+
+            element.vulns.forEach(function(vuln) {
+                if (!vuln.checked) {
+                    checked = false;
+                }
+            });
+
+            element.checked = checked;
+        }
+    }
 });

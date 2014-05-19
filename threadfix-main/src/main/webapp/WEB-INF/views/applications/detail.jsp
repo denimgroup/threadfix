@@ -14,7 +14,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document-form-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-agent-tasks-tab-controller.js"></script>
-
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bulk-operations-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
 </head>
 

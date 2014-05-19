@@ -51,7 +51,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     });
 
     $scope.updateDefectStatus = function() {
-        $http.get(tfEncoder.encode("/defects/update")).
+        $http.get(tfEncoder.encode(currentUrl + "/defects/update")).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
