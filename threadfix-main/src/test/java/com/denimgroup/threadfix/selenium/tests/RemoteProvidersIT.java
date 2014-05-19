@@ -190,7 +190,7 @@ public class RemoteProvidersIT extends BaseIT {
         remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(0);
-        sleep(15000);
+        sleep(20000);
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 
