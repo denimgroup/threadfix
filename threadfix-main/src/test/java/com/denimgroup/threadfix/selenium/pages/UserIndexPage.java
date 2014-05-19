@@ -217,7 +217,7 @@ public class UserIndexPage extends BasePage {
 		if(oldName == null){
 			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 		}else{
-			return new Select(driver.findElementById("roleSelect"+(oldName))).getFirstSelectedOption().getText().contains(role);
+			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 		}
 
 	}

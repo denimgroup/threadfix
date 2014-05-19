@@ -135,6 +135,8 @@ public class UserEntIT extends BaseIT {
 
 		ConfigureDefaultsPage configDefaultsPage = loginPage.login("user", "password")
                 .clickConfigureDefaultsLink()
+                .defaultPermissions()
+                .checkGlobalGroupCheckbox()
                 .setRoleSelect("User")
                 .clickUpdateDefaults();
 		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
@@ -151,6 +153,8 @@ public class UserEntIT extends BaseIT {
 		configDefaultsPage = userIndexPage.clickCancel(userName)
                 .clickDelete(userName)
                 .clickConfigureDefaultsLink()
+                .defaultPermissions()
+                .checkGlobalGroupCheckbox()
                 .setRoleSelect("Administrator")
                 .clickUpdateDefaults();
 		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
@@ -167,7 +171,9 @@ public class UserEntIT extends BaseIT {
 		configDefaultsPage = userIndexPage.clickCancel(userName)
                 .clickDelete(userName)
                 .clickConfigureDefaultsLink()
+                .defaultPermissions()
                 .checkGlobalGroupCheckbox()
+                .setRoleSelect("Read Access")
                 .clickUpdateDefaults();
 		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
 		
