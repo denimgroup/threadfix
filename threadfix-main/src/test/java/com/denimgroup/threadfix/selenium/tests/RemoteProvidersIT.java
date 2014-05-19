@@ -93,7 +93,6 @@ public class RemoteProvidersIT extends BaseIT {
                 .setVeraPassword(VERACODE_PASSWORD)
                 .saveVera();
 
-        sleep(5000);
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
 

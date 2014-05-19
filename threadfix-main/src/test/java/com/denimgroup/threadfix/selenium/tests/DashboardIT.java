@@ -25,10 +25,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -93,7 +90,7 @@ public class DashboardIT extends BaseIT {
                 .clickSubmitComment();
 
         DashboardPage dashboardPage = vulnerabilityDetailPage.clickDashboardLink();
-
+        sleep(2000);
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
 

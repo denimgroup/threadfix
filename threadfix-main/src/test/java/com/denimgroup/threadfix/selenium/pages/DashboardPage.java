@@ -50,7 +50,6 @@ public class DashboardPage extends BasePage{
     }
 
     public boolean isCommentDisplayed() {
-        waitForElement(driver.findElementByLinkText("View"));
         return driver.findElementByLinkText("View").isDisplayed();
     }
 
