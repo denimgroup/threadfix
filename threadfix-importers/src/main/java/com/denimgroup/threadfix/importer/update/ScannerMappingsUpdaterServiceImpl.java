@@ -42,7 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = false)
+@Transactional(readOnly = false) // used to be true
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
 
     private ChannelVulnerabilityDao channelVulnerabilityDao;
