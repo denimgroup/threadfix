@@ -176,7 +176,7 @@ public abstract class BasePage {
 	
 	public DashboardPage clickDashboardLink(){
 		driver.findElementById("dashboardHeader").click();
-		sleep(1000);
+		sleep(3000);
 		return new DashboardPage(driver);
 	}
 	

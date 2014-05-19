@@ -162,6 +162,7 @@ public class FilterIT extends BaseIT {
                 .saveFilterChanges();
 
         teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
+        sleep(3000);
 
         assertTrue("The global filter for team1 was not implemented correctly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Medium", "0"));
