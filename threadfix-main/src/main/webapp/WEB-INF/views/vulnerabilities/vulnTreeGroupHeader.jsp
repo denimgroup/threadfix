@@ -7,7 +7,7 @@
             <li ng-class="{ active: element.numberToShow === 100 }"><a ng-click="updateElementTable(element, 100, 1)">100</a></li>
         </ul>
     </span>
-    <span ng-show="element.totalVulns < 10">
+    <span ng-show="element.totalVulns < 11">
         <ul style="width:190px; float:left" class="nav nav-pills">
             <li ng-class="{ active: element.numberToShow === 10 }"> <a ng-disabled="true">10</a></li>
             <li ng-class="{ active: element.numberToShow === 25 }"> <a ng-disabled="true">25</a></li>

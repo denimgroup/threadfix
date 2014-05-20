@@ -72,8 +72,5 @@
                 </tr>
             </tbody>
         </table>
-        <c:if test="${ canModifyVulnerabilities }">
-            <a id="uploadDocVulnModalLink" class="btn" ng-click="showUploadForm()">Add File</a>
-        </c:if>
     </div>
 </div>
