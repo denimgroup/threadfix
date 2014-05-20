@@ -201,6 +201,7 @@
             </div>
         </div>
 
+        <!-- Field Controls: Type, path, parameter, etc. -->
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showDetailsControls = !showDetailsControls">
                 <span class="icon" ng-class="{ 'icon-minus': showDetailsControls, 'icon-plus': !showDetailsControls }"></span> Field Controls
@@ -264,6 +265,7 @@
             </div>
         </div>
 
+        <!-- Date controls -->
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
                 <span class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Date Controls

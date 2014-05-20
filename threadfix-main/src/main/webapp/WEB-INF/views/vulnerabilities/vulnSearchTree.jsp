@@ -27,7 +27,7 @@
                                             'badge-important': category.intValue === 5,
                                             'badge-warning': category.intValue === 4,
                                             'badge-success': category.intValue === 3,
-                                            'badge-info': category.intValue === 2 || element.intValue === 1
+                                            'badge-info': category.intValue === 2
                                             }">
                         {{ category.total }}
                     </span>
@@ -44,7 +44,7 @@
                                     'badge-important': element.intValue === 5,
                                     'badge-warning': element.intValue === 4,
                                     'badge-success': element.intValue === 3,
-                                    'badge-info': element.intValue === 2 || element.intValue === 1
+                                    'badge-info': element.intValue === 2
                                     }">
                         {{ element.numResults }}
                     </span>
@@ -53,7 +53,7 @@
                     {{ element.genericVulnerability.name | shortCweNames }}
                 </td>
             </tr>
-            <tr ng-show="category.expanded && element.expanded" ng-repeat-end>
+            <tr ng-if="category.expanded && element.expanded" ng-repeat-end>
                 <td></td>
                 <td colspan="4" class="vuln-tree-vuln-list">
                     <div class="accordion-group">
