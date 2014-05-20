@@ -94,61 +94,44 @@ public class RoleEntIT extends BaseIT {
 
 	}
 
+
     @Test
-    public void testEditRoleNameLength() {
-        String roleNameLong = "rolename" + getRandomString(25);
-        String roleNameShort = "RolenameShort";
+    public void testCreateRoleValidation() {
+        String whiteSpaceName = "     ";
 
-        rolesIndexPage = loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleNameShort, null)
-                .clickSaveRole(null);
-
-        rolesIndexPage =  rolesIndexPage.clickOrganizationHeaderLink()
-                .clickManageRolesLink()
-                .clickEditLink(roleNameShort)
-                .setRoleName(roleNameLong, roleNameShort)
-                .clickSaveRole(roleNameShort);
-
-        assertTrue("Name length error did not show.",
-                rolesIndexPage.getNameError().contains("This field has a maximum length of 25"));
-    }
-
-	@Test
-	public void testCreateRoleValidation() {
-		String whiteSpaceName = "     ";
-		String normalName = getRandomString(15);
-
-		// Test whitespace
-
+        // Test whitespace
         rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink()
                 .clickCreateRole()
                 .setRoleName(whiteSpaceName,null)
-                .clickSaveRoleInvalid(null);
+                .clickSaveRole(null);
 
-		assertTrue("Blank field error didn't show correctly.", 
-				rolesIndexPage.getNameError().contains("Name is required."));
+        assertTrue("Blank field error didn't show correctly.",
+                rolesIndexPage.getNameError().contains("Name is required."));
+    }
+
+
+    @Test
+	public void testCreateRoleDupicateValidation() {
+
+		String name1 = "testNameDuplication";
+        String name2 = "testNameDuplication";
 
 		// Test duplicates
-
-		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal()
+		rolesIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+                .clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(normalName,null)
+				.setRoleName(name1,null)
 				.clickSaveRole(null)
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(normalName,null)
-				.clickSaveRoleInvalid(null);
+				.setRoleName(name2,null)
+				.clickSaveRole(null);
 
 		assertTrue("Duplicate name error did not show correctly.",
 				rolesIndexPage.getDupNameError().contains("That name is already taken."));
 
-		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal().clickDeleteButton(normalName);
-
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(normalName));
-		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(normalName));
+		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal();
 	}
 
 	@Test
@@ -194,7 +177,8 @@ public class RoleEntIT extends BaseIT {
 		assertTrue("new role user was not able to add an application",add);
 	}
 
-
+    // TODO: Enterprise is not an option in Role Permissions
+    @Ignore
 	@Test
 	public void testSetPermissions() {
 		String name = "testName" + getRandomString(10);
@@ -251,7 +235,8 @@ public class RoleEntIT extends BaseIT {
 	
 	// these tests are to ensure that threadfix cannot enter a state with no users that
 	// have permissions to manage users / roles / groups
-
+    // TODO: bug filed for Read Access not an option in Roles
+    @Ignore
 	@Test
 	public void testRemoveRolesFromUser() {
 		String admin = "Administrator";

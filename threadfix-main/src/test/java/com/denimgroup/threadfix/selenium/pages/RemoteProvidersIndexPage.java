@@ -126,7 +126,9 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveWhiteHat(){
 		driver.findElementById("submit").click();
-        sleep(1000);
+        sleep(6000);
+        waitForElement(driver.findElementById("configure2"));
+        sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 
