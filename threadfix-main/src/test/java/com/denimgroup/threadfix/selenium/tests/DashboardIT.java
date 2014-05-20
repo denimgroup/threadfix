@@ -85,7 +85,8 @@ public class DashboardIT extends BaseIT {
                 .clickSubmitComment();
 
         DashboardPage dashboardPage = vulnerabilityDetailPage.clickDashboardLink();
-        sleep(2000);
+        vulnerabilityDetailPage.clickDashboardLink();
+        sleep(5000);
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
 

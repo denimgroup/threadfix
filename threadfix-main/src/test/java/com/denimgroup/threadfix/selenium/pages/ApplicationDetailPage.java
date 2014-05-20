@@ -413,11 +413,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isBreadcrumbPresent() {
-        return driver.findElementByLinkText("Applications Index").isDisplayed();
+        return driver.findElementById("applicationsIndexLink").isDisplayed();
     }
 
-    public boolean isApplicationBreadcrumbPresent(String applicationName) {
-        return driver.findElementByLinkText("Team: " + applicationName).isDisplayed();
+    public boolean isApplicationBreadcrumbPresent() {
+        return driver.findElementById("teamLink").isDisplayed();
     }
 
     public boolean vulnerabilitiesFiltered(String level, String expected) {
