@@ -328,6 +328,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
         String elementToClick = "provider2updateMapping" + appRow;
+        waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
         }

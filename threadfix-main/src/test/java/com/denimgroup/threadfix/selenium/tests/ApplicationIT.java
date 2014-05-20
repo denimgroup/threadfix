@@ -484,7 +484,7 @@ public class ApplicationIT extends BaseIT {
 
         VulnerabilityDetailPage vulnerabilityDetailPage = ap.clickScansTab()
                 .clickViewScan()
-                .clickViewFinding(1)
+                .clickViewFinding()
                 .clickViewVulnerability();
 
         //TODO requires ElementIDs on VulnerabililtyDetailPage
@@ -517,7 +517,7 @@ public class ApplicationIT extends BaseIT {
 
         ap.clickScansTab()
                 .clickViewScan()
-                .clickViewFinding(1)
+                .clickViewFinding()
                 .clickEditVulnerability();
 
         //TODO Bug in VulnerabilityDetailsPage, does not save changes.

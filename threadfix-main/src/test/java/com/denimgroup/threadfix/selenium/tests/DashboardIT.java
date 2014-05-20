@@ -78,16 +78,14 @@ public class DashboardIT extends BaseIT {
         ScanIndexPage scanIndexPage = loginPage.login("user", "password").clickScansHeaderLink();
 
         VulnerabilityDetailPage vulnerabilityDetailPage = scanIndexPage.clickAnyViewScanLink()
-                .clickViewFinding(1)
+                .clickViewFinding()
                 .clickViewVulnerability()
                 .clickAddComment()
                 .setCommentText(commentText)
                 .clickSubmitComment();
 
         DashboardPage dashboardPage = vulnerabilityDetailPage.clickDashboardLink();
-        vulnerabilityDetailPage.clickDashboardLink();
         sleep(5000);
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
-
 }

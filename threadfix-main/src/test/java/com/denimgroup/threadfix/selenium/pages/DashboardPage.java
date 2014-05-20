@@ -50,7 +50,7 @@ public class DashboardPage extends BasePage{
     }
 
     public boolean isCommentDisplayed() {
-        return driver.findElementByLinkText("View").isDisplayed();
+        return driver.findElementById("viewMoreLink1").isDisplayed();
     }
 
 	public ReportsIndexPage click6MonthViewMore(){
