@@ -75,14 +75,9 @@ public class DashboardIT extends BaseIT {
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
+        ScanIndexPage scanIndexPage = loginPage.login("user", "password").clickScansHeaderLink();
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-
-        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewScan()
+        VulnerabilityDetailPage vulnerabilityDetailPage = scanIndexPage.clickAnyViewScanLink()
                 .clickViewFinding(1)
                 .clickViewVulnerability()
                 .clickAddComment()

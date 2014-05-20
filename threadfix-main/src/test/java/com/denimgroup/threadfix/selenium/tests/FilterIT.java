@@ -151,7 +151,7 @@ public class FilterIT extends BaseIT {
         DatabaseUtils.createApplication(teamName2, appName2);
         DatabaseUtils.uploadScan(teamName2, appName2, file);
 
-        FilterPage globalFilterPage = loginPage.login("user", "password")
+        TeamIndexPage globalFilterPage = loginPage.login("user", "password")
                 .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity)
@@ -159,10 +159,12 @@ public class FilterIT extends BaseIT {
                 .enableSeverityFilters()
                 .hideMedium()
                 .hideInfo()
-                .saveFilterChanges();
+                .saveFilterChanges()
+                .clickOrganizationHeaderLink();
 
+        sleep(3000);
         teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
-        sleep(7000);
+        sleep(3000);
 
         assertTrue("The global filter for team1 was not implemented correctly - medium should be 0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Medium", "0"));

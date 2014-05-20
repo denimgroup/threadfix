@@ -38,7 +38,7 @@ public class ScanIndexPage extends BasePage {
 
 	public ScanIndexPage(WebDriver webdriver) {
 		super(webdriver);
-		scanTable = driver.findElementById("wafTableBody");
+		scanTable = driver.findElementById("main-content");
 //		backToApplicationLink = driver.findElementById("backToApplicationLink");
 	}
 
