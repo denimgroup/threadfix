@@ -19,14 +19,28 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
         alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
     }
 
+    $scope.clickVulnTab = function() {
+        $rootScope.$broadcast('loadVulnerabilitySearchTable');
+    }
+
+    var countVulnerabilities = function() {
+        $scope.vulnerabilityCount = 0;
+        $scope.applications.forEach(function(application) {
+            $scope.vulnerabilityCount += application.totalVulnCount;
+        });
+    }
+
     $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = "&orgId=" + $scope.teamId;
         $http.get(tfEncoder.encodeRelative($scope.teamId + "/info")).
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.team = data.object.team;
-                    $scope.$broadcast('seeMoreExtension', "/" + $scope.team.id);
+                    $scope.team.applications = data.object.applications;
                     $scope.applications = data.object.applications;
+                    countVulnerabilities();
+                    $scope.$broadcast('team', $scope.team);
+                    $scope.$broadcast('seeMoreExtension', "/" + $scope.team.id);
                 } else {
                     var error = "Error encountered. Message was " + $scope.message;
                     $scope.errorMessage = error;

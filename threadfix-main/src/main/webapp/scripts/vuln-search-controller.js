@@ -42,7 +42,12 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     $scope.$on('application', function($event, application) {
         $scope.treeApplication = application;
         $scope.parameters.applications = [ application ];
-    })
+    });
+
+    $scope.$on('team', function($event, team) {
+        $scope.treeTeam = team;
+        $scope.parameters.teams = [ team ];
+    });
 
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
         if (!$scope.teams) {

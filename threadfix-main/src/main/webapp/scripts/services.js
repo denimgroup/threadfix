@@ -128,16 +128,20 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             parameters.genericSeverities.push({ intValue: 5 });
         }
 
-        parameters.teams.forEach(function(filteredTeam) {
-            filteredTeam.id = undefined;
-        });
-        $scope.teams.forEach(function(team) {
+        if ($scope.treeTeam) {
+            $scope.parameters.teams = [ { id: $scope.treeTeam.id } ];
+        } else {
             parameters.teams.forEach(function(filteredTeam) {
-                if (team.name === filteredTeam.name) {
-                    filteredTeam.id = team.id;
-                }
+                filteredTeam.id = undefined;
             });
-        });
+            $scope.teams.forEach(function(team) {
+                parameters.teams.forEach(function(filteredTeam) {
+                    if (team.name === filteredTeam.name) {
+                        filteredTeam.id = team.id;
+                    }
+                });
+            });
+        }
 
         if ($scope.treeApplication) {
             $scope.parameters.applications = [ { id: $scope.treeApplication.id } ];

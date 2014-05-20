@@ -1,6 +1,6 @@
 <div class="accordion-inner" ng-repeat="vulnerability in element.vulns">
     <span ng-hide="treeApplication">
-        <div class="vuln-tree-label">Application</div>{{ vulnerability.team.name }} / {{ vulnerability.app.name }}
+        <div class="vuln-tree-label">Application</div>{{ treeTeam ? vulnerability.team.name : "" }} / {{ vulnerability.app.name }}
         <br>
     </span>
 
