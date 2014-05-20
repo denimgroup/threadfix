@@ -2,6 +2,7 @@
 
     <%@ include file="../successMessage.jspf" %>
 
+    <!-- This is the Action button -->
     <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
         <div ng-if="treeApplication">
             <div ng-show="treeApplication && vulnTree" id="btnDiv" class="btn-group" ng-controller="BulkOperationsController">
@@ -33,6 +34,18 @@
     <div class="filter-controls">
         <h3>Filters</h3>
 
+        <!-- Clear / select all -->
+        <div class="accordion-group">
+            <div class="accordion-heading" style="text-align:center">
+                <a class="btn" ng-click="toggleAllFilters()">
+                    {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showTypeAndMergedControls) ? 'Collapse' : 'Expand' }} All
+                </a>
+                <a class="btn" ng-click="resetFilters()">Clear</a>
+            </div>
+        </div>
+
+
+        <!-- Saved Filters section -->
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showSaveAndLoadControls = !showSaveAndLoadControls">
                 <span class="icon" ng-class="{ 'icon-minus': showSaveAndLoadControls, 'icon-plus': !showSaveAndLoadControls }"></span> Saved Filters
@@ -49,7 +62,6 @@
                     </div>
                     <input style="width: 180px;" placeholder="Enter a name for the filter" ng-model="currentFilterNameInput" type="text"/>
                     <a class="btn btn-primary" ng-hide="savingFilter" ng-disabled="!currentFilterNameInput" ng-click="saveCurrentFilters()">Create</a>
-                    <a class="btn" ng-hide="savingFilter" ng-click="resetFilters()">Clear Filters</a>
                     <button id="loadingButton"
                             ng-show="savingFilter"
                             disabled="disabled"
@@ -72,6 +84,7 @@
             </div>
         </div>
 
+        <!-- Teams and Applications section (should only show on Reports page -->
         <div class="accordion-group" ng-if="!treeApplication && !treeTeam">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
                 <span class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
@@ -142,6 +155,7 @@
             </div>
         </div>
 
+        <!-- Scanner and # Merged controls -->
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showTypeAndMergedControls = !showTypeAndMergedControls">
                 <span class="icon" ng-class="{ 'icon-minus': showTypeAndMergedControls, 'icon-plus': !showTypeAndMergedControls }"></span> Scanner and # Merged

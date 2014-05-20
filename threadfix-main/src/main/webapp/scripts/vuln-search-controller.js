@@ -21,6 +21,22 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
         $scope.refresh();
     }
 
+    $scope.toggleAllFilters = function() {
+        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showDetailsControls || $scope.showDateControls || $scope.showTypeAndMergedControls) {
+            $scope.showSaveAndLoadControls = false;
+            $scope.showTeamAndApplicationControls = false;
+            $scope.showDetailsControls = false;
+            $scope.showDateControls = false;
+            $scope.showTypeAndMergedControls = false;
+        } else {
+            $scope.showSaveAndLoadControls = true;
+            $scope.showTeamAndApplicationControls = true;
+            $scope.showDetailsControls = true;
+            $scope.showDateControls = true;
+            $scope.showTypeAndMergedControls = true;
+        }
+    }
+
     $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);
 
     $scope.maxDate = new Date();
