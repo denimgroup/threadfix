@@ -1,6 +1,6 @@
 <div class="vuln-search-filter-control" style="width:900px;" ng-controller="VulnSearchController">
 
-    <%@ include file="../successMessage.jspf" %>
+    <%--<%@ include file="../successMessage.jspf" %>--%>
 
     <!-- This is the Action button -->
     <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
