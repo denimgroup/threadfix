@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.service.DocumentService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,12 @@ public class DocumentController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
 			return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
 		}
+
+        if (FilenameUtils.getBaseName(file.getOriginalFilename()).length()>Document.MAX_LENGTH_NAME) {
+            return writer.writeValueAsString(RestResponse.failure("File name is too long, max is "
+                    + Document.MAX_LENGTH_NAME + " length."));
+        }
+
 		Document document = documentService.saveFileToApp(appId, file);
 
 		if (document == null) {
@@ -87,6 +94,12 @@ public class DocumentController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)){
             return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
 		}
+
+        if (FilenameUtils.getBaseName(file.getOriginalFilename()).length()>Document.MAX_LENGTH_NAME) {
+            return writer.writeValueAsString(RestResponse.failure("File name is too long, max is "
+                    + Document.MAX_LENGTH_NAME + " length."));
+        }
+
         Document document = documentService.saveFileToVuln(vulnId, file);
 		if (document == null) {
 			log.warn("Saving the document have failed. Returning to file upload page.");

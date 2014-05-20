@@ -47,19 +47,19 @@ public class JobStatusServiceImpl implements JobStatusService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public List<JobStatus> loadAll() {
 		return jobStatusDao.retrieveAll();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public List<JobStatus> loadAllOpen() {
 		return jobStatusDao.retrieveAllOpen();
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public JobStatus loadJobStatus(int id) {
 		return jobStatusDao.retrieveById(id);
 	}

@@ -95,7 +95,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             object.closed = true;
         } else if ($scope.vulnType === 'False Positive') {
             object.falsePositive = true;
+        } else if ($scope.vulnType === 'Hidden') {
+            object.hidden = true;
         }
+
 
         return object;
     }
@@ -369,8 +372,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (s) {
-            $scope.successMessage = "Successfully merged the vulnerability.";
+        modalInstance.result.then(function () {
+            $scope.successMessage = "Successfully submitted the vulnerability.";
             localRefresh();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

@@ -37,8 +37,8 @@ import java.util.Date;
 public class Document extends AuditableEntity {
 
 	private static final long serialVersionUID = -4412241568719564078L;
-	
-	@Size(max = 50, message = "{errors.maxlength} 50.")
+	public static final int MAX_LENGTH_NAME = 256;
+	@Size(max = MAX_LENGTH_NAME, message = "{errors.maxlength} 256.")
 	private String name;
 	
 	private Vulnerability vulnerability;

@@ -37,7 +37,7 @@ import java.security.SecureRandom;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class APIKeyServiceImpl implements APIKeyService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(APIKeyService.class);

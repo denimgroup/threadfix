@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.util;
 
+import javax.xml.stream.events.StartDocument;
+
+import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 public abstract class HandlerWithBuilder extends DefaultHandler {
@@ -37,4 +40,30 @@ public abstract class HandlerWithBuilder extends DefaultHandler {
     	builder.setLength(0);
     	return toReturn;
     }
+	
+	//used for synthesizing raw XML from SAX startElement events
+    protected String makeTag(String name, String qName, Attributes attrs){
+	    
+    	StringBuffer tag = new StringBuffer();
+    	tag.append("<");
+    	if (name != null && name.length()>0){
+    		tag.append(name);
+    	} else {
+    		tag.append(qName);
+    	}
+    	
+    	for (int i = 0; i < attrs.getLength(); i++){
+    		tag.append(" ");
+    		tag.append(attrs.getQName(i));
+    		tag.append("=\"");
+    		//this will probably need entity encoding
+    		tag.append(attrs.getValue(i));
+    		tag.append("\"");
+    	}
+    	
+    	tag.append(">");
+    	return tag.toString();
+    }
+
+	
 }

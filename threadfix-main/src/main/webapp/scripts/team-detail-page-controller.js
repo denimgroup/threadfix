@@ -77,7 +77,8 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
         modalInstance.result.then(function (editedTeam) {
             if (editedTeam) {
-            $scope.successMessage = "Successfully edited team";
+                $scope.team = editedTeam;
+                $scope.successMessage = "Successfully edited team " + editedTeam.name;
             } else {
                 $window.location.href = tfEncoder.encode("/organizations");
             }

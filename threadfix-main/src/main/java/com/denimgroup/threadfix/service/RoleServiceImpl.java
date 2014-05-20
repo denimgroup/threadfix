@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.service;
 import java.util.List;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,11 +112,12 @@ public class RoleServiceImpl implements RoleService {
 		Role databaseRole = loadRole(name.trim());
 		
 		if (databaseRole != null && !databaseRole.getId().equals(role.getId())) {
-			return "A role with this name already exists.";
+            result.rejectValue("displayName", MessageConstants.ERROR_NAMETAKEN);
+			return FIELD_ERROR;
 		}
 		
 		if (name.length() > Role.NAME_LENGTH) {
-			return "The maximum length for name is " + Role.NAME_LENGTH + " characters.";
+			return FIELD_ERROR;
 		}
 		
 		if (databaseRole != null) {

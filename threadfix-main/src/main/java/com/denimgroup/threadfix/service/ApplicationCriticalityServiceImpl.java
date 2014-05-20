@@ -34,7 +34,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationCriticalityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class ApplicationCriticalityServiceImpl implements ApplicationCriticalityService {
 
 	private ApplicationCriticalityDao applicationCriticalityDao;

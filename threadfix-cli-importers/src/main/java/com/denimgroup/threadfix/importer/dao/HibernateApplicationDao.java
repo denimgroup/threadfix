@@ -78,7 +78,7 @@ public class HibernateApplicationDao implements ApplicationDao {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = false) // used to be true
 	public Application retrieveById(int id) {
 		return (Application) getActiveAppCriteria().add(Restrictions.eq("id",id)).uniqueResult();
 	}

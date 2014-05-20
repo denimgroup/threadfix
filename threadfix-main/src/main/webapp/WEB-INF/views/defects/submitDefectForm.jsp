@@ -6,31 +6,37 @@
     </div>
     <div ng-form="form" class="modal-body">
         <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
-        <table ng-show="initialized" class="dataTable">
+        <table ng-show="initialized" class="dataTable" style="text-align: left">
             <tbody>
-                <tr>
-                    <td ng-show="config.typeName === 'Version One' && config.typeName !== 'HP Quality Center'">Sprint</td>
-                    <td ng-show="config.typeName !== 'Version One' && config.typeName !== 'HP Quality Center'">Component</td>
-                    <td ng-hide="config.typeName !== 'HP Quality Center'" class="inputValue">
-                        <select style="width:120px;" ng-model="object.selectedComponent" name="selectedComponent" ng-options="component for component in config.components"></select>
-                    </td>
-                    <td>Priority</td>
+                <tr ng-show="config.typeName === 'Version One' || config.typeName === 'Bugzilla' || config.typeName === 'Jira'">
+                    <td ng-show="config.typeName === 'Version One'">Sprint</td>
+                    <td ng-show="config.typeName === 'Bugzilla' || config.typeName === 'Jira'">Component</td>
                     <td class="inputValue">
-                        <select style="width:120px;" ng-model="object.priority" name="priority" ng-options="priority for priority in config.priorities"></select>
-                    </td>
-                    <td>Status</td>
-                    <td class="inputValue">
-                        <select style="width:120px;" ng-model="object.status" name="status" ng-options="status for status in config.statuses"></select>
+                        <select ng-model="object.selectedComponent" name="selectedComponent" ng-options="component for component in config.components"></select>
                     </td>
                 </tr>
-                <tr ng-hide="config.typeName !== 'Jira' && config.typeName !== 'Version One'">
-                    <td ng-hide="config.typeName !== 'HP Quality Center'">Version</td>
-                    <td ng-hide="config.typeName !== 'HP Quality Center'" class="inputValue">
-                        <select style="width:120px;" ng-model="object.version" name="version" ng-options="version for version in config.versions"></select>
+                <tr>
+                    <td>Priority</td>
+                    <td class="inputValue">
+                        <select ng-model="object.priority" name="priority" ng-options="priority for priority in config.priorities"></select>
                     </td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td class="inputValue">
+                        <select ng-model="object.status" name="status" ng-options="status for status in config.statuses"></select>
+                    </td>
+                </tr>
+                <tr ng-show="config.typeName === 'Bugzilla' || config.typeName === 'HP Quality Center'">
+                    <td>Version</td>
+                    <td class="inputValue">
+                        <select ng-model="object.version" name="version" ng-options="version for version in config.versions"></select>
+                    </td>
+                </tr>
+                <tr ng-show="config.typeName === 'Bugzilla' || config.typeName === 'HP Quality Center'">
                     <td>Severity</td>
                     <td class="inputValue">
-                        <select style="width:120px;" ng-model="object.severity" name="severity" ng-options="severity for severity in config.severities"></select>
+                        <select ng-model="object.severity" name="severity" ng-options="severity for severity in config.severities"></select>
                     </td>
                 </tr>
                 <tr>

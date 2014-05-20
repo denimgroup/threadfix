@@ -20,6 +20,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
 
             if (data.success) {
                 $scope.config = data.object.projectMetadata;
+                $scope.config.typeName = data.object.defectTrackerName;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
                 $scope.config.defects = data.object.defectList.map(function(defect) {

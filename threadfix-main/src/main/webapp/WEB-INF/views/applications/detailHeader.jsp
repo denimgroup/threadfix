@@ -1,11 +1,15 @@
+<%@ include file="/common/taglibs.jsp"%>
 <spring:url value="/organizations/{orgId}" var="orgUrl">
 	<spring:param name="orgId" value="${ application.organization.id }"/>
 </spring:url>
 
+
 <ul class="breadcrumb">
     <li><a id="applicationsIndexLink" href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
-    <li><a id="teamLink" href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
-    <li class="active">Application: <c:out value="${ application.name }"/></li>
+    <li ng-show="application"><a id="teamLink" class="pointer" ng-click="goToTeam(application)">Team: {{ application.team.name }}</a> <span class="divider">/</span></li>
+    <li ng-show="application" class="active">Application: {{ application.name }}</li>
+    <li ng-hide="application"><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
+    <li ng-hide="application" class="active">Application: <c:out value="${ application.name }"/></li>
 </ul>
 
 <div ng-controller="ApplicationPageModalController">
@@ -52,9 +56,6 @@
 
     </h2>
 </div>
-<%--<%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>--%>
-<%--<%@ include file="/WEB-INF/views/applications/modals/manualFindingModal.jsp" %>--%>
-<%--<%@ include file="/WEB-INF/views/applications/modals/scanParametersModal.jsp" %>--%>
 
 <div id="editApplicationModal" class="modal hide fade" tabindex="-1"
 	role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -62,18 +63,6 @@
 		<%@ include file="/WEB-INF/views/applications/forms/editApplicationForm.jsp" %>
 	</div>
 </div> 
-<%--<div id="viewApplicationModal" class="modal hide fade" tabindex="-1"--%>
-	<%--role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-	<%--<div id="viewAppFormDiv">--%>
-		<%--<%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>--%>
-	<%--</div>--%>
-<%--</div>--%>
-<%--<div id="usersModal" class="modal hide fade" tabindex="-1"--%>
-		<%--role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-		<%--<div id="editFormDiv">--%>
-			<%--<%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>--%>
-		<%--</div>--%>
-<%--</div>--%>
 <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
-<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
+<%@ include file="/WEB-INF/views/errorMessage.jspf"%>

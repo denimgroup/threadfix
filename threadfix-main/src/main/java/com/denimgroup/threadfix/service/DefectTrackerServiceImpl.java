@@ -41,7 +41,7 @@ import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class DefectTrackerServiceImpl implements DefectTrackerService {
 
 	private DefectTrackerDao defectTrackerDao = null;

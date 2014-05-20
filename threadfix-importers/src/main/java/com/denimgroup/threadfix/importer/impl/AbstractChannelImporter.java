@@ -72,7 +72,7 @@ import java.util.zip.ZipFile;
  * @author mcollins
  * 
  */
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public abstract class AbstractChannelImporter extends SpringBeanAutowiringSupport implements ChannelImporter {
 	
 	// this.getClass() will turn into the individual importer name at runtime.
@@ -80,7 +80,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 	
 	protected enum FindingKey {
-		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE
+		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL, RECOMMENDATION, RAWFINDING
 	}
 	
 	// A stream pointing to the scan's contents. Set with either setFile or
@@ -246,7 +246,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
-			return new BigInteger(1, messageDigest.digest()).toString(16);
+			log.debug("REMOVEME: To be hashed (not including quotes):'" + toHash+"'");
+			String hash = new BigInteger(1, messageDigest.digest()).toString(16);
+			log.debug("Hash: " + hash);
+			return hash;
 		} catch (NoSuchAlgorithmException e) {
 			log.error("Can't find MD5 hash function to hash finding info", e);
 			return null;
@@ -267,7 +270,13 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 				findingMap.get(FindingKey.PARAMETER),
 				findingMap.get(FindingKey.VULN_CODE),
 				findingMap.get(FindingKey.SEVERITY_CODE),
-				findingMap.get(FindingKey.CWE));
+				findingMap.get(FindingKey.CWE),
+				findingMap.containsKey(FindingKey.VALUE) ? findingMap.get(FindingKey.VALUE) : null,
+				findingMap.containsKey(FindingKey.REQUEST) ? findingMap.get(FindingKey.REQUEST) : null,
+				findingMap.containsKey(FindingKey.RESPONSE) ? findingMap.get(FindingKey.RESPONSE) : null,
+				findingMap.containsKey(FindingKey.DETAIL) ? findingMap.get(FindingKey.DETAIL) : null,
+				findingMap.containsKey(FindingKey.RECOMMENDATION) ? findingMap.get(FindingKey.RECOMMENDATION) : null,
+				findingMap.containsKey(FindingKey.RAWFINDING) ? findingMap.get(FindingKey.RAWFINDING) : null);
 	}
 
 	/**
@@ -288,13 +297,53 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 */
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
-    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
+		   		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
+    	return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, cweCode, null, null, null, null, null, null);
+	}
+    
+    @Nullable
+	protected Finding constructFinding(String url, String parameter,
+		   		String channelVulnerabilityCode, String channelSeverityCode, String cweCode, String parameterValue, String request, String response) {
+    	return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, cweCode, parameterValue, request, response, null, null, null);
+	}
+  
+	/**
+	 *
+	 * This method can be used to construct a finding out of the 
+	 * important common information that findings have.
+	 * @param url
+	 * @param parameter
+	 * @param channelVulnerabilityCode
+	 * @param channelSeverityCode
+	 * @param cweCode 
+	 * @param parameterValue
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+     protected Finding constructFinding(String url, String parameter, 
+		    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode, String parameterValue,
+		    		String request, String response, String detail, String recommendation, String rawFinding) {
+    	 
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
 			return null;
 		}
     	
     	Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
+		
+		// unify URLs 
+		Map<String,String> patterns = new HashMap<String,String>();
+		patterns.put(";jsessionid=.*",";jsessionid=[removed]");
+		patterns.put("/_ns:.*?/","/_ns:[removed]/");
+		patterns.put("=[^/]*","=[removed]");
+		
+		for ( String match : patterns.keySet()){
+			if (url.matches(".*"+match+".*")){
+				url = url.replaceAll(match, patterns.get(match));
+			}
+		}
+		
 		
 		if (url != null && !url.isEmpty()) {
 			try {
@@ -334,6 +383,30 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		}
 		
 		finding.setSurfaceLocation(location);
+
+		if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
+			parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setAttackString(parameterValue);
+		
+		if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
+			request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";		
+		finding.setAttackRequest(request);
+			
+		if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
+			response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setAttackResponse(response);
+						
+		if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH)
+			detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setScannerDetail(detail);
+		
+		if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH)
+			recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setScannerRecommendation(recommendation);
+		
+		if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
+			rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
+		finding.setRawFinding(rawFinding);
 		
 		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
@@ -646,9 +719,9 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 					int result = scan.getImportTime().compareTo(testDate);
 					if (result == 0) {
 						return ScanImportStatus.DUPLICATE_ERROR;
-					} else if (result > 0) {
-						return ScanImportStatus.OLD_SCAN_ERROR;
-					}
+					} //else if (result > 0) {
+					//	return ScanImportStatus.OLD_SCAN_ERROR;
+					//}
 				}
 			}
 		}

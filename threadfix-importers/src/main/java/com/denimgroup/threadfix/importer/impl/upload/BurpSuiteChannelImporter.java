@@ -23,24 +23,27 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.importer.util.DateUtils;
-import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import com.denimgroup.threadfix.importer.util.RegexUtils;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 
 /**
  * 
@@ -53,6 +56,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String REST_URL_PARAM = "REST URL parameter";
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
 	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<>();
+	private static Pattern pattern = Pattern.compile("The payload <b>(.*)</b> was submitted");
 	static {
 		SEVERITY_MAP.put("deformation", "Information");
 		SEVERITY_MAP.put("eddium", "Medium");
@@ -68,7 +72,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public Scan parseInput() {
-		cleanInputStream();
+		//cleanInputStream();
 		return parseSAXInput(new BurpSuiteSAXParser());
 	}
 	
@@ -109,7 +113,20 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		private boolean getHostText           = false;
 		private boolean getBackupParameter    = false;
 		private boolean getSerialNumber       = false;
-		
+		private boolean getParamValueText	  = false;
+		private boolean getRequestText		  = false;
+		private boolean getResponseText       = false;
+		private boolean getScannerDetail      = false;
+		private boolean getScannerRecommendation = false;
+		private boolean getRawFinding		  = false;
+		private boolean isBase64Encoded		  = false;
+		 		
+		private String currentScannerDetail   = null;
+		private String currentScannerRecommendation = null;
+		private StringBuffer currentRawFinding	  = new StringBuffer();
+		private String currentParameterValue  = null;
+		private String currentRequest         = null;
+		private String currentResponse        = null;
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
@@ -121,11 +138,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		
 		private void add(Finding finding) {
 			if (finding != null) {
-				if (currentSerialNumber != null) {
-					finding.setNativeId(currentSerialNumber);
-				} else {
+//				if (currentSerialNumber != null) {
+//					finding.setNativeId(currentSerialNumber);
+//				} else {
 					finding.setNativeId(getNativeId(finding));
-				}
+//				}
 				
 	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);
@@ -141,20 +158,46 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    {
 	    	if ("type".equals(qName)) {
 	    		getChannelVulnText = true;
+	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("location".equals(qName)) {
 	    		getUrlText = true;
+	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("serialNumber".equals(qName)) {
 	    		getSerialNumber = true;
+	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("host".equals(qName)) {
 	    		getHostText = true;
+	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("severity".equals(qName)) {
 	    		getSeverityText = true;
+	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("issues".equals(qName)) {
 	    		date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss zzz yyyy", atts.getValue("exportTime"));
+	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("request".equals(qName)) {
 	    		getBackupParameter = true;
+	    		getRequestText = true;
+	    		isBase64Encoded = "true".equals(atts.getValue("base64")) ? true : false;
+	    		getBuilderText(); //resets the stringbuffer
+	    	} else if ("response".equals(qName)) {
+	    		getResponseText = true;
+	    		isBase64Encoded = "true".equals(atts.getValue("base64")) ? true : false;
+	    		getBuilderText(); //resets the stringbuffer
+	    	} else if ("issueDetail".equals(qName)) {
+	    		getParamValueText = true;
+	    		getScannerDetail = true;
+	    		getBuilderText(); //resets the stringbuffer
+	    	} else if ("remediationDetail".equals(qName)) {
+	    		getScannerRecommendation = true;
+	    		getBuilderText(); //resets the stringbuffer
+	    	} else if ("issue".equals(qName)){
+	    		getRawFinding = true;
+	    		getBuilderText(); //resets the stringbuffer
 	    	}
-	    }
+	    	if (getRawFinding){
+	    		currentRawFinding.append(makeTag(name, qName , atts));
+	    	}
+	    }	    
 
 	    public void endElement (String uri, String name, String qName)
 	    {
@@ -179,6 +222,36 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if (getSerialNumber) {
 	    		currentSerialNumber = getBuilderText();
 	    		getSerialNumber = false;
+	    	} else if (getParamValueText) {
+    		    currentParameterValue = getBuilderText();
+    		    currentScannerDetail = currentParameterValue;
+    		    Matcher m = pattern.matcher(currentParameterValue);
+	    		if (m.find()){
+	    			currentParameterValue = m.group(1);
+	    		} else {
+	    			currentParameterValue = "";
+	    		}
+	    		getParamValueText = false;
+	    	} else if (getRequestText) {
+	    		currentRequest = getBuilderText();
+	    		if (currentRequest != null)
+	    			try {
+	    				if (isBase64Encoded) 
+	    					currentRequest = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentRequest));
+	    			}catch(Exception ignored){
+	    				//sometimes the content throws an exception when decoding.  If so, just leave as-is
+	    			}
+	    		getRequestText = false;
+	    	} else if (getResponseText) {
+	    		currentResponse = getBuilderText();
+	    		if (currentResponse != null)
+	    			try{
+	    				if (isBase64Encoded) 
+	    					currentResponse = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentResponse));
+	    			}catch(Exception ignored){
+	    				//sometimes the content throws an exception when decoding.  If so, just leave as-is
+	    			}
+	    		getResponseText = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
 	    		getSeverityText = false;
@@ -194,6 +267,13 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		
 	    		getBackupParameter = false;
+	    	} else if (getScannerRecommendation){
+	    		currentScannerRecommendation = getBuilderText();
+	    		getScannerRecommendation = false;
+	    	}
+	    	//if we're inside an <issue/>
+	    	if (getRawFinding){
+	    		currentRawFinding.append("</" + qName + ">\n");
 	    	}
 	    	
 	    	if ("issue".equals(qName)) {
@@ -210,11 +290,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    			currentParameter = "";
 	    		}
 	    		
-	    		if (SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
+	    		if (currentSeverityCode != null && SEVERITY_MAP.containsKey(currentSeverityCode.toLowerCase()) && SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
 	    			currentSeverityCode = SEVERITY_MAP.get(currentSeverityCode.toLowerCase());
 	    		}
 	    		Finding finding = constructFinding(currentHostText + currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
+	    				currentChannelVulnCode, currentSeverityCode, null, currentParameterValue, currentRequest, currentResponse, currentScannerDetail, currentScannerRecommendation, currentRawFinding.toString());
 	    		
 	    		add(finding);
 	    		
@@ -224,14 +304,27 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		currentUrlText         = null;
 	    		currentSerialNumber    = null;
 	    		currentBackupParameter = null;
+	    		currentParameterValue  = null;
+	    		currentRequest         = null;
+	    		currentResponse        = null;
+	    		currentScannerDetail   = null;
+	    		currentScannerRecommendation = null;
+	    		
+	    		getRawFinding = false;
+	    		currentRawFinding.setLength(0);
 	    	}
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (getChannelVulnText || getHostText || getUrlText || getParamText || 
-	    			getSeverityText || getBackupParameter || getSerialNumber) {
+	    			getSeverityText || getBackupParameter || getSerialNumber ||
+	    			getParamValueText || getRequestText || getResponseText || 
+	    			getScannerDetail || getScannerRecommendation ) {
 	    		addTextToBuilder(ch,start,length);
+	    	}
+	    	if (getRawFinding){
+	    		currentRawFinding.append(ch, start, length);
 	    	}
 	    }
 	}

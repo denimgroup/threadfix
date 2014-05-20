@@ -39,6 +39,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
 
                    $scope.config.application.organization = $scope.config.application.team;
+                   $scope.$parent.application = $scope.config.application;
                } else {
                    $log.info("HTTP request for form objects failed. Error was " + data.message);
                }
@@ -94,6 +95,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         } else if (name === 'createDefectTracker') {
             $scope.showCreateDefectTrackerModal();
+        } else if (name === 'goToWaf') {
+            $scope.goToWaf();
         }
     });
 
@@ -126,7 +129,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (application) {
             $scope.config.application = application;
-            $scope.successMessage = "Successfully edited application " + application.name;
+            $scope.$parent.application = application;
+            $scope.$parent.successMessage = "Successfully edited application " + application.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -365,6 +369,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $log.info('Modal dismissed at: ' + new Date());
         });
 
-    }
+    };
+
+    $scope.goToWaf = function() {
+        window.location.href = tfEncoder.encode("/wafs/" + $scope.config.application.waf.id);
+    };
 
 })

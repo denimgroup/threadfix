@@ -245,7 +245,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
 
             calculateShowImportAll(provider);
 
-            $scope.successMessage = "Successfully edited tracker " + editedApp.name;
+            $scope.successMessage = "Successfully edited mapping for " + provider.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
