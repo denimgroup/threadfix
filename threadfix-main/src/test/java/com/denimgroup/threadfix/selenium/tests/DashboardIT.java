@@ -69,7 +69,7 @@ public class DashboardIT extends BaseIT {
     public void dashboardRecentCommentsDisplayTest() {
         String teamName = "dashboardGraphTestTeam" + getRandomString(3);
         String appName = "dashboardGraphTestApp" + getRandomString(3);
-        String commentText = "This is a test comment.";
+        String commentText = "comment text comment text";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -85,6 +85,7 @@ public class DashboardIT extends BaseIT {
                 .clickSubmitComment();
 
         DashboardPage dashboardPage = vulnerabilityDetailPage.clickDashboardLink();
+        dashboardPage.clickDashboardLink();
         sleep(5000);
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
