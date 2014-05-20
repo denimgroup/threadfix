@@ -49,8 +49,6 @@ public enum ScannerType {
 	SENTINEL("whitehat", "WhiteHat Sentinel"),
 	VERACODE("veracode", "Veracode"),
 	MANUAL("manual", "Manual");
-//	SSVL("ssvl","SSVL");
-
 
 	private String fullName;
 	private String shortName;

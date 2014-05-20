@@ -38,6 +38,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -178,26 +180,21 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
 	    	}
 	    	
 	    	if ("vulnerability".equals(qName)) {
-	    		
-	    		//fix up URI based attacks so they don't pollute the scan with lots of vulnerabilities
-	    		
-	    		if ("URI-BASED".equals(currentParameter) && currentParameterValue != null){
-	    			String textToRemove = currentParameterValue;
-	    			currentUrlText = currentUrlText.replace(textToRemove,"");
-	    			//ridonkulous
-	    			textToRemove = java.net.URLEncoder.encode(textToRemove).replace("%28","(").replace("%29",")"); //.net url encoder ignores ()
-	    			currentUrlText = currentUrlText.replaceAll("(?i)"+java.util.regex.Pattern.quote(textToRemove),""); //(?i) makes it case insensitive, quote lets () into regex
 
-	    			//next we try replacing a version with a modified attack value (because they report it wrong)
-	    			textToRemove = currentParameterValue.replaceAll("netsparker", "alert");
-	    			currentUrlText = currentUrlText.replace(textToRemove,"");
-	    			//ridonkulous
-	    			textToRemove = java.net.URLEncoder.encode(textToRemove).replace("%28","(").replace("%29",")"); //.net url encoder ignores ()
-	    			currentUrlText = currentUrlText.replaceAll("(?i)"+java.util.regex.Pattern.quote(textToRemove),""); //(?i) makes it case insensitive, quote lets () into regex
-	    		}
-	    		
-	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode, currentCwe, currentParameterValue, currentRequest, currentResponse, currentDescription, null, currentRawFinding.toString());
+                Map<FindingKey, String> findingMap = new HashMap<>();
+                findingMap.put(FindingKey.PATH, currentUrlText);
+                findingMap.put(FindingKey.PARAMETER, currentParameter);
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                findingMap.put(FindingKey.CWE, currentCwe);
+                findingMap.put(FindingKey.VALUE, currentParameterValue);
+                findingMap.put(FindingKey.REQUEST, currentRequest);
+                findingMap.put(FindingKey.RESPONSE, currentResponse);
+                findingMap.put(FindingKey.DETAIL, currentDescription);
+                findingMap.put(FindingKey.RECOMMENDATION, null);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+	    		Finding finding = constructFinding(findingMap);
 	    		
 	    		// The old XML format didn't include severities. As severities are required
 	    		// for vulnerabilities to show on the application page, let's assign medium 

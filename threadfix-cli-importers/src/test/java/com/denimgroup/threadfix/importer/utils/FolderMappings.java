@@ -33,8 +33,6 @@ public class FolderMappings {
         addToMap(ScannerType.FORTIFY, "Static/Fortify");
         addToMap(ScannerType.DEPENDENCY_CHECK, "Static/DependencyCheck");
         addToMap(ScannerType.MANUAL, "Manual/SSVL");
-//        addToMap(ScannerType.SSVL, "Manual/SSVL");
-//        addToMap(ScannerType.MANUAL, "Manual/Manual");
     }
 
     private static void addToMap(ScannerType type, String fileKey) {

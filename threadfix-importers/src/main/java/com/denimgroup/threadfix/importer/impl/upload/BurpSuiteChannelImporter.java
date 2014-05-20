@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,7 +73,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	@Override
 	public Scan parseInput() {
-		//cleanInputStream();
+		cleanInputStream();
 		return parseSAXInput(new BurpSuiteSAXParser());
 	}
 	
@@ -138,11 +139,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 		
 		private void add(Finding finding) {
 			if (finding != null) {
-//				if (currentSerialNumber != null) {
-//					finding.setNativeId(currentSerialNumber);
-//				} else {
+				if (currentSerialNumber != null) {
+					finding.setNativeId(currentSerialNumber);
+				} else {
 					finding.setNativeId(getNativeId(finding));
-//				}
+				}
 				
 	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);
@@ -293,8 +294,21 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		if (currentSeverityCode != null && SEVERITY_MAP.containsKey(currentSeverityCode.toLowerCase()) && SEVERITY_MAP.get(currentSeverityCode.toLowerCase()) != null) {
 	    			currentSeverityCode = SEVERITY_MAP.get(currentSeverityCode.toLowerCase());
 	    		}
-	    		Finding finding = constructFinding(currentHostText + currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode, null, currentParameterValue, currentRequest, currentResponse, currentScannerDetail, currentScannerRecommendation, currentRawFinding.toString());
+
+                Map<FindingKey, String> findingMap = new HashMap<>();
+                findingMap.put(FindingKey.PATH, currentHostText + currentUrlText);
+                findingMap.put(FindingKey.PARAMETER, currentParameter);
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                findingMap.put(FindingKey.CWE, null);
+                findingMap.put(FindingKey.VALUE, currentParameterValue);
+                findingMap.put(FindingKey.REQUEST, currentRequest);
+                findingMap.put(FindingKey.RESPONSE, currentResponse);
+                findingMap.put(FindingKey.DETAIL, currentScannerDetail);
+                findingMap.put(FindingKey.RECOMMENDATION, currentScannerRecommendation);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+	    		Finding finding = constructFinding(findingMap);
 	    		
 	    		add(finding);
 	    		
