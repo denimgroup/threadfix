@@ -114,7 +114,8 @@ class BrakemanChannelImporter extends AbstractChannelImporter {
 		if (inputStream == null) {
 			return null;
 		}
-		
+
+        Map<FindingKey, String> findingMap = new HashMap<>();
 		Scan scan = new Scan();
 		scan.setFindings(new ArrayList<Finding>());
 		scan.setApplicationChannel(applicationChannel);
@@ -205,12 +206,16 @@ class BrakemanChannelImporter extends AbstractChannelImporter {
 					if (isVersion2) {
 						parameter = jsonItem.getString("user_input");
 					}
-					
-					Finding finding = constructFinding(jsonItem.getString("file"),
-													   parameter,
-													   jsonItem.getString("warning_type"),
-													   severityCode);
-					
+
+                    findingMap.put(FindingKey.PATH, jsonItem.getString("file"));
+                    findingMap.put(FindingKey.PARAMETER, parameter);
+                    findingMap.put(FindingKey.VULN_CODE, jsonItem.getString("warning_type"));
+                    findingMap.put(FindingKey.SEVERITY_CODE, severityCode);
+                    findingMap.put(FindingKey.DETAIL, jsonItem.getString("message"));
+                    findingMap.put(FindingKey.RAWFINDING, jsonItem.toString());
+
+                    Finding finding = constructFinding(findingMap);
+
 					if (finding != null) {
 						finding.setIsStatic(true);
 						finding.setNativeId(hashFindingInfo(jsonItem.toString(),null,null));
