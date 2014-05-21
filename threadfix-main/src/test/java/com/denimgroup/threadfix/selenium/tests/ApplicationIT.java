@@ -72,7 +72,6 @@ public class ApplicationIT extends BaseIT {
                 .saveApplication()
                 .clickApplicationName(appName);
 
-        sleep(5000);
         assertTrue("The name was not preserved correctly on Application Detail Page.",
                 ap.getNameText().contains(appName));
     }
