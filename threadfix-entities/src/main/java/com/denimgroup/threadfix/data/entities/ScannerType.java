@@ -50,7 +50,6 @@ public enum ScannerType {
 	VERACODE("veracode", "Veracode"),
 	MANUAL("manual", "Manual");
 
-
 	private String fullName;
 	private String shortName;
 	

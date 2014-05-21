@@ -85,48 +85,54 @@ public class ApplicationMergerImpl implements ApplicationMerger {
 
 		ScanStatisticsUpdater scanStatisticsUpdater = new ScanStatisticsUpdater(scan, scanDao, 
 				jobStatusService, statusId);
-		
-		for (Finding finding : scan.getFindings()) {
-			scanStatisticsUpdater.doFindingCountUpdate();
-			
-			boolean match = false;
 
-			for (Vulnerability vuln : oldGuesser.getPossibilities(finding)) {
-				totalCount++;
-				match = matcher.doesMatch(finding, vuln);
-				if (match) {
-					scanStatisticsUpdater.addFindingToOldVulnUpdate(finding, vuln);
-					VulnerabilityParser.addToVuln(vuln, finding);
-					break;
-				}
-			}
+        if (application.getSkipApplicationMerge()) {
+            for (Finding finding : scan.getFindings()) {
+                Vulnerability newVuln = VulnerabilityParser.parse(finding);
+                scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
+            }
+        } else {
+            for (Finding finding : scan.getFindings()) {
+                scanStatisticsUpdater.doFindingCountUpdate();
 
-			// if the generated vulnerability didn't match any that were in the
-			// db, compare it to valid new vulns still in memory
-			if (!match) {
-				for (Vulnerability newVuln : newGuesser.getPossibilities(finding)) {
-					totalCount++;
-					match = matcher.doesMatch(finding, newVuln);
-					if (match) {
-						scanStatisticsUpdater.addFindingToInScanVulnUpdate(finding);
-						VulnerabilityParser.addToVuln(newVuln, finding);
-						break;
-					}
-				}
-			}
+                boolean match = false;
 
-			// if it wasn't found there either, we need to save it.
-			// it gets counted as new if a vuln is successfully parsed.
-			if (!match) {
-				Vulnerability newVuln = VulnerabilityParser.parse(finding);
-				scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
-				if (newVuln != null) {
-					newGuesser.add(newVuln);
-				}
-			}
-		}
-		
-		log.info("Did " + totalCount + " comparisons while merging.");
-		log.info("Merging took " + (System.currentTimeMillis() - timeNow) + " ms.");
-	}
+                for (Vulnerability vuln : oldGuesser.getPossibilities(finding)) {
+                    totalCount++;
+                    match = matcher.doesMatch(finding, vuln);
+                    if (match) {
+                        scanStatisticsUpdater.addFindingToOldVulnUpdate(finding, vuln);
+                        VulnerabilityParser.addToVuln(vuln, finding);
+                        break;
+                    }
+                }
+
+                // if the generated vulnerability didn't match any that were in the
+                // db, compare it to valid new vulns still in memory
+                if (!match) {
+                    for (Vulnerability newVuln : newGuesser.getPossibilities(finding)) {
+                        totalCount++;
+                        match = matcher.doesMatch(finding, newVuln);
+                        if (match) {
+                            scanStatisticsUpdater.addFindingToInScanVulnUpdate(finding);
+                            VulnerabilityParser.addToVuln(newVuln, finding);
+                            break;
+                        }
+                    }
+                }
+
+                // if it wasn't found there either, we need to save it.
+                // it gets counted as new if a vuln is successfully parsed.
+                if (!match) {
+                    Vulnerability newVuln = VulnerabilityParser.parse(finding);
+                    scanStatisticsUpdater.addFindingToNewVulnUpdate(finding, newVuln);
+                    if (newVuln != null) {
+                        newGuesser.add(newVuln);
+                    }
+                }
+            }
+        }
+        log.info("Did " + totalCount + " comparisons while merging.");
+        log.info("Merging took " + (System.currentTimeMillis() - timeNow) + " ms.");
+    }
 }

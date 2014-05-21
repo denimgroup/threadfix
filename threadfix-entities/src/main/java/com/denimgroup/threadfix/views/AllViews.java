@@ -6,4 +6,5 @@ public class AllViews {
 
     public static class FormInfo {}
 
+    public static class VulnSearch {}
 }

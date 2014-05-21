@@ -78,10 +78,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	// this.getClass() will turn into the individual importer name at runtime.
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	protected static final String FILE_CHECK_COMPLETED = "File check completed.";
-	
-	protected enum FindingKey {
-		VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE
-	}
+
+    protected enum FindingKey {
+        VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL, RECOMMENDATION, RAWFINDING
+    }
 	
 	// A stream pointing to the scan's contents. Set with either setFile or
 	// setFileName.
@@ -246,28 +246,14 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		try {
 			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 			messageDigest.update(toHash.toString().getBytes(), 0, toHash.length());
-			return new BigInteger(1, messageDigest.digest()).toString(16);
+			log.debug("REMOVEME: To be hashed (not including quotes):'" + toHash+"'");
+			String hash = new BigInteger(1, messageDigest.digest()).toString(16);
+			log.debug("Hash: " + hash);
+			return hash;
 		} catch (NoSuchAlgorithmException e) {
 			log.error("Can't find MD5 hash function to hash finding info", e);
 			return null;
 		}
-	}
-	
-	/*
-	 * This method can be used to construct a finding out of the
-	 * important common information that findings have.
-	 */
-    @Nullable
-	protected Finding constructFinding(Map<FindingKey, String> findingMap) {
-		if (findingMap == null || findingMap.size() == 0) {
-			return null;
-		}
-		
-		return constructFinding(findingMap.get(FindingKey.PATH),
-				findingMap.get(FindingKey.PARAMETER),
-				findingMap.get(FindingKey.VULN_CODE),
-				findingMap.get(FindingKey.SEVERITY_CODE),
-				findingMap.get(FindingKey.CWE));
 	}
 
 	/**
@@ -278,7 +264,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
 			String channelVulnerabilityCode, String channelSeverityCode) {
-		return constructFinding(url, parameter, channelVulnerabilityCode, channelSeverityCode, null);
+        Map<FindingKey, String> findingMap = new HashMap<>();
+        findingMap.put(FindingKey.PATH, url);
+        findingMap.put(FindingKey.PARAMETER, parameter);
+        findingMap.put(FindingKey.VULN_CODE, channelVulnerabilityCode);
+        findingMap.put(FindingKey.SEVERITY_CODE, channelSeverityCode);
+		return constructFinding(findingMap);
 	}
 	
 	/**
@@ -288,7 +279,40 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 	 */
     @Nullable
 	protected Finding constructFinding(String url, String parameter,
-    		String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
+               String channelVulnerabilityCode, String channelSeverityCode, String cweCode) {
+        Map<FindingKey, String> findingMap = new HashMap<>();
+        findingMap.put(FindingKey.PATH, url);
+        findingMap.put(FindingKey.PARAMETER, parameter);
+        findingMap.put(FindingKey.VULN_CODE, channelVulnerabilityCode);
+        findingMap.put(FindingKey.SEVERITY_CODE, channelSeverityCode);
+        findingMap.put(FindingKey.CWE, cweCode);
+    	return constructFinding(findingMap);
+	}
+    
+    /*
+     * This method can be used to construct a finding out of the
+     * important common information that findings have.
+     */
+    @Nullable
+     protected Finding constructFinding(Map<FindingKey, String> findingMap) {
+
+         if (findingMap == null || findingMap.size() == 0) {
+             return null;
+         }
+
+         String url = findingMap.get(FindingKey.PATH);
+         String parameter = findingMap.get(FindingKey.PARAMETER);
+         String channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE);
+         String channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE);
+         String cweCode = findingMap.get(FindingKey.CWE);
+         String parameterValue = findingMap.containsKey(FindingKey.VALUE) ? findingMap.get(FindingKey.VALUE) : null;
+         String request = findingMap.containsKey(FindingKey.REQUEST) ? findingMap.get(FindingKey.REQUEST) : null;
+         String response = findingMap.containsKey(FindingKey.RESPONSE) ? findingMap.get(FindingKey.RESPONSE) : null;
+         String detail = findingMap.containsKey(FindingKey.DETAIL) ? findingMap.get(FindingKey.DETAIL) : null;
+         String recommendation = findingMap.containsKey(FindingKey.RECOMMENDATION) ? findingMap.get(FindingKey.RECOMMENDATION) : null;
+         String rawFinding = findingMap.containsKey(FindingKey.RAWFINDING) ? findingMap.get(FindingKey.RAWFINDING) : null;
+
+    	 
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
 			return null;
 		}

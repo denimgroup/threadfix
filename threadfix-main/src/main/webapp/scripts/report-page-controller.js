@@ -130,6 +130,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadReport = function() { loadReport(); }
 
     $scope.updateOptions = function(tab) {
+        $scope.vulnSearch = false;
         $scope.options = tab.options;
         $scope.reportId = tab.options[0].id;
 
@@ -137,10 +138,14 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.$on('rootScopeInitialized', function() {
-        threadfixAPIService.getTeams().
+        threadfixAPIService.getVulnSearchParameters().
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.teams = data.object;
+                    $scope.teams = data.object.teams;
+                    $scope.scanners = data.object.scanners;
+                    $scope.genericVulnerabilities = data.object.vulnTypes;
+                    $scope.applications = data.object.applications;
+                    $scope.savedFilters = data.object.savedFilters;
 
                     $scope.teams.sort(nameCompare)
 
@@ -265,6 +270,12 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 return 0;
             }
         });
+    }
+
+    $scope.loadVulnSearch = function() {
+        $scope.vulnSearch = true;
+        $scope.$broadcast('loadVulnerabilitySearchTable');
+
     }
 
 });

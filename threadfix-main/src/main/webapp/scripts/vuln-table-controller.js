@@ -34,7 +34,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode(currentUrl + "/vulnerabilities/" + vuln.id + "/addComment");
+                    return tfEncoder.encode(rl + "/vulnerabilities/" + vuln.id + "/addComment");
                 },
                 object: function () {
                     return {};

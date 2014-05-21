@@ -36,6 +36,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);
 
+                   $rootScope.$broadcast('loadVulnerabilitySearchTable');
+
                    $scope.config.application.organization = $scope.config.application.team;
                    $scope.$parent.application = $scope.config.application;
                } else {
@@ -50,7 +52,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     });
 
     $scope.updateDefectStatus = function() {
-        $http.get(tfEncoder.encode("/defects/update")).
+        $http.get(tfEncoder.encode(currentUrl + "/defects/update")).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
