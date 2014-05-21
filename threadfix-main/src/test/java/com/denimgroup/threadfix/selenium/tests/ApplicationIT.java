@@ -57,8 +57,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testCreateBasicApplicationDisplayedApplicationDetailPage() {
-        String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
-        String appName = "testCreateBasicApplicationApp" + getRandomString(3);
+        String teamName = "TeamName" + getRandomString(3);
+        String appName = "AppName" + getRandomString(3);
         String urlText = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
@@ -66,18 +66,15 @@ public class ApplicationIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        //Create Team & Application
-        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
+        //Create Application
+        ApplicationDetailPage ap = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, urlText, "Low")
-                .saveApplication();
+                .saveApplication()
+                .clickApplicationName(appName);
 
-        //Navigate to Application Detail Page
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
+        sleep(5000);
         assertTrue("The name was not preserved correctly on Application Detail Page.",
-                applicationDetailPage.getNameText().contains(appName));
+                ap.getNameText().contains(appName));
     }
 
     //Validation Test

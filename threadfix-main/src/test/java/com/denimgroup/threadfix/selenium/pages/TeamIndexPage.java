@@ -186,26 +186,35 @@ public class TeamIndexPage extends BasePage {
     }
 
     public TeamIndexPage setApplicationName(String appName, String teamName) {
+        sleep(1000);
         driver.findElementById("applicationNameInput").clear();
         driver.findElementById("applicationNameInput").sendKeys(appName);
         return setPage();
     }
 
     public TeamIndexPage setApplicationUrl(String url) {
+        sleep(1000);
         driver.findElementById("applicationUrlInput").clear();
         driver.findElementById("applicationUrlInput").sendKeys(url);
         return setPage();
     }
 
     public TeamIndexPage setApplicationCriticality(String criticality) {
+        sleep(1000);
         new Select(driver.findElementById("criticalityIdSelect")).selectByVisibleText(criticality);
         return setPage();
     }
 
     public TeamIndexPage saveApplication() {
         driver.findElementById("submit").click();
-        sleep(3000);
+        sleep(5000);
         return new TeamIndexPage(driver);
+    }
+
+    public ApplicationDetailPage clickApplicationName(String appName) {
+        sleep(1000);
+        driver.findElementByLinkText(appName).click();
+        return new ApplicationDetailPage(driver);
     }
 
     public TeamIndexPage saveApplicationInvalid() {
