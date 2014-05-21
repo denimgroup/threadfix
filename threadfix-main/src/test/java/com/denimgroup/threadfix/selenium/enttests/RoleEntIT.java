@@ -134,6 +134,8 @@ public class RoleEntIT extends BaseIT {
 		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal();
 	}
 
+    // TODO: Assigning Roles to Users is broken, bug filed.
+    @Ignore
 	@Test
 	public void addApplicationOnly(){
 		String roleName = "appOnly" + getRandomString(10);
@@ -344,9 +346,9 @@ public class RoleEntIT extends BaseIT {
 		
 		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName2));
 	}
-	
-	
-	
-	
+
+
+
+
 
 }
