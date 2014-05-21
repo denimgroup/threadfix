@@ -23,11 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.remote;
 
+import com.denimgroup.threadfix.VulnerabilityInfo;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
@@ -171,8 +174,8 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	public RestResponse<Organization> searchForTeamByName(String name) {
 		return httpRestUtils.httpGet("/teams/lookup", "&name=" + name, Organization.class);
     }
-	
-	public void setKey(String key) {
+
+    public void setKey(String key) {
         propertiesManager.setKey(key);
 	}
 
@@ -271,4 +274,41 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								filePath, column, lineText, lineNumber }, Finding.class);
 	}
 
+
+    @Override
+    public RestResponse<Vulnerability[]> searchVulnerabilities(VulnerabilitySearchParameters parameters) {
+        assert parameters != null;
+        return null;
+    }
+
+    // TODO find a better way to serialize this into a VulnerabilitySearchParameters form.
+    @Override
+    public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds,
+               List<Integer> teamIds, List<Integer> applicationIds, List<String> scannerNames,
+               List<Integer> genericSeverityValues, Integer numberVulnerabilities, String parameter, String path,
+               Date startDate, Date endDate, Boolean showOpen, Boolean showClosed, Boolean showFalsePositive,
+               Boolean showHidden, Integer numberMerged) {
+        List<String> paramNames  = new ArrayList<String>();
+        List<String> paramValues = new ArrayList<String>();
+
+        addArrayFields(genericVulnerabilityIds, "genericVulnerabilities", "id", paramNames, paramValues);
+        addArrayFields(teamIds, "teams", "id", paramNames, paramValues);
+        addArrayFields(applicationIds, "applications", "id", paramNames, paramValues);
+        addArrayFields(genericSeverityValues, "genericSeverities", "intValue", paramNames, paramValues);
+        addArrayFields(scannerNames, "channelTypes", "name", paramNames, paramValues);
+
+        assert paramNames.size() == paramValues.size() : "Mismatched param names and values. This probably won't work.";
+
+        return httpRestUtils.httpPost("/vulnerabilities", paramNames.toArray(new String[paramNames.size()]),
+                paramValues.toArray(new String[paramValues.size()]), VulnerabilityInfo[].class);
+    }
+
+    private void addArrayFields(List<?> ids, String key, String field, List<String> paramNames, List<String> paramValues) {
+        if (ids != null) {
+            for (int i = 0; i < ids.size(); i++) {
+                paramNames.add(key + "[" + i + "]." + field);
+                paramValues.add(String.valueOf(ids.get(i)));
+            }
+        }
+    }
 }

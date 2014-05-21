@@ -7,4 +7,7 @@ public class AllViews {
     public static class FormInfo {}
 
     public static class VulnSearch {}
+
+    public static class RestVulnSearch extends VulnSearch {}
+    public static class UIVulnSearch extends VulnSearch {}
 }

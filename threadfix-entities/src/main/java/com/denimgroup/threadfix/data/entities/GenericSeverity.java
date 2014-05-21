@@ -98,6 +98,7 @@ public class GenericSeverity extends BaseEntity {
 	}
 
 	@Column(nullable=false)
+    @JsonView(Object.class)
 	public Integer getIntValue() {
 		return intValue;
 	}
