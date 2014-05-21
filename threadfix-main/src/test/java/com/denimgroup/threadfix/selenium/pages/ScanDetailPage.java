@@ -96,6 +96,7 @@ public class ScanDetailPage extends BasePage{
 	}
 	public FindingDetailPage clickViewFinding(){
 		driver.findElementById("mappedVulnType").click();
+        sleep(3000);
         waitForElement(driver.findElementByLinkText("View Vulnerability"));
 		return new FindingDetailPage(driver);
 	}

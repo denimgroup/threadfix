@@ -85,7 +85,7 @@ public abstract class BasePage {
 	
 	public ScanIndexPage clickScansHeaderLink(){
 		driver.findElementById("scansHeader").click();
-		sleep(1000);
+		sleep(3000);
 		return new ScanIndexPage(driver);
 	}
 	

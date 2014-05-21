@@ -129,6 +129,8 @@ public class UserEntIT extends BaseIT {
 	}
 
 	// If this test fails with the defaults changed it could cause the other user tests to fail
+    // TODO: Ignored because Read Access is not an option in Roles, bug filed.
+    @Ignore
 	@Test
 	public void defaultRoleTest(){
 		String userName = "configureDefaultsUser" + getRandomString(3);

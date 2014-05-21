@@ -102,6 +102,8 @@ public class ScanIndexPage extends BasePage {
 	}
 	public ScanDetailPage clickAnyViewScanLink(){
 		driver.findElementByLinkText("View Scan").click();
+        sleep(3000);
+        waitForElement(driver.findElementById("statisticButton"));
 		return new ScanDetailPage(driver);
 	}
 	public ScanDetailPage clickViewScanLink(String teamName,String appName,String Scanner){
