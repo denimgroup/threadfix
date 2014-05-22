@@ -39,7 +39,7 @@ public class OptionsHolder {
                 .create("t");
         options.addOption(teams);
 
-        final Option teamsPrettyPrint = OptionBuilder.withLongOpt("teamsPrettyPrint")
+        Option teamsPrettyPrint = OptionBuilder.withLongOpt("teamsPrettyPrint")
                 .withDescription("Fetches a human readable list of ThreadFix teams, applications, and application IDs.")
                 .create("tpp");
         options.addOption(teamsPrettyPrint);
@@ -53,6 +53,13 @@ public class OptionsHolder {
                 .withDescription("Set either the url (ThreadFix base url) or key (ThreadFix API key) properties")
                 .create("s");
         options.addOption(set);
+
+        OptionBuilder.hasOptionalArgs()
+                .withValueSeparator(' ')
+                .withLongOpt("vulnerabilitySearch")
+                .withDescription("Query the vulnerabilities using various optional parameters. More information can " +
+                        "be found at https://github.com/denimgroup/threadfix/wiki/Threadfix-REST-Interface")
+                .create("search");
 
         Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName")
                 .withValueSeparator(' ')

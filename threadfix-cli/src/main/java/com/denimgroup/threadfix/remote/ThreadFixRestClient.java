@@ -58,10 +58,11 @@ public interface ThreadFixRestClient {
     public RestResponse<Organization> searchForTeamByName(String name);
 
     // Information about these methods can be found on the wiki.
-    public RestResponse<Vulnerability[]> searchVulnerabilities(VulnerabilitySearchParameters parameters);
-    public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds, List<Integer> teamIds, List<Integer> applicationIds,
-                                                               List<String> scannerNames, List<Integer> genericSeverityValues, Integer numberVulnerabilities,
-                                                               String parameter, String path, Date startDate, Date endDate, Boolean showOpen, Boolean showClosed, Boolean showFalsePositive, Boolean showHidden, Integer numberMerged);
+    public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds,
+               List<Integer> teamIds, List<Integer> applicationIds,
+               List<String> scannerNames, List<Integer> genericSeverityValues, Integer numberVulnerabilities,
+               String parameter, String path, Date startDate, Date endDate, Boolean showOpen, Boolean showClosed,
+               Boolean showFalsePositive, Boolean showHidden, Integer numberMerged);
 
     public void setKey(String key);
     public void setUrl(String url);

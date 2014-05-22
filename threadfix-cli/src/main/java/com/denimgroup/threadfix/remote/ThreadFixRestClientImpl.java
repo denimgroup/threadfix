@@ -274,13 +274,6 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								filePath, column, lineText, lineNumber }, Finding.class);
 	}
 
-
-    @Override
-    public RestResponse<Vulnerability[]> searchVulnerabilities(VulnerabilitySearchParameters parameters) {
-        assert parameters != null;
-        return null;
-    }
-
     // TODO find a better way to serialize this into a VulnerabilitySearchParameters form.
     @Override
     public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds,
