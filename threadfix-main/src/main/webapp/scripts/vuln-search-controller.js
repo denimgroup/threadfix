@@ -22,17 +22,19 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     }
 
     $scope.toggleAllFilters = function() {
-        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showDetailsControls || $scope.showDateControls || $scope.showTypeAndMergedControls) {
+        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showDetailsControls || $scope.showDateControls || $scope.showDateRange || $scope.showTypeAndMergedControls) {
             $scope.showSaveAndLoadControls = false;
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
             $scope.showDateControls = false;
+            $scope.showDateRange = false;
             $scope.showTypeAndMergedControls = false;
         } else {
             $scope.showSaveAndLoadControls = true;
             $scope.showTeamAndApplicationControls = true;
             $scope.showDetailsControls = true;
             $scope.showDateControls = true;
+            $scope.showDateRange = true;
             $scope.showTypeAndMergedControls = true;
         }
     }
@@ -42,6 +44,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     $scope.maxDate = new Date();
 
     $scope.openEndDate = function($event) {
+        resetAging();
         $event.preventDefault();
         $event.stopPropagation();
 
@@ -49,11 +52,18 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     };
 
     $scope.openStartDate = function($event) {
+        resetAging();
         $event.preventDefault();
         $event.stopPropagation();
 
         $scope.startDateOpened = true;
     };
+
+    var resetAging = function() {
+        $scope.parameters.daysOldModifier = undefined;
+        $scope.parameters.daysOld = undefined;
+        $scope.refresh();
+    }
 
     $scope.$on('application', function($event, application) {
         $scope.treeApplication = application;
@@ -164,6 +174,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
     }
 
     $scope.setDaysOldModifier = function(modifier) {
+        resetDateRange();
         if ($scope.parameters.daysOldModifier === modifier) {
             $scope.parameters.daysOldModifier = undefined;
             $scope.refresh();
@@ -173,9 +184,12 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
                 $scope.refresh();
             }
         }
+
+
     }
 
     $scope.setDaysOld = function(days) {
+        resetDateRange();
         if ($scope.parameters.daysOld === days) {
             $scope.parameters.daysOld = undefined;
             $scope.refresh();
@@ -185,6 +199,14 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
                 $scope.refresh();
             }
         }
+    }
+
+    var resetDateRange = function(){
+        // Reset Date Range
+        $scope.startDate = null;
+        $scope.startDateOpened = false;
+        $scope.endDate = null;
+        $scope.endDateOpened = false;
     }
 
     $scope.setNumberMerged = function(numberMerged) {
@@ -382,5 +404,42 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
 
             element.checked = checked;
         }
+    }
+
+
+    $scope.exportCSV = function() {
+        console.log('Updating element table');
+
+        var parameters = angular.copy($scope.parameters);
+
+        vulnSearchParameterService.updateParameters($scope, parameters);
+        parameters.genericSeverities.push({ intValue: element.intValue });
+        parameters.genericVulnerabilities = [ element.genericVulnerability ];
+        parameters.page = page;
+        parameters.numberVulnerabilities = numToShow;
+
+        $scope.loadingTree = true;
+
+        $http.post(tfEncoder.encode("/reports/search"), parameters).
+            success(function(data, status, headers, config) {
+                element.expanded = true;
+
+                if (data.success) {
+                    element.vulns = data.object.vulns;
+                    element.vulns.forEach(updateChannelNames)
+                    element.totalVulns = data.object.vulnCount;
+                    element.max = Math.ceil(data.object.vulnCount/100);
+                    element.numberToShow = numToShow;
+                    element.page = page;
+                } else {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                }
+
+                $scope.loadingTree = false;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.loadingTree = false;
+            });
     }
 });
