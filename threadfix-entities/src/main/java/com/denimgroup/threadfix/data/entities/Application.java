@@ -134,7 +134,7 @@ public class Application extends AuditableEntity {
     private Integer infoVulnCount = 0, lowVulnCount = 0, mediumVulnCount = 0,
             highVulnCount = 0, criticalVulnCount = 0, totalVulnCount = 0;
 
-    private boolean skipApplicationMerge = false;
+    private Boolean skipApplicationMerge = false;
 
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -717,13 +717,13 @@ public class Application extends AuditableEntity {
         return map;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonView(AllViews.FormInfo.class)
-    public boolean getSkipApplicationMerge() {
-        return skipApplicationMerge;
+    public Boolean getSkipApplicationMerge() {
+        return skipApplicationMerge != null && skipApplicationMerge;
     }
 
-    public void setSkipApplicationMerge(boolean isSkipApplicationMerge) {
+    public void setSkipApplicationMerge(Boolean isSkipApplicationMerge) {
         this.skipApplicationMerge = isSkipApplicationMerge;
     }
 }
