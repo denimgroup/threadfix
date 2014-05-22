@@ -8,6 +8,7 @@ public class AllViews {
 
     public static class VulnSearch {}
 
-    public static class RestVulnSearch extends VulnSearch {}
     public static class UIVulnSearch extends VulnSearch {}
+
+    public static class RestVulnSearch extends UIVulnSearch {}
 }

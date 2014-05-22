@@ -297,6 +297,56 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
         addArrayFields(genericSeverityValues, "genericSeverities", "intValue", paramNames, paramValues);
         addArrayFields(scannerNames, "channelTypes", "name", paramNames, paramValues);
 
+        if (numberVulnerabilities != null) {
+            paramNames.add("numberVulnerabilities");
+            paramValues.add(numberVulnerabilities.toString());
+        }
+
+        if (parameter != null) {
+            paramNames.add("parameter");
+            paramValues.add(parameter);
+        }
+
+        if (path != null) {
+            paramNames.add("path");
+            paramValues.add(path);
+        }
+
+        if (startDate != null) {
+            paramNames.add("startDate");
+            paramValues.add(String.valueOf(startDate.getTime()));
+        }
+
+        if (endDate != null) {
+            paramNames.add("endDate");
+            paramValues.add(String.valueOf(endDate.getTime()));
+        }
+
+        if (showOpen != null) {
+            paramNames.add("showOpen");
+            paramValues.add(showOpen.toString());
+        }
+
+        if (showClosed != null) {
+            paramNames.add("showClosed");
+            paramValues.add(showClosed.toString());
+        }
+
+        if (showFalsePositive != null) {
+            paramNames.add("showFalsePositive");
+            paramValues.add(showFalsePositive.toString());
+        }
+
+        if (showHidden != null) {
+            paramNames.add("showHidden");
+            paramValues.add(showHidden.toString());
+        }
+
+        if (numberMerged != null) {
+            paramNames.add("numberMerged");
+            paramValues.add(numberMerged.toString());
+        }
+
         assert paramNames.size() == paramValues.size() : "Mismatched param names and values. This probably won't work.";
 
         return httpRestUtils.httpPost("/vulnerabilities", paramNames.toArray(new String[paramNames.size()]),
