@@ -43,7 +43,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
         if (teamIdInt === -1) {
             $scope.application = {id: -1, name: "All"};
-            $scope.applications = [];
+            $scope.applications = undefined;
         } else {
 
             $scope.teams.forEach(function(team) {
@@ -63,10 +63,10 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.clearApplications = function() {
-        $scope.applications = [];
+        $scope.applications = undefined;
     }
 
-    $scope.applications = [];
+    $scope.applications = undefined;
     $scope.options = $scope.tabs[0].options;
 
     $scope.formatId = 1;
@@ -144,7 +144,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.teams = data.object.teams;
                     $scope.scanners = data.object.scanners;
                     $scope.genericVulnerabilities = data.object.vulnTypes;
-                    $scope.applications = data.object.applications;
                     $scope.savedFilters = data.object.savedFilters;
 
                     $scope.teams.sort(nameCompare)
@@ -152,6 +151,9 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.teams.unshift({id: -1, name: "All"});
                     $scope.teamId = -1;
                     $scope.applicationId = -1;
+                    $scope.team = $scope.teams[0];
+                    $scope.application = {id: -1, name: "All"};
+                    $scope.applications = undefined;
 
                     //teamId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
                     //appId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;

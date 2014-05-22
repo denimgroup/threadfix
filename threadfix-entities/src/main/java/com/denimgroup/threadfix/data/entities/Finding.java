@@ -75,8 +75,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private List<DataFlowElement> dataFlowElements;
 	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
-	
-	private String calculatedUrlPath, calculatedFilePath;
+	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
 
 	@Override

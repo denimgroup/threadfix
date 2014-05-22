@@ -36,6 +36,9 @@ import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 
  * @author mcollins
@@ -60,11 +63,23 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 		private boolean getParamText          = false;
 		private boolean getSeverityText       = false;
 		private boolean getDateText           = false;
+        private boolean getRequestText		  = false;
+        private boolean getResponseText       = false;
+        private boolean getScannerDetail      = false;
+        private boolean getScannerRecommendation = false;
+        private boolean inFinding		  = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
+        private String currentScannerDetail   = null;
+        private String currentScannerRecommendation = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
+        private String currentRequest         = null;
+        private String currentResponse        = null;
+
+        Map<FindingKey, String> findingMap = new HashMap<>();
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -87,7 +102,15 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 		    	case "Details"   : getParamText = true;       break;
 		    	case "Severity"  : getSeverityText = true;    break;
 		    	case "StartTime" : getDateText = true;        break;
+                case "Description" : getScannerDetail = true;        break;
+                case "Recommendation" : getScannerRecommendation = true;        break;
+                case "Request" : getRequestText = true;        break;
+                case "Response" : getResponseText = true;        break;
+                case "ReportItem" : inFinding = true;        break;
 	    	}
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
 	    }
 
 	    public void endElement (String uri, String name, String qName)
@@ -116,8 +139,23 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 	    		String temp = getBuilderText();
 	    		date = DateUtils.getCalendarFromString("dd/MM/yyyy, hh:mm:ss", temp);
 	    		getDateText = false;
-	    	}
-	    	
+	    	} else if (getRequestText) {
+                currentRequest = getBuilderText();
+                getRequestText = false;
+            } else if (getResponseText) {
+                currentResponse = getBuilderText();
+                getResponseText = false;
+            } else if (getScannerDetail) {
+                currentScannerDetail = getBuilderText();
+                getScannerDetail = false;
+            } else if (getScannerRecommendation) {
+                currentScannerRecommendation = getBuilderText();
+                getScannerRecommendation = false;
+            }
+
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
 	    	
 	    	if ("ReportItem".equals(qName)) {
 	    		
@@ -128,24 +166,45 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 	    		if (currentChannelVulnCode.endsWith(" (verified)")) {
 	    			currentChannelVulnCode = currentChannelVulnCode.replace(" (verified)", "");
 	    		}
-	    		
-	    		Finding finding = constructFinding(currentUrlText, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		
+
+                findingMap.put(FindingKey.PATH, currentUrlText);
+                findingMap.put(FindingKey.PARAMETER, currentParameter);
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                findingMap.put(FindingKey.CWE, null);
+                findingMap.put(FindingKey.VALUE, null);
+                findingMap.put(FindingKey.REQUEST, currentRequest);
+                findingMap.put(FindingKey.RESPONSE, currentResponse);
+                findingMap.put(FindingKey.DETAIL, currentScannerDetail);
+                findingMap.put(FindingKey.RECOMMENDATION, currentScannerRecommendation);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+                Finding finding = constructFinding(findingMap);
 	    		add(finding);
 	    		
 	    		currentChannelVulnCode = null;
 	    		currentSeverityCode    = null;
 	    		currentParameter       = null;
 	    		currentUrlText         = null;
+                currentRequest         = null;
+                currentResponse        = null;
+                currentScannerDetail     = null;
+                currentScannerRecommendation     = null;
+                inFinding 			   = false;
+                currentRawFinding.setLength(0);
 	    	}
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getDateText) {
+	    	if (getChannelVulnText || getUrlText
+                    || getParamText || getSeverityText || getDateText
+                    || getRequestText || getResponseText
+                    || getScannerDetail || getScannerRecommendation) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 

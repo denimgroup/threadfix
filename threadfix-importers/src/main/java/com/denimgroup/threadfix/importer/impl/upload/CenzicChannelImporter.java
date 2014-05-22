@@ -32,8 +32,12 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -43,6 +47,12 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 
     private static final String EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet, Script, or Object",
             DB_EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet Script or Object";
+
+    private static final String payloadPattern = "\\?(.*)";
+    private static final String pathPattern = "(.*)\\?";
+    private static final String cwePattern = "CWE-(.*)";
+    private static final String paramPattern = ":(.*)";
+
 
 	public CenzicChannelImporter() {
 		super(ScannerType.CENZIC_HAILSTORM);
@@ -54,6 +64,9 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	}
 	
 	public class CenzicSAXParser extends HandlerWithBuilder {
+
+        Map<FindingKey, String> findingMap = new HashMap<>();
+
         private boolean getReportItemType = false;
         private boolean getChannelVulnText    = false;
 		private boolean getUrlText            = false;
@@ -61,6 +74,11 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 		private boolean getSeverityText       = false;
 		private boolean getItemDateText = false;
         private boolean getDateText = false;
+        private boolean getRequestText		  = false;
+        private boolean getResponseText       = false;
+        private boolean getScannerDetail      = false;
+        private boolean getScannerRecommendation = false;
+        private boolean inFinding		  = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
@@ -68,6 +86,11 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 		private String currentSeverityCode    = null;
         private String currentReportItemType = null;
         private String currentCweId = null;
+        private String currentScannerDetail   = null;
+        private String currentScannerRecommendation = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
+        private String currentRequest         = null;
+        private String currentResponse        = null;
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -93,7 +116,15 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 		    	case "Severity"  : getSeverityText = true;    break;
 		    	case "ReportItemCreateDate" : getItemDateText = true;        break;
                 case "ReportItemType" : getReportItemType = true;        break;
+                case "Remediation" : getScannerRecommendation = true;        break;
+                case "Message" : getScannerDetail = true;        break;
+                case "HttpRequest" : getRequestText = true;        break;
+                case "HttpResponse" : getResponseText = true;        break;
+                case "ReportItem" : inFinding = true;        break;
 	    	}
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
 	    }
 
 	    public void endElement (String uri, String name, String qName)
@@ -109,7 +140,7 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    		getUrlText = false;
 	    	} else if (getParamText) {
 	    		String text = getBuilderText();
-                currentParameter = getParam(text);
+                currentParameter = RegexUtils.getRegexResult(text, paramPattern).trim();
                 getParamText = false;
             } else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
@@ -129,13 +160,46 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    	} else if (getReportItemType) {
                 currentReportItemType = getBuilderText();
                 getReportItemType = false;
+            } else if (getRequestText) {
+                currentRequest = getBuilderText();
+                getRequestText = false;
+            } else if (getResponseText) {
+                currentResponse = getBuilderText();
+                getResponseText = false;
+            } else if (getScannerDetail) {
+                currentScannerDetail = getBuilderText();
+                getScannerDetail = false;
+            } else if (getScannerRecommendation) {
+                currentScannerRecommendation = getBuilderText();
+                getScannerRecommendation = false;
             }
-	    	
+
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
 	    	if ("ReportItem".equals(qName)) {
 
                 if ("Vulnerable".equalsIgnoreCase(currentReportItemType)) {
-                    Finding finding = constructFinding(currentUrlText, currentParameter,
-                            currentChannelVulnCode, currentSeverityCode, getCweId(currentCweId));
+
+                    String possibleUrl = RegexUtils.getRegexResult(currentUrlText, pathPattern);
+                    String payload = RegexUtils.getRegexResult(currentUrlText, payloadPattern);
+                    currentUrlText = (possibleUrl==null)? currentUrlText : possibleUrl;
+
+                    findingMap.put(FindingKey.PATH, currentUrlText);
+                    findingMap.put(FindingKey.PARAMETER, currentParameter);
+                    findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                    findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                    findingMap.put(FindingKey.CWE, RegexUtils.getRegexResult(currentCweId, cwePattern));
+                    findingMap.put(FindingKey.VALUE, payload);
+                    findingMap.put(FindingKey.REQUEST, currentRequest);
+                    findingMap.put(FindingKey.RESPONSE, currentResponse);
+                    findingMap.put(FindingKey.DETAIL, currentScannerDetail);
+                    findingMap.put(FindingKey.RECOMMENDATION, currentScannerRecommendation);
+                    findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+                    Finding finding = constructFinding(findingMap);
+                    add(finding);
 
                     add(finding);
                 }
@@ -144,9 +208,15 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    		currentParameter       = null;
 	    		currentUrlText         = null;
                 currentReportItemType = null;
+                currentRequest         = null;
+                currentResponse        = null;
+                currentScannerDetail     = null;
+                inFinding 			   = false;
+                currentRawFinding.setLength(0);
 	    	}
 
             if ("SmartAttacksData".equals(qName)) {
+                currentScannerRecommendation     = null;
                 currentChannelVulnCode = null;
                 currentCweId = null;
             }
@@ -154,26 +224,13 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 
 	    public void characters (char ch[], int start, int length)
 	    {
-	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getItemDateText || getReportItemType || getDateText) {
+	    	if (getChannelVulnText || getUrlText || getParamText || getSeverityText || getItemDateText || getReportItemType || getDateText
+                    || getRequestText || getResponseText || getScannerDetail || getScannerRecommendation) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
-
-        private String getParam(String currentParameter) {
-            String[] params = currentParameter.split(":");
-            if (params.length != 2)
-                return currentParameter;
-            else if (params[1] != null)
-                return params[1].trim();
-
-            return  currentParameter;
-        }
-
-        private String getCweId(String currentCwe) {
-            if (currentCwe == null || !currentCwe.contains("CWE-"))
-                return null;
-            return currentCwe.replace("CWE-","");
-        }
 	}
 
 	@Override
