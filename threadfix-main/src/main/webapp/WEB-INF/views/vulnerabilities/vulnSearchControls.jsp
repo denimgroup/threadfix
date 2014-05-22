@@ -38,7 +38,7 @@
         <div class="accordion-group">
             <div class="accordion-heading" style="text-align:center">
                 <a class="btn" ng-click="toggleAllFilters()">
-                    {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showTypeAndMergedControls) ? 'Collapse' : 'Expand' }} All
+                    {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls) ? 'Collapse' : 'Expand' }} All
                 </a>
                 <a class="btn" ng-click="resetFilters()">Clear</a>
             </div>
@@ -259,10 +259,10 @@
             </div>
         </div>
 
-        <!-- Date controls -->
+        <!-- Aging -->
         <div class="accordion-group">
             <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
-                <span id="showDateControls" class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Date Controls
+                <span id="showDateControls" class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Aging
             </div>
             <div class="filter-group-body" ng-show="showDateControls">
                 <div class="accordion-inner">
@@ -278,7 +278,15 @@
                         <li id="90days" ng-class="{ active: parameters.daysOld === 90 }"><a ng-click="setDaysOld(90)">90 days</a></li>
                     </ul>
                 </div>
+            </div>
+        </div>
 
+        <!-- Date Range -->
+        <div class="accordion-group">
+            <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
+                <span id="showDateRange" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
+            </div>
+            <div class="filter-group-body" ng-show="showDateRange">
                 <div class="accordion-inner">
                     <h4>Start Date</h4>
                     <div class="col-md-6">
@@ -302,6 +310,14 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Export buttons -->
+        <div class="accordion-group">
+            <div class="accordion-heading" style="text-align:center">
+                <a class="btn" ng-click="exportCSV()">Export CSV</a>
+                <a class="btn" ng-click="exportJSON()">Export JSON</a>
             </div>
         </div>
     </div>
