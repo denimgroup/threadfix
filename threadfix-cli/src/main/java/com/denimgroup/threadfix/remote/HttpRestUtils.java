@@ -222,6 +222,10 @@ public class HttpRestUtils {
     }
 
     private void addApiKey(PostMethod post) {
-        post.addParameter("apiKey", propertiesManager.getKey());
+        if (propertiesManager.getKey() == null) {
+            throw new IllegalStateException("Please set your key before using this tool. Use the -s key <key> option.");
+        } else {
+            post.addParameter("apiKey", propertiesManager.getKey());
+        }
     }
 }

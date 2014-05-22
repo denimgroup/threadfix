@@ -29,9 +29,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,12 +43,18 @@ public class VulnSearchParameterParser {
     private static final Pattern integerPattern = Pattern.compile("[\\,=]([0-9]+)");
     private static final Pattern stringPattern = Pattern.compile("[\\,=]([^,=]+)");
 
-    static String[] arguments = null;
+    static String[] parameters = null;
+
+    static final private List<String> validParameters = Arrays.asList("genericVulnerabilityIds", "teamIds",
+            "applicationIds", "scannerNames", "genericSeverityValues", "numberVulnerabilities", "parameter",
+            "path", "startDate", "endDate", "showOpen", "showClosed", "showFalsePositive", "showHidden", "numberMerged");
 
     public static RestResponse<VulnerabilityInfo[]> processVulnerabilitySearchParameters(ThreadFixRestClient client,
                                                                                          String... args) {
 
-        arguments = args; // This makes me cringe but it's single-threaded right?
+        parameters = collapseParameters(args); // This makes me cringe but it's single-threaded right?
+
+        checkArguments();
 
         return client.searchVulnerabilities(
                 getIntegerArray("genericVulnerabilityIds"),
@@ -69,6 +73,42 @@ public class VulnSearchParameterParser {
                 getBooleanValue("showHidden"),
                 getIntegerValue("numberMerged")
         );
+    }
+
+    // This lets us handle fun stuff like scannerNames=Arachni,Cenzic Hailstorm
+    private static String[] collapseParameters(String[] parameters) {
+        List<String> newList = new ArrayList<String>();
+        String lastValue = null;
+        for (String parameter : parameters) {
+            if (parameter.contains("=")) {
+                if (lastValue != null) {
+                    newList.add(lastValue);
+                }
+                lastValue = parameter;
+            } else if (lastValue != null) {
+                lastValue = lastValue.concat(" ");
+                lastValue = lastValue.concat(parameter);
+            }
+        }
+        if (lastValue != null) {
+            newList.add(lastValue);
+        }
+        System.out.println("Args: " + newList);
+        return newList.toArray(new String[newList.size()]);
+    }
+
+    private static void checkArguments() {
+        for (String parameter : parameters) {
+            if (!parameter.contains("=")) {
+                throw new IllegalArgumentException(parameter + " was invalid. Expected format is <key>=<value>");
+            }
+
+            String shorterName = parameter.substring(0, parameter.indexOf('='));
+
+            if (!validParameters.contains(shorterName)) {
+                throw new IllegalArgumentException(parameter + " was invalid. The key should be one of " + validParameters);
+            }
+        }
     }
 
     private static List<Integer> getIntegerArray(String key) {
@@ -119,7 +159,7 @@ public class VulnSearchParameterParser {
     }
 
     private static String getArgument(String key) {
-        for (String argument : arguments) {
+        for (String argument : parameters) {
             if (argument.startsWith(key)) {
                 return argument.substring(key.length());
             }

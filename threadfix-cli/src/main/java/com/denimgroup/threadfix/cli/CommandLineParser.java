@@ -47,7 +47,7 @@ public class CommandLineParser {
 		scanOptions.put("Repository URL", new String[]{ "Arbitrary Git URL" });
 	}
 	
-	public static void main (String[] args) {
+	public static void main(String[] args) {
 		
 		Options options = OptionsHolder.getOptions();
 		

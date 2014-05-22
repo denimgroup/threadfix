@@ -54,12 +54,13 @@ public class OptionsHolder {
                 .create("s");
         options.addOption(set);
 
-        OptionBuilder.hasOptionalArgs()
-                .withValueSeparator(' ')
+        Option search = OptionBuilder.withValueSeparator(' ')
+                .hasOptionalArgs()
                 .withLongOpt("vulnerabilitySearch")
                 .withDescription("Query the vulnerabilities using various optional parameters. More information can " +
                         "be found at https://github.com/denimgroup/threadfix/wiki/Threadfix-REST-Interface")
                 .create("search");
+        options.addOption(search);
 
         Option queueScan = OptionBuilder.withArgName("applicationId> <scannerName")
                 .withValueSeparator(' ')
