@@ -16,14 +16,14 @@
         <tbody ng-repeat="category in vulnTree" ng-show="category.total > 0">
             <tr>
                 <td>
-                    <span ng-hide="category.expanded" ng-click="category.expanded = true" class="icon icon-plus-sign"></span>
-                    <span ng-show="category.expanded" ng-click="category.expanded = false" class="icon icon-minus-sign"></span>
+                    <span id="expand{{ category.name }}" ng-hide="category.expanded" ng-click="category.expanded = true" class="icon icon-plus-sign"></span>
+                    <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="category.expanded = false" class="icon icon-minus-sign"></span>
                 </td>
                 <td style="width:50px">
                     {{ category.name }}
                 </td>
                 <td ng-style="badgeWidth">
-                    <span ng-style="badgeWidth" class="badge" ng-class="{
+                    <span id="totalBadge{{ category.name }}" ng-style="badgeWidth" class="badge" ng-class="{
                                             'badge-important': category.intValue === 5,
                                             'badge-warning': category.intValue === 4,
                                             'badge-success': category.intValue === 3,
@@ -36,11 +36,11 @@
             <tr ng-repeat-start="element in category.entries" ng-show="category.expanded">
                 <td></td>
                 <td>
-                    <span ng-hide="element.expanded" ng-click="expandAndRetrieveTable(element)" class="icon icon-plus-sign"></span>
-                    <span ng-show="element.expanded" ng-click="element.expanded = false" class="icon icon-minus-sign"></span>
+                    <span id="expandVuln{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-hide="element.expanded" ng-click="expandAndRetrieveTable(element)" class="icon icon-plus-sign"></span>
+                    <span id="collapseVuln{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-show="element.expanded" ng-click="element.expanded = false" class="icon icon-minus-sign"></span>
                 </td>
                 <td>
-                    <span ng-style="badgeWidth" class="badge" ng-class="{
+                    <span id="totalBadge{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-style="badgeWidth" class="badge" ng-class="{
                                     'badge-important': element.intValue === 5,
                                     'badge-warning': element.intValue === 4,
                                     'badge-success': element.intValue === 3,
@@ -49,7 +49,7 @@
                         {{ element.numResults }}
                     </span>
                 </td>
-                <td>
+                <td id="cweName{{ category.name }}{{ element.genericVulnerability.displayId }}">
                     {{ element.genericVulnerability.name | shortCweNames }}
                 </td>
             </tr>
