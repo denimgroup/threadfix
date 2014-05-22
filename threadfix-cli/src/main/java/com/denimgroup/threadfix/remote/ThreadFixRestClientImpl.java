@@ -23,11 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.remote;
 
+import com.denimgroup.threadfix.VulnerabilityInfo;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
@@ -171,8 +174,8 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 	public RestResponse<Organization> searchForTeamByName(String name) {
 		return httpRestUtils.httpGet("/teams/lookup", "&name=" + name, Organization.class);
     }
-	
-	public void setKey(String key) {
+
+    public void setKey(String key) {
         propertiesManager.setKey(key);
 	}
 
@@ -271,4 +274,84 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 								filePath, column, lineText, lineNumber }, Finding.class);
 	}
 
+    // TODO find a better way to serialize this into a VulnerabilitySearchParameters form.
+    @Override
+    public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds,
+               List<Integer> teamIds, List<Integer> applicationIds, List<String> scannerNames,
+               List<Integer> genericSeverityValues, Integer numberVulnerabilities, String parameter, String path,
+               Date startDate, Date endDate, Boolean showOpen, Boolean showClosed, Boolean showFalsePositive,
+               Boolean showHidden, Integer numberMerged) {
+        List<String> paramNames  = new ArrayList<String>();
+        List<String> paramValues = new ArrayList<String>();
+
+        addArrayFields(genericVulnerabilityIds, "genericVulnerabilities", "id", paramNames, paramValues);
+        addArrayFields(teamIds, "teams", "id", paramNames, paramValues);
+        addArrayFields(applicationIds, "applications", "id", paramNames, paramValues);
+        addArrayFields(genericSeverityValues, "genericSeverities", "intValue", paramNames, paramValues);
+        addArrayFields(scannerNames, "channelTypes", "name", paramNames, paramValues);
+
+        if (numberVulnerabilities != null) {
+            paramNames.add("numberVulnerabilities");
+            paramValues.add(numberVulnerabilities.toString());
+        }
+
+        if (parameter != null) {
+            paramNames.add("parameter");
+            paramValues.add(parameter);
+        }
+
+        if (path != null) {
+            paramNames.add("path");
+            paramValues.add(path);
+        }
+
+        if (startDate != null) {
+            paramNames.add("startDate");
+            paramValues.add(String.valueOf(startDate.getTime()));
+        }
+
+        if (endDate != null) {
+            paramNames.add("endDate");
+            paramValues.add(String.valueOf(endDate.getTime()));
+        }
+
+        if (showOpen != null) {
+            paramNames.add("showOpen");
+            paramValues.add(showOpen.toString());
+        }
+
+        if (showClosed != null) {
+            paramNames.add("showClosed");
+            paramValues.add(showClosed.toString());
+        }
+
+        if (showFalsePositive != null) {
+            paramNames.add("showFalsePositive");
+            paramValues.add(showFalsePositive.toString());
+        }
+
+        if (showHidden != null) {
+            paramNames.add("showHidden");
+            paramValues.add(showHidden.toString());
+        }
+
+        if (numberMerged != null) {
+            paramNames.add("numberMerged");
+            paramValues.add(numberMerged.toString());
+        }
+
+        assert paramNames.size() == paramValues.size() : "Mismatched param names and values. This probably won't work.";
+
+        return httpRestUtils.httpPost("/vulnerabilities", paramNames.toArray(new String[paramNames.size()]),
+                paramValues.toArray(new String[paramValues.size()]), VulnerabilityInfo[].class);
+    }
+
+    private void addArrayFields(List<?> ids, String key, String field, List<String> paramNames, List<String> paramValues) {
+        if (ids != null) {
+            for (int i = 0; i < ids.size(); i++) {
+                paramNames.add(key + "[" + i + "]." + field);
+                paramValues.add(String.valueOf(ids.get(i)));
+            }
+        }
+    }
 }

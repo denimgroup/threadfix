@@ -21,24 +21,25 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
-import com.denimgroup.threadfix.data.entities.VulnerabilityTreeElement;
-
-import java.util.List;
+import java.beans.PropertyEditorSupport;
+import java.util.Date;
 
 /**
- * Created by mac on 5/7/14.
+ * Created by mac on 5/20/14.
  */
-public interface VulnerabilitySearchService {
+public class NumericDatePropertyEditorSupport extends PropertyEditorSupport {
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        if (text.matches("^[0-9]+$")) {
+            setValue(parseDate(text));
+        } else {
+            setValue(null);
+        }
+    }
 
-    List<Vulnerability> performLookup(VulnerabilitySearchParameters parameters);
-
-    List<VulnerabilityTreeElement> getTree(VulnerabilitySearchParameters parameters);
-
-    Long getCount(VulnerabilitySearchParameters parameters);
-
-    void doNameLookups(VulnerabilitySearchParameters parameters);
+    private Date parseDate(String text) {
+        return new Date(Long.valueOf(text));
+    }
 }

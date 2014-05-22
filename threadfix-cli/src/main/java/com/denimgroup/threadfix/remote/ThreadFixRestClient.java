@@ -24,8 +24,12 @@
 
 package com.denimgroup.threadfix.remote;
 
+import com.denimgroup.threadfix.VulnerabilityInfo;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,6 +56,13 @@ public interface ThreadFixRestClient {
     public RestResponse<String> getAllTeamsPrettyPrint();
     public RestResponse<Organization> searchForTeamById(String id);
     public RestResponse<Organization> searchForTeamByName(String name);
+
+    // Information about these methods can be found on the wiki.
+    public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds,
+               List<Integer> teamIds, List<Integer> applicationIds,
+               List<String> scannerNames, List<Integer> genericSeverityValues, Integer numberVulnerabilities,
+               String parameter, String path, Date startDate, Date endDate, Boolean showOpen, Boolean showClosed,
+               Boolean showFalsePositive, Boolean showHidden, Integer numberMerged);
 
     public void setKey(String key);
     public void setUrl(String url);

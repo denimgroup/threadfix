@@ -53,18 +53,6 @@ public class HttpRestUtils {
         this.propertiesManager = manager;
     }
 
-    public HttpRestUtils() {
-        this.propertiesManager = new PropertiesManager();
-    }
-
-    @NotNull
-	public RestResponse<Object> httpPostFile(@NotNull String path, @NotNull String fileName,
-                                             @NotNull String[] paramNames,
-                                             @NotNull String[] paramVals) {
-		File file = new File(fileName);
-        return httpPostFile(path, file, paramNames, paramVals, Object.class);
-	}
-
     @NotNull
 	public <T> RestResponse<T> httpPostFile(@NotNull String path,
                                             @NotNull File file,
@@ -117,14 +105,6 @@ public class HttpRestUtils {
     }
 
     @NotNull
-    public RestResponse<Object> httpPost(@NotNull String path,
-                                         @NotNull String[] paramNames,
-                                         @NotNull String[] paramVals) {
-
-        return httpPost(path, paramNames, paramVals, Object.class);
-    }
-
-    @NotNull
     public <T> RestResponse<T> httpPost(@NotNull String path,
                                         @NotNull String[] paramNames,
                                         @NotNull String[] paramVals,
@@ -169,18 +149,8 @@ public class HttpRestUtils {
 	}
 
     @NotNull
-    public RestResponse<Object> httpGet(@NotNull String path) {
-        return httpGet(path, "");
-    }
-
-    @NotNull
     public <T> RestResponse<T> httpGet(@NotNull String path, @NotNull Class<T> targetClass) {
         return httpGet(path, "", targetClass);
-    }
-
-    @NotNull
-    public RestResponse<Object> httpGet(String path, String params) {
-        return httpGet(path, params, Object.class);
     }
 
     @NotNull
@@ -252,6 +222,10 @@ public class HttpRestUtils {
     }
 
     private void addApiKey(PostMethod post) {
-        post.addParameter("apiKey", propertiesManager.getKey());
+        if (propertiesManager.getKey() == null) {
+            throw new IllegalStateException("Please set your key before using this tool. Use the -s key <key> option.");
+        } else {
+            post.addParameter("apiKey", propertiesManager.getKey());
+        }
     }
 }
