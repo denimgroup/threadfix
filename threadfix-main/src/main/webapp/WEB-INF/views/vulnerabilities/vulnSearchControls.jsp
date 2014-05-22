@@ -117,7 +117,7 @@
                     <input id="applicationNameTypeahead"
                            focus-on="showApplicationInput"
                            ng-show="showApplicationInput"
-                           typeahead="(application.team.name + ' / ' + application.name) for application in applications | filter:$viewValue | limitTo:8"
+                           typeahead="(application.team.name + ' / ' + application.name) for application in searchApplications | filter:$viewValue | limitTo:8"
                            type="text"
                            ng-model="newFilteredApplication.name"
                            typeahead-on-select="addNew(parameters.applications, newFilteredApplication.name); newFilteredApplication = {}; showApplicationInput = false"/>
@@ -316,8 +316,7 @@
         <!-- Export buttons -->
         <div class="accordion-group">
             <div class="accordion-heading" style="text-align:center">
-                <a class="btn" ng-click="exportCSV()">Export CSV</a>
-                <a class="btn" ng-click="exportJSON()">Export JSON</a>
+                <a ng-click="exportCSV()" class="btn">Export CSV</a>
             </div>
         </div>
     </div>

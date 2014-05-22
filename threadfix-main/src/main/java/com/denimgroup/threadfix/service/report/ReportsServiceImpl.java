@@ -696,6 +696,12 @@ public class ReportsServiceImpl implements ReportsService {
         return reportFormat + "_" + teamName + "_" + appName;
     }
 
+    @Override
+    public ReportCheckResultBean generateSearchReport(List<Vulnerability> vulnerabilityList) {
+        StringBuffer dataExport = getDataVulnListReport(getVulnListInfo(vulnerabilityList), null);
+        return new ReportCheckResultBean(ReportCheckResult.VALID, dataExport, null);
+    }
+
     private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
 		List<List<String>> rowParamsList = new ArrayList<>();
 		List<Application> applicationList = new ArrayList<>();
@@ -729,24 +735,49 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		return rowParamsList;
 	}
+
+    private List<List<String>> getVulnListInfo(List<Vulnerability> vulnerabilityList) {
+        List<List<String>> rowParamsList = new ArrayList<>();
+        SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
+        for (Vulnerability vuln : vulnerabilityList) {
+            if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive())) {
+                continue;
+            }
+
+            String openedDate = formatter.format(vuln.getOpenTime().getTime());
+            // Orders of positions: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID
+            rowParamsList.add(Arrays.asList(vuln.getGenericVulnerability().getId().toString(),
+                    vuln.getGenericVulnerability().getName(),
+                    vuln.getSurfaceLocation().getPath(),
+                    vuln.getSurfaceLocation().getParameter(),
+                    vuln.getGenericSeverity().getName(),
+                    openedDate,
+                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
+        }
+        return rowParamsList;
+    }
 	
 	private StringBuffer getDataVulnListReport(List<List<String>> rowParamsList, List<Integer> applicationIdList) {
 		StringBuffer data = new StringBuffer();
-		data.append("Vulnerability List \n");
+		data.append("Vulnerability List \n\n");
 
-		List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
-		String teamName = (teamNames != null && teamNames.size() == 1) ? teamNames.get(0) : "All";
-		data.append("Team: ").append(teamName).append(" \n");
-		String appName = ""; 
-		if (applicationIdList.size() == 1) {
-			Application app = applicationDao.retrieveById(applicationIdList.get(0));
-			if (app != null) {
-				appName = app.getName();
-			}
-		} else {
-			appName = "All";
-		}
-		data.append("Application: ").append(appName).append(" \n \n");
+        if (applicationIdList != null) {
+
+            List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
+            String teamName = (teamNames != null && teamNames.size() == 1) ? teamNames.get(0) : "All";
+            data.append("Team: ").append(teamName).append(" \n");
+            String appName = "";
+            if (applicationIdList.size() == 1) {
+                Application app = applicationDao.retrieveById(applicationIdList.get(0));
+                if (app != null) {
+                    appName = app.getName();
+                }
+            } else {
+                appName = "All";
+            }
+            data.append("Application: ").append(appName).append(" \n \n");
+        }
+
 		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID \n");
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {

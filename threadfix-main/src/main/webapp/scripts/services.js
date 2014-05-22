@@ -150,7 +150,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             parameters.applications.forEach(function(filteredApp) {
                 filteredApp.id = undefined;
             });
-            $scope.applications.forEach(function(app) {
+            $scope.searchApplications.forEach(function(app) {
                 parameters.applications.forEach(function(filteredApp) {
                     if (filteredApp.name === (app.team.name + " / " + app.name)) {
                         filteredApp.id = app.id;

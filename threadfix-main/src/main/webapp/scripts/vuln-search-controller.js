@@ -83,7 +83,7 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
                         $scope.teams = data.object.teams;
                         $scope.scanners = data.object.scanners;
                         $scope.genericVulnerabilities = data.object.vulnTypes;
-                        $scope.applications = data.object.applications;
+                        $scope.searchApplications = data.object.applications;
                         $scope.savedFilters = data.object.savedFilters;
                     }
                     $scope.resetFilters();
@@ -413,29 +413,15 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
         var parameters = angular.copy($scope.parameters);
 
         vulnSearchParameterService.updateParameters($scope, parameters);
-        parameters.genericSeverities.push({ intValue: element.intValue });
-        parameters.genericVulnerabilities = [ element.genericVulnerability ];
-        parameters.page = page;
-        parameters.numberVulnerabilities = numToShow;
 
-        $scope.loadingTree = true;
-
-        $http.post(tfEncoder.encode("/reports/search"), parameters).
-            success(function(data, status, headers, config) {
-                element.expanded = true;
-
-                if (data.success) {
-                    element.vulns = data.object.vulns;
-                    element.vulns.forEach(updateChannelNames)
-                    element.totalVulns = data.object.vulnCount;
-                    element.max = Math.ceil(data.object.vulnCount/100);
-                    element.numberToShow = numToShow;
-                    element.page = page;
-                } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                }
-
-                $scope.loadingTree = false;
+        $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
+            success(function(data, status, headers, config, response) {
+                var element = angular.element('<a/>');
+                element.attr({
+                    href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+                    target: '_blank',
+                    download: 'search_export.csv'
+                })[0].click();
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
