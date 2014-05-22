@@ -47,7 +47,7 @@ public class CommandLineParser {
 		scanOptions.put("Repository URL", new String[]{ "Arbitrary Git URL" });
 	}
 	
-	public static void main (String[] args) {
+	public static void main(String[] args) {
 		
 		Options options = OptionsHolder.getOptions();
 		
@@ -75,6 +75,10 @@ public class CommandLineParser {
 				} else {
 					throw new ParseException("First argument to set must be url or key");
 				}
+			} else if (cmd.hasOption("search")) {
+
+				String[] setArgs = cmd.getOptionValues("search");
+				printOutput(VulnSearchParameterParser.processVulnerabilitySearchParameters(client, setArgs));
 				
 			} else if (cmd.hasOption("ct")) {
 				String[] createArgs = cmd.getOptionValues("ct");

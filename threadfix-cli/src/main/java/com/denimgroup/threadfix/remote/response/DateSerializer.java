@@ -21,24 +21,29 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
-import com.denimgroup.threadfix.data.entities.VulnerabilityTreeElement;
+package com.denimgroup.threadfix.remote.response;
 
-import java.util.List;
+import com.google.gson.*;
+
+import java.lang.reflect.Type;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Created by mac on 5/7/14.
+ * Created by mac on 1/23/14.
  */
-public interface VulnerabilitySearchService {
+public class DateSerializer implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
-    List<Vulnerability> performLookup(VulnerabilitySearchParameters parameters);
+    @Override
+    public JsonElement serialize(Date src, Type typeOfSrc,	JsonSerializationContext context) {
+        return new JsonPrimitive(src.getTime());
+    }
 
-    List<VulnerabilityTreeElement> getTree(VulnerabilitySearchParameters parameters);
-
-    Long getCount(VulnerabilitySearchParameters parameters);
-
-    void doNameLookups(VulnerabilitySearchParameters parameters);
+    @Override
+    public Date deserialize(JsonElement json, Type typeOfT,  JsonDeserializationContext context) throws JsonParseException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(json.getAsJsonPrimitive().getAsLong());
+        return cal.getTime();
+    }
 }
