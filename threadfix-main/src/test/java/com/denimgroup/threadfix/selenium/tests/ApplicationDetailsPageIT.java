@@ -58,8 +58,9 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testTabUserNavigation() {
         buildTeamAppandScan();
+        sleep(3000);
         dashboardPage.clickUserTab();
-        sleep(1000);
+        sleep(2000);
         assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
         assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
         assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
@@ -103,7 +104,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testApplicationName() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
-        sleep(2000);
+        sleep(5000);
         assertTrue("Application Name is not present", ap.isApplicationNamePresent());
     }
 
@@ -117,6 +118,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonContents() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
+        sleep(3000);
         ap.clickActionButton();
         sleep(1000);
         assertTrue("Edit Delete button is not present", ap.isEditDeletePresent());
@@ -154,7 +156,9 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonEditVulnFilter() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(3000);
         ap.clickActionButton();
+        sleep(2000);
         FilterPage filterPage = ap.clickEditVulnerabilityFilters();
         sleep(1000);
         assertTrue("Did not navigate to FilterPage.", filterPage.isElementVisible("createNewKeyModalButton"));
@@ -166,7 +170,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
         sleep(3000);
         ap.clickActionButton()
                 .clickManualFindingButton();
-        sleep(2000);
+        sleep(3000);
         assertTrue("Dynamic Radio button is not present.", ap.isDynamicRadioPresent());
         assertTrue("Static Radio button is not present.", ap.isStaticRadioPresent());
         assertTrue("CWE input is not present", ap.isCWEInputPresent());
