@@ -89,7 +89,6 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
                     if ($scope.documents.length === 0) {
                         $scope.heading = '0 Files';
                     }
-                    $rootScope.$broadcast('scanDeleted', $scope.scans.length > 0);
 
                 } else {
                     $scope.errorMessage = "Something went wrong. " + data.message;

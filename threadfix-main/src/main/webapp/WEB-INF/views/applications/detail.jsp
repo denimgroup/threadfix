@@ -19,7 +19,7 @@
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
-      ng-init="empty = <c:out value="${ numVulns }"/> === 0"
+      ng-init="empty = <c:out value="${ numVulns }"/> === 0; numVulns = <c:out value="${numVulns}"/>"s
       ng-file-drop="onFileSelect($files)"
       ng-class="{ 'drag-enabled': dragEnabled }"
       id="apps">

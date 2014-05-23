@@ -1,4 +1,4 @@
-<tab id='vulnTab' heading="<c:out value='${ numVulns }'/> Vulnerabilities">
+<tab id='vulnTab' heading="{{ numVulns }} Vulnerabilities">
 
     <%@ include file="../../vulnerabilities/vulnSearchControls.jsp" %>
 
