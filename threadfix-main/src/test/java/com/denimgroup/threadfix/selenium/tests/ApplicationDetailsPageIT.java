@@ -58,14 +58,15 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testTabUserNavigation() {
         buildTeamAppandScan();
-            dashboardPage.clickUserTab();
-            assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
-            assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
-            assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
-            assertTrue("Toggle help is not present", dashboardPage.isToggleHelpLinkPresent());
-            assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
-            assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
-            assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
+        dashboardPage.clickUserTab();
+        sleep(1000);
+        assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
+        assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
+        assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
+        assertTrue("Toggle help is not present", dashboardPage.isToggleHelpLinkPresent());
+        assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
+        assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
+        assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
     }
 
     @Test
@@ -102,6 +103,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testApplicationName() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
+        sleep(2000);
         assertTrue("Application Name is not present", ap.isApplicationNamePresent());
     }
 
@@ -116,6 +118,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     public void testActionButtonContents() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
         ap.clickActionButton();
+        sleep(1000);
         assertTrue("Edit Delete button is not present", ap.isEditDeletePresent());
         assertTrue("Edit De;ete button is not clickable", ap.isEditDeleteClickable());
         assertTrue("Edit Vuln button is not present", ap.isEditVulnFiltersPresent());
@@ -129,6 +132,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonEditDeleteButton() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(2000);
         ap.clickEditDeleteBtn();
         ap.clickSourceInfo();
         assertTrue("Delete Button is not present", ap.isDeleteButtonPresent());
@@ -159,6 +163,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonAddManualFinding() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(3000);
         ap.clickActionButton()
                 .clickManualFindingButton();
         sleep(2000);

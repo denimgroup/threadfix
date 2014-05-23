@@ -155,6 +155,7 @@ public class ApplicationIT extends BaseIT {
                 .expandTeamRowByName(teamName)
 				.clickViewAppLink(appName1, teamName);
 
+        sleep(2000);
 		applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(appName2)
 				.setUrlInput(urlText2)
@@ -247,6 +248,7 @@ public class ApplicationIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
+        sleep(2000);
 		// Test blank input
 		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(emptyString)
@@ -295,7 +297,7 @@ public class ApplicationIT extends BaseIT {
         WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, type)
-                .clickModalSubmit();
+                .clickCreateWaf();
 
 		// Add Application with WAF
         ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
@@ -436,6 +438,7 @@ public class ApplicationIT extends BaseIT {
 
         teamIndexPage.expandTeamRowByName(teamName1);
         ApplicationDetailPage applicationDetailpage = teamIndexPage.clickViewAppLink(appName, teamName1);
+        sleep(2000);
         applicationDetailpage.clickEditDeleteBtn();
         applicationDetailpage.setTeam(teamName2);
         applicationDetailpage.clickUpdateApplicationButton();
@@ -526,7 +529,7 @@ public class ApplicationIT extends BaseIT {
     public void deleteManualFindingScan() {
         String teamName = "TeamName" + getRandomString(5);
         String appName = "AppName" + getRandomString(5);
-        String CWE = "89";
+        String CWE = "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')";
         String parameter = "Test_Parameter";
         String desc = "Test Description for deleting manual finding.";
 

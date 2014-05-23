@@ -136,6 +136,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickEditDeleteBtn() {
+        sleep(2000);
         clickActionButton();
         sleep(2000);
         waitForElement(driver.findElementById("editApplicationModalButton"));
