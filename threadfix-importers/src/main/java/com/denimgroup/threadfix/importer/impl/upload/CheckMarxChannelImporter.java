@@ -34,15 +34,14 @@ import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  *
@@ -81,10 +80,14 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
 
     public class CheckMarxScanParser extends HandlerWithBuilder {
 
+        Map<FindingKey, String> findingMap = new HashMap<>();
         // These are per-Query
         String currentCweId = null,
             currentVulnName = null,
             currentSeverity = null;
+        String currentQueryBeginTag = null,
+                currentQueryEndTag = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
 
         // These are per-Result
         String currentFileName = null,
@@ -97,13 +100,23 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
 
         boolean getText = false;
         int currentSequence = 1;
+        boolean inFinding = false;
 
         List<DataFlowElement> currentDataFlowElements = new ArrayList<>();
 
         void addFinding() {
 
+            currentRawFinding.append(currentQueryEndTag);
+
+            findingMap.put(FindingKey.PATH, currentFileName);
+            findingMap.put(FindingKey.PARAMETER, null);
+            findingMap.put(FindingKey.VULN_CODE, currentVulnName);
+            findingMap.put(FindingKey.SEVERITY_CODE, currentSeverity);
+            findingMap.put(FindingKey.CWE, currentCweId);
+            findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
             // TODO maybe parse parameter
-            Finding finding = constructFinding(currentFileName, null, currentVulnName, currentSeverity, currentCweId);
+            Finding finding = constructFinding(findingMap);
 
             if (finding != null) {
                 finding.setSourceFileLocation(currentFileName);
@@ -119,6 +132,8 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             currentFileName = null;
             findingLineNumber = null;
             currentDataFlowElements = new ArrayList<>();
+            inFinding = false;
+            currentRawFinding.setLength(0);
         }
 
         void addDataFlowElement() {
@@ -146,10 +161,14 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
                 currentCweId = atts.getValue(CWE_ID);
                 currentVulnName = atts.getValue(NAME_ATTRIBUTE);
                 currentSeverity = atts.getValue(SEVERITY);
+                currentQueryBeginTag = makeTag(name, qName, atts);
+                currentQueryEndTag = "</" + qName + ">";
 
             } else if (qName.equals(RESULT)) {
                 currentFileName = atts.getValue(FILE_NAME);
                 findingLineNumber = atts.getValue(LINE);
+                inFinding = true;
+                currentRawFinding.append(currentQueryBeginTag);
 
             } else if (qName.equals(LINE) || qName.equals(CODE) || qName.equals(FILE_NAME) || qName.equals(NAME)) {
                 getText = true;
@@ -158,6 +177,8 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
                 getText = false;
                 builder.setLength(0);
             }
+            if (inFinding)
+                currentRawFinding.append(makeTag(name, qName , atts));
         }
 
         public void endElement (String uri, String name, String qName) {
@@ -172,8 +193,21 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             } else {
                 switch (qName) {
                     case PATH_NODE: addDataFlowElement(); break;
-                    case RESULT:    addFinding();         break;
+                    case RESULT:
+                    {
+                        currentRawFinding.append("</").append(qName).append(">");
+                        addFinding();
+                        break;
+                    }
                 }
+            }
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
+            if (qName.equalsIgnoreCase(QUERY)) {
+                currentQueryBeginTag = null;
+                currentQueryEndTag = null;
             }
         }
 
@@ -181,6 +215,8 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             if (getText) {
                 addTextToBuilder(ch, start, length);
             }
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
         }
     }
 
