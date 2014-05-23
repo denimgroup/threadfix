@@ -33,4 +33,8 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
         window.location.href = tfEncoder.encode("/organizations/" + application.team.id);
     };
 
+    $scope.$on('numVulns', function(event, numVulns) {
+        $scope.numVulns = numVulns;
+    });
+
 });
