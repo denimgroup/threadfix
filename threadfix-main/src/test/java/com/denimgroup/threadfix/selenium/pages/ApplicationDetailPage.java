@@ -377,10 +377,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean vulnsFilteredOpen(int count) {
-        return driver.findElementByLinkText( count + " Open Vulnerabilities").isDisplayed();
+        return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
     }
 
     public FilterPage clickEditVulnerabilityFilters() {
+        waitForElement(driver.findElementByClassName("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
         return new FilterPage(driver);
     }

@@ -541,10 +541,10 @@ public class ApplicationIT extends BaseIT {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
+        sleep(3000);
         ap.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(CWE)
-                .setParameter(parameter)
                 .setDescription(desc)
                 .clickDynamicSubmit();
 

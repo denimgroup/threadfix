@@ -103,8 +103,9 @@ public abstract class BasePage {
 	}
 	
 	public void clickConfigTab(){
+        sleep(2000);
 		driver.findElementById("tabConfigAnchor").click();
-		sleep(3000);
+		sleep(2000);
         waitForElement(driver.findElementById("apiKeysLink"));
 	}
 	
