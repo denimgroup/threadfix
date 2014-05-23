@@ -23,20 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 
@@ -65,14 +64,17 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
 		}
 	}
 
-	public class FindBugsSAXParser extends DefaultHandler {
+	public class FindBugsSAXParser extends HandlerWithBuilder {
+        Map<FindingKey, String> findingMap = new HashMap<>();
+
 		private Boolean inSecurityBug         = false;
 		private Boolean getDataFlowElements   = false;
-		
+
 		private String currentChannelVulnCode = null;
 		private String currentPath            = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
 		
 		private List<DataFlowElement> dataFlowElements = null;
 		private int dataFlowPosition;
@@ -139,13 +141,25 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
 	    			 dataFlowPosition = 1;
 	    		 }
 	    	}
+            if (inSecurityBug)
+                currentRawFinding.append(makeTag(name, qName , atts));
 	    }
 
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if (inSecurityBug && "BugInstance".equals(qName)) {
-	    		Finding finding = constructFinding(currentPath, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
+            if (inSecurityBug){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+            if (inSecurityBug && "BugInstance".equals(qName)) {
+
+                findingMap.put(FindingKey.PATH, currentPath);
+                findingMap.put(FindingKey.PARAMETER, currentParameter);
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+                Finding finding = constructFinding(findingMap);
+
                 if (finding != null) {
                     finding.setDataFlowElements(dataFlowElements);
                     add(finding);
@@ -158,8 +172,14 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
 	    		dataFlowElements = null;
 	    		dataFlowPosition = 0;
 	    		getDataFlowElements = false;
+                currentRawFinding.setLength(0);
 	    	}
 	    }
+        public void characters (char ch[], int start, int length)
+        {
+            if (inSecurityBug)
+                currentRawFinding.append(ch,start,length);
+        }
 	}
 
 	@Override
