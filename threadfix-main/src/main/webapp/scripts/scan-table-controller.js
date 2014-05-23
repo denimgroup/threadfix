@@ -25,8 +25,10 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
                             $scope.scans.splice(index, 1);
                         }
 
-                        if ($scope.scans.length === 0) {
-                            $scope.heading = '0 Scans';
+                        if ($scope.scans.length === 1) {
+                            $scope.heading = '1 Scan';
+                        } else {
+                            $scope.heading = $scope.scans.length + " Scans";
                         }
                         $rootScope.$broadcast('scanDeleted', $scope.scans.length > 0);
 
@@ -61,6 +63,5 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
         }
 
     });
-
 
 });

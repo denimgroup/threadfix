@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
+module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
 
     $scope.parameters = {};
 
@@ -424,8 +424,31 @@ module.controller('VulnSearchController', function($scope, $window, $http, tfEnc
                 })[0].click();
             }).
             error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
     }
+
+    $scope.$on('scanUploaded', function() {
+        $scope.refresh();
+        $scope.refreshHeading();
+    });
+
+    $scope.$on('scanDeleted', function() {
+        $scope.refresh();
+        $scope.refreshHeading();
+    });
+
+    $scope.refreshHeading = function() {
+        $http.get(tfEncoder.encode("/reports/update/heading/"+ $scope.$parent.appId)).
+            success(function(data, status, headers, config, response) {
+                $rootScope.$broadcast('scans', data.object.scans);
+                $rootScope.$broadcast('numVulns',  data.object.numVulns);
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to retrieve heading information. HTTP status was " + status;
+                $scope.loadingTree = false;
+            });
+    }
+
 });
