@@ -9,7 +9,7 @@
 	</a>
 </div>
 <div id="copyright">
-Version 2.0. Copyright &copy; 2009 - 2014. Denim Group, Ltd. All rights reserved.
+Version 2.1M1. Copyright &copy; 2009 - 2014. Denim Group, Ltd. All rights reserved.
 </div>
 
 </div>
