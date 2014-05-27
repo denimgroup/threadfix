@@ -22,7 +22,7 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
             controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode("/configuration/scanqueue" + $scope.currentUrl + "/addScanQueueTask");
+                    return tfEncoder.encode($scope.currentUrl + "/addScanQueueTask");
                 },
                 buttonText: function() {
                     return "Add Scan Queue Task";
