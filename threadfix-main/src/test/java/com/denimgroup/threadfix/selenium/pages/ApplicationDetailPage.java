@@ -382,7 +382,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public FilterPage clickEditVulnerabilityFilters() {
         sleep(3000);
-        waitForElement(driver.findElementByClassName("editVulnerabilityFiltersButton"));
+        waitForElement(driver.findElementById("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
         return new FilterPage(driver);
     }
