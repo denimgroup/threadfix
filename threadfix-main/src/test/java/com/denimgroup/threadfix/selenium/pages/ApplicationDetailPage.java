@@ -120,6 +120,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickActionButton() {
         waitForElement(driver.findElementById("actionButton1"));
+        sleep(3000);
         driver.findElementById("actionButton1").click();
         return new ApplicationDetailPage(driver);
     }

@@ -276,16 +276,20 @@ public class WafIT extends BaseIT {
                 .clickModalSubmit();
 
 		//Add waf to application
-		TeamIndexPage teamIndexPage = wafIndexPage.clickOrganizationHeaderLink();
-        teamIndexPage.expandTeamRowByName(teamName);
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
-        applicationDetailPage.clickEditDeleteBtn();
-        applicationDetailPage.clickAddWaf();
-        applicationDetailPage.addWaf(wafName);
-        applicationDetailPage.clickDynamicSubmit();
+		TeamIndexPage teamIndexPage = wafIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName)
+                .clickDynamicSubmit();
+
         assertTrue("waf was not added.", driver.findElement(By.id("wafName")).getText().contains(wafName));
+
         applicationDetailPage.clickModalSubmit();
         sleep(500);
+
 		//Generating  Deny waf Rules
 		WafRulesPage wafRulesPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .clickWafsHeaderLink()
