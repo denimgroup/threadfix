@@ -287,8 +287,8 @@ public class WafIT extends BaseIT {
 
         assertTrue("waf was not added.", driver.findElement(By.id("wafName")).getText().contains(wafName));
 
-        applicationDetailPage.clickModalSubmit();
-        sleep(500);
+        applicationDetailPage.saveWafAdd();
+        sleep(15000);
 
 		//Generating  Deny waf Rules
 		WafRulesPage wafRulesPage = applicationDetailPage.clickOrganizationHeaderLink()
