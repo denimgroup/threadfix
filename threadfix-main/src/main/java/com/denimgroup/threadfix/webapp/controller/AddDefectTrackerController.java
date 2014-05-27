@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -44,9 +43,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -58,8 +55,6 @@ public class AddDefectTrackerController {
 
     @Autowired
 	private DefectTrackerService defectTrackerService;
-    @Autowired
-	private ApplicationService applicationService;
     @Autowired(required = false)
     @Nullable
 	private PermissionService permissionService;
@@ -92,7 +87,7 @@ public class AddDefectTrackerController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody RestResponse<DefectTracker> processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
-			BindingResult result) {
+			BindingResult result, Model model) {
 		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}
@@ -129,11 +124,12 @@ public class AddDefectTrackerController {
 			defectTrackerService.storeDefectTracker(defectTracker);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug(user + " has successfully created a Defect Tracker with the name " + defectTracker.getName() +
+			log.info(user + " has successfully created a Defect Tracker with the name " + defectTracker.getName() +
 					", the URL " + defectTracker.getUrl() + 
 					", the type " + defectTracker.getDefectTrackerType().getName() + 
 					", and the ID " + defectTracker.getId());
 
+            model.addAttribute("defectTracker", new DefectTracker());
 
             return RestResponse.success(defectTracker);
         }

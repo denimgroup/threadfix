@@ -32,7 +32,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Scanner Comparison By Vulnerability Types]]></text>
+				<text><![CDATA[Scan Comparison By Vulnerability]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="40" width="800" height="20"/>

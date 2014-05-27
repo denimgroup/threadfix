@@ -188,7 +188,7 @@ public class EditApplicationController {
                     Permission.CAN_UPLOAD_SCANS,
                     Permission.CAN_MODIFY_VULNERABILITIES,
                     Permission.CAN_SUBMIT_DEFECTS,
-                    Permission.CAN_VIEW_JOB_STATUSES,
+//                    Permission.CAN_VIEW_JOB_STATUSES,
                     Permission.CAN_GENERATE_REPORTS,
                     Permission.CAN_MANAGE_DEFECT_TRACKERS,
                     Permission.CAN_MANAGE_USERS);

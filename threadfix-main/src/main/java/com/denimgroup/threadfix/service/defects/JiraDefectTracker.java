@@ -46,7 +46,7 @@ import java.util.*;
  */
 public class JiraDefectTracker extends AbstractDefectTracker {
 	
-    RestUtils restUtils = RestUtilsImpl.getInstance();
+    RestUtils restUtils = RestUtilsImpl.getInstance(JiraDefectTracker.class);
     
 	// The double slash is the Jira newline wiki syntax.
 	private static final String newLineRegex = "\\\\n", 

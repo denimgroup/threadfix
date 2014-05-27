@@ -20,7 +20,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[12 Month Vulnerability Breakdown]]></text>
+				<text><![CDATA[12 Month Vulnerability Burndown]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="222" y="40" width="309" height="20"/>
@@ -73,7 +73,7 @@
 				</categoryDataset>
 				<barPlot>
 					<plot labelRotation="45.0">
-						<seriesColor seriesOrder="0" color="#004678"/>
+						<seriesColor seriesOrder="0" color="#169eff"/>
 						<seriesColor seriesOrder="1" color="#004678"/>
 						<seriesColor seriesOrder="2" color="#BDD84D"/>
 						<seriesColor seriesOrder="3" color="#FDE05E"/>

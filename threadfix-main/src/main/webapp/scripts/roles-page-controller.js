@@ -45,7 +45,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canManageRemoteProviders": "false",
                          "canManageRoles": "false",
                          "canManageTeams": "false",
-                         "canViewJobStatuses": "false",
+//                         "canViewJobStatuses": "false",
                          "canViewErrorLogs": "false",
                          "canUploadScans": "false",
                          "canSubmitDefects": "false",
@@ -93,7 +93,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canManageRemoteProviders = role.canManageRemoteProviders === true ? "true" : "false";
             role.canManageRoles = role.canManageRoles === true ? "true" : "false";
             role.canManageTeams = role.canManageTeams === true ? "true" : "false";
-            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
+//            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
             role.canViewErrorLogs = role.canViewErrorLogs === true ? "true" : "false";
             role.canUploadScans = role.canUploadScans === true ? "true" : "false";
             role.canSubmitDefects = role.canSubmitDefects === true ? "true" : "false";
@@ -115,7 +115,8 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                 },
                 object: function() {
                     addKeys(role);
-                    return role;
+                    var roleCopy = angular.copy(role);
+                    return roleCopy;
                 },
                 buttonText: function() {
                     return "Save Edits";
@@ -144,7 +145,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                 $scope.roles.sort(nameCompare);
                 $scope.successMessage = "Successfully edited role " + editedRole.displayName;
             } else {
-                $scope.successMessage = "Role deletion was successful for Role " + editedRole.displayName;
+                $scope.successMessage = "Role deletion was successful for Role " + role.displayName;
             }
 
             if ($scope.roles.length === 0){

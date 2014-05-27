@@ -16,11 +16,11 @@
 	    <li>
 	    	<a id="defectTrackersLink" href="<spring:url value="configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
 	    </li>
-	    <security:authorize ifAnyGranted="ROLE_CAN_VIEW_JOB_STATUSES">
-		    <li>
-		    	<a id="jobStatusesLink" href="<spring:url value="/jobs/all" />">Job Statuses</a>
-		    </li>
-	    </security:authorize>
+	    <%--<security:authorize ifAnyGranted="ROLE_CAN_VIEW_JOB_STATUSES">--%>
+		    <%--<li>--%>
+		    	<%--<a id="jobStatusesLink" href="<spring:url value="/jobs/all" />">Job Statuses</a>--%>
+		    <%--</li>--%>
+	    <%--</security:authorize>--%>
 	    <li>
 	    	<a id="remoteProvidersLink" href="<spring:url value="configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
 	    </li>

@@ -36,7 +36,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('scans', $scope.config.scans);
                    $rootScope.$broadcast('documents', $scope.config.documents);
 
+                   $rootScope.$broadcast('loadVulnerabilitySearchTable');
+
                    $scope.config.application.organization = $scope.config.application.team;
+                   $scope.$parent.application = $scope.config.application;
                } else {
                    $log.info("HTTP request for form objects failed. Error was " + data.message);
                }
@@ -49,7 +52,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     });
 
     $scope.updateDefectStatus = function() {
-        $http.get(tfEncoder.encode("/defects/update")).
+        $http.get(tfEncoder.encode(currentUrl + "/defects/update")).
             success(function(data, status, headers, config) {
 
                 if (data.success) {
@@ -92,6 +95,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         } else if (name === 'createDefectTracker') {
             $scope.showCreateDefectTrackerModal();
+        } else if (name === 'goToWaf') {
+            $scope.goToWaf();
         }
     });
 
@@ -106,9 +111,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit");
                 },
                 object: function () {
+                    var appCopy = angular.copy($scope.config.application);
                     var app = $scope.config.application;
                     app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete")
-                    return $scope.config.application;
+                    return appCopy;
                 },
                 config: function() {
                     return $scope.config;
@@ -123,7 +129,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (application) {
             $scope.config.application = application;
-            $scope.successMessage = "Successfully edited application " + application.name;
+            $scope.$parent.application = application;
+            $scope.$parent.successMessage = "Successfully edited application " + application.name;
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -278,11 +285,17 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (waf) {
-            $scope.config.wafs.push(waf);
-            $scope.config.application.waf = waf;
-            $scope.successMessage = "Successfully created waf " + waf.name;
-            $scope.showEditModal();
+        modalInstance.result.then(function (dt) {
+
+            if (!$scope.config.defectTrackerList || $scope.config.defectTrackerList.length === 0) {
+                $scope.config.defectTrackerList = [];
+            }
+
+            $scope.config.defectTrackerList.push(dt);
+            $scope.config.application.defectTracker = dt;
+            $scope.successMessage = "Successfully created waf " + dt.name;
+//            $scope.showEditModal();
+            $scope.showAddDefectTrackerModal();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -356,6 +369,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             $log.info('Modal dismissed at: ' + new Date());
         });
 
-    }
+    };
+
+    $scope.goToWaf = function() {
+        window.location.href = tfEncoder.encode("/wafs/" + $scope.config.application.waf.id);
+    };
 
 })

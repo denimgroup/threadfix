@@ -78,6 +78,11 @@ public class ScheduledScanServiceImpl implements ScheduledScanService {
                 && ScheduledScan.DayInWeek.getDay(day)==null) {
             result.rejectValue("dateError", null, null, "Select day from list");
         }
+
+        // Clean day if it is Daily schedule
+        if (ScheduledScan.ScheduledFrequencyType.getFrequency(frequency) == ScheduledScan.ScheduledFrequencyType.DAILY) {
+            scheduledScan.setDay(null);
+        }
     }
 
     @Override

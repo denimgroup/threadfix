@@ -85,7 +85,7 @@ public abstract class BasePage {
 	
 	public ScanIndexPage clickScansHeaderLink(){
 		driver.findElementById("scansHeader").click();
-		sleep(1000);
+		sleep(3000);
 		return new ScanIndexPage(driver);
 	}
 	
@@ -103,6 +103,7 @@ public abstract class BasePage {
 	}
 	
 	public void clickConfigTab(){
+        sleep(2000);
 		driver.findElementById("tabConfigAnchor").click();
 		sleep(2000);
         waitForElement(driver.findElementById("apiKeysLink"));
@@ -176,7 +177,7 @@ public abstract class BasePage {
 	
 	public DashboardPage clickDashboardLink(){
 		driver.findElementById("dashboardHeader").click();
-		sleep(1000);
+		sleep(3000);
 		return new DashboardPage(driver);
 	}
 	
@@ -368,6 +369,11 @@ public abstract class BasePage {
 
     }
 
+    public boolean isElementVisible(String elementID){
+        ExpectedCondition<WebElement> condition = ExpectedConditions.visibilityOf(driver.findElementById(elementID));
+        return condition.apply(driver) != null;
+    }
+
 
     /*--------------helper functions--------------*/
 	public void sleep(int num) {
@@ -476,14 +482,14 @@ public abstract class BasePage {
 
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalCancel() {
-        return (T) clickModalSubmitInvalid(this.getClass());
+        return (T) clickModalCancel(this.getClass());
     }
 
     @SuppressWarnings("unchecked")
     public <T extends BasePage> T clickModalCancel(Class<T> targetClass) {
         driver.findElementById("closeModalButton").click();
-
-        assertTrue("Close button wasn't present.", driver.findElementsById("closeModalbutton").size() != 0);
+        sleep(500);
+        assertTrue("Close button wasn't still present.", driver.findElementsById("closeModalbutton").size() == 0);
 
         return (T) this;
     }

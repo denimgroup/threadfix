@@ -10,8 +10,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     $scope.vulnType = 'Open';
 
-    $scope.sortType = 'Type';
-    $scope.sort = 1;
+    $scope.sortType = 'Severity';
+    $scope.sort = 2;
 
     var getCweFilter = function() {
         if ($scope.cweFilter) {
@@ -34,7 +34,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             controller: 'GenericModalController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode(currentUrl + "/vulnerabilities/" + vuln.id + "/addComment");
+                    return tfEncoder.encode(rl + "/vulnerabilities/" + vuln.id + "/addComment");
                 },
                 object: function () {
                     return {};
@@ -95,7 +95,10 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
             object.closed = true;
         } else if ($scope.vulnType === 'False Positive') {
             object.falsePositive = true;
+        } else if ($scope.vulnType === 'Hidden') {
+            object.hidden = true;
         }
+
 
         return object;
     }
@@ -156,6 +159,7 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
     var refreshSuccess = function(data) {
         $scope.vulns = data.object.vulnerabilities;
+        $scope.vulns.forEach(sortFindings);
         $scope.genericVulnerabilities = data.object.genericVulnerabilities;
         $scope.numVulns = data.object.numVulns;
         $scope.max = Math.ceil(data.object.numVulns/100);
@@ -180,6 +184,14 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
         $scope.loading = false;
 
         calculateShowTypeSelect();
+    }
+
+    var sortFindings = function(vuln) {
+        vuln.findings.sort(function(a, b) {
+            if (a.importTime < b.importTime) return 1;
+            if (a.importTime > b.importTime) return -1;
+            return 0;
+        });
     }
 
     // Listeners / refresh stuff
@@ -360,8 +372,8 @@ myAppModule.controller('VulnTableController', function ($scope, $window, $http, 
 
         $scope.currentModal = modalInstance;
 
-        modalInstance.result.then(function (s) {
-            $scope.successMessage = "Successfully merged the vulnerability.";
+        modalInstance.result.then(function () {
+            $scope.successMessage = "Successfully submitted the vulnerability.";
             localRefresh();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

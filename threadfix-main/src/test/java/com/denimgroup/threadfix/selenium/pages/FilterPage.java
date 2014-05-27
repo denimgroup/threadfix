@@ -55,21 +55,20 @@ public class FilterPage extends BasePage {
     }
 
     public FilterPage clickAddFilter() {
-        return clickModalSubmit();
+        driver.findElementById("submit").click();
+        return new FilterPage(driver);
     }
 
     public FilterPage addVulnerabilityFilter(String vulnerabilityType, String severity) {
         setVulnerabilityType(vulnerabilityType)
                 .setSeverity(severity)
                 .clickAddFilter();
-        sleep(1000);
         waitForElement(driver.findElementByClassName("alert-success"));
-
         return new FilterPage(driver);
     }
 
     public FilterPage deleteFilter() {
-        driver.findElementById("edit1").findElement(By.className("btn")).click();
+        driver.findElementById("edit0").findElement(By.className("btn")).click();
         driver.findElementById("deleteButton").click();
 
         Alert alert = driver.switchTo().alert();
@@ -100,7 +99,7 @@ public class FilterPage extends BasePage {
 
     public FilterPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
-        //waitForElement(driver.findElementByClassName("alert-success"));
+        sleep(5000);
         return new FilterPage(driver);
     }
 

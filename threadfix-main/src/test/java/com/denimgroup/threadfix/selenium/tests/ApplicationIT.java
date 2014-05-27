@@ -57,8 +57,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testCreateBasicApplicationDisplayedApplicationDetailPage() {
-        String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
-        String appName = "testCreateBasicApplicationApp" + getRandomString(3);
+        String teamName = "TeamName" + getRandomString(3);
+        String appName = "AppName" + getRandomString(3);
         String urlText = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
@@ -66,18 +66,14 @@ public class ApplicationIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        //Create Team & Application
-        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
+        //Create Application
+        ApplicationDetailPage ap = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, urlText, "Low")
-                .saveApplication();
-
-        //Navigate to Application Detail Page
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+                .saveApplication()
+                .clickApplicationName(appName);
 
         assertTrue("The name was not preserved correctly on Application Detail Page.",
-                applicationDetailPage.getNameText().contains(appName));
+                ap.getNameText().contains(appName));
     }
 
     //Validation Test
@@ -159,6 +155,7 @@ public class ApplicationIT extends BaseIT {
                 .expandTeamRowByName(teamName)
 				.clickViewAppLink(appName1, teamName);
 
+        sleep(2000);
 		applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(appName2)
 				.setUrlInput(urlText2)
@@ -170,7 +167,7 @@ public class ApplicationIT extends BaseIT {
 		assertTrue("The name was not preserved correctly on Application Detail Page.",
                 appName2.equals(applicationDetailPage.getNameText()));
 
-        applicationDetailPage = applicationDetailPage.clickEditDeleteBtn();
+        applicationDetailPage.clickEditDeleteBtn();
 	    assertTrue("The URL was not edited correctly.", applicationDetailPage.getUrlText().contains(urlText2));
 	}
 
@@ -251,6 +248,7 @@ public class ApplicationIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
+        sleep(2000);
 		// Test blank input
 		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(emptyString)
@@ -299,7 +297,7 @@ public class ApplicationIT extends BaseIT {
         WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(wafName, type)
-                .clickModalSubmit();
+                .clickCreateWaf();
 
 		// Add Application with WAF
         ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
@@ -438,13 +436,15 @@ public class ApplicationIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        TeamDetailPage teamDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
-                .clickViewAppLink(appName, teamName1)
-                .clickEditDeleteBtn()
-                .setTeam(teamName2)
-                .clickUpdateApplicationButton()
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName1);
+        teamIndexPage.expandTeamRowByName(teamName1);
+        ApplicationDetailPage applicationDetailpage = teamIndexPage.clickViewAppLink(appName, teamName1);
+        sleep(2000);
+        applicationDetailpage.clickEditDeleteBtn();
+        applicationDetailpage.setTeam(teamName2);
+        applicationDetailpage.clickUpdateApplicationButton();
+
+        applicationDetailpage.clickOrganizationHeaderLink();
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
 
         Boolean appOnTeam1 = teamDetailPage.isAppPresent(appName);
 
@@ -483,7 +483,7 @@ public class ApplicationIT extends BaseIT {
 
         VulnerabilityDetailPage vulnerabilityDetailPage = ap.clickScansTab()
                 .clickViewScan()
-                .clickViewFinding(1)
+                .clickViewFinding()
                 .clickViewVulnerability();
 
         //TODO requires ElementIDs on VulnerabililtyDetailPage
@@ -516,7 +516,7 @@ public class ApplicationIT extends BaseIT {
 
         ap.clickScansTab()
                 .clickViewScan()
-                .clickViewFinding(1)
+                .clickViewFinding()
                 .clickEditVulnerability();
 
         //TODO Bug in VulnerabilityDetailsPage, does not save changes.
@@ -529,7 +529,7 @@ public class ApplicationIT extends BaseIT {
     public void deleteManualFindingScan() {
         String teamName = "TeamName" + getRandomString(5);
         String appName = "AppName" + getRandomString(5);
-        String CWE = "89";
+        String CWE = "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')";
         String parameter = "Test_Parameter";
         String desc = "Test Description for deleting manual finding.";
 
@@ -541,10 +541,10 @@ public class ApplicationIT extends BaseIT {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
+        sleep(3000);
         ap.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(CWE)
-                .setParameter(parameter)
                 .setDescription(desc)
                 .clickDynamicSubmit();
 

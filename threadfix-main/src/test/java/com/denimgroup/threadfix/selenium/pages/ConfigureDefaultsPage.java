@@ -53,4 +53,11 @@ public class ConfigureDefaultsPage extends BasePage {
 	public boolean isSaveSuccessful(){
 		return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
 	}
+
+    public ConfigureDefaultsPage defaultPermissions() {
+        driver.findElementByClassName("panel-title").click();
+        sleep(1000);
+        return new ConfigureDefaultsPage(driver);
+    }
+
 }

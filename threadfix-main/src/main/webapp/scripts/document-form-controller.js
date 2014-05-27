@@ -89,19 +89,17 @@ myAppModule.controller('DocumentFormController', function ($scope, $window, $mod
                     if ($scope.documents.length === 0) {
                         $scope.heading = '0 Files';
                     }
-                    $rootScope.$broadcast('scanDeleted', $scope.scans.length > 0);
 
                 } else {
-                    scan.deleting = false;
                     $scope.errorMessage = "Something went wrong. " + data.message;
                 }
             }).
             error(function(data, status, headers, config) {
                 $log.info("HTTP request for form objects failed.");
                 // TODO improve error handling and pass something back to the users
-                scan.deleting = false;
                 $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
-            });    };
+            });
+    };
 
     $scope.viewDocument = function(document) {
         window.location.href = tfEncoder.encode($scope.currentUrl + '/documents/' + document.id);

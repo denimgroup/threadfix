@@ -111,6 +111,7 @@ public class ChannelType extends BaseEntity {
 		this.url = url;
 	}
 
+    @JsonIgnore
 	@Column(length = 1024, nullable = true)
 	public String getExportInfo() {
 		return exportInfo;

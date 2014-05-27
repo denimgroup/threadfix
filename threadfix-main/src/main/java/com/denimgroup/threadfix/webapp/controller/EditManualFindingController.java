@@ -28,11 +28,8 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
-import com.denimgroup.threadfix.service.FindingService;
-import com.denimgroup.threadfix.service.ManualFindingService;
-import com.denimgroup.threadfix.service.VulnerabilityService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import sun.java2d.Surface;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -65,6 +61,10 @@ public class EditManualFindingController {
     private VulnerabilityService vulnerabilityService;
 	@Autowired
     private ManualFindingService manualFindingService = null;
+    @Autowired
+    private QueueSender queueSender;
+    @Autowired
+    private ScanService scanService;
 
 	public boolean isManual(Finding finding) {
 		return !(finding == null || finding.getScan() == null || 
@@ -117,7 +117,7 @@ public class EditManualFindingController {
 	}
 	
     @RequestMapping(params = "group=static", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> staticSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<Vulnerability> staticSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
             @PathVariable("vulnerabilityId") int vulnerabilityId,
@@ -161,19 +161,18 @@ public class EditManualFindingController {
                 return FormRestResponse.failure("Form Validation failed.", result);
 			} else {
 				status.setComplete();
+                updateVulnAfterEdit(vulnerabilityId, dbFinding, appId);
                 int newVulnId = dbFinding.getVulnerability().getId();
-                String msg = "Static finding has been modified" +
-                        ((vulnerabilityId==newVulnId) ? "" :
-                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
-                model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
-//                return RestResponse.success("A static manual finding has been modified to application");
-                return RestResponse.success(msg);
+//                String msg = "Static finding has been modified" +
+//                        ((vulnerabilityId==newVulnId) ? "" :
+//                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
+                return RestResponse.success(vulnerabilityService.loadVulnerability(newVulnId));
 			}
 		}
 	}
 	
     @RequestMapping(params = "group=dynamic", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> dynamicSubmit(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<Vulnerability> dynamicSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
             @PathVariable("findingId") int findingId,
             @PathVariable("vulnerabilityId") int vulnerabilityId,
@@ -221,15 +220,35 @@ public class EditManualFindingController {
                 return FormRestResponse.failure("Form Validation failed.", result);
 			} else {
 				status.setComplete();
+                updateVulnAfterEdit(vulnerabilityId, dbFinding, appId);
                 int newVulnId = dbFinding.getVulnerability().getId();
-                String msg = "Dynamic finding has been modified" +
-                        ((vulnerabilityId==newVulnId) ? "" :
-                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
+//                String msg = "Dynamic finding has been modified" +
+//                        ((vulnerabilityId==newVulnId) ? "" :
+//                                " and moved from Vulnerability " + vulnerabilityId + " to Vulnerability " + newVulnId);
                 model.addAttribute("contentPage", "/organizations/" + orgId + "/applications/" + appId + "/vulnerabilities/" + newVulnId);
-                return RestResponse.success(msg);
+                return RestResponse.success(vulnerabilityService.loadVulnerability(newVulnId));
 			}
 		}
 	}
+
+    private void updateVulnAfterEdit(int vulnerabilityId, Finding dbFinding, int appId) {
+        int newVulnId = dbFinding.getVulnerability().getId();
+
+        if (newVulnId != vulnerabilityId) {
+            Vulnerability oldVuln = vulnerabilityService.loadVulnerability(vulnerabilityId);
+            if (oldVuln.getFindings() == null || oldVuln.getFindings().size() == 0 ||
+                    (oldVuln.getFindings().size() == 1 && oldVuln.getFindings().get(0).getId() == dbFinding.getId() )) {
+                oldVuln.getApplication().getVulnerabilities().remove(oldVuln);
+                oldVuln.setApplication(null);
+                vulnerabilityService.deleteVulnerability(oldVuln);
+                Scan scan = manualFindingService.getManualScan(appId);
+                scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities()-1);
+                scanService.storeScan(scan);
+            }
+
+        }
+        queueSender.updateCachedStatistics(appId);
+    }
 
     private void copyFinding(Finding finding, Finding dbFinding) {
         dbFinding.setIsStatic(finding.getIsStatic());

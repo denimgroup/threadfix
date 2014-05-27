@@ -298,7 +298,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 				post.addParameter(paramNames[i], paramVals[i]);
 			}
 
-			HttpClient client = getConfiguredHttpClient();
+			HttpClient client = getConfiguredHttpClient(QualysRemoteProvider.class);
 			
 			int status = client.executeMethod(post);
 
@@ -333,7 +333,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			get.setRequestHeader("Authorization", "Basic " + encodedLogin);
 		}
 		
-		HttpClient client = getConfiguredHttpClient();
+		HttpClient client = getConfiguredHttpClient(QualysRemoteProvider.class);
 		try {
 			int status = client.executeMethod(get);
 			if (status != 200) {

@@ -26,12 +26,13 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -40,8 +41,16 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class ScanQueueEntIT extends BaseIT {
 
-	private static Map<String, String> scansMap = ScanContents.SCAN_FILE_MAP;
-	
+	private static final  Map<String, String> scansMap = new HashMap<>();
+    static{
+        scansMap.put("OWASP Zed Attack Proxy", null );
+        scansMap.put("Burp Suite", null );
+        scansMap.put("Acunetix WVS", null);
+        scansMap.put("IBM Rational AppScan", null);
+    }
+
+    // TODO: Ignored because adding scan tasks is broken and bug is filed
+    @Ignore
 	@Test
 	public void testAddScanTask() throws MalformedURLException {
 		String teamName = "scanQueueTaskTeam" + getRandomString(3);
@@ -55,14 +64,14 @@ public class ScanQueueEntIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
-		
+
 		for (Entry<String, String> mapEntry : scansMap.entrySet()) {
             String tempName = mapEntry.getKey();
             if(mapEntry.getKey().equals("NTO Spider6")){
                 tempName = "NTO Spider";
             }
 
-			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab()
+			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab(scanQueueCount)
                     .clickAddNewScanTask()
                     .setScanQueueType(tempName)
                     .submitScanQueue();

@@ -6,7 +6,7 @@ myAppModule.value('deleteUrl', null);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('PermissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl) {
+myAppModule.controller('PermissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, headerText) {
 
     $scope.object = object;
 
@@ -15,6 +15,8 @@ myAppModule.controller('PermissionModalController', function ($scope, $rootScope
     $scope.buttonText = buttonText;
 
     $scope.loading = false;
+
+    $scope.headerText = headerText;
 
     var buildMap = function(object) {
 

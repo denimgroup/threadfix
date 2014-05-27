@@ -33,6 +33,8 @@ public class FindingDetailPage extends BasePage {
 
     public VulnerabilityDetailPage clickViewVulnerability() {
         driver.findElementByLinkText("View Vulnerability").click();
+        sleep(3000);
+        waitForElement(driver.findElementById("toggleMoreInfoButton"));
         return new VulnerabilityDetailPage(driver);
     }
 

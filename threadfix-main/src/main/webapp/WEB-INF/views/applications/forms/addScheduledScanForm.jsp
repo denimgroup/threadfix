@@ -18,7 +18,7 @@
             <tr class="left-align">
                 <td style="padding:5px;">Time</td>
                 <td style="padding:5px;">
-                    <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour" name="hour">
+                    <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour">
                         <option value="0" label="0"/>
                         <option value="1" label="1"/>
                         <option value="2" label="2"/>
@@ -33,7 +33,7 @@
                         <option value="11" label="11"/>
                     </select>
                      :
-                    <select name="minute" ng-model="object.minute" style="margin-bottom:0; width:52px;" id="minute" name="minute">
+                    <select name="minute" ng-model="object.minute" style="margin-bottom:0; width:52px;" id="minute">
                         <option value="0" label="00"/>
                         <option value="15" label="15"/>
                         <option value="30" label="30"/>
@@ -51,8 +51,7 @@
 
                     <select style="margin-bottom:0; width:110px;" name="selectedDay"
                                  id="selectedDay" ng-model="object.day"
-                                 ng-show="object.frequency !== 'Daily'"
-                                 name="day">
+                                 ng-show="object.frequency !== 'Daily'">
                         <option value="Sunday">Sunday</option>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
@@ -69,7 +68,7 @@
             <tr class="left-align">
                 <td style="padding:5px;">Scanner</td>
                 <td style="padding:5px;">
-                    <select style="width:243px;" name="scanner"
+                    <select style="width:243px;" name="scanner" ng-model="object.scanner"
                                  id="scanner${application.id}"/>
                         <option ng-repeat='scanner in config.scanners' value="{{ scanner }}"> {{ scanner }} </option>
                     </select>

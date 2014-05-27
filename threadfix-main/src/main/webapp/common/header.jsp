@@ -102,7 +102,7 @@
 							<li class="divider" role="presentation"></li>
                             <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
                                 <li class="normalLinks">
-                                    <a id="configureDefaultsLink" href="<spring:url value="/configuration/defaults" htmlEscape="true"/>">Configure Defaults</a>
+                                    <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>
                             </security:authorize>
                             <security:authorize ifAnyGranted="ROLE_CAN_MODIFY_VULNERABILITIES">

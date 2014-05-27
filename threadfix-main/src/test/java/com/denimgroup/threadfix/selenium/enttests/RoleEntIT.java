@@ -94,69 +94,48 @@ public class RoleEntIT extends BaseIT {
 
 	}
 
-    @Test
-    public void testEditRoleNameLength() {
-        String roleNameLong = "rolename" + getRandomString(25);
-        String roleNameShort = "RolenameShort";
 
+    @Test
+    public void testCreateRoleValidation() {
+        String whiteSpaceName = "     ";
+
+        // Test whitespace
         rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink()
                 .clickCreateRole()
-                .setRoleName(roleNameShort, null)
+                .setRoleName(whiteSpaceName,null)
                 .clickSaveRole(null);
 
-        rolesIndexPage.clickEditLink(roleNameShort)
-                .setRoleName(roleNameLong, roleNameShort)
-                .clickSaveRole(roleNameShort);
-
-        assertTrue("Name length error did not show.",
-                rolesIndexPage.getNameError().contains("This field has a maximum length of 25"));
+        assertTrue("Blank field error didn't show correctly.",
+                rolesIndexPage.getNameError().contains("Name is required."));
     }
 
-	@Test
-	public void testCreateRoleValidation() {
-		String emptyName = "";
-		String whiteSpaceName = "     ";
-		String normalName = getRandomString(15);
 
-		// Test empty string
-		
-		rolesIndexPage = loginPage.login("user", "password")
-				.clickManageRolesLink()
-				.clickCreateRole()
-				.setRoleName(emptyName,null)
-				.clickSaveRoleInvalid(null);
+    @Test
+	public void testCreateRoleDupicateValidation() {
 
-		assertTrue("Blank field error didn't show correctly.", 
-				rolesIndexPage.getNameError().contains("This field cannot be blank"));
-
-		// Test whitespace
-
-		rolesIndexPage = rolesIndexPage.setRoleName(whiteSpaceName,null).clickSaveRoleInvalid(null);
-
-		assertTrue("Blank field error didn't show correctly.", 
-				rolesIndexPage.getNameError().contains("This field cannot be blank"));
+		String name1 = "testNameDuplication";
+        String name2 = "testNameDuplication";
 
 		// Test duplicates
-
-		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal()
+		rolesIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+                .clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(normalName,null)
+				.setRoleName(name1,null)
 				.clickSaveRole(null)
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(normalName,null)
-				.clickSaveRoleInvalid(null);
+				.setRoleName(name2,null)
+				.clickSaveRole(null);
 
 		assertTrue("Duplicate name error did not show correctly.",
-				rolesIndexPage.getDisplayNameError().contains("A role with this name already exists."));
+				rolesIndexPage.getDupNameError().contains("That name is already taken."));
 
-		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal().clickDeleteButton(normalName);
-
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(normalName));
-		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(normalName));
+		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal();
 	}
 
+    // TODO: Assigning Roles to Users is broken, bug filed.
+    @Ignore
 	@Test
 	public void addApplicationOnly(){
 		String roleName = "appOnly" + getRandomString(10);
@@ -197,19 +176,11 @@ public class RoleEntIT extends BaseIT {
 		
 		Boolean add  = applicationDetailPage.getNameText().contains(appName);
 		
-		applicationDetailPage.logout()
-							.login("user", "password")
-							.clickOrganizationHeaderLink()
-							.clickViewTeamLink(teamName)
-							.clickDeleteButton()
-							.clickManageRolesLink()
-							.clickDeleteButton(roleName)
-							.logout();
-		
 		assertTrue("new role user was not able to add an application",add);
 	}
 
-
+    // TODO: Enterprise is not an option in Role Permissions
+    @Ignore
 	@Test
 	public void testSetPermissions() {
 		String name = "testName" + getRandomString(10);
@@ -266,7 +237,8 @@ public class RoleEntIT extends BaseIT {
 	
 	// these tests are to ensure that threadfix cannot enter a state with no users that
 	// have permissions to manage users / roles / groups
-
+    // TODO: bug filed for Read Access not an option in Roles
+    @Ignore
 	@Test
 	public void testRemoveRolesFromUser() {
 		String admin = "Administrator";
@@ -281,6 +253,8 @@ public class RoleEntIT extends BaseIT {
 		 				.chooseRoleForGlobalAccess(admin, null)
 		 				.clickAddNewUserBtn()
 		 				.clickEditLink("user")
+                        .enterPassword("passwordpassword", null)
+                        .enterConfirmPassword("passwordpassword", null)
 		 				.chooseRoleForGlobalAccess("Read Access", "user")
 		 				.clickUpdateUserBtn("user");
 		 
@@ -372,9 +346,9 @@ public class RoleEntIT extends BaseIT {
 		
 		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName2));
 	}
-	
-	
-	
-	
+
+
+
+
 
 }

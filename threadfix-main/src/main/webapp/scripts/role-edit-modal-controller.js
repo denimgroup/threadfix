@@ -60,7 +60,7 @@ myAppModule.controller('RoleEditModalController', function ($scope, $rootScope, 
         $scope.object.canManageRemoteProviders = value;
         $scope.object.canManageRoles = value;
         $scope.object.canManageTeams = value;
-        $scope.object.canViewJobStatuses = value;
+//        $scope.object.canViewJobStatuses = value;
         $scope.object.canViewErrorLogs = value;
         $scope.object.canUploadScans = value;
         $scope.object.canSubmitDefects = value;

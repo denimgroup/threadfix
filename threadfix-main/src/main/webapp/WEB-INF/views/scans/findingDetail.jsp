@@ -85,7 +85,31 @@
 						<c:if test="${ empty finding.displayId }"><c:out value="${ finding.nativeId }" /></c:if>						
 					</td>
 				</tr>
-			</c:if>		
+				<tr>
+					<td class="bold" >Attack String</td>
+					<td class="inputValue"><PRE><c:out value="${ finding.attackString }"/></PRE></td>
+				</tr>
+				<tr class="odd">
+					<td class="bold" valign=top>Scanner Detail</td>
+					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE><c:out value="${ finding.scannerDetail }"/></PRE></td>
+				</tr>
+				<tr>
+					<td class="bold" valign=top>Scanner Recommendation</td>
+					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE><c:out value="${ finding.scannerRecommendation }"/></PRE></td>
+				</tr>				
+				<tr>
+					<td class="bold" valign=top>Attack Request</td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.attackRequest }"/></PRE></td>
+				</tr>
+				<tr>
+					<td class="bold" valign=top>Attack Response</td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.attackResponse }"/></PRE></td>
+				</tr>
+				<tr>
+					<td class="bold" valign=top>Raw Finding</td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.rawFinding }"/></PRE></td>
+				</tr>
+			</c:if>
 			<c:if test="${ not empty finding.dependency }">			
 				<tr>
 					<td class="bold">CVE ID</td>

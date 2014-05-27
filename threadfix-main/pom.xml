@@ -618,6 +618,7 @@
                                 <zipUrlInstaller>
                                     <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
                                 </zipUrlInstaller>
+                                <timeout>960000</timeout>
                             </container>
                         </configuration>
                         <executions>
@@ -654,6 +655,7 @@
                                 <zipUrlInstaller>
                                     <url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.53/bin/apache-tomcat-7.0.53.zip</url>
                                 </zipUrlInstaller>
+                                <timeout>360000</timeout>
                             </container>
                         </configuration>
                         <executions>

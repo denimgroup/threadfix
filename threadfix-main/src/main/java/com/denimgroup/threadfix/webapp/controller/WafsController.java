@@ -178,8 +178,6 @@ public class WafsController {
 		if (waf != null && canDelete) {
 			wafService.deleteById(wafId);
 			status.setComplete();
-			ControllerUtils.addSuccessMessage(request, 
-					"The WAF deletion was successful for WAF" + waf.getName() + ".");
 			return "redirect:/wafs";
 		} else {
 			
@@ -189,13 +187,14 @@ public class WafsController {
 		}
 	}
 
-	@RequestMapping(value = "/{wafId}/rules/download/app/{appId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{wafId}/rules/download/app/{appId}", method = RequestMethod.GET)
 	public ModelAndView download(@PathVariable("wafId") int wafId,
                                  @PathVariable("appId") int wafAppId,
 			HttpServletResponse response, HttpServletRequest request) throws IOException {
 		Waf waf = wafService.loadWaf(wafId);
 		if (waf == null)
 			return null;
+
         Application application = null;
         if (wafAppId != -1) {
             application = applicationService.loadApplication(wafAppId);

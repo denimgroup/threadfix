@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	private RemoteProviderApplicationService remoteProviderApplicationService;
 	private ScanMergeService scanMergeService;
 	private RemoteProviderFactory remoteProviderFactory;
+
+    @Autowired
+    private QueueSender queueSender;
 
 	@Autowired
 	public RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao,
@@ -133,7 +137,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		
 		List<Scan> resultScans = remoteProviderFactory.fetchScans(remoteProviderApplication);
 		
-		ResponseCode success = ResponseCode.ERROR_OTHER;
+		ResponseCode success = ResponseCode.ERROR_NO_SCANS_FOUND;
 		if (resultScans != null && resultScans.size() > 0) {
 			Collections.sort(resultScans, new Comparator<Scan>() {
 				@Override
@@ -191,6 +195,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 					
 						scanMergeService.processRemoteScan(resultScan);
 						success = ResponseCode.SUCCESS;
+                        queueSender.updateCachedStatistics(remoteProviderApplication.getApplication().getId());
 					}
 				}
 			}
@@ -203,6 +208,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				}
 			}
 		}
+
 		return success;
 	}
 

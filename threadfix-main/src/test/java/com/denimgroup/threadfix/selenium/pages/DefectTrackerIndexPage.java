@@ -68,11 +68,6 @@ public class DefectTrackerIndexPage extends BasePage {
         sleep(1000);
 		return new DefectTrackerIndexPage(driver);
 	}
-	
-	public DefectTrackerIndexPage clickCloseButton() {
-		driver.findElementById("closeDTModalButton").click();
-		return new DefectTrackerIndexPage(driver);
-	}
 
 	public DefectTrackerIndexPage clickAddDefectTrackerButton() {
 		driver.findElementById("addNewDTButton").click();
@@ -84,15 +79,23 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		return new DefectTrackerIndexPage(driver);
 	}
-	
-	public String getNameErrorsText() {
-		return driver.findElementById("name.errors").getText();
+
+	public String getNameRequiredErrorsText() {
+		return driver.findElementById("nameRequiredError").getText();
 	}
-	
+
+    public String getNameDuplicateErrorsText() {
+        return driver.findElementById("nameServerError").getText();
+    }
+
 	public String getUrlErrorsText() {
 		sleep(2000);
 		return driver.findElementById("url.errors").getText();
 	}
+
+    public String getSuccessMessage(){
+        return driver.findElementByClassName("alert-success").getText();
+    }
 
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
@@ -102,7 +105,8 @@ public class DefectTrackerIndexPage extends BasePage {
 		driver.findElementById("submit").click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
-		return new DefectTrackerIndexPage(driver);
+		sleep(5000);
+        return new DefectTrackerIndexPage(driver);
 	}
 
 }

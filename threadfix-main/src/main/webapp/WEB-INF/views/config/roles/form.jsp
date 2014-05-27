@@ -16,8 +16,16 @@
         <tbody>
             <tr>
                 <td>Name</td>
-                <td class="inputValue"><input type="text" name="displayName" focus-on="focusInput" ng-model="object.displayName"
-                                              size="70" maxlength="255" value="${ displayName }" /></td>
+                <td class="inputValue">
+                    <input id="roleNameInput" type="text" name="displayName" focus-on="focusInput" ng-model="object.displayName"
+                                              size="70" maxlength="25" value="${ displayName }" required/>
+                </td>
+                <td>
+                    <span id="roleNameInputRequiredError" class="errors" ng-show="form.displayName.$dirty && form.displayName.$error.required">Name is required.</span>
+                    <span id="roleNameInputLengthError" class="errors" ng-show="form.displayName.$dirty && form.displayName.$error.maxlength">Maximum length is 25.</span>
+                    <span id="roleNameInputNameError" class="errors" ng-show="object.displayName_error"> {{ object.displayName_error }}</span>
+
+                </td>
             </tr>
             <tr>
                 <td><a class="btn" ng-click="setAll('true')">Select All</a></td>
@@ -205,15 +213,15 @@
                                                                       id="canViewErrorLogsFalse" name="canViewErrorLogs" value="false" />
             </td>
         </tr>
-        <tr>
-            <td>View Job Statuses</td>
-            <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                                      id="canViewJobStatusesTrue" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"
-                                                                      value="true" /></td>
-            <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                                      id="canViewJobStatusesFalse" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"
-                                                                      value="false" /></td>
-        </tr>
+        <!--<tr>-->
+            <!--<td>View Job Statuses</td>-->
+            <!--<td class="inputValue" style="text-align: center;"><input type="radio"-->
+                                                                      <!--id="canViewJobStatusesTrue" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"-->
+                                                                      <!--value="true" /></td>-->
+            <!--<td class="inputValue" style="text-align: center;"><input type="radio"-->
+                                                                      <!--id="canViewJobStatusesFalse" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"-->
+                                                                      <!--value="false" /></td>-->
+        <!--</tr>-->
         </tbody>
     </table>
     </div>

@@ -38,6 +38,10 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
 	public TFSDefectTracker() {}
 
+    static {
+        System.setProperty("com.microsoft.tfs.client.allowInsecureBasic", "true");
+    }
+
     TFSClient client = new TFSClientImpl();
 
     private boolean configureClient() {
@@ -60,6 +64,7 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 			DefectMetadata metadata) {
 
         assert vulnerabilities != null && vulnerabilities.size() > 0;
+        assert metadata != null;
 
 		boolean validConfiguration = configureClient();
 		

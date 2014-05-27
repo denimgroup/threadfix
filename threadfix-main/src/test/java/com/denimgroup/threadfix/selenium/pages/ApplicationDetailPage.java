@@ -68,16 +68,15 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickTestConnection() {
-        waitForElement(driver.findElementById("jsonLink"));
-        driver.findElementById("jsonLink").click();
-        sleep(8000);
-        waitForElement(driver.findElementByLinkText("Add Defect Tracker"));
+        waitForElement(driver.findElementById("getProductNames"));
+        driver.findElementById("getProductNames").click();
+        sleep(5000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage selectProduct(String product) {
         sleep(4000);
-        new Select(driver.findElementById("projectList"))
+        new Select(driver.findElementById("productNameSelect"))
                 .selectByVisibleText(product);
         return new ApplicationDetailPage(driver);
     }
@@ -86,11 +85,6 @@ public class ApplicationDetailPage extends BasePage {
         waitForElement(driver.findElementById("defectTrackerId"));
         new Select(driver.findElementById("defectTrackerId"))
                 .selectByVisibleText(defectTracker);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickSubmitTrackerButton() {
-        driver.findElementById("submitDTModal").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -103,27 +97,9 @@ public class ApplicationDetailPage extends BasePage {
                 .setPassword(password)
                 .clickTestConnection()
                 .selectProduct(productName)
-                .clickSubmitTrackerButton();
+                .clickUpdateApplicationButton()
+                .clickUpdateApplicationButton();
 
-        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
-        sleep(2000);
-
-        return new ApplicationDetailPage(driver);
-
-    }
-
-    public ApplicationDetailPage editDefectTracker(String defectTracker, String username,
-                                                   String password, String productName) {
-        clickEditDeleteBtn()
-                .clickEditDefectTrackerButton()
-                .selectDefectTracker(defectTracker)
-                .setUsername(username)
-                .setPassword(password)
-                .clickTestConnection()
-                .selectProduct(productName)
-                .clickSubmitTrackerButton();
-
-        waitForElement(driver.findElementById("addDefectTrackerSuccessMessage"));
         sleep(2000);
 
         return new ApplicationDetailPage(driver);
@@ -134,7 +110,7 @@ public class ApplicationDetailPage extends BasePage {
         Select s = new Select(driver.findElementById("wafSelect"));
         s.selectByVisibleText(wafName);
         sleep(4000);
-        return new ApplicationDetailPage(driver);
+        return this;
     }
 
     public ApplicationDetailPage saveWafAdd() {
@@ -160,6 +136,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickEditDeleteBtn() {
+        sleep(2000);
         clickActionButton();
         sleep(2000);
         waitForElement(driver.findElementById("editApplicationModalButton"));
@@ -288,19 +265,13 @@ public class ApplicationDetailPage extends BasePage {
         return severity.getFirstSelectedOption().getText();
     }
 
-    public ApplicationDetailPage clickCloseAppModal() {
-        driver.findElementById("editAppFormDiv").findElement(By.className("modal-footer")).findElements(By.className("btn")).get(0).click();
-        sleep(2500);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage clickCloseAppInvalid() {
         driver.findElementByLinkText("Close").click();
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScanAgentTasksTab() {
-        driver.findElementById("scanQueueTabLink").click();
+    public ApplicationDetailPage clickScanAgentTasksTab(int count) {
+        driver.findElementByLinkText(count + " Scan Agent Tasks").click();
         sleep(1000);
         waitForElement(driver.findElementById("scanQueueTable"));
         return new ApplicationDetailPage(driver);
@@ -324,25 +295,25 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickAddNewScanTask() {
-        driver.findElementById("addScanQueueLink" + modalNumber()).click();
-        waitForElement(driver.findElementById("addScanQueue" + modalNumber()));
+        driver.findElementById("addScanQueueLink").click();
+        waitForElement(driver.findElementById("submit"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setDocFileInput(String file) {
-        driver.findElementById("docInput" + modalNumber()).sendKeys(file);
+        driver.findElementById("docFileInput").sendKeys(file);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage submitScanQueue() {
-        driver.findElementById("addScanQueueButton" + modalNumber()).click();
+        driver.findElementById("submit").click();
         sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickDocumentTab() {
-        driver.findElementById("documentsTab").click();
-        waitForElement(driver.findElementById("uploadDocModalLink"));
+    public ApplicationDetailPage clickDocumentTab(int count) {
+        driver.findElementByLinkText( count + " Files").click();
+        waitForElement(driver.findElementByLinkText("Add File"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -364,13 +335,13 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickUploadDocLink() {
-        driver.findElementById("uploadDocModalLink" + modalNumber()).click();
-        waitForElement(driver.findElementById("uploadDoc" + modalNumber()));
+        driver.findElementByLinkText("Add File").click();
+        waitForElement(driver.findElementById("docFileInput"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setScanQueueType(String scanQueueType) {
-        new Select(driver.findElementById("scanQueueType"))
+        new Select(driver.findElementById("scanner"))
                 .selectByVisibleText(scanQueueType);
         return new ApplicationDetailPage(driver);
     }
@@ -401,7 +372,17 @@ public class ApplicationDetailPage extends BasePage {
         return "0";
     }
 
+    public boolean vulnsFilteredHidden(int count) {
+        return driver.findElementByLinkText( count + " Hidden").isDisplayed();
+    }
+
+    public boolean vulnsFilteredOpen(int count) {
+        return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
+    }
+
     public FilterPage clickEditVulnerabilityFilters() {
+        sleep(3000);
+        waitForElement(driver.findElementByClassName("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
         return new FilterPage(driver);
     }
@@ -424,7 +405,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage clickSourceInfo(){
         waitForElement(driver.findElementByLinkText("Source Code Information"));
-        driver.findElementByLinkText("Source Code Information");
+        driver.findElementByLinkText("Source Code Information").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -435,11 +416,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isBreadcrumbPresent() {
-        return driver.findElementByLinkText("Applications Index").isDisplayed();
+        return driver.findElementById("applicationsIndexLink").isDisplayed();
     }
 
-    public boolean isApplicationBreadcrumbPresent(String applicationName) {
-        return driver.findElementByLinkText("Team: " + applicationName).isDisplayed();
+    public boolean isApplicationBreadcrumbPresent() {
+        return driver.findElementById("teamLink").isDisplayed();
     }
 
     public boolean vulnerabilitiesFiltered(String level, String expected) {
@@ -556,7 +537,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isSourceFolderPresent() {
-        return driver.findElementById("repositoryFolder").isDisplayed();
+        return driver.findElementById("repositoryFolderInput").isDisplayed();
     }
 
     public boolean isDefectTrackerAddPresent() {

@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, $rootScope) {
+myAppModule.controller('ApplicationDetailPageController', function ($scope, $window, $rootScope, tfEncoder) {
 
     $scope.dragEnabled = true;
 
@@ -28,5 +28,13 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
     });
 
     $scope.rightReportTitle = "Top 10 Vulnerabilities";
+
+    $scope.goToTeam = function(application) {
+        window.location.href = tfEncoder.encode("/organizations/" + application.team.id);
+    };
+
+    $scope.$on('numVulns', function(event, numVulns) {
+        $scope.numVulns = numVulns;
+    });
 
 });

@@ -94,8 +94,10 @@ public class ScanDetailPage extends BasePage{
 	public String getNumMergedResults(int row){
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
-	public FindingDetailPage clickViewFinding(int row){
+	public FindingDetailPage clickViewFinding(){
 		driver.findElementById("mappedVulnType").click();
+        sleep(3000);
+        waitForElement(driver.findElementByLinkText("View Vulnerability"));
 		return new FindingDetailPage(driver);
 	}
 	

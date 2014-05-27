@@ -31,9 +31,9 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         {
             title: "Comparison",
             options: [
-                { name: "Comparison By Vulnerability", id: 4 },
-                { name: "Comparison Summary", id: 5 },
-                { name: "Comparison Detail", id: 6 }
+                { name: "Scan Comparison By Vulnerability", id: 4 },
+                { name: "Scan Comparison Summary", id: 5 },
+                { name: "Scan Comparison Detail", id: 6 }
             ]
         }
     ];
@@ -43,7 +43,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
         if (teamIdInt === -1) {
             $scope.application = {id: -1, name: "All"};
-            $scope.applications = [];
+            $scope.applications = undefined;
         } else {
 
             $scope.teams.forEach(function(team) {
@@ -63,10 +63,10 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.clearApplications = function() {
-        $scope.applications = [];
+        $scope.applications = undefined;
     }
 
-    $scope.applications = [];
+    $scope.applications = undefined;
     $scope.options = $scope.tabs[0].options;
 
     $scope.formatId = 1;
@@ -101,6 +101,12 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                         $scope.columnCount = data.object.columnCount;
 
                     } else if ($scope.reportId === '11') {
+                        $scope.severityMap = {};
+                        $scope.severityMap["Critical"] = 4;
+                        $scope.severityMap["High"] = 3;
+                        $scope.severityMap["Medium"] = 2;
+                        $scope.severityMap["Low"] = 1;
+                        $scope.severityMap["Info"] = 0;
                         $scope.listOfLists = data.object.listOfLists;
                     } else {
                         $scope.reportHTML = data;
@@ -124,6 +130,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadReport = function() { loadReport(); }
 
     $scope.updateOptions = function(tab) {
+        $scope.vulnSearch = false;
         $scope.options = tab.options;
         $scope.reportId = tab.options[0].id;
 
@@ -131,16 +138,23 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     }
 
     $scope.$on('rootScopeInitialized', function() {
-        threadfixAPIService.getTeams().
+        threadfixAPIService.getVulnSearchParameters().
             success(function(data, status, headers, config) {
                 if (data.success) {
-                    $scope.teams = data.object;
+                    $scope.teams = data.object.teams;
+                    $scope.scanners = data.object.scanners;
+                    $scope.genericVulnerabilities = data.object.vulnTypes;
+                    $scope.savedFilters = data.object.savedFilters;
+                    $scope.searchApplications = data.object.applications;
 
                     $scope.teams.sort(nameCompare)
 
                     $scope.teams.unshift({id: -1, name: "All"});
                     $scope.teamId = -1;
                     $scope.applicationId = -1;
+                    $scope.team = $scope.teams[0];
+                    $scope.application = {id: -1, name: "All"};
+                    $scope.applications = undefined;
 
                     //teamId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
                     //appId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
@@ -206,6 +220,18 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.setSort = function(index) {
         $scope.index = index;
         $scope.reverse = !$scope.reverse;
+
+        // Sorting for Vulnerability List
+        if ($scope.reportId === '11') {
+            if (index === 0) {
+                // Sorting CWEID
+                return sortID();
+            } else if (index === 4) {
+                // Sorting Severity
+                return sortSeverity();
+            }
+        }
+
         $scope.listOfLists.sort(function(a, b) {
             if ($scope.reverse) {
                 if (a[index] > b[index]) return 1;
@@ -217,6 +243,42 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 return 0;
             }
         });
+    }
+
+    var sortID = function() {
+        $scope.listOfLists.sort(function(a, b) {
+            var intA = Number(a[0]);
+            var intB = Number(b[0]);
+            if ($scope.reverse) {
+                if (intA > intB) return 1;
+                if (intA < intB) return -1;
+                return 0;
+            } else {
+                if (intA < intB) return 1;
+                if (intA > intB) return -1;
+                return 0;
+            }
+        });
+    }
+
+    var sortSeverity = function() {
+        $scope.listOfLists.sort(function(a, b) {
+            if ($scope.reverse) {
+                if ($scope.severityMap[a[4]] > $scope.severityMap[b[4]]) return 1;
+                if ($scope.severityMap[a[4]] < $scope.severityMap[b[4]]) return -1;
+                return 0;
+            } else {
+                if (($scope.severityMap[a[4]] < $scope.severityMap[b[4]])) return 1;
+                if (($scope.severityMap[a[4]] > $scope.severityMap[b[4]])) return -1;
+                return 0;
+            }
+        });
+    }
+
+    $scope.loadVulnSearch = function() {
+        $scope.vulnSearch = true;
+        $scope.$broadcast('loadVulnerabilitySearchTable');
+
     }
 
 });

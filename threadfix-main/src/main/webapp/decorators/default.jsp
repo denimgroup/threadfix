@@ -17,6 +17,7 @@
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular-file-upload.min.js"></script>
 
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/filters.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/threadfix-module.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/services.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>

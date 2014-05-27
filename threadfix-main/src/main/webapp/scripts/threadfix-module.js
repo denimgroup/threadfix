@@ -3,10 +3,18 @@
 
 
 // the httpProvider stuff configures things to work like x-www-form-urlencoded
-angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload'], function($httpProvider)
+angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilters'], function($httpProvider)
 {
     // Use x-www-form-urlencoded Content-Type
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+
+    $httpProvider.defaults.transformResponse.push(function(data) {
+        if (/<div ng\-controller="LoginController">/.exec(data)) {
+            window.location.pathname = window.location.pathname;
+        }
+
+        return data;
+    });
 
     // Override $http service's default transformRequest
     $httpProvider.defaults.transformRequest = [function(data)

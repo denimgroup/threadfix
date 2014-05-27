@@ -24,22 +24,19 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import com.denimgroup.threadfix.data.entities.SecurityEvent;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
@@ -64,11 +61,12 @@ public class WafRuleController {
 	public WafRuleController(){}
 
 	@PreAuthorize("hasRole('ROLE_CAN_GENERATE_WAF_RULES')")
-	@RequestMapping(value = "/rules", method = RequestMethod.POST)
-	public String generateWafRulesForApps(@PathVariable("wafId") int wafId, 
-			@RequestParam("wafDirective") String wafDirective,
-            @RequestParam("wafApplicationId") int wafAppId,
+	@RequestMapping(value = "/generateRules/{wafApplicationId}/{wafDirective}", method = RequestMethod.POST)
+	public @ResponseBody RestResponse<Map<String, Object>> generateWafRulesForApps(@PathVariable("wafId") int wafId,
+			@PathVariable("wafDirective") String wafDirective,
+            @PathVariable("wafApplicationId") int wafAppId,
             ModelMap model) {
+        Map<String, Object> responseMap = new HashMap<>();
 		Waf waf = wafService.loadWaf(wafId);
 		
 		if (waf == null) {
@@ -82,36 +80,58 @@ public class WafRuleController {
             if (application == null
                     || application.getWaf() == null
                     || application.getWaf().getId() != wafId) {
-                model.addAttribute("contentPage", "wafs/detailRuleList.jsp");
-                model.addAttribute("errorMessage", "Application is invalid");
-                return "ajaxSuccessHarness";
+                return RestResponse.failure("Application is invalid");
             }
         }
 
         List<WafRule> newWafRuleList = wafService.generateWafRules(waf, wafDirective, application);
         String rulesText = wafService.getRulesText(waf, newWafRuleList);
-        model.addAttribute(waf);
-        model.addAttribute("selectedAppId", wafAppId);
-        model.addAttribute("rulesText", rulesText);
-        model.addAttribute("contentPage", "wafs/detailRuleList.jsp");
-        return "ajaxSuccessHarness";
+
+        responseMap.put("waf", waf);
+        responseMap.put("rulesText", rulesText);
+        return RestResponse.success(responseMap);
 	}
 
-	@RequestMapping("/rule/{ruleId}")
-	public String viewRule(@PathVariable("wafId") int wafId, @PathVariable("ruleId") Integer ruleId, ModelMap model) {
-		WafRule wafRule = wafRuleService.loadWafRule(ruleId);
-		
-		if (wafRule == null) {
-			log.warn(ResourceNotFoundException.getLogMessage("WafRule", ruleId));
-			throw new ResourceNotFoundException();
-		}
-		
-		if (wafRule.getSecurityEvents() == null)
-			wafRule.setSecurityEvents(new ArrayList<SecurityEvent>());
-		
-		model.addAttribute("numTimesFired", wafRule.getSecurityEvents().size());
-		model.addAttribute(wafRule);
-		return "wafs/rules/detail";
+
+    @RequestMapping("/rule/{ruleId}")
+    public String viewRule(@PathVariable("wafId") int wafId, @PathVariable("ruleId") Integer ruleId, ModelMap model) {
+        WafRule wafRule = wafRuleService.loadWafRule(ruleId);
+
+        if (wafRule == null) {
+            log.warn(ResourceNotFoundException.getLogMessage("WafRule", ruleId));
+            throw new ResourceNotFoundException();
+        }
+
+        if (wafRule.getSecurityEvents() == null)
+            wafRule.setSecurityEvents(new ArrayList<SecurityEvent>());
+
+        model.addAttribute("numTimesFired", wafRule.getSecurityEvents().size());
+        model.addAttribute(wafRule);
+        return "wafs/rules/detail";
+    }
+
+	@RequestMapping("/getRules")
+	public @ResponseBody
+    RestResponse<Map<String, Object>> getRules(@PathVariable("wafId") int wafId) {
+        Map<String, Object> responseMap = new HashMap<>();
+
+        Waf waf = wafService.loadWaf(wafId);
+
+        WafRuleDirective lastDirective = null;
+
+        if ((waf.getLastWafRuleDirective() != null) && (waf.getWafType().getId().equals(
+                waf.getLastWafRuleDirective().getWafType().getId()))) {
+            lastDirective = waf.getLastWafRuleDirective();
+        } else if (waf.getWafType() != null && waf.getWafType().getWafRuleDirectives() != null
+                && waf.getWafType().getWafRuleDirectives().size() >= 1) {
+            lastDirective = waf.getWafType().getWafRuleDirectives().get(0);
+        }
+
+        String rulesText = wafService.getAllRuleText(waf);
+        responseMap.put("waf", waf);
+        responseMap.put("rulesText", rulesText);
+        responseMap.put("lastDirective", lastDirective);
+		return  RestResponse.success(responseMap);
 	}
 	
 }

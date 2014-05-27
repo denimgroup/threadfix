@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 public class DashboardPage extends BasePage{
 
@@ -51,7 +50,7 @@ public class DashboardPage extends BasePage{
     }
 
     public boolean isCommentDisplayed() {
-        return driver.findElementById("commentText1").isDisplayed();
+        return driver.findElementById("viewMoreLink1").isDisplayed();
     }
 
 	public ReportsIndexPage click6MonthViewMore(){

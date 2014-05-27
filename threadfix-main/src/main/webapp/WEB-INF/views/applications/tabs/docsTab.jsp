@@ -20,7 +20,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody id="wafTableBody">
+        <tbody>
             <tr ng-repeat="document in documents" class="bodyRow">
                 <td id="docName{{ $index }}">{{ document.name }}</td>
                 <td id="type{{ $index }}" >{{ document.type }}</td>

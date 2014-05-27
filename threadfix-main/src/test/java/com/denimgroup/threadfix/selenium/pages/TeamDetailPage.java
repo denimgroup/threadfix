@@ -59,7 +59,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isAppPresent(String appName){
-        return driver.findElementById("applicationsTableBody").getText().contains(appName);
+        return driver.findElementsByLinkText(appName).size() != 0;
     }
 
     public int getEditModalHeaderWidth(){
@@ -117,7 +117,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean applicationVulnerabilitiesFiltered(String appName, String level, String expected) {
-        return driver.findElementById("app" + level + "Vulns" + appName).getText().equals(expected);
+        return driver.findElementById("app" + level + "Vulns0").getText().equals(expected);
     }
 
     public boolean isActionBtnPresent(){

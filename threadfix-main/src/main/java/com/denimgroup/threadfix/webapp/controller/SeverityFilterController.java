@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.SeverityFilter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,8 @@ public class SeverityFilterController {
 	public GenericVulnerabilityService genericVulnerabilityService;
     @Autowired
 	public GenericSeverityService genericSeverityService;
+    @Autowired
+    private QueueSender queueSender = null;
 	
 	private final SanitizedLogger log = new SanitizedLogger(SeverityFilterController.class);
 
@@ -133,6 +136,8 @@ public class SeverityFilterController {
 			severityFilterService.clean(severityFilter, orgId, appId);
 			severityFilterService.save(severityFilter, orgId, appId);
 			vulnerabilityFilterService.updateVulnerabilities(orgId, appId);
+
+            queueSender.updateAllCachedStatistics();
 			
 	    	return RestResponse.success(severityFilter);
 		}

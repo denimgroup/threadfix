@@ -25,10 +25,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -72,29 +69,24 @@ public class DashboardIT extends BaseIT {
     public void dashboardRecentCommentsDisplayTest() {
         String teamName = "dashboardGraphTestTeam" + getRandomString(3);
         String appName = "dashboardGraphTestApp" + getRandomString(3);
-        String commentText = "This is a test comment.";
+        String commentText = "comment text comment text";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
+        ScanIndexPage scanIndexPage = loginPage.login("user", "password").clickScansHeaderLink();
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-
-        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewScan()
-                .clickViewFinding(1)
+        VulnerabilityDetailPage vulnerabilityDetailPage = scanIndexPage.clickAnyViewScanLink()
+                .clickViewFinding()
                 .clickViewVulnerability()
                 .clickAddComment()
                 .setCommentText(commentText)
                 .clickSubmitComment();
 
         DashboardPage dashboardPage = vulnerabilityDetailPage.clickDashboardLink();
-
+        dashboardPage.clickDashboardLink();
+        sleep(5000);
         assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
-
 }

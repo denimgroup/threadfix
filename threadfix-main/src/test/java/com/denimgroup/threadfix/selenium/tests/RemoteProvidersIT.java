@@ -31,7 +31,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
@@ -92,7 +91,6 @@ public class RemoteProvidersIT extends BaseIT {
                 .setVeraPassword(VERACODE_PASSWORD)
                 .saveVera();
 
-        sleep(5000);
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
 
@@ -112,9 +110,10 @@ public class RemoteProvidersIT extends BaseIT {
                 .setVeraPassword("Password Bad")
                 .clickModalSubmitInvalid();
 
-        remoteProvidersIndexPage.sleep(1000);
-
-		assertTrue("Incorrect credentials accepted", remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+        remoteProvidersIndexPage.sleep(15000);
+        String error = remoteProvidersIndexPage.getErrorMessage();
+        System.out.println(error);
+		assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
     //TODO need valid QualysGuard credentials
@@ -138,11 +137,10 @@ public class RemoteProvidersIT extends BaseIT {
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
                 .clickModalSubmitInvalid();
-
-        remoteProvidersIndexPage.sleep(1000);
-		
-		assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+        sleep(15000);
+        String error = remoteProvidersIndexPage.getErrorMessage();
+		System.out.println(error);
+		assertTrue("Expected failure", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
     //TODO Update when new ids are added
@@ -154,16 +152,18 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickRemoteProvidersLink()
-                .clickConfigureWhiteHat()
-                .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat()
-                .mapWhiteHatToTeamAndApp(1, teamName, appName);
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        remoteProvidersIndexPage.clickConfigureWhiteHat();
+        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
+        remoteProvidersIndexPage.saveWhiteHat();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
-
-        assertFalse("WhiteHat scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded() == "No active Vulnerabilities found.");
+        sleep(25000);
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().accept();
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 
@@ -181,17 +181,17 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickRemoteProvidersLink()
-                .clickConfigureVeracode()
-                .setVeraUsername(VERACODE_USER)
-                .setVeraPassword(VERACODE_PASSWORD)
-                .saveVera()
-                .mapVeracodeToTeamAndApp(3, teamName, appName);
-
-        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
-
-        assertFalse("Veracode scans were not imported properly.", applicationDetailPage.remoteProvidersScansUploaded() == "No active Vulnerabilities found.");
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        remoteProvidersIndexPage.clickConfigureVeracode();
+        remoteProvidersIndexPage.setVeraUsername(VERACODE_USER);
+        remoteProvidersIndexPage.setVeraPassword(VERACODE_PASSWORD);
+        remoteProvidersIndexPage.saveVera();
+        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(0);
+        sleep(20000);
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().accept();
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 
@@ -201,4 +201,24 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
 
     }
+//
+//    @Test
+//    public void invalidImportVeracodeScan() {
+//        String teamName = "importVeracodeTeam" + getRandomString(3);
+//        String appName = "importVeracodeApp" + getRandomString(3);
+//
+//        DatabaseUtils.createTeam(teamName);
+//        DatabaseUtils.createApplication(teamName, appName);
+//
+//        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+//        remoteProvidersIndexPage.clickConfigureVeracode();
+//        remoteProvidersIndexPage.setVeraUsername(VERACODE_USER);
+//        remoteProvidersIndexPage.setVeraPassword(VERACODE_PASSWORD);
+//        remoteProvidersIndexPage.saveVera();
+//        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(3, teamName, appName);
+//        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
+//        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(3);
+//        //assert error message displayed
+//        assertTrue("Error was not displayed", driver.findElement(By.className("alert-danger")).isDisplayed());
+//    }
 }

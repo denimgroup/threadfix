@@ -28,8 +28,8 @@ import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,18 +41,18 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("/configuration/defaults")
+@RequestMapping("/configuration/settings")
 @SessionAttributes("defaultConfiguration")
-public class DefaultConfigController {
+public class SystemSettingsController {
 	
-	protected final SanitizedLogger log = new SanitizedLogger(DefaultConfigController.class);
+	protected final SanitizedLogger log = new SanitizedLogger(SystemSettingsController.class);
 
 	private RoleService roleService = null;
 	private DefaultConfigService defaultConfigService = null;
 	
 	@Autowired
-	public DefaultConfigController(DefaultConfigService defaultConfigService,
-			RoleService roleService) {
+	public SystemSettingsController(DefaultConfigService defaultConfigService,
+                                    RoleService roleService) {
 		this.roleService = roleService;
 		this.defaultConfigService = defaultConfigService;
 	}
@@ -62,12 +62,16 @@ public class DefaultConfigController {
 		if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled", "activeDirectoryBase",
                     "activeDirectoryURL", "activeDirectoryUsername", "activeDirectoryCredentials",
-                    "proxyHost", "proxyPort", "proxyUsername", "proxyPassword");
+                    "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
+                    "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
+                    "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldUseProxyCredentials");
 		} else {
-			dataBinder.setAllowedFields("defaultRoleId", "globalGroupEnabled");
+            // this should prevent any parameters from coming in.
+            // We also need to check permissions on the server side though
+			dataBinder.setAllowedFields();
 		}
 	}
-	
+
 	@ModelAttribute
 	public List<Role> populateRoles() {
 		return roleService.loadAll();
@@ -75,12 +79,12 @@ public class DefaultConfigController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String setupForm(Model model, HttpServletRequest request) {
-		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
+		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
 		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
-		return "config/defaults";
+		return "config/systemSettings";
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	public String processForm(@ModelAttribute DefaultConfiguration configModel,
 			HttpServletRequest request) {
@@ -88,7 +92,7 @@ public class DefaultConfigController {
 		defaultConfigService.saveConfiguration(configModel);
 		ControllerUtils.addSuccessMessage(request, "Configuration was saved successfully.");
 		
-		return "redirect:/configuration/defaults";
+		return "redirect:/configuration/settings";
 	}
 	
 }

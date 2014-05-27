@@ -169,7 +169,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		InputStream responseStream = null;
 		
-		HttpClient client = getConfiguredHttpClient();
+		HttpClient client = getConfiguredHttpClient(WhiteHatRemoteProvider.class);
 
 		try {
 			int status = client.executeMethod(get);

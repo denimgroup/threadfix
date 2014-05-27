@@ -2,9 +2,10 @@
 
 <head>
 	<title><c:out value="${ waf.name }"/></title>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/waf-detail-page-controller.js"></script>
 </head>
 
-<body id="wafs">
+<body id="waf" ng-controller="WafDetailPageController" ng-init="loading = true; showRuleInfo = false;">
 	<h2 id="nameText" ><c:out value="${ waf.name }"/></h2>
 
 	<div id="helpText">
@@ -20,8 +21,9 @@
 			</tr>
 		</tbody>
 	</table>
-	
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jspf" %>
 	
 	<c:if test="${ not hasApps }">
 		<div class="alert alert-error" style="margin-top:10px;">
@@ -102,7 +104,7 @@
 				<spring:param name="wafId" value="${ waf.id }"/>
 			</spring:url>
 			<form:form method="post" action="${ fn:escapeXml(generateRulesUrl) }" id="wafGenerateForm">
-                <select id="wafApplicationSelect" name="wafApplicationId">
+                <select id="wafApplicationSelect" name="wafApplicationId" ng-model="wafApplicationId">
                     <option value="-2">Select Application</option>
                     <option value="-1">All Applications</option>
                     <c:forEach var="app" items="${ apps }">
@@ -116,7 +118,7 @@
 					No Directives Found.  
 				</c:when>
 				<c:otherwise>
-					<select id="wafDirectiveSelect" name="wafDirective" >
+					<select id="wafDirectiveSelect" name="wafDirective" ng-model="wafDirective">
 						<option value="${ lastDirective.directive }"><c:out value="${ lastDirective.directive }"/></option>
 						<c:forEach var="directive" items="${ directives }">
 							<option value="${ directive.directive }"><c:out value="${ directive.directive }"/></option>
@@ -124,10 +126,12 @@
 					</select>
 				</c:otherwise>
 			</c:choose>
-                <a id="generateWafRulesButton" class="modalSubmit btn btn-primary" data-success-div="ruleListDiv">Generate WAF Rules</a>
+                <a id="generateWafRulesButton" class="btn btn-primary" ng-click="generateRules()">Generate WAF Rules</a>
 			</form:form>
 		</c:if>
-		
+
+        <br>
+        <div ng-show="loading" class="spinner-div"><span class="spinner dark"></span>Loading</div>
         <div id="ruleListDiv">
             <%@ include file="/WEB-INF/views/wafs/detailRuleList.jsp" %>
         </div>

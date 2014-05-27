@@ -70,12 +70,10 @@ public class DocumentIT extends BaseIT {
 			} else {
 				continue;
 			}
-			applicationDetailPage = applicationDetailPage.clickDocumentTab()
+			applicationDetailPage = applicationDetailPage.clickDocumentTab(docCnt)
                     .clickUploadDocLink()
-                    .setDocFileInput(mapEntry.getValue())
-                    .submitDoc();
+                    .setDocFileInput(mapEntry.getValue());
 
-			applicationDetailPage = applicationDetailPage.clickDocumentTab();
 			docCnt++;
 		}
 		assertTrue("Document count is incorrect", docCnt == applicationDetailPage.docsCount());

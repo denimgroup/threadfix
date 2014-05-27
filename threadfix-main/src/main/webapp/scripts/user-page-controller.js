@@ -80,7 +80,8 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     return tfEncoder.encode("/configuration/users/" + user.id + "/edit");
                 },
                 user: function() {
-                    return user;
+                    var userCopy = angular.copy(user);
+                    return userCopy;
                 },
                 deleteUrl: function() {
                     return tfEncoder.encode("/configuration/users/" + user.id + "/delete");

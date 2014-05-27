@@ -34,8 +34,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Scanner;
 
 public class ResponseParser {
 
@@ -46,11 +46,12 @@ public class ResponseParser {
     }
 
     private static Gson getGson() {
-        GsonBuilder gsonB = new GsonBuilder();
-        gsonB.registerTypeAdapter(Calendar.class, new CalendarSerializer());
-        gsonB.registerTypeAdapter(GregorianCalendar.class, new CalendarSerializer());
-        gsonB.registerTypeAdapter(byte[].class, new ByteToStringSerializer()); // needed for files.
-        return gsonB.create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Calendar.class, new CalendarSerializer());
+        gsonBuilder.registerTypeAdapter(GregorianCalendar.class, new CalendarSerializer());
+        gsonBuilder.registerTypeAdapter(Date.class, new DateSerializer());
+        gsonBuilder.registerTypeAdapter(byte[].class, new ByteToStringSerializer()); // needed for files.
+        return gsonBuilder.create();
     }
 
     // TODO remove the double JSON read for efficiency
@@ -59,7 +60,6 @@ public class ResponseParser {
     public static <T> RestResponse<T> getRestResponse(String responseString, int responseCode, Class<T> internalClass) {
 
         LOGGER.debug("Parsing response for type " + internalClass.getCanonicalName());
-        //System.out.println(responseString);
 
         RestResponse<T> response = new RestResponse<T>();
 
@@ -109,14 +109,6 @@ public class ResponseParser {
         instance.success = false;
 
         return instance;
-    }
-
-    // from https://weblogs.java.net/blog/pat/archive/2004/10/stupid_scanner_1.html
-    private static String convertStreamToString(InputStream inputStream) {
-
-
-        Scanner s = new Scanner(inputStream, "UTF-8").useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 
 }

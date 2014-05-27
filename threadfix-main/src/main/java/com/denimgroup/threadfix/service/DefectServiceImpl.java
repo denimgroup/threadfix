@@ -23,24 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = false)
@@ -293,7 +292,7 @@ public class DefectServiceImpl implements DefectService {
 					Boolean defectOpenStatus = defectMap.get(defect);
 
 					if (vuln.isActive() && defectOpenStatus != null &&
-							!defectOpenStatus.booleanValue()) {
+							!defectOpenStatus) {
 						if (vuln.getDefectClosedTime() == null) {
 							vuln.setDefectClosedTime(Calendar.getInstance());
 							vulnerabilityDao.saveOrUpdate(vuln);

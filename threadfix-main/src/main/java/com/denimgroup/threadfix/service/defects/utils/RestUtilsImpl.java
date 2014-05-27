@@ -46,22 +46,22 @@ import java.net.URL;
  * @author mcollins
  *
  */
-public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUtils {
+public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements RestUtils {
 
     @Autowired(required = false)
     private ProxyService proxyService;
 
-    private static boolean WRITE_REQUESTS_TO_FILE = true;
-
 	private RestUtilsImpl() {} // intentional, we shouldn't be instantiating this class.
-	
+
+    Class<T> classToProxy = null;
+
 	private static final SanitizedLogger LOG = new SanitizedLogger(RestUtilsImpl.class);
     private String postErrorResponse;
 
-    private static RestUtilsImpl INSTANCE = new RestUtilsImpl();
-
-    public static RestUtilsImpl getInstance() {
-        return INSTANCE;
+    public static <T> RestUtilsImpl getInstance(Class<T> classToProxy) {
+        RestUtilsImpl impl = new RestUtilsImpl();
+        impl.classToProxy = classToProxy;
+        return impl;
     }
 
 	//The following methods help with REST interfaces.
@@ -78,23 +78,15 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
             if (proxyService == null) {
 			    httpConnection = (HttpURLConnection) url.openConnection();
             } else {
-                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+                httpConnection = proxyService.getConnectionWithProxyConfig(url, classToProxy);
             }
 
 			setupAuthorization(httpConnection, username, password);
-			
+
 			httpConnection.addRequestProperty("Content-Type", "application/json");
 			httpConnection.addRequestProperty("Accept", "application/json");
 
 			InputStream stream = httpConnection.getInputStream();
-
-            if (WRITE_REQUESTS_TO_FILE) {
-                String responseString = IOUtils.toString(stream);
-                OutputStream out = new FileOutputStream(new File("/Users/mac/scratch/" + System.currentTimeMillis()));
-                IOUtils.write(urlString + "\n", out);
-                IOUtils.write(responseString, out);
-                stream = new ByteArrayInputStream(responseString.getBytes());
-            }
 
             return stream;
 		} catch (IOException e) {
@@ -102,14 +94,14 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
 		    return null;
 		}
 	}
-	
+
 	public String getUrlAsString(String urlString, String username, String password) {
 		InputStream responseStream = getUrl(urlString,username,password);
-		
+
 		if (responseStream == null) {
 			return null;
 		}
-		
+
 		String test = null;
 		try {
 			test = IOUtils.toString(responseStream);
@@ -118,10 +110,10 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
 		} finally {
 			closeInputStream(responseStream);
 		}
-		
+
 		return test;
 	}
-	
+
 	public void closeInputStream(InputStream stream) {
 		if (stream != null) {
 			try {
@@ -140,21 +132,21 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
 			LOG.warn("URL used for POST was bad: '" + urlString + "'");
 			return null;
 		}
-		
+
 		HttpURLConnection httpConnection = null;
 		OutputStreamWriter outputWriter = null;
 		try {
             if (proxyService == null) {
                 httpConnection = (HttpURLConnection) url.openConnection();
             } else {
-                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+                httpConnection = proxyService.getConnectionWithProxyConfig(url, classToProxy);
             }
 
 			setupAuthorization(httpConnection, username, password);
-			
+
 			httpConnection.addRequestProperty("Content-Type", contentType);
 			httpConnection.addRequestProperty("Accept", contentType);
-			
+
 			httpConnection.setDoOutput(true);
 			outputWriter = new OutputStreamWriter(httpConnection.getOutputStream());
 		    outputWriter.write(data);
@@ -162,14 +154,6 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
 
 			InputStream is = httpConnection.getInputStream();
 
-            if (WRITE_REQUESTS_TO_FILE) {
-                String responseString = IOUtils.toString(is);
-                OutputStream out = new FileOutputStream(new File("/Users/mac/scratch/" + System.currentTimeMillis()));
-                IOUtils.write(urlString + "\n", out);
-                IOUtils.write(responseString, out);
-                is = new ByteArrayInputStream(responseString.getBytes());
-            }
-			
 			return is;
 		} catch (IOException e) {
 			LOG.warn("IOException encountered trying to post to URL with message: " + e.getMessage());
@@ -249,12 +233,12 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
 
         boolean retVal;
 
-        HttpClient httpClient = null;
+        HttpClient httpClient;
         try {
             if (proxyService == null) {
                 httpClient = new HttpClient();
             } else {
-                httpClient = proxyService.getClientWithProxyConfig();
+                httpClient = proxyService.getClientWithProxyConfig(classToProxy);
             }
 
             GetMethod get = new GetMethod(urlString);
@@ -287,7 +271,7 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
     public boolean hasXSeraphLoginReason(String urlString, String username, String password) {
         URL url;
         try {
-            url = new URL(urlString);//getUrlWithRest() + "user?username=" + getUsername());
+            url = new URL(urlString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return false;
@@ -299,7 +283,7 @@ public class RestUtilsImpl extends SpringBeanAutowiringSupport implements RestUt
             if (proxyService == null) {
                 httpConnection = (HttpURLConnection) url.openConnection();
             } else {
-                httpConnection = proxyService.getConnectionWithProxyConfig(url);
+                httpConnection = proxyService.getConnectionWithProxyConfig(url, classToProxy);
             }
 
             setupAuthorization(httpConnection, username, password);

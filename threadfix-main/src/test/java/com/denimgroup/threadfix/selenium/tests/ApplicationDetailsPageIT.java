@@ -58,14 +58,16 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testTabUserNavigation() {
         buildTeamAppandScan();
-            dashboardPage.clickUserTab();
-            assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
-            assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
-            assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
-            assertTrue("Toggle help is not present", dashboardPage.isToggleHelpLinkPresent());
-            assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
-            assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
-            assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
+        sleep(3000);
+        dashboardPage.clickUserTab();
+        sleep(2000);
+        assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
+        assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
+        assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
+        assertTrue("Toggle help is not present", dashboardPage.isToggleHelpLinkPresent());
+        assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
+        assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
+        assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
     }
 
     @Test
@@ -94,13 +96,15 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void  testBreadCrumbNavigation() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(1000);
         assertTrue("BreadCrumb Application is not present", ap.isBreadcrumbPresent());
-        assertTrue("BreadCrumb Application is not present", ap.isApplicationBreadcrumbPresent(teamName));
+        assertTrue("BreadCrumb Application is not present", ap.isApplicationBreadcrumbPresent());
     }
 
     @Test
     public void testApplicationName() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
+        sleep(5000);
         assertTrue("Application Name is not present", ap.isApplicationNamePresent());
     }
 
@@ -114,7 +118,9 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonContents() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
+        sleep(3000);
         ap.clickActionButton();
+        sleep(1000);
         assertTrue("Edit Delete button is not present", ap.isEditDeletePresent());
         assertTrue("Edit De;ete button is not clickable", ap.isEditDeleteClickable());
         assertTrue("Edit Vuln button is not present", ap.isEditVulnFiltersPresent());
@@ -128,6 +134,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonEditDeleteButton() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(2000);
         ap.clickEditDeleteBtn();
         ap.clickSourceInfo();
         assertTrue("Delete Button is not present", ap.isDeleteButtonPresent());
@@ -144,24 +151,26 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("Defect Tracker add button is not clickable.", ap.isDefectTrackerAddClickable());
         assertTrue("Waf add button is not present.", ap.isWAFAddButtonPresent());
         assertTrue("Waf add button is not clickable.", ap.isWAFAddButtonClickable());
-        assertTrue("Save Changes button is not present.", ap.isSaveChangesButtonPresent());
-        assertTrue("Save Changes button is not clickable.", ap.isSaveChangesButtonClickable());
     }
 
     @Test
     public void testActionButtonEditVulnFilter() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(3000);
         ap.clickActionButton();
+        sleep(2000);
         FilterPage filterPage = ap.clickEditVulnerabilityFilters();
-        assertTrue("Did not navigate to FilterPage.", filterPage.isCreateNewFilterPresent());
+        sleep(1000);
+        assertTrue("Did not navigate to FilterPage.", filterPage.isElementVisible("createNewKeyModalButton"));
     }
 
     @Test
     public void testActionButtonAddManualFinding() {
         ApplicationDetailPage ap = buildTeamAppandScan();
+        sleep(3000);
         ap.clickActionButton()
                 .clickManualFindingButton();
-        sleep(2000);
+        sleep(3000);
         assertTrue("Dynamic Radio button is not present.", ap.isDynamicRadioPresent());
         assertTrue("Static Radio button is not present.", ap.isStaticRadioPresent());
         assertTrue("CWE input is not present", ap.isCWEInputPresent());

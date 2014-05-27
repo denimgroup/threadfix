@@ -42,7 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
 
     private ChannelVulnerabilityDao channelVulnerabilityDao;
@@ -203,6 +203,27 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         defaultConfigurationDao.saveOrUpdate(config);
     }
 
+    @Override
+    @Transactional
+    public void updateMappings() {
+        log.info("Start updating Scanner mapping from startup");
+
+        try {
+            updateGenericVulnerabilities();
+            updateChannelVulnerabilities();
+            updateUpdatedDate();
+
+        } catch (URISyntaxException e) {
+            String message = "There was error when reading files.";
+            log.warn(message, e);
+        } catch (IOException e) {
+            String message = "There was error when updating mappings.";
+            log.warn(message, e);
+        }
+
+        log.info("Ended updating Scanner mapping from startup");
+    }
+
     private List<String[]> updateAllScanners() {
 
         List<String[]> scannerResults = new ArrayList<>();
@@ -330,7 +351,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         if (genericVulnerability == null) {
             log.info("Add new Generic Vulnerability with CWE Id " + genericIdInt);
             genericVulnerability = new GenericVulnerability();
-            genericVulnerability.setDisplayId(genericIdInt);
+            genericVulnerability.setCweId(genericIdInt);
         } else {
             log.info("Update Generic Vulnerability with Id " + genericIdInt);
             oldName = genericVulnerability.getName();

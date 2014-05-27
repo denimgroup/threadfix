@@ -73,9 +73,6 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		if (result && finding != null && finding.getScan() != null && 
 				finding.getScan().getFindings() != null) {
 			
-			finding.getScan().setNumberTotalVulnerabilities(
-					finding.getScan().getNumberTotalVulnerabilities() - 1);
-			
 			Finding oldFinding = null;
 
 			int id = finding.getId();
@@ -184,7 +181,8 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		return true;
 	}
 
-	private Scan getManualScan(Integer applicationId) {
+    @Override
+    public Scan getManualScan(Integer applicationId) {
 		if (applicationId == null)
 			return null;
 

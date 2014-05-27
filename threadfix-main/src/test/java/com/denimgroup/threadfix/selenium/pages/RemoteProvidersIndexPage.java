@@ -127,6 +127,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	public RemoteProvidersIndexPage saveWhiteHat(){
 		driver.findElementById("submit").click();
         sleep(6000);
+        waitForElement(driver.findElementById("configure2"));
+        sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -286,8 +288,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	/*-------------- action functions ---------------*/
 	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String teamName, String appName){
 		clickEditWhiteHatButton(appRow);
-		selectWhiteHatTeamMapping(teamName);
-		selectWhiteHatAppMapping(appName);
+        selectTeamMapping(teamName);
+        selectAppMapping(appName);
 		clickUpdateMappings();
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -297,13 +299,13 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public UserIndexPage selectWhiteHatTeamMapping(String teamName){
+	public UserIndexPage selectTeamMapping(String teamName){
 		WebElement a = driver.findElementById("orgSelect1");
 		new Select(a).selectByVisibleText(teamName);
 		return new UserIndexPage(driver);
 	}
 
-	public UserIndexPage selectWhiteHatAppMapping(String appName){
+	public UserIndexPage selectAppMapping(String appName){
 		WebElement a = driver.findElementById("appSelect1");
 		new Select(a).selectByVisibleText(appName);
 		return new UserIndexPage(driver);
@@ -319,8 +321,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage mapVeracodeToTeamAndApp(int appRow, String teamName, String appName) {
         clickVeraCodeEditMappingButton(appRow);
-        selectVeracodeTeamMapping(teamName, appRow);
-        selectVeracodeAppMapping(appName, appRow);
+        selectTeamMapping(teamName);
+        selectAppMapping(appName);
         clickUpdateMappings();
         sleep(6000);
         return new RemoteProvidersIndexPage(driver);
@@ -328,21 +330,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
         String elementToClick = "provider2updateMapping" + appRow;
+        waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
         }
-        return new RemoteProvidersIndexPage(driver);
-    }
-
-    public RemoteProvidersIndexPage selectVeracodeTeamMapping(String teamName, int appRow) {
-        WebElement teamSelect = driver.findElementById("orgSelect2-" + appRow);
-        new Select(teamSelect).selectByVisibleText(teamName);
-        return new RemoteProvidersIndexPage(driver);
-    }
-
-    public RemoteProvidersIndexPage selectVeracodeAppMapping(String appName, int appRow) {
-        WebElement appSelect = driver.findElementById("appSelect2-" + appRow);
-        new Select(appSelect).selectByVisibleText(appName);
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -358,8 +349,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
 	public String getErrorMessage(){
-        String error = driver.findElementById("errorSpan").getText();
-        System.out.println(error);
+        waitForElementPresence("errorSpan",60);
 		return driver.findElementById("errorSpan").getText();
 	}
 	

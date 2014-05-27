@@ -86,7 +86,8 @@ public class WafIndexPage extends BasePage {
 	public boolean isTextPresentInWafTableBody(String text) {
 		return driver.findElementById("wafTableBody").getText().contains(text);
 	}
-	
+
+    //todo replace with wafName once success message is fixed.
 	public boolean isSuccessPresent(String wafName){
 		return driver.findElementByClassName("alert-success").getText().contains(wafName);
 	}
