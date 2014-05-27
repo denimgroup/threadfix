@@ -529,8 +529,8 @@ public class ApplicationIT extends BaseIT {
     public void deleteManualFindingScan() {
         String teamName = "TeamName" + getRandomString(5);
         String appName = "AppName" + getRandomString(5);
-        String CWE = "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')";
-        String parameter = "Test_Parameter";
+        String CWE = "79";
+        String url = "http://test.com";
         String desc = "Test Description for deleting manual finding.";
 
         DatabaseUtils.createTeam(teamName);
@@ -545,6 +545,7 @@ public class ApplicationIT extends BaseIT {
         ap.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(CWE)
+                .setURL(url)
                 .setDescription(desc)
                 .clickDynamicSubmit();
 
