@@ -373,9 +373,12 @@ public class ApplicationDetailPage extends BasePage {
         return "0";
     }
 
-    public boolean vulnsFilteredHidden(int count) {
-        return driver.findElementByLinkText( count + " Hidden").isDisplayed();
+    public ApplicationDetailPage expandCriticalVulns() {
+        driver.findElementById("expandCritical").click();
+        return new ApplicationDetailPage(driver);
     }
+
+
 
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
