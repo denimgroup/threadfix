@@ -114,10 +114,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = false)
 	public Integer createUser(User user) {
-		User newUser = getDefaultUser(user);
-        encryptPassword(newUser);
-		userDao.saveOrUpdate(newUser);
-        return newUser.getId();
+        encryptPassword(user);
+		userDao.saveOrUpdate(user);
+        return user.getId();
 	}
 
 	private void encryptPassword(User user) {
@@ -353,18 +352,4 @@ public class UserServiceImpl implements UserService {
 		return resultList;
 	}
 
-    private User getDefaultUser(User modelUser) {
-        User user = new User();
-        DefaultConfiguration defaultsModel = defaultConfigService.loadCurrentConfiguration();
-        if (defaultsModel != null) {
-            user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
-            if (user.getHasGlobalGroupAccess()) {
-                user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
-            }
-        }
-        user.setName(modelUser.getName());
-        user.setUnencryptedPassword(modelUser.getUnencryptedPassword());
-        user.setPasswordConfirm(modelUser.getPasswordConfirm());
-        return user;
-    }
 }

@@ -70,6 +70,7 @@ public interface UserService {
 	void delete(User user);
 
 	/**
+     * Returns the integer ID of the new user
 	 * @param user
 	 */
 	Integer createUser(User user);
