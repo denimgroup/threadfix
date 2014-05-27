@@ -43,7 +43,7 @@
                         <span id="urlInvalidError" class="errors" ng-show="form.url.$dirty && form.url.$error.url">URL is invalid.</span>
                         <span id="urlCharacterLimitError" class="errors" ng-show="form.url.$dirty && form.url.$error.maxlength">Over 255 characters limit!</span>
                         <span id="urlServerError" class="errors" ng-show="object.url_error"> {{ object.url_error }}</span>
-                        <span id="urlSelfSignedCertificateError" class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates">here</a>.</span>
+                        <span id="urlSelfSignedCertificateError" class="errors" ng-show="showKeytoolLink">Instructions for importing a self-signed certificate can be found <a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates">here</a>.</span>
                     </td>
                 </tr>
                 <tr>

@@ -14,11 +14,11 @@ https://groups.google.com/forum/#!forum/threadfix
 
 Instructions on setting up a development environment can be found here:
 
-https://code.google.com/p/threadfix/wiki/EnvironmentSetup
+https://github.com/denimgroup/threadfix/wiki/Environment-Setup
 
 Further documentation can be found online here:
 
-https://code.google.com/p/threadfix/w/list
+https://github.com/denimgroup/threadfix/wiki/
 
 Submit bugs to the GitHub issue tracker:
 

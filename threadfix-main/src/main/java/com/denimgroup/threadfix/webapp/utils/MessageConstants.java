@@ -80,7 +80,7 @@ public class MessageConstants {
         addToMap(ERROR_ZIP, "{0} is an invalid zip code.");
         addToMap(ERROR_FILEPATH, "{0} is not a valid file.");
         addToMap(ERROR_SELF_CERTIFICATE, "Instructions for importing a self-signed certificate can be found <a target=\"_blank\" " +
-                "href=\"http://code.google.com/p/threadfix/wiki/ImportingSelfSignedCertificates\">here");
+                "href=\"https://github.com/denimgroup/threadfix/wiki/Importing-Self-Signed-Certificates\">here");
 
         addToMap(ERROR_NAMETAKEN, "That name is already taken.");
         addToMap(ERROR_CANCEL, "Operation cancelled.");

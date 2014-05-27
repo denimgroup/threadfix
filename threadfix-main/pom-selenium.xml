@@ -731,7 +731,7 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 
 	<url>http://www.denimgroup.com/threadfix/</url>
 	<scm>
-		<url>https://github.com/denimgroup/threadfix.git</url>
+		<url>https://github.com/denimgroup/threadfix/</url>
 	</scm>
 	<issueManagement>
 		<system>https://github.com/denimgroup/threadfix/issues</system>
