@@ -104,7 +104,6 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testApplicationName() {
         ApplicationDetailPage ap =  buildTeamAppandScan();
-        sleep(5000);
         assertTrue("Application Name is not present", ap.isApplicationNamePresent());
     }
 
@@ -167,10 +166,8 @@ public class ApplicationDetailsPageIT extends BaseIT {
     @Test
     public void testActionButtonAddManualFinding() {
         ApplicationDetailPage ap = buildTeamAppandScan();
-        sleep(3000);
         ap.clickActionButton()
                 .clickManualFindingButton();
-        sleep(3000);
         assertTrue("Dynamic Radio button is not present.", ap.isDynamicRadioPresent());
         assertTrue("Static Radio button is not present.", ap.isStaticRadioPresent());
         assertTrue("CWE input is not present", ap.isCWEInputPresent());
