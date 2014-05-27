@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.entities.WafRule;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class WafRuleServiceImpl implements WafRuleService {
 
 	private WafRuleDao wafRuleDao = null;

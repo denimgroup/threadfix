@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.data.dao.SecurityEventDao;
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false) // used to be true
 public class SecurityEventServiceImpl implements SecurityEventService {
 
 	private SecurityEventDao securityEventDao = null;

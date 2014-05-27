@@ -1,3 +1,5 @@
+.project
+*/.project
 target
 threadfix-cli.log*
 threadfix-cli.log
