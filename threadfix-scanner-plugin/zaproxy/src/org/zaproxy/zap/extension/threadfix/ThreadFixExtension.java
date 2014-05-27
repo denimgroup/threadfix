@@ -24,18 +24,16 @@
 
 package org.zaproxy.zap.extension.threadfix;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javax.swing.JMenuItem;
-
+import com.denimgroup.threadfix.plugin.zap.action.EndpointsAction;
+import com.denimgroup.threadfix.plugin.zap.action.ImportAction;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ExtensionAdaptor;
 import org.parosproxy.paros.extension.ExtensionHook;
 
-import com.denimgroup.threadfix.plugin.zap.action.EndpointsAction;
-import com.denimgroup.threadfix.plugin.zap.action.ImportAction;
+import javax.swing.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class ThreadFixExtension extends ExtensionAdaptor {
 
@@ -117,21 +115,21 @@ public class ThreadFixExtension extends ExtensionAdaptor {
     }
     @Override
     public String getAuthor() {
-       logger.info("Getting Author");
+        logger.info("Getting Author");
         return "Denim Group";
     }
 
     @Override
     public String getDescription() {
-       logger.info("Getting Description");
+        logger.info("Getting Description");
         return "ThreadFix integration";
     }
 
     @Override
     public URL getURL() {
-       logger.info("Getting URL");
+        logger.info("Getting URL");
         try {
-            return new URL("http://code.google.com/p/threadfix/wiki/ZapPlugin");
+            return new URL("https://github.com/denimgroup/threadfix/wiki/Zap-Plugin");
         } catch (MalformedURLException e) {
             return null;
         }
