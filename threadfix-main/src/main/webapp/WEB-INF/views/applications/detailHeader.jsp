@@ -15,8 +15,8 @@
 <div ng-controller="ApplicationPageModalController">
     <h2 style="padding-bottom:5px;line-height:1">
 
-    <span ng-hide="config" id="nameText" style="padding-top:5px;"><c:out value="${ application.name }"/></span>
-    <span ng-show="config" id="nameText" style="padding-top:5px;">{{ config.application.name }}</span>
+    <span ng-if="!config" id="nameText" style="padding-top:5px;"><c:out value="${ application.name }"/></span>
+    <span ng-if="config" id="nameText" style="padding-top:5px;">{{ config.application.name }}</span>
     <c:if test="${ not empty canManageApplications }">
         <div id="btnDiv1" class="btn-group">
             <button id="actionButton1" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
