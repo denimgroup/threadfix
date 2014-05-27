@@ -53,7 +53,9 @@ public class UserValidator implements Validator {
 				roleService == null ||
 				roleService.loadRole(user.getGlobalRole().getId()) == null) {
 			user.setGlobalRole(null);
-		}
+		} else {
+            user.setGlobalRole(roleService.loadRole(user.getGlobalRole().getId()));
+        }
 
 		if (isEmptyOrWhitespace(user.getName())) {
 			errors.rejectValue("name", MessageConstants.ERROR_REQUIRED, new String[] { "Name" }, null);
