@@ -235,6 +235,10 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
+    public String getLengthError() {
+        return driver.findElementById("lengthError").getText();
+    }
+
     public String getErrorMessage(String key) {
         return driver.findElementById(key).getText();
     }

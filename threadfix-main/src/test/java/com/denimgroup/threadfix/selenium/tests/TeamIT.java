@@ -72,28 +72,19 @@ public class TeamIT extends BaseIT {
 
          assertTrue("All teams were not collapsed properly.", teamIndexPage.areAllTeamsCollapsed());
 
-        teamIndexPage = teamIndexPage.clickViewTeamLink(teamName1)
-                .clickDeleteButton()
-                .clickViewTeamLink(teamName2)
-                .clickDeleteButton();
-
-        loginPage = teamIndexPage.logout();
     }
 
-    //TODO is this test needed any longer?
-    @Ignore
+
 	@Test
 	public void longTeamNameEditModalHeader(){
-		String newOrgName = getRandomString(60);
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+		String newOrgName = getRandomString(70);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickAddTeamButton()
-                .setTeamName(newOrgName)
-                .addNewTeam()
-                .clickViewTeamLink(newOrgName)
-                .clickEditOrganizationLink();
+                .setTeamName(newOrgName);
 		
-		assertTrue("Header width was incorrect with long team name",teamDetailPage.getEditModalHeaderWidth() == 400);
+		assertTrue("Header width was incorrect with long team name",teamIndexPage.getLengthError().contains("Maximum length is 60."));
 	}
 
     //TODO Need to update this when the validation is done in the form and not return a failure
@@ -189,7 +180,7 @@ public class TeamIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName,appName));
+        assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName, appName));
     }
 
 	//TODO needs revision when error messages are updated
