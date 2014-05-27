@@ -463,8 +463,8 @@ public class ApplicationIT extends BaseIT {
         String teamName = "Team" + getRandomString(5);
         String appName = "App" + getRandomString(5);
         String cwe = "Improper Validation of Certificate Expiration";
-        String parameter = "testPara";
-        String desc = "Test description test";
+        String parameter = "Test Parameter";
+        String desc = "Test description.";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

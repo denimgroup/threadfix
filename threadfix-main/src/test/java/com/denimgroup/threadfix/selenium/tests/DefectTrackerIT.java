@@ -162,36 +162,36 @@ public class DefectTrackerIT extends BaseIT {
 		// Test browser length limit
 	}
 
-//	@Test
-//	public void testEditDefectTrackerName() {
-//		String originalDefectTrackerName = "testEditDefectTracker"+ getRandomString(3);
-//		String editedDefectTrackerName = "testEditDefectTracker-edit"+ getRandomString(3);
-//		String originalDefectTrackerType = "Jira";
-//        String editedDefectTrackerType = "Bugzilla";
-//
-//        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-//                .clickDefectTrackersLink();
-//
-//		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-//                .enterName(null, originalDefectTrackerName)
-//                .enterType(null, originalDefectTrackerType)
-//				.enterURL(null, TEST_JIRA_URL)
-//                .clickSaveDefectTracker();
-//
-//        //Edit previously created defect tracker
-//		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(originalDefectTrackerName)
-//                .enterName(originalDefectTrackerName, editedDefectTrackerName)
-//                .enterType(originalDefectTrackerName, editedDefectTrackerType)
-//                .enterURL(originalDefectTrackerName, TEST_BUGZILLA_URL)
-//                .clickUpdateDefectTrackerButton();
-//
-//		assertTrue("Edit did not change the name.",
-//                defectTrackerIndexPage.doesNameExist(editedDefectTrackerName));
-//        assertTrue("Edit did not change the type.",
-//                defectTrackerIndexPage.doesTypeExistForName(editedDefectTrackerName, editedDefectTrackerType));
-//        assertTrue("Edit did not change url.",
-//                defectTrackerIndexPage.doesURLExistForName(editedDefectTrackerName, TEST_BUGZILLA_URL));
-//	}
+	@Test
+	public void testEditDefectTracker() {
+		String originalDefectTrackerName = "testEditDefectTracker"+ getRandomString(3);
+		String editedDefectTrackerName = "testEditDefectTracker-edit"+ getRandomString(3);
+		String originalDefectTrackerType = "Jira";
+        String editedDefectTrackerType = "Bugzilla";
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
+
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(originalDefectTrackerName)
+                .enterType(originalDefectTrackerType)
+				.enterURL(TEST_JIRA_URL)
+                .clickSaveDefectTracker();
+
+        //Edit previously created defect tracker
+		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(originalDefectTrackerName)
+                .enterName(editedDefectTrackerName)
+                .enterType(editedDefectTrackerType)
+                .enterURL(TEST_BUGZILLA_URL)
+                .clickSaveDefectTracker();
+
+		assertTrue("Edit did not change the name.",
+                defectTrackerIndexPage.isNamePresent(editedDefectTrackerName));
+        assertTrue("Edit did not change the type.",
+                defectTrackerIndexPage.isTypeCorrect(editedDefectTrackerType, editedDefectTrackerName));
+        assertTrue("Edit did not change url.",
+                defectTrackerIndexPage.isUrlCorrect(TEST_BUGZILLA_URL, editedDefectTrackerName));
+	}
 
     @Test
 	public void testEditDefectTrackerFieldValidation() {

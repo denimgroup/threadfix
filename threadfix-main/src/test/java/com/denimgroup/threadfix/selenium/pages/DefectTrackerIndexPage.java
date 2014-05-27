@@ -101,6 +101,18 @@ public class DefectTrackerIndexPage extends BasePage {
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
 
+    public boolean isNamePresent(String name) {
+        return driver.findElementById("defectTrackerName" + name).getText().contains(name);
+    }
+
+    public boolean isUrlCorrect(String url, String name) {
+        return driver.findElementById("defectTrackerUrl" + name).getText().contains(url);
+    }
+
+    public boolean isTypeCorrect(String type, String name) {
+        return driver.findElementById("defectTrackerType" + name).getText().contains(type);
+    }
+
 	public DefectTrackerIndexPage clickSaveDefectTracker() {
 		driver.findElementById("submit").click();
 		WebDriverWait wait = new WebDriverWait(driver, 60);
