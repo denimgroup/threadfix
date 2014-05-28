@@ -164,8 +164,7 @@ public class TeamIT extends BaseIT {
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 
-    // TODO Wait for the graphs to have id's, then test. Right now, indexing would be required to locate the graph.
-    @Ignore
+
     @Test
     public void testTeamGraphs() {
         String teamName = getRandomString(8);
@@ -180,7 +179,7 @@ public class TeamIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName, appName));
+        assertTrue("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName));
     }
 
 	//TODO needs revision when error messages are updated

@@ -335,11 +335,8 @@ public class TeamIndexPage extends BasePage {
         return isClickable("collapseAllButton");
 	}
 
-    // TODO this needs to be changed so that it will use the img id and not a path
-    public boolean isGraphDisplayed(String teamName, String appName) {
-        modalNum = modalNumber(teamName, appName);
-        String temp = "/threadfix/jasperimage/pointInTim" + modalNum + "/img_0_0_0";
-        return driver.findElementByXPath(temp).isDisplayed();
+    public boolean isGraphDisplayed(String teamName) {
+        return driver.findElementById("teamGraph" + teamName).isDisplayed();
     }
 
     public boolean teamVulnerabilitiesFiltered(String teamName, String level, String expected) {
