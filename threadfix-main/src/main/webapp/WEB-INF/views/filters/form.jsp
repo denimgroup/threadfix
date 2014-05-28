@@ -25,8 +25,8 @@
                            ng-model="object.sourceGenericVulnerability.name"
                            typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in config.genericVulnerabilities | filter:$viewValue | limitTo:10"
                            class="form-control"/>
-                    <span class="errors" ng-show="form.sourceGenericVulnerabilityName.$dirty && form.sourceGenericVulnerabilityName.$error.required">Vulnerability is required.</span>
-                    <span class="errors" ng-show="object.sourceGenericVulnerability_name_error"> {{ object.sourceGenericVulnerability_name_error }}</span>
+                    <span id="genericVulnerabilityRequiredError" class="errors" ng-show="form.sourceGenericVulnerabilityName.$dirty && form.sourceGenericVulnerabilityName.$error.required">Vulnerability is required.</span>
+                    <span id="genericVulnerabilityNameError" class="errors" ng-show="object.sourceGenericVulnerability_name_error"> {{ object.sourceGenericVulnerability_name_error }}</span>
                 </td>
             </tr>
             <tr>
@@ -37,8 +37,8 @@
                     <select id="targetGenericSeverity.id" required style="width:320px" name="targetGenericSeverityId" ng-model="object.targetGenericSeverity.id">
                         <option ng-selected="severity.id === object.targetGenericSeverity.id" ng-repeat = "severity in config.genericSeverities" value="{{ severity.id }}"> {{ severity.name }} </option>
                     </select>
-                    <span class="errors" ng-show="form.targetGenericSeverityId.$dirty && form.targetGenericSeverityId.$error.required">Severity is required.</span>
-                    <span class="errors" ng-show="object.targetGenericSeverity_id_error"> {{ object.targetGenericSeverity_id_error }}</span>
+                    <span id="genericSeverityRequiredError" class="errors" ng-show="form.targetGenericSeverityId.$dirty && form.targetGenericSeverityId.$error.required">Severity is required.</span>
+                    <span id="genericSeverityIdError" class="errors" ng-show="object.targetGenericSeverity_id_error"> {{ object.targetGenericSeverity_id_error }}</span>
                 </td>
             </tr>
         </table>

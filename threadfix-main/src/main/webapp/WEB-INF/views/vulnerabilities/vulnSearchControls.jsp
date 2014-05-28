@@ -37,10 +37,10 @@
         <!-- Clear / select all -->
         <div class="accordion-group">
             <div class="accordion-heading" style="text-align:center">
-                <a class="btn" ng-click="toggleAllFilters()">
+                <a id="toggleAllButton" class="btn" ng-click="toggleAllFilters()">
                     {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls) ? 'Collapse' : 'Expand' }} All
                 </a>
-                <a class="btn" ng-click="resetFilters()">Clear</a>
+                <a id="clearFiltersButton" class="btn" ng-click="resetFilters()">Clear</a>
             </div>
         </div>
 
@@ -142,7 +142,8 @@
                         <span id="showApplicationInput" class="icon" ng-class="{ 'icon-minus': showApplicationInput, 'icon-plus': !showApplicationInput }"></span>
                     </a>
                     <br>
-                    <input focus-on="showApplicationInput"
+                    <input id="applicationNameTypeahead"
+                           focus-on="showApplicationInput"
                            ng-show="showApplicationInput"
                            typeahead="(treeTeam.name + ' / ' + application.name) for application in treeTeam.applications | filter:$viewValue | limitTo:8"
                            type="text"
@@ -210,7 +211,6 @@
                     <input id="vulnerabilityTypeTypeahead"
                            ng-show="showTypeInput"
                            focus-on="showTypeInput"
-                           id="vulnerabilityTypeFilterInput"
                            type="text"
                            class="form-control"
                            ng-model="newFilteredType.text"
@@ -316,7 +316,7 @@
         <!-- Export buttons -->
         <div class="accordion-group">
             <div class="accordion-heading" style="text-align:center">
-                <a ng-click="exportCSV()" class="btn">Export CSV</a>
+                <a id="exportCSVButton" ng-click="exportCSV()" class="btn">Export CSV</a>
             </div>
         </div>
     </div>

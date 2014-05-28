@@ -16,11 +16,11 @@
             <td id="genericVulnerability{{ $index }}">
                 {{ vulnFilter.sourceGenericVulnerability.name }}
             </td>
-            <td style="word-wrap: break-word;" id="genericSeverity{{ $index }}">
-                <div ng-hide="vulnFilter.targetGenericSeverity">
+            <td style="word-wrap: break-word;">
+                <div id="genericSeverity{{ $index }}" ng-if="!vulnFilter.targetGenericSeverity">
                     Ignore
                 </div>
-                <div ng-show="vulnFilter.targetGenericSeverity">
+                <div id="genericSeverity{{ $index }}" ng-if="vulnFilter.targetGenericSeverity">
                     {{ vulnFilter.targetGenericSeverity.name }}
                 </div>
             </td>
