@@ -109,7 +109,7 @@
 					<td class="bold" valign=top>Raw Finding</td>
 					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.rawFinding }"/></PRE></td>
 				</tr>
-			</c:if>
+			</c:if>		
 			<c:if test="${ not empty finding.dependency }">			
 				<tr>
 					<td class="bold">CVE ID</td>

@@ -211,12 +211,12 @@ public class Role extends AuditableEntity {
 	public void setCanViewJobStatuses(Boolean canViewJobStatuses) {
 		this.canViewJobStatuses = canViewJobStatuses;
 	}
-
+	
 	@Column
 	public Boolean getEnterprise(){
 		return enterprise != null && enterprise;
 	}
-
+	
 	public void setEnterprise(Boolean enterprise){
 		this.enterprise = enterprise;
 	}
@@ -269,7 +269,7 @@ public class Role extends AuditableEntity {
 
 //		if (getCanViewJobStatuses())
 //			permissions.add(Permission.CAN_VIEW_JOB_STATUSES);
-
+		
 		if (getEnterprise())
 			permissions.add(Permission.ENTERPRISE);
 

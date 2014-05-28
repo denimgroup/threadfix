@@ -1,6 +1,8 @@
+<%@ include file="/common/taglibs.jsp"%>
 <spring:url value="/organizations/{orgId}" var="orgUrl">
 	<spring:param name="orgId" value="${ application.organization.id }"/>
 </spring:url>
+
 
 <ul class="breadcrumb">
     <li><a id="applicationsIndexLink" href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -9,7 +11,6 @@
     <li ng-hide="application"><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ application.organization.name }"/></a> <span class="divider">/</span></li>
     <li ng-hide="application" class="active">Application: <c:out value="${ application.name }"/></li>
 </ul>
-
 
 <div ng-controller="ApplicationPageModalController">
     <h2 style="padding-bottom:5px;line-height:1">
@@ -37,7 +38,7 @@
                 <c:if test="${!canManageApplications }">
                     <li><a id="viewApplicationModalButton">Details	</a></li>
                 </c:if>
-                <c:if test="${ canManageUsers && enterprise}">
+                ScannerMappingUpdater     <c:if test="${ canManageUsers && enterprise}">
                     <li><a id="userListModelButton">View Permissible Users</a></li>
                 </c:if>
                 <c:if test="${ canUploadScans }">
