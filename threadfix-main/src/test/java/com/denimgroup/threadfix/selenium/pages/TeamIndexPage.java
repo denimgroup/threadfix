@@ -301,23 +301,10 @@ public class TeamIndexPage extends BasePage {
         return isClickable("addTeamModalButton");
 	}
 
-    public boolean areAllTeamsExpanded() {
-        for (int i = 1; i <= getNumTeamRows(); i++){
-            if (!(driver.findElementById("teamAppTableDiv" + i).isDisplayed())) {
-                return false;
-            }
-        }
-        return true;
+    public boolean isTeamsExpanded(String teamName, String appName) {
+        return driver.findElementById("applicationLink" + teamName + "-" + appName).isDisplayed();
     }
 
-    public boolean areAllTeamsCollapsed() {
-        for (int i = 1; i <= getNumTeamRows(); i++){
-            if (driver.findElementById("teamAppTableDiv" + i).isDisplayed()) {
-                return false;
-            }
-        }
-        return true;
-    }
 
 	public boolean isExpandAllBtnPresent(){
 		return driver.findElementById("expandAllButton").isDisplayed();	
