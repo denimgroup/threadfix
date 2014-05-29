@@ -161,7 +161,7 @@
                 <td><button id="addDefectTrackerButton" class="btn" ng-click="switchTo('addDefectTracker')">Set Defect Tracker</button></td>
 			</tr>
             <tr>
-                <td>Skip Application Merging</td>
+                <td>Disable Vulnerability Merging</td>
                 <td class="inputValue">
                     <input id="skipApplicationMerge" type="checkbox" ng-model="object.skipApplicationMerge" name="skipApplicationMerge"/>
                 </td>
