@@ -8,7 +8,7 @@
         </span>
     </h3>
 
-    <div id="noResultsFound" ng-if="!vulnTree || vulnTree.length > 0">
+    <div id="noResultsFound" ng-if="!vulnTree || vulnTree.length == 0">
         No results found.
     </div>
 
