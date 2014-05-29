@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -378,8 +375,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-
-
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
     }
@@ -410,6 +405,56 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickSourceInfo(){
         waitForElement(driver.findElementByLinkText("Source Code Information"));
         driver.findElementByLinkText("Source Code Information").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public int getFilterDivHeight() {
+        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
+    }
+
+    //TODO id's for button
+    public ApplicationDetailPage clickExpandAllFilters() {
+        driver.findElementByLinkText("Expand All").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickCollapseAllFilters() {
+        driver.findElementByLinkText("Collapse All").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandFieldControls() {
+        driver.findElementById("showFieldControls").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addVulnerabilityTypeFilter(String vulnerabilityType) {
+        driver.findElementById("showTypeInput").click();
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
+       return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addPathFilter(String path) {
+        driver.findElementById("pathInput").sendKeys(path);
+        driver.findElementById("pathInput").sendKeys(Keys.RETURN);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleSeverityFilter(String level) {
+        driver.findElementById("show" + level).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addParameterFilter(String parameter) {
+        driver.findElementById("parameterInput").sendKeys(parameter);
+        driver.findElementById("parameterInput").sendKeys(Keys.RETURN);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleStatusFilter(String status) {
+        WebElement temp = driver.findElementById("show" + status);
+        temp.click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -624,4 +669,11 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByLinkText("0 Scans").isDisplayed();
     }
 
+    public boolean isSeverityLevelShown(String level) {
+        return driver.findElementsById("expand" + level).size() != 0;
+    }
+
+    public boolean isVulnerabilityCountCorrect(String level, String expected) {
+        return expected.equals(driver.findElementById("totalBadge" + level).getText());
+    }
 }

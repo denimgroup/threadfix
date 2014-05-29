@@ -259,7 +259,6 @@ public class FilterIT extends BaseIT {
             FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
                     .deleteFilter()
                     .closeSuccessNotification();
-
             teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
         } catch (NoSuchElementException e) {
             System.out.println("There was not a global vulnerability filter set.");

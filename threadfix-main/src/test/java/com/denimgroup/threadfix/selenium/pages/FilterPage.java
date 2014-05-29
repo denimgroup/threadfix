@@ -159,4 +159,8 @@ public class FilterPage extends BasePage {
         return driver.findElementById("createNewKeyModalButton").isDisplayed();
     }
 
+    public boolean isVulnerabilityTypeFound() {
+        return driver.findElementByClassName("errors").isDisplayed();
+    }
+
 }
