@@ -67,7 +67,7 @@ myAppModule.controller('ScanAgentTasksTabController', function ($scope, $window,
 
         if (confirm('Are you sure you want to delete this scan queue task?')) {
             task.deleting = true;
-            $http.post(tfEncoder.encode("/configuration/scanqueue" + $scope.currentUrl + "/scanQueueTask/" + task.id + "/delete")).
+            $http.post(tfEncoder.encode($scope.currentUrl + "/scanQueueTask/" + task.id + "/delete")).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {

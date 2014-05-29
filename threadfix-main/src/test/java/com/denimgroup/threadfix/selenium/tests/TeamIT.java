@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -52,26 +51,29 @@ public class TeamIT extends BaseIT {
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
 	}
 
-    // TODO possible deletion due to tables having a height of zero, the aren't 'not displayed'
-    @Ignore
+    
     @Test
     public void testExpandAndCollapseAllTeams(){
         String teamName1 = getRandomString(8);
         String teamName2 = getRandomString(8);
+        String appName1 = "app" + getRandomString(3);
+        String appName2 = "app" + getRandomString(3);
 
         DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createApplication(teamName1, appName1);
         DatabaseUtils.createTeam(teamName2);
+        DatabaseUtils.createApplication(teamName2, appName2);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
         teamIndexPage = teamIndexPage.expandAllTeams();
+        assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1,appName1));
+        assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2,appName2));
 
-        assertTrue("All teams were not expanded properly.", teamIndexPage.areAllTeamsExpanded());
-
+        //note the logic change in assert method call
         teamIndexPage = teamIndexPage.collapseAllTeams();
-
-         assertTrue("All teams were not collapsed properly.", teamIndexPage.areAllTeamsCollapsed());
-
+        assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1, appName1));
+        assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2, appName2));
     }
 
 
@@ -95,8 +97,6 @@ public class TeamIT extends BaseIT {
 		
 		String emptyInputError = "Name is required.";
 		
-		String longInput = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-        String longInputFormatted ="eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 		// Test empty input
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
@@ -113,23 +113,7 @@ public class TeamIT extends BaseIT {
                 .addNewTeamInvalid();
 		assertTrue("The correct error text was not present",
                 emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
-		
-		// Test browser length limit
-//		teamIndexPage = teamIndexPage.setTeamName(longInput)
-//                  .addNewTeamInvalid();
-//
-//		assertTrue("The organization name was not cropped correctly.", teamIndexPage.isTeamPresent(longInputFormatted));
-//
-//        teamIndexPage = teamIndexPage.setTeamName(longInputFormatted)
-//                .addNewTeam();
-//
-//		//Test name duplication checking
-//		teamIndexPage = teamIndexPage.clickOrganizationHeaderLink()
-//                .clickAddTeamButton()
-//                .setTeamName(longInputFormatted)
-//                .addNewTeamInvalid();
-//
-//		assertTrue(teamIndexPage.getNameErrorMessage().equals("That name is already taken."));
+
 	}
 
 	@Test
@@ -164,8 +148,7 @@ public class TeamIT extends BaseIT {
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 
-    // TODO Wait for the graphs to have id's, then test. Right now, indexing would be required to locate the graph.
-    @Ignore
+
     @Test
     public void testTeamGraphs() {
         String teamName = getRandomString(8);
@@ -180,7 +163,7 @@ public class TeamIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertFalse("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName, appName));
+        assertTrue("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName));
     }
 
 	//TODO needs revision when error messages are updated
@@ -214,12 +197,7 @@ public class TeamIT extends BaseIT {
 		teamDetailPage = teamDetailPage.setNameInput("           ")
                 .clickUpdateButtonInvalid();
 		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorMessage("requiredError")));
-		
-		// Test browser length limit
-//		teamDetailPage = teamDetailPage.clickCloseEditModal()
-//                .clickEditOrganizationLink()
-//                .setNameInput(longInput)
-//                .clickUpdateButtonValid();
+
         orgName = longInput.substring(0, 60);
 
         teamDetailPage = teamDetailPage
@@ -227,12 +205,6 @@ public class TeamIT extends BaseIT {
                 .clickUpdateButtonValid();
 
 		assertTrue("The organization name was not cropped correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(orgName));
-		
-		// Test name duplication checking
-//		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-//                .setNameInput(orgNameDuplicateTest)
-//                .clickUpdateButtonInvalid();
-//
-//		assertTrue(teamDetailPage.getErrorText().equals("That name is already taken."));
+
 	}
 }

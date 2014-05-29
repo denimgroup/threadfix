@@ -6,7 +6,7 @@
 </div>
 <div ng-show="severityErrorMessage" class="alert alert-danger">
     <button class="close" ng-click="severityErrorMessage = undefined" type="button">&times;</button>
-    {{ severityErrorMessage }}
+    <span id="severityErrorMessage">{{ severityErrorMessage }}</span>
 </div>
 
 <div ng-form="form" class="modal-body">
