@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -162,7 +163,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
     }
 
     /* Scanner and Merged */
-    //TODO change parts when ids come through
     @Test
     public void testMergedFindingsFilter() {
         String teamName = getRandomString(8);
@@ -181,22 +181,16 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
 
+        sleep(1000);
+
         assertTrue("Only 4 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
 
         applicationDetailPage = applicationDetailPage.toggleFourPlus();
 
-        // Change this when possible.
-        assertFalse("Critical vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Critical"));
-        assertFalse("High vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("High"));
-        assertFalse("Medium vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Medium"));
-        assertFalse("Low vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Low"));
-        assertFalse("Info vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Info"));
+        sleep(1000);
+
+        assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
 
     @Test
@@ -348,7 +342,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 applicationDetailPage.isSeverityLevelShown("Info"));
     }
 
-    //TODO maybe change this to check for the string 'No results found.' when ids allow
     @Test
     public void testStatusFilter() {
         String teamName = getRandomString(8);
@@ -367,20 +360,10 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("Closed");
 
-        assertFalse("Critical vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Critical"));
-        assertFalse("High vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("High"));
-        assertFalse("Medium vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Medium"));
-        assertFalse("Low vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Low"));
-        assertFalse("Info vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Info"));
+        assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
 
     /* Aging */
-    //TODO parts of this will be replaced when id for 'No results found.' are in
     @Test
     public void testLessThanFilter() {
         String teamName = getRandomString(8);
@@ -411,16 +394,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
         applicationDetailPage = applicationDetailPage.toggleOneWeek();
 
-        assertFalse("Critical vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Critical"));
-        assertFalse("High vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("High"));
-        assertFalse("Medium vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Medium"));
-        assertFalse("Low vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Low"));
-        assertFalse("Info vulnerabilities should not be shown.",
-                applicationDetailPage.isSeverityLevelShown("Info"));
+        assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
 
         applicationDetailPage = applicationDetailPage.toggleMoreThan();
 
@@ -448,6 +422,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
     /* Date Range */
     //TODO Put on hold because of bugs and ids to check for 'No Results Found' better
+    @Ignore
     @Test
     public void testDateFilter() {
         String teamName = getRandomString(8);
