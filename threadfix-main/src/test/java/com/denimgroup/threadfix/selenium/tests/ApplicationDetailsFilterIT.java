@@ -38,7 +38,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
     private static final String REST_URL = System.getProperty("REST_URL");
 
     static {
-
         if (API_KEY == null) {
             throw new RuntimeException("Please set API_KEY in run configuration.");
         }
@@ -48,7 +47,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         }
     }
 
-    //TODO check when ids are given to expand/collapse button
     @Test
     public void testExpandCollapse() {
         int filtersExpandedControlSize = 0;
@@ -66,14 +64,169 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .clickViewAppLink(appName, teamName);
 
         filtersCollapsedControlSize = applicationDetailPage.getFilterDivHeight();
-        applicationDetailPage = applicationDetailPage.clickExpandAllFilters();
+        applicationDetailPage = applicationDetailPage.toggleAll();
 
         filtersExpandedControlSize = applicationDetailPage.getFilterDivHeight();
         assertFalse("Filters were not expanded.", filtersCollapsedControlSize == filtersExpandedControlSize);
 
-        applicationDetailPage = applicationDetailPage.clickCollapseAllFilters();
+        applicationDetailPage = applicationDetailPage.toggleAll();
         assertFalse("Filters were not collapsed.",
                 filtersCollapsedControlSize == applicationDetailPage.getFilterDivHeight());
+    }
+
+    @Test
+    public void testClearFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String parameter = "username";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.expandFieldControls()
+                .addParameterFilter(parameter)
+                .toggleSeverityFilter("Critical")
+                .toggleSeverityFilter("Medium");
+
+        sleep(1000);
+
+        assertTrue("Only 4 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
+
+        applicationDetailPage = applicationDetailPage.toggleClear();
+
+        assertTrue("Critical vulnerabilities should be shown.",
+                applicationDetailPage.isSeverityLevelShown("Critical"));
+        assertTrue("Medium vulnerabilities should be shown.",
+                applicationDetailPage.isSeverityLevelShown("Medium"));
+        assertTrue("Low vulnerabilities should be shown.",
+                applicationDetailPage.isSeverityLevelShown("Low"));
+        assertTrue("Info vulnerabilities should be shown.",
+                applicationDetailPage.isSeverityLevelShown("Info"));
+    }
+
+    /* Saved Filters */
+    @Test
+    public void testSavedFilters() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        String scanner = "IBM Rational AppScan";
+        String parameter = "username";
+        String newFilter = "Custom Filter";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
+                .addScannerFilter(scanner)
+                .expandFieldControls()
+                .addParameterFilter(parameter)
+                .toggleSeverityFilter("Medium")
+                .toggleSeverityFilter("Critical")
+                .expandSavedFilters()
+                .addSavedFilter(newFilter);
+
+        assertTrue("Only 4 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
+
+        applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .toggleClear()
+                .expandSavedFilters()
+                .loadSavedFilter(newFilter);
+
+        assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+        assertTrue("Only 4 medium vulnerabilities should be shown. There was a problem loading saved filter.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
+    }
+
+    /* Scanner and Merged */
+    //TODO change parts when ids come through
+    @Test
+    public void testMergedFindingsFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
+                .toggleTwoPlus();
+
+        assertTrue("Only 4 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
+
+        applicationDetailPage = applicationDetailPage.toggleFourPlus();
+
+        // Change this when possible.
+        assertFalse("Critical vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Critical"));
+        assertFalse("High vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("High"));
+        assertFalse("Medium vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Medium"));
+        assertFalse("Low vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Low"));
+        assertFalse("Info vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Info"));
+    }
+
+    @Test
+    public void testScannerFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        String scanner = "IBM Rational AppScan";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
+                .addScannerFilter(scanner);
+
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
     }
 
     /* Field Controls */
@@ -96,9 +249,10 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType);
 
+        sleep(1000);
+
         assertTrue("Only 5 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
-
     }
 
     //TODO get rid of the extra clicks for the info shown when fix
@@ -148,10 +302,10 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        // Get rid of these when fix is issued.
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addParameterFilter(parameter);
 
+        // Get rid of these when fix is issued.
         applicationDetailPage = applicationDetailPage.toggleSeverityFilter("Info")
                 .toggleSeverityFilter("Info");
 
@@ -224,4 +378,93 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         assertFalse("Info vulnerabilities should not be shown.",
                 applicationDetailPage.isSeverityLevelShown("Info"));
     }
+
+    /* Aging */
+    //TODO parts of this will be replaced when id for 'No results found.' are in
+    @Test
+    public void testLessThanFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.expandAging()
+                .toggleLessThan()
+                .toggle90Days();
+
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
+
+        applicationDetailPage = applicationDetailPage.toggleOneWeek();
+
+        assertFalse("Critical vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Critical"));
+        assertFalse("High vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("High"));
+        assertFalse("Medium vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Medium"));
+        assertFalse("Low vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Low"));
+        assertFalse("Info vulnerabilities should not be shown.",
+                applicationDetailPage.isSeverityLevelShown("Info"));
+
+        applicationDetailPage = applicationDetailPage.toggleMoreThan();
+
+        assertTrue("Only 16 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
+        assertTrue("Only 15 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "15"));
+        assertTrue("Only 25 low vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Low", "25"));
+        assertTrue("Only 15 info vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Info", "15"));
+
+        applicationDetailPage = applicationDetailPage.toggle90Days();
+
+        assertTrue("Only 6 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
+        assertTrue("Only 6 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
+        assertTrue("Only 4 low vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Low", "4"));
+        assertTrue("Only 10 info vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Info", "10"));
+    }
+
+
+    /* Date Range */
+    //TODO Put on hold because of bugs and ids to check for 'No Results Found' better
+    @Test
+    public void testDateFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage = applicationDetailPage.expandDateRange()
+                .enterStartDate("14-June-2011");
+    }
+
+
 }

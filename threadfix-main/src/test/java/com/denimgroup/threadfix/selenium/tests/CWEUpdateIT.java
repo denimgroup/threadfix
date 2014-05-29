@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.NoSuchElementException;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class CWEUpdateIT extends BaseIT {
@@ -46,7 +46,7 @@ public class CWEUpdateIT extends BaseIT {
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity);
 
-        assertFalse("Could not find the vulnerability.", globalFilterPage.isVulnerabilityTypeFound());
+        assertTrue("Could not find the vulnerability.", globalFilterPage.isVulnerabilityTypeFound());
 
         try {
             TeamIndexPage teamIndexPage = globalFilterPage.deleteFilter()

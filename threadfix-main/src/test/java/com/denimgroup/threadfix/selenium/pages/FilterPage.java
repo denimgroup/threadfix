@@ -160,7 +160,7 @@ public class FilterPage extends BasePage {
     }
 
     public boolean isVulnerabilityTypeFound() {
-        return driver.findElementByClassName("errors").isDisplayed();
+        return driver.findElementsById("genericVulnerabilityNameError").size() == 0;
     }
 
 }

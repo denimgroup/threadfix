@@ -412,14 +412,62 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElement(By.className("filter-controls")).getSize().getHeight();
     }
 
-    //TODO id's for button
-    public ApplicationDetailPage clickExpandAllFilters() {
-        driver.findElementByLinkText("Expand All").click();
+    public ApplicationDetailPage toggleAll() {
+        driver.findElementById("toggleAllButton").click();
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickCollapseAllFilters() {
-        driver.findElementByLinkText("Collapse All").click();
+    public ApplicationDetailPage toggleClear() {
+        driver.findElementById("clearFiltersButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandSavedFilters() {
+        driver.findElementById("savedFiltersExpand").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        driver.findElementById("saveFilterButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage loadSavedFilter(String savedFilter) {
+        new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
+        driver.findElementById("loadFilterButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandScannerAndMerged() {
+        driver.findElementById("expandScannerFilters").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleTwoPlus() {
+        driver.findElementById("set2MergedFindings").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleThreePlus() {
+        driver.findElementById("set3MergedFindings").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleFourPlus() {
+        driver.findElementById("set4MergedFindings").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleFivePlus() {
+        driver.findElementById("set5MergedFindings").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addScannerFilter(String scanner) {
+        driver.findElementById("showScannerInput").click();
+        driver.findElementById("scannerTypeahead").sendKeys(scanner);
+        driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
         return new ApplicationDetailPage(driver);
     }
 
@@ -455,6 +503,56 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage toggleStatusFilter(String status) {
         WebElement temp = driver.findElementById("show" + status);
         temp.click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandAging() {
+        driver.findElementById("showDateControls").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleLessThan() {
+        driver.findElementById("lessThan").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleMoreThan() {
+        driver.findElementById("moreThan").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggleOneWeek() {
+        driver.findElementById("oneWeek").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggle30Days() {
+        driver.findElementById("30days").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggle60Days() {
+        driver.findElementById("60days").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage toggle90Days() {
+        driver.findElementById("90days").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandDateRange() {
+        driver.findElementById("showDateRange").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage enterStartDate(String date) {
+        driver.findElementById("startDateInput").sendKeys(date);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage enterEndDate(String date) {
+        driver.findElementById("endDateInput").sendKeys(date);
         return new ApplicationDetailPage(driver);
     }
 
