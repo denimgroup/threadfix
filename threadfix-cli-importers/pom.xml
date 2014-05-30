@@ -40,28 +40,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire.version}</version>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                            <includes>
-                                <include>**/*Tests.java</include>
-                                <include>**/*Test.java</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/TransactionalTest.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
 
@@ -77,9 +56,6 @@
     <profiles>
         <profile>
             <id>int</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -92,10 +68,16 @@
                                     <goal>test</goal>
                                 </goals>
                                 <configuration>
-                                    <skip>false</skip>
+                                    <excludes>
+                                        <exclude>**/TransactionalTest.java</exclude>
+                                    </excludes>
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
@@ -184,10 +166,10 @@
             <artifactId>commons-validator</artifactId>
             <version>${commons.validator.version}</version>
             <exclusions>
-            	<exclusion>
-            		<artifactId>commons-collections</artifactId>
-            		<groupId>commons-collections</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
