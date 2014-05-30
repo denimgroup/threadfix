@@ -38,7 +38,7 @@ public class CWEUpdateIT extends BaseIT {
     //TODO Figure out what is wrong with getting the error messages
     @Test
     public void testCWEUpdate() {
-        String vulnerabilityType = "Improper Authorization in Handler for Custom URL Scheme (CWE 2001)";
+        String vulnerabilityType = "Improper Authorization in Handler for Custom URL Scheme";
         String severity = "High";
 
         FilterPage globalFilterPage = loginPage.login("user", "password")

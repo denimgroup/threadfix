@@ -429,6 +429,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -436,7 +437,24 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .clickViewAppLink(appName, teamName);
 
         applicationDetailPage = applicationDetailPage.expandDateRange()
-                .enterStartDate("14-June-2011");
+                .enterStartDate("14-June-2012")
+                .expandFieldControls()
+                .toggleStatusFilter("Open");
+
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
+
+        applicationDetailPage = applicationDetailPage.enterEndDate("15-June-2012")
+                .toggleStatusFilter("Open");
+
+        assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
+
     }
 
 
