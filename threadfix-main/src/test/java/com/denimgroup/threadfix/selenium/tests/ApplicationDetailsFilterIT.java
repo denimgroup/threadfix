@@ -239,8 +239,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType);
 
-        sleep(1000);
-
         assertTrue("Only 5 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
     }
@@ -378,7 +376,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandAging()
                 .toggleLessThan()
                 .toggle90Days();
-        sleep(1000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));

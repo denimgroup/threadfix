@@ -101,6 +101,7 @@ public class FilterPage extends BasePage {
     public FilterPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
         sleep(5000);
+        waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
     }
 
@@ -163,5 +164,4 @@ public class FilterPage extends BasePage {
     public boolean isVulnerabilityTypeFound() {
         return driver.findElementsById("genericVulnerabilityNameError").size() == 0;
     }
-
 }

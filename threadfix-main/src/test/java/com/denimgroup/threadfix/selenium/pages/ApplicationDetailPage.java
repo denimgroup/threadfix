@@ -419,6 +419,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage toggleClear() {
         driver.findElementById("clearFiltersButton").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -438,7 +439,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage loadSavedFilter(String savedFilter) {
         new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
         driver.findElementById("loadFilterButton").click();
-        sleep(2000);
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -450,26 +451,26 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage toggleTwoPlus() {
-        driver.findElementById("set2MergedFindings").click();
-        sleep(4000);
+        driver.findElementByLinkText("2+").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleThreePlus() {
-        driver.findElementById("set3MergedFindings").click();
-        sleep(4000);
+        driver.findElementByLinkText("3+").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleFourPlus() {
-        driver.findElementById("set4MergedFindings").click();
-        sleep(4000);
+        driver.findElementByLinkText("4+").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleFivePlus() {
-        driver.findElementById("set5MergedFindings").click();
-        sleep(4000);
+        driver.findElementByLinkText("5+").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -477,7 +478,7 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("showScannerInput").click();
         driver.findElementById("scannerTypeahead").sendKeys(scanner);
         driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
-        sleep(2000);
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -492,28 +493,33 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("showTypeInput").click();
         driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
         driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
        return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage addPathFilter(String path) {
         driver.findElementById("pathInput").sendKeys(path);
         driver.findElementById("pathInput").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleSeverityFilter(String level) {
         driver.findElementById("show" + level).click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage addParameterFilter(String parameter) {
         driver.findElementById("parameterInput").sendKeys(parameter);
         driver.findElementById("parameterInput").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleStatusFilter(String status) {
         driver.findElementById("show" + status).click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -525,38 +531,38 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage toggleLessThan() {
-        driver.findElementById("lessThan").click();
-        sleep(2000);
+        driver.findElementByLinkText("Less Than").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleMoreThan() {
-        driver.findElementById("moreThan").click();
-        sleep(2000);
+        driver.findElementByLinkText("More Than").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleOneWeek() {
-        driver.findElementById("oneWeek").click();
-        sleep(2000);
+        driver.findElementByLinkText("1 Week").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggle30Days() {
-        driver.findElementById("30days").click();
-        sleep(2000);
+        driver.findElementByLinkText("30 days").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggle60Days() {
-        driver.findElementById("60days").click();
-        sleep(2000);
+        driver.findElementByLinkText("60 days").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggle90Days() {
-        driver.findElementById("90days").click();
-        sleep(2000);
+        driver.findElementByLinkText("90 days").click();
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
@@ -574,6 +580,12 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage enterEndDate(String date) {
         driver.findElementById("endDateInput").sendKeys(date);
         return new ApplicationDetailPage(driver);
+    }
+
+    public void waitForResultsToLoad() {
+        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
+            sleep(1000);
+        }
     }
 
     /*________________ Boolean Functions ________________*/
