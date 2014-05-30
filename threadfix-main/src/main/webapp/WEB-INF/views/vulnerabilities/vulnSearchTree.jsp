@@ -4,7 +4,7 @@
             Results
         </span>
         <span class="spinner-div">
-            <span ng-show="loadingTree" class="spinner dark"></span>
+            <span id="vulnTreeLoadingSpinner" ng-show="loadingTree" class="spinner dark"></span>
         </span>
     </h3>
 
