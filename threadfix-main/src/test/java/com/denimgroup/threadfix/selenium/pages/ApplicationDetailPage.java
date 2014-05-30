@@ -366,7 +366,6 @@ public class ApplicationDetailPage extends BasePage {
                 return count;
             }
         }
-
         return "0";
     }
 
@@ -414,6 +413,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage toggleAll() {
         driver.findElementById("toggleAllButton").click();
+        sleep(1500);
         return new ApplicationDetailPage(driver);
     }
 
@@ -423,7 +423,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandSavedFilters() {
+        sleep(1000);
         driver.findElementById("savedFiltersExpand").click();
+        sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -436,11 +438,14 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage loadSavedFilter(String savedFilter) {
         new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
         driver.findElementById("loadFilterButton").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage expandScannerAndMerged() {
+        sleep(1500);
         driver.findElementById("expandScannerFilters").click();
+        sleep(1500);
         return new ApplicationDetailPage(driver);
     }
 
@@ -468,11 +473,14 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("showScannerInput").click();
         driver.findElementById("scannerTypeahead").sendKeys(scanner);
         driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage expandFieldControls() {
+        sleep(1000);
         driver.findElementById("showFieldControls").click();
+        sleep(1000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -501,13 +509,14 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage toggleStatusFilter(String status) {
-        WebElement temp = driver.findElementById("show" + status);
-        temp.click();
+        driver.findElementById("show" + status).click();
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage expandAging() {
+        sleep(1500);
         driver.findElementById("showDateControls").click();
+        sleep(1500);
         return new ApplicationDetailPage(driver);
     }
 
@@ -543,6 +552,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage expandDateRange() {
         driver.findElementById("showDateRange").click();
+        sleep(1500);
         return new ApplicationDetailPage(driver);
     }
 

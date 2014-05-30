@@ -50,8 +50,8 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
     @Test
     public void testExpandCollapse() {
-        int filtersExpandedControlSize = 0;
-        int filtersCollapsedControlSize = 0;
+        int filtersExpandedControlSize;
+        int filtersCollapsedControlSize;
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -365,7 +365,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
     /* Aging */
     @Test
-    public void testLessThanFilter() {
+    public void testAgingFilter() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -382,6 +382,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandAging()
                 .toggleLessThan()
                 .toggle90Days();
+        sleep(1000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -393,10 +394,12 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "5"));
 
         applicationDetailPage = applicationDetailPage.toggleOneWeek();
+        sleep(1000);
 
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
 
         applicationDetailPage = applicationDetailPage.toggleMoreThan();
+        sleep(1000);
 
         assertTrue("Only 16 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
@@ -408,6 +411,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "15"));
 
         applicationDetailPage = applicationDetailPage.toggle90Days();
+        sleep(1000);
 
         assertTrue("Only 6 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
@@ -418,7 +422,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         assertTrue("Only 10 info vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Info", "10"));
     }
-
 
     /* Date Range */
     //TODO Put on hold because of bugs and ids to check for 'No Results Found' better
