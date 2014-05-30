@@ -229,7 +229,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')";
+        String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation";
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -238,6 +238,8 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType);
+
+        sleep(2000);
 
         assertTrue("Only 5 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
