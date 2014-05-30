@@ -181,14 +181,10 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
 
-        sleep(1000);
-
         assertTrue("Only 4 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
 
         applicationDetailPage = applicationDetailPage.toggleFourPlus();
-
-        sleep(1000);
 
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
     }

@@ -413,7 +413,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage toggleAll() {
         driver.findElementById("toggleAllButton").click();
-        sleep(1500);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -423,9 +423,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandSavedFilters() {
-        sleep(1000);
+        sleep(2000);
         driver.findElementById("savedFiltersExpand").click();
-        sleep(1000);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -443,29 +443,33 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandScannerAndMerged() {
-        sleep(1500);
+        sleep(2000);
         driver.findElementById("expandScannerFilters").click();
-        sleep(1500);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleTwoPlus() {
         driver.findElementById("set2MergedFindings").click();
+        sleep(4000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleThreePlus() {
         driver.findElementById("set3MergedFindings").click();
+        sleep(4000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleFourPlus() {
         driver.findElementById("set4MergedFindings").click();
+        sleep(4000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleFivePlus() {
         driver.findElementById("set5MergedFindings").click();
+        sleep(4000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -478,9 +482,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandFieldControls() {
-        sleep(1000);
+        sleep(2000);
         driver.findElementById("showFieldControls").click();
-        sleep(1000);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -514,45 +518,51 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandAging() {
-        sleep(1500);
+        sleep(2000);
         driver.findElementById("showDateControls").click();
-        sleep(1500);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleLessThan() {
         driver.findElementById("lessThan").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleMoreThan() {
         driver.findElementById("moreThan").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggleOneWeek() {
         driver.findElementById("oneWeek").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggle30Days() {
         driver.findElementById("30days").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggle60Days() {
         driver.findElementById("60days").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage toggle90Days() {
         driver.findElementById("90days").click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage expandDateRange() {
         driver.findElementById("showDateRange").click();
-        sleep(1500);
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
