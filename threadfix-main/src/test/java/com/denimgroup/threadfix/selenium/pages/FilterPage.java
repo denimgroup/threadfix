@@ -63,8 +63,10 @@ public class FilterPage extends BasePage {
         setVulnerabilityType(vulnerabilityType)
                 .setSeverity(severity)
                 .clickAddFilter();
-        sleep(180000);
-        waitForElement(driver.findElementByClassName("alert-success"));
+        //sleep(180000);
+        WebDriverWait wait = new WebDriverWait(driver, 180);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("alert-success")));
+        //waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
     }
 
