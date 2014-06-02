@@ -116,7 +116,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
                 post.addParameter(paramNames[i], paramVals[i]);
             }
 
-            HttpClient client = getConfiguredHttpClient(QualysRemoteProvider.class);
+            HttpClient client = getConfiguredHttpClient(classInstance);
 
             int status = client.executeMethod(post);
 
