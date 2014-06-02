@@ -319,20 +319,20 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     	
     	Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
-		
-		// unify URLs 
+
+		// unify URLs
 		Map<String,String> patterns = new HashMap<String,String>();
 		patterns.put(";jsessionid=.*",";jsessionid=[removed]");
 		patterns.put("/_ns:.*?/","/_ns:[removed]/");
 		patterns.put("=[^/]*","=[removed]");
-		
+
 		for ( String match : patterns.keySet()){
-			if (url.matches(".*"+match+".*")){
+			if (url != null && url.matches(".*" + match + ".*")){
 				url = url.replaceAll(match, patterns.get(match));
 			}
 		}
-		
-		
+
+
 		if (url != null && !url.isEmpty()) {
 			try {
 				location.setUrl(new URL(url));
