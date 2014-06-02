@@ -60,10 +60,7 @@ public class RegexUtils {
 		
 		Matcher matcher = pattern.matcher(targetString);
 
-		if (matcher.find())
-			return matcher.group(1);
-		else
-			return null;
+        return matcher.find() ? matcher.group(1) : null;
 	}
 	
 	/**

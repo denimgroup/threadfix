@@ -23,10 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
@@ -38,6 +38,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Parses the SCA Fortify fpr output file.
@@ -486,7 +487,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 				}
 				
 				if (parameter == null && isObjectOfCall) {
-					parameter = RegexUtils.getRegexResult(line, "([a-zA-Z0-9_\\[]+\\]?)\\." + functionName);
+					parameter = RegexUtils.getRegexResult(line, "([a-zA-Z0-9_\\[]+\\]?)\\." + Pattern.quote(functionName));
 				} else if (number != -1) {
 					if (line.contains(functionName)) {
 						String commas = "";
@@ -496,7 +497,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 						
 						String paramRegex = "([^,\\)]+)";
 						
-						parameter = RegexUtils.getRegexResult(line, functionName + "\\(" + commas + paramRegex);
+						parameter = RegexUtils.getRegexResult(line, Pattern.quote(functionName) + "\\(" + commas + paramRegex);
 						
 						if (tookOutReturn) {
 							String testParameter = RegexUtils.getRegexResult(parameter,

@@ -52,11 +52,7 @@ public class RegexUtils {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(targetString);
 
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return null;
-        }
+        return matcher.find() ? matcher.group(1) : null;
     }
 
 }
