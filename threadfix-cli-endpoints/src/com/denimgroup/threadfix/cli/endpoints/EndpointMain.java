@@ -24,18 +24,25 @@
 
 package com.denimgroup.threadfix.cli.endpoints;
 
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
-import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
-
 public class EndpointMain {
 	
 	public static void main(String[] args) {
+
+        resetLoggingConfiguration();
+
 		if (args.length != 1) {
 			System.out.println("This program takes 1 argument, the file root.");
 			
@@ -71,4 +78,13 @@ public class EndpointMain {
 			}
 		}
 	}
+
+    private static void resetLoggingConfiguration() {
+        ConsoleAppender console = new ConsoleAppender(); //create appender
+        String pattern = "%d [%p|%c|%C{1}] %m%n";
+        console.setLayout(new PatternLayout(pattern));
+        console.setThreshold(Level.FATAL);
+        console.activateOptions();
+        Logger.getRootLogger().addAppender(console);
+    }
 }
