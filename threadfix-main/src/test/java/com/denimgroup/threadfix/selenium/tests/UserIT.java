@@ -173,17 +173,18 @@ public class UserIT extends BaseIT {
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(baseUserName, null)
-                .enterPassword("lengthy password 2", null)
-                .enterConfirmPassword("lengthy password 2", null)
-                .clickAddNewUserBtn()
-                .clickAddUserLink()
-                .enterName(userNameDuplicateTest, null)
+                .enterName(baseUserName)
                 .enterPassword("lengthy password 2", null)
                 .enterConfirmPassword("lengthy password 2", null)
                 .clickAddNewUserBtn();
 
-
+        userIndexPage = userIndexPage.clickOrganizationHeaderLink()
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userNameDuplicateTest)
+                .enterPassword("lengthy password 2", null)
+                .enterConfirmPassword("lengthy password 2", null)
+                .clickAddNewUserBtn();
 
 		// Test submission with no changes
 		userIndexPage = userIndexPage.clickManageUsersLink()
@@ -195,7 +196,7 @@ public class UserIT extends BaseIT {
 
 		// Test Empty
 		userIndexPage = userIndexPage.clickEditLink(baseUserName)
-                .enterName("", baseUserName)
+                .enterName("")
                 .enterPassword("", baseUserName)
                 .enterConfirmPassword("", baseUserName)
                 .clickUpdateUserBtnInvalid(baseUserName);

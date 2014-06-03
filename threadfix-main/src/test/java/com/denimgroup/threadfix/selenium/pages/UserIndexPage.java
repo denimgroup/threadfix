@@ -66,13 +66,21 @@ public class UserIndexPage extends BasePage {
 		sleep(1000);
 		return new UserIndexPage(driver);
 	}
-	
+
+    @Deprecated
 	public UserIndexPage enterName(String name,String oldName){
 		WebElement nameField = driver.findElementById("name");
         nameField.clear();
         nameField.sendKeys(name);
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage enterName(String username) {
+        WebElement nameField = driver.findElementById("name");
+        nameField.clear();
+        nameField.sendKeys(username);
+        return new UserIndexPage(driver);
+    }
 	
 	public UserIndexPage enterPassword(String password,String oldName){
 		if(oldName == null){

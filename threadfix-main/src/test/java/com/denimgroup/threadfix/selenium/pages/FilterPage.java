@@ -64,7 +64,7 @@ public class FilterPage extends BasePage {
                 .setSeverity(severity)
                 .clickAddFilter();
         //sleep(180000);
-        WebDriverWait wait = new WebDriverWait(driver, 180);
+        WebDriverWait wait = new WebDriverWait(driver, 300);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("alert-success")));
         //waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
