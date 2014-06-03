@@ -43,7 +43,10 @@
         <div id="tabsDiv">
             <h3>{{ vulnFiltersTitle }}</h3>
 
-            <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+            <div id="vulnFiltersSuccessMessage" ng-show="successMessage" class="alert alert-success">
+                <button class="close" ng-click="successMessage = undefined" type="button">&times;</button>
+                {{ successMessage }}
+            </div>
 
             <a id="createNewKeyModalButton" ng-click="showNewFilterModal()" class="btn">Create New Filter</a>
 
