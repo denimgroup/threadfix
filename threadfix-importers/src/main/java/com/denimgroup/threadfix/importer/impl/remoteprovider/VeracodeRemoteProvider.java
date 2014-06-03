@@ -37,8 +37,8 @@ import java.util.*;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 
-	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
-	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
+	public static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
+	public static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
 	
 	private static final String
 		DATE_FORMAT_WITH_T = "yyyy-MM-dd'T'HH:mm:ss",

@@ -23,8 +23,54 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.VeracodeMockHttpUtils;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by mac on 6/3/14.
  */
 public class VeracodeApplicationParsingTests {
+
+    public static RemoteProvider getVeracodeImporterWithMock(String username, String password) {
+        VeracodeRemoteProvider provider = new VeracodeRemoteProvider();
+
+        provider.utils = new VeracodeMockHttpUtils();
+
+        RemoteProviderType type = new RemoteProviderType();
+        type.setUsername(username);
+        type.setPassword(password);
+
+        provider.setRemoteProviderType(type);
+
+        return provider;
+    }
+
+    @Test
+    public void readAppsAuthenticated() {
+        RemoteProvider provider = getVeracodeImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
+                VeracodeMockHttpUtils.GOOD_PASSWORD);
+
+        List<RemoteProviderApplication> applications = provider.fetchApplications();
+
+        assertTrue("Applications were null.", applications != null);
+        assertFalse("Applications were empty.", applications.isEmpty());
+    }
+
+    @Test
+    public void readAppsUnauthenticated() {
+        RemoteProvider provider = getVeracodeImporterWithMock(VeracodeMockHttpUtils.BAD_USERNAME,
+                VeracodeMockHttpUtils.BAD_PASSWORD);
+
+        List<RemoteProviderApplication> applications = provider.fetchApplications();
+
+        assertTrue("Applications weren't null.", applications == null);
+    }
+
 }
