@@ -29,12 +29,12 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport implements RemoteProviderHttpUtils {
 
@@ -77,7 +77,12 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
 
             if (status == 200) {
                 InputStream responseStream = get.getResponseBodyAsStream();
-                return HttpResponse.success(status, responseStream);
+                byte[] bytes = IOUtils.toByteArray(responseStream);
+                File directory = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url);
+                directory.mkdirs();
+                File file = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url + "/" + System.currentTimeMillis());
+                IOUtils.write(bytes, new FileOutputStream(file));
+                return HttpResponse.success(status, new ByteArrayInputStream(bytes));
             } else {
                 LOG.warn("Status : " + status);
             }
@@ -118,7 +123,12 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
 
             if (status == 200) {
                 InputStream responseStream = post.getResponseBodyAsStream();
-                return HttpResponse.success(status, responseStream);
+                byte[] bytes = IOUtils.toByteArray(responseStream);
+                File directory = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url);
+                directory.mkdirs();
+                File file = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url + "/" + System.currentTimeMillis());
+                IOUtils.write(bytes, new FileOutputStream(file));
+                return HttpResponse.success(status, new ByteArrayInputStream(bytes));
             } else {
                 LOG.warn("Status : " + status);
                 return HttpResponse.failure(status);

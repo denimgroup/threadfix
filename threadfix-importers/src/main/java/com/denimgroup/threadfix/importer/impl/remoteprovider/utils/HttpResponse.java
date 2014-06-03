@@ -56,7 +56,7 @@ public class HttpResponse {
     }
 
     public boolean isValid() {
-        return status == 200 && status < 300 && inputStream != null;
+        return status == 200 && inputStream != null;
     }
 
     public int getStatus() {

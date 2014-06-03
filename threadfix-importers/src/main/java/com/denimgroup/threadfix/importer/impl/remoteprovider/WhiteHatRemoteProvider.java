@@ -110,8 +110,9 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			return null;
 		}
 		
-		for (Scan resultScan : scans)
+		for (Scan resultScan : scans) {
 			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+        }
 		
 		LOG.info("WhiteHat "+ scans.size() +" scans successfully parsed.");
 		
@@ -125,9 +126,12 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	 */
 	private List<Scan> filterScans(List<Scan> scans) {
 		List<Scan> resultList = new ArrayList<>();
-		for (Scan s: scans) 
+
+		for (Scan s: scans) {
 			resultList.add(s);
-		for (int i=0;i<scans.size()-1;i++) {
+        }
+
+		for (int i = 0; i < scans.size() - 1; i++) {
 			Scan scan1 = scans.get(i);
 			Calendar date1 = scan1.getImportTime();
 			Scan scan2 = scans.get(i+1);
@@ -150,6 +154,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 				}
 			}
 		}
+
 		return resultList;
 	}
 

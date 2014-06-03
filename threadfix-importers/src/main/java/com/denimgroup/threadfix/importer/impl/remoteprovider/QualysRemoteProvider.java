@@ -162,7 +162,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		
 		for (String scanId : scanIds) {
             HttpResponse response = utils.getUrl(
-                    getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId);
+                    getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId, username, password);
 			
 			if (response.isValid()) {
                 inputStream = response.getInputStream();
@@ -202,7 +202,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		// POST with no parameters
 		// TODO include filters
-		HttpResponse connection = utils.postUrl(getAppsUrl(remoteProviderType), new String[]{}, new String[]{});
+		HttpResponse connection = utils.postUrl(getAppsUrl(remoteProviderType), new String[]{}, new String[]{}, username, password);
 
 		InputStream stream;
         if (connection.isValid()) {
@@ -233,7 +233,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		// POST with no parameters
 		// TODO include filters
-		HttpResponse response = utils.postUrl(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{});
+		HttpResponse response = utils.postUrl(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{}, username, password);
         InputStream stream;
 		if (response.isValid()) {
             stream = response.getInputStream();
