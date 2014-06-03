@@ -49,8 +49,8 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 		super(ScannerType.ACUNETIX_WVS);
 	}
 
-	String detailsPattern = "input <b><font color=\"dark\">([^<]+)</font>";
-	String pathPattern = "(.*) \\([a-z0-9]{25,50}\\)";
+	private static final String DETAILS_PATTERN = "input <b><font color=\"dark\">([^<]+)</font>",
+            PATH_PATTERN = "(.*) \\([a-z0-9]{25,50}\\)";
 
 	@Override
 	public Scan parseInput() {
@@ -122,7 +122,7 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 	    	} else if (getUrlText) {
 	    		currentUrlText = getBuilderText();
 	    		if (currentUrlText != null && !currentUrlText.trim().equals("")) {
-	    			String possibleString = RegexUtils.getRegexResult(currentUrlText, pathPattern);
+	    			String possibleString = RegexUtils.getRegexResult(currentUrlText, PATH_PATTERN);
 	    			if (possibleString != null) {
 	    				currentUrlText = possibleString;
 	    			}
@@ -130,7 +130,7 @@ class AcunetixChannelImporter extends AbstractChannelImporter {
 	    		getUrlText = false;
 	    	} else if (getParamText) {
 	    		String text = getBuilderText();
-	    		currentParameter = RegexUtils.getRegexResult(text, detailsPattern);
+	    		currentParameter = RegexUtils.getRegexResult(text, DETAILS_PATTERN);
 	    		getParamText = false;
 	    	} else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();

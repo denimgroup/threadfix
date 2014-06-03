@@ -231,7 +231,7 @@
                 <div class="accordion-inner">
                     Parameter
                     <br>
-                    <input id="parameterInput" style="width: 180px;" type="text" placeholder="Example: username" ng-model="parameters.parameter"/>
+                    <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username" ng-model="parameters.parameter"/>
                 </div>
 
                 <div class="accordion-inner">

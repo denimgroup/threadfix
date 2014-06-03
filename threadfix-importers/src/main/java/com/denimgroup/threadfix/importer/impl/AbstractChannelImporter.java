@@ -305,12 +305,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
          String channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE);
          String channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE);
          String cweCode = findingMap.get(FindingKey.CWE);
-         String parameterValue = findingMap.containsKey(FindingKey.VALUE) ? findingMap.get(FindingKey.VALUE) : null;
-         String request = findingMap.containsKey(FindingKey.REQUEST) ? findingMap.get(FindingKey.REQUEST) : null;
-         String response = findingMap.containsKey(FindingKey.RESPONSE) ? findingMap.get(FindingKey.RESPONSE) : null;
-         String detail = findingMap.containsKey(FindingKey.DETAIL) ? findingMap.get(FindingKey.DETAIL) : null;
-         String recommendation = findingMap.containsKey(FindingKey.RECOMMENDATION) ? findingMap.get(FindingKey.RECOMMENDATION) : null;
-         String rawFinding = findingMap.containsKey(FindingKey.RAWFINDING) ? findingMap.get(FindingKey.RAWFINDING) : null;
+         String parameterValue = findingMap.get(FindingKey.VALUE);
+         String request = findingMap.get(FindingKey.REQUEST);
+         String response = findingMap.get(FindingKey.RESPONSE);
+         String detail = findingMap.get(FindingKey.DETAIL);
+         String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
+         String rawFinding = findingMap.get(FindingKey.RAWFINDING);
 
     	 
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
@@ -319,7 +319,20 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     	
     	Finding finding = new Finding();
 		SurfaceLocation location = new SurfaceLocation();
-		
+
+		// unify URLs
+		Map<String,String> patterns = new HashMap<String,String>();
+		patterns.put(";jsessionid=.*",";jsessionid=[removed]");
+		patterns.put("/_ns:.*?/","/_ns:[removed]/");
+		patterns.put("=[^/]*","=[removed]");
+
+		for ( String match : patterns.keySet()){
+			if (url != null && url.matches(".*" + match + ".*")){
+				url = url.replaceAll(match, patterns.get(match));
+			}
+		}
+
+
 		if (url != null && !url.isEmpty()) {
 			try {
 				location.setUrl(new URL(url));

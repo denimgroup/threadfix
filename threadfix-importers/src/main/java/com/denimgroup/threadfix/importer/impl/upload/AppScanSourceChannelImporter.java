@@ -23,13 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -37,8 +37,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 
@@ -268,21 +266,7 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	return returnList;
 	    }
 	}
-	
-	public static String getRegexResult2(String targetString, String regex) {
-		if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
-			return null;
-		}
 
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(targetString);
-
-		if (matcher.find())
-			return matcher.group(1);
-		else
-			return null;
-	}
-	
 	@Override
 	public ScanCheckResultBean checkFile() {
 		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
