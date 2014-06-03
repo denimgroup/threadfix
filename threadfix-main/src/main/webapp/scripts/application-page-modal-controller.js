@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal, tfEncoder) {
+myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal, tfEncoder, timeoutService) {
 
     var currentUrl = "/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId;
 
@@ -52,9 +52,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     });
 
     $scope.updateDefectStatus = function() {
+        timeoutService.timeout();
         $http.get(tfEncoder.encode(currentUrl + "/defects/update")).
             success(function(data, status, headers, config) {
-
+                timeoutService.cancel();
                 if (data.success) {
                     $scope.successMessage = data.object;
                 } else {
@@ -62,6 +63,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 }
             }).
             error(function(data, status, headers, config) {
+                timeoutService.cancel();
                 $log.info("HTTP request for form objects failed.");
                 // TODO improve error handling and pass something back to the users
                 $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
@@ -90,7 +92,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             if ($scope.config.defectTrackerList.length === 0) {
                 $scope.showCreateDefectTrackerModal();
             } else {
-                $scope.showAddDefectTrackerModal();
+                $scope.showAddDefectTrackerModal(null);
             }
 
         } else if (name === 'createDefectTracker') {
@@ -219,7 +221,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
     }
 
     // Defect Tracker methods
-    $scope.showAddDefectTrackerModal = function() {
+    $scope.showAddDefectTrackerModal = function(newDt) {
         var modalInstance = $modal.open({
             templateUrl: 'addDefectTrackerModal.html',
             controller: 'AddDefectTrackerModalController',
@@ -230,9 +232,18 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 },
                 object: function () {
 
-                    var id = null;
+                    if (newDt) {
+                        return {
+                            defectTracker: newDt,
+                            defectTrackerId:  newDt.id
+                        };
+                    }
+
                     if ($scope.config.application.defectTracker) {
-                        id = $scope.config.application.defectTracker.id;
+                        return {
+                            defectTracker: $scope.config.application.defectTracker,
+                            defectTrackerId:  $scope.config.application.defectTracker.id
+                        };
                     }
 
                     return {
@@ -253,7 +264,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (defectTracker) {
             $scope.config.application.defectTracker = defectTracker;
-            $scope.successMessage = "Set waf to " + defectTracker.name;
+            $scope.successMessage = "Set defect tracker to " + defectTracker.name;
             $scope.showEditModal();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -292,10 +303,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
 
             $scope.config.defectTrackerList.push(dt);
-            $scope.config.application.defectTracker = dt;
+//            $scope.config.application.defectTracker = dt;
             $scope.successMessage = "Successfully created waf " + dt.name;
 //            $scope.showEditModal();
-            $scope.showAddDefectTrackerModal();
+            $scope.showAddDefectTrackerModal(dt);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

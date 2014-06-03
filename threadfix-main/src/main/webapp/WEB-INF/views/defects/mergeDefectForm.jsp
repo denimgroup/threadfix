@@ -12,7 +12,7 @@
                 <tr class="left-align">
                     <td style="padding:5px;">Select Defect</td>
                     <td style="padding:5px;">
-                        <select style="margin-bottom:0;" ng-model="object.id" id="defectId" name="id" ng-options="defect for defect in config.defects">
+                        <select style="margin-bottom:0;" ng-model="object.id" id="defectId" name="id" ng-options="defect for defect in config.defects" required>
                         </select>
                     </td>
                 </tr>
@@ -22,7 +22,7 @@
         <%@ include file="littleVulnTable.jspf" %>
 	</div>
     <div class="modal-footer">
-        <span class="errors" style="float:left">{{ error }}</span>
+        <span class="errors" style="float:left">{{ errorMessage }}</span>
 
         <a class="btn" ng-click="cancel()">Close</a>
         <button id="loadingButton"

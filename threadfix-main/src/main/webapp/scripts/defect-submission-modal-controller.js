@@ -1,7 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
 // TODO wrap this back into genericModalController and make config optional
-myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url) {
+myAppModule.controller('DefectSubmissionModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, configUrl, url, timeoutService) {
 
     $scope.focusInput = true;
 
@@ -14,11 +14,14 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
 
     $scope.showRemoveLink = $scope.vulns.length > 1;
 
+    timeoutService.timeout();
+
     $http.get(configUrl).
         success(function(data, status, headers, config) {
             $scope.initialized = true;
 
             if (data.success) {
+                timeoutService.cancel();
                 $scope.config = data.object.projectMetadata;
                 $scope.config.typeName = data.object.defectTrackerName;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
@@ -46,6 +49,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
     $scope.ok = function (valid) {
 
         if (valid) {
+            timeoutService.timeout();
             $scope.loading = true;
 
             $scope.object.vulnerabilityIds = $scope.vulns.map(function(vuln) {
@@ -54,22 +58,25 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
 
             threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {
+                    timeoutService.cancel();
                     $scope.loading = false;
 
                     if (data.success) {
                         $modalInstance.close(data.object);
                     } else {
-                        $scope.errors = "Failure. Message was : " + data.message;
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
                     }
                 }).
                 error(function(data, status, headers, config) {
+                    timeoutService.cancel();
                     $scope.loading = false;
-                    $scope.errors = "Failure. HTTP status was " + status;
+                    $scope.errorMessage = "Failure. HTTP status was " + status;
                 });
         }
     };
 
     $scope.cancel = function () {
+        timeoutService.cancel();
         $modalInstance.dismiss('cancel');
     };
 

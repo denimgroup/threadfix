@@ -64,6 +64,7 @@ public class ApplicationsController {
 	public ApplicationsController(){}
 	
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationsController.class);
+    private static final String ERROR_MSG = "error_msg";
 
     @Autowired
 	private FindingService findingService;
@@ -250,12 +251,19 @@ public class ApplicationsController {
 		ProjectMetadata data = null;
 
         List<Defect> defectList = null;
+        Map<String, Object> map = new HashMap<>();
 		if (dt != null) {
             defectList = dt.getDefectList();
+            if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
+                map.put(ERROR_MSG, dt.getLastError());
+                return map;
+            }
 			data = dt.getProjectMetadata();
+            if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
+                map.put(ERROR_MSG, dt.getLastError());
+                return map;
+            }
 		}
-
-        Map<String, Object> map = new HashMap<>();
 
 		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());
 		map.put("defectList", defectList);
@@ -271,8 +279,8 @@ public class ApplicationsController {
 
 		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId);
 
-        if (returnMap == null) {
-            return RestResponse.failure("Unable to retrieve Defect Tracker information.");
+        if (returnMap.get(ERROR_MSG) != null) {
+            return RestResponse.failure(returnMap.get(ERROR_MSG).toString());
         } else {
             return RestResponse.success(returnMap);
         }

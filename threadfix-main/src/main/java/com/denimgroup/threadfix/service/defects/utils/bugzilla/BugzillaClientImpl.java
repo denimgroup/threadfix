@@ -78,7 +78,7 @@ public class BugzillaClientImpl extends SpringBeanAutowiringSupport implements B
     }
 
     @Override
-    public ConnectionStatus configure(String url, String username, String password) {
+    public ConnectionStatus configure(String url, String username, String password) throws XmlRpcException{
 
         assert url != null;
 
@@ -101,6 +101,7 @@ public class BugzillaClientImpl extends SpringBeanAutowiringSupport implements B
                 loginStatus = login(client);
             } catch (XmlRpcException e) {
                 LOG.error("Encountered XmlRpcException while trying to log in.", e);
+                throw e;
             }
 
             // TODO Pass this information back to the user

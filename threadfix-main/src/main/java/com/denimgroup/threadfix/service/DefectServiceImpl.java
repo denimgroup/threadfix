@@ -36,10 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = false)
@@ -83,7 +80,7 @@ public class DefectServiceImpl implements DefectService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public Defect createDefect(List<Vulnerability> allVulns, String summary,
+	public Map<String, Object> createDefect(List<Vulnerability> allVulns, String summary,
 			String preamble, String component, String version,
 			String severity, String priority, String status) {
 		if (allVulns == null || allVulns.size() == 0 || allVulns.get(0) == null ||
@@ -91,7 +88,8 @@ public class DefectServiceImpl implements DefectService {
 			log.warn("Null input, exiting.");
 			return null;
 		}
-		
+
+        Map<String, Object> map = new HashMap<>();
 		Vulnerability vuln = allVulns.get(0);
 
 		Application application = vuln.getApplication();
@@ -177,7 +175,8 @@ public class DefectServiceImpl implements DefectService {
 			} else {
 				log.info("Successfully submitted defect.");
 			}
-			return defect;
+            map.put(DEFECT, defect);
+			return map;
 		}
 		
 		if (defectTrackerName != null) {
@@ -185,7 +184,8 @@ public class DefectServiceImpl implements DefectService {
 		} else {
 			log.warn("There was an error submitting the defect.");
 		}
-		return null;
+        map.put(ERROR, dt.getLastError());
+		return map;
 	}
 
 	private String createMessage(Vulnerability vuln) {
@@ -356,7 +356,9 @@ public class DefectServiceImpl implements DefectService {
 		defect.setApplication(application);
 		List<Defect> defectList = new ArrayList<>();
 		defectList.add(defect);
-		dt.getMultipleDefectStatus(defectList);
+        Map<Defect, Boolean> map = dt.getMultipleDefectStatus(defectList);
+        if (map.isEmpty())
+            return false;
 		defectDao.saveOrUpdate(defect);
 
 		for (Vulnerability vulnerability : vulnerabilities) {
