@@ -101,7 +101,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
                 inputStream.close();
 			} catch (IOException e) {
                 LOG.error("Failed to close the input stream in RemoteProvider.", e);
-			}
-		}
-	}
+            }
+        }
+    }
 }

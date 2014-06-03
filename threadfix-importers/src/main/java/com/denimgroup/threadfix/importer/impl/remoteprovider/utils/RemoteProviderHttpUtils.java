@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.remoteprovider;
+package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
 /**
  * Created by mac on 6/2/14.

@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.remoteprovider;
+package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
@@ -36,9 +36,6 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by mac on 6/2/14.
- */
 public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport implements RemoteProviderHttpUtils {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(RemoteProviderHttpUtils.class);
@@ -61,7 +58,6 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
     @Override
     @NotNull
     public HttpResponse getUrl(String url, String username, String password) {
-
         assert url != null;
 
         GetMethod get = new GetMethod(url);

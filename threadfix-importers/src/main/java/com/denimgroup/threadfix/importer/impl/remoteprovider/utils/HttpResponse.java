@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.remoteprovider;
+package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
 import java.io.InputStream;
 
@@ -42,7 +42,7 @@ public class HttpResponse {
     }
 
     public static HttpResponse success(int status, InputStream inputStream) {
-        assert status < 300 && status >= 200;
+        assert status == 200;
 
         return new HttpResponse(status, inputStream);
     }
@@ -56,7 +56,7 @@ public class HttpResponse {
     }
 
     public boolean isValid() {
-        return status >= 200 && status < 300 && inputStream != null;
+        return status == 200 && status < 300 && inputStream != null;
     }
 
     public int getStatus() {

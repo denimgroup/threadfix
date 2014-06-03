@@ -24,6 +24,9 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.jetbrains.annotations.NotNull;
