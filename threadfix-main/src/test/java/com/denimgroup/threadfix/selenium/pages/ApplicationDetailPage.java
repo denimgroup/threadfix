@@ -511,8 +511,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage addParameterFilter(String parameter) {
-        driver.findElementById("parameterInput").sendKeys(parameter);
-        driver.findElementById("parameterInput").sendKeys(Keys.RETURN);
+        driver.findElementById("parameterFilterInput").sendKeys(parameter);
+        driver.findElementById("parameterFilterInput").sendKeys(Keys.RETURN);
         waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
