@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
@@ -33,6 +34,9 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
  * 
  */
 public interface DefectService {
+
+    public static final String DEFECT = "defect";
+    public static final String ERROR = "error";
 
 	/**
 	 * @return
@@ -66,7 +70,7 @@ public interface DefectService {
 	 * @param severity
 	 * @return
 	 */
-	Defect createDefect(List<Vulnerability> vulns, String summary, String preamble,
+    Map<String, Object> createDefect(List<Vulnerability> vulns, String summary, String preamble,
 			String component, String version, String severity, String priority, String status);
 
 	/**

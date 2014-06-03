@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('BulkOperationsController', function($http, $log, $modal, tfEncoder, $scope) {
+module.controller('BulkOperationsController', function($rootScope, $http, $log, $modal, tfEncoder, $scope) {
 
     var $parent = $scope.$parent;
 
@@ -75,8 +75,8 @@ module.controller('BulkOperationsController', function($http, $log, $modal, tfEn
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (s) {
-            $parent.successMessage = "Successfully submitted the defect: " + s;
             $scope.refresh();
+            $rootScope.$broadcast('successMessage', "Successfully submitted the defect: " + s);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -127,8 +127,9 @@ module.controller('BulkOperationsController', function($http, $log, $modal, tfEn
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (returnValue) {
-            $scope.successMessage = "Successfully merged the vulnerability.";
+
             $scope.refresh();
+            $rootScope.$broadcast('successMessage', "Successfully merged the vulnerability.");
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

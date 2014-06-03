@@ -257,3 +257,22 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
     return transformer;
 });
+
+threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
+
+    var timeoutService = {};
+    var timer;
+
+    timeoutService.timeout = function() {
+        timer = $timeout(function(){
+            alert('Timeout, exiting system. Please logon and try again.');
+            window.location.href = tfEncoder.encode("/j_spring_security_logout");
+        },30000);
+    };
+
+    timeoutService.cancel = function() {
+        $timeout.cancel(timer);
+    };
+
+    return timeoutService;
+});

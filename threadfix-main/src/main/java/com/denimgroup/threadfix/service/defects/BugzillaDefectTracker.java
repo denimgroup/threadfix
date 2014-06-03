@@ -52,7 +52,13 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
     private BugzillaClient.ConnectionStatus configureClientAndGetStatus() {
 
-        BugzillaClient.ConnectionStatus status = bugzillaClient.configure(getServerURLWithRpc(), username, password);
+        BugzillaClient.ConnectionStatus status = null;
+        try {
+            status = bugzillaClient.configure(getServerURLWithRpc(), username, password);
+        } catch (XmlRpcException e) {
+            setLastError(e.getMessage());
+            return BugzillaClient.ConnectionStatus.INVALID;
+        }
 
         if (status != BugzillaClient.ConnectionStatus.VALID) {
             log.error("Received Bugzilla connection status " + status + ", please fix the error before continuing.");
@@ -321,7 +327,10 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			productList = buffer.toString();
 			productList = productList.substring(0, productList.length() - 1);
 		} catch (XmlRpcException e) {
-			e.printStackTrace();
+            log.error(e.getMessage());
+            setLastError(e.getMessage());
+            return e.getMessage();
+//			e.printStackTrace();
 		} catch (IllegalArgumentException e2) {
 			if (e2.getMessage().contains("Host name may not be null")) {
 				return BAD_CONFIGURATION;
@@ -433,9 +442,11 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
         BugzillaClient.ConnectionStatus status = configureClientAndGetStatus();
 
 		if (status == BugzillaClient.ConnectionStatus.INVALID) {
-			lastError = status.toString();
+			if (getLastError() == null || getLastError().isEmpty())
+                setLastError(status.toString());
 			return null;
 		} else {
+            setLastError(null);
 			return getProducts();
 		}
 	}
