@@ -63,9 +63,8 @@ public class FilterPage extends BasePage {
         setVulnerabilityType(vulnerabilityType)
                 .setSeverity(severity)
                 .clickAddFilter();
-        //sleep(180000);
         WebDriverWait wait = new WebDriverWait(driver, 300);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("alert-success")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vulnFiltersSuccessMessage")));
         //waitForElement(driver.findElementByClassName("alert-success"));
         return new FilterPage(driver);
     }
@@ -102,7 +101,7 @@ public class FilterPage extends BasePage {
 
     public FilterPage saveFilterChanges() {
         driver.findElementById("submitSeverityFilterForm").click();
-        waitForElement(driver.findElementByClassName("alert-success"));
+        waitForElement(driver.findElementById("severitySuccessMessage"));
         return new FilterPage(driver);
     }
 
