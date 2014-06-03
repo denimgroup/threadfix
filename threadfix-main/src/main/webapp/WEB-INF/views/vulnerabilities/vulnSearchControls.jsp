@@ -225,13 +225,15 @@
                 <div class="accordion-inner">
                     Path
                     <br>
-                    <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp" ng-model="parameters.path"/>
+                    <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp"
+                           ng-model="parameters.path" ng-blur="refresh()" ng-enter="refresh()"/>
                 </div>
 
                 <div class="accordion-inner">
                     Parameter
                     <br>
-                    <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username" ng-model="parameters.parameter"/>
+                    <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username"
+                           ng-model="parameters.parameter" ng-blur="refresh()" ng-enter="refresh()"/>
                 </div>
 
                 <div class="accordion-inner">
