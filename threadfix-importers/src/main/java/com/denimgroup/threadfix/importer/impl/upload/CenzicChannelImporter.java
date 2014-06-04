@@ -140,7 +140,10 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    		getUrlText = false;
 	    	} else if (getParamText) {
 	    		String text = getBuilderText();
-                currentParameter = RegexUtils.getRegexResult(text, PARAM_PATTERN).trim();
+                currentParameter = RegexUtils.getRegexResult(text, PARAM_PATTERN);
+                if (currentParameter != null) {
+                    currentParameter = currentParameter.trim();
+                }
                 getParamText = false;
             } else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
