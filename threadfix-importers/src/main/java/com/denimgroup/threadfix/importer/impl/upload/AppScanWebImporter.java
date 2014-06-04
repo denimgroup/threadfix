@@ -59,8 +59,10 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	}
 	
 	public class AppScanSAXParser extends HandlerWithBuilder {
-		
-		private ChannelVulnerability currentChannelVuln = null;
+
+        Map<FindingKey, String> findingMap = new HashMap<>();
+
+        private ChannelVulnerability currentChannelVuln = null;
 		private ChannelSeverity currentChannelSeverity  = null;
 		
 		private String currentUrl = null;
@@ -68,6 +70,10 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		private String currentIssueTypeId = null;
 		private String requestText = null;
 		private String currentHttpMethod = null;
+        private String currentScannerDetail   = null;
+        private String currentAttackDetail = null;
+        private String currentRequestResponse         = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
 		
 		private final Map<String, ChannelSeverity> severityMap = new HashMap<>();
 		private final Map<String, String> genericVulnMap = new HashMap<>();
@@ -79,6 +85,10 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		private boolean grabIssueTypeName = false;
 		private boolean inIssueTypes = true;
 		private boolean grabDate          = false;
+        private boolean grabRequestResponseText		  = false;
+        private boolean grabAttackDetail       = false;
+        private boolean grabScannerDetail      = false;
+        private boolean inFinding		  = false;
 
 	    public AppScanSAXParser () {
 	    	super();
@@ -145,7 +155,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    		
 	    		switch (qName) {
 	    			case "IssueType" : currentIssueTypeId = atts.getValue(0); break;
-	    			case "Issue"     : inIssueTypes = false;                    break;
+	    			case "Issue"     : inIssueTypes = false;                  break;
 	    			case "Severity"  : grabSeverity = true;                   break;
 	    			case "link"      : grabCWE = true;                        break;
 	    			case "name"      : grabIssueTypeName = true;              break;
@@ -155,6 +165,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		    	if ("Issue".equals(qName)) {
 		    		currentChannelVuln = getChannelVulnerability(atts.getValue(0));
 		    		currentChannelSeverity = severityMap.get(atts.getValue(0));
+                    inFinding = true;
 		    	}
 		    	else if ("Entity".equals(qName))
 		    		currentParam = atts.getValue("Name");
@@ -163,8 +174,17 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		    	else if ("OriginalHttpTraffic".equals(qName)) {
 		    		requestText = "";
 		    		grabDate = true;
-		    	}
+		    	} else if ("Difference".equals(qName)) {
+                    grabAttackDetail = true;
+                } else if ("Reasoning".equals(qName)) {
+                    grabScannerDetail = true;
+                } else if ("TestHttpTraffic".equals(qName)) {
+                    grabRequestResponseText = true;
+                }
 	    	}
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
 	    }
 
 	    public void endElement (String uri, String name, String qName) throws SAXException {
@@ -196,7 +216,20 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    		grabIssueTypeName = false;
 	    	} else if (grabDate) {
 	    		requestText = requestText.concat(getBuilderText());
-		  	}
+		  	} else if (grabAttackDetail) {
+                currentAttackDetail = getBuilderText();
+                grabAttackDetail = false;
+            } else if (grabScannerDetail) {
+                currentScannerDetail = getBuilderText();
+                grabScannerDetail = false;
+            } else if (grabRequestResponseText) {
+                currentRequestResponse = getBuilderText();
+                grabRequestResponseText = false;
+            }
+
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
 	    	
 	    	if ("Issues".equals(qName)) {
 				throw new SAXException("Done Parsing.");
@@ -226,6 +259,12 @@ class AppScanWebImporter extends AbstractChannelImporter {
 
 	    		finding.setNativeId(getNativeId(finding));
 	    		finding.setIsStatic(false);
+
+                findingMap.put(FindingKey.REQUEST, currentRequestResponse);
+                findingMap.put(FindingKey.VALUE, currentAttackDetail);
+                findingMap.put(FindingKey.DETAIL, currentScannerDetail);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+                addFindingDetail(finding, findingMap);
 	    		
 	    		saxFindingList.add(finding);
 	    	
@@ -233,6 +272,12 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    		currentUrl = null;
 	    		currentParam = null;
 	    		currentHttpMethod = null;
+                currentScannerDetail   = null;
+                currentAttackDetail = null;
+                currentRequestResponse         = null;
+                currentRawFinding.setLength(0);
+                inFinding = false;
+
 	    		
 	    	} else if ("OriginalHttpTraffic".equals(qName)) {
 	    		if (date == null) {
@@ -258,9 +303,12 @@ class AppScanWebImporter extends AbstractChannelImporter {
 		}
 
 		public void characters (char ch[], int start, int length) {
-	    	if (grabUrlText || grabSeverity || grabCWE || grabIssueTypeName || grabDate) {
+	    	if (grabUrlText || grabSeverity || grabCWE || grabIssueTypeName || grabDate
+                    || grabRequestResponseText || grabAttackDetail || grabScannerDetail) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 

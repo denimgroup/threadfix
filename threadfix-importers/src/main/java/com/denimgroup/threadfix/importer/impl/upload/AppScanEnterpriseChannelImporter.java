@@ -52,6 +52,7 @@ class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 		tagMap.put("security_entity_element", FindingKey.PARAMETER);
 		tagMap.put("test_url", FindingKey.PATH);
 		tagMap.put("issue_id", FindingKey.NATIVE_ID);
+        tagMap.put("risk_category_name", FindingKey.DETAIL);
 	}
 
 	public AppScanEnterpriseChannelImporter() {
@@ -102,6 +103,7 @@ class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
 		
 		private FindingKey itemKey = null;
 	
@@ -128,11 +130,19 @@ class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
 	    	}
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
 	    }
 	    
 	    public void endElement (String uri, String name, String qName)
 	    {
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
 	    	if ("row".equals(qName)) {
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
 	    		Finding finding = constructFinding(findingMap);
 
                 if (finding != null) {
@@ -141,6 +151,7 @@ class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
                 }
 	    		findingMap = null;
 	    		inFinding = false;
+                currentRawFinding.setLength(0);
 	    	} else if (inFinding && itemKey != null) {
 	    		String currentItem = getBuilderText();
 	    		
@@ -155,6 +166,8 @@ class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    	if (getDate || itemKey != null) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 

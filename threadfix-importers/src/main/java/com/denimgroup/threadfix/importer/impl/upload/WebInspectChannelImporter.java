@@ -34,6 +34,9 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Imports the results of a WebInspect scan (xml output).
  * 
@@ -65,100 +68,116 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	}
 	
 	public class WebInspectSAXParser extends HandlerWithBuilder {
-		
-		private String currentChannelVulnName;
-		private String currentUrl;
-		private String currentParam;
-		private String currentChannelSeverityName;
-		private String currentResponseText;
 
-		private boolean grabUrlText       = false;
-		private boolean grabVulnNameText  = false;
-		private boolean grabSeverityText  = false;
-		private boolean grabParameterText = false;
-		private boolean grabDate          = false;
-		private boolean grabTypeId        = false;
-		
-		private boolean ignoreFinding     = false;
-		
-		private boolean issues = false;
-		
-		private final String [] paramChars = { "[", "]", "%" };
-			 	
-	 	private String cleanParam(String param){
-	 		if (param == null || param.isEmpty())
-	 			return null;
-	 		
-	 		String editedParam = param;
-	 		
-	 		for (String character : paramChars)
-	 			if (editedParam.contains(character))
-	 				editedParam = editedParam.substring(0, editedParam.indexOf(character));
+        private String currentChannelVulnName;
+        private String currentUrl;
+        private String currentParam;
+        private String currentChannelSeverityName;
+        private String currentResponseText;
+        private String currentAttackHTTPRequest;
+        private StringBuffer currentRawFinding = new StringBuffer();
 
-	 		return editedParam;
-	 	}
-	    
-		public void add(Finding finding) {
-			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
-	    		finding.setIsStatic(false);
-	    		saxFindingList.add(finding);
-    		}
-		}
+        private Map<FindingKey, String> findingMap = new HashMap<>();
 
-	    ////////////////////////////////////////////////////////////////////
-	    // Event handlers.
-	    ////////////////////////////////////////////////////////////////////
-		
-	    public void startElement (String uri, String name,
-				      String qName, Attributes atts)
-	    {
-	    	if ("Issues".equals(qName))
-	    		issues = true;
-	    	
-	    	if (issues) {
-	    		if ("Name".equals(qName)) {
-	    			if (currentChannelVulnName == null)
-	    				grabVulnNameText = true;
-	    		} else if ("Severity".equals(qName)) {
-	    			grabSeverityText = true;
-	    		} else if ("CheckTypeID".equals(qName)) {
-		    		grabTypeId = true;
-		    	}
-	    		
-	    	} else {
-	    		if ("URL".equals(qName)) {
-	    			grabUrlText = true;
-	    		} else if ("AttackParamDescriptor".equals(qName)) {
-		    		grabParameterText = true;
-		    	}
-	    	}
-	    	
-	    	if (date == null && "RawResponse".equals(qName))
-	    		grabDate = true;
-	    }
+        private boolean grabUrlText       = false;
+        private boolean grabVulnNameText  = false;
+        private boolean grabSeverityText  = false;
+        private boolean grabParameterText = false;
+        private boolean grabDate          = false;
+        private boolean grabTypeId        = false;
+        private boolean grabAttackHTTPRequest = false;
 
-	    public void endElement (String uri, String name, String qName)
-	    {
-	    	if (grabUrlText) {
-	    		currentUrl = getBuilderText();
-	    		grabUrlText = false;
-	    	
-	    	} else if (grabVulnNameText) {
-	    		currentChannelVulnName = getBuilderText();
-	    		grabVulnNameText = false;
-	    	
-	    	} else if (grabSeverityText) {
-	    		currentChannelSeverityName = getBuilderText();
-	    		grabSeverityText = false;
-	    		
-	    	} else if (grabParameterText) {
-	    		currentParam = getBuilderText();
-	    		
-	    		// TODO decide whether or not to clean out the various [] and %5d characters
-	    		// that are sometimes tacked on. Right now we do.
-	    		currentParam = cleanParam(currentParam);
-	    		grabParameterText = false;
+        private boolean ignoreFinding = false;
+
+        private boolean issues = false, issue = false;
+
+        private final String[] paramChars = {"[", "]", "%"};
+
+        private String cleanParam(String param) {
+            if (param == null || param.isEmpty())
+                return null;
+
+            String editedParam = param;
+
+            for (String character : paramChars)
+                if (editedParam.contains(character))
+                    editedParam = editedParam.substring(0, editedParam.indexOf(character));
+
+            return editedParam;
+        }
+
+        public void add(Finding finding) {
+            if (finding != null) {
+                finding.setNativeId(getNativeId(finding));
+                finding.setIsStatic(false);
+                saxFindingList.add(finding);
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////
+        // Event handlers.
+        ////////////////////////////////////////////////////////////////////
+
+        public void startElement(String uri, String name,
+                                 String qName, Attributes atts) {
+            if ("Issues".equals(qName))
+                issues = true;
+            if ("Issue".equals(qName))
+                issue = true;
+
+            if (issues && issue) {
+                if ("Name".equals(qName)) {
+                    if (currentChannelVulnName == null)
+                        grabVulnNameText = true;
+                } else if ("Severity".equals(qName)) {
+                    grabSeverityText = true;
+                } else if ("CheckTypeID".equals(qName)) {
+                    grabTypeId = true;
+                } else if ("AttackHTTPRequest".equals(qName)){
+                    grabAttackHTTPRequest = true;
+                }
+
+            } else {
+                if ("URL".equals(qName)) {
+                    grabUrlText = true;
+                } else if ("AttackParamDescriptor".equals(qName)) {
+                    grabParameterText = true;
+                }
+            }
+
+            if (date == null && "RawResponse".equals(qName))
+                grabDate = true;
+
+            if (issue){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
+        }
+
+        public void endElement(String uri, String name, String qName) {
+
+            if (issue){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
+            if (grabUrlText) {
+                currentUrl = getBuilderText();
+                grabUrlText = false;
+
+            } else if (grabVulnNameText) {
+                currentChannelVulnName = getBuilderText();
+                grabVulnNameText = false;
+
+            } else if (grabSeverityText) {
+                currentChannelSeverityName = getBuilderText();
+                grabSeverityText = false;
+
+            } else if (grabParameterText) {
+                currentParam = getBuilderText();
+
+                // TODO decide whether or not to clean out the various [] and %5d characters
+                // that are sometimes tacked on. Right now we do.
+                currentParam = cleanParam(currentParam);
+                grabParameterText = false;
 	    	} else if (grabDate) {
 	    		if (currentResponseText == null)
 	    			currentResponseText = getBuilderText();
@@ -168,7 +187,10 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    		String temp = getBuilderText().trim();
 	    		ignoreFinding = temp.equals(bestPractices);
 	    		grabTypeId = false;
-	    	}
+	    	} else if (grabAttackHTTPRequest) {
+                currentAttackHTTPRequest = getBuilderText();
+                grabAttackHTTPRequest = false;
+            }
 	    	
 	    	if ("Issues".equals(qName))
 	    		issues = false;
@@ -181,8 +203,15 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    			return;
 	    		
 	    		if (!ignoreFinding) {
-	    			Finding finding = constructFinding(currentUrl, currentParam, 
-		    				currentChannelVulnName, currentChannelSeverityName);
+
+                    findingMap.put(FindingKey.PATH, currentUrl);
+                    findingMap.put(FindingKey.PARAMETER, currentParam);
+                    findingMap.put(FindingKey.VULN_CODE, currentChannelVulnName);
+                    findingMap.put(FindingKey.SEVERITY_CODE, currentChannelSeverityName);
+                    findingMap.put(FindingKey.REQUEST, currentAttackHTTPRequest);
+                    findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+	    			Finding finding = constructFinding(findingMap);
 
 		    		add(finding);
 	    		}
@@ -192,6 +221,10 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    		currentParam = null;
 	    		currentUrl = null;
 	    		ignoreFinding = false;
+                issue = false;
+                currentRawFinding.setLength(0);
+                currentAttackHTTPRequest = null;
+
 	    	}
 	    	
 	    	if (grabDate && "RawResponse".equals(qName)) {
@@ -204,9 +237,12 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (grabUrlText || grabVulnNameText || grabSeverityText || grabParameterText
-	    			|| grabDate || grabTypeId) {
+	    			|| grabDate || grabTypeId || grabAttackHTTPRequest) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+
+            if (issue)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 

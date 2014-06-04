@@ -305,14 +305,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
          String channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE);
          String channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE);
          String cweCode = findingMap.get(FindingKey.CWE);
-         String parameterValue = findingMap.get(FindingKey.VALUE);
-         String request = findingMap.get(FindingKey.REQUEST);
-         String response = findingMap.get(FindingKey.RESPONSE);
-         String detail = findingMap.get(FindingKey.DETAIL);
-         String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
-         String rawFinding = findingMap.get(FindingKey.RAWFINDING);
 
-    	 
     	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
 			return null;
 		}
@@ -372,30 +365,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		
 		finding.setSurfaceLocation(location);
 
-		if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
-			parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setAttackString(parameterValue);
-		
-		if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
-			request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";		
-		finding.setAttackRequest(request);
-			
-		if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
-			response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setAttackResponse(response);
-						
-		if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH)
-			detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setScannerDetail(detail);
-		
-		if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH)
-			recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setScannerRecommendation(recommendation);
-		
-		if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
-			rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setRawFinding(rawFinding);
-		
+        addFindingDetail(finding, findingMap);
+
 		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
         if (channelVulnerability == null) {
@@ -430,6 +401,39 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 		finding.setChannelSeverity(channelSeverity);
 			    		
 		return finding;
+    }
+
+    protected void addFindingDetail(Finding finding, Map<FindingKey, String> findingMap) {
+        String parameterValue = findingMap.get(FindingKey.VALUE);
+        String request = findingMap.get(FindingKey.REQUEST);
+        String response = findingMap.get(FindingKey.RESPONSE);
+        String detail = findingMap.get(FindingKey.DETAIL);
+        String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
+        String rawFinding = findingMap.get(FindingKey.RAWFINDING);
+
+        if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
+            parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setAttackString(parameterValue);
+
+        if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
+            request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setAttackRequest(request);
+
+        if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
+            response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setAttackResponse(response);
+
+        if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH)
+            detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setScannerDetail(detail);
+
+        if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH)
+            recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setScannerRecommendation(recommendation);
+
+        if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
+            rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setRawFinding(rawFinding);
     }
 
 	protected void closeInputStream(InputStream stream) {
