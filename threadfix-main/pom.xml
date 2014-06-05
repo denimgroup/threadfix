@@ -487,6 +487,11 @@
             <artifactId>complete</artifactId>
             <version>0.1.6</version>
         </dependency>
+        <dependency>
+        	<groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>1.2.1</version>
+        </dependency>
 	</dependencies>
 
 	<profiles>
