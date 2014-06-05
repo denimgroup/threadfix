@@ -7,14 +7,15 @@
         <th>Parameter</th>
     </thead>
     <tbody>
-        <tr ng-repeat="vuln in vulns" ng-class="{
-                            error: vuln.severityName === 'Critical',
-                            warning: vuln.severityName === 'High',
-                            success: vuln.severityName === 'Medium',
-                            info: vuln.severityName === 'Info' || vuln.severityName === 'Low'
-                            }">
+        <tr ng-repeat="vuln in vulns"
+                            ng-class="{
+                            error: vuln.severityId === 5,
+                            warning: vuln.severityId === 4,
+                            success: vuln.severityId === 3,
+                            info: element.severityId === 2 || element.severityId === 1
+                            }" >
             <td><a class="pointer" ng-show="showRemoveLink" ng-click="remove(vuln)">&times;</a></td>
-            <td> {{ vuln.vulnerabilityName }} </td>
+            <td> {{ vuln.vulnerabilityName | shortCweNames }} </td>
             <td> {{ vuln.path }} </td>
             <td> {{ vuln.parameter }} </td>
         </tr>
