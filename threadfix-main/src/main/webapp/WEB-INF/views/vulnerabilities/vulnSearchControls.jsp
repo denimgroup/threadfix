@@ -293,7 +293,10 @@
                     <h4>Start Date</h4>
                     <div class="col-md-6">
                         <p class="input-group">
-                            <input id="startDateInput" type="text" class="form-control" ng-model="startDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate" is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close" />
+                            <input id="startDateInput" type="text" class="form-control" ng-model="startDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate"
+                                   is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
+                                   ng-change="refresh()"
+                                    />
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="icon icon-calendar"></i></button>
                           </span>
@@ -305,7 +308,10 @@
                     <h4>End Date</h4>
                     <div class="col-md-6">
                         <p class="input-group">
-                            <input id="endDateInput" type="text" class="form-control" ng-model="endDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="endDate" is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close" />
+                            <input id="endDateInput" type="text" class="form-control" ng-model="endDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="endDate"
+                                   is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
+                                   ng-change="refresh()"
+                                    />
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="icon icon-calendar"></i></button>
                             </span>
