@@ -84,6 +84,7 @@ public class ResponseParser {
         }
 
         response.responseCode = responseCode;
+        response.jsonString = responseString;
 
         LOGGER.debug("Setting response code to " + responseCode + ".");
 

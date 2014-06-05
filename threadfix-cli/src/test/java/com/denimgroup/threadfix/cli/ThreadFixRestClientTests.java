@@ -49,7 +49,7 @@ public class ThreadFixRestClientTests {
      */
 
     private ThreadFixRestClient getClient() {
-        return new ThreadFixRestClientImpl(new TestUtils());
+        return new ThreadFixRestClientImpl(new TestPropertiesManager());
     }
 
 
@@ -98,7 +98,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testCreateTeam() {
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         RestResponse<Organization> organizationResponse = createTeam(name);
 
@@ -107,7 +107,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSearchForTeamById() {
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         String teamId = getTeamId(name).toString();
 
@@ -118,7 +118,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSearchForTeamByName() {
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         Integer teamId = getTeamId(name);
 
@@ -130,7 +130,7 @@ public class ThreadFixRestClientTests {
     @Test
     public void testGetAllTeams() {
 
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         Integer teamId = getTeamId(name);
 
@@ -153,7 +153,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testCreateApplication() {
-        String appName = TestUtils.getName(), teamName = TestUtils.getName();
+        String appName = TestPropertiesManager.getName(), teamName = TestPropertiesManager.getName();
 
         RestResponse<Application> response =
                 createApplication(getTeamId(teamName).toString(), appName, dummyUrl);
@@ -167,7 +167,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSearchForApplicationById() {
-        String name = TestUtils.getName(), teamName = TestUtils.getName();
+        String name = TestPropertiesManager.getName(), teamName = TestPropertiesManager.getName();
 
         String idString = getApplicationId(teamName, name, dummyUrl).toString();
 
@@ -182,7 +182,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSearchForApplicationByName() {
-        String name = TestUtils.getName(), teamName = TestUtils.getName();
+        String name = TestPropertiesManager.getName(), teamName = TestPropertiesManager.getName();
 
         String idString = getApplicationId(teamName, name, dummyUrl).toString();
 
@@ -197,7 +197,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSetParameters() {
-        String appName = TestUtils.getName(), teamName = TestUtils.getName(),
+        String appName = TestPropertiesManager.getName(), teamName = TestPropertiesManager.getName(),
                 url = "http://www.test.com";
 
         FrameworkType type = FrameworkType.SPRING_MVC;
@@ -217,7 +217,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testCreateWaf() {
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         RestResponse<Waf> wafRestResponse = createWaf(name, WafType.BIG_IP_ASM);
 
@@ -226,7 +226,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSearchForWafByName() {
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         Integer wafId = getWafId(name, WafType.DENY_ALL_RWEB);
 
@@ -237,7 +237,7 @@ public class ThreadFixRestClientTests {
 
     @Test
     public void testSearchForWafById() {
-        String name = TestUtils.getName();
+        String name = TestPropertiesManager.getName();
 
         Integer wafId = getWafId(name, WafType.DENY_ALL_RWEB);
 
@@ -249,7 +249,7 @@ public class ThreadFixRestClientTests {
     @Test
     public void testAddWaf() {
 
-        String wafName = TestUtils.getName(), appName = TestUtils.getName(), teamName = TestUtils.getName();
+        String wafName = TestPropertiesManager.getName(), appName = TestPropertiesManager.getName(), teamName = TestPropertiesManager.getName();
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();
         String wafId = getWafId(wafName, WafType.MOD_SECURITY).toString();
@@ -265,7 +265,7 @@ public class ThreadFixRestClientTests {
     @Test
     public void testTask() {
         String scannerList = "OWASP Zed Attack Proxy";
-        ThreadFixRestClient client = new ThreadFixRestClientImpl(new TestUtils());
+        ThreadFixRestClient client = new ThreadFixRestClientImpl(new TestPropertiesManager());
 
         RestResponse<Task> response = client.requestTask(scannerList, "");
 

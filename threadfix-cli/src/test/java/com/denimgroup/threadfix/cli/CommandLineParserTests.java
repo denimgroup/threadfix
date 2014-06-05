@@ -35,9 +35,4 @@ import junit.framework.TestCase;
  */
 public class CommandLineParserTests extends TestCase {
 
-//    @Test
-//    public void testGetOptions() {
-//        Options options = CommandLineParser.getOptions();
-//        assertEquals(16, options.getOptions().size());
-//    }
 }
