@@ -115,7 +115,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
     public Calendar getImportTime() {
 		return importTime;
 	}
@@ -201,6 +201,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
+    @JsonView(AllViews.RestView2_1.class)
 	public Integer getNumberClosedVulnerabilities() {
 		return numberClosedVulnerabilities;
 	}
@@ -209,6 +210,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 		this.numberClosedVulnerabilities = numberClosedVulnerabilities;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
 	@Column
 	public Integer getNumberNewVulnerabilities() {
 		return numberNewVulnerabilities;
@@ -218,6 +220,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 		this.numberNewVulnerabilities = numberNewVulnerabilities;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
 	@Column
 	public Integer getNumberOldVulnerabilities() {
 		return numberOldVulnerabilities;
@@ -246,7 +249,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-	public Integer getNumberResurfacedVulnerabilities() {
+    @JsonView(AllViews.RestView2_1.class)
+    public Integer getNumberResurfacedVulnerabilities() {
 		return numberResurfacedVulnerabilities;
 	}
 
@@ -255,7 +259,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
     public Integer getNumberTotalVulnerabilities() {
 		return numberTotalVulnerabilities;
 	}
@@ -263,8 +267,9 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberTotalVulnerabilities(Integer numberTotalVulnerabilities) {
 		this.numberTotalVulnerabilities = numberTotalVulnerabilities;
 	}
-	
-	@Column
+
+    @JsonView(AllViews.RestView2_1.class)
+    @Column
 	public Integer getNumberRepeatFindings() {
 		return numberRepeatFindings;
 	}
@@ -272,8 +277,9 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberRepeatFindings(Integer numberRepeatFindings) {
 		this.numberRepeatFindings = numberRepeatFindings;
 	}
-	
-	@Column
+
+    @JsonView(AllViews.RestView2_1.class)
+    @Column
 	public Integer getNumberRepeatResults() {
 		return numberRepeatResults;
 	}
@@ -468,7 +474,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         return getApplication();
     }
 
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
     @Transient
     private String getScannerName() {
         return getApplicationChannel().getChannelType().getName();

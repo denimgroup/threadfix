@@ -11,4 +11,14 @@ public class AllViews {
     public static class UIVulnSearch extends VulnSearch {}
 
     public static class RestVulnSearch extends UIVulnSearch {}
+
+    public static class RestView {}
+
+    public static class RestView2_1 extends RestView {}
+
+    public static class RestViewTeam2_1 extends RestView2_1 {}
+
+    public static class RestViewApplication2_1 extends RestView2_1 {}
+
+
 }

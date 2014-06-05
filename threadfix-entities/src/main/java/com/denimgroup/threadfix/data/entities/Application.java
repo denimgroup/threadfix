@@ -157,6 +157,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
+    @JsonView(AllViews.RestViewApplication2_1.class)
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -307,8 +308,8 @@ public class Application extends AuditableEntity {
 
     @OneToMany(mappedBy = "application")
 	@OrderBy("importTime DESC")
-    @JsonIgnore
-	public List<Scan> getScans() {
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    public List<Scan> getScans() {
 		return scans;
 	}
 
@@ -411,7 +412,7 @@ public class Application extends AuditableEntity {
 	}
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public Integer getTotalVulnCount() {
         return totalVulnCount == null ? 0 : totalVulnCount;
     }
@@ -421,13 +422,13 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public Integer getInfoVulnCount() {
         return infoVulnCount == null ? 0 : infoVulnCount;
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setInfoVulnCount(Integer infoVulnCount) {
         this.infoVulnCount = infoVulnCount;
     }
@@ -437,7 +438,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setLowVulnCount(Integer lowVulnCount) {
         this.lowVulnCount = lowVulnCount;
     }
@@ -447,7 +448,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setMediumVulnCount(Integer mediumVulnCount) {
         this.mediumVulnCount = mediumVulnCount;
     }
@@ -457,13 +458,13 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setHighVulnCount(Integer highVulnCount) {
         this.highVulnCount = highVulnCount;
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public Integer getCriticalVulnCount() {
         return criticalVulnCount == null ? 0 : criticalVulnCount;
     }
@@ -706,7 +707,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
