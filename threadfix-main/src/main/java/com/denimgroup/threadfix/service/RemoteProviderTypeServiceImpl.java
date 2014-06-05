@@ -49,9 +49,8 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	private RemoteProviderApplicationService remoteProviderApplicationService;
 	private ScanMergeService scanMergeService;
 	private RemoteProviderFactory remoteProviderFactory;
-
     @Autowired
-    private QueueSender queueSender;
+    private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	public RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao,
@@ -195,7 +194,8 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 					
 						scanMergeService.processRemoteScan(resultScan);
 						success = ResponseCode.SUCCESS;
-                        queueSender.updateCachedStatistics(remoteProviderApplication.getApplication().getId());
+
+                        vulnerabilityService.updateVulnerabilityReport(remoteProviderApplication.getApplication());
 					}
 				}
 			}
