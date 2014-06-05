@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -37,6 +38,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Imports the results of a W3AF scan (xml output).
@@ -122,93 +125,129 @@ class W3afChannelImporter extends AbstractChannelImporter {
 		inputStream = new ByteArrayInputStream(contents.toString().getBytes("UTF-8"));
 	}
 
-	public class W3afSAXParser extends DefaultHandler {
+	public class W3afSAXParser extends HandlerWithBuilder {
 
-		public void add(Finding finding) {
-			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
-	    		finding.setIsStatic(false);
-	    		saxFindingList.add(finding);
-    		}
-		}
+        private StringBuffer currentRawFinding = new StringBuffer();
+        private Map<FindingKey, String> findingMap = new HashMap<>();
+        private Boolean inVuln = false;
+        private String path, param, vuln, severity;
 
-	    ////////////////////////////////////////////////////////////////////
-	    // Event handlers.
-	    ////////////////////////////////////////////////////////////////////
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) {	    	
-	    	if ("w3afrun".equals(qName))
-	    		date = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
-	    		    	
-	    	if ("vulnerability".equals(qName) && atts.getValue("url") != null && 
-	    			!atts.getValue("url").isEmpty()) {
-	    		
-	    		String param = atts.getValue("var");
-	    		if ("None".equals(param)) 
-	    			param = null;
-	    		
-	    		Finding finding = constructFinding(atts.getValue("url"),
-	    										   param,
-	    										   atts.getValue("name"),
-	    										   atts.getValue("severity"));
-	    		add(finding);
-	    	}
-	    	
-	    	if ("information".equals(qName) && POTENTIALLY_INTERESTING_FILE.equals(atts.getValue("name")) &&
-	    			atts.getValue("url") != null && !atts.getValue("url").isEmpty()) {
-	    		Finding finding = constructFinding(atts.getValue("url"),
-												   null,
-												   atts.getValue("name"),
-												   "Info");
-	    		
-				add(finding);
-	    	}
-	    }
-	}
+        public void add(Finding finding) {
+            if (finding != null) {
+                finding.setNativeId(getNativeId(finding));
+                finding.setIsStatic(false);
+                saxFindingList.add(finding);
+            }
+        }
 
-	@Override
-	public ScanCheckResultBean checkFile() {
-		
-		try {
-			removeTagFromInputStream("httpresponse");
-		} catch (IOException e) {
+        ////////////////////////////////////////////////////////////////////
+        // Event handlers.
+        ////////////////////////////////////////////////////////////////////
+
+        public void startElement(String uri, String name, String qName, Attributes atts) {
+            if ("w3afrun".equals(qName))
+                date = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
+
+            if ("vulnerability".equals(qName) && atts.getValue("url") != null &&
+                    !atts.getValue("url").isEmpty()) {
+                currentRawFinding.append(makeTag(name, qName , atts));
+                inVuln = true;
+
+                param = atts.getValue("var");
+                if ("None".equals(param))
+                    param = null;
+
+                path = atts.getValue("url");
+                vuln = atts.getValue("name");
+                severity = atts.getValue("severity");
+
+            }
+
+            if ("information".equals(qName) && POTENTIALLY_INTERESTING_FILE.equals(atts.getValue("name")) &&
+                    atts.getValue("url") != null && !atts.getValue("url").isEmpty()) {
+                currentRawFinding.append(makeTag(name, qName , atts));
+                inVuln = true;
+                param = null;
+                path = atts.getValue("url");
+                vuln = atts.getValue("name");
+                severity = "Info";
+            }
+        }
+
+        public void endElement(String uri, String name, String qName) {
+            if (inVuln) {
+                currentRawFinding.append("</").append(qName).append(">");
+
+                findingMap.put(FindingKey.PATH, path);
+                findingMap.put(FindingKey.PARAMETER, param);
+                findingMap.put(FindingKey.VULN_CODE, vuln);
+                findingMap.put(FindingKey.SEVERITY_CODE, severity);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+                Finding finding = constructFinding(findingMap);
+                add(finding);
+
+                inVuln = false;
+                param = null;
+                path = null;
+                vuln = null;
+                severity = null;
+                currentRawFinding.setLength(0);
+
+            }
+        }
+
+        public void characters (char ch[], int start, int length)
+        {
+            if (inVuln)
+                currentRawFinding.append(ch,start,length);
+        }
+    }
+
+    @Override
+    public ScanCheckResultBean checkFile() {
+
+        try {
+            removeTagFromInputStream("httpresponse");
+        } catch (IOException e) {
             log.error("Encountered IOException while trying to remove teh httpresponse tag", e);
-		}
-		
-		return testSAXInput(new W3afSAXValidator());
-	}
-	
-	public class W3afSAXValidator extends DefaultHandler {
-		private boolean hasFindings = false, hasDate = false, correctFormat = false;
-	    
-	    private void setTestStatus() {
-	    	if (!correctFormat)
-	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
-	    		testStatus = checkTestDate();
-	    	if (ScanImportStatus.SUCCESSFUL_SCAN == testStatus && !hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
-	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
-	    }
+        }
 
-	    ////////////////////////////////////////////////////////////////////
-	    // Event handlers.
-	    ////////////////////////////////////////////////////////////////////
-	    
-	    public void endDocument() {
-	    	setTestStatus();
-	    }
+        return testSAXInput(new W3afSAXValidator());
+    }
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) {	    	
-	    	if ("vulnerability".equals(qName))
-	    		hasFindings = true;
-	    	
-	    	if (!correctFormat && "w3afrun".equals(qName)) {
-	    		correctFormat = true;
-	    		testDate = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
-	    		hasDate = testDate != null;
-	    	}
-	    }
-	}
+    public class W3afSAXValidator extends DefaultHandler {
+        private boolean hasFindings = false, hasDate = false, correctFormat = false;
+
+        private void setTestStatus() {
+            if (!correctFormat)
+                testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+            else if (hasDate)
+                testStatus = checkTestDate();
+            if (ScanImportStatus.SUCCESSFUL_SCAN == testStatus && !hasFindings)
+                testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+            else if (testStatus == null)
+                testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+        }
+
+        ////////////////////////////////////////////////////////////////////
+        // Event handlers.
+        ////////////////////////////////////////////////////////////////////
+
+        public void endDocument() {
+            setTestStatus();
+        }
+
+        public void startElement(String uri, String name, String qName, Attributes atts) {
+            if ("vulnerability".equals(qName))
+                hasFindings = true;
+
+            if (!correctFormat && "w3afrun".equals(qName)) {
+                correctFormat = true;
+                testDate = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
+                hasDate = testDate != null;
+            }
+        }
+    }
 }

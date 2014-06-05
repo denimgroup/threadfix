@@ -96,6 +96,9 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 		private Boolean getDataFlowLine       = false;
 		private Boolean getIdentifierText     = false;
 		private Boolean getDate               = false;
+        private Boolean getScannerDetail = false;
+        private Boolean getScannerRecommendation = false;
+        private Boolean inFinding = false;
 		
 		private String currentChannelVulnCode = null;
 		private String currentUrlText         = null;
@@ -103,6 +106,11 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 		private String currentCodeLine        = null;
 		private String currentNativeId        = null;
 		private String currentSourceFileLocation = null;
+        private String currentScannerDetail = null;
+        private String currentScannerRecommendation = null;
+
+        Map<FindingKey, String> findingMap = new HashMap<>();
+        private StringBuffer currentRawFinding	  = new StringBuffer();
 		
 		private String currentDataFlowLineNum  = null;
 		private String currentDataFlowFile     = null;
@@ -237,11 +245,25 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	    		currentUrlText = currentSourceFileLocation;
 	    	} else if ("StartTimeStamp".equals(qName)) {
 	    		getDate = true;
-	    	}
+	    	} else if ("Result".equals(qName)) {
+                inFinding = true;
+            } else if ("Resolution".equals(qName)) {
+                getScannerRecommendation = true;
+            } else if ("ProblemDescription".equals(qName)) {
+                getScannerDetail = true;
+            }
+
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
 	    }
 
 	    public void endElement (String uri, String name, String qName)
 	    {
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
 	    	if (getChannelVulnText) {
 	    		currentChannelVulnCode = getBuilderText();
 	    		getChannelVulnText = false;
@@ -260,7 +282,13 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	    	} else if (getDataFlowLine) {
 	    		currentDataFlowLineText = getBuilderText();
 	    		getDataFlowLine = false;
-	    	}
+	    	} else if (getScannerDetail) {
+                currentScannerDetail = getBuilderText();
+                getScannerDetail = false;
+            } else if (getScannerRecommendation) {
+                currentScannerRecommendation = getBuilderText();
+                getScannerRecommendation = false;
+            }
 	    	
 	    	if ("CallResult".equals(qName) || "MethodBoundary".equals(qName)) {
 	    		Integer lineNum = null;
@@ -288,9 +316,15 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	    	} else if ("Rule".equals(qName)) {
 	    		currentChannelVulnCode = null;
 	    	} else if ("Result".equals(qName)) {
-	    		Finding finding = constructFinding(currentUrlText, 
-	    				getNextParam(currentCodeLine, currentEntryPoint), 
-	    				currentChannelVulnCode, SEVERITIES_MAP.get(currentChannelVulnCode));
+                findingMap.put(FindingKey.PATH, currentUrlText);
+                findingMap.put(FindingKey.PARAMETER, getNextParam(currentCodeLine, currentEntryPoint));
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, SEVERITIES_MAP.get(currentChannelVulnCode));
+                findingMap.put(FindingKey.DETAIL, currentScannerDetail);
+                findingMap.put(FindingKey.RECOMMENDATION, currentScannerRecommendation);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+	    		Finding finding = constructFinding(findingMap);
 
                 if (finding != null) {
                     finding.setNativeId(currentNativeId);
@@ -306,15 +340,22 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	    		currentUrlText = null;
 	    		currentNativeId = null;
 	    		dataFlowElements = new ArrayList<>();
+                currentScannerDetail = null;
+                currentScannerRecommendation = null;
+                currentRawFinding.setLength(0);
+                inFinding = false;
 	    	}
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (getDataFlowLine || getChannelVulnText || getCodeLineText || 
-	    			getEntryPointText || getIdentifierText || getDate) {
+	    			getEntryPointText || getIdentifierText || getDate || getScannerDetail || getScannerRecommendation) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
+
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 

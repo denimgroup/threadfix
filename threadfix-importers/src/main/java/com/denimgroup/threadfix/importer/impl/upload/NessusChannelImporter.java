@@ -90,10 +90,18 @@ class NessusChannelImporter extends AbstractChannelImporter {
 		private Boolean getFindings           = false;
 		private Boolean getNameText           = false;
 		private Boolean getHost               = false;
+        private Boolean getScannerDetail = false;
+        private Boolean getScannerRecommendation = false;
+        private Boolean inFinding = false;
 	
 		private String currentChannelVulnCode = null;
 		private String currentSeverityCode    = null;
 		private String host                   = null;
+        private String currentDetail = null;
+        private String currentRecommendation = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
+
+        Map<FindingKey, String> findingMap = new HashMap<>();
 		
 		private String pluginOutputString = null;
 		
@@ -120,9 +128,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    	if (PATH_PARSE_MAP.containsKey(currentChannelVulnCode)) {
 	    		parseRegexMatchesAndAdd(stringResult);
 	    	} else if (SSL_VULNS.contains(currentChannelVulnCode)){
-	    		Finding finding = constructFinding("Application Server", null, 
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		add(finding);
+	    		add(createFinding("Application Server", null));
 	    	} else if (CSRF_VULN_CODE.equals(currentChannelVulnCode)){
 	    		parseCSRFAndAdd(stringResult);
 	    	} else {
@@ -139,9 +145,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    		if (smallerPart.contains("\n")) {
 	    			for (String line : smallerPart.split("\n")) {
 	    				if (line != null && !line.trim().equals("")) {
-	    					Finding finding = constructFinding(line.trim(), null, 
-	    		    				currentChannelVulnCode, currentSeverityCode);
-	    		    		add(finding);
+	    		    		add(createFinding(line.trim(), null));
 	    				}
 	    			}
 	    		}
@@ -169,9 +173,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
     			if (path != null && host != null && !path.startsWith("http"))
     				path = host + path;
     			
-	    		Finding finding = constructFinding(path, param, 
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		add(finding);
+	    		add(createFinding(path, param));
     		}
 	    }
 	    
@@ -194,17 +196,26 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    				path = host + path;
 	    			
 	    			if (param != null || path != null) {
-	    				Finding finding = constructFinding(path, param, 
-	    	    				currentChannelVulnCode, currentSeverityCode);
-	    	    		add(finding);
-	    	    		param = null;
-	    	    		path = null;
+	    	    		add(createFinding(path, param));
 	    			}
 	    		}
 	    	}
     		currentChannelVulnCode = null;
     		currentSeverityCode = null;
 	    }
+
+        private Finding createFinding(String url, String param) {
+
+            findingMap.put(FindingKey.PATH, url);
+            findingMap.put(FindingKey.PARAMETER, param);
+            findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+            findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+            findingMap.put(FindingKey.DETAIL, currentDetail);
+            findingMap.put(FindingKey.RECOMMENDATION, currentRecommendation);
+            findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+            return constructFinding(findingMap);
+        }
 	    
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
@@ -216,18 +227,31 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    	if ("ReportItem".equals(qName)) {
 	    		currentChannelVulnCode = atts.getValue("pluginID");
 	    		currentSeverityCode = atts.getValue("severity");
+                inFinding = true;
 	    	} else if ("plugin_output".equals(qName)) {
 	    		getFindings = true;
 	    	} else if (date == null && "tag".equals(qName) && "HOST_END".equals(atts.getValue("name"))) {
 	    		getDate = true;
 	    	} else if (host == null && "name".equals(qName)) {
 	    		getNameText = true;
-	    	}
+	    	} else if ("description".equals(qName)) {
+                getScannerDetail = true;
+            } else if ("solution".equals(qName)) {
+                getScannerRecommendation = true;
+            }
+
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
 	    }
 
 	    public void endElement (String uri, String name, String qName)
 	    {
-	    	if (getDate) {
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
+            if (getDate) {
 	    		String tempDateString = getBuilderText();
 	    		if (tempDateString != null) {
 	    			date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString.trim());
@@ -235,8 +259,6 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    		getDate = false;
 	    	} else if (getFindings) {
 	    		pluginOutputString = getBuilderText();
-	    		parseFindingString();
-	    		pluginOutputString = null;
 	    		getFindings = false;
 	    	} else if (getNameText) {
 	    		String text = getBuilderText();
@@ -262,13 +284,26 @@ class NessusChannelImporter extends AbstractChannelImporter {
 					}
 	    			getHost = false;
 	    		}
-	    	}
+	    	} else if (getScannerDetail) {
+                currentDetail = getBuilderText();
+                getScannerDetail = false;
+            } else if (getScannerRecommendation) {
+                currentRecommendation = getBuilderText();
+                getScannerRecommendation = false;
+            } else if ("ReportItem".equals(qName)) {
+                parseFindingString();
+                pluginOutputString = null;
+                inFinding = false;
+                currentRawFinding.setLength(0);
+            }
 	    }
 	    
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || getFindings || getNameText || getHost) {
+	    	if (getDate || getFindings || getNameText || getHost || getScannerDetail || getScannerRecommendation) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 
