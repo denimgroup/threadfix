@@ -19,9 +19,9 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
     $http.get(configUrl).
         success(function(data, status, headers, config) {
             $scope.initialized = true;
+            timeoutService.cancel();
 
             if (data.success) {
-                timeoutService.cancel();
                 $scope.config = data.object.projectMetadata;
                 $scope.config.typeName = data.object.defectTrackerName;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
@@ -41,6 +41,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             }
         }).
         error(function(data, status, headers, config) {
+            timeoutService.cancel();
             $scope.initialized = true;
             $scope.errorMessage = "Failure. HTTP status was " + status;
         });
