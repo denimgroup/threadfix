@@ -38,9 +38,6 @@ import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
 public class RoleEntIT extends BaseIT {
-
-	RolesIndexPage rolesIndexPage = null;
-
 	/**
 	 * Also tests delete
 	 */
@@ -73,40 +70,40 @@ public class RoleEntIT extends BaseIT {
         assertTrue("Role not added.", rolesIndexPage.isNamePresent(roleName));
 
         rolesIndexPage = rolesIndexPage.clickDeleteButton(roleName);
+
         assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
         assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
     }
 
 	@Test
 	public void testEditRole() {
-		String name1 = "1" + getRandomString(15);
-		String name2 = "2" + getRandomString(15);
+		String originalRoleName = getRandomString(8);
+		String editedRoleName = getRandomString(8);
 
 		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(name1,null)
-				.clickSaveRole(null)
-				.clickEditLink(name1)
-				.clickSaveRole(name1);
+				.setRoleName(originalRoleName)
+				.clickSaveRole()
+				.clickEditLink(originalRoleName)
+				.clickSaveRole();
 
-		assertTrue("Role not added.", rolesIndexPage.isNamePresent(name1));
-		assertTrue("Validation message is Present.",rolesIndexPage.isEditValidationPresent(name1));
+		assertTrue("Role not added.", rolesIndexPage.isNamePresent(originalRoleName));
+		assertTrue("Validation message is Present.",rolesIndexPage.isEditValidationPresent(originalRoleName));
 		
-		rolesIndexPage = rolesIndexPage.clickEditLink(name1)
-				.setRoleName(name2,name1)
-				.clickSaveRole(name1);
+		rolesIndexPage = rolesIndexPage.clickEditLink(originalRoleName)
+				.setRoleName(editedRoleName)
+				.clickSaveRole();
 		
-		assertTrue("Role not Edited Correctly.", rolesIndexPage.isNamePresent(name2));
-		assertTrue("Validation message is Present.",rolesIndexPage.isEditValidationPresent(name2));
+		assertTrue("Role not Edited Correctly.", rolesIndexPage.isNamePresent(editedRoleName));
+		assertTrue("Validation message is Present.",rolesIndexPage.isEditValidationPresent(editedRoleName));
 		
-		rolesIndexPage = rolesIndexPage.clickDeleteButton(name2);
+		rolesIndexPage = rolesIndexPage.clickDeleteButton(editedRoleName);
 
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(name2));
-		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name2));
+		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(editedRoleName));
+		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(editedRoleName));
 
 	}
-
 
     @Test
     public void testCreateRoleValidation() {
@@ -116,35 +113,31 @@ public class RoleEntIT extends BaseIT {
         RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink()
                 .clickCreateRole()
-                .setRoleName(whiteSpaceName,null)
-                .clickSaveRole(null);
+                .setRoleName(whiteSpaceName)
+                .clickSaveRoleInvalid();
 
         assertTrue("Blank field error didn't show correctly.",
                 rolesIndexPage.getNameError().contains("Name is required."));
     }
 
-
     @Test
-	public void testCreateRoleDupicateValidation() {
-
-		String name1 = "testNameDuplication";
-        String name2 = "testNameDuplication";
+	public void testCreateRoleDuplicateValidation() {
+		String roleName1 = "testNameDuplication";
+        String roleName2 = "testNameDuplication";
 
 		// Test duplicates
 		RolesIndexPage rolesIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
                 .clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(name1,null)
-				.clickSaveRole(null)
+				.setRoleName(roleName1)
+				.clickSaveRole()
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(name2,null)
-				.clickSaveRole(null);
+				.setRoleName(roleName2)
+				.clickSaveRoleInvalid();
 
 		assertTrue("Duplicate name error did not show correctly.",
 				rolesIndexPage.getDupNameError().contains("That name is already taken."));
-
-		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal();
 	}
 
 	@Test
@@ -156,14 +149,13 @@ public class RoleEntIT extends BaseIT {
 		String appName = getRandomString(10);
 
         DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
 					 .clickOrganizationHeaderLink()
 					 .clickManageRolesLink()
 					 .clickCreateRole()
 					 .setRoleName(roleName)
-					 .setPermissionValue("ManageApplications", true)
+					 .setPermissionValue("canManageApplications", true)
 					 .clickSaveRole()
                      .clickOrganizationHeaderLink();
 
@@ -190,59 +182,67 @@ public class RoleEntIT extends BaseIT {
 	}
 
     // TODO: Enterprise is not an option in Role Permissions
-    @Ignore
 	@Test
 	public void testSetPermissions() {
-		String name = "testName" + getRandomString(10);
+		String roleName = getRandomString(10);
 		
-		rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(name,null);
+				.setRoleName(roleName);
 		
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertFalse("Checkbox was set to true when it shouldn't have been.", 
-					rolesIndexPage.getPermissionValue(role,null));
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertFalse("Checkbox was set to true when it shouldn't have been.",
+                        rolesIndexPage.getPermissionValue(permission));
+                rolesIndexPage.setPermissionValue(permission, true);
+            }
+		}
+
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .clickEditLink(roleName);
+
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(permission));
+                rolesIndexPage.setPermissionValue(permission, false);
+            }
 		}
 		
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertFalse("Checkbox was set to true when it shouldn't have been.", 
-					rolesIndexPage.getPermissionValue(role,null));
-			rolesIndexPage.setPermissionValue(role, true, null);
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .clickEditLink(roleName);
+		
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertFalse("Role was not turned off correctly.", rolesIndexPage.getPermissionValue(permission));
+            }
+		}
+
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .clickDeleteButton(roleName)
+                .clickCreateRole()
+                .setRoleName(roleName);
+		
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                rolesIndexPage.setPermissionValue(permission, true);
+            }
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(null)
-									.clickEditLink(name);
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(role,name));
-			rolesIndexPage.setPermissionValue(role, false,name);
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .clickEditLink(roleName);
+		
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(permission));
+            }
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(name)
-									.clickEditLink(name);
-		
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertFalse("Role was not turned off correctly.", rolesIndexPage.getPermissionValue(role,name));
-		}
-		rolesIndexPage = rolesIndexPage.clickSaveRole(name)
-									.clickDeleteButton(name)
-									.clickCreateRole()
-									.setRoleName(name,null);
-		
-		for (String role : Role.ALL_PERMISSIONS) {
-			rolesIndexPage.setPermissionValue(role, true, null);
-		}
-		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(null).clickEditLink(name);
-		
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(role,name));
-		}
-		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(name)
-				.clickDeleteButton(name);
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(name));
-		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name));
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+				.clickDeleteButton(roleName);
+
+		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
+		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
 	
 	// these tests are to ensure that threadfix cannot enter a state with no users that
@@ -257,95 +257,100 @@ public class RoleEntIT extends BaseIT {
 				.clickManageUsersLink()
 				.clickAddUserLink();
 
-		   userIndexPage.enterName("RoleRemoval",null)
-		 				.enterPassword("passwordpassword", null)
-		 				.enterConfirmPassword("passwordpassword", null)
-		 				.chooseRoleForGlobalAccess(admin, null)
-		 				.clickAddNewUserBtn()
-		 				.clickEditLink("user")
-                        .enterPassword("passwordpassword", null)
-                        .enterConfirmPassword("passwordpassword", null)
-		 				.chooseRoleForGlobalAccess("Read Access", "user")
-		 				.clickUpdateUserBtn("user");
-		 
+		 userIndexPage.enterName("RoleRemoval")
+                 .enterPassword("passwordpassword")
+                 .enterConfirmPassword("passwordpassword")
+                 .chooseRoleForGlobalAccess(admin, null)
+                 .clickAddNewUserBtn()
+                 .clickEditLink("user")
+                 .enterPassword("passwordpassword")
+                 .enterConfirmPassword("passwordpassword")
+                 .chooseRoleForGlobalAccess("Read Access", "user")
+                 .clickUpdateUserBtn("user");
 		
-		rolesIndexPage = userIndexPage.clickManageRolesLink()
+		RolesIndexPage rolesIndexPage = userIndexPage.clickManageRolesLink()
 				.clickEditLink(admin);
 		
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(role,admin));
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
+            }
 		}
 		
 		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			rolesIndexPage.setPermissionValue(protectedPermission, false,admin);
-		}	
-		rolesIndexPage.clickSaveRoleInvalid(admin);
-		assertTrue("Protected permission was not protected correctly.", 
+			rolesIndexPage.setPermissionValue(protectedPermission, false);
+		}
+
+		rolesIndexPage.clickSaveRoleInvalid();
+
+        assertTrue("Protected permission was not protected correctly.",
 				rolesIndexPage.getDisplayNameError().contains("You cannot remove the Manage Users privilege from this role."));
 
 		rolesIndexPage = rolesIndexPage.clickCloseModal()
-									.clickManageRolesLink()
-									.clickEditLink(admin);
+                .clickManageRolesLink()
+                .clickEditLink(admin);
 		
-		for (String role : Role.ALL_PERMISSIONS) {
-			assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(role,admin));
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
+            }
 		}
 		
 		rolesIndexPage.clickManageUsersLink()
-						.clickEditLink("user")
-						.chooseRoleForGlobalAccess(admin, "user")
-						.clickUpdateUserBtn("user")
-						.clickDeleteButton("RoleRemoval");
-		
+                .clickEditLink("user")
+                .chooseRoleForGlobalAccess(admin, "user")
+                .clickUpdateUserBtn("user")
+                .clickDeleteButton("RoleRemoval");
 	}
 
     // TODO this test will not run correctly because of bugs involved with editing user options
     @Ignore
 	@Test
 	public void testDeleteRoleWithUserAttached(){
-		String roleName = "test" + getRandomString(10);
-		String roleName2 = "test" + getRandomString(10);
-		rolesIndexPage = loginPage.login("user", "password")
-								.clickManageRolesLink();
+		String roleName1 = getRandomString(10);
+		String roleName2 = getRandomString(10);
+
+		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink();
 		
 		rolesIndexPage = rolesIndexPage.clickCreateRole()
-				.setRoleName(roleName,null)
-				.clickSaveRole(null)
+				.setRoleName(roleName1)
+				.clickSaveRole()
 				.clickCreateRole()
-				.setRoleName(roleName2,null)
-				.clickSaveRole(null)
-				.clickEditLink(roleName);
+				.setRoleName(roleName2)
+				.clickSaveRole()
+				.clickEditLink(roleName1);
 		
 		for (String protectedPermission : Role.ALL_PERMISSIONS) {
-			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName);
+			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true);
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName)
-									.clickEditLink(roleName2);
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .clickEditLink(roleName2);
 		
 		for (String protectedPermission : Role.ALL_PERMISSIONS) {
-			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true,roleName2);
+			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true);
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName2)
-					.clickManageUsersLink()
-					.clickEditLink("user")
-					.chooseRoleForGlobalAccess(roleName, "user")
-					.clickUpdateUserBtn("user")
-					.clickManageRolesLink()
-					.clickDeleteButton(roleName)
-                    .clickManageRolesLink();
+		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .clickManageUsersLink()
+                .clickEditLink("user")
+                .chooseRoleForGlobalAccess(roleName1, "user")
+                .clickUpdateUserBtn("user")
+                .clickManageRolesLink()
+                .clickDeleteButton(roleName1)
+                .clickManageRolesLink();
 
-		assertTrue("Role was not removed.",rolesIndexPage.isNamePresent(roleName));
+		assertTrue("Role was not removed.", rolesIndexPage.isNamePresent(roleName1));
 		
 		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
-									.clickEditLink("user")
-									.chooseRoleForGlobalAccess(roleName2, "user")
-									.clickUpdateUserBtn("user")
-									.clickManageRolesLink()
-									.clickDeleteButton(roleName);
+                .clickEditLink("user")
+                .chooseRoleForGlobalAccess(roleName2, "user")
+                .clickUpdateUserBtn("user")
+                .clickManageRolesLink()
+                .clickDeleteButton(roleName1);
 		
-		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName));
+		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName1));
 		
 		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickEditLink("user")
@@ -354,7 +359,7 @@ public class RoleEntIT extends BaseIT {
 				.clickManageRolesLink()
 				.clickDeleteButton(roleName2);
 		
-		assertFalse("Role was not removed.",rolesIndexPage.isNamePresent(roleName2));
+		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName2));
 	}
 
 

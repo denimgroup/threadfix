@@ -92,15 +92,15 @@ public class TeamEntIT extends BaseIT {
 				.clickOrganizationHeaderLink()
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(newRole,null)
-				.setPermissionValue("canManageTeams",true,null)
-				.clickSaveRole(null);
+				.setRoleName(newRole)
+				.setPermissionValue("canManageTeams",true)
+				.clickSaveRole();
 
         UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName, null)
-				.enterPassword(newPassword, null)
-				.enterConfirmPassword(newPassword, null)
+				.enterName(userName)
+				.enterPassword(newPassword)
+				.enterConfirmPassword(newPassword)
 				.clickGlobalAccess(null)
 				.clickAddNewUserBtn();
 
@@ -135,15 +135,15 @@ public class TeamEntIT extends BaseIT {
 				.clickOrganizationHeaderLink()
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(newRole, null)
-				.setPermissionValue("canManageTeams", true, null)
-				.clickSaveRole(null);
+				.setRoleName(newRole)
+				.setPermissionValue("canManageTeams", true)
+				.clickSaveRole();
 
         UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName, null)
-				.enterPassword(password, null)
-				.enterConfirmPassword(password, null)
+				.enterName(userName)
+				.enterPassword(password)
+				.enterConfirmPassword(password)
 				.clickGlobalAccess(null)
 				.clickAddNewUserBtn();
 
@@ -174,9 +174,9 @@ public class TeamEntIT extends BaseIT {
         UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName, null)
-				.enterPassword(password, null)
-				.enterConfirmPassword(password, null)
+				.enterName(userName)
+				.enterPassword(password)
+				.enterConfirmPassword(password)
 				.clickGlobalAccess(null)
 				.clickAddNewUserBtn();
 
