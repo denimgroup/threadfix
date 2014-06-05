@@ -81,7 +81,8 @@ public class UserIndexPage extends BasePage {
         nameField.sendKeys(username);
         return new UserIndexPage(driver);
     }
-	
+
+    @Deprecated
 	public UserIndexPage enterPassword(String password,String oldName){
 		if(oldName == null){
 			driver.findElementById("password").clear();
@@ -92,7 +93,14 @@ public class UserIndexPage extends BasePage {
 		}
 		return new UserIndexPage(driver);
 	}
-	
+
+    public UserIndexPage enterPassword(String password) {
+        driver.findElementById("password").clear();
+        driver.findElementById("password").sendKeys(password);
+        return new UserIndexPage(driver);
+    }
+
+    @Deprecated
 	public UserIndexPage enterConfirmPassword(String password,String oldName){
 		if(oldName == null){
 			driver.findElementById("confirm").clear();
@@ -103,6 +111,12 @@ public class UserIndexPage extends BasePage {
 		}
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage enterConfirmPassword(String password) {
+        driver.findElementById("confirm").clear();
+        driver.findElementById("confirm").sendKeys(password);
+        return new UserIndexPage(driver);
+    }
 	
 	public UserIndexPage clickLDAP(String oldName){
 		if(oldName == null){

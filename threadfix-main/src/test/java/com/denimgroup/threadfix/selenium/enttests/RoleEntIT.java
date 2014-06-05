@@ -40,36 +40,49 @@ import static org.junit.Assert.assertTrue;
 public class RoleEntIT extends BaseIT {
 
 	RolesIndexPage rolesIndexPage = null;
-	RoleCreatePage roleCreatePage = null;
 
 	/**
 	 * Also tests delete
 	 */
 	@Test
-	public void testCreateRoleBasic() {
+	public void testCreateRole() {
 		// needs to be alphabetically before "Admin" preset role
-		String name = "Aa" + getRandomString(15);
+		//String roleName = "Aa" + getRandomString(8);
+        String roleName = getRandomString(8);
 
-		rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(name,null)
-				.clickSaveRole(null);
+				.setRoleName(roleName)
+				.clickSaveRole();
 
-		assertTrue("Role not added.", rolesIndexPage.isNamePresent(name));
-		assertTrue("Validation message is Present.",rolesIndexPage.isCreateValidationPresent(name));
-
-		rolesIndexPage = rolesIndexPage.clickDeleteButton(name);
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(name));
-		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(name));
+		assertTrue("Role not added.", rolesIndexPage.isNamePresent(roleName));
+		assertTrue("Validation message is Present.",rolesIndexPage.isCreateValidationPresent(roleName));
 	}
+
+    @Test
+    public void testDeleteRole() {
+        String roleName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .clickSaveRole();
+
+        assertTrue("Role not added.", rolesIndexPage.isNamePresent(roleName));
+
+        rolesIndexPage = rolesIndexPage.clickDeleteButton(roleName);
+        assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
+        assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
+    }
 
 	@Test
 	public void testEditRole() {
 		String name1 = "1" + getRandomString(15);
 		String name2 = "2" + getRandomString(15);
 
-		rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
 				.clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(name1,null)
@@ -100,7 +113,7 @@ public class RoleEntIT extends BaseIT {
         String whiteSpaceName = "     ";
 
         // Test whitespace
-        rolesIndexPage = loginPage.login("user", "password")
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink()
                 .clickCreateRole()
                 .setRoleName(whiteSpaceName,null)
@@ -118,7 +131,7 @@ public class RoleEntIT extends BaseIT {
         String name2 = "testNameDuplication";
 
 		// Test duplicates
-		rolesIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+		RolesIndexPage rolesIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
                 .clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(name1,null)
@@ -134,13 +147,11 @@ public class RoleEntIT extends BaseIT {
 		rolesIndexPage = rolesIndexPage.clickCloseCreateRoleModal();
 	}
 
-    // TODO: Assigning Roles to Users is broken, bug filed.
-    @Ignore
 	@Test
-	public void addApplicationOnly(){
+	public void addApplicationOnlyRole(){
 		String roleName = "appOnly" + getRandomString(10);
-		String user = getRandomString(10);
-		String pw = getRandomString(15);
+		String userName = getRandomString(10);
+		String password = getRandomString(15);
 		String teamName = getRandomString(10);
 		String appName = getRandomString(10);
 
@@ -151,21 +162,21 @@ public class RoleEntIT extends BaseIT {
 					 .clickOrganizationHeaderLink()
 					 .clickManageRolesLink()
 					 .clickCreateRole()
-					 .setRoleName(roleName, null)
-					 .setPermissionValue("canManageApplications", true, null)
-					 .clickSaveRole(null)
+					 .setRoleName(roleName)
+					 .setPermissionValue("ManageApplications", true)
+					 .clickSaveRole()
                      .clickOrganizationHeaderLink();
 
         teamIndexPage.clickManageUsersLink()
                      .clickAddUserLink()
-                     .enterName(user, null)
-                     .enterPassword(pw, null)
-                     .enterConfirmPassword(pw, null)
+                     .enterName(userName)
+                     .enterPassword(password)
+                     .enterConfirmPassword(password)
                      .chooseRoleForGlobalAccess(roleName, null)
                      .clickAddNewUserBtn()
                      .logout();
 
-		ApplicationDetailPage applicationDetailPage = loginPage.login(user, pw)
+		ApplicationDetailPage applicationDetailPage = loginPage.login(userName, password)
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(teamName)
 					.addNewApplication(teamName, appName, "", "Low")
@@ -173,10 +184,9 @@ public class RoleEntIT extends BaseIT {
 					.clickOrganizationHeaderLink()
 					.expandTeamRowByName(teamName)
 					.clickViewAppLink(appName, teamName);
-		
-		Boolean add  = applicationDetailPage.getNameText().contains(appName);
-		
-		assertTrue("new role user was not able to add an application",add);
+
+		assertTrue("new role user was not able to add an application",
+                applicationDetailPage.getNameText().contains(appName));
 	}
 
     // TODO: Enterprise is not an option in Role Permissions

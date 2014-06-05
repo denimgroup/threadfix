@@ -98,7 +98,7 @@ public class RolesIndexPage extends BasePage {
 		return new RolesIndexPage(driver);
 	}
 	
-
+    @Deprecated
 	public RolesIndexPage setRoleName(String name,String oldName){
 		if(oldName == null){
 			driver.findElementsById("roleNameInput").get(getNumRows()).clear();
@@ -109,7 +109,14 @@ public class RolesIndexPage extends BasePage {
 		}
 		return new RolesIndexPage(driver);
 	}
-	
+
+    public RolesIndexPage setRoleName(String roleName) {
+        driver.findElementById("roleNameInput").clear();
+        driver.findElementById("roleNameInput").sendKeys(roleName);
+        return this;
+    }
+
+    @Deprecated
 	public RolesIndexPage clickSaveRole(String oldName){ 
 		if(oldName == null){
 			driver.findElementById("submit").click();
@@ -120,6 +127,11 @@ public class RolesIndexPage extends BasePage {
 		}
 		return new RolesIndexPage(driver);
 	}
+
+    public RolesIndexPage clickSaveRole() {
+        driver.findElementById("submit").click();
+        return new RolesIndexPage(driver);
+    }
 	
 	public RolesIndexPage clickSaveRoleInvalid(String oldName){ 
 		if(oldName == null){
@@ -162,12 +174,13 @@ public class RolesIndexPage extends BasePage {
         }
         return driver.findElementById("editRoleModal"+(getIndex(oldName)+1)).findElement(By.id(permissionName + "True")).isSelected();
 	}
-		
+
+    @Deprecated
 	public RolesIndexPage setPermissionValue(String permissionName, boolean value,String oldName) {
 		if(oldName == null){
 			String target = value ? "True" : "False";
 			driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + target)).click();
-		}else{
+		} else {
 			String target = value ? "True" : "False";
 			driver.findElementById("editRoleModal"+(getIndex(oldName)+1)).findElement(By.id(permissionName + target)).click();
 		}
@@ -175,6 +188,15 @@ public class RolesIndexPage extends BasePage {
 		return new RolesIndexPage(driver);
 	}
 
+    public RolesIndexPage setPermissionValue(String permissonValue, boolean value) {
+        if (value) {
+            driver.findElementById("can" + permissonValue + "True").click();
+        } else {
+            driver.findElementById("can" + permissonValue + "False").click();
+        }
+
+        return this;
+    }
 	
 	public RolesIndexPage clickCloseModal(){
         waitForElement(driver.findElementByClassName("modal-footer").findElement(By.className("btn")));
