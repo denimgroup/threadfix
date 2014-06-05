@@ -10,11 +10,11 @@
             <td colspan="6" style="text-align:center;">No roles found.</td>
         </tr>
         <tr ng-repeat="role in roles" ng-show="roles">
-            <td id="role{{ $index }}">
+            <td id="role{{ role.displayName }}">
                 {{ role.displayName }}
             </td>
             <td>
-                <a id="editModalLink{{ $index }}" class="btn" ng-click="openEditModal(role)">
+                <a id="editModalLink{{ role.displayName }}" class="btn" ng-click="openEditModal(role)">
                     Edit / Delete
                 </a>
             </td>
