@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.net.URL;
+
 /**
  * Created by mcollins on 6/4/14.
  */
@@ -50,7 +52,37 @@ public class TestUtils {
 
         String teamId = JsonTestUtils.getId(client.createTeam(TestUtils.getRandomName()));
 
-        return getConfiguredClient().createApplication(teamId, getRandomName(), "http://test");
+        RestResponse<Application> appNoScanResponse =
+                getConfiguredClient().createApplication(teamId, getRandomName(), "http://test");
+
+        assert appNoScanResponse != null;
+        assert appNoScanResponse.success;
+        assert appNoScanResponse.object != null;
+
+        return appNoScanResponse;
+    }
+
+    public static String getScanPath() {
+        URL scanFileUrl = TestUtils.class.getClassLoader().getResource("testfire.xml");
+
+        assert scanFileUrl != null : "Please make the sample scan testfire.xml available as a resource.";
+
+        return scanFileUrl.getFile();
+    }
+
+    public static RestResponse<Application> createApplicationWithScan() {
+        ThreadFixRestClient client = getConfiguredClient();
+
+        String teamId = JsonTestUtils.getId(client.createTeam(TestUtils.getRandomName()));
+
+        RestResponse<Application> appNoScanResponse =
+                getConfiguredClient().createApplication(teamId, getRandomName(), "http://test");
+
+        String appId = JsonTestUtils.getId(appNoScanResponse);
+
+        getConfiguredClient().uploadScan(appId, getScanPath());
+
+        return getConfiguredClient().searchForApplicationById(appId);
     }
 
 

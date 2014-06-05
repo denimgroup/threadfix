@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.cli.api2_1;
 import com.denimgroup.threadfix.cli.util.JsonTestUtils;
 import com.denimgroup.threadfix.cli.util.TestUtils;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.junit.Test;
 
@@ -38,32 +39,88 @@ public class ApplicationTests {
     String[] applicationFields = { "id", "name", "uniqueId", "totalVulnCount", "criticalVulnCount", "highVulnCount",
             "lowVulnCount", "infoVulnCount", "team", "scans" };
 
-    @Test
-    public void createApplicationTest() {
-        JsonTestUtils.assertHasFields(TestUtils.createApplication(), applicationFields);
-    }
+    String[] applicationScanListFields = {
+            "numberTotalVulnerabilities",
+            "numberRepeatResults",
+            "numberRepeatFindings",
+            "numberOldVulnerabilities",
+            "numberNewVulnerabilities",
+            "numberClosedVulnerabilities",
+            "numberResurfacedVulnerabilities",
+            "numberInfoVulnerabilities",
+            "numberLowVulnerabilities",
+            "numberMediumVulnerabilities",
+            "numberHighVulnerabilities",
+            "numberCriticalVulnerabilities",
+            "importTime",
+            "scannerName",
+            "id"
+    };
 
     @Test
-    public void teamFieldTest() {
-        JsonTestUtils.assertHasObjectWithFields(TestUtils.createApplication(), "team", "name", "id");
+    public void createApplicationTest() {
+        testAllApplicationFields(TestUtils.createApplicationWithScan());
     }
 
     @Test
     public void lookupByIdTest() {
-        String id = JsonTestUtils.getId(TestUtils.createApplication());
+        String id = JsonTestUtils.getId(TestUtils.createApplicationWithScan());
 
-        JsonTestUtils.assertHasFields(TestUtils.getConfiguredClient().searchForApplicationById(id), applicationFields);
+        testAllApplicationFields(TestUtils.getConfiguredClient().searchForApplicationById(id));
     }
 
     @Test
     public void lookupByNameTest() {
-        RestResponse<Application> applicationResponse = TestUtils.createApplication();
+        RestResponse<Application> applicationResponse = TestUtils.createApplicationWithScan();
 
         String teamName = applicationResponse.object.getOrganization().getName();
         String appName = applicationResponse.object.getName();
 
-        JsonTestUtils.assertHasFields(
-                TestUtils.getConfiguredClient().searchForApplicationByName(teamName, appName), applicationFields);
+        applicationResponse = TestUtils.getConfiguredClient().searchForApplicationByName(teamName, appName);
+        testAllApplicationFields(applicationResponse);
+    }
+
+    @Test
+    public void setParametersTest() {
+        RestResponse<Application> applicationResponse = TestUtils.createApplicationWithScan();
+
+        applicationResponse =
+            TestUtils.getConfiguredClient().setParameters(JsonTestUtils.getId(applicationResponse),
+                    "SPRING_MVC", "http://test.com");
+
+        testAllApplicationFields(applicationResponse);
+    }
+
+    @Test
+    public void setWafTest() {
+        RestResponse<Application> applicationResponse = TestUtils.createApplicationWithScan();
+
+        RestResponse<Waf> wafRestResponse = TestUtils.getConfiguredClient().createWaf("test", "Snort");
+
+        applicationResponse = TestUtils.getConfiguredClient().addWaf(
+                JsonTestUtils.getId(applicationResponse),
+                JsonTestUtils.getId(wafRestResponse)
+        );
+
+        testAllApplicationFields(applicationResponse);
+    }
+
+    @Test
+    public void addAppUrlTest() {
+        RestResponse<Application> applicationResponse = TestUtils.createApplicationWithScan();
+
+        applicationResponse = TestUtils.getConfiguredClient().addAppUrl(
+                JsonTestUtils.getId(applicationResponse),
+                "http://test2"
+        );
+
+        testAllApplicationFields(applicationResponse);
+    }
+
+    private void testAllApplicationFields(RestResponse<Application> applicationRestResponse) {
+        JsonTestUtils.assertHasFields(applicationRestResponse, applicationFields);
+        JsonTestUtils.assertHasObjectWithFields(applicationRestResponse, "team", "name", "id");
+        JsonTestUtils.assertHasArrayOfObjectsWithFields(applicationRestResponse, "scans", applicationScanListFields);
     }
 
 
