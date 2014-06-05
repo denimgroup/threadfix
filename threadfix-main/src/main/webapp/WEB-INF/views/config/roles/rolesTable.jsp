@@ -10,7 +10,7 @@
             <td colspan="6" style="text-align:center;">No roles found.</td>
         </tr>
         <tr ng-repeat="role in roles" ng-show="roles">
-            <td id="role{{ $index }}">
+            <td id="role{{ role.displayName }}">
                 {{ role.displayName }}
             </td>
             <td>
