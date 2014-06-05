@@ -44,6 +44,19 @@
 		    </plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+        	<id>dependencycheck</id>
+        	<build>
+        		<plugins>
+        			<plugin>
+        				<groupId>org.owasp</groupId>
+        				<artifactId>dependency-check-maven</artifactId>
+        			</plugin>
+        		</plugins>
+        	</build>
+        </profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>
@@ -51,6 +64,11 @@
 			<artifactId>threadfix-ham</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+        	<groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>1.2.1</version>
+        </dependency>
 	</dependencies>
 
 </project>
