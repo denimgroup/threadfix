@@ -753,7 +753,7 @@ public class ReportsServiceImpl implements ReportsService {
                     vuln.getSurfaceLocation().getParameter(),
                     vuln.getGenericSeverity().getName(),
                     openedDate,
-                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
+                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId().toString()));
         }
         return rowParamsList;
     }
