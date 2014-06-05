@@ -14,7 +14,7 @@
                 {{ role.displayName }}
             </td>
             <td>
-                <a id="editModalLink{{ $index }}" class="btn" ng-click="openEditModal(role)">
+                <a id="editModalLink{{ role.displayName }}" class="btn" ng-click="openEditModal(role)">
                     Edit / Delete
                 </a>
             </td>
