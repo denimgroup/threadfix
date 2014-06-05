@@ -48,6 +48,17 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+        	<id>dependencycheck</id>
+        	<build>
+        		<plugins>
+        			<plugin>
+        				<groupId>org.owasp</groupId>
+        				<artifactId>dependency-check-maven</artifactId>
+        			</plugin>
+        		</plugins>
+        	</build>
+        </profile>
     </profiles>
 
 	<dependencies>
@@ -79,6 +90,11 @@
             <type>jar</type>
             <classifier>runtime</classifier>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>1.2.1</version>
         </dependency>
 	</dependencies>
 
