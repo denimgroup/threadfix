@@ -40,7 +40,7 @@ public class WafTests {
     public void testCreateWaf() {
         RestResponse<Waf> wafResponse = TestUtils.getConfiguredClient().createWaf(TestUtils.getRandomName(), "Snort");
 
-        JsonTestUtils.assertHasFields(wafResponse, "id", "date", "wafTypeName", "applications");
+        JsonTestUtils.assertHasFields(wafResponse, "id", "name", "wafTypeName", "applications");
     }
 
     @Test
@@ -57,7 +57,7 @@ public class WafTests {
         wafResponse =
                 TestUtils.getConfiguredClient().searchForWafById(String.valueOf(wafResponse.object.getId()));
 
-        JsonTestUtils.assertHasFields(wafResponse, "id", "date", "wafTypeName", "applications");
+        JsonTestUtils.assertHasFields(wafResponse, "id", "name", "wafTypeName", "applications");
         JsonTestUtils.assertHasArrayOfObjectsWithFields(wafResponse, "applications", "id", "name");
     }
 
@@ -76,7 +76,7 @@ public class WafTests {
 
         wafResponse = TestUtils.getConfiguredClient().searchForWafByName(name);
 
-        JsonTestUtils.assertHasFields(wafResponse, "id", "date", "wafTypeName", "applications");
+        JsonTestUtils.assertHasFields(wafResponse, "id", "name", "wafTypeName", "applications");
         JsonTestUtils.assertHasArrayOfObjectsWithFields(wafResponse, "applications", "id", "name");
     }
 

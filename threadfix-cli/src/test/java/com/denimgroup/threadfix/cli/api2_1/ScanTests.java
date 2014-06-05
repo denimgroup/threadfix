@@ -48,7 +48,7 @@ public class ScanTests {
             "numberLowVulnerabilities",
             "numberMediumVulnerabilities",
             "numberHighVulnerabilities",
-            "numberCriticalVulneraibilities",
+            "numberCriticalVulnerabilities",
             "importTime",
             "scannerName",
             "id",
@@ -71,7 +71,9 @@ public class ScanTests {
             "rawFinding",
             "dependency",
             "surfaceLocation",
-            "dataFlowElements"
+            "dataFlowElements",
+            "severity",
+            "vulnerabilityType"
     };
 
     @Test

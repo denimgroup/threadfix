@@ -44,7 +44,7 @@ public class TestUtils {
     }
 
     public static String getRandomName() {
-        return RandomStringUtils.random(10);
+        return RandomStringUtils.random(10, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
 
     public static RestResponse<Application> createApplication() {
@@ -73,16 +73,33 @@ public class TestUtils {
     public static RestResponse<Application> createApplicationWithScan() {
         ThreadFixRestClient client = getConfiguredClient();
 
-        String teamId = JsonTestUtils.getId(client.createTeam(TestUtils.getRandomName()));
+        String teamName = TestUtils.getRandomName();
+
+        String teamId = JsonTestUtils.getId(client.createTeam(teamName));
 
         RestResponse<Application> appNoScanResponse =
                 getConfiguredClient().createApplication(teamId, getRandomName(), "http://test");
+
+        assert appNoScanResponse != null;
+        assert appNoScanResponse.success;
+        assert appNoScanResponse.object != null;
 
         String appId = JsonTestUtils.getId(appNoScanResponse);
 
         getConfiguredClient().uploadScan(appId, getScanPath());
 
-        return getConfiguredClient().searchForApplicationById(appId);
+        RestResponse<Application> applicationRestResponse =
+                getConfiguredClient().searchForApplicationById(appId);
+
+        assert applicationRestResponse.success : applicationRestResponse.message;
+        assert applicationRestResponse.object != null :
+                "The object was null: " + applicationRestResponse.getOriginalJson();
+        assert applicationRestResponse.object.getOrganization() != null :
+                "Organization was null: " + applicationRestResponse.getOriginalJson();
+        assert applicationRestResponse.object.getOrganization().getId() != null :
+                "Organization id was null: " + applicationRestResponse.getOriginalJson();
+
+        return applicationRestResponse;
     }
 
 

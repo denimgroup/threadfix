@@ -294,7 +294,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      * important common information that findings have.
      */
     @Nullable
-     protected Finding constructFinding(Map<FindingKey, String> findingMap) {
+    protected Finding constructFinding(Map<FindingKey, String> findingMap) {
 
          if (findingMap == null || findingMap.size() == 0) {
              return null;
@@ -305,98 +305,17 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
          String channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE);
          String channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE);
          String cweCode = findingMap.get(FindingKey.CWE);
-         String parameterValue = findingMap.get(FindingKey.VALUE);
-         String request = findingMap.get(FindingKey.REQUEST);
-         String response = findingMap.get(FindingKey.RESPONSE);
-         String detail = findingMap.get(FindingKey.DETAIL);
-         String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
-         String rawFinding = findingMap.get(FindingKey.RAWFINDING);
 
-    	 
-    	if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
-			return null;
-		}
-    	
-    	Finding finding = new Finding();
-		SurfaceLocation location = new SurfaceLocation();
+        if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
+            return null;
+        }
 
-		// unify URLs
-		Map<String,String> patterns = new HashMap<String,String>();
-		patterns.put(";jsessionid=.*",";jsessionid=[removed]");
-		patterns.put("/_ns:.*?/","/_ns:[removed]/");
-		patterns.put("=[^/]*","=[removed]");
+        Finding finding = new Finding();
 
-		for ( String match : patterns.keySet()){
-			if (url != null && url.matches(".*" + match + ".*")){
-				url = url.replaceAll(match, patterns.get(match));
-			}
-		}
+        finding.setSurfaceLocation(getSurfaceLocation(url, parameter));
+        setExtraScannerInformation(finding, findingMap);
 
-
-		if (url != null && !url.isEmpty()) {
-			try {
-				location.setUrl(new URL(url));
-			} catch (MalformedURLException e) {
-				if (hosts != null) {
-					for (String host : hosts) {
-		    			if (url.startsWith(host)) {
-		    				location.setHost(host);
-			    			location.setPath("/" + url.substring(host.length()));
-		    			}
-					}
-				}
-	    		
-	    		if (location.getPath() == null) {
-	    			location.setPath(url);
-	    		}
-			}
-		}
-		
-		if (parameter != null && !parameter.isEmpty()) {
-			location.setParameter(parameter);
-		}
-		
-		// We need to ensure that validation succeeds and that none of the Strings are too long.
-		if (location.getHost() != null && location.getHost().length() > SurfaceLocation.HOST_LENGTH) {
-			location.setHost(location.getHost().substring(0, SurfaceLocation.HOST_LENGTH - 1));
-		}
-		if (location.getParameter() != null && location.getParameter().length() > SurfaceLocation.PARAMETER_LENGTH) {
-			location.setParameter(location.getParameter().substring(0, SurfaceLocation.PARAMETER_LENGTH - 1));
-		}
-		if (location.getPath() != null && location.getPath().length() > SurfaceLocation.PATH_LENGTH) {
-			location.setPath(location.getPath().substring(0, SurfaceLocation.PATH_LENGTH - 1));
-		}
-		if (location.getQuery() != null && location.getQuery().length() > SurfaceLocation.QUERY_LENGTH) {
-			location.setQuery(location.getQuery().substring(0, SurfaceLocation.QUERY_LENGTH - 1));
-		}
-		
-		finding.setSurfaceLocation(location);
-
-		if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
-			parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setAttackString(parameterValue);
-		
-		if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH)
-			request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";		
-		finding.setAttackRequest(request);
-			
-		if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH)
-			response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setAttackResponse(response);
-						
-		if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH)
-			detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setScannerDetail(detail);
-		
-		if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH)
-			recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setScannerRecommendation(recommendation);
-		
-		if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
-			rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
-		finding.setRawFinding(rawFinding);
-		
-		ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
+        ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
         if (channelVulnerability == null) {
             channelVulnerability = new ChannelVulnerability();
@@ -422,14 +341,108 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         finding.setChannelVulnerability(channelVulnerability);
-		
-		ChannelSeverity channelSeverity = null;
-		if (channelSeverityCode != null) {
-			channelSeverity = getChannelSeverity(channelSeverityCode);
-		}
-		finding.setChannelSeverity(channelSeverity);
-			    		
-		return finding;
+
+        ChannelSeverity channelSeverity = null;
+        if (channelSeverityCode != null) {
+            channelSeverity = getChannelSeverity(channelSeverityCode);
+        }
+        finding.setChannelSeverity(channelSeverity);
+
+        return finding;
+    }
+
+    private void setExtraScannerInformation(Finding finding, Map<FindingKey,String> findingMap) {
+        String parameterValue = findingMap.get(FindingKey.VALUE);
+        String request = findingMap.get(FindingKey.REQUEST);
+        String response = findingMap.get(FindingKey.RESPONSE);
+        String detail = findingMap.get(FindingKey.DETAIL);
+        String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
+        String rawFinding = findingMap.get(FindingKey.RAWFINDING);
+
+        if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH) {
+            parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
+        }
+        finding.setAttackString(parameterValue);
+
+        if (request != null && request.length() > Finding.ATTACK_REQUEST_LENGTH) {
+            request = request.substring(0,Finding.ATTACK_REQUEST_LENGTH-20) + "\n\n[truncated]\n";
+        }
+        finding.setAttackRequest(request);
+
+        if (response != null && response.length() > Finding.ATTACK_RESPONSE_LENGTH) {
+            response = response.substring(0,Finding.ATTACK_RESPONSE_LENGTH-20) + "\n\n[truncated]\n";
+        }
+        finding.setAttackResponse(response);
+
+        if (detail != null && detail.length() > Finding.SCANNER_DETAIL_LENGTH) {
+            detail = detail.substring(0,Finding.SCANNER_DETAIL_LENGTH-20) + "\n\n[truncated]\n";
+        }
+        finding.setScannerDetail(detail);
+
+        if (recommendation != null && recommendation.length() > Finding.SCANNER_RECOMMENDATION_LENGTH) {
+            recommendation = recommendation.substring(0,Finding.SCANNER_RECOMMENDATION_LENGTH-20) + "\n\n[truncated]\n";
+        }
+        finding.setScannerRecommendation(recommendation);
+
+        if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH) {
+            rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
+        }
+        finding.setRawFinding(rawFinding);
+    }
+
+    private SurfaceLocation getSurfaceLocation(String url, String parameter) {
+        SurfaceLocation location = new SurfaceLocation();
+
+        // unify URLs
+        Map<String,String> patterns = new HashMap<>();
+        patterns.put(";jsessionid=.*",";jsessionid=[removed]");
+        patterns.put("/_ns:.*?/","/_ns:[removed]/");
+        patterns.put("=[^/]*","=[removed]");
+
+        for ( String match : patterns.keySet()){
+            if (url != null && url.matches(".*" + match + ".*")){
+                url = url.replaceAll(match, patterns.get(match));
+            }
+        }
+
+        if (url != null && !url.isEmpty()) {
+            try {
+                location.setUrl(new URL(url));
+            } catch (MalformedURLException e) {
+                if (hosts != null) {
+                    for (String host : hosts) {
+                        if (url.startsWith(host)) {
+                            location.setHost(host);
+                            location.setPath("/" + url.substring(host.length()));
+                        }
+                    }
+                }
+
+                if (location.getPath() == null) {
+                    location.setPath(url);
+                }
+            }
+        }
+
+        if (parameter != null && !parameter.isEmpty()) {
+            location.setParameter(parameter);
+        }
+
+        // We need to ensure that validation succeeds and that none of the Strings are too long.
+        if (location.getHost() != null && location.getHost().length() > SurfaceLocation.HOST_LENGTH) {
+            location.setHost(location.getHost().substring(0, SurfaceLocation.HOST_LENGTH - 1));
+        }
+        if (location.getParameter() != null && location.getParameter().length() > SurfaceLocation.PARAMETER_LENGTH) {
+            location.setParameter(location.getParameter().substring(0, SurfaceLocation.PARAMETER_LENGTH - 1));
+        }
+        if (location.getPath() != null && location.getPath().length() > SurfaceLocation.PATH_LENGTH) {
+            location.setPath(location.getPath().substring(0, SurfaceLocation.PATH_LENGTH - 1));
+        }
+        if (location.getQuery() != null && location.getQuery().length() > SurfaceLocation.QUERY_LENGTH) {
+            location.setQuery(location.getQuery().substring(0, SurfaceLocation.QUERY_LENGTH - 1));
+        }
+
+        return location;
     }
 
 	protected void closeInputStream(InputStream stream) {

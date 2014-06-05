@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.LogParserService;
 import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
 @RequestMapping("/rest/wafs")
@@ -69,7 +75,7 @@ public class WafRestController extends RestController {
 
 	// TODO figure out if there is an easier way to make Spring respond to both
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Waf[]> wafIndexNoSlash(HttpServletRequest request) {
+	public @ResponseBody Object wafIndexNoSlash(HttpServletRequest request) {
 		return wafIndex(request);
 	}
 
@@ -78,21 +84,21 @@ public class WafRestController extends RestController {
      * @return
      */
 	@RequestMapping(headers="Accept=application/json", value="/", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Waf[]> wafIndex(HttpServletRequest request) {
+	public @ResponseBody Object wafIndex(HttpServletRequest request) {
 		log.info("Received REST request for WAFs");
 
 		String result = checkKey(request, INDEX);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		
 		List<Waf> wafs = wafService.loadAll();
 		
 		if (wafs == null || wafs.isEmpty()) {
 			log.warn("wafService.loadAll() returned null.");
-            return RestResponse.failure("No WAFs found.");
+            return failure("No WAFs found.");
 		} else {
-            return RestResponse.success(wafs.toArray(new Waf[wafs.size()]));
+            return writeSuccessObjectWithView(wafs, AllViews.RestViewWaf2_1.class);
         }
 	}
 
@@ -103,22 +109,22 @@ public class WafRestController extends RestController {
      * @return
      */
 	@RequestMapping(headers="Accept=application/json", value="/{wafId}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Waf> wafDetail(HttpServletRequest request,
+	public @ResponseBody Object wafDetail(HttpServletRequest request,
 			@PathVariable("wafId") int wafId) {
 		log.info("Received REST request for WAF with ID = " + wafId + ".");
 
 		String result = checkKey(request, DETAIL);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		
 		Waf waf = wafService.loadWaf(wafId);
 		
 		if (waf == null) {
 			log.warn("Invalid WAF ID.");
-			return RestResponse.failure(LOOKUP_FAILED);
+			return failure(LOOKUP_FAILED);
 		} else {
-            return RestResponse.success(waf);
+            return writeSuccessObjectWithView(waf, AllViews.RestViewWaf2_1.class);
         }
 	}
 
@@ -128,7 +134,7 @@ public class WafRestController extends RestController {
      * @return
      */
 	@RequestMapping(headers="Accept=application/json", value="/lookup", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Waf> wafLookup(HttpServletRequest request) {
+	public @ResponseBody Object wafLookup(HttpServletRequest request) {
 		
 		if (request.getParameter("name") == null) {
 			log.info("Received REST request for WAF with name = " + request.getParameter("name") + ".");
@@ -138,20 +144,20 @@ public class WafRestController extends RestController {
 
 		String result = checkKey(request, LOOKUP);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		
 		if (request.getParameter("name") == null) {
-			return RestResponse.failure(LOOKUP_FAILED);
+			return failure(LOOKUP_FAILED);
 		}
 		
 		Waf waf = wafService.loadWaf(request.getParameter("name"));
 		
 		if (waf == null) {
 			log.warn("Invalid WAF Name.");
-			return RestResponse.failure("Invalid WAF Name.");
+			return failure("Invalid WAF Name.");
 		}
-		return RestResponse.success(waf);
+        return writeSuccessObjectWithView(waf, AllViews.RestViewWaf2_1.class);
 	}
 	
 	/**
@@ -165,14 +171,14 @@ public class WafRestController extends RestController {
 
 		String result = checkKey(request, RULES);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		
 		Waf waf = wafService.loadWaf(wafId);
 		
 		if (waf == null) {
 			log.warn("Invalid WAF ID.");
-			return RestResponse.failure("Invalid WAF ID.");
+			return failure("Invalid WAF ID.");
 		}
 
         Application application = null;
@@ -182,24 +188,26 @@ public class WafRestController extends RestController {
                     || application.getWaf() == null
                     || application.getWaf().getId() != wafId) {
                 log.warn("Invalid Application ID.");
-                return RestResponse.failure("Invalid Application ID.");
+                return failure("Invalid Application ID.");
             }
         }
 
         List<WafRule> ruleList = wafService.generateWafRules(waf, waf.getLastWafRuleDirective(), application);
         String ruleStr = wafService.getRulesText(waf, ruleList);
-        if (ruleStr == null || ruleStr.isEmpty())
-            return RestResponse.failure("No Rules generated for WAF.");
-		else return RestResponse.success(ruleStr);
+        if (ruleStr == null || ruleStr.isEmpty()) {
+            return failure("No Rules generated for WAF.");
+        } else {
+            return success(ruleStr);
+        }
 	}
 	
 	@RequestMapping(headers="Accept=application/json", value="/new", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<Waf> newWaf(HttpServletRequest request) {
+	public @ResponseBody Object newWaf(HttpServletRequest request) {
 		log.info("Received REST request for a new WAF.");
 		
 		String result = checkKey(request, NEW);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		
 		String name = request.getParameter("name");
@@ -207,14 +215,14 @@ public class WafRestController extends RestController {
 		
 		if (name == null || type == null) {
 			log.warn("Request for WAF creation failed because it was missing one or both parameters.");
-			return RestResponse.failure(CREATION_FAILED);
+			return failure(CREATION_FAILED);
 		}
 		
 		WafType wafType = wafService.loadWafType(type);
 		
 		if (wafType == null) {
 			log.warn("Invalid WAF type requested.");
-			return RestResponse.failure(NOT_FOUND_WAF);
+			return failure(NOT_FOUND_WAF);
 		}
 		
 		if (!name.trim().isEmpty() && name.length() < Waf.NAME_LENGTH) {
@@ -225,9 +233,9 @@ public class WafRestController extends RestController {
 			waf.setWafType(wafType);
 			
 			wafService.storeWaf(waf);
-			return RestResponse.success(waf);
+            return writeSuccessObjectWithView(waf, AllViews.RestViewWaf2_1.class);
 		} else {
-			return RestResponse.failure(CREATION_FAILED);
+			return failure(CREATION_FAILED);
 		}
 	}
 	
@@ -238,7 +246,7 @@ public class WafRestController extends RestController {
 
 		String result = checkKey(request, LOG);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		
 		Waf waf = wafService.loadWaf(wafId);
@@ -255,7 +263,7 @@ public class WafRestController extends RestController {
 		
 		if (waf == null || logContents == null || logContents.isEmpty()) {
 			log.debug("Invalid input.");
-			return RestResponse.failure("Invalid input");
+			return failure("Invalid input");
 		}
 				
 		logParserService.setFileAsString(logContents);
@@ -268,6 +276,6 @@ public class WafRestController extends RestController {
 			log.debug("Found " + events.size() + " security events.");
 		}
 		
-		return RestResponse.success(events);
+		return success(events);
 	}
 }

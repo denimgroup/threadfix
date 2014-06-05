@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
@@ -707,7 +708,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
+    @JsonView({ AllViews.TableRow.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -716,6 +717,17 @@ public class Application extends AuditableEntity {
         map.put("name", team.getName());
 
         return map;
+    }
+
+    public void setTeam(Organization organization) {
+        this.organization = organization;
+    }
+
+    @Transient
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    @JsonProperty("organization")
+    private Organization getOrganizationRest() {
+        return organization;
     }
 
     @Column(nullable = true)

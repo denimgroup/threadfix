@@ -26,10 +26,13 @@ package com.denimgroup.threadfix.cli.util;
 
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,7 +41,7 @@ import java.util.Set;
 public class JsonTestUtils {
 
     public static <T> String getId(RestResponse<T> restResponse) {
-        assert restResponse.success;
+        assert restResponse.success : "Failure. JSON was " + restResponse.getOriginalJson();
 
         return getJsonObject(restResponse)
                 .getAsJsonObject("object")
@@ -48,6 +51,8 @@ public class JsonTestUtils {
     }
 
     public static <T> void assertHasFields(RestResponse<T> object, String... fields) {
+
+        assert object.success : "Rest request failed: " + object.getOriginalJson();
         // get the nested object
         JsonObject jsonObject = getJsonObject(object).getAsJsonObject("object");
 
@@ -55,6 +60,10 @@ public class JsonTestUtils {
     }
 
     public static <T> void assertHasObjectWithFields(RestResponse<T> restResponse, String objectKey, String... fields) {
+
+        assert getJsonObject(restResponse) != null :
+                "Failed to parse RestResponse from data: " + restResponse.getOriginalJson();
+
         JsonObject jsonObject = getJsonObject(restResponse).getAsJsonObject("object");
 
         jsonObject = jsonObject.getAsJsonObject(objectKey);
@@ -64,7 +73,12 @@ public class JsonTestUtils {
 
     // { [ { field1: value, field2: value } ] }
     public static <T> void assertHasArrayOfObjectsWithFields(RestResponse<T> restResponse, String objectKey, String... fields) {
-        JsonArray jsonArray = getJsonObject(restResponse).getAsJsonObject(objectKey).getAsJsonArray("object");
+
+        assert getJsonObject(restResponse) != null :
+                "Failed to parse RestResponse from data: " + restResponse.getOriginalJson();
+        assert getJsonObject(restResponse).getAsJsonObject("object").getAsJsonArray(objectKey) != null :
+                "Failed to retrieve object for key object." + objectKey + " in object " + restResponse.getOriginalJson();
+        JsonArray jsonArray = getJsonObject(restResponse).getAsJsonObject("object").getAsJsonArray(objectKey);
 
         assert jsonArray != null;
 
@@ -75,7 +89,11 @@ public class JsonTestUtils {
     public static <T> void assertIsArrayWithFields(RestResponse<T> restResponse, String... fields) {
         JsonArray jsonArray = getJsonObject(restResponse).getAsJsonArray("object");
 
-        assert jsonArray != null;
+        assert getJsonObject(restResponse) != null :
+                "Failed to parse RestResponse from data: " + restResponse.getOriginalJson();
+
+        assert jsonArray != null :
+                "Unable to parse array from " + restResponse.getOriginalJson();
 
         innerValidate(jsonArray.get(0).getAsJsonObject(), fields);
     }
@@ -85,6 +103,8 @@ public class JsonTestUtils {
     }
 
     private static void innerValidate(JsonObject jsonObject, String[] fields) {
+        assert jsonObject != null : "Null object passed to innerValidate. Fix the code.";
+
         Set<String> missingFields = new HashSet<String>();
         for (String field : fields) {
             if (!jsonObject.has(field)) {
@@ -92,8 +112,17 @@ public class JsonTestUtils {
             }
         }
 
-        assert missingFields.isEmpty() : "JsonObject was missing " + missingFields;
-        assert jsonObject.entrySet().size() == fields.length;
+        assert missingFields.isEmpty() : "JsonObject " + jsonObject + " was missing " + missingFields;
+
+        if (jsonObject.entrySet().size() != fields.length) {
+            Set<String> actualFields = new HashSet<String>();
+            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+                actualFields.add(entry.getKey());
+            }
+            actualFields.removeAll(Arrays.asList(fields));
+            assert actualFields.isEmpty() : "The returned JSON had the extra fields : " + actualFields;
+        }
+
     }
 
 }

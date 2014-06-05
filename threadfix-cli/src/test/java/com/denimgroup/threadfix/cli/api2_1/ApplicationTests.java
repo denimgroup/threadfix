@@ -37,7 +37,7 @@ import org.junit.Test;
 public class ApplicationTests {
 
     String[] applicationFields = { "id", "name", "uniqueId", "totalVulnCount", "criticalVulnCount", "highVulnCount",
-            "lowVulnCount", "infoVulnCount", "team", "scans" };
+            "mediumVulnCount", "lowVulnCount", "infoVulnCount", "organization", "scans" };
 
     String[] applicationScanListFields = {
             "numberTotalVulnerabilities",
@@ -76,7 +76,10 @@ public class ApplicationTests {
         String teamName = applicationResponse.object.getOrganization().getName();
         String appName = applicationResponse.object.getName();
 
-        applicationResponse = TestUtils.getConfiguredClient().searchForApplicationByName(teamName, appName);
+        assert teamName != null : "Teamname was null in " + applicationResponse;
+        assert appName != null : "Application name was null in " + applicationResponse;
+
+        applicationResponse = TestUtils.getConfiguredClient().searchForApplicationByName(appName, teamName);
         testAllApplicationFields(applicationResponse);
     }
 
@@ -119,7 +122,7 @@ public class ApplicationTests {
 
     private void testAllApplicationFields(RestResponse<Application> applicationRestResponse) {
         JsonTestUtils.assertHasFields(applicationRestResponse, applicationFields);
-        JsonTestUtils.assertHasObjectWithFields(applicationRestResponse, "team", "name", "id");
+        JsonTestUtils.assertHasObjectWithFields(applicationRestResponse, "organization", "name", "id");
         JsonTestUtils.assertHasArrayOfObjectsWithFields(applicationRestResponse, "scans", applicationScanListFields);
     }
 
