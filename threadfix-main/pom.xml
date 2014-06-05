@@ -671,6 +671,16 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+        	<id>dependencycheck</id>
+        	<build>
+        		<plugins>
+        			<plugin>
+        				<artifactId>dependency-check-maven</artifactId>
+        			</plugin>
+        		</plugins>
+        	</build>
+        </profile>
 	</profiles>
 
 
