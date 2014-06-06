@@ -24,23 +24,21 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 
-	private static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
-	private static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
+	public static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
+	public static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";
 	
 	private static final String
 		DATE_FORMAT_WITH_T = "yyyy-MM-dd'T'HH:mm:ss",
@@ -49,7 +47,9 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	private String password = null;
 	private String username = null;
 
-	public VeracodeRemoteProvider() {
+    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
+
+    public VeracodeRemoteProvider() {
 		super(ScannerType.VERACODE);
 	}
 
@@ -57,7 +57,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null ||
 				remoteProviderApplication.getApplicationChannel() == null) {
-			LOG.error("Veracode getScan() called with invalid parameters. Returning null");
+            String error = remoteProviderApplication == null ? "remoteProviderApplication" : "applicationChannel";
+			LOG.error("Veracode getScan() called with null " + error + ". Returning null");
 			return null;
 		}
 		
@@ -65,12 +66,22 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		password = remoteProviderApplication.getRemoteProviderType().getPassword();
 		
 		// This block tries to get the latest build for the app and dies if it fails.
-		InputStream appBuildsInputStream = getUrl(GET_APP_BUILDS_URI,username,password);
+        HttpResponse response = utils.getUrl(GET_APP_BUILDS_URI, username, password);
+
+        InputStream appBuildsInputStream;
+        if (response.isValid()) {
+		    appBuildsInputStream = response.getInputStream();
+        } else {
+            LOG.error("Error encountered while getting application builds. Status was " + response.getStatus());
+            return null;
+        }
+
 		String appName = remoteProviderApplication.getNativeId();
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
 		
 		List<String> buildIds = null;
-		
+
+        assert appBuildsInputStream != null : "Failed to get app builds.";
 		if (appBuildsInputStream != null) {
 			parse(appBuildsInputStream, parser);
 			buildIds = parser.map.get(appName);
@@ -101,10 +112,13 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			LOG.warn("Importing scan for build ID " + buildId + " and application " + appName);
 	
 			// This block tries to parse the scan corresponding to the build.
-			inputStream = getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
+			response = utils.getUrl(GET_DETAILED_REPORT_URI + "?build_id=" + buildId, username, password);
 
-			if (inputStream == null) {
-				LOG.warn("Received a bad response from Veracode servers, returning null.");
+            if (response.isValid()) {
+                inputStream = response.getInputStream();
+            } else {
+				LOG.warn("Received a bad response (status code " + response.getStatus() +
+                        ") from Veracode servers while attempting to parse a scan, skipping to next scan.");
 				continue;
 			}
 			
@@ -129,7 +143,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	@Override
 	public List<RemoteProviderApplication> fetchApplications() {
-		if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
+        if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
 				remoteProviderType.getPassword() == null) {
 			LOG.warn("Insufficient credentials.");
 			return null;
@@ -140,11 +154,12 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
 		
-		InputStream stream = null;
-		
-		stream = getUrl(GET_APP_BUILDS_URI,username,password);
-		
-		if (stream == null) {
+        HttpResponse response = utils.getUrl(GET_APP_BUILDS_URI,username,password);
+
+		InputStream stream;
+        if (response.isValid()) {
+            stream = response.getInputStream();
+        } else {
 			LOG.warn("Got a bad response from Veracode. Check your username and password.");
 			return null;
 		}
@@ -160,40 +175,6 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		}
 		
 		return parser.list;
-	}
-	
-	public InputStream getUrl(String urlString, String username, String password) {
-		URL url = null;
-		try {
-			url = new URL(urlString);
-		} catch (MalformedURLException e) {
-            LOG.error("Encountered MalformedURLException in getUrl in VeracodeRemoteProvider.", e);
-			return null;
-		}
-
-		try {
-            HttpsURLConnection m_connect;
-            if (proxyService == null) {
-                m_connect = (HttpsURLConnection) url.openConnection();
-            } else {
-                m_connect = proxyService.getSSLConnectionWithProxyConfig(url, VeracodeRemoteProvider.class);
-            }
-
-			setupAuthorization(m_connect, username, password);
-
-			return m_connect.getInputStream();
-		} catch (IOException e) {
-            LOG.error("Encountered IOException in getUrl in VeracodeRemoteProvider.", e);
-		}
-		return null;
-	}
-
-	public void setupAuthorization(HttpsURLConnection connection,
-			String username, String password) {
-		String login = username + ":" + password;
-		String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
-		//String encodedLogin = Base64.encodeBase64String(login.getBytes());
-		connection.setRequestProperty("Authorization", "Basic " + encodedLogin);
 	}
 
 	public class VeracodeApplicationBuildsParser extends DefaultHandler {

@@ -279,6 +279,7 @@ public class ThreadFixRestClientIT {
 
     @Test
     public void testAddWaf() {
+
         String wafName = TestUtils.getName(), appName = TestUtils.getName(), teamName = TestUtils.getName();
 
         String appId = getApplicationId(teamName, appName, dummyUrl).toString();

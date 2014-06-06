@@ -57,38 +57,38 @@ public class HttpRestUtilsIT {
 //
 //    @Test
 //    public void testHttpPostFile() {
-//        String ret = TestUtils.getRestUtils().httpPostFile(TestUtils.URL + "/applications/" + APPLICATION_ID + "/upload",
+//        String ret = TestPropertiesManager.getRestUtils().httpPostFile(TestPropertiesManager.URL + "/applications/" + APPLICATION_ID + "/upload",
 //                FILE_PATH,
 //                new String[] {  },
 //                new String[] {  });
 //
-//        assertNotNull(TestUtils.getJSONObject(ret));
+//        assertNotNull(TestPropertiesManager.getJSONObject(ret));
 //    }
 //
 //    @Test
 //    public void testHttpPost() {
-//        String ret = TestUtils.getRestUtils().httpPost(TestUtils.URL + "/applications/" + APPLICATION_ID + "/addUrl",
+//        String ret = TestPropertiesManager.getRestUtils().httpPost(TestPropertiesManager.URL + "/applications/" + APPLICATION_ID + "/addUrl",
 //                new String[] { "apiKey",       "url" },
-//                new String[] {  TestUtils.API_KEY,  TestUtils.URL});
+//                new String[] {  TestPropertiesManager.API_KEY,  TestPropertiesManager.URL});
 //
-//        assertNotNull(TestUtils.getJSONObject(ret));
+//        assertNotNull(TestPropertiesManager.getJSONObject(ret));
 //    }
 //
 //    @Test
 //    public void testHttpGet() {
-//        String ret = TestUtils.getRestUtils().httpGet(TestUtils.URL + "/applications/" + APPLICATION_ID +
-//                "?apiKey=" + TestUtils.API_KEY);
+//        String ret = TestPropertiesManager.getRestUtils().httpGet(TestPropertiesManager.URL + "/applications/" + APPLICATION_ID +
+//                "?apiKey=" + TestPropertiesManager.API_KEY);
 //
-//        assertNotNull(TestUtils.getJSONObject(ret));
+//        assertNotNull(TestPropertiesManager.getJSONObject(ret));
 //    }
 
     @Test
     public void testSetUrl() {
         PropertiesManager utils = new PropertiesManager();
-        utils.setUrl(TestUtils.URL);
+        utils.setUrl(TestPropertiesManager.URL);
         try {
             Configuration properties = new PropertiesConfiguration("threadfix.properties");
-            assertEquals(TestUtils.URL, properties.getString("url"));
+            assertEquals(TestPropertiesManager.URL, properties.getString("url"));
         } catch (ConfigurationException e) {
             Assert.fail();
         }
@@ -97,10 +97,10 @@ public class HttpRestUtilsIT {
     @Test
     public void testSetKey() {
         PropertiesManager utils = new PropertiesManager();
-        utils.setKey(TestUtils.API_KEY);
+        utils.setKey(TestPropertiesManager.API_KEY);
         try {
             Configuration properties = new PropertiesConfiguration("threadfix.properties");
-            assertEquals(TestUtils.API_KEY, properties.getString("key"));
+            assertEquals(TestPropertiesManager.API_KEY, properties.getString("key"));
         } catch (ConfigurationException e) {
             Assert.fail();
         }
@@ -109,12 +109,12 @@ public class HttpRestUtilsIT {
     @Test
     public void testGetUrl() {
         PropertiesManager utils = new PropertiesManager();
-        assertEquals(TestUtils.URL, utils.getUrl());
+        assertEquals(TestPropertiesManager.URL, utils.getUrl());
     }
 
     @Test
     public void testGetKey() {
         PropertiesManager utils = new PropertiesManager();
-        assertEquals(TestUtils.API_KEY, utils.getKey());
+        assertEquals(TestPropertiesManager.API_KEY, utils.getKey());
     }
 }

@@ -27,16 +27,16 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -53,7 +53,9 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	private List<Calendar> scanDateList = null;
 	private Map<Finding, List<DateStatus>> findingDateStatusMap = null;
 
-	public WhiteHatRemoteProvider() {
+    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
+
+    public WhiteHatRemoteProvider() {
 		super(ScannerType.SENTINEL);
 	}
 
@@ -62,11 +64,15 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		LOG.info("Retrieving a WhiteHat scan.");
 
 		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
-		
-		InputStream labelSiteIdStream = httpGet(SITES_URL + "?key=" + apiKey);
-		
-		if (labelSiteIdStream == null) {
-			LOG.warn("Received a bad response from WhiteHat servers, returning null.");
+
+        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey);
+
+		InputStream labelSiteIdStream;
+		if (response.isValid()) {
+            labelSiteIdStream = response.getInputStream();
+        } else {
+			LOG.warn("Received a " + response.getStatus() + " status code from WhiteHat servers while trying " +
+                    "to get scans for " + remoteProviderApplication.getNativeId() + ", returning null.");
 			return null;
 		}
 		
@@ -88,9 +94,10 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		LOG.info("Requesting site ID " + siteId);
 
-		inputStream = httpGet(url);
-		
-		if (inputStream == null) {
+        response = utils.getUrl(url);
+        if (response.isValid()) {
+            inputStream = response.getInputStream();
+        } else {
 			LOG.warn("Received a bad response from WhiteHat servers, returning null.");
 			return null;
 		}
@@ -103,8 +110,9 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			return null;
 		}
 		
-		for (Scan resultScan : scans)
+		for (Scan resultScan : scans) {
 			resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+        }
 		
 		LOG.info("WhiteHat "+ scans.size() +" scans successfully parsed.");
 		
@@ -118,9 +126,12 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	 */
 	private List<Scan> filterScans(List<Scan> scans) {
 		List<Scan> resultList = new ArrayList<>();
-		for (Scan s: scans) 
+
+		for (Scan s: scans) {
 			resultList.add(s);
-		for (int i=0;i<scans.size()-1;i++) {
+        }
+
+		for (int i = 0; i < scans.size() - 1; i++) {
 			Scan scan1 = scans.get(i);
 			Calendar date1 = scan1.getImportTime();
 			Scan scan2 = scans.get(i+1);
@@ -143,6 +154,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 				}
 			}
 		}
+
 		return resultList;
 	}
 
@@ -156,34 +168,20 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		apiKey = remoteProviderType.getApiKey();
 		
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
-		
-		InputStream stream = httpGet(SITES_URL + "?key=" + apiKey);
 
-		parse(stream, parser);
-		
+        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey);
+
+        if (response.isValid()) {
+		    parse(response.getInputStream(), parser);
+        } else {
+            LOG.error("Unable to retrieve applications due to " + response.getStatus() +
+                    " response status from WhiteHat servers.");
+            return null;
+        }
+
 		return parser.getApplications();
 	}
-	
-	public InputStream httpGet(String urlStr) {
-		GetMethod get = new GetMethod(urlStr);
-		
-		InputStream responseStream = null;
-		
-		HttpClient client = getConfiguredHttpClient(WhiteHatRemoteProvider.class);
 
-		try {
-			int status = client.executeMethod(get);
-			if (status != 200) {
-				LOG.warn("Request status was not 200. It was " + status);
-			}
-			
-			responseStream = get.getResponseBodyAsStream();
-		} catch (IOException e) {
-            LOG.error("Encountered IOException in httpGet in WhiteHatRemoteProvider.", e);
-		}
-		return responseStream;
-	}
-	
 	/**
 	 * This method parses input file to list of scan
 	 * @param handler

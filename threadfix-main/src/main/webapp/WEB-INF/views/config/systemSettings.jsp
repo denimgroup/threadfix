@@ -17,7 +17,7 @@
 	<spring:url value="" var="emptyUrl"/>
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
         <div class="panel panel-default">
-            <div class="panel-heading pointer" style="width:200px" ng-click="editDefaultPermissions = !editDefaultPermissions">
+            <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDefaultPermissions = !editDefaultPermissions">
                 <h3 class="panel-title">
                     <span ng-hide="editDefaultPermissions" class="icon icon-chevron-right"></span>
                     <span ng-show="editDefaultPermissions" class="icon icon-chevron-down"></span>
@@ -49,7 +49,7 @@
 
         <c:if test="${ isEnterprise }">
             <div class="panel panel-default">
-                <div class="panel-heading pointer" style="width:150px" ng-click="editLdapSettings = !editLdapSettings">
+                <div id="ldapSettingsPanel" class="panel-heading pointer" style="width:150px" ng-click="editLdapSettings = !editLdapSettings">
                     <h3 class="panel-title">
                         <span ng-hide="editLdapSettings" class="icon icon-chevron-right"></span>
                         <span ng-show="editLdapSettings" class="icon icon-chevron-down"></span>
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading pointer" style="width:150px" ng-click="configureProxySettings = !configureProxySettings">
+                <div id="proxySettingsPanel" class="panel-heading pointer" style="width:150px" ng-click="configureProxySettings = !configureProxySettings">
                     <h3 class="panel-title">
                         <span ng-hide="configureProxySettings" class="icon icon-chevron-right"></span>
                         <span ng-show="configureProxySettings" class="icon icon-chevron-down"></span>
