@@ -38,7 +38,7 @@
                 <c:if test="${!canManageApplications }">
                     <li><a id="viewApplicationModalButton">Details	</a></li>
                 </c:if>
-                ScannerMappingUpdater     <c:if test="${ canManageUsers && enterprise}">
+                <c:if test="${ canManageUsers && enterprise}">
                     <li><a id="userListModelButton">View Permissible Users</a></li>
                 </c:if>
                 <c:if test="${ canUploadScans }">
