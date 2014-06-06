@@ -726,8 +726,14 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonView(AllViews.RestViewApplication2_1.class)
     @JsonProperty("organization")
-    private Organization getOrganizationRest() {
-        return organization;
+    private  Map<String, Object> getOrganizationRest() {
+        Organization team = getOrganization();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", team.getId());
+        map.put("name", team.getName());
+
+        return map;
     }
 
     @Column(nullable = true)
