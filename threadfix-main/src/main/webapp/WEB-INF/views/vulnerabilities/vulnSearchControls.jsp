@@ -85,7 +85,7 @@
         </div>
 
         <!-- Teams and Applications section (should only show on Reports page -->
-        <div class="accordion-group" ng-if="!treeApplication && !treeTeam">
+        <div class="accordion-group" ng-show="!treeApplication && !treeTeam">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
                 <span id="expandTeamAndApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
             </div>
@@ -130,19 +130,19 @@
         </div>
 
         <!-- This is the same as the above control but only shows up on the team page. -->
-        <div class="accordion-group" ng-if="treeTeam">
+        <div class="accordion-group" ng-show="treeTeam">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
-                <span id="expandTeamAndApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
+                <span id="expandApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
             </div>
             <div ng-show="showTeamAndApplicationControls" class="filter-group-body">
 
                 <div class="accordion-inner">
                     Applications
                     <a ng-hide="showApplicationInput" ng-click="showApplicationInput = !showApplicationInput">
-                        <span id="showApplicationInput" class="icon" ng-class="{ 'icon-minus': showApplicationInput, 'icon-plus': !showApplicationInput }"></span>
+                        <span id="showApplicationInput1" class="icon" ng-class="{ 'icon-minus': showApplicationInput, 'icon-plus': !showApplicationInput }"></span>
                     </a>
                     <br>
-                    <input id="applicationNameTypeahead"
+                    <input id="applicationNameTypeahead1"
                            focus-on="showApplicationInput"
                            ng-show="showApplicationInput"
                            typeahead="(treeTeam.name + ' / ' + application.name) for application in treeTeam.applications | filter:$viewValue | limitTo:8"
