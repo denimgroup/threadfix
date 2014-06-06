@@ -2,27 +2,27 @@ package com.denimgroup.threadfix.views;
 
 public class AllViews {
 
-    public static class TableRow {}
+    public static interface TableRow {}
 
-    public static class FormInfo {}
+    public static interface FormInfo {}
 
-    public static class VulnSearch {}
+    public static interface VulnSearch {}
 
-    public static class UIVulnSearch extends VulnSearch {}
+    public static interface UIVulnSearch extends VulnSearch {}
 
-    public static class RestVulnSearch extends UIVulnSearch {}
+    public static interface RestVulnSearch extends UIVulnSearch, RestView2_1 {}
 
-    public static class RestView {}
+    public static interface RestView {}
 
-    public static class RestView2_1 extends RestView {}
+    public static interface RestView2_1 extends RestView {}
 
-    public static class RestViewTeam2_1 extends RestView2_1 {}
+    public static interface RestViewTeam2_1 extends RestView2_1 {}
 
-    public static class RestViewWaf2_1 extends RestView2_1 {}
+    public static interface RestViewWaf2_1 extends RestView2_1 {}
 
-    public static class RestViewApplication2_1 extends RestView2_1 {}
+    public static interface RestViewApplication2_1 extends RestView2_1 {}
 
-    public static class RestViewScan2_1 extends RestView2_1 {}
+    public static interface RestViewScan2_1 extends RestView2_1 {}
 
 
 }

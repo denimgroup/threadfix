@@ -336,7 +336,6 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.attackResponse = attackResponse;
 	}
 
-    @JsonView(AllViews.RestView2_1.class)
     @Column(length = SCANNER_DETAIL_LENGTH)
 	public String getScannerDetail() {
 		return scannerDetail;
@@ -346,7 +345,6 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.scannerDetail = scannerDetail;
 	}
 
-    @JsonView(AllViews.RestView2_1.class)
     @Column(length = SCANNER_RECOMMENDATION_LENGTH)
 	public String getScannerRecommendation() {
 		return scannerRecommendation;
@@ -357,7 +355,6 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = RAW_FINDING_LENGTH)
-    @JsonView(AllViews.RestView2_1.class)
 	public String getRawFinding() {
 		return rawFinding;
 	}
