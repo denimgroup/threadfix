@@ -149,7 +149,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = NATIVE_ID_LENGTH)
-	public String getNativeId() {
+    @JsonView(AllViews.RestView2_1.class)
+    public String getNativeId() {
 		return nativeId;
 	}
 
@@ -158,7 +159,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = NATIVE_ID_LENGTH)
-	@JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public String getDisplayId() {
 		return displayId;
 	}
@@ -180,7 +181,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "surfaceLocationId")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
 	public SurfaceLocation getSurfaceLocation() {
 		return surfaceLocation;
 	}
@@ -203,6 +204,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@OneToMany(mappedBy = "finding")
 	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
 	@OrderBy("sequence DESC")
+    @JsonView(AllViews.RestView2_1.class)
 	public List<DataFlowElement> getDataFlowElements() {
 		return dataFlowElements;
 	}
@@ -231,6 +233,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
 	public String getSourceFileLocation() {
 		return sourceFileLocation;
 	}
@@ -241,7 +244,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public String getCalculatedUrlPath() {
 		return calculatedUrlPath;
 	}
@@ -251,7 +254,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column
-	@JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public String getCalculatedFilePath() {
 		return calculatedFilePath;
 	}
@@ -294,6 +297,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = LONG_DESCRIPTION_LENGTH)
+    @JsonView(AllViews.RestView2_1.class)
 	public void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
 	}
@@ -302,56 +306,59 @@ public class Finding extends AuditableEntity implements FindingLike {
 		return longDescription;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
+    @Column(length = ATTACK_STRING_LENGTH)
 	public String getAttackString() {
 		return attackString;
 	}
 
-	@Column(length = ATTACK_STRING_LENGTH)
-	public void setAttackString(String attackString) {
-		this.attackString = attackString;
-	}
+    public void setAttackString(String attackString) {
+        this.attackString = attackString;
+    }
 
+    @JsonView(AllViews.RestView2_1.class)
+    @Column(length = ATTACK_REQUEST_LENGTH)
 	public String getAttackRequest() {
 		return attackRequest;
 	}
 
-	@Column(length = ATTACK_REQUEST_LENGTH)
 	public void setAttackRequest(String attackRequest) {
 		this.attackRequest = attackRequest;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
+    @Column(length = ATTACK_RESPONSE_LENGTH)
 	public String getAttackResponse() {
 		return attackResponse;
 	}
 
-	@Column(length = ATTACK_RESPONSE_LENGTH)
 	public void setAttackResponse(String attackResponse) {
 		this.attackResponse = attackResponse;
 	}
 
+    @Column(length = SCANNER_DETAIL_LENGTH)
 	public String getScannerDetail() {
 		return scannerDetail;
 	}
 
-	@Column(length = SCANNER_DETAIL_LENGTH)
 	public void setScannerDetail(String scannerDetail) {
 		this.scannerDetail = scannerDetail;
 	}
 
+    @Column(length = SCANNER_RECOMMENDATION_LENGTH)
 	public String getScannerRecommendation() {
 		return scannerRecommendation;
 	}
 
-	@Column(length = SCANNER_RECOMMENDATION_LENGTH)
 	public void setScannerRecommendation(String scannerRecommendation) {
 		this.scannerRecommendation = scannerRecommendation;
 	}
 
+	@Column(length = RAW_FINDING_LENGTH)
 	public String getRawFinding() {
 		return rawFinding;
 	}
 
-	@Column(length = RAW_FINDING_LENGTH)
 	public void setRawFinding(String rawFinding) {
 		this.rawFinding = rawFinding;
 	}
@@ -376,7 +383,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "dependencyId")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
 	public Dependency getDependency() {
 		return dependency;
 	}
@@ -413,6 +420,19 @@ public class Finding extends AuditableEntity implements FindingLike {
 		}
 	}
 
+    @Transient
+    @JsonView(AllViews.RestView2_1.class)
+    private String getVulnerabilityType() {
+        return getChannelVulnerability() == null ? null :
+                getChannelVulnerability().getName();
+    }
+
+    @Transient
+    @JsonView(AllViews.RestView2_1.class)
+    private String getSeverity() {
+        return getChannelSeverity() == null ? null :
+                getChannelSeverity().getName();
+    }
 
 
 }

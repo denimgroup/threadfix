@@ -103,7 +103,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PARAMETER_LENGTH)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
 	public String getParameter() {
 		return parameter;
 	}
@@ -113,7 +113,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PATH_LENGTH)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
 	public String getPath() {
 		return path;
 	}
@@ -170,13 +170,13 @@ public class SurfaceLocation extends BaseEntity {
 	 */
 	@Transient
     @JsonIgnore
+    @JsonView(AllViews.RestView2_1.class)
 	public URL getUrl() {
 		if (url == null) {
 			try {
 				int tempPort = -1;
 				// 0 is the default (and the field can't be null), but -1 is the
-				// default for the URL
-				// constructor
+				// default for the URL constructor
 				if (port != 0)
 					tempPort = port;
 

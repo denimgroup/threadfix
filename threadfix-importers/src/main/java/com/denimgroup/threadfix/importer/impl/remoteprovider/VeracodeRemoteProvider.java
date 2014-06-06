@@ -129,7 +129,10 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	@Override
 	public List<RemoteProviderApplication> fetchApplications() {
-		if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
+
+        ((String) null).charAt(2);
+
+        if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
 				remoteProviderType.getPassword() == null) {
 			LOG.warn("Insufficient credentials.");
 			return null;
@@ -140,9 +143,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
 		
-		InputStream stream = null;
-		
-		stream = getUrl(GET_APP_BUILDS_URI,username,password);
+		InputStream stream = getUrl(GET_APP_BUILDS_URI,username,password);
 		
 		if (stream == null) {
 			LOG.warn("Got a bad response from Veracode. Check your username and password.");
@@ -163,7 +164,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	}
 	
 	public InputStream getUrl(String urlString, String username, String password) {
-		URL url = null;
+		URL url;
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
