@@ -23,8 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import org.junit.Test;
+
 /**
  * Created by mac on 6/3/14.
  */
 public class VeracodeScanParsingTests {
+
+    @Test
+    public void stubForNow() {
+        // TODO fill this in
+    }
 }

@@ -23,8 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import org.junit.Test;
+
 /**
  * Created by mac on 6/3/14.
  */
 public class QualysApplicationParsingTests {
+
+    @Test
+    public void scanTestStub() {
+        // TODO fill this in
+    }
+
 }
