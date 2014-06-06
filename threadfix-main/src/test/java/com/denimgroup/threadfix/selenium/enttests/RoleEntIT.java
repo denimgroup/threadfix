@@ -303,67 +303,36 @@ public class RoleEntIT extends BaseIT {
                 .clickDeleteButton("RoleRemoval");
 	}
 
-    // TODO this test will not run correctly because of bugs involved with editing user options
-    @Ignore
 	@Test
 	public void testDeleteRoleWithUserAttached(){
-		String roleName1 = getRandomString(10);
-		String roleName2 = getRandomString(10);
+		String roleName = getRandomString(10);
+        String tempUser = getRandomString(8);
 
 		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink();
 		
 		rolesIndexPage = rolesIndexPage.clickCreateRole()
-				.setRoleName(roleName1)
-				.clickSaveRole()
-				.clickCreateRole()
-				.setRoleName(roleName2)
-				.clickSaveRole()
-				.clickEditLink(roleName1);
+				.setRoleName(roleName);
 		
-		for (String protectedPermission : Role.ALL_PERMISSIONS) {
-			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true);
-		}
-		
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
-                .clickEditLink(roleName2);
-		
-		for (String protectedPermission : Role.ALL_PERMISSIONS) {
-			rolesIndexPage = rolesIndexPage.setPermissionValue(protectedPermission, true);
+		for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                rolesIndexPage = rolesIndexPage.setPermissionValue(permission, true);
+            }
 		}
 		
 		rolesIndexPage = rolesIndexPage.clickSaveRole()
                 .clickManageUsersLink()
-                .clickEditLink("user")
-                .chooseRoleForGlobalAccess(roleName1, "user")
-                .clickUpdateUserBtn("user")
+                .clickAddUserLink()
+                .enterName(tempUser)
+                .enterPassword("TestPassword")
+                .enterConfirmPassword("TestPassword")
+                .clickGlobalAccess(null)
+                .chooseRoleForGlobalAccess(roleName, tempUser)
+                .clickModalSubmit()
                 .clickManageRolesLink()
-                .clickDeleteButton(roleName1)
+                .clickDeleteButton(roleName)
                 .clickManageRolesLink();
 
-		assertTrue("Role was not removed.", rolesIndexPage.isNamePresent(roleName1));
-		
-		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickEditLink("user")
-                .chooseRoleForGlobalAccess(roleName2, "user")
-                .clickUpdateUserBtn("user")
-                .clickManageRolesLink()
-                .clickDeleteButton(roleName1);
-		
-		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName1));
-		
-		rolesIndexPage = rolesIndexPage.clickManageUsersLink()
-				.clickEditLink("user")
-				.chooseRoleForGlobalAccess("Administrator", "user")
-				.clickUpdateUserBtn("user")
-				.clickManageRolesLink()
-				.clickDeleteButton(roleName2);
-		
-		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName2));
+		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
-
-
-
-
-
 }
