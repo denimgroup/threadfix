@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -83,7 +82,7 @@ public class Waf extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView(AllViews.RestViewWaf2_1.class)
+    @JsonView(AllViews.RestView2_1.class)
     private String getWafTypeName() {
         return getWafType() == null ? null : getWafType().getName();
     }

@@ -37,7 +37,7 @@ import org.junit.Test;
 public class ApplicationTests {
 
     String[] applicationFields = { "id", "name", "uniqueId", "totalVulnCount", "criticalVulnCount", "highVulnCount",
-            "mediumVulnCount", "lowVulnCount", "infoVulnCount", "organization", "scans" };
+            "mediumVulnCount", "lowVulnCount", "infoVulnCount", "organization", "scans", "waf" };
 
     String[] applicationScanListFields = {
             "numberTotalVulnerabilities",

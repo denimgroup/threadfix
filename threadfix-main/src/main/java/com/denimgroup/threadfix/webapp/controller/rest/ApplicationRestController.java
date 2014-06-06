@@ -45,7 +45,6 @@ import java.io.IOException;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
-import static com.denimgroup.threadfix.service.util.ControllerUtils.getObjectWriter;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -185,7 +184,6 @@ public class ApplicationRestController extends RestController {
 		scanParametersService.saveConfiguration(application, bean);
 
         return writeSuccessObjectWithView(application, AllViews.RestViewApplication2_1.class);
-
 	}
 	
 	/**

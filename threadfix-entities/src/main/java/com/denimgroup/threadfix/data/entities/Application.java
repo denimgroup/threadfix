@@ -268,7 +268,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "wafId")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class })
 	public Waf getWaf() {
 		return waf;
 	}

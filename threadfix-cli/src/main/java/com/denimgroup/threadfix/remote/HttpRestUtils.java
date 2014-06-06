@@ -60,7 +60,9 @@ public class HttpRestUtils {
                                             @NotNull String[] paramVals,
                                             @NotNull Class<T> targetClass) {
 
-		//	TODO - Revisit how we handle certificate errors here
+        System.out.println("Posting to " + path);
+
+        //	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String completeUrl = makePostUrl(path);
@@ -110,6 +112,8 @@ public class HttpRestUtils {
                                         @NotNull String[] paramVals,
                                         @NotNull Class<T> targetClass) {
 
+        System.out.println("Posting to " + path);
+
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String urlString = makePostUrl(path);
@@ -158,6 +162,8 @@ public class HttpRestUtils {
                                        @NotNull Class<T> targetClass) {
 
         String urlString = makeGetUrl(path, params);
+
+        System.out.println("Posting to " + path);
 
 		LOGGER.debug("Requesting " + urlString);
 

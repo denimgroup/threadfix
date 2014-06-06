@@ -96,8 +96,10 @@ public class ResponseParser {
         try {
             inputString = IOUtils.toString(responseStream, "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to parse response stream due to IOException.", e);
         }
+
+        System.out.println(inputString);
 
         return getRestResponse(inputString, responseCode, target);
     }
