@@ -18,6 +18,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showHidden: false
         };
 
+        $scope.endDate = undefined;
+        $scope.startDate = undefined;
+
         $scope.refresh();
     }
 
@@ -62,7 +65,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     var resetAging = function() {
         $scope.parameters.daysOldModifier = undefined;
         $scope.parameters.daysOld = undefined;
-        $scope.refresh();
+//        $scope.refresh();
     }
 
     $scope.$on('application', function($event, application) {
