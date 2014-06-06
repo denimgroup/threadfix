@@ -28,8 +28,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
 public class SystemSettingsPage extends BasePage {
-	
-
 
 	public SystemSettingsPage(WebDriver webdriver) {
 		super(webdriver);

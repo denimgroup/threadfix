@@ -36,7 +36,7 @@
                     <li><a id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">Edit Vulnerability Filters</a></li>
                 </c:if>
                 <c:if test="${!canManageApplications }">
-                    <li><a id="viewApplicationModalButton">Details	</a></li>
+                    <li><a id="viewApplicationModalButton">Details	</a></li
                 </c:if>
                 <c:if test="${ canManageUsers && enterprise}">
                     <li><a id="userListModelButton">View Permissible Users</a></li>

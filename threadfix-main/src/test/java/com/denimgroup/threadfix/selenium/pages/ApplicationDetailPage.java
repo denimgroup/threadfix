@@ -213,6 +213,12 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickDeleteScanTaskButton() {
+        driver.findElementByLinkText("Delete").click();
+        handleAlert();
+        return new ApplicationDetailPage(driver);
+    }
+
     public int modalNumber() {
         String s = driver.findElementByClassName("modal").getAttribute("id");
         Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");

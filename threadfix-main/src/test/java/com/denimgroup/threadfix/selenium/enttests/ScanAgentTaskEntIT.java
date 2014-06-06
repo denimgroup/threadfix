@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.dao.support.DataAccessUtils;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -37,9 +38,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @Category(EnterpriseTests.class)
-public class ScanQueueEntIT extends BaseIT {
+public class ScanAgentTaskEntIT extends BaseIT {
 
 	private static final  Map<String, String> scansMap = new HashMap<>();
     static{
@@ -49,10 +51,58 @@ public class ScanQueueEntIT extends BaseIT {
         scansMap.put("IBM Rational AppScan", null);
     }
 
+    @Test
+    public void testAddSingleScan() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String scanner = "OWASP Zed Attack Proxy";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScanAgentTasksTab(0)
+                .clickAddNewScanTask()
+                .setScanQueueType(scanner)
+                .submitScanQueue();
+
+        assertTrue("Scan Queue Task is not present ", applicationDetailPage.isScanQueuePresent(scanner));
+        assertTrue("Scan Queue Task tab count is incorrect after adding ", 1 == applicationDetailPage.scanQueueCount());
+    }
+
+    @Test
+    public void testDeleteScan() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String scanner = "OWASP Zed Attack Proxy";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScanAgentTasksTab(0)
+                .clickAddNewScanTask()
+                .setScanQueueType(scanner)
+                .submitScanQueue();
+
+        assertTrue("Scan task was not created.", applicationDetailPage.isScanQueuePresent(scanner));
+
+        applicationDetailPage.clickDeleteScanTaskButton();
+
+        assertFalse("Scan task was not deleted.", applicationDetailPage.isScanQueuePresent(scanner));
+
+    }
+
 	@Test
-	public void testAddScanTask() throws MalformedURLException {
-		String teamName = "scanQueueTaskTeam" + getRandomString(3);
-		String appName = "scanQueueTaskApp" + getRandomString(3);
+	public void testAddMultipleScans() throws MalformedURLException {
+		String teamName = getRandomString(8);
+		String appName = getRandomString(8);
 		int scanQueueCount  = 0;
 
         DatabaseUtils.createTeam(teamName);
@@ -79,5 +129,6 @@ public class ScanQueueEntIT extends BaseIT {
 		}
 		assertTrue("Scan Queue Task count is incorrect", scanQueueCount == applicationDetailPage.scanQueueCount());
 	}
+
 
 }
