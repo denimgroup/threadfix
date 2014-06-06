@@ -52,6 +52,9 @@ public class VeracodeMockHttpUtils implements RemoteProviderHttpUtils {
     @Override
     public HttpResponse getUrl(String url, String username, String password) {
 
+        assert username != null : "Username was null. This should never happen.";
+        assert password != null : "Password was null. This should never happen.";
+
         if (username.equals(GOOD_USERNAME) && password.equals(GOOD_PASSWORD)) {
             if (url.equals(VeracodeRemoteProvider.GET_APP_BUILDS_URI)) {
                 return HttpResponse.success(200, getStream("veracode/apps.xml"));

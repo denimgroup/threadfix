@@ -57,7 +57,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null ||
 				remoteProviderApplication.getApplicationChannel() == null) {
-			LOG.error("Veracode getScan() called with invalid parameters. Returning null");
+            String error = remoteProviderApplication == null ? "remoteProviderApplication" : "applicationChannel";
+			LOG.error("Veracode getScan() called with null " + error + ". Returning null");
 			return null;
 		}
 		
@@ -79,7 +80,8 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
 		
 		List<String> buildIds = null;
-		
+
+        assert appBuildsInputStream != null : "Failed to get app builds.";
 		if (appBuildsInputStream != null) {
 			parse(appBuildsInputStream, parser);
 			buildIds = parser.map.get(appName);

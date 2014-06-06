@@ -99,8 +99,6 @@ public class ResponseParser {
             LOGGER.error("Unable to parse response stream due to IOException.", e);
         }
 
-        System.out.println(inputString);
-
         return getRestResponse(inputString, responseCode, target);
     }
 

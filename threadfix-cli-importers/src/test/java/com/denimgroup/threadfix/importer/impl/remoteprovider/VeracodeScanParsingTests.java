@@ -23,15 +23,84 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.VeracodeMockHttpUtils;
+import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
+import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mac on 6/3/14.
  */
+@Component
 public class VeracodeScanParsingTests {
 
+    @Autowired
+    RemoteProviderFactory factory = null;
+    @Autowired
+    ThreadFixBridge       bridge  = null;
+
+    String[] appNames = {
+            "Dynamic Sample Application", "Open SSH", "Galleon", "Apache",
+            "Roller", "HSQLdb", "Bodgeit", "DVWA", "BlogEngine.NET", "Lunar Lander",
+            "Metamail", "Hadoop", "WebGoat",
+    };
+
+    private RemoteProviderApplication getApplication(RemoteProviderType type, String nativeId) {
+        RemoteProviderApplication application = new RemoteProviderApplication();
+        application.setNativeId(nativeId);
+        application.setRemoteProviderType(type);
+        application.setApplicationChannel(new ApplicationChannel());
+        return application;
+    }
+
+    public static void test(String nativeId) {
+        // @Transactional requires Spring AOP, which requires a Spring Bean. Lots of steps to get DB access
+        SpringConfiguration.getContext().getBean(VeracodeScanParsingTests.class).testInner(nativeId);
+    }
+
+    @Transactional(readOnly = false)
+    public void testInner(String nativeId) {
+
+        assertTrue("Spring config is wrong. Factory was null", factory != null);
+        assertTrue("Spring config is wrong. Bridge was null", bridge != null);
+
+        VeracodeRemoteProvider provider = new VeracodeRemoteProvider();
+        bridge.injectDependenciesManually(provider);
+
+        provider.utils = new VeracodeMockHttpUtils();
+
+        RemoteProviderType type = new RemoteProviderType();
+        type.setUsername(VeracodeMockHttpUtils.GOOD_USERNAME);
+        type.setPassword(VeracodeMockHttpUtils.GOOD_PASSWORD);
+
+        provider.setRemoteProviderType(type);
+        provider.setChannel(new ApplicationChannel());
+
+        List<Scan> scans = provider.getScans(getApplication(type, nativeId));
+
+        assertFalse("Scans were null for application " + nativeId + ".", scans == null);
+        assertFalse("Scans were empty.", scans.isEmpty());
+
+        // TODO make more assertions about the contents here
+    }
+
     @Test
-    public void stubForNow() {
-        // TODO fill this in
+    public void testAllScans() {
+        for (String application : appNames) {
+            test(application);
+        }
     }
 }
