@@ -24,15 +24,15 @@
             </tr>
             <tr class="bodyRow" ng-repeat="task in scanAgentTasks">
                 <td>
-                    <a class="pointer" ng-click="goTo(task)">
+                    <a id="goToTaskLink{{ $index }}" class="pointer" ng-click="goTo(task)">
                         {{ task.id }}
                     </a>
                 </td>
-                <td>{{ task.statusString }}</td>
+                <td id="statusString{{ $index }}">{{ task.statusString }}</td>
                 <td id="scannerType{{ $index }}"> {{ task.scanner }}</td>
-                <td>{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
-                <td>{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
-                <td>{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
+                <td id="createTime{{ $index }}">{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
+                <td id="startTime{{ $index }}">{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
+                <td id="endTime{{ $index }}">{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
                 <%--<c:if test="${ canManageApplications }">--%>
                     <%--<td class="centered">--%>
                         <%--<a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>--%>
@@ -40,7 +40,7 @@
                 <%--</c:if>--%>
                 <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
                     <td class="centered">
-                        <a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
+                        <a id="deleteButton{{ $index }}" class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
                     </td>
                 </security:authorize>
             </tr>

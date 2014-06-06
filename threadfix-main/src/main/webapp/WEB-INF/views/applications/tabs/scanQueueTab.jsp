@@ -21,18 +21,18 @@
             </tr>
             <tr class="bodyRow" ng-repeat="task in scanAgentTasks">
                 <td>
-                    <a class="pointer" ng-click="goTo(task)">
+                    <a id="scanAgentTask{{ $index }}" class="pointer" ng-click="goTo(task)">
                         {{ task.id }}
                     </a>
                 </td>
-                <td>{{ task.statusString }}</td>
+                <td id="scanAgentTaskStatusString{{ $index }}">{{ task.statusString }}</td>
                 <td id="scannerType{{ $index }}"> {{ task.scanner }}</td>
-                <td>{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
-                <td>{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
-                <td>{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
+                <td id="scanAgentTaskCreateTime{{ $index }}">{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
+                <td id="scanAgentTaskStartTime{{ $index }}">{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
+                <td id="scanAgentTaskEndTime{{ $index }}">{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
                 <c:if test="${ canManageApplications }">
                     <td class="centered">
-                        <a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
+                        <a id="deleteButton{{ $index }}" class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
                     </td>
                 </c:if>
             </tr>
