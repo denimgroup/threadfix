@@ -471,8 +471,14 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     // TODO figure out JSON serialization better
     @JsonView(AllViews.TableRow.class)
     @Transient
-    private Application getApp() {
-        return getApplication();
+    private Map<String, Object> getApp() {
+        Application app = getApplication();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", app.getId());
+        map.put("name", app.getName());
+
+        return map;
     }
 
     @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
@@ -483,7 +489,13 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
     @JsonView(AllViews.TableRow.class)
     @Transient
-    private Organization getTeam() {
-        return getApplication().getOrganization();
+    private Map<String, Object> getTeam() {
+        Organization team = getApplication().getOrganization();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", team.getId());
+        map.put("name", team.getName());
+
+        return map;
     }
 }

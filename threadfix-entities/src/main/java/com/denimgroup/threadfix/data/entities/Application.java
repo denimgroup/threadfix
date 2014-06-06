@@ -708,7 +708,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -726,7 +726,7 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonView(AllViews.RestViewApplication2_1.class)
     @JsonProperty("organization")
-    private  Map<String, Object> getOrganizationRest() {
+    public Map<String, Object> getOrganizationRest() {
         Organization team = getOrganization();
 
         Map<String, Object> map = new HashMap<String, Object>();
