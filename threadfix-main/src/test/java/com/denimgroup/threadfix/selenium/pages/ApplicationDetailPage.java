@@ -269,7 +269,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage clickScanAgentTasksTab(int count) {
-        driver.findElementByLinkText(count + " Scan Agent Tasks").click();
+        if (count == 1) {
+            driver.findElementByLinkText(count + " Scan Agent Task").click();
+        } else {
+            driver.findElementByLinkText(count + " Scan Agent Tasks").click();
+        }
         sleep(1000);
         waitForElement(driver.findElementById("scanQueueTable"));
         return new ApplicationDetailPage(driver);
@@ -278,7 +282,7 @@ public class ApplicationDetailPage extends BasePage {
     public int scanQueueCount() {
         WebElement scanQueueTab;
         try {
-            scanQueueTab = driver.findElementById("scanQueueTabLink");
+            scanQueueTab = driver.findElementById("scanAgentTasksTab");
         } catch (NoSuchElementException e) {
             return 0;
         }
@@ -287,7 +291,8 @@ public class ApplicationDetailPage extends BasePage {
         Pattern pattern = Pattern.compile("^\\s*(\\d+)");
         Matcher matcher = pattern.matcher(scanText);
         if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
+            int temp = Integer.parseInt(matcher.group(1));
+            return temp;
         }
         return -1;
     }
@@ -608,7 +613,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isScanQueuePresent(String scanner) {
         int rowCnt = driver.findElementsByClassName("bodyRow").size();
-        for (int i = 1; i <= rowCnt; i++) {
+        for (int i = 0; i <= rowCnt; i++) {
             if (driver.findElementById("scannerType" + i).getText().trim().equals(scanner)) {
                 return true;
             }

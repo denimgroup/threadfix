@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
-import com.denimgroup.threadfix.selenium.pages.ConfigureDefaultsPage;
+import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import org.junit.Ignore;
@@ -42,10 +42,12 @@ public class UserEntIT extends BaseIT {
     @Ignore
 	@Test
 	public void testDeleteLastUserRemoveLastRole(){
-        String newRole = "User";
+        String newRole = getRandomString(8);
+
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickDeleteButton("user");
+
 		assertTrue("User was deleted", userIndexPage.isUserNamePresent("user"));
 		
 		userIndexPage = userIndexPage.chooseRoleForGlobalAccess(newRole, "user")
@@ -66,12 +68,13 @@ public class UserEntIT extends BaseIT {
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword("TestPassword",null)
-				.enterConfirmPassword("TestPassword",null)
+				.enterName(userName)
+				.enterPassword("TestPassword")
+				.enterConfirmPassword("TestPassword")
 				.clickLDAP(null)
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
+
 		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
 
 		//turn ldap off
@@ -88,22 +91,23 @@ public class UserEntIT extends BaseIT {
 		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
 	}
 
-    //No user roles currently
-    // TODO this test will not run correctly because of bugs involved with editing user options
+    // TODO this test will not run correctly because of bugs involved with 'read-access' bug in FF
     @Ignore
 	@Test
-	public void editRoleTest(){
-		String userName = "testChangeRoleUser" + getRandomString(3);
+	public void editUserRoleTest(){
+		String userName = getRandomString(8);
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName, null)
-				.enterPassword("TestPassword", null)
-				.enterConfirmPassword("TestPassword", null)
-                .chooseRoleForGlobalAccess("Administrator", userName)
+				.enterName(userName)
+				.enterPassword("TestPassword")
+				.enterConfirmPassword("TestPassword")
+                .clickGlobalAccess(null)
+                .chooseRoleForGlobalAccess("User", userName)
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
+
 		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 
         // Change role to 'Read Access'
@@ -135,55 +139,60 @@ public class UserEntIT extends BaseIT {
 	public void defaultRoleTest(){
 		String userName = "configureDefaultsUser" + getRandomString(3);
 
-		ConfigureDefaultsPage configDefaultsPage = loginPage.login("user", "password")
-                .clickConfigureDefaultsLink()
+		SystemSettingsPage configDefaultsPage = loginPage.login("user", "password")
+                .clickSystemSettingsLink()
                 .defaultPermissions()
                 .checkGlobalGroupCheckbox()
                 .setRoleSelect("User")
                 .clickUpdateDefaults();
-		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
+
+		assertTrue("Default permissions changes were not saved",configDefaultsPage.isSaveSuccessful());
 		
 		UserIndexPage userIndexPage = configDefaultsPage.clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName, null)
-                .enterPassword("TestPassword", null)
-                .enterConfirmPassword("TestPassword", null)
+                .enterName(userName)
+                .enterPassword("TestPassword")
+                .enterConfirmPassword("TestPassword")
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
+
 		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 		
 		configDefaultsPage = userIndexPage.clickCancel(userName)
                 .clickDelete(userName)
-                .clickConfigureDefaultsLink()
+                .clickSystemSettingsLink()
                 .defaultPermissions()
                 .checkGlobalGroupCheckbox()
                 .setRoleSelect("Administrator")
                 .clickUpdateDefaults();
+
 		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
 		
 		userIndexPage = configDefaultsPage.clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName, null)
-                .enterPassword("TestPassword", null)
-                .enterConfirmPassword("TestPassword", null)
+                .enterName(userName)
+                .enterPassword("TestPassword")
+                .enterConfirmPassword("TestPassword")
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
+
 		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(userName, "Administrator"));
 		
 		configDefaultsPage = userIndexPage.clickCancel(userName)
                 .clickDelete(userName)
-                .clickConfigureDefaultsLink()
+                .clickSystemSettingsLink()
                 .defaultPermissions()
                 .checkGlobalGroupCheckbox()
                 .setRoleSelect("Read Access")
                 .clickUpdateDefaults();
+
 		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
 		
 		userIndexPage = configDefaultsPage.clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName,null)
-                .enterPassword("TestPassword",null)
-                .enterConfirmPassword("TestPassword",null)
+                .enterName(userName)
+                .enterPassword("TestPassword")
+                .enterConfirmPassword("TestPassword")
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
 		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));

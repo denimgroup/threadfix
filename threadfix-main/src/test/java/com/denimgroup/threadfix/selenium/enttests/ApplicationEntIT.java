@@ -39,5 +39,4 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class ApplicationEntIT extends BaseIT {
 
-
 }

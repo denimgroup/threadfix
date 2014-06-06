@@ -168,10 +168,10 @@ public abstract class BasePage {
 		return new ErrorLogPage(driver);
 	}
 	
-	public ConfigureDefaultsPage clickConfigureDefaultsLink(){
+	public SystemSettingsPage clickSystemSettingsLink(){
 		clickConfigTab();
 		driver.findElementById("configureDefaultsLink").click();
-		return new ConfigureDefaultsPage(driver);
+		return new SystemSettingsPage(driver);
 		
 	}
 	

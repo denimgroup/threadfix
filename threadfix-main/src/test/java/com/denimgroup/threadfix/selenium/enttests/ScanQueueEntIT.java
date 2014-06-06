@@ -49,8 +49,6 @@ public class ScanQueueEntIT extends BaseIT {
         scansMap.put("IBM Rational AppScan", null);
     }
 
-    // TODO: Ignored because adding scan tasks is broken and bug is filed
-    @Ignore
 	@Test
 	public void testAddScanTask() throws MalformedURLException {
 		String teamName = "scanQueueTaskTeam" + getRandomString(3);
@@ -67,9 +65,6 @@ public class ScanQueueEntIT extends BaseIT {
 
 		for (Entry<String, String> mapEntry : scansMap.entrySet()) {
             String tempName = mapEntry.getKey();
-            if(mapEntry.getKey().equals("NTO Spider6")){
-                tempName = "NTO Spider";
-            }
 
 			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab(scanQueueCount)
                     .clickAddNewScanTask()
@@ -77,8 +72,10 @@ public class ScanQueueEntIT extends BaseIT {
                     .submitScanQueue();
 
 			scanQueueCount++;
-			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),applicationDetailPage.isScanQueuePresent(tempName));
-			assertTrue("Scan Queue Task count is incorrect after adding "+mapEntry.getKey(), scanQueueCount == applicationDetailPage.scanQueueCount());
+			assertTrue("Scan Queue Task is not present " + mapEntry.getKey(),
+                    applicationDetailPage.isScanQueuePresent(tempName));
+			assertTrue("Scan Queue Task count is incorrect after adding " + mapEntry.getKey(),
+                    scanQueueCount == applicationDetailPage.scanQueueCount());
 		}
 		assertTrue("Scan Queue Task count is incorrect", scanQueueCount == applicationDetailPage.scanQueueCount());
 	}
