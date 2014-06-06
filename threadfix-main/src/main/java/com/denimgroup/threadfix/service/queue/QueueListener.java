@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author bbeverly
@@ -231,12 +232,16 @@ public class QueueListener implements MessageListener {
 		}
 
 		Vulnerability vuln = vulnerabilities.get(0);
-		Defect defect = defectService.createDefect(vulnerabilities, summary,
+		Map<String, Object> map = defectService.createDefect(vulnerabilities, summary,
 				preamble, component, version, severity, priority, status);
 
+        Defect defect = null;
+        if (map.get(DefectService.DEFECT) instanceof Defect)
+            defect = (Defect) map.get(DefectService.DEFECT);
 		if (defect == null) {
 			if (vuln == null || vuln.getApplication() == null) {
-				closeJobStatus(jobStatusId, "The defect could not be created.");
+				closeJobStatus(jobStatusId, map.get(DefectService.ERROR) == null ?
+                        "The defect could not be created." : map.get(DefectService.ERROR).toString());
 				return;
 			} else {
 				closeJobStatus(jobStatusId, defectService.getErrorMessage(vulnerabilities));

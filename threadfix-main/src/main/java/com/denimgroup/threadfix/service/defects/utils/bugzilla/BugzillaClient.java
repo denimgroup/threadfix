@@ -36,7 +36,7 @@ public interface BugzillaClient {
         VALID, INVALID
     }
 
-    ConnectionStatus configure(String url, String username, String password);
+    ConnectionStatus configure(String url, String username, String password) throws XmlRpcException;
 
     Map<String, Integer> createBug(Map<String, String> bugMap) throws XmlRpcException;
 

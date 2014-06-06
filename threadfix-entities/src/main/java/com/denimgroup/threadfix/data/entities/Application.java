@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
@@ -157,6 +158,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
+    @JsonView(AllViews.RestViewApplication2_1.class)
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -266,7 +268,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "wafId")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class })
 	public Waf getWaf() {
 		return waf;
 	}
@@ -307,8 +309,8 @@ public class Application extends AuditableEntity {
 
     @OneToMany(mappedBy = "application")
 	@OrderBy("importTime DESC")
-    @JsonIgnore
-	public List<Scan> getScans() {
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    public List<Scan> getScans() {
 		return scans;
 	}
 
@@ -411,7 +413,7 @@ public class Application extends AuditableEntity {
 	}
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public Integer getTotalVulnCount() {
         return totalVulnCount == null ? 0 : totalVulnCount;
     }
@@ -421,13 +423,13 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public Integer getInfoVulnCount() {
         return infoVulnCount == null ? 0 : infoVulnCount;
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setInfoVulnCount(Integer infoVulnCount) {
         this.infoVulnCount = infoVulnCount;
     }
@@ -437,7 +439,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setLowVulnCount(Integer lowVulnCount) {
         this.lowVulnCount = lowVulnCount;
     }
@@ -447,7 +449,7 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setMediumVulnCount(Integer mediumVulnCount) {
         this.mediumVulnCount = mediumVulnCount;
     }
@@ -457,13 +459,13 @@ public class Application extends AuditableEntity {
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public void setHighVulnCount(Integer highVulnCount) {
         this.highVulnCount = highVulnCount;
     }
 
     @Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestViewApplication2_1.class })
     public Integer getCriticalVulnCount() {
         return criticalVulnCount == null ? 0 : criticalVulnCount;
     }
@@ -706,7 +708,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView({ AllViews.TableRow.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -715,6 +717,17 @@ public class Application extends AuditableEntity {
         map.put("name", team.getName());
 
         return map;
+    }
+
+    public void setTeam(Organization organization) {
+        this.organization = organization;
+    }
+
+    @Transient
+    @JsonView(AllViews.RestViewApplication2_1.class)
+    @JsonProperty("organization")
+    private Organization getOrganizationRest() {
+        return organization;
     }
 
     @Column(nullable = true)

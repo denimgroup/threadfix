@@ -45,7 +45,7 @@ public class Dependency extends AuditableEntity {
 	private String cve;
 
 	@Column(length = 20)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestViewScan2_1.class})
     public String getCve() {
 		return cve;
 	}

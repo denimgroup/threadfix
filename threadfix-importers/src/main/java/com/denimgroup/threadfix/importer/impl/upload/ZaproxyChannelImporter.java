@@ -37,7 +37,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -90,12 +92,22 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 		private Boolean getChannelVulnName    = false;
 		private Boolean getSeverityName       = false;
 		private Boolean getCweId			  = false;
+        private Boolean getAttackStr = false;
+        private Boolean getDesc = false;
+        private Boolean getSolution = false;
+        private Boolean inFinding = false;
 	
 		private String currentChannelVulnCode = null;
 		private String currentPath            = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
 		private String currentCweId			  = null;
+        private String currentAttackStr = null;
+        private String currentDesc = null;
+        private String currentSolution = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
+
+        private Map<FindingKey, String> findingMap = new HashMap<>();
 		
 	    public void add(Finding finding) {
 			if (finding != null) {
@@ -128,18 +140,43 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		getSeverityName = true;
 	    	} else if ("cweid".equals(qName)) {
 	    		getCweId = true;
-	    	}
-	    }
+	    	} else if ("alertitem".equals(qName)) {
+                inFinding = true;
+            } else if ("desc".equals(qName)) {
+                getDesc = true;
+            } else if ("solution".equals(qName)) {
+                getSolution = true;
+            } else if ("attack".equals(qName)) {
+                getAttackStr = true;
+            }
+
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
+        }
 
 	    @Override
 		public void endElement (String uri, String name, String qName)
 	    {
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
 	    	if ("report".equals(qName)) {
 	    		getDate = false;
 	    	} else if ("alertitem".equals(qName)) {
 
-	    		Finding finding = constructFinding(currentPath, currentParameter,
-	    				currentChannelVulnCode, currentSeverityCode, currentCweId);
+                findingMap.put(FindingKey.PATH, currentPath);
+                findingMap.put(FindingKey.PARAMETER, currentParameter);
+                findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
+                findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
+                findingMap.put(FindingKey.CWE, currentCweId);
+                findingMap.put(FindingKey.VALUE, currentAttackStr);
+                findingMap.put(FindingKey.DETAIL, currentDesc);
+                findingMap.put(FindingKey.RECOMMENDATION, currentSolution);
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+
+	    		Finding finding = constructFinding(findingMap);
 	    		if (finding != null && finding.getChannelVulnerability() == null) {
 	    			
 	    			String channelVulnerabilityCode = getAlternative(currentChannelVulnCode);
@@ -152,10 +189,15 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		currentParameter       = null;
 	    		currentPath            = null;
 	    		getParameter           = false;
+                inFinding = false;
 	    		
 	    		currentChannelVulnCode = null;
 	    		currentSeverityCode    = null;
 	    		currentCweId 		   = null;
+                currentAttackStr = null;
+                currentDesc = null;
+                currentSolution = null;
+                currentRawFinding.setLength(0);
 	    		
 	    	} else if (getUri) {
 	    		currentPath = getBuilderText();
@@ -185,14 +227,27 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	} else if (getCweId) {
 	    		currentCweId = getBuilderText();
 	    		getCweId = false;
-	    	}
+	    	} else if (getAttackStr) {
+                currentAttackStr = getBuilderText();
+                getAttackStr = false;
+            } else if (getDesc) {
+                currentDesc = getBuilderText();
+                getDesc = false;
+            } else if (getSolution) {
+                currentSolution = getBuilderText();
+                getSolution = false;
+            }
 	    }
 	    
 	    @Override
 		public void characters (char ch[], int start, int length) {
-	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName || getCweId) {
+	    	if (getDate || getParameter || getUri || getChannelVulnName || getSeverityName || getCweId
+                    || getAttackStr || getDesc || getSolution) {
 	    		addTextToBuilder(ch,start,length);
 	    	}
+
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
 	    }
 	}
 

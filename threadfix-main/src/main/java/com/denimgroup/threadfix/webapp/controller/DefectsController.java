@@ -40,6 +40,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/defects")
@@ -80,18 +81,21 @@ public class DefectsController {
 		}
 
 		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(defectViewModel.getVulnerabilityIds());
-		Defect newDefect = defectService.createDefect(vulnerabilities, defectViewModel.getSummary(), 
+		Map<String,Object> map = defectService.createDefect(vulnerabilities, defectViewModel.getSummary(),
 				defectViewModel.getPreamble(), 
 				defectViewModel.getSelectedComponent(), 
 				defectViewModel.getVersion(), 
 				defectViewModel.getSeverity(), 
 				defectViewModel.getPriority(), 
 				defectViewModel.getStatus());
-		
+        Defect newDefect = null;
+        if (map.get(DefectService.DEFECT) instanceof Defect)
+            newDefect = (Defect)map.get(DefectService.DEFECT);
 		if (newDefect != null) {
 			return RestResponse.success("The Defect was submitted to the tracker.");
         } else {
-            return RestResponse.failure("The Defect couldn't be submitted to the tracker.");
+            return RestResponse.failure(map.get(DefectService.ERROR) == null ?
+                    "The Defect couldn't be submitted to the tracker." : map.get(DefectService.ERROR).toString());
         }
 	}
 

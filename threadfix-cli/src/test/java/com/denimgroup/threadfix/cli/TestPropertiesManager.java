@@ -36,7 +36,7 @@ import org.apache.commons.lang.RandomStringUtils;
  * Time: 4:00 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TestUtils extends PropertiesManager {
+public class TestPropertiesManager extends PropertiesManager {
 
     public static final String URL = "http://localhost:8082/rest";
     public static final String API_KEY = "xZ32iTkKAVVBUio2cR81mgqpLRw19EMAvxmkLHvkM";

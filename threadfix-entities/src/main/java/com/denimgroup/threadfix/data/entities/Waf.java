@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -80,7 +80,13 @@ public class Waf extends AuditableEntity {
 	public void setWafType(WafType wafType) {
 		this.wafType = wafType;
 	}
-	
+
+    @Transient
+    @JsonView(AllViews.RestView2_1.class)
+    private String getWafTypeName() {
+        return getWafType() == null ? null : getWafType().getName();
+    }
+
 	@ManyToOne
 	@JoinColumn(name = "wafRuleDirectiveId")
 	public WafRuleDirective getLastWafRuleDirective() {
@@ -92,7 +98,7 @@ public class Waf extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "waf")
-	@JsonIgnore
+    @JsonView(AllViews.RestViewWaf2_1.class)
 	public List<Application> getApplications() {
 		return applicationList;
 	}

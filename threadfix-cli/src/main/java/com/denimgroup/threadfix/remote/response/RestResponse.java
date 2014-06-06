@@ -42,6 +42,8 @@ public class RestResponse<T> {
     @JsonView(Object.class)
     public T object = null;
 
+    String jsonString = null;
+
     public static <T> RestResponse<T> failure(String response) {
         RestResponse<T> restResponse = new RestResponse<T>();
         restResponse.message = response;
@@ -56,12 +58,12 @@ public class RestResponse<T> {
     }
 
     @JsonIgnore
-    public String getObjectAsJsonString() {
-        return new Gson().toJson(object);
+    public String getOriginalJson() {
+        return jsonString;
     }
 
     public String toString() {
-        return getObjectAsJsonString();
+        return jsonString;
     }
 
 }

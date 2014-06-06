@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('AddDefectTrackerModalController', function ($scope, $http, $rootScope, $modalInstance, tfEncoder, threadFixModalService, object, config) {
+myAppModule.controller('AddDefectTrackerModalController', function ($scope, $http, $rootScope, $modalInstance, tfEncoder, threadFixModalService, object, config, timeoutService) {
 
     $scope.object = object;
 
@@ -14,8 +14,11 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
         var app = $scope.config.application;
         var url = tfEncoder.encode("/organizations/" + app.team.id + "/applications/jsontest");
 
+        timeoutService.timeout();
+
         $http.post(url, $scope.object).
             success(function(data, status, headers, config) {
+                timeoutService.cancel();
                 $scope.loading = false;
 
                 if (data.success) {
@@ -26,6 +29,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
                 }
             }).
             error(function(data, status, headers, config) {
+                timeoutService.cancel();
                 $scope.loading = false;
                 $scope.error = "Failure. HTTP status was " + status;
             });
@@ -34,6 +38,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
     $scope.ok = function (valid) {
 
         if (valid) {
+            timeoutService.timeout();
             $scope.loading = true;
 
             var app = $scope.config.application;
@@ -45,6 +50,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
 
             threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {
+                    timeoutService.cancel();
                     $scope.loading = false;
 
                     if (data.success) {
@@ -67,6 +73,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
                     }
                 }).
                 error(function(data, status, headers, config) {
+                    timeoutService.cancel();
                     $scope.loading = false;
                     $scope.error = "Failure. HTTP status was " + status;
                 });
@@ -80,6 +87,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
     }
 
     $scope.cancel = function () {
+        timeoutService.cancel();
         $modalInstance.dismiss('cancel');
     };
 });

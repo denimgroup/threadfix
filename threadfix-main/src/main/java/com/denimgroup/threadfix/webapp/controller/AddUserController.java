@@ -100,6 +100,7 @@ public class AddUserController {
                 return FormRestResponse.failure("Errors", result);
 			}
 
+            user.setId(null);
 			Integer id = userService.createUser(user);
 			
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();

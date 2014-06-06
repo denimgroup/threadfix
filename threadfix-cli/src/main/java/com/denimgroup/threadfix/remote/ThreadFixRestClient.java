@@ -58,6 +58,7 @@ public interface ThreadFixRestClient {
     public RestResponse<Organization> searchForTeamByName(String name);
 
     // Information about these methods can be found on the wiki.
+    // https://github.com/denimgroup/threadfix/wiki/Command-Line-Interface
     public RestResponse<VulnerabilityInfo[]> searchVulnerabilities(List<Integer> genericVulnerabilityIds,
                List<Integer> teamIds, List<Integer> applicationIds,
                List<String> scannerNames, List<Integer> genericSeverityValues, Integer numberVulnerabilities,

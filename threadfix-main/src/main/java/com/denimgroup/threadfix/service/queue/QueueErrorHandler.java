@@ -21,40 +21,31 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service.queue;
 
-package com.denimgroup.threadfix.importer.util;
-
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.denimgroup.threadfix.service.ExceptionLogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ErrorHandler;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 /**
- * Created by mac on 2/4/14.
+ * Created by mcollins on 6/4/14.
  */
-public class RegexUtils {
+public class QueueErrorHandler extends SpringBeanAutowiringSupport implements ErrorHandler {
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(RegexUtils.class);
+    @Autowired
+    private ExceptionLogService exceptionLogService;
 
-    /**
-     * Utility to prevent declaring a bunch of Matchers and Patterns.
-     *
-     * @param targetString string to have regex applied to it
-     * @param regex the regular expression
-     * @return result of applying Regex
-     */
-    @Nullable
-    public static String getRegexResult(String targetString, String regex) {
-        if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
-            LOG.warn("getRegexResult got null or empty input.");
-            return null;
-        }
+    private final SanitizedLogger log = new SanitizedLogger(QueueErrorHandler.class);
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(targetString);
+    @Override
+    public void handleError(Throwable throwable) {
+        ExceptionLog exceptionLog = new ExceptionLog(throwable);
 
-        return matcher.find() ? matcher.group(1) : null;
+        exceptionLogService.storeExceptionLog(exceptionLog);
+
+        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
     }
-
 }

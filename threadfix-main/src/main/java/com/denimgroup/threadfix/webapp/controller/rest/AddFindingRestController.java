@@ -27,6 +27,8 @@ package com.denimgroup.threadfix.webapp.controller.rest;
 import javax.servlet.http.HttpServletRequest;
 
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,9 +37,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.service.APIKeyService;
 import com.denimgroup.threadfix.service.FindingService;
 import com.denimgroup.threadfix.service.ManualFindingService;
+
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
 @RequestMapping("/rest/applications/{appId}/addFinding")
@@ -64,29 +68,29 @@ public class AddFindingRestController extends RestController {
 	 * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#addDynamicFinding()
 	 */
 	@RequestMapping(headers="Accept=application/json", value="", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<Finding> createFinding(HttpServletRequest request,
+	public @ResponseBody Object createFinding(HttpServletRequest request,
 			@PathVariable("appId") int appId) {
 		log.info("Received REST request for a new Finding.");
 
 		String result = checkKey(request, NEW);
 		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
+			return failure(result);
 		}
 		// By not using @RequestParam notations, we can catch the error in the code
 		// and provide better error messages.
 		 
 		String checkResult = findingService.checkRequestForFindingParameters(request);
 		if (!checkResult.equals(PASSED_CHECK)) {
-            return RestResponse.failure(checkResult);
+            return failure(checkResult);
         }
 		
 		Finding finding = findingService.parseFindingFromRequest(request);
 		boolean mergeResult = manualFindingService.processManualFinding(finding, appId);
 		
 		if (mergeResult) {
-			return RestResponse.success(finding);
+			return writeSuccessObjectWithView(finding, AllViews.RestView2_1.class);
 		} else {
-			return RestResponse.failure("There was an error merging the new Finding.");
+			return failure("There was an error merging the new Finding.");
 		}
 	}
 }

@@ -57,7 +57,7 @@
         <%@ include file="littleVulnTable.jspf" %>
     </div>
     <div class="modal-footer">
-        <span class="errors" style="float:left">{{ error }}</span>
+        <span class="errors" style="float:left">{{ errorMessage }}</span>
 
         <a class="btn" ng-click="cancel()">Close</a>
         <button id="loadingButton"

@@ -141,7 +141,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 
 	@Override
 	public List<RemoteProviderApplication> fetchApplications() {
-		if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
+        if (remoteProviderType == null || remoteProviderType.getUsername() == null ||
 				remoteProviderType.getPassword() == null) {
 			LOG.warn("Insufficient credentials.");
 			return null;
@@ -293,7 +293,9 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    			atts.getValue("action") != null &&
 	    			atts.getValue("action").equals("Mitigation Accepted")) {
 	    		mitigationProposed = false;
-	    		lastFinding.setMarkedFalsePositive(true);
+                if (lastFinding != null) {
+	    		    lastFinding.setMarkedFalsePositive(true);
+                }
 	    		LOG.info("The false positive mitigation was accepted.");
 	    	}
 	    	
