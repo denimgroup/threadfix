@@ -21,20 +21,23 @@
                 <h3 class="panel-title">
                     <span ng-hide="editDefaultPermissions" class="icon icon-chevron-right"></span>
                     <span ng-show="editDefaultPermissions" class="icon icon-chevron-down"></span>
-                    Default Permissions
+                    LDAP Role
                 </h3>
             </div>
             <div class="panel-body" ng-show="editDefaultPermissions">
                 <table class="dataTable">
                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
                         <tr>
-                            <td>Global Group enabled for new users?</td>
-                            <td class="inputValue" style="text-align: left;">
+                            <td>
+                                Global Group enabled for LDAP users?
+                                <a class="btn" popover="When LDAP users log in, ThreadFix can assign them a default role. If no role is selected here, the user will be unable to access any data in ThreadFix. To configure per-team and per-application permissions for an LDAP user, create a ThreadFix user with the same username.">?</a>
+                            </td>
+                            <td class="inputValue" style="text-align: left;" ng-init="globalGroupEnabled = <c:out value="${ defaultConfiguration.globalGroupEnabled }"/>">
                                 <form:checkbox id="globalGroupEnabledCheckbox" path="globalGroupEnabled" ng-model="globalGroupEnabled"/>
                             </td>
                             <td class="inputValue">
                                 <form:select ng-disabled="!globalGroupEnabled" id="roleSelect" path="defaultRoleId">
-                                    <form:option value="0" label="Select a role" />
+                                    <form:option value="0" label="Read Access" />
                                     <form:options items="${ roleList }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </td>
