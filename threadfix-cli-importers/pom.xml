@@ -182,10 +182,10 @@
             <artifactId>commons-validator</artifactId>
             <version>${commons.validator.version}</version>
             <exclusions>
-            	<exclusion>
-            		<artifactId>commons-collections</artifactId>
-            		<groupId>commons-collections</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -299,6 +299,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-entities</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
@@ -315,9 +322,9 @@
             <version>${codehaus.jackson.version}</version>
         </dependency>
         <dependency>
-        	<groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>1.2.1</version>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>1.2.1</version>
         </dependency>
     </dependencies>
 

@@ -1,41 +1,41 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
+    <parent>
         <groupId>com.denimgroup.threadfix</groupId>
         <artifactId>master-pom</artifactId>
         <version>2.0FINAL-SNAPSHOT</version>
     </parent>
 
-	<artifactId>threadfix</artifactId>
-	<packaging>war</packaging>
-	<name>threadfix</name>
-	<description>
+    <artifactId>threadfix</artifactId>
+    <packaging>war</packaging>
+    <name>threadfix</name>
+    <description>
         This is the webapp module for ThreadFix that provides a web UI and a platform for the various other plugins.
-	</description>
+    </description>
 
-	<inceptionYear>2009</inceptionYear>
+    <inceptionYear>2009</inceptionYear>
 
-	<prerequisites>
-		<maven>3</maven>
-	</prerequisites>
+    <prerequisites>
+        <maven>3</maven>
+    </prerequisites>
 
-	<repositories>
-		<repository>
-			<id>lib</id>
-			<name>lib</name>
-			<releases>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<checksumPolicy>ignore</checksumPolicy>
-			</snapshots>
-			<url>file://${project.basedir}/lib</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
 
 	<build>
 		<plugins>
@@ -98,22 +98,22 @@
                     </execution>
                 </executions>
             </plugin>
-		</plugins>
+        </plugins>
 
-		<resources>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>ESAPI.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
-	</build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>ESAPI.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+    </build>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.jetbrains.annotations</groupId>
             <artifactId>annotations</artifactId>
@@ -469,6 +469,13 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-entities</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-service-interfaces</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -477,7 +484,7 @@
             <artifactId>threadfix-importers</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-ham</artifactId>
             <version>${project.version}</version>
@@ -489,8 +496,8 @@
         </dependency>
         <dependency>
         	<groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>1.2.1</version>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>1.2.1</version>
         </dependency>
 	</dependencies>
 
@@ -697,4 +704,5 @@
 	<issueManagement>
 		<system>https://github.com/denimgroup/threadfix/issues</system>
 	</issueManagement>
+
 </project>

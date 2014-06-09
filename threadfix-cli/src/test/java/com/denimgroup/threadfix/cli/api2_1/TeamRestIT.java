@@ -24,18 +24,21 @@
 
 package com.denimgroup.threadfix.cli.api2_1;
 
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.cli.util.JsonTestUtils;
 import com.denimgroup.threadfix.cli.util.TestUtils;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 
 /**
  * Created by mcollins on 6/4/14.
  */
-public class TeamTests {
+@Category(CommunityTests.class)
+public class TeamRestIT {
 
     String[] teamFields = { "id", "name", "activeApplications", "totalVulnCount",
             "criticalVulnCount", "highVulnCount", "mediumVulnCount", "lowVulnCount", "infoVulnCount" };
