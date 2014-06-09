@@ -38,6 +38,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                     $scope.team = data.object.team;
                     $scope.team.applications = data.object.applications;
                     $scope.applications = data.object.applications;
+                    $scope.users = data.object.users;
                     countVulnerabilities();
                     $scope.$broadcast('team', $scope.team);
                     $scope.$broadcast('seeMoreExtension', "/" + $scope.team.id);
@@ -137,6 +138,27 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.goToPage = function(app) {
         $window.location.href = tfEncoder.encodeRelative($scope.team.id + "/applications/" + app.id);
-    }
+    };
+
+    $scope.showUsers = function() {
+        $modal.open({
+            templateUrl: 'permissibleUsersModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return {};
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {};
+                },
+                buttonText: function() {
+                    return {};
+                }
+            }
+        });
+    };
 
 });

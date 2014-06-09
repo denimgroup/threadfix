@@ -38,8 +38,8 @@
                 <c:if test="${!canManageApplications }">
                     <li><a id="viewApplicationModalButton">Details	</a></li>
                 </c:if>
-                <c:if test="${ canManageUsers && enterprise}">
-                    <li><a id="userListModelButton">View Permissible Users</a></li>
+                <c:if test="${ canManageUsers && isEnterprise}">
+                    <li><a id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
                 </c:if>
                 <c:if test="${ canUploadScans }">
                     <li><a class="pointer" id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>

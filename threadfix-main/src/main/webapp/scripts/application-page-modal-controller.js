@@ -386,4 +386,25 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         window.location.href = tfEncoder.encode("/wafs/" + $scope.config.application.waf.id);
     };
 
+    $scope.showUsers = function() {
+        $modal.open({
+            templateUrl: 'permissibleUsersModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return {};
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {};
+                },
+                buttonText: function() {
+                    return {};
+                }
+            }
+        });
+    };
+
 })
