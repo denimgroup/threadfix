@@ -42,43 +42,6 @@ import static junit.framework.Assert.assertEquals;
  */
 public class HttpRestUtilsTests {
 
-    private static final int APPLICATION_ID = 1;
-    private static final String FILE_PATH = "C:\\Users\\stran\\Desktop\\CLIJTest\\export.xml";
-
-    /**
-     * !!!!!!! ATTENTION: Before running these test cases, please making sure:
-     *      + ThreadFix server is running with API_KEY
-     *      + There APPLICATION_ID in ThreadFix server, and not yet any scans are imported
-     *      +  There is correct xml scan result FILE_PATH
-     */
-//
-//    @Test
-//    public void testHttpPostFile() {
-//        String ret = TestPropertiesManager.getRestUtils().httpPostFile(TestPropertiesManager.URL + "/applications/" + APPLICATION_ID + "/upload",
-//                FILE_PATH,
-//                new String[] {  },
-//                new String[] {  });
-//
-//        assertNotNull(TestPropertiesManager.getJSONObject(ret));
-//    }
-//
-//    @Test
-//    public void testHttpPost() {
-//        String ret = TestPropertiesManager.getRestUtils().httpPost(TestPropertiesManager.URL + "/applications/" + APPLICATION_ID + "/addUrl",
-//                new String[] { "apiKey",       "url" },
-//                new String[] {  TestPropertiesManager.API_KEY,  TestPropertiesManager.URL});
-//
-//        assertNotNull(TestPropertiesManager.getJSONObject(ret));
-//    }
-//
-//    @Test
-//    public void testHttpGet() {
-//        String ret = TestPropertiesManager.getRestUtils().httpGet(TestPropertiesManager.URL + "/applications/" + APPLICATION_ID +
-//                "?apiKey=" + TestPropertiesManager.API_KEY);
-//
-//        assertNotNull(TestPropertiesManager.getJSONObject(ret));
-//    }
-
     @Test
     public void testSetUrl() {
         PropertiesManager utils = new PropertiesManager();
@@ -103,15 +66,4 @@ public class HttpRestUtilsTests {
         }
     }
 
-    @Test
-    public void testGetUrl() {
-        PropertiesManager utils = new PropertiesManager();
-        assertEquals(TestPropertiesManager.URL, utils.getUrl());
-    }
-
-    @Test
-    public void testGetKey() {
-        PropertiesManager utils = new PropertiesManager();
-        assertEquals(TestPropertiesManager.API_KEY, utils.getKey());
-    }
 }
