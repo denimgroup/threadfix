@@ -85,19 +85,22 @@ public class ScanDetailPage extends BasePage{
 	public String getVulnType(int row){
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
+
 	public String getPath(int row){
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
+
 	public String getParameter(int row){
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
+
 	public String getNumMergedResults(int row){
 		return driver.findElementById("mappedSeverity"+row).getText();
 	}
+
 	public FindingDetailPage clickViewFinding(){
 		driver.findElementById("mappedVulnType").click();
         sleep(3000);
-        waitForElement(driver.findElementByLinkText("View Vulnerability"));
 		return new FindingDetailPage(driver);
 	}
 	

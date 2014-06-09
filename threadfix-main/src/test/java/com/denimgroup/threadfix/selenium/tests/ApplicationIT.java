@@ -204,7 +204,6 @@ public class ApplicationIT extends BaseIT {
         assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(teamName,appName2));
     }
 
-	//Validation Test
 	@Test
 	public void testEditBasicApplicationValidation() {
         String teamName = "testEditBasicApplicationValidationTeam" + getRandomString(3);
@@ -454,40 +453,49 @@ public class ApplicationIT extends BaseIT {
         Boolean appOnTeam2 = teamDetailPage.isAppPresent(appName);
 
         assertTrue("The application was not switched properly.", !appOnTeam1 && appOnTeam2);
-
     }
 
     @Ignore
     @Test
     public void testAddDynamicManualFinding() {
-        String teamName = "Team" + getRandomString(5);
-        String appName = "App" + getRandomString(5);
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
-        String desc = "Test description.";
+        String desc = "Test Description.";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage ap = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        ap.clickActionButton()
+        applicationDetailPage.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(cwe)
                 .setParameter(parameter)
                 .setDescription(desc)
                 .clickDynamicSubmit();
 
-        VulnerabilityDetailPage vulnerabilityDetailPage = ap.clickScansTab()
+        assertTrue("Manual finding was not added to vulnerabilities listing on application detail page.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        //TODO requires ids for the 'inputValue' for verification
+        assertTrue("Description was not present", true);
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickScansTab()
                 .clickViewScan()
                 .clickViewFinding()
                 .clickViewVulnerability();
 
         //TODO requires ElementIDs on VulnerabililtyDetailPage
-        assertTrue("Description was not present", vulnerabilityDetailPage.isTextPresentOnPage(desc) );
+        assertTrue("Description was not present", vulnerabilityDetailPage.isTextPresentOnPage(desc));
     }
 
     @Ignore
@@ -521,9 +529,7 @@ public class ApplicationIT extends BaseIT {
 
         //TODO Bug in VulnerabilityDetailsPage, does not save changes.
         // Continue to finish building test when bug is fixed.
-
     }
-
 
     @Test
     public void deleteManualFindingScan() {
@@ -555,7 +561,6 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Manual Finding was not deleted correctly.", ap.isScanDeleted());
 
     }
-
 
     @Test
     public void deleteUploadedScan() {

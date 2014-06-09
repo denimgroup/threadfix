@@ -133,6 +133,13 @@ public abstract class BasePage {
 		sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public ScanAgentTasksPage clickScanAgentTasksLink() {
+        clickConfigTab();
+        driver.findElementById("scanQueueLink").click();
+        sleep(3000);
+        return new ScanAgentTasksPage(driver);
+    }
 	
 	public UserChangePasswordPage clickChangePasswordLink(){
 		clickUserTab();

@@ -213,8 +213,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickDeleteScanTaskButton() {
-        driver.findElementByLinkText("Delete").click();
+    public ApplicationDetailPage clickDeleteScanTaskButton(String id) {
+        driver.findElementById("deleteButton" + id).click();
         handleAlert();
         return new ApplicationDetailPage(driver);
     }
@@ -599,6 +599,10 @@ public class ApplicationDetailPage extends BasePage {
         }
     }
 
+    public String getScannerDate(int row) {
+        return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
+    }
+
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {
@@ -617,11 +621,16 @@ public class ApplicationDetailPage extends BasePage {
         return specificVulnerabilityCount(level).equals(expected);
     }
 
-    public boolean isScanQueuePresent(String scanner) {
+    public boolean isScanAgentTaskPresent(String date) {
         int rowCnt = driver.findElementsByClassName("bodyRow").size();
-        for (int i = 0; i <= rowCnt; i++) {
-            if (driver.findElementById("scannerType" + i).getText().trim().equals(scanner)) {
-                return true;
+        for (int i = 0; i < rowCnt; i++) {
+            try {
+                if (driver.findElementById("scanAgentTaskCreateTime" + i).getText().trim().equals(date)) {
+                    return true;
+                }
+            } catch (NoSuchElementException e) {
+                System.err.println("Scan Agent Task with date of: " + date + " could not be found. " + e.getMessage());
+                return false;
             }
         }
         return false;

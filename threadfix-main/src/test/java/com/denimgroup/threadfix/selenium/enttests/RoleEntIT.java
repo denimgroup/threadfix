@@ -181,7 +181,6 @@ public class RoleEntIT extends BaseIT {
                 applicationDetailPage.getNameText().contains(appName));
 	}
 
-    // TODO: Enterprise is not an option in Role Permissions
 	@Test
 	public void testSetPermissions() {
 		String roleName = getRandomString(10);
