@@ -268,7 +268,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "wafId")
-    @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class })
+    @JsonIgnore
 	public Waf getWaf() {
 		return waf;
 	}
@@ -276,6 +276,24 @@ public class Application extends AuditableEntity {
 	public void setWaf(Waf waf) {
 		this.waf = waf;
 	}
+
+    @Transient
+    @JsonProperty("waf")
+    @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class })
+    private Map<String, Object> getWafRest() {
+
+        if (waf== null) {
+            return null;
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("id", waf.getId());
+        map.put("name", waf.getName());
+
+        return map;
+    }
+
 
 	@OneToMany(mappedBy = "application", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -708,7 +726,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -726,8 +744,14 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonView(AllViews.RestViewApplication2_1.class)
     @JsonProperty("organization")
-    private Organization getOrganizationRest() {
-        return organization;
+    public Map<String, Object> getOrganizationRest() {
+        Organization team = getOrganization();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", team.getId());
+        map.put("name", team.getName());
+
+        return map;
     }
 
     @Column(nullable = true)
