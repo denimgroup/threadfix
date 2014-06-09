@@ -37,6 +37,23 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class UserEntIT extends BaseIT {
 
+    @Test
+    public void createUserWithoutGlobalAccess() {
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn()
+                .clickEditLink(userName);
+
+        assertFalse("Global Access was allowed when it should not have been.", userIndexPage.isGlobalAccessSelected());
+    }
+
 	//If this test fails it can cascade and cause several other tests to fail
     // TODO this test will not run correctly because of bugs involved with user creation
     @Ignore
@@ -67,10 +84,10 @@ public class UserEntIT extends BaseIT {
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
-				.clickAddUserLink()
-				.enterName(userName)
-				.enterPassword("TestPassword")
-				.enterConfirmPassword("TestPassword")
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword("TestPassword")
+                .enterConfirmPassword("TestPassword")
 				.clickLDAP(null)
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
@@ -91,8 +108,6 @@ public class UserEntIT extends BaseIT {
 		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
 	}
 
-    // TODO this test will not run correctly because of bugs involved with 'read-access' bug in FF
-    @Ignore
 	@Test
 	public void editUserRoleTest(){
 		String userName = getRandomString(8);
@@ -103,7 +118,7 @@ public class UserEntIT extends BaseIT {
 				.enterName(userName)
 				.enterPassword("TestPassword")
 				.enterConfirmPassword("TestPassword")
-                .clickGlobalAccess(null)
+                .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess("User", userName)
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
@@ -120,16 +135,16 @@ public class UserEntIT extends BaseIT {
 		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator",userName)
 				.clickUpdateUserBtn(userName)
 				.clickEditLink(userName)
-				.clickGlobalAccess(userName)
+				.toggleGlobalAccess()
 				.clickUpdateUserBtn(userName)
 				.clickEditLink(userName);
-		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected(userName));
+		assertFalse("Global Access was not revoked", userIndexPage.isGlobalAccessSelected());
 
         // Reinstate Global Access
-		userIndexPage = userIndexPage.clickGlobalAccess(userName)
+		userIndexPage = userIndexPage.toggleGlobalAccess()
                 .clickUpdateUserBtn(userName)
                 .clickEditLink(userName);
-		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected(userName));
+		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
 	}
 
 	// If this test fails with the defaults changed it could cause the other user tests to fail
@@ -139,16 +154,16 @@ public class UserEntIT extends BaseIT {
 	public void defaultRoleTest(){
 		String userName = "configureDefaultsUser" + getRandomString(3);
 
-		SystemSettingsPage configDefaultsPage = loginPage.login("user", "password")
+		SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
                 .clickSystemSettingsLink()
                 .defaultPermissions()
                 .checkGlobalGroupCheckbox()
                 .setRoleSelect("User")
                 .clickUpdateDefaults();
 
-		assertTrue("Default permissions changes were not saved",configDefaultsPage.isSaveSuccessful());
+		assertTrue("Default permissions changes were not saved", systemSettingsPage.isSaveSuccessful());
 		
-		UserIndexPage userIndexPage = configDefaultsPage.clickManageUsersLink()
+		UserIndexPage userIndexPage = systemSettingsPage.clickManageUsersLink()
                 .clickAddUserLink()
                 .enterName(userName)
                 .enterPassword("TestPassword")
@@ -156,9 +171,9 @@ public class UserEntIT extends BaseIT {
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
 
-		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
+		assertTrue("User role was not selected", userIndexPage.isRoleSelected(userName, "User"));
 		
-		configDefaultsPage = userIndexPage.clickCancel(userName)
+		systemSettingsPage = userIndexPage.clickCancel(userName)
                 .clickDelete(userName)
                 .clickSystemSettingsLink()
                 .defaultPermissions()
@@ -166,9 +181,9 @@ public class UserEntIT extends BaseIT {
                 .setRoleSelect("Administrator")
                 .clickUpdateDefaults();
 
-		assertTrue("Default changes not Saved",configDefaultsPage.isSaveSuccessful());
+		assertTrue("Default changes not Saved",systemSettingsPage.isSaveSuccessful());
 		
-		userIndexPage = configDefaultsPage.clickManageUsersLink()
+		userIndexPage = systemSettingsPage.clickManageUsersLink()
                 .clickAddUserLink()
                 .enterName(userName)
                 .enterPassword("TestPassword")
@@ -176,9 +191,9 @@ public class UserEntIT extends BaseIT {
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
 
-		assertTrue("Administrator role was not selected",userIndexPage.isRoleSelected(userName, "Administrator"));
+		assertTrue("Administrator role was not selected", userIndexPage.isRoleSelected(userName, "Administrator"));
 		
-		configDefaultsPage = userIndexPage.clickCancel(userName)
+		systemSettingsPage = userIndexPage.clickCancel(userName)
                 .clickDelete(userName)
                 .clickSystemSettingsLink()
                 .defaultPermissions()
@@ -186,9 +201,9 @@ public class UserEntIT extends BaseIT {
                 .setRoleSelect("Read Access")
                 .clickUpdateDefaults();
 
-		assertTrue("Default Changes not Saved",configDefaultsPage.isSaveSuccessful());
+		assertTrue("Default Changes not Saved",systemSettingsPage.isSaveSuccessful());
 		
-		userIndexPage = configDefaultsPage.clickManageUsersLink()
+		userIndexPage = systemSettingsPage.clickManageUsersLink()
                 .clickAddUserLink()
                 .enterName(userName)
                 .enterPassword("TestPassword")

@@ -131,7 +131,8 @@ public class UserIndexPage extends BasePage {
 		//return driver.findElementById("isLdapUserCheckbox"+(oldName)).isSelected();
         return driver.findElementByClassName("ldapCheckbox").isSelected();
 	}
-	
+
+    @Deprecated
 	public UserIndexPage clickGlobalAccess(String oldName){
 		if(oldName == null){
 			driver.findElementById("hasGlobalGroupAccessCheckbox").click();
@@ -140,6 +141,11 @@ public class UserIndexPage extends BasePage {
 		}
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage toggleGlobalAccess() {
+        driver.findElementById("hasGlobalGroupAccessCheckbox").click();
+        return this;
+    }
 	
 	public UserIndexPage chooseRoleForGlobalAccess(String role,String oldName){
 		if(oldName == null){
@@ -186,9 +192,9 @@ public class UserIndexPage extends BasePage {
         return driver.findElementsById("editUserModal" + userName).size() != 0;
 	}
 	
-	public UserIndexPage clickEditLink(String roleName) {
-        waitForElement(driver.findElementById("editUserModal"+roleName));
-		driver.findElementById("editUserModal"+roleName).click();
+	public UserIndexPage clickEditLink(String userName) {
+        waitForElement(driver.findElementById("editUserModal"+userName));
+		driver.findElementById("editUserModal"+userName).click();
 		sleep(1000);
 		return new UserIndexPage(driver);
 	}
@@ -247,6 +253,10 @@ public class UserIndexPage extends BasePage {
 	public boolean isGlobalAccessSelected(String oldName){
 		return driver.findElementById("hasGlobalGroupAccessCheckbox" + (oldName)).isSelected();
 	}
+
+    public boolean isGlobalAccessSelected() {
+        return driver.findElementById("hasGlobalGroupAccessCheckbox").isSelected();
+    }
 
     public boolean isSaveChangesButtonClickable(String name) {
         return isClickable("submit");
