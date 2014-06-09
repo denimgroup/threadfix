@@ -455,14 +455,13 @@ public class ApplicationIT extends BaseIT {
         assertTrue("The application was not switched properly.", !appOnTeam1 && appOnTeam2);
     }
 
-    @Ignore
     @Test
     public void testAddDynamicManualFinding() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
-        String desc = "Test Description.";
+        String description = "Test Description.";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -476,7 +475,7 @@ public class ApplicationIT extends BaseIT {
                 .clickManualFindingButton()
                 .setCWE(cwe)
                 .setParameter(parameter)
-                .setDescription(desc)
+                .setDescription(description)
                 .clickDynamicSubmit();
 
         assertTrue("Manual finding was not added to vulnerabilities listing on application detail page.",
@@ -486,49 +485,59 @@ public class ApplicationIT extends BaseIT {
                 .clickViewScan()
                 .clickViewFinding();
 
-        //TODO requires ids for the 'inputValue' for verification
-        assertTrue("Description was not present", true);
-
-        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickScansTab()
-                .clickViewScan()
-                .clickViewFinding()
-                .clickViewVulnerability();
-
-        //TODO requires ElementIDs on VulnerabililtyDetailPage
-        assertTrue("Description was not present", vulnerabilityDetailPage.isTextPresentOnPage(desc));
+        assertTrue("Finding description did not match the given input.",
+                description.equals(findingDetailPage.getDetail("longDescription")));
+        assertTrue("Finding parameter did not match the given input.",
+                parameter.equals(findingDetailPage.getDetail("parameter")));
+        assertTrue("Finding CWE did not match the given input",
+                cwe.equals(findingDetailPage.getDetail("genericVulnerabilityName")));
     }
 
-    @Ignore
     @Test
     public void testEditDynamicManualFindings() {
-        String teamName = "TeamName" + getRandomString(5);
-        String appName = "AppName" + getRandomString(5);
-        String cwe = "Improper Neutralization of Special Elements used in an SQL Command";
-        String parameter = "testParameter";
-        String desc = "Test Description: This is a test, this is only a test.";
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String originalParameter = "testParameter";
+        String editedParameter = "testParameter-edited";
+        String originalDescription = "Test Description: This is a test, this is only a test.";
+        String editedDescription = "Edited Description: This should have been edited.";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage ap = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        ap.clickActionButton()
+        applicationDetailPage.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(cwe)
-                .setParameter(parameter)
-                .setDescription(desc)
+                .setParameter(originalParameter)
+                .setDescription(originalDescription)
                 .clickDynamicSubmit();
 
-        ap.clickScansTab()
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickScansTab()
                 .clickViewScan()
                 .clickViewFinding()
-                .clickEditVulnerability();
+                .clickViewVulnerability()
+                .clickEditFinding()
+                .setDescription(editedDescription)
+                .setParameter(editedParameter)
+                .clickModalSubmit();
 
-        //TODO Bug in VulnerabilityDetailsPage, does not save changes.
-        // Continue to finish building test when bug is fixed.
+        FindingDetailPage findingDetailPage = vulnerabilityDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        assertTrue("Finding description did not match the given input.",
+                editedDescription.equals(findingDetailPage.getDetail("longDescription")));
+        assertTrue("Finding parameter did not match the given input.",
+                editedParameter.equals(findingDetailPage.getDetail("parameter")));
     }
 
     @Test

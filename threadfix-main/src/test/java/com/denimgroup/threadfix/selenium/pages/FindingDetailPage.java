@@ -38,8 +38,7 @@ public class FindingDetailPage extends BasePage {
         return new VulnerabilityDetailPage(driver);
     }
 
-    public VulnerabilityDetailPage clickEditVulnerability() {
-        driver.findElementByLinkText("editLink").click();
-        return new VulnerabilityDetailPage(driver);
+    public String getDetail(String detailId) {
+        return driver.findElementById(detailId).getText().trim();
     }
 }
