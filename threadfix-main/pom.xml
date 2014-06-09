@@ -498,6 +498,7 @@
         	<groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
             <version>1.2.1</version>
+            <scope>test</scope>
         </dependency>
 	</dependencies>
 
