@@ -76,13 +76,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             int status = client.executeMethod(get);
 
             if (status == 200) {
-                InputStream responseStream = get.getResponseBodyAsStream();
-                byte[] bytes = IOUtils.toByteArray(responseStream);
-                File directory = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url);
-                directory.mkdirs();
-                File file = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url + "/" + System.currentTimeMillis());
-                IOUtils.write(bytes, new FileOutputStream(file));
-                return HttpResponse.success(status, new ByteArrayInputStream(bytes));
+                return HttpResponse.success(status, get.getResponseBodyAsStream());
             } else {
                 LOG.warn("Status : " + status);
             }
@@ -122,13 +116,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             int status = client.executeMethod(post);
 
             if (status == 200) {
-                InputStream responseStream = post.getResponseBodyAsStream();
-                byte[] bytes = IOUtils.toByteArray(responseStream);
-                File directory = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url);
-                directory.mkdirs();
-                File file = new File("/Users/mac/scratch/" + classInstance.getSimpleName().replaceAll(" ", "") + "/" + url + "/" + System.currentTimeMillis());
-                IOUtils.write(bytes, new FileOutputStream(file));
-                return HttpResponse.success(status, new ByteArrayInputStream(bytes));
+                return HttpResponse.success(status, post.getResponseBodyAsStream());
             } else {
                 LOG.warn("Status : " + status);
                 return HttpResponse.failure(status);

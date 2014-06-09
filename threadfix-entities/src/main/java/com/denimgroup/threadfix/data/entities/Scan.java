@@ -175,6 +175,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+    @JsonIgnore
 	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
 		return scanRepeatFindingMaps;
 	}

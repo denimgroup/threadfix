@@ -28,12 +28,14 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.InputStream;
 import java.util.*;
+import java.util.logging.Handler;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 
@@ -222,12 +224,15 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    }
 	}
 	
-	public class VeracodeSAXParser extends DefaultHandler {
+	public class VeracodeSAXParser extends HandlerWithBuilder {
 		
 		private boolean inStaticFlaws = true;
 		
 		private Finding lastFinding = null;
 		private boolean mitigationProposed = false;
+
+        private String rawFlaw = null;
+        private Map<FindingKey, String> findingMap = new HashMap<>();
 
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
@@ -259,10 +264,15 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 					url = atts.getValue("location");
 				}
 
-	    		Finding finding = constructFinding(url,
-	    										   atts.getValue("vuln_parameter"),
-	    										   atts.getValue("cweid"),
-	    										   atts.getValue("severity"));
+                rawFlaw = makeTag(name, qName, atts) + "</flaw>";
+                findingMap.put(FindingKey.PATH, url);
+                findingMap.put(FindingKey.PARAMETER, atts.getValue("vuln_parameter"));
+                findingMap.put(FindingKey.VULN_CODE, atts.getValue("cweid"));
+                findingMap.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+                findingMap.put(FindingKey.DETAIL, atts.getValue("description"));
+                findingMap.put(FindingKey.RAWFINDING, rawFlaw);
+
+	    		Finding finding = constructFinding(findingMap);
 	    		if (finding != null) {
 	    			finding.setNativeId(atts.getValue("issueid"));
 	    			
@@ -285,6 +295,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
     						finding.getDataFlowElements().add(dataFlowElement);
     					}
     				}
+                    rawFlaw = null;
     				lastFinding = finding;
     				mitigationProposed = false;
 	        		saxFindingList.add(finding);
@@ -310,11 +321,9 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 	    
 	    @Override
 	    public void endElement (String uri, String localName, String qName) throws SAXException {
-	    	if (qName.equals("dynamicflaws")) {
-	    		if ("dynamicflaws".equals(qName)) {
-		    		inStaticFlaws = true;
-		    	}
-	    	}
-	    }
+            if ("dynamicflaws".equals(qName)) {
+                inStaticFlaws = true;
+            }
+        }
 	}
 }

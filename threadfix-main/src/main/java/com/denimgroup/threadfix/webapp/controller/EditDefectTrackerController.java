@@ -129,8 +129,6 @@ public class EditDefectTrackerController {
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			if (defectTracker != null) {
 				log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
-                ControllerUtils.addSuccessMessage(request,
-                        "Defect Tracker " + defectTracker.getName() + " has been edited successfully.");
 			}
 			
             return RestResponse.success(defectTracker);

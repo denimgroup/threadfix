@@ -293,7 +293,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    }
 	}
 	
-	public class WhiteHatVulnerabilitiesParser extends DefaultHandler {
+	public class WhiteHatVulnerabilitiesParser extends HandlerWithBuilder {
 		
 		public Finding finding = new Finding();
 		
@@ -302,6 +302,10 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		private boolean creatingVuln = false;
 		
 		private DateStatus dateStatus = null;
+
+        private String vulnTag = null;
+        private boolean inAttackVector = false;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
 		
 		private void addFinding() {
 			Finding finding = constructFinding(map);
@@ -329,11 +333,13 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		findingDateStatusMap = new HashMap<>();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
+                vulnTag = makeTag(name, qName, atts);
 	    		map.clear();
 	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
 	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
 	    	} else if ("attack_vector".equals(qName)) {
+                currentRawFinding.append(makeTag(name, qName , atts));
 	    		map.put(FindingKey.PATH, null);
 	    		map.put(FindingKey.PARAMETER, null);
 	    		dateStatus = new DateStatus();
@@ -351,7 +357,8 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    			scanDateList.add(testedDate);
 	    	}
 	    	else if (creatingVuln) {
-	    		if (qName.equals("request")) {
+                currentRawFinding.append(makeTag(name, qName , atts));
+                if (qName.equals("request")) {
 		    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
 		    	} else if (qName.equals("param")) {
 		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
@@ -360,11 +367,22 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    }
 	    
 	    @Override
-	    public void endElement (String uri, String localName, String qName) throws SAXException {	    	
-	    	if (qName.equals("attack_vector")) {
+	    public void endElement (String uri, String localName, String qName) throws SAXException {
+            if (creatingVuln) {
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
+            if (qName.equals("attack_vector")) {
+                currentRawFinding.append("</").append("vulnerability").append(">");
+                map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
 	    		addFinding();
 	    		creatingVuln = false;
+                currentRawFinding.setLength(0);
 	    	}
+
+            if ("vulnerability".equals(qName)) {
+                vulnTag = null;
+            }
 	    }
 	    
 	    private String getPath(String fullUrl) {
