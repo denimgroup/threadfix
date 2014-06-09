@@ -51,69 +51,69 @@
 		<tbody>
 			<tr>
 				<td class="bold">Scanner Vulnerability</td>
-				<td class="inputValue"><c:out value="${ finding.channelVulnerability.name }"/></td>
+				<td class="inputValue" id="scannerVulnerabilityType"><c:out value="${ finding.channelVulnerability.name }"/></td>
 			</tr>
 			<tr>
 				<td class="bold">Scanner Severity</td>
-				<td class="inputValue"><c:out value="${ finding.channelSeverity.name }"/></td>
+				<td class="inputValue" id="scannerSeverity"><c:out value="${ finding.channelSeverity.name }"/></td>
 			</tr>
 			<tr>
 				<td class="bold">CWE Vulnerability</td>
-				<td class="inputValue"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
+				<td class="inputValue" id="genericVulnerabilityName"><c:out value="${ finding.channelVulnerability.genericVulnerability.name }"/></td>
 			</tr>
 			<tr>
 				<td class="bold">Severity</td>
-				<td class="inputValue"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
+				<td class="inputValue" id="genericSeverityName"><c:out value="${ finding.channelSeverity.severityMap.genericSeverity.name }"/></td>
 			</tr>
             <tr>
                 <td class="bold">Description</td>
-                <td class="inputValue" style="max-width:500px;word-wrap: break-word;"><c:out value="${ finding.longDescription }"/></td>
+                <td class="inputValue" id="longDescription" style="max-width:500px;word-wrap: break-word;"><c:out value="${ finding.longDescription }"/></td>
             </tr>
 			<c:if test="${ empty finding.dependency }">			
 				<tr>
 					<td class="bold">Path</td>
-					<td class="inputValue"><c:out value="${ finding.surfaceLocation.path }"/></td>
+					<td class="inputValue" id="path"><c:out value="${ finding.surfaceLocation.path }"/></td>
 				</tr>
 				<tr>
 					<td class="bold">Parameter</td>
-					<td class="inputValue"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
+					<td class="inputValue" id="parameter"><c:out value="${ finding.surfaceLocation.parameter }"/></td>
 				</tr>
 				<tr>
 					<td class="bold">Native ID</td>
-					<td class="inputValue">
+					<td class="inputValue" id="nativeId">
 						<c:if test="${ not empty finding.displayId }"><c:out value="${ finding.displayId }" /></c:if>
 						<c:if test="${ empty finding.displayId }"><c:out value="${ finding.nativeId }" /></c:if>						
 					</td>
 				</tr>
 				<tr>
 					<td class="bold" >Attack String</td>
-					<td class="inputValue"><PRE><c:out value="${ finding.attackString }"/></PRE></td>
+					<td class="inputValue"><PRE id="attackString"><c:out value="${ finding.attackString }"/></PRE></td>
 				</tr>
 				<tr class="odd">
 					<td class="bold" valign=top>Scanner Detail</td>
-					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE><c:out value="${ finding.scannerDetail }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE id="scannerDetail"><c:out value="${ finding.scannerDetail }"/></PRE></td>
 				</tr>
 				<tr>
 					<td class="bold" valign=top>Scanner Recommendation</td>
-					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE><c:out value="${ finding.scannerRecommendation }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE id="scannerRecommendation"><c:out value="${ finding.scannerRecommendation }"/></PRE></td>
 				</tr>				
 				<tr>
 					<td class="bold" valign=top>Attack Request</td>
-					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.attackRequest }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE id="attackRequest"><c:out value="${ finding.attackRequest }"/></PRE></td>
 				</tr>
 				<tr>
 					<td class="bold" valign=top>Attack Response</td>
-					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.attackResponse }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE id="attackResponse"><c:out value="${ finding.attackResponse }"/></PRE></td>
 				</tr>
 				<tr>
 					<td class="bold" valign=top>Raw Finding</td>
-					<td class="inputValue" style="word-wrap: break-word;"><PRE><c:out value="${ finding.rawFinding }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;"><PRE id="rawFinding"><c:out value="${ finding.rawFinding }"/></PRE></td>
 				</tr>
 			</c:if>		
 			<c:if test="${ not empty finding.dependency }">			
 				<tr>
 					<td class="bold">CVE ID</td>
-					<td class="inputValue">
+					<td class="inputValue" id="dependency">
 						<c:out value="${ finding.dependency.cve } "/>
 						(<a target="_blank" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ finding.dependency.cve }">View</a>)
 					</td>	

@@ -21,7 +21,7 @@
                 <h3 class="panel-title">
                     <span ng-hide="editDefaultPermissions" class="icon icon-chevron-right"></span>
                     <span ng-show="editDefaultPermissions" class="icon icon-chevron-down"></span>
-                    LDAP Role
+                    Default LDAP Role
                 </h3>
             </div>
             <div class="panel-body" ng-show="editDefaultPermissions">
@@ -29,8 +29,7 @@
                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
                         <tr>
                             <td>
-                                Global Group enabled for LDAP users?
-                                <a class="btn" popover="When LDAP users log in, ThreadFix can assign them a default role. If no role is selected here, the user will be unable to access any data in ThreadFix. To configure per-team and per-application permissions for an LDAP user, create a ThreadFix user with the same username.">?</a>
+                                Default role enabled for LDAP users
                             </td>
                             <td class="inputValue" style="text-align: left;" ng-init="globalGroupEnabled = <c:out value="${ defaultConfiguration.globalGroupEnabled }"/>">
                                 <form:checkbox id="globalGroupEnabledCheckbox" path="globalGroupEnabled" ng-model="globalGroupEnabled"/>
@@ -42,6 +41,7 @@
                                 </form:select>
                             </td>
                             <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+                                <a class="btn" popover="When LDAP users log in, ThreadFix can assign them a default role. If no role is selected here, the user will be unable to access any data in ThreadFix. To configure per-team and per-application permissions for an LDAP user, create a ThreadFix user with the same username.">?</a>
                                 <form:errors id="globalGroupEnabledErrors" path="globalGroupEnabled" cssClass="errors" />
                             </td>
                         </tr>
