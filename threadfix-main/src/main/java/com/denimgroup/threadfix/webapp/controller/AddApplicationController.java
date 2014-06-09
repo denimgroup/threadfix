@@ -100,6 +100,10 @@ public class AddApplicationController {
             return RestResponse.failure("Permissions Failure");
         }
 
+        if (licenseService != null && !licenseService.canAddApps()) {
+            return RestResponse.failure("The current license does not allow the creation of any more applications.");
+        }
+
         Organization team = organizationService.loadOrganization(orgId);
 
         if (team == null) {

@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
@@ -174,7 +175,7 @@ public class RemoteProvidersController {
 	public @ResponseBody RestResponse<RemoteProviderApplication> configureAppSubmit(
             @PathVariable int typeId,
             @PathVariable int remoteProviderApplicationId,
-            @RequestParam("application.id") int applicationId) {
+            @RequestParam("applicationId") int applicationId) {
 
         String errMsg = remoteProviderApplicationService.processApp(remoteProviderApplicationId, applicationId);
 

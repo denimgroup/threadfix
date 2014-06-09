@@ -5,6 +5,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-providers-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-provider-modal-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-provider-modal-mapping-controller.js"></script>
 </head>
 
 <body ng-controller="RemoteProvidersController">

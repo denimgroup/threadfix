@@ -56,8 +56,8 @@ public class TestUtils {
                 getConfiguredClient().createApplication(teamId, getRandomName(), "http://test");
 
         assert appNoScanResponse != null;
-        assert appNoScanResponse.success;
-        assert appNoScanResponse.object != null;
+        assert appNoScanResponse.success : "Response was " + appNoScanResponse;
+        assert appNoScanResponse.object != null : "Response was " + appNoScanResponse;
 
         return appNoScanResponse;
     }
