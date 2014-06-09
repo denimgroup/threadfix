@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -105,6 +106,7 @@ public class TeamDetailPageController {
                 mav.addObject("canAddApps", true);
             }
 
+            mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());
             mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
@@ -131,6 +133,9 @@ public class TeamDetailPageController {
             Map<String, Object> map = new HashMap<>();
             map.put("team", organization);
             map.put("applications", apps);
+            if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
+                map.put("users", userService.getPermissibleUsers(orgId, null));
+            }
             restResponse = RestResponse.success(map);
         }
 

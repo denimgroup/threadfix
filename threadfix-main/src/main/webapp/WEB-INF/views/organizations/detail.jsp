@@ -15,6 +15,7 @@
 
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
     <%@ include file="/WEB-INF/views/organizations/editTeamForm.jsp" %>
+    <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
 
     <ul class="breadcrumb">
         <li><a href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -41,20 +42,13 @@
                             </a>
                         </li>
                     </c:if>
-                    <c:if test="${ canManageUsers && enterprise }">
-                        <li><a id="userListModelButton" href="#usersModal" data-toggle="modal">View Permissible Users</a></li>
+                    <c:if test="${ canManageUsers && isEnterprise }">
+                        <li><a id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
                     </c:if>
                 </ul>
             </div>
         </c:if>
     </h2>
-
-    <div id="usersModal" class="modal hide fade" tabindex="-1"
-        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div id="permissibleUsersDiv">
-            <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
-        </div>
-    </div>
 
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
