@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<parent>
-		<groupId>com.denimgroup.threadfix</groupId>
-		<artifactId>master-pom</artifactId>
+    <parent>
+        <groupId>com.denimgroup.threadfix</groupId>
+        <artifactId>master-pom</artifactId>
         <version>2.0FINAL-SNAPSHOT</version>
-	</parent>
+    </parent>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>threadfix-ham</artifactId>
-	<name>threadfix-ham</name>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>threadfix-ham</artifactId>
+    <name>threadfix-ham</name>
     <description>
         HAM stands for Hybrid Analysis Mapping. The module originated in research done for DHS to
         improve static-to-dynamic vulnerabilty matching. It is now a generalized system primarily for
@@ -20,98 +20,82 @@
         EndpointQueryBuilder.
     </description>
 
-	<build>
+    <build>
         <testSourceDirectory>src/test/java</testSourceDirectory>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
-			</plugin>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire.version}</version>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                            <includes>
-                                <include>**/*Tests.java</include>
-                                <include>**/*Test.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>
             <id>int</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-test</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>test</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>false</skip>
-                                </configuration>
-                            </execution>
-                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
 
-	<dependencies>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${commons.io.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-entities</artifactId>
             <version>${project.version}</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${jacoco.version}</version>
+            <type>jar</type>
+            <classifier>runtime</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+    </dependencies>
 
 </project>

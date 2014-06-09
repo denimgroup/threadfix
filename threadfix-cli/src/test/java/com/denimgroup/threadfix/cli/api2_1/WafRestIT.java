@@ -24,17 +24,20 @@
 
 package com.denimgroup.threadfix.cli.api2_1;
 
+import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.cli.util.JsonTestUtils;
 import com.denimgroup.threadfix.cli.util.TestUtils;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * Created by mcollins on 6/5/14.
  */
-public class WafTests {
+@Category(CommunityTests.class)
+public class WafRestIT {
 
     @Test
     public void testCreateWaf() {

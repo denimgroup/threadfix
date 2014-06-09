@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.cli;
 
+import com.denimgroup.threadfix.cli.util.TestUtils;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
@@ -34,24 +35,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ThreadFixRestClientTests {
+public class ThreadFixRestClientIT {
 
     String dummyUrl = "http://test.com";
 
-    /**
-     * !!!!!!! ATTENTION: Before running these testcases, please making sure:
-     *      + ThreadFix server is running with API_KEY
-     *      + There TEAM_ID with TEAM_NAME in ThreadFix server
-     *      + There APPLICATION_ID with APPLICATION_NAME in ThreadFix server
-     *      + There's WAF_ID with WAF_NAME in TF, and rules are generated
-     *      + There's TASK_ID
-     *      + There's config file ACUNETIX_CONFIG_FILE
-     */
-
     private ThreadFixRestClient getClient() {
-        return new ThreadFixRestClientImpl(new TestPropertiesManager());
+        return TestUtils.getConfiguredClient();
     }
-
 
     private RestResponse<Organization> createTeam(String name) {
         return getClient().createTeam(name);
