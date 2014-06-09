@@ -62,7 +62,7 @@
                     <td class="no-color">Global Role</td>
                     <td class="no-color" style="text-align: left;">
                         <select id="roleSelect" name="globalRole.id" ng-model="user.globalRole.id">
-                            <option value="0" label="Read Access" />
+                            <option value="0" label="Read Access">Read Access</option>
                             <option ng-selected="role.id === user.globalRole.id" ng-repeat="role in roles" value="{{ role.id }}">
                                 {{ role.displayName }}
                             </option>
