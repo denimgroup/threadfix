@@ -85,10 +85,10 @@ public class HttpRestUtilsIT {
     @Test
     public void testSetUrl() {
         PropertiesManager utils = new PropertiesManager();
-        utils.setUrl(TestPropertiesManager.URL);
+        utils.setUrl(TestUtils.URL);
         try {
             Configuration properties = new PropertiesConfiguration("threadfix.properties");
-            assertEquals(TestPropertiesManager.URL, properties.getString("url"));
+            assertEquals(TestUtils.URL, properties.getString("url"));
         } catch (ConfigurationException e) {
             Assert.fail();
         }
@@ -97,10 +97,10 @@ public class HttpRestUtilsIT {
     @Test
     public void testSetKey() {
         PropertiesManager utils = new PropertiesManager();
-        utils.setKey(TestPropertiesManager.API_KEY);
+        utils.setKey(TestUtils.API_KEY);
         try {
             Configuration properties = new PropertiesConfiguration("threadfix.properties");
-            assertEquals(TestPropertiesManager.API_KEY, properties.getString("key"));
+            assertEquals(TestUtils.API_KEY, properties.getString("key"));
         } catch (ConfigurationException e) {
             Assert.fail();
         }
@@ -109,12 +109,12 @@ public class HttpRestUtilsIT {
     @Test
     public void testGetUrl() {
         PropertiesManager utils = new PropertiesManager();
-        assertEquals(TestPropertiesManager.URL, utils.getUrl());
+        assertEquals(TestUtils.URL, utils.getUrl());
     }
 
     @Test
     public void testGetKey() {
         PropertiesManager utils = new PropertiesManager();
-        assertEquals(TestPropertiesManager.API_KEY, utils.getKey());
+        assertEquals(TestUtils.API_KEY, utils.getKey());
     }
 }
