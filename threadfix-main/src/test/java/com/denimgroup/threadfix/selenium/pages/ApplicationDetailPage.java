@@ -385,6 +385,32 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage expandResultsByLevel(String level) {
+        driver.findElementById("expand" + level).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandVulnerabilityByType(String type) {
+        driver.findElementById("expandVuln" + type).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage expandCommentSection(String level) {
+        driver.findElementById("commentsButton" + level).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addComment(String level) {
+        driver.findElementById("addCommentButton" + level).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setComment(String comment) {
+        driver.findElementById("commentInputBox").clear();
+        driver.findElementById("commentInputBox").sendKeys(comment);
+        return this;
+    }
+
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
     }

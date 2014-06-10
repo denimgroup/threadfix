@@ -33,14 +33,15 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class DashboardIT extends BaseIT {
 
 	@Test
 	public void dashboardGraphsDisplayTest(){
-        String teamName = "dashboardGraphTestTeam" + getRandomString(3);
-        String appName = "dashboardGraphTestApp" + getRandomString(3);
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -54,8 +55,8 @@ public class DashboardIT extends BaseIT {
 
     @Test
     public void dashboardRecentUploadsDisplayTest(){
-        String teamName = "dashboardGraphTestTeam" + getRandomString(3);
-        String appName = "dashboardGraphTestApp" + getRandomString(3);
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -66,13 +67,11 @@ public class DashboardIT extends BaseIT {
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
 
-    // TODO: needs to be rewritten for new ApplicationDetailPage vulnerabilities table
-    @Ignore
     @Test
     public void dashboardRecentCommentsDisplayTest() {
-        String teamName = "dashboardGraphTestTeam" + getRandomString(3);
-        String appName = "dashboardGraphTestApp" + getRandomString(3);
-        String commentText = "comment text comment text";
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String commentText = "Test comment.";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -81,12 +80,16 @@ public class DashboardIT extends BaseIT {
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .clickViewAppLink(appName, teamName);
+                .clickViewAppLink(appName, teamName)
+                .expandResultsByLevel("High")
+                .expandVulnerabilityByType("High79")
+                .expandCommentSection("High790")
+                .addComment("High790")
+                .setComment(commentText)
+                .clickModalSubmit();
 
-        //traverse vulnerabilities
-        //add comment
-        //go to dashboard
+        DashboardPage dashboardPage = applicationDetailPage.clickDashboardLink();
 
-        //assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
+        assertTrue("Comments are not displayed on Dashboard Page.", dashboardPage.isCommentDisplayed());
     }
 }

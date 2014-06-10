@@ -61,14 +61,14 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             currentPathParameters = new ArrayList<>();
 
     private static final String
-            VALUE = "value",
-            METHOD = "method",
-            REQUEST_PARAM = "RequestParam",
-            PATH_VARIABLE = "PathVariable",
-            REQUEST_MAPPING = "RequestMapping",
-            CLASS = "class",
-            BINDING_RESULT = "BindingResult",
-            CONTROLLER = "Controller";
+               VALUE = "value",
+    METHOD = "method",
+    REQUEST_PARAM = "RequestParam",
+    PATH_VARIABLE = "PathVariable",
+    REQUEST_MAPPING = "RequestMapping",
+    CLASS = "class",
+    BINDING_RESULT = "BindingResult",
+    CONTROLLER = "Controller";
 
     @Nonnull
     private Phase phase = Phase.ANNOTATION;
