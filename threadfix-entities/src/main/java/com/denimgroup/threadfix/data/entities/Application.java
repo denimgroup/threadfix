@@ -148,7 +148,7 @@ public class Application extends AuditableEntity {
 	}
 
 	@Column(length = URL_LENGTH)
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView(Object.class)
 	public String getUrl() {
 		return url;
 	}
@@ -410,7 +410,7 @@ public class Application extends AuditableEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "applicationCriticalityId")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonView(Object.class)
 	public ApplicationCriticality getApplicationCriticality() {
 		return applicationCriticality;
 	}
