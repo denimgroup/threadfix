@@ -27,18 +27,18 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface EndpointDatabase extends EndpointGenerator {
 
     @Nullable
     Endpoint findBestMatch(EndpointQuery query);
 
-    @NotNull
+    @Nonnull
 	Set<Endpoint> findAllMatches(EndpointQuery query);
 
-    @NotNull
+    @Nonnull
     FrameworkType getFrameworkType();
 	
 }

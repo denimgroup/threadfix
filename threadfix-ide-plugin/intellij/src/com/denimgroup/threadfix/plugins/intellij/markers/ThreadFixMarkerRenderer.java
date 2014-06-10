@@ -28,7 +28,7 @@ import com.denimgroup.threadfix.plugins.intellij.properties.Constants;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.util.IconLoader;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.*;
 import java.util.Set;
@@ -43,7 +43,7 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
 
     String compiledText = null;
 
-    public ThreadFixMarkerRenderer(@NotNull VulnerabilityMarker marker){
+    public ThreadFixMarkerRenderer(@Nonnull VulnerabilityMarker marker){
         descriptions.add(getInfo(marker));
         lineNumber = MarkerUtils.getLineNumber(marker);
     }
@@ -72,7 +72,7 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
         return lineNumber;
     }
 
-    public void addMarkerInfo(@NotNull VulnerabilityMarker marker) {
+    public void addMarkerInfo(@Nonnull VulnerabilityMarker marker) {
         descriptions.add(getInfo(marker));
     }
 
@@ -93,7 +93,7 @@ class ThreadFixMarkerRenderer extends GutterIconRenderer {
     }
 
     // TODO change to a transparent png
-    @NotNull
+    @Nonnull
     @Override
     public Icon getIcon() {
         return IconLoader.getIcon(Constants.THREADFIX_ICON_NAME);

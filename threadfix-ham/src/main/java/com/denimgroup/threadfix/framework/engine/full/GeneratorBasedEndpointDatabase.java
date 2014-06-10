@@ -29,20 +29,20 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.*;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
-	@NotNull
+	@Nonnull
     private final List<Endpoint> endpoints;
 
-    @NotNull
+    @Nonnull
 	private final PathCleaner pathCleaner;
 
-    @NotNull
+    @Nonnull
 	private final FrameworkType frameworkType;
 	
 	private final Map<String, Set<Endpoint>>
@@ -53,9 +53,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
 	protected final static SanitizedLogger log = new SanitizedLogger(GeneratorBasedEndpointDatabase.class);
 
-	public GeneratorBasedEndpointDatabase(@NotNull EndpointGenerator endpointGenerator,
-                                          @NotNull PathCleaner pathCleaner,
-                                          @NotNull FrameworkType frameworkType) {
+	public GeneratorBasedEndpointDatabase(@Nonnull EndpointGenerator endpointGenerator,
+                                          @Nonnull PathCleaner pathCleaner,
+                                          @Nonnull FrameworkType frameworkType) {
 		
 		log.info("Using generic EndpointGenerator-based translator.");
 		
@@ -93,8 +93,8 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		log.info("Done building mappings. Static keys: " + staticMap.size() + ", dynamic keys: " + dynamicMap.size());
 	}
 	
-	private void addToMap(@NotNull Map<String, Set<Endpoint>> map,
-                          @NotNull String value, @NotNull Endpoint endpoint) {
+	private void addToMap(@Nonnull Map<String, Set<Endpoint>> map,
+                          @Nonnull String value, @Nonnull Endpoint endpoint) {
         if (!map.containsKey(value)) {
             map.put(value, new HashSet<Endpoint>());
         }
@@ -103,7 +103,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	}
 	
 	@Override
-	public Endpoint findBestMatch(@NotNull EndpointQuery query) {
+	public Endpoint findBestMatch(@Nonnull EndpointQuery query) {
 		
 		Endpoint returnEndpoint = null;
 		
@@ -116,9 +116,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		return returnEndpoint;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
-	public Set<Endpoint> findAllMatches(@NotNull EndpointQuery query) {
+	public Set<Endpoint> findAllMatches(@Nonnull EndpointQuery query) {
 		Set<Endpoint> resultingSet = new HashSet<>();
 		
         List<Set<Endpoint>> resultSets = new ArrayList<>();
@@ -176,8 +176,8 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		return resultingSet;
 	}
 
-    @NotNull
-    private Set<Endpoint> getFromCodePoints(@NotNull List<CodePoint> codePoints) {
+    @Nonnull
+    private Set<Endpoint> getFromCodePoints(@Nonnull List<CodePoint> codePoints) {
         Set<Endpoint> results = new HashSet<>();
 
         top: for (CodePoint codePoint : codePoints) {
@@ -210,9 +210,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         return results;
     }
 
-    @NotNull
+    @Nonnull
     private Set<Endpoint> getValueOrEmptySet(@Nullable String key,
-                                             @NotNull Map<String, Set<Endpoint>> map) {
+                                             @Nonnull Map<String, Set<Endpoint>> map) {
         if (key == null)
             return new HashSet<>();
 
@@ -233,9 +233,9 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         return new HashSet<>();
     }
 
-	@NotNull
+	@Nonnull
     private Set<Endpoint> getValueOrEmptySetWithSimpleKey(@Nullable String key,
-                                             @NotNull Map<String, Set<Endpoint>> map) {
+                                             @Nonnull Map<String, Set<Endpoint>> map) {
 		if (key != null && map.containsKey(key) && map.get(key) != null) {
 			return new HashSet<>(map.get(key));
 		} else {
@@ -243,19 +243,19 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 		}
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public List<Endpoint> generateEndpoints() {
 		return endpoints;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public FrameworkType getFrameworkType() {
 		return frameworkType;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return frameworkType.toString() + " EndpointDatabase with " + endpoints.size() + " total records.";

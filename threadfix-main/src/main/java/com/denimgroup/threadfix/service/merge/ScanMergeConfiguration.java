@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 /**
  * This class is used to hold information about what types of algorithms to use in a vulnerability merge.
@@ -84,13 +84,13 @@ public class ScanMergeConfiguration extends ProjectConfig {
 	}
 
 	@Override
-    @NotNull
+    @Nonnull
 	public SourceCodeAccessLevel getSourceCodeAccessLevel() {
 		return sourceCodeAccessLevel;
 	}
 
 	@Override
-    @NotNull
+    @Nonnull
 	public FrameworkType getFrameworkType() {
 		return frameworkType;
 	}

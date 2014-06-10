@@ -24,29 +24,29 @@
 
 package com.denimgroup.threadfix.framework.engine.framework;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class UrlPatternMapping {
 
-    @NotNull
+    @Nonnull
 	private String servletName, urlPattern;
 
-    public UrlPatternMapping(@NotNull String servletName, @NotNull String urlPattern) {
+    public UrlPatternMapping(@Nonnull String servletName, @Nonnull String urlPattern) {
         this.servletName = servletName.trim();
         this.urlPattern = urlPattern.trim();
     }
 
-    @NotNull
+    @Nonnull
 	public String getServletName() {
 		return servletName;
 	}
 
-    @NotNull
+    @Nonnull
 	public String getUrlPattern() {
 		return urlPattern;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return getServletName() + " -> " + getUrlPattern();

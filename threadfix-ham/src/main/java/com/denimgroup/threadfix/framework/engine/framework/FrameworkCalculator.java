@@ -24,14 +24,14 @@
 
 package com.denimgroup.threadfix.framework.engine.framework;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 
 // TODO make this more generic
 public class FrameworkCalculator {
@@ -55,8 +55,8 @@ public class FrameworkCalculator {
         INSTANCE.frameworkCheckers.add(checker);
     }
 	
-	@NotNull
-    public static FrameworkType getType(@NotNull File rootFile) {
+	@Nonnull
+    public static FrameworkType getType(@Nonnull File rootFile) {
 		log.info("Attempting to guess Framework Type from source tree.");
 		log.info("File: " + rootFile);
 		

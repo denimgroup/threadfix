@@ -24,9 +24,9 @@
 package com.denimgroup.threadfix.framework.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 
 
@@ -55,10 +55,10 @@ public class EventBasedTokenizerRunner {
 	 * @param file
 	 * @param eventBasedTokenizers
 	 */
-    public static void run(@Nullable File file, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
+    public static void run(@Nullable File file, @Nonnull EventBasedTokenizer... eventBasedTokenizers ) {
         run(file, true, eventBasedTokenizers);
     }
-	public static void run(@Nullable File file, boolean javaComments, @NotNull EventBasedTokenizer... eventBasedTokenizers ) {
+	public static void run(@Nullable File file, boolean javaComments, @Nonnull EventBasedTokenizer... eventBasedTokenizers ) {
 
 		if (file != null && file.exists() && file.isFile()) {
 			try (Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8")) {

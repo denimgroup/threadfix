@@ -35,8 +35,8 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CommonPathFinder {
 	
@@ -73,7 +73,7 @@ public class CommonPathFinder {
 		return parseRoot(getFilePathsFromDirectory(rootFile, fileExtension));
 	}
 	
-	@NotNull
+	@Nonnull
     @SuppressWarnings("unchecked")
 	private static List<String> getFilePathsFromDirectory(File rootFile, String fileExtension) {
 		Collection<File> files = FileUtils.listFiles(rootFile,
@@ -110,7 +110,7 @@ public class CommonPathFinder {
 		return returnStrings;
 	}
 
-	@NotNull
+	@Nonnull
     private static List<String> getUrlPaths(@Nullable List<PartialMapping> partialMappings,
                                             @Nullable String extension) {
 		if (partialMappings == null || partialMappings.isEmpty()) {
@@ -185,7 +185,7 @@ public class CommonPathFinder {
 	}
 
 	@Nullable
-    private static String[] getCommonParts(@Nullable String[] soFar, @NotNull String[] newParts) {
+    private static String[] getCommonParts(@Nullable String[] soFar, @Nonnull String[] newParts) {
 		
 		String[] returnParts = newParts;
 		

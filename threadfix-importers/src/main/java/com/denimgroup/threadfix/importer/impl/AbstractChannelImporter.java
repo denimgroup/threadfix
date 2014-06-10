@@ -35,8 +35,8 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -108,7 +108,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected String channelTypeCode;
 
-    public AbstractChannelImporter(@NotNull ScannerType channelTypeName) {
+    public AbstractChannelImporter(@Nonnull ScannerType channelTypeName) {
         this.channelTypeCode = channelTypeName.getFullName();
     }
 

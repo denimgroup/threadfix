@@ -23,13 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class SpringPathCleaner implements PathCleaner {
 	
@@ -53,7 +53,7 @@ public class SpringPathCleaner implements PathCleaner {
 	}
 	
 	@Override
-	public String cleanStaticPath(@NotNull String filePath) {
+	public String cleanStaticPath(@Nonnull String filePath) {
 		String relativeFilePath = filePath;
 		
 		if (staticRoot != null && filePath.startsWith(staticRoot)) {
@@ -64,7 +64,7 @@ public class SpringPathCleaner implements PathCleaner {
 	}
 
 	@Override
-	public String cleanDynamicPath(@NotNull String urlPath) {
+	public String cleanDynamicPath(@Nonnull String urlPath) {
 		
 		String relativeUrlPath = urlPath;
 		
@@ -94,7 +94,7 @@ public class SpringPathCleaner implements PathCleaner {
 
     @Nullable
     @Override
-    public String getDynamicPathFromStaticPath(@NotNull String filePath) {
+    public String getDynamicPathFromStaticPath(@Nonnull String filePath) {
         return filePath;
     }
 
@@ -108,7 +108,7 @@ public class SpringPathCleaner implements PathCleaner {
 		return staticRoot;
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return "Spring PathCleaner with dynamic root = " + dynamicRoot + ", static root = " + staticRoot;

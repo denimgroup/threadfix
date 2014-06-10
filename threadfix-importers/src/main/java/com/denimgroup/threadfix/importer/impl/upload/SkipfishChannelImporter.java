@@ -32,8 +32,8 @@ import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -423,7 +423,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 
     // TODO refactor this class to make lookups simpler
     // probably read everything and keep in-memory map of stuff we need
-    private InputStream findSamplesFile(@NotNull ZipFile zipFile) {
+    private InputStream findSamplesFile(@Nonnull ZipFile zipFile) {
         if (zipFile.entries() == null) {
             throw new ScanFileUnavailableException("No zip entries were found in the zip file.");
         }
@@ -445,7 +445,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 
 	// This method looks to see if the zip file contains the folder containing everything,
 	// and returns the name of the folder so that paths can be correctly constructed.
-	private String findFolderName(@NotNull ZipFile zipFile) {
+	private String findFolderName(@Nonnull ZipFile zipFile) {
 
 		if (zipFile.entries() != null && zipFile.entries().hasMoreElements()) {
 			String possibleMatch = zipFile.entries().nextElement().toString();

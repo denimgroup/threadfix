@@ -23,25 +23,24 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.interfaces;
 
-import org.jetbrains.annotations.NotNull;
-
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 public interface Endpoint extends Comparable<Endpoint> {
 
-    @NotNull
+    @Nonnull
 	Set<String> getParameters();
 
-    @NotNull
+    @Nonnull
 	Set<String> getHttpMethods();
 
-    @NotNull
+    @Nonnull
 	String getUrlPath();
 
-    @NotNull
+    @Nonnull
 	String getFilePath();
 
-    @NotNull
+    @Nonnull
 	String getCSVLine();
 	
 	int getStartingLineNumber();

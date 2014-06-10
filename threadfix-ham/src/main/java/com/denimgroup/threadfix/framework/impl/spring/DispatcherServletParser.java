@@ -26,14 +26,14 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import java.io.*;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class DispatcherServletParser {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("DispatcherServletParser");
 	
 	// this is much faster than an implementation using the tokenizer.
-	public static boolean usesSpringMvcAnnotations(@NotNull File file) {
+	public static boolean usesSpringMvcAnnotations(@Nonnull File file) {
 		boolean returnValue = false;
 		
 		if (file.exists()) {

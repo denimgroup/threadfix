@@ -23,12 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.framework;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ClassMapping {
 
-	@NotNull
+	@Nonnull
     private final String servletName, classWithPackage;
 
     @Nullable
@@ -36,7 +36,7 @@ public class ClassMapping {
 	
 	private static final String CLASSPATH_START = "classpath:";
 	
-	public ClassMapping(@NotNull String servletName, @NotNull String classWithPackage,
+	public ClassMapping(@Nonnull String servletName, @Nonnull String classWithPackage,
                         @Nullable String contextConfigLocation,
                         @Nullable String contextClass) {
 
@@ -51,12 +51,12 @@ public class ClassMapping {
 		}
 	}
 	
-	@NotNull
+	@Nonnull
     public String getServletName() {
 		return servletName;
 	}
 	
-	@NotNull
+	@Nonnull
     public String getClassWithPackage() {
 		return classWithPackage;
 	}
@@ -71,7 +71,7 @@ public class ClassMapping {
         return contextClass;
     }
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return getServletName() + " -> " + getClassWithPackage();

@@ -25,8 +25,8 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import java.util.TreeSet;
 // from Spring documentation: Ant-style path patterns are supported (e.g. "/myPath/*.do").
 class SpringControllerEndpointParser implements EventBasedTokenizer {
 
-    @NotNull
+    @Nonnull
     Set<SpringControllerEndpoint> endpoints = new TreeSet<>();
     private int startLineNumber = 0, curlyBraceCount = 0, openParenCount = 0;
     private boolean inClass = false, afterOpenParen = false, isPathParameter;
@@ -49,11 +49,11 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     private String classEndpoint = null, currentMapping = null, lastValue = null,
             secondToLastValue = null, lastParam, lastParamType;
 
-    @NotNull
+    @Nonnull
     private final String rootFilePath;
     @Nullable
     private BeanField currentModelObject = null;
-    @NotNull
+    @Nonnull
     private List<String>
             classMethods  = new ArrayList<>(),
             methodMethods = new ArrayList<>(),
@@ -70,9 +70,9 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             BINDING_RESULT = "BindingResult",
             CONTROLLER = "Controller";
 
-    @NotNull
+    @Nonnull
     private Phase phase = Phase.ANNOTATION;
-    @NotNull
+    @Nonnull
     private AnnotationState annotationState = AnnotationState.START;
     private SignatureState signatureState = SignatureState.START;
 
@@ -91,18 +91,18 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
         START, ARROBA, REQUEST_PARAM, GET_ANNOTATION_VALUE, ANNOTATION_PARAMS, VALUE, GET_VARIABLE_NAME
     }
 
-    @NotNull
-    public static Set<SpringControllerEndpoint> parse(@NotNull File file, @Nullable SpringEntityMappings entityMappings) {
+    @Nonnull
+    public static Set<SpringControllerEndpoint> parse(@Nonnull File file, @Nullable SpringEntityMappings entityMappings) {
         SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath(), entityMappings);
         EventBasedTokenizerRunner.run(file, parser);
         return parser.endpoints;
     }
 
-    SpringControllerEndpointParser(@NotNull String rootFilePath) {
+    SpringControllerEndpointParser(@Nonnull String rootFilePath) {
         this.rootFilePath = rootFilePath;
     }
 
-    private SpringControllerEndpointParser(@NotNull String rootFilePath,
+    private SpringControllerEndpointParser(@Nonnull String rootFilePath,
                                            @Nullable SpringEntityMappings entityMappings) {
         this.rootFilePath = rootFilePath;
         this.entityMappings = entityMappings;

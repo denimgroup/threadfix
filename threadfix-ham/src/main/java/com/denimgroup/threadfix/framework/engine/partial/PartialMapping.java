@@ -24,8 +24,8 @@
 package com.denimgroup.threadfix.framework.engine.partial;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface PartialMapping {
 
@@ -35,7 +35,7 @@ public interface PartialMapping {
     @Nullable
 	String getDynamicPath();
 
-    @NotNull
+    @Nonnull
     FrameworkType guessFrameworkType();
 	
 }

@@ -31,8 +31,8 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -46,7 +46,7 @@ import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactor
 
 public class SpringParameterParsingTests {
 	
-	@NotNull
+	@Nonnull
     static ProjectConfig
 		defaultConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.FULL,
 			new File(TestConstants.PETCLINIC_SOURCE_LOCATION), null),
@@ -54,12 +54,12 @@ public class SpringParameterParsingTests {
 				null, null);
 	
 	// These are immutable so it's ok to use the same one for all the tests
-	@NotNull
+	@Nonnull
     static SpringDataFlowParser parser = new SpringDataFlowParser(defaultConfig);
 	@Nullable
     static ParameterParser factoryParser = ParameterParserFactory.getParameterParser(defaultConfig);
 	
-	@NotNull
+	@Nonnull
     static ParameterParser[] allParsers = {
 		factoryParser,
 		parser,

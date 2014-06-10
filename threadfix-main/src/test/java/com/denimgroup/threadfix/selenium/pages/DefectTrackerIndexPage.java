@@ -23,18 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import javax.annotation.Nonnull;
 
 public class DefectTrackerIndexPage extends BasePage {
 
 	public static String DT_URL = "http://10.2.10.145/bugzilla";
 	public static String JIRA_URL = "https://threadfix.atlassian.net/";
 
-	public DefectTrackerIndexPage(@NotNull WebDriver webdriver) {
+	public DefectTrackerIndexPage(@Nonnull WebDriver webdriver) {
 		super(webdriver);
 	}
 

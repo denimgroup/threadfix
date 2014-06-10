@@ -47,8 +47,8 @@
 package com.denimgroup.threadfix.plugins.intellij.dialog;
 
 import com.intellij.ui.CheckedTreeNode;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,7 +59,7 @@ import org.jetbrains.annotations.Nullable;
  */
 class ThreadFixAppNode extends CheckedTreeNode {
 
-    @NotNull
+    @Nonnull
     public String getName() {
         return name;
     }
@@ -71,7 +71,7 @@ class ThreadFixAppNode extends CheckedTreeNode {
 
     private final String name, id;
 
-    public ThreadFixAppNode(@NotNull String name, @Nullable String id) {
+    public ThreadFixAppNode(@Nonnull String name, @Nullable String id) {
         this.name = name;
         this.id = id;
     }

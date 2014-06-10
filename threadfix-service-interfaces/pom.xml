@@ -14,12 +14,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.annotations</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${jetbrains-annotations.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>${apache.activemq.version}</version>

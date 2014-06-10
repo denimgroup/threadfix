@@ -26,12 +26,12 @@ package com.denimgroup.threadfix.framework.engine.framework;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public abstract class FrameworkChecker {
 
-    @NotNull
-    public abstract FrameworkType check(@NotNull ProjectDirectory directory);
+    @Nonnull
+    public abstract FrameworkType check(@Nonnull ProjectDirectory directory);
 
     @Override
     public int hashCode() {

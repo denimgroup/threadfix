@@ -29,12 +29,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.validation.constraints.NotNull;
-import java.io.*;
+import javax.annotation.Nonnull;
+import java.io.IOException;
 
 public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport implements RemoteProviderHttpUtils {
 
@@ -56,7 +55,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
     }
 
     @Override
-    @NotNull
+    @Nonnull
     public HttpResponse getUrl(String url, String username, String password) {
         assert url != null;
 

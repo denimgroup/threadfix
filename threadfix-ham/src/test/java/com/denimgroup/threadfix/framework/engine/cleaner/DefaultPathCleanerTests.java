@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestUtils;
@@ -49,7 +49,7 @@ public class DefaultPathCleanerTests {
 				staticRoot.equals(cleaner.getStaticRoot()));
 	}
 	
-	@NotNull
+	@Nonnull
     String[][] base = {
 		{ "/root/about.jsp", "/bodgeit/about.jsp" },
 		{ "/root/admin.jsp", "/bodgeit/admin.jsp" },

@@ -27,14 +27,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 
 public class JSPMappingsTests {
-	@NotNull
+	@Nonnull
     String[] pages = { "/root/about.jsp",
 			"/root/admin.jsp",
 			"/root/advanced.jsp",
@@ -72,7 +72,7 @@ public class JSPMappingsTests {
 		}
 	}
 
-	@NotNull
+	@Nonnull
     String[][] tests = { { "/root/advanced.jsp", "debug", "54" },
 			{ "/root/advanced.jsp", "q", "58" },
 			{ "/root/basket.jsp", "debug", "89" },

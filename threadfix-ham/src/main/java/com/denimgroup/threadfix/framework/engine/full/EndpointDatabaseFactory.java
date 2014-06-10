@@ -24,28 +24,28 @@
 
 package com.denimgroup.threadfix.framework.engine.full;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EndpointDatabaseFactory {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("EndpointDatabaseFactory");
 
     @Nullable
-    public static EndpointDatabase getDatabase(@NotNull ProjectConfig projectConfig) {
+    public static EndpointDatabase getDatabase(@Nonnull ProjectConfig projectConfig) {
 
         EndpointDatabase database = null;
 
@@ -63,32 +63,32 @@ public class EndpointDatabaseFactory {
     }
 
 	@Nullable
-    public static EndpointDatabase getDatabase(@NotNull File rootFile) {
+    public static EndpointDatabase getDatabase(@Nonnull File rootFile) {
 		FrameworkType type = FrameworkCalculator.getType(rootFile);
 		return getDatabase(rootFile, type);
 	}
 	
 	@Nullable
-    public static EndpointDatabase getDatabase(@NotNull File rootFile, List<PartialMapping> partialMappings) {
+    public static EndpointDatabase getDatabase(@Nonnull File rootFile, List<PartialMapping> partialMappings) {
 		FrameworkType type = FrameworkCalculator.getType(rootFile);
 		
 		return getDatabase(rootFile, type, partialMappings);
 	}
 
 	@Nullable
-    public static EndpointDatabase getDatabase(@NotNull File rootFile, @NotNull FrameworkType frameworkType) {
+    public static EndpointDatabase getDatabase(@Nonnull File rootFile, @Nonnull FrameworkType frameworkType) {
 		return getDatabase(rootFile, frameworkType, new ArrayList<PartialMapping>());
 	}
 	
 	@Nullable
-    public static EndpointDatabase getDatabase(@NotNull File rootFile, @NotNull FrameworkType frameworkType, List<PartialMapping> partialMappings) {
+    public static EndpointDatabase getDatabase(@Nonnull File rootFile, @Nonnull FrameworkType frameworkType, List<PartialMapping> partialMappings) {
 		PathCleaner cleaner = PathCleanerFactory.getPathCleaner(frameworkType, partialMappings);
 		
 		return getDatabase(rootFile, frameworkType, cleaner);
 	}
 	
 	@Nullable
-    public static EndpointDatabase getDatabase(@NotNull File rootFile, @NotNull FrameworkType frameworkType, PathCleaner cleaner) {
+    public static EndpointDatabase getDatabase(@Nonnull File rootFile, @Nonnull FrameworkType frameworkType, PathCleaner cleaner) {
 		EndpointGenerator generator = null;
 		
 		switch (frameworkType) {

@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import java.io.File;
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SpringControllerEndpointParserTests {
 
-    @NotNull
+    @Nonnull
     String[][] expected = {
             {"/owners/new", "GET",  "45", "49" },
             {"/owners/new", "POST", "52", "60" },

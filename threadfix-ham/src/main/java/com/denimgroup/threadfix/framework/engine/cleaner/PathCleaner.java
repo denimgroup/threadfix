@@ -23,16 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.cleaner;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public interface PathCleaner {
 
     @Nullable
-	String cleanStaticPath(@NotNull String filePath);
+	String cleanStaticPath(@Nonnull String filePath);
 
     @Nullable
-	String cleanDynamicPath(@NotNull String urlPath);
+	String cleanDynamicPath(@Nonnull String urlPath);
 
     /**
      * Optional method. Classes wishing to skip this method should return filePath.
@@ -40,7 +40,7 @@ public interface PathCleaner {
      * @return dynamic URL
      */
     @Nullable
-    String getDynamicPathFromStaticPath(@NotNull String filePath);
+    String getDynamicPathFromStaticPath(@Nonnull String filePath);
 
     @Nullable
 	String getDynamicRoot();

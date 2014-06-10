@@ -32,7 +32,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -46,20 +46,20 @@ import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactor
 
 public class JSPParameterParserTests {
 	
-	@NotNull
+	@Nonnull
     ProjectConfig
 		fullSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.FULL,
 				new File(TestConstants.BODGEIT_SOURCE_LOCATION), "/"),
 		noSourceConfig = new ProjectConfig(FrameworkType.JSP, SourceCodeAccessLevel.NONE, null, null);
 
-	@NotNull
+	@Nonnull
     ParameterParser
 		factoryParser = ParameterParserFactory.getParameterParser(fullSourceConfig),
 		fullSourceParser = new JSPDataFlowParser(fullSourceConfig),
 		noSourceParser = new JSPDataFlowParser(noSourceConfig);
 	
 	// These are from the PetClinic Fortify results
-	@NotNull
+	@Nonnull
     private static List<? extends CodePoint> basicModelElements = Arrays.asList(
 		new DefaultCodePoint("root/register.jsp",32,
 				"String username = (String) request.getParameter(\"username\");"),

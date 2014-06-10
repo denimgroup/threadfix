@@ -46,12 +46,6 @@
             <version>${commons.io.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains.annotations</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${jetbrains-annotations.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>${codehaus.jackson.version}</version>

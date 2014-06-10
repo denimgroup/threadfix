@@ -29,8 +29,8 @@ import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;
@@ -41,13 +41,13 @@ public class JSPDataFlowParser implements ParameterParser {
 	@Nullable
     private final JSPMappings jspMappings;
 
-    @NotNull
+    @Nonnull
 	private final SourceCodeAccessLevel sourceCodeAccessLevel;
 	
 	private static final Pattern REQUEST_GET_PARAM_STRING_ASSIGN =
 			Pattern.compile("^String [^=]+= .*request\\.getParameter\\(\"([^\"]+)\"\\)");
 	
-	public JSPDataFlowParser(@NotNull ProjectConfig projectConfig) {
+	public JSPDataFlowParser(@Nonnull ProjectConfig projectConfig) {
 		this.sourceCodeAccessLevel = projectConfig.getSourceCodeAccessLevel();
 
         File rootFile = projectConfig.getRootFile();
@@ -59,7 +59,7 @@ public class JSPDataFlowParser implements ParameterParser {
 	}
 
 	@Override
-	public String parse(@NotNull EndpointQuery query) {
+	public String parse(@Nonnull EndpointQuery query) {
 		String parameter = null;
 		
 		if (query.getCodePoints() != null) {
@@ -78,7 +78,7 @@ public class JSPDataFlowParser implements ParameterParser {
 	}
 	
 	@Nullable
-    private String parseNoSource(@NotNull EndpointQuery query) {
+    private String parseNoSource(@Nonnull EndpointQuery query) {
 		String parameter = null;
 
         List<CodePoint> codePoints = query.getCodePoints();
@@ -99,7 +99,7 @@ public class JSPDataFlowParser implements ParameterParser {
 	}
 	
 	@Nullable
-    private String parseWithSource(@NotNull EndpointQuery query) {
+    private String parseWithSource(@Nonnull EndpointQuery query) {
 		String test = null;
 		
 		if (jspMappings == null) {

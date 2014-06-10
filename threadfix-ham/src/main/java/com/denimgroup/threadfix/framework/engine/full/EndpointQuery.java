@@ -27,7 +27,7 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public interface EndpointQuery {
 

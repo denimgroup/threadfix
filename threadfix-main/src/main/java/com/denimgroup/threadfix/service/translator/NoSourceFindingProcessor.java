@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class NoSourceFindingProcessor implements FindingProcessor {
 
@@ -51,7 +51,7 @@ class NoSourceFindingProcessor implements FindingProcessor {
 	}
 
 	@Override
-	public void process(@NotNull Finding finding) {
+	public void process(@Nonnull Finding finding) {
 
         if (finding.getIsStatic()) {
             if (finding.getSourceFileLocation() != null) {
