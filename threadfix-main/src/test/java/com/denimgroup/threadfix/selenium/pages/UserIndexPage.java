@@ -117,7 +117,8 @@ public class UserIndexPage extends BasePage {
         driver.findElementById("confirm").sendKeys(password);
         return new UserIndexPage(driver);
     }
-	
+
+    @Deprecated
 	public UserIndexPage clickLDAP(String oldName){
 		if(oldName == null){
 			driver.findElementById("newUserModal").findElement(By.id("isLdapUserCheckbox")).click();
@@ -126,11 +127,21 @@ public class UserIndexPage extends BasePage {
 		}
 		return new UserIndexPage(driver);
 	}
-	
+
+    public UserIndexPage toggleLDAP() {
+        driver.findElementById("isLdapUserCheckbox").click();
+        return this;
+    }
+
+    @Deprecated
 	public boolean isLDAPSelected(String oldName){
 		//return driver.findElementById("isLdapUserCheckbox"+(oldName)).isSelected();
         return driver.findElementByClassName("ldapCheckbox").isSelected();
 	}
+
+    public boolean isLDAPSelected() {
+        return driver.findElementById("isLdapUserCheckbox").isSelected();
+    }
 
     @Deprecated
 	public UserIndexPage clickGlobalAccess(String oldName){
@@ -146,7 +157,8 @@ public class UserIndexPage extends BasePage {
         driver.findElementById("hasGlobalGroupAccessCheckbox").click();
         return this;
     }
-	
+
+    @Deprecated
 	public UserIndexPage chooseRoleForGlobalAccess(String role,String oldName){
 		if(oldName == null){
             driver.findElementById("hasGlobalGroupAccessCheckbox").click();
@@ -156,6 +168,11 @@ public class UserIndexPage extends BasePage {
 		}
 		return new UserIndexPage(driver);
 	}
+
+    public UserIndexPage chooseRoleForGlobalAccess(String role) {
+        new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
+        return this;
+    }
 	
 	public UserIndexPage clickAddNewUserBtn(){
         waitForElement(driver.findElementById("submit"));

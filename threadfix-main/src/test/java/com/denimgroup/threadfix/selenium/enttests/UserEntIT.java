@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
@@ -51,36 +52,43 @@ public class UserEntIT extends BaseIT {
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
 
-        assertFalse("Global Access was allowed when it should not have been.", userIndexPage.isGlobalAccessSelected());
+        assertFalse("Global Access was selected when it should not have been.", userIndexPage.isGlobalAccessSelected());
+
+        DashboardPage dashboardPage = userIndexPage.logout()
+                .login(userName, password);
+
+        assertTrue("Alert was not shown on dashboard page.", dashboardPage.isAlertDisplayed());
     }
 
-	//If this test fails it can cascade and cause several other tests to fail
-    // TODO this test will not run correctly because of bugs involved with user creation
-    @Ignore
-	@Test
-	public void testDeleteLastUserRemoveLastRole(){
-        String newRole = getRandomString(8);
+    @Test
+    public void createUserWithGlobalAccess() {
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
 
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
-				.clickManageUsersLink()
-				.clickDeleteButton("user");
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess("Administrator")
+                .clickAddNewUserBtn()
+                .clickEditLink(userName);
 
-		assertTrue("User was deleted", userIndexPage.isUserNamePresent("user"));
-		
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess(newRole, "user")
-                .clickUpdateUserBtnInvalid("user");
-		
-		assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
-		
-		userIndexPage.clickCancel("user");
-	}
+        assertTrue("Global Access was not selected as it should have been.", userIndexPage.isGlobalAccessSelected());
 
-    //No Ldap users currently
-    // TODO this test will not run correctly because of bugs involved with user creation
+        DashboardPage dashboardPage = userIndexPage.logout()
+                .login(userName, password);
+
+        assertFalse("Alert was shown on dashboard page", dashboardPage.isAlertDisplayed());
+    }
+
+    //TODO Fix this when LDAP user creation has changed.
     @Ignore
 	@Test
 	public void createLdapUser(){
-		String userName = "testLdapUser" + getRandomString(3);
+		String userName = getRandomString(8);
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
@@ -88,24 +96,24 @@ public class UserEntIT extends BaseIT {
                 .enterName(userName)
                 .enterPassword("TestPassword")
                 .enterConfirmPassword("TestPassword")
-				.clickLDAP(null)
+				.toggleLDAP()
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
 
-		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
+		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected());
 
 		//turn ldap off
-		userIndexPage = userIndexPage.clickLDAP(userName)
+		userIndexPage = userIndexPage.toggleLDAP()
                 .clickUpdateUserBtn(userName)
                 .clickEditLink(userName);
-		assertFalse("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
+		assertFalse("LDAP remained selected on creation", userIndexPage.isLDAPSelected());
 
 		//turn ldap on
-		userIndexPage = userIndexPage.clickLDAP(userName)
+		userIndexPage = userIndexPage.toggleLDAP()
                 .clickUpdateUserBtn(userName)
                 .clickEditLink(userName)
                 .clickCancel(userName);
-		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected(userName));
+		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected());
 	}
 
 	@Test
@@ -210,6 +218,29 @@ public class UserEntIT extends BaseIT {
                 .enterConfirmPassword("TestPassword")
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
+
 		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
 	}
+
+    //If this test fails it can cascade and cause several other tests to fail
+    // TODO this test will not run correctly because of bugs involved with user creation
+    @Ignore
+    @Test
+    public void testDeleteLastUserRemoveLastRole(){
+        String newRole = getRandomString(8);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickDeleteButton("user");
+
+        assertTrue("User was deleted", userIndexPage.isUserNamePresent("user"));
+
+        userIndexPage = userIndexPage.chooseRoleForGlobalAccess(newRole, "user")
+                .clickUpdateUserBtnInvalid("user");
+
+        assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
+
+        userIndexPage.clickCancel("user");
+    }
+
 }
