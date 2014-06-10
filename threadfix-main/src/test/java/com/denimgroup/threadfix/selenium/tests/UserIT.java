@@ -129,29 +129,31 @@ public class UserIT extends BaseIT {
 
 	@Test
 	public void testEditUser() {
-		String userName = "testEditUser" + getRandomString(3);
-        String password = "testEditUser";
-		String editedUserName = "testEditUser" + getRandomString(3);
-        String editedPassword = "testCreateUser3";
+		String userName = getRandomString(8);
+        String password = getRandomString(15);
+		String editedUserName = getRandomString(8);
+        String editedPassword = getRandomString(15);
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
-											.clickManageUsersLink();
+                .clickManageUsersLink();
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
-		userIndexPage = userIndexPage.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword(password,null)
-				.enterConfirmPassword(password,null)
+
+        userIndexPage = userIndexPage.clickAddUserLink()
+				.enterName(userName)
+				.enterPassword(password)
+				.enterConfirmPassword(password)
 				.clickAddNewUserBtn()
 				.logout()
 				.login(userName, password)
 				.clickManageUsersLink()
 				.clickEditLink(userName);
 		
-		userIndexPage.enterName(editedUserName,userName);
-		userIndexPage.enterPassword(editedPassword,userName);
-		userIndexPage.enterConfirmPassword(editedPassword,userName);
+		userIndexPage.enterName(editedUserName);
+		userIndexPage.enterPassword(editedPassword);
+		userIndexPage.enterConfirmPassword(editedPassword);
 		userIndexPage.clickUpdateUserBtn(userName);
+
         sleep(500);
 		assertTrue("Username changed when edited.", userIndexPage.isUserNamePresent(editedUserName));
 
@@ -159,7 +161,8 @@ public class UserIT extends BaseIT {
 		// This ensures that the password was correctly updated.
 		// if this messes up, the test won't complete.
 		DashboardPage dashboardPage = userIndexPage.logout()
-                                                .login(editedUserName, editedPassword);
+                .login(editedUserName, editedPassword);
+
         assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
 	}
 
