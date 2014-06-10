@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ResourceManager {
 
-	@NotNull
+	@Nonnull
     public static File getFile(String name) {
 		File file = new File(TestConstants.THREADFIX_SOURCE_ROOT + "threadfix-ham/target/test-classes/" + name);
         assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
@@ -39,7 +39,7 @@ public class ResourceManager {
         return file;
     }
 
-	@NotNull
+	@Nonnull
     public static File getSpringFile(String name) {
 		return getFile("code/spring/" + name);
 	}

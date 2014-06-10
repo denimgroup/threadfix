@@ -27,9 +27,9 @@ package com.denimgroup.threadfix.framework.impl.jsp;
 import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class JSPPathCleaner extends DefaultPathCleaner {
@@ -45,7 +45,7 @@ public class JSPPathCleaner extends DefaultPathCleaner {
 
     @Nullable
     @Override
-    public String getDynamicPathFromStaticPath(@NotNull String filePath) {
+    public String getDynamicPathFromStaticPath(@Nonnull String filePath) {
         String cleanedPath = filePath;
 
         if (staticRoot != null) {
@@ -74,7 +74,7 @@ public class JSPPathCleaner extends DefaultPathCleaner {
     }
 
     @Override
-    public String cleanDynamicPath(@NotNull String urlPath) {
+    public String cleanDynamicPath(@Nonnull String urlPath) {
         String cleanedPath = urlPath;
 
         if (cleanedPath.contains("\\")) {
@@ -92,7 +92,7 @@ public class JSPPathCleaner extends DefaultPathCleaner {
         return cleanedPath;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public String toString() {
         return "[JSP PathCleaner dynamicRoot = " +

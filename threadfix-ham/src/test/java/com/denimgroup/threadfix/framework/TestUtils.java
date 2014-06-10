@@ -27,14 +27,14 @@ import java.util.*;
 
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import static junit.framework.Assert.assertTrue;
 
 public class TestUtils {
 
-	@NotNull
-    public static List<PartialMapping> getMappings(@NotNull String[][] strings) {
+	@Nonnull
+    public static List<PartialMapping> getMappings(@Nonnull String[][] strings) {
 		List<PartialMapping> mappings = new ArrayList<>();
 		
 		for (String[] stringArray : strings) {

@@ -25,7 +25,7 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

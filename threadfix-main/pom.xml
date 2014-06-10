@@ -115,11 +115,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.annotations</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${jetbrains-annotations.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>
             <version>${esapi.version}</version>

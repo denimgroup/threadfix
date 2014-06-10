@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import com.denimgroup.threadfix.framework.engine.framework.ClassMapping;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,20 +47,20 @@ public class SpringServletConfigurationChecker {
         CLASSPATH = "classpath:";
 
     ProjectDirectory projectDirectory;
-    @NotNull ClassMapping mapping;
-    @NotNull Map<String, String> contextParams;
+    @Nonnull ClassMapping mapping;
+    @Nonnull Map<String, String> contextParams;
 
     private SpringServletConfigurationChecker(ProjectDirectory projectDirectory,
-                                              @NotNull ClassMapping mapping,
-                                              @NotNull Map<String, String> contextParams) {
+                                              @Nonnull ClassMapping mapping,
+                                              @Nonnull Map<String, String> contextParams) {
         this.projectDirectory = projectDirectory;
         this.mapping = mapping;
         this.contextParams = contextParams;
     }
 
     public static boolean checkServletConfig(ProjectDirectory projectDirectory,
-                                             @NotNull ClassMapping mapping,
-                                             @NotNull Map<String, String> contextParams) {
+                                             @Nonnull ClassMapping mapping,
+                                             @Nonnull Map<String, String> contextParams) {
         boolean result = false;
 
         if (mapping.getClassWithPackage().equals(DISPATCHER_SERVLET)) {

@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +51,7 @@ public class ScanParser {
      * @return the String output
      */
     @Transactional(readOnly = false) // used to be true
-    public String readFile(@NotNull String filePath) {
+    public String readFile(@Nonnull String filePath) {
         if (bridge == null) {
             throw new IllegalStateException("Spring configuration is broken, please fix autowiring.");
         }
@@ -68,12 +68,12 @@ public class ScanParser {
 
 
     @Transactional(readOnly = false) // used to be true
-    public Scan getScan(@NotNull String filePath) throws TypeParsingException, ScanTestingException {
+    public Scan getScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {
         return getScan(new File(filePath));
     }
 
     @Transactional(readOnly = false) // used to be true
-    public Scan getScan(@NotNull File file) throws TypeParsingException, ScanTestingException, ScanFileNotFoundException {
+    public Scan getScan(@Nonnull File file) throws TypeParsingException, ScanTestingException, ScanFileNotFoundException {
 
         if (!file.exists()) {
             throw new ScanFileNotFoundException("Scan file not found: " + file.getAbsolutePath());

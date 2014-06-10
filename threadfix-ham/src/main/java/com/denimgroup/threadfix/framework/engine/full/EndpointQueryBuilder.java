@@ -28,8 +28,8 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EndpointQueryBuilder {
 	
@@ -44,24 +44,24 @@ public class EndpointQueryBuilder {
 	
 	private EndpointQueryBuilder() {}
 	
-	@NotNull
+	@Nonnull
     public static EndpointQueryBuilder start() {
 		return new EndpointQueryBuilder();
 	}
 	
-	@NotNull
+	@Nonnull
     public EndpointQueryBuilder setDynamicPath(@Nullable String dynamicPath) {
 		this.dynamicPath = dynamicPath;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
     public EndpointQueryBuilder setStaticPath(@Nullable String staticPath) {
 		this.staticPath = staticPath;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
     public EndpointQueryBuilder setParameter(@Nullable String parameter) {
 		this.parameter = parameter;
 		
@@ -72,26 +72,26 @@ public class EndpointQueryBuilder {
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
     public EndpointQueryBuilder setHttpMethod(@Nullable String httpMethod) {
 		this.httpMethod = httpMethod;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
     public EndpointQueryBuilder setCodePoints(@Nullable List<? extends CodePoint> basicModelElements) {
 		this.codePoints = basicModelElements;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
     public EndpointQueryBuilder setInformationSourceType(
-            @NotNull InformationSourceType informationSourceType) {
+            @Nonnull InformationSourceType informationSourceType) {
 		this.informationSourceType = informationSourceType;
 		return this;
 	}
 
-	@NotNull
+	@Nonnull
     public EndpointQuery generateQuery() {
 		return new DefaultEndpointQuery(dynamicPath, staticPath, parameter,
 				httpMethod, codePoints, informationSourceType);
@@ -157,7 +157,7 @@ public class EndpointQueryBuilder {
 			return informationSourceType;
 		}
 		
-		@NotNull
+		@Nonnull
         @Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();

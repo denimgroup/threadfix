@@ -41,9 +41,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jetbrains.annotations</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${jetbrains-annotations.version}</version>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${findbugs.jsr305.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

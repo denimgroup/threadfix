@@ -25,8 +25,8 @@
 package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public interface RemoteProviderApplicationDao {
@@ -42,7 +42,7 @@ public interface RemoteProviderApplicationDao {
 	 * @param id
 	 * @return
 	 */
-    @NotNull
+    @Nonnull
 	List<RemoteProviderApplication> retrieveAllWithTypeId(int id);
 
 	/**

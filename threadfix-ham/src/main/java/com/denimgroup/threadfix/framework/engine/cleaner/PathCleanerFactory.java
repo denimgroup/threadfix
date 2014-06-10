@@ -24,13 +24,13 @@
 
 package com.denimgroup.threadfix.framework.engine.cleaner;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPPathCleaner;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public class PathCleanerFactory {
 	
@@ -38,7 +38,7 @@ public class PathCleanerFactory {
 	
 	// TODO add an option for manual roots
 	
-	@NotNull
+	@Nonnull
     public static PathCleaner getPathCleaner(FrameworkType frameworkType, List<PartialMapping> partialMappings) {
 		PathCleaner returnCleaner;
 		

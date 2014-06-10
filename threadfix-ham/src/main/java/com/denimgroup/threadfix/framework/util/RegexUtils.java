@@ -24,8 +24,7 @@
 
 package com.denimgroup.threadfix.framework.util;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

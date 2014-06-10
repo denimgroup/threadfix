@@ -29,7 +29,7 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -289,7 +289,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 	private class QualysAppsParser extends HandlerWithBuilder {
 
-        @NotNull
+        @Nonnull
 		public List<RemoteProviderApplication> list = new ArrayList<>();
 		
 		private boolean getName = false;

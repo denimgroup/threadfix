@@ -35,8 +35,8 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class FullSourceFindingProcessor implements FindingProcessor {
 
@@ -48,7 +48,7 @@ class FullSourceFindingProcessor implements FindingProcessor {
     @Nullable
 	private final ParameterParser parameterParser;
 
-    @NotNull
+    @Nonnull
 	private final FindingProcessor noSourceProcessor;
 	
 	public FullSourceFindingProcessor(ProjectConfig config, Scan scan) {
@@ -68,7 +68,7 @@ class FullSourceFindingProcessor implements FindingProcessor {
 	}
 
 	@Override
-	public void process(@NotNull Finding finding) {
+	public void process(@Nonnull Finding finding) {
 		String parameter = null;
 
         Endpoint endpoint = null;

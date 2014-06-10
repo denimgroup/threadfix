@@ -24,8 +24,8 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,9 +36,9 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public static final String GENERIC_INT_SEGMENT = "{id}";
 	private static final String requestMappingStart = "RequestMethod.";
 	
-	@NotNull
+	@Nonnull
     private final String rawFilePath, rawUrlPath;
-	@NotNull
+	@Nonnull
     private final Set<String> methods, parameters, pathParameters;
 	private final int startLineNumber, endLineNumber;
 	
@@ -53,11 +53,11 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
     @Nullable
     private SpringDataBinderParser dataBinderParser = null;
 	
-	public SpringControllerEndpoint(@NotNull String filePath,
-                                    @NotNull String urlPath,
-            @NotNull Collection<String> methods,
-            @NotNull Collection<String> parameters,
-            @NotNull Collection<String> pathParameters,
+	public SpringControllerEndpoint(@Nonnull String filePath,
+                                    @Nonnull String urlPath,
+            @Nonnull Collection<String> methods,
+            @Nonnull Collection<String> parameters,
+            @Nonnull Collection<String> pathParameters,
 			int startLineNumber,
             int endLineNumber,
             @Nullable BeanField modelObject) {
@@ -80,7 +80,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
      * @param entityMappings entity mappings from the application
      * @param globalDataBinderParser can be null, if a databinderparser is set with the setter it will be used too
      */
-    public void expandParameters(@NotNull SpringEntityMappings entityMappings,
+    public void expandParameters(@Nonnull SpringEntityMappings entityMappings,
                           @Nullable SpringDataBinderParser globalDataBinderParser) {
         if (modelObject != null) {
             BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);
@@ -117,8 +117,8 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
         parameters.addAll(pathParameters);
     }
 
-    @NotNull
-	private Set<String> getCleanedSet(@NotNull Collection<String> methods) {
+    @Nonnull
+	private Set<String> getCleanedSet(@Nonnull Collection<String> methods) {
 		Set<String> returnSet = new HashSet<>();
 		for (String method : methods) {
 			if (method.startsWith(requestMappingStart)) {
@@ -135,13 +135,13 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		return returnSet;
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public Set<String> getParameters() {
 		return parameters;
 	}
 
-    @NotNull
+    @Nonnull
     public String getCleanedFilePath() {
 		if (cleanedFilePath == null && fileRoot != null &&
 				rawFilePath.contains(fileRoot)) {
@@ -188,7 +188,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return "[" + getCleanedFilePath() +
@@ -200,13 +200,13 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 				"]";
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public Set<String> getHttpMethods() {
 		return methods;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public String getUrlPath() {
 		String path = getCleanedUrlPath();
@@ -217,7 +217,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
         }
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public String getFilePath() {
 		return getCleanedFilePath();

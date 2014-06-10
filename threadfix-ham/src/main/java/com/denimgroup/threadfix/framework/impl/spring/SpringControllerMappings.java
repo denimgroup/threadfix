@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
@@ -38,21 +38,21 @@ import com.denimgroup.threadfix.framework.util.FilePathUtils;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
-	@NotNull
+	@Nonnull
     private final Collection<File> javaFiles;
 	
-	@NotNull
+	@Nonnull
     private final Map<String, Set<SpringControllerEndpoint>>
             urlToControllerMethodsMap, controllerToUrlsMap;
 	
-	@NotNull
+	@Nonnull
     private final File rootDirectory;
 
-    @NotNull
+    @Nonnull
     private List<SpringControllerEndpoint> endpointsList = new ArrayList<>();
 	
 	@SuppressWarnings("unchecked")
-	public SpringControllerMappings(@NotNull File rootDirectory) {
+	public SpringControllerMappings(@Nonnull File rootDirectory) {
 		this.rootDirectory = rootDirectory;
 
         urlToControllerMethodsMap = new HashMap<>();
@@ -67,7 +67,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 		}
 	}
 
-    @NotNull
+    @Nonnull
 	public Set<SpringControllerEndpoint> getEndpointsFromController(String controllerPath) {
 		if (controllerToUrlsMap.containsKey(controllerPath)) {
 			return controllerToUrlsMap.get(controllerPath);
@@ -76,7 +76,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 		}
 	}
 
-    @NotNull
+    @Nonnull
 	public Set<SpringControllerEndpoint> getEndpointsFromUrl(String controllerPath) {
 		if (urlToControllerMethodsMap.containsKey(controllerPath)) {
 			return urlToControllerMethodsMap.get(controllerPath);
@@ -145,7 +145,7 @@ public class SpringControllerMappings implements EndpointGenerator {
         }
     }
 
-	@NotNull
+	@Nonnull
     @Override
 	public List<Endpoint> generateEndpoints() {
 		List<Endpoint> returnEndpoints = new ArrayList<>();
@@ -159,7 +159,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 		return returnEndpoints;
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

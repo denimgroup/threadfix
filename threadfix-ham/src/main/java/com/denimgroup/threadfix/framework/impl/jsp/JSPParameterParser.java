@@ -32,8 +32,8 @@ import java.util.Map;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 /**
@@ -45,18 +45,18 @@ import org.jetbrains.annotations.Nullable;
 public class JSPParameterParser implements EventBasedTokenizer {
 	
 //	private Map<Integer, String> lineNumberToParameterMap = new HashMap<>();
-	@NotNull
+	@Nonnull
     private Map<String, List<Integer>> parameterToLineNumbersMap = new HashMap<>();
-	@NotNull
+	@Nonnull
     private Map<String, String>
 		variableToParametersMap = new HashMap<>(),
 		stringsTable = new HashMap<>();
 	
 	private static final String REQUEST_GET_PARAMETER = "request.getParameter", STRING = "String";
 	
-	@NotNull
+	@Nonnull
     private State state = State.START;
-	@NotNull
+	@Nonnull
     private PageState pageState = PageState.START;
 	
 	@Nullable
@@ -72,14 +72,14 @@ public class JSPParameterParser implements EventBasedTokenizer {
 		START, OPEN_ANGLE_BRACKET, IN_JSP, PERCENTAGE
 	}
 	
-	@NotNull
+	@Nonnull
     public static Map<Integer, List<String>> parse(File file) {
 		JSPParameterParser parser = new JSPParameterParser();
 		EventBasedTokenizerRunner.run(file, false, parser);
 		return parser.buildParametersMap();
 	}
 	
-	@NotNull
+	@Nonnull
     Map<Integer, List<String>> buildParametersMap() {
 		Map<Integer, List<String>> lineNumToParamMap = new HashMap<>();
 		

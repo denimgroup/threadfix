@@ -28,8 +28,8 @@ import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ public class SpringDataFlowParser implements ParameterParser {
 	@Nullable
     private final SpringEntityMappings mappings;
 	
-	public SpringDataFlowParser(@NotNull ProjectConfig projectConfig) {
+	public SpringDataFlowParser(@Nonnull ProjectConfig projectConfig) {
 		SpringEntityMappings mappings = null;
 		if (projectConfig.getRootFile() != null) {
 			mappings = new SpringEntityMappings(projectConfig.getRootFile());
@@ -69,7 +69,7 @@ public class SpringDataFlowParser implements ParameterParser {
 	 * 
 	 */
 	@Override
-	public String parse(@NotNull EndpointQuery query) {
+	public String parse(@Nonnull EndpointQuery query) {
 		
 		String parameter = null;
 		
@@ -95,8 +95,8 @@ public class SpringDataFlowParser implements ParameterParser {
 		return parameter;
 	}
 	
-	@NotNull
-    private List<String> getLines(@NotNull List<CodePoint> codePoints) {
+	@Nonnull
+    private List<String> getLines(@Nonnull List<CodePoint> codePoints) {
 		List<String> returnList = new ArrayList<>(codePoints.size());
 		
 		for (CodePoint element : codePoints) {
@@ -164,7 +164,7 @@ public class SpringDataFlowParser implements ParameterParser {
 	}
 	
 	@Nullable
-    private String attemptModelParsingWithMappings(@NotNull List<String> lines) {
+    private String attemptModelParsingWithMappings(@Nonnull List<String> lines) {
 		String result = null;
 		
 		if (!lines.isEmpty()) {
@@ -201,8 +201,8 @@ public class SpringDataFlowParser implements ParameterParser {
 		return result;
 	}
 	
-	@NotNull
-    private String buildStringFromFieldChain(@NotNull List<BeanField> fieldChain) {
+	@Nonnull
+    private String buildStringFromFieldChain(@Nonnull List<BeanField> fieldChain) {
 		StringBuilder parameterChainBuilder = new StringBuilder();
 		
 		if (fieldChain.size() > 1) {
@@ -226,8 +226,8 @@ public class SpringDataFlowParser implements ParameterParser {
 		return RegexUtils.getRegexResult(elementText, ENTITY_TYPE_PATTERN);
 	}
 
-    @NotNull
-	private List<BeanField> getParameterWithEntityData(String line, @NotNull BeanField beanField) {
+    @Nonnull
+	private List<BeanField> getParameterWithEntityData(String line, @Nonnull BeanField beanField) {
 		List<String> methodCalls = RegexUtils.getRegexResults(line,
 				Pattern.compile(beanField.getParameterKey() + "(\\.get[^\\(]+\\(\\))+"));
 		
@@ -241,7 +241,7 @@ public class SpringDataFlowParser implements ParameterParser {
 	}
 
 	@Nullable
-    private String getParameter(String line, @NotNull String modelObject) {
+    private String getParameter(String line, @Nonnull String modelObject) {
 		String methodCall = RegexUtils.getRegexResult(line, "(" + modelObject + "\\.[a-zA-Z0-9]+)");
 		
 		String parameterName = null;
@@ -254,8 +254,8 @@ public class SpringDataFlowParser implements ParameterParser {
 	}
 
 	@Nullable
-    private String getParameterFromBeanAccessor(@NotNull String modelObject,
-			@NotNull String methodCall) {
+    private String getParameterFromBeanAccessor(@Nonnull String modelObject,
+			@Nonnull String methodCall) {
 		
 		String propertyName = null;
 		

@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.framework.filefilter;
 import java.io.File;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 public class FileExtensionFileFilter implements IOFileFilter {
 	private final String fileExtension;
@@ -36,12 +36,12 @@ public class FileExtensionFileFilter implements IOFileFilter {
 	}
 	
 	@Override
-	public boolean accept(@NotNull File file) {
+	public boolean accept(@Nonnull File file) {
 		return file.getName().endsWith(fileExtension);
 	}
 
 	@Override
-	public boolean accept(File dir, @NotNull String name) {
+	public boolean accept(File dir, @Nonnull String name) {
 		return name.endsWith(fileExtension);
 	}
 }

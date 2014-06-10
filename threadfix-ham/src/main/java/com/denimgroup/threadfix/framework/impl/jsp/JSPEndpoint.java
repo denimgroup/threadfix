@@ -31,27 +31,27 @@ import java.util.Set;
 
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class JSPEndpoint extends AbstractEndpoint {
 
-    @NotNull
+    @Nonnull
 	private final String dynamicPath, staticPath;
 
-    @NotNull
+    @Nonnull
 	private final Set<String> parameters = new HashSet<>(), methods;
 
-	@NotNull
+	@Nonnull
     private final Map<String, Integer> paramToLineMap;
 
-	@NotNull
+	@Nonnull
     private final Map<Integer, List<String>> parameterMap;
 	
-	public JSPEndpoint(@NotNull String staticPath,
-                       @NotNull String dynamicPath,
-                       @NotNull Set<String> methods,
-			           @NotNull Map<Integer, List<String>> parameterMap) {
+	public JSPEndpoint(@Nonnull String staticPath,
+                       @Nonnull String dynamicPath,
+                       @Nonnull Set<String> methods,
+			           @Nonnull Map<Integer, List<String>> parameterMap) {
 		this.methods = methods;
 		this.staticPath = staticPath;
 		this.dynamicPath = dynamicPath;
@@ -64,7 +64,7 @@ class JSPEndpoint extends AbstractEndpoint {
 		this.paramToLineMap = getParamToLineMap(parameterMap);
 	}
 
-	@NotNull
+	@Nonnull
     private Map<String, Integer> getParamToLineMap(
 			Map<Integer, List<String>> parameterMap) {
 		Map<String, Integer> paramMap = new HashMap<>();
@@ -76,8 +76,8 @@ class JSPEndpoint extends AbstractEndpoint {
 		return paramMap;
 	}
 	
-	private Integer getFirstLineNumber(@NotNull String parameterName,
-			@NotNull Map<Integer, List<String>> parameterMap) {
+	private Integer getFirstLineNumber(@Nonnull String parameterName,
+			@Nonnull Map<Integer, List<String>> parameterMap) {
 		Integer returnValue = Integer.MAX_VALUE;
 		
         for (Map.Entry<Integer, List<String>> entry : parameterMap.entrySet()) {
@@ -97,7 +97,7 @@ class JSPEndpoint extends AbstractEndpoint {
 	
 	// TODO improve
     @Nullable
-    String getParameterName(@NotNull Iterable<CodePoint> codePoints) {
+    String getParameterName(@Nonnull Iterable<CodePoint> codePoints) {
 		String parameter = null;
 		
 		for (CodePoint codePoint : codePoints) {
@@ -112,19 +112,19 @@ class JSPEndpoint extends AbstractEndpoint {
 		return parameter;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public Set<String> getParameters() {
 		return parameters;
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String getUrlPath() {
 		return dynamicPath;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public Set<String> getHttpMethods() {
 		return methods;
@@ -135,7 +135,7 @@ class JSPEndpoint extends AbstractEndpoint {
 		return true; // JSPs aren't controller-based, so the whole page is the endpoint
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public String getFilePath() {
 		return staticPath;

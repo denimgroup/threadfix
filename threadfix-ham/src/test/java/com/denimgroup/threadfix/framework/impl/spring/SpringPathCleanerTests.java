@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import static org.junit.Assert.assertTrue;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 
 public class SpringPathCleanerTests {
 	
-	@NotNull
+	@Nonnull
     String[][] petClinicAppScanData = {
 		{ "/petclinic", ""},
 		{ "/petclinic/owners", "/owners" },
@@ -66,7 +66,7 @@ public class SpringPathCleanerTests {
 		}
 	}
 
-	@NotNull
+	@Nonnull
     String[][] petClinicFortifyData = {
 		{ TestConstants.PETCLINIC_SOURCE_LOCATION + "/src/main/java/test/Controller.java", "/src/main/java/test/Controller.java"},
 		{ TestConstants.PETCLINIC_SOURCE_LOCATION + "/pom.xml", "/pom.xml"},

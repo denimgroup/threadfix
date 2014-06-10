@@ -30,7 +30,7 @@ import java.util.*;
 
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -85,7 +85,7 @@ public class JSPIncludeParserTests {
 		assertTrue("failure.", JSPIncludeParser.parse(new File(TestConstants.FAKE_FILE)).isEmpty());
 	}
 
-	private void compare(@NotNull Collection<File> results, @NotNull Collection<String> expected) {
+	private void compare(@Nonnull Collection<File> results, @Nonnull Collection<String> expected) {
 		Set<String> resultsCopy = new HashSet<>();
 		Set<String> expectedCopy = new HashSet<>(expected);
 
