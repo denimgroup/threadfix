@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -128,10 +129,9 @@ public class UserIT extends BaseIT {
     }
 
 	@Test
-	public void testEditUser() {
+	public void testEditUserPasswordChange() {
 		String userName = getRandomString(8);
         String password = getRandomString(15);
-		String editedUserName = getRandomString(8);
         String editedPassword = getRandomString(15);
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
@@ -139,32 +139,60 @@ public class UserIT extends BaseIT {
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 
-        userIndexPage = userIndexPage.clickAddUserLink()
+        UserChangePasswordPage userChangePasswordPage = userIndexPage.clickAddUserLink()
 				.enterName(userName)
 				.enterPassword(password)
 				.enterConfirmPassword(password)
 				.clickAddNewUserBtn()
 				.logout()
 				.login(userName, password)
-				.clickManageUsersLink()
-				.clickEditLink(userName);
-		
-		userIndexPage.enterName(editedUserName);
-		userIndexPage.enterPassword(editedPassword);
-		userIndexPage.enterConfirmPassword(editedPassword);
-		userIndexPage.clickUpdateUserBtn(userName);
+                .clickChangePasswordLink()
+                .setCurrentPassword(password)
+                .setNewPassword(editedPassword)
+                .setConfirmPassword(editedPassword)
+                .clickUpdate();
 
-        sleep(500);
-		assertTrue("Username changed when edited.", userIndexPage.isUserNamePresent(editedUserName));
 
-		// Test that we are able to log in the second time.
-		// This ensures that the password was correctly updated.
-		// if this messes up, the test won't complete.
-		DashboardPage dashboardPage = userIndexPage.logout()
-                .login(editedUserName, editedPassword);
+		DashboardPage dashboardPage = userChangePasswordPage.logout()
+                .login(userName, editedPassword);
 
         assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
 	}
+
+    @Test
+    public void testEditUserAdministrator() {
+        String userName = getRandomString(8);
+        String editedUserName = getRandomString(8);
+        String password = getRandomString(15);
+        String editedPassword = getRandomString(15);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        DashboardPage dashboardPage= userIndexPage.logout()
+                .login(userName, password);
+
+        assertTrue("New user was not able to login.", dashboardPage.isLoggedin());
+
+        userIndexPage = dashboardPage.logout()
+                .login("user", "password")
+                .clickManageUsersLink()
+                .clickEditLink(userName)
+                .enterName(editedUserName)
+                .enterPassword(editedPassword)
+                .enterConfirmPassword(editedPassword)
+                .clickModalSubmit();
+
+        dashboardPage = userIndexPage.logout()
+                .login(editedUserName, editedPassword);
+
+        assertTrue("Edited user was not able to login.", dashboardPage.isLoggedin());
+    }
 
 	@Test 
 	public void testEditUserFieldValidation() {
