@@ -494,7 +494,7 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void testEditDynamicManualFindings() {
+    public void testEditDynamicManualFinding() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String cwe = "Improper Validation of Certificate Expiration";
@@ -513,6 +513,93 @@ public class ApplicationIT extends BaseIT {
 
         applicationDetailPage.clickActionButton()
                 .clickManualFindingButton()
+                .setCWE(cwe)
+                .setParameter(originalParameter)
+                .setDescription(originalDescription)
+                .clickDynamicSubmit();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding()
+                .clickViewVulnerability()
+                .clickEditFinding()
+                .setDescription(editedDescription)
+                .setParameter(editedParameter)
+                .clickModalSubmit();
+
+        FindingDetailPage findingDetailPage = vulnerabilityDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        assertTrue("Finding description did not match the given input.",
+                editedDescription.equals(findingDetailPage.getDetail("longDescription")));
+        assertTrue("Finding parameter did not match the given input.",
+                editedParameter.equals(findingDetailPage.getDetail("parameter")));
+    }
+
+    @Test
+    public void testAddStaticManualFinding() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .clickStaticRadioButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(description)
+                .clickDynamicSubmit();
+
+        assertTrue("Manual finding was not added to vulnerabilities listing on application detail page.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "1"));
+
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        assertTrue("Finding description did not match the given input.",
+                description.equals(findingDetailPage.getDetail("longDescription")));
+        assertTrue("Finding parameter did not match the given input.",
+                parameter.equals(findingDetailPage.getDetail("parameter")));
+        assertTrue("Finding CWE did not match the given input",
+                cwe.equals(findingDetailPage.getDetail("genericVulnerabilityName")));
+    }
+
+    @Test
+    public void testEditStaticManualFinding() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String originalParameter = "testParameter";
+        String editedParameter = "testParameter-edited";
+        String originalDescription = "Test Description: This is a test, this is only a test.";
+        String editedDescription = "Edited Description: This should have been edited.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .clickStaticRadioButton()
                 .setCWE(cwe)
                 .setParameter(originalParameter)
                 .setDescription(originalDescription)
