@@ -23,51 +23,64 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
+
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by mac on 6/11/14.
  */
-public class DotNetControllerMappings {
+public class DotNetEndpoint extends AbstractEndpoint {
 
-    private String               controllerName = null;
-    private Map<String, Integer> actions        = new HashMap<>();
+    final String path;
+    final String filePath;
+    final int lineNumber;
 
+    public DotNetEndpoint(String path, String filePath, int lineNumber) {
+        this.path = path;
+        this.filePath = filePath;
+        this.lineNumber = lineNumber;
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getParameters() {
+        return new HashSet<>();
+    }
+
+    @Nonnull
+    @Override
+    public Set<String> getHttpMethods() {
+        return new HashSet<>(Arrays.asList("GET"));
+    }
+
+    @Nonnull
+    @Override
+    public String getUrlPath() {
+        return path;
+    }
+
+    @Nonnull
+    @Override
     public String getFilePath() {
         return filePath;
     }
 
-    private final String filePath;
-
-
-    public void setControllerName(String controllerName) {
-        assert this.controllerName == null;
-        this.controllerName = controllerName;
+    @Override
+    public int getStartingLineNumber() {
+        return lineNumber;
     }
 
-    public String getControllerName() {
-        return controllerName;
+    @Override
+    public int getLineNumberForParameter(String parameter) {
+        return -1;
     }
 
-    public void addAction(String action, Integer lineNumber) {
-        actions.put(action, lineNumber);
+    @Override
+    public boolean matchesLineNumber(int lineNumber) {
+        return lineNumber == this.lineNumber;
     }
-
-    @Nonnull
-    public List<String> getActions() {
-        return new ArrayList<>(actions.keySet());
-    }
-
-    public Integer getLineNumberForAction(String action) {
-        return actions.get(action);
-    }
-
-    public DotNetControllerMappings(String filePath) {
-        this.filePath = filePath;
-    }
-
 }

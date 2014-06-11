@@ -34,18 +34,22 @@ import java.io.File;
  */
 public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywords {
 
-    DotNetControllerMappings mappings = new DotNetControllerMappings();
+    final DotNetControllerMappings mappings;
 
     @Nonnull
     public static DotNetControllerMappings parse(@Nonnull File file) {
-        DotNetControllerParser parser = new DotNetControllerParser();
+        DotNetControllerParser parser = new DotNetControllerParser(file);
         EventBasedTokenizerRunner.run(file, parser);
         return parser.mappings;
     }
 
+    private DotNetControllerParser(File file) {
+        mappings = new DotNetControllerMappings(file.getAbsolutePath());
+    }
+
     @Override
     public boolean shouldContinue() {
-        return shouldContinue; // TODO determine end conditions
+        return shouldContinue;
     }
 
     enum State {
@@ -56,18 +60,10 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     int currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0, methodBraceLevel = 0, storedParen = 0;
     boolean shouldContinue = true;
     String lastString = null;
+    Integer lastLineNumber = null;
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
-
-        System.out.print(type + " ");
-        System.out.println(stringValue);
-        System.out.println("state: " + currentState);
-        System.out.println(currentCurlyBrace);
-        System.out.println(currentParen);
-        System.out.println(classBraceLevel);
-        System.out.println(methodBraceLevel);
-        System.out.println(storedParen);
 
         switch (type) {
             case '{': currentCurlyBrace += 1; break;
@@ -104,7 +100,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                     assert lastString != null;
 
                     storedParen = currentParen - 1;
-                    mappings.addAction(lastString);
+                    mappings.addAction(lastString, lineNumber);
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 
