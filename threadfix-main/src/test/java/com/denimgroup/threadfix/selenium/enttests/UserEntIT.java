@@ -165,9 +165,9 @@ public class UserEntIT extends BaseIT {
 		SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
                 .clickSystemSettingsLink()
                 .defaultPermissions()
-                .checkGlobalGroupCheckbox()
-                .setRoleSelect("User")
-                .clickUpdateDefaults();
+                .toggleDefaultRoleCheckbox()
+                .setRole("User")
+                .clickSaveChanges();
 
 		assertTrue("Default permissions changes were not saved", systemSettingsPage.isSaveSuccessful());
 		
@@ -185,9 +185,9 @@ public class UserEntIT extends BaseIT {
                 .clickDelete(userName)
                 .clickSystemSettingsLink()
                 .defaultPermissions()
-                .checkGlobalGroupCheckbox()
-                .setRoleSelect("Administrator")
-                .clickUpdateDefaults();
+                .toggleDefaultRoleCheckbox()
+                .setRole("Administrator")
+                .clickSaveChanges();
 
 		assertTrue("Default changes not Saved",systemSettingsPage.isSaveSuccessful());
 		
@@ -205,9 +205,9 @@ public class UserEntIT extends BaseIT {
                 .clickDelete(userName)
                 .clickSystemSettingsLink()
                 .defaultPermissions()
-                .checkGlobalGroupCheckbox()
-                .setRoleSelect("Read Access")
-                .clickUpdateDefaults();
+                .toggleDefaultRoleCheckbox()
+                .setRole("Read Access")
+                .clickSaveChanges();
 
 		assertTrue("Default Changes not Saved",systemSettingsPage.isSaveSuccessful());
 		

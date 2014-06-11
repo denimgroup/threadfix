@@ -164,7 +164,7 @@ public class RoleEntIT extends BaseIT {
                      .enterName(userName)
                      .enterPassword(password)
                      .enterConfirmPassword(password)
-                     .chooseRoleForGlobalAccess(roleName, null)
+                     .chooseRoleForGlobalAccess(roleName)
                      .clickAddNewUserBtn()
                      .logout();
 
@@ -192,7 +192,7 @@ public class RoleEntIT extends BaseIT {
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
             if (permission != "enterprise") {
-                assertFalse("Checkbox was set to true when it shouldn't have been.",
+                assertFalse("Permission was set to yes when it should have been set to no.",
                         rolesIndexPage.getPermissionValue(permission));
                 rolesIndexPage.setPermissionValue(permission, true);
             }
@@ -203,7 +203,8 @@ public class RoleEntIT extends BaseIT {
 
 		for (String permission : Role.ALL_PERMISSIONS) {
             if (permission != "enterprise") {
-                assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(permission));
+                assertTrue("Permission was set to no when it should have been set to yes."
+                        , rolesIndexPage.getPermissionValue(permission));
                 rolesIndexPage.setPermissionValue(permission, false);
             }
 		}
@@ -213,22 +214,17 @@ public class RoleEntIT extends BaseIT {
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
             if (permission != "enterprise") {
-                assertFalse("Role was not turned off correctly.", rolesIndexPage.getPermissionValue(permission));
+                assertFalse("Permission was set to yes when it should have been set to no.",
+                        rolesIndexPage.getPermissionValue(permission));
             }
 		}
 
 		rolesIndexPage = rolesIndexPage.clickSaveRole()
                 .clickDeleteButton(roleName)
                 .clickCreateRole()
-                .setRoleName(roleName);
-		
-		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
-                rolesIndexPage.setPermissionValue(permission, true);
-            }
-		}
-		
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .clickSaveRole()
                 .clickEditLink(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {

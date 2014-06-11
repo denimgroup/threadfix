@@ -41,7 +41,12 @@ public class LdapAuthenticator implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) {
-        return ldapService != null ? ldapService.authenticate(authentication) : null;
+        try {
+            return ldapService != null ? ldapService.authenticate(authentication) : null;
+        } catch (Exception e) {
+            log.error("Encountered an exception. Returning null.", e);
+            return null;
+        }
     }
 
     @Override

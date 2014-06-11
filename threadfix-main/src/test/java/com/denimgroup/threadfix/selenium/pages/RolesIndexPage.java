@@ -99,6 +99,15 @@ public class RolesIndexPage extends BasePage {
 
         return this;
     }
+
+    public RolesIndexPage toggleAllPermissions(boolean status) {
+        if (status) {
+            driver.findElementByLinkText("Select All").click();
+        } else {
+            driver.findElementByLinkText("Select None").click();
+        }
+        return this;
+    }
 	
 	public RolesIndexPage clickCloseModal(){
         waitForElement(driver.findElementByClassName("modal-footer").findElement(By.className("btn")));

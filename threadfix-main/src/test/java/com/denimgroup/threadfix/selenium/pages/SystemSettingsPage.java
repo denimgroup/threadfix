@@ -32,30 +32,75 @@ public class SystemSettingsPage extends BasePage {
 	public SystemSettingsPage(WebDriver webdriver) {
 		super(webdriver);
 	}
-	
-	public SystemSettingsPage setRoleSelect(String code){
-		new Select(driver.findElementById("roleSelect")).selectByVisibleText(code);
-		return this;
-	}
 
-	public SystemSettingsPage checkGlobalGroupCheckbox() {
-		driver.findElementById("globalGroupEnabledCheckbox").click();
-		return this;
-	}
-	
-	public SystemSettingsPage clickUpdateDefaults() {
-		driver.findElementById("updateDefaultsButton").click();
-		return new SystemSettingsPage(driver);
-	}
-	
-	public boolean isSaveSuccessful(){
-		return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
-	}
+    /*________________ DEFAULT LDAP ROLE ________________*/
+    public SystemSettingsPage expandDefaultLDAPRole() {
+        driver.findElementById("defaultPermissionsPanel").click();
+        return new SystemSettingsPage(driver);
+    }
 
+    @Deprecated
     public SystemSettingsPage defaultPermissions() {
         driver.findElementByClassName("panel-title").click();
         sleep(1000);
         return new SystemSettingsPage(driver);
     }
 
+    public SystemSettingsPage toggleDefaultRoleCheckbox() {
+        driver.findElementById("globalGroupEnabledCheckbox").click();
+        return this;
+    }
+
+    public SystemSettingsPage setRole(String role){
+        new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
+        return this;
+    }
+
+    /*________________ LDAP SETTINGS ________________*/
+    public SystemSettingsPage expandLDAPSettings() {
+        driver.findElementById("ldapSettingsPanel").click();
+        return new SystemSettingsPage(driver);
+    }
+
+    public SystemSettingsPage setLDAPSearchBase(String searchBase) {
+        driver.findElementById("activeDirectoryBase").clear();
+        driver.findElementById("activeDirectoryBase").sendKeys(searchBase);
+        return this;
+    }
+
+    public SystemSettingsPage setLDAPUserDN(String userDN) {
+        driver.findElementById("activeDirectoryUsername").clear();
+        driver.findElementById("activeDirectoryUsername").sendKeys(userDN);
+        return this;
+    }
+
+    public SystemSettingsPage setLDAPPassword(String password) {
+        driver.findElementById("activeDirectoryCredentials").clear();
+        driver.findElementById("activeDirectoryCredentials").sendKeys(password);
+        return this;
+    }
+
+    public SystemSettingsPage setLDAPUrl(String url) {
+        driver.findElementById("activeDirectoryURL").clear();
+        driver.findElementById("activeDirectoryURL").sendKeys(url);
+        return this;
+    }
+
+    /*________________ Proxy Settings ________________*/
+    public SystemSettingsPage expandProxySettings() {
+        driver.findElementById("proxySettingsPanel").click();
+        return new SystemSettingsPage(driver);
+    }
+
+    /*________________ Page Methods ________________*/
+
+	public SystemSettingsPage clickSaveChanges() {
+		driver.findElementById("updateDefaultsButton").click();
+		return new SystemSettingsPage(driver);
+	}
+
+    /*________________ Boolean Methods ________________*/
+    public boolean isSaveSuccessful(){
+        return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
+    }
 }
