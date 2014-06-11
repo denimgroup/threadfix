@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +49,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 /**
  * @author bbeverly
@@ -98,13 +103,13 @@ public class ApplicationsIndexController {
 	}
 
 	@RequestMapping(value="/jsonList", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<Organization[]> jsonList() {
+	public @ResponseBody Object jsonList() {
         List<Organization> organizations = organizationService.loadAllActive();
 
         if (organizations == null) {
-            return RestResponse.failure("No organizations found.");
+            return failure("No organizations found.");
         } else {
-            return RestResponse.success(organizations.toArray(new Organization[organizations.size()]));
+            return writeSuccessObjectWithView(organizations, AllViews.TableRow.class);
         }
 	}
 	
@@ -143,7 +148,7 @@ public class ApplicationsIndexController {
         Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
 
         if (myChannelId == null) {
-            return RestResponse.failure("Failed to determine the scan type.");
+            return failure("Failed to determine the scan type.");
         }
 
         String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
@@ -155,12 +160,12 @@ public class ApplicationsIndexController {
 
             if (scan != null) {
                 Organization organization = organizationService.loadOrganization(orgId);
-                return RestResponse.success(organization);
+                return success(organization);
             } else {
-                return RestResponse.failure("Something went wrong while processing the scan.");
+                return failure("Something went wrong while processing the scan.");
             }
         } else {
-            return RestResponse.failure(returnValue.getScanCheckResult().toString());
+            return failure(returnValue.getScanCheckResult().toString());
         }
     }
 }
