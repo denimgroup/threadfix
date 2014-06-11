@@ -80,4 +80,6 @@ public interface QueueSender {
 
     void updateAllCachedStatistics();
 
+    void updateVulnFilter();
+
 }
