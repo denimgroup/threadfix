@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -35,15 +35,15 @@ import java.util.*;
 class SpringEntityMappings {
 
     // This should be done by the end of the constructor
-	@NotNull
+	@Nonnull
     private final Collection<SpringEntityParser> entityParsers;
 	
-	@NotNull
+	@Nonnull
     private final Map<String, BeanFieldSet> fieldMap = new HashMap<>();
 
     // This version will parse all the Java files in the directory.
 	@SuppressWarnings("unchecked")
-	public SpringEntityMappings(@NotNull File rootDirectory) {
+	public SpringEntityMappings(@Nonnull File rootDirectory) {
 
         entityParsers = new ArrayList<>();
 
@@ -62,12 +62,12 @@ class SpringEntityMappings {
 		}
 	}
 
-    public SpringEntityMappings(@NotNull Collection<SpringEntityParser> entityParsers) {
+    public SpringEntityMappings(@Nonnull Collection<SpringEntityParser> entityParsers) {
         this.entityParsers = entityParsers;
         generateMap();
     }
 	
-	public BeanFieldSet getPossibleParametersForModelType(@NotNull BeanField beanField) {
+	public BeanFieldSet getPossibleParametersForModelType(@Nonnull BeanField beanField) {
 		return getPossibleParametersForModelType(beanField.getType());
 	}
 	
@@ -98,8 +98,8 @@ class SpringEntityMappings {
 		return fields.addAll(fieldsToAdd);
 	}
 	
-	@NotNull
-    private BeanFieldSet spiderFields(String prefix, String className, @NotNull Set<String> alreadyVisited) {
+	@Nonnull
+    private BeanFieldSet spiderFields(String prefix, String className, @Nonnull Set<String> alreadyVisited) {
 		BeanFieldSet fields = fieldMap.get(className);
 		
 		if (fields == null) {
@@ -124,7 +124,7 @@ class SpringEntityMappings {
 		return fieldsWithPrefixes;
 	}
 	
-	@NotNull
+	@Nonnull
     public List<BeanField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable BeanField initialField) {
 		List<BeanField> fields = new ArrayList<>();
 		
@@ -173,7 +173,7 @@ class SpringEntityMappings {
 		addSuperClassFieldsToModels(superClassMap);
 	}
 	
-	private void addSuperClassFieldsToModels(@NotNull Map<String, String> superClassMap) {
+	private void addSuperClassFieldsToModels(@Nonnull Map<String, String> superClassMap) {
 		Set<String> done = new HashSet<>();
 		
 		for (String key : fieldMap.keySet()) {
@@ -198,7 +198,7 @@ class SpringEntityMappings {
 		}
 	}
 
-	private void addModelsToSuperClassAndFieldMaps(@NotNull Map<String, String> superClassMap) {
+	private void addModelsToSuperClassAndFieldMaps(@Nonnull Map<String, String> superClassMap) {
 		for (SpringEntityParser entityParser : entityParsers) {
 
             if (entityParser.getClassName() != null) {
@@ -213,7 +213,7 @@ class SpringEntityMappings {
 	}
 	
 	@Nullable
-    private String getParameterFromBeanAccessor(@NotNull String methodCall) {
+    private String getParameterFromBeanAccessor(@Nonnull String methodCall) {
 		
 		String propertyName = null;
 		

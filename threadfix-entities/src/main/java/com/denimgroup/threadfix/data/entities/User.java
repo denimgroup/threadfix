@@ -48,7 +48,7 @@ public class User extends AuditableEntity {
 	private Boolean isLdapUser = false;
 	private boolean wasLdapUser = false;
 
-	private Boolean hasGlobalGroupAccess = true;
+	private Boolean hasGlobalGroupAccess = false;
 	private Boolean hasChangedInitialPassword = false;
 	private Date lastLoginDate = new Date();
 	private Date lastPasswordChangedDate = new Date();

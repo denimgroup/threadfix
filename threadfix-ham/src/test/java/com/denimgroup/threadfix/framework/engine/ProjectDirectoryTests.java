@@ -28,14 +28,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
 
 public class ProjectDirectoryTests {
 	
-	@NotNull
+	@Nonnull
     ProjectDirectory
 		springDirectory = new ProjectDirectory(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
 	

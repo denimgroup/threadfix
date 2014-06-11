@@ -84,6 +84,7 @@ public class ResponseParser {
         }
 
         response.responseCode = responseCode;
+        response.jsonString = responseString;
 
         LOGGER.debug("Setting response code to " + responseCode + ".");
 
@@ -95,7 +96,7 @@ public class ResponseParser {
         try {
             inputString = IOUtils.toString(responseStream, "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Unable to parse response stream due to IOException.", e);
         }
 
         return getRestResponse(inputString, responseCode, target);

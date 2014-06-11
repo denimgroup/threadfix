@@ -33,8 +33,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -48,7 +48,7 @@ class WebXMLParser {
 	}
 	
 	@Nullable
-    public static ServletMappings getServletMappings(@NotNull File file,
+    public static ServletMappings getServletMappings(@Nonnull File file,
 			ProjectDirectory projectDirectory) {
 		ServletParser parser = new WebXMLParser.ServletParser();
 
@@ -71,11 +71,11 @@ class WebXMLParser {
 	// but is only accessible to this class.
 	private static class ServletParser extends DefaultHandler {
 		
-		@NotNull
+		@Nonnull
         List<ClassMapping> servlets = new ArrayList<>();
-		@NotNull
+		@Nonnull
         List<UrlPatternMapping> mappings = new ArrayList<>();
-        @NotNull
+        @Nonnull
         Map<String, String> contextParams = new HashMap<>();
 		
 		@Nullable
@@ -83,7 +83,7 @@ class WebXMLParser {
                 servletClass = null,
                 contextConfigLocation = null,
                 contextClass = null;
-		@NotNull
+		@Nonnull
         StringBuilder builder = new StringBuilder();
 		
 		boolean getContextConfigLocation = false,
@@ -102,7 +102,7 @@ class WebXMLParser {
             CONTEXT_CLASS = "contextClass",
             CONTEXT_PARAM = "context-param";
 
-		@NotNull
+		@Nonnull
         private static Set<String> tagsToGrab = new HashSet<>(Arrays.asList(
 			new String[] { SERVLET_NAME, URL_PATTERN, SERVLET_CLASS,
 					PARAM_NAME, PARAM_VALUE }));
@@ -119,7 +119,7 @@ class WebXMLParser {
 
 		@Override
 		public void endElement(String uri, String localName,
-				@NotNull String qName) throws SAXException {
+				@Nonnull String qName) throws SAXException {
 			
 			switch (qName) {
 				case SERVLET_NAME:  servletName  = getBuilderText(); break;
@@ -177,7 +177,7 @@ class WebXMLParser {
 			}
 		}
 		
-		@NotNull
+		@Nonnull
         private String getBuilderText() {
 			String returnValue = builder.toString();
 			builder.setLength(0);

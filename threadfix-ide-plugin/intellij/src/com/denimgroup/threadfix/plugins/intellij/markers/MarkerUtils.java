@@ -42,8 +42,8 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.awt.*;
 import java.util.Collection;
@@ -192,7 +192,7 @@ public class MarkerUtils {
         }
     }
 
-    private static void addRenderers(@NotNull VulnerabilityMarker marker, @NotNull MarkupModel documentMarkupModel) {
+    private static void addRenderers(@Nonnull VulnerabilityMarker marker, @Nonnull MarkupModel documentMarkupModel) {
 
         TextAttributes attributes = new TextAttributes();
 
@@ -236,7 +236,7 @@ public class MarkerUtils {
         }
     }
 
-    public static Integer getLineNumber(@NotNull VulnerabilityMarker marker) {
+    public static Integer getLineNumber(@Nonnull VulnerabilityMarker marker) {
         if (marker.getLineNumber() != null && marker.getLineNumber().matches("^[0-9]+$")) {
             Integer integer = Integer.valueOf(marker.getLineNumber());
             return integer == 0 ? 0 : integer - 1; // somehow this got off by one.

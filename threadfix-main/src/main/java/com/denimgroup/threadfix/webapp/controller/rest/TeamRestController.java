@@ -30,7 +30,9 @@ import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,28 +45,32 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
 @Controller
 @RequestMapping("/rest/teams")
 public class TeamRestController extends RestController {
     @Autowired
-	private OrganizationService organizationService;
+    private OrganizationService           organizationService;
     @Autowired
-	private ApplicationService applicationService;
+    private ApplicationService            applicationService;
     @Autowired
-	private ApplicationCriticalityService applicationCriticalityService;
-	
-	public static final String CREATION_FAILED = "New Team creation failed.";
-	public static final String LOOKUP_FAILED = "Team Lookup failed.";
-	
-	private final static String DETAIL = "teamIDLookup", 
-		LOOKUP = "teamNameLookup",
-		NEW = "newTeam",
-		INDEX = "teamList";
-	
-	// TODO finalize which methods need to be restricted
-	static {
-		restrictedMethods.add(NEW);
-	}
+    private ApplicationCriticalityService applicationCriticalityService;
+    @Autowired(required = false)
+    private LicenseService                licenseService;
+
+    public static final String CREATION_FAILED = "New Team creation failed.";
+    public static final String LOOKUP_FAILED   = "Team Lookup failed.";
+
+    private final static String DETAIL = "teamIDLookup",
+            LOOKUP                     = "teamNameLookup",
+            NEW                        = "newTeam",
+            INDEX                      = "teamList";
+
+    // TODO finalize which methods need to be restricted
+    static {
+        restrictedMethods.add(NEW);
+    }
 
     /**
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#searchForTeamById(String)
@@ -72,50 +78,56 @@ public class TeamRestController extends RestController {
      * @param request
      * @return
      */
-	@RequestMapping(headers = "Accept=application/json", value="/{teamID}", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<Organization> teamIDLookup(@PathVariable("teamID") int teamId,
-			HttpServletRequest request) {
-		log.info("Received REST request for Team with ID " + teamId + ".");
+    @RequestMapping(headers = "Accept=application/json", value = "/{teamID}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Object teamIDLookup(@PathVariable("teamID") int teamId,
+                        HttpServletRequest request) {
+        log.info("Received REST request for Team with ID " + teamId + ".");
 
-		String result = checkKey(request, DETAIL);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
+        String result = checkKey(request, DETAIL);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return RestResponse.failure(result);
+        }
 
-		Organization org = organizationService.loadOrganization(teamId);
+        Organization org = organizationService.loadOrganization(teamId);
 
-		if (org == null) {
-			log.warn("Team lookup failed for ID " + teamId + ".");
-			return RestResponse.failure(LOOKUP_FAILED);
-		} else {
-			log.info("REST request for Team with ID " + teamId
-					+ " completed successfully.");
-			return RestResponse.success(org);
-		}
-	}
-	
-	/**
+        if (org == null) {
+            log.warn("Team lookup failed for ID " + teamId + ".");
+            return RestResponse.failure(LOOKUP_FAILED);
+        } else {
+            log.info("REST request for Team with ID " + teamId
+                    + " completed successfully.");
+            return writeSuccessObjectWithView(org, AllViews.RestViewTeam2_1.class);
+        }
+    }
+
+    /**
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#createApplication(String, String, String)
-	 * Create a new application with the supplied name and URL. 
-	 * The rest of the configuration is done through other methods.
-	 */
-	@RequestMapping(headers="Accept=application/json", value="/{teamId}/applications/new", method=RequestMethod.POST)
-	public @ResponseBody RestResponse<Application> newApplication(HttpServletRequest request,
-			@PathVariable("teamId") int teamId) {
-		log.info("Received REST request for a new Application.");
+     * Create a new application with the supplied name and URL.
+     * The rest of the configuration is done through other methods.
+     */
+    @RequestMapping(headers = "Accept=application/json", value = "/{teamId}/applications/new", method = RequestMethod.POST)
+    public @ResponseBody Object newApplication(HttpServletRequest request,
+                          @PathVariable("teamId") int teamId) {
+        log.info("Received REST request for a new Application.");
 
-		String result = checkKey(request, NEW);
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
-		
-		// By not using @RequestParam notations, we can catch the error in the code
-		// and provide better error messages.
-		String name = request.getParameter("name");
-		String url = request.getParameter("url");
-		
-		if (name == null) {
-			log.warn("Call to New Application was missing the name parameter.");
+        String result = checkKey(request, NEW);
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return RestResponse.failure(result);
+        }
+
+        if (licenseService != null && !licenseService.canAddApps()) {
+            return RestResponse.failure("The current license does not allow the creation of any more applications.");
+        }
+
+        // By not using @RequestParam notations, we can catch the error in the code
+        // and provide better error messages.
+        String name = request.getParameter("name");
+        String url = request.getParameter("url");
+
+        if (name == null) {
+            log.warn("Call to New Application was missing the name parameter.");
 			return RestResponse.failure(CREATION_FAILED);
 		}
 		
@@ -150,7 +162,7 @@ public class TeamRestController extends RestController {
 		if (applicationService.checkApplication(application)) {
 			applicationService.storeApplication(application);
 			log.info("Application creation was successful. Returning application.");
-			return RestResponse.success(application);
+            return writeSuccessObjectWithView(application, AllViews.RestViewApplication2_1.class);
 		} else {
 			//	TODO - We could really use some better debug here
 			log.warn("Something was invalid.");
@@ -164,7 +176,7 @@ public class TeamRestController extends RestController {
      * @return
      */
 	@RequestMapping(headers = "Accept=application/json", value="/lookup", method = RequestMethod.GET)
-	public @ResponseBody RestResponse teamNameLookup(HttpServletRequest request) {
+	public @ResponseBody Object teamNameLookup(HttpServletRequest request) {
 		
 		String teamName = request.getParameter("name");
 		
@@ -183,7 +195,7 @@ public class TeamRestController extends RestController {
 		} else {
 			log.info("REST request for Team with ID " + teamName
 					+ " completed successfully.");
-			return RestResponse.success(org);
+            return writeSuccessObjectWithView(org, AllViews.RestViewTeam2_1.class);
 		}
 	}
 
@@ -194,7 +206,7 @@ public class TeamRestController extends RestController {
      */
 	@RequestMapping(headers = "Accept=application/json", value = "/new", method = RequestMethod.POST,
             produces = "application/json; charset=utf-8")
-	public @ResponseBody RestResponse<Organization> newTeam(HttpServletRequest request) {
+	public @ResponseBody Object newTeam(HttpServletRequest request) {
 		log.info("Received REST request for new Team.");
 
 		String result = checkKey(request, NEW);
@@ -210,7 +222,7 @@ public class TeamRestController extends RestController {
 			if (organizationService.isValidOrganization(organization)) {
 				organizationService.storeOrganization(organization);
 				log.info("Successfully created new Team.");
-				return RestResponse.success(organization);
+				return writeSuccessObjectWithView(organization, AllViews.RestViewTeam2_1.class);
 			} else {
 				log.info(CREATION_FAILED);
 				return RestResponse.failure(CREATION_FAILED);
@@ -222,13 +234,15 @@ public class TeamRestController extends RestController {
 		}
 	}
 
+
+
     /**
      * @see com.denimgroup.threadfix.remote.ThreadFixRestClient#getAllTeams()
      * @param request
      * @return
      */
 	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public @ResponseBody RestResponse<Organization[]> teamList(HttpServletRequest request) {
+	public @ResponseBody Object teamList(HttpServletRequest request) {
 		log.info("Received REST request for Team list.");
 		
 		String result = checkKey(request, INDEX);
@@ -241,12 +255,12 @@ public class TeamRestController extends RestController {
         if (organizations == null) {
             return RestResponse.failure("No organizations found.");
         } else {
-            return RestResponse.success(organizations.toArray(new Organization[organizations.size()]));
+            return writeSuccessObjectWithView(organizations, AllViews.RestViewTeam2_1.class);
         }
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "")
-	public @ResponseBody RestResponse alsoTeamList(HttpServletRequest request) {
+	public @ResponseBody Object alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}
 

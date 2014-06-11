@@ -25,8 +25,9 @@
 package com.denimgroup.threadfix.framework.engine.partial;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class DefaultPartialMapping implements PartialMapping {
 	
@@ -57,13 +58,13 @@ public class DefaultPartialMapping implements PartialMapping {
 		return dynamicPath;
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public FrameworkType guessFrameworkType() {
 		return FrameworkType.getFrameworkType(frameworkGuess);
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return staticPath + " <--> " + dynamicPath;

@@ -31,7 +31,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +71,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	}
 	
 	@Override
-    @NotNull
+    @Nonnull
 	public List<RemoteProviderApplication> loadAllWithTypeId(int id) {
 		return remoteProviderApplicationDao.retrieveAllWithTypeId(id);
 	}

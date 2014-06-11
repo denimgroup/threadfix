@@ -6,7 +6,7 @@ myAppModule.value('deleteUrl', null);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl) {
+myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService) {
 
     $scope.object = object;
 
@@ -19,10 +19,12 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
     $scope.ok = function (valid) {
 
         if (valid) {
+            timeoutService.timeout();
             $scope.loading = true;
 
             threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {
+                    timeoutService.cancel();
                     $scope.loading = false;
 
                     if (data.success) {
@@ -45,6 +47,7 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
                     }
                 }).
                 error(function(data, status, headers, config) {
+                    timeoutService.cancel();
                     $scope.loading = false;
                     $scope.error = "Failure. HTTP status was " + status;
                 });
@@ -58,6 +61,7 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
     }
 
     $scope.cancel = function () {
+        timeoutService.cancel();
         $modalInstance.dismiss('cancel');
     };
 

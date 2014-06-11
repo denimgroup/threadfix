@@ -24,17 +24,15 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -135,6 +133,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 		SEVERITIES_MAP.put("150094", "1");
 		SEVERITIES_MAP.put("150095", "1");
 	}
+
+    RemoteProviderHttpUtils utils = new RemoteProviderHttpUtilsImpl<>(this.getClass());
 	
 	public QualysRemoteProvider() {
 		super(ScannerType.QUALYSGUARD_WAS);
@@ -161,10 +161,14 @@ public class QualysRemoteProvider extends RemoteProvider {
 		List<Scan> scanList = new ArrayList<>();
 		
 		for (String scanId : scanIds) {
-			inputStream = httpGet(getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId);
+            HttpResponse response = utils.getUrl(
+                    getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId, username, password);
 			
-			if (inputStream == null) {
-				LOG.warn("Got a bad response from Qualys servers for scan ID " + scanId + ". Trying the next scan.");
+			if (response.isValid()) {
+                inputStream = response.getInputStream();
+            } else {
+				LOG.warn("Got a " + response.getStatus() + " response code when requesting scan with ID " + scanId +
+                        ". Trying the next scan.");
 				continue;
 			}
 	
@@ -195,18 +199,20 @@ public class QualysRemoteProvider extends RemoteProvider {
 		
 		password = remoteProviderType.getPassword();
 		username = remoteProviderType.getUsername();
-		
-		InputStream stream = null;
-		
+
 		// POST with no parameters
 		// TODO include filters
-		stream = httpPost(getAppsUrl(remoteProviderType),new String[]{},new String[]{});
-		
-		if (stream == null) {
-			LOG.warn("Response from Qualys servers was null, check your credentials.");
-			return null;
-		}
-		
+		HttpResponse connection = utils.postUrl(getAppsUrl(remoteProviderType), new String[]{}, new String[]{}, username, password);
+
+		InputStream stream;
+        if (connection.isValid()) {
+            stream = connection.getInputStream();
+        } else {
+            LOG.warn("Failed to retrieve the applications. Check your credentials. status code was " +
+                    connection.getStatus());
+            return null;
+        }
+
 		QualysAppsParser parser = new QualysAppsParser();
 		
 		parse(stream, parser);
@@ -227,12 +233,15 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		// POST with no parameters
 		// TODO include filters
-		InputStream stream = httpPost(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{});
-		
-		if (stream == null) {
-			return null;
-		}
-		
+		HttpResponse response = utils.postUrl(getScansForAppUrl(app.getRemoteProviderType()),new String[]{},new String[]{}, username, password);
+        InputStream stream;
+		if (response.isValid()) {
+            stream = response.getInputStream();
+        } else {
+            LOG.warn("Unable to retrieve scans for the application " + app.getNativeId() + ". Got response code " + response.getStatus());
+            return null;
+        }
+
 		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
 		
@@ -240,11 +249,10 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
-			Calendar mapDate = null;
-
 			if (app.getNativeId().equals(map.get("webAppName")) && map.get("date") != null) {
-				mapDate = DateUtils.getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("date"));
-				if (app.getLastImportTime() == null || mapDate.after(app.getLastImportTime())) {
+                Calendar mapDate = DateUtils.getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("date"));
+				if (mapDate != null && (app.getLastImportTime() == null ||
+                        mapDate.after(app.getLastImportTime()))) {
 					scanIds.add(map.get("id"));
 				}
 			}
@@ -277,86 +285,11 @@ public class QualysRemoteProvider extends RemoteProvider {
 		return isEuropean ? "eu" : "com";
 	}
 	
-	// UTILITIES
-	
-	private InputStream httpPost(String request, String[] paramNames,
-			String[] paramVals) {
-		
-		PostMethod post = new PostMethod(request);
-		
-		post.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
-
-		if (username != null && password != null) {
-			String login = username + ":" + password;
-			String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
-			
-			post.setRequestHeader("Authorization", "Basic " + encodedLogin);
-		}
-				
-		try {
-			for (int i = 0; i < paramNames.length; i++) {
-				post.addParameter(paramNames[i], paramVals[i]);
-			}
-
-			HttpClient client = getConfiguredHttpClient(QualysRemoteProvider.class);
-			
-			int status = client.executeMethod(post);
-
-			if (status != 200) {
-				LOG.warn("Status was not 200.");
-				LOG.warn("Status : " + status);
-			}
-			
-			InputStream responseStream = post.getResponseBodyAsStream();
-			
-			if (responseStream != null) {
-				return responseStream;
-			}
-
-		} catch (IOException e1) {
-            log.error("Encountered IOException while making request to Veracode.", e1);
-		}
-
-		LOG.warn("There was an error and the POST request was not finished.");
-		return null;
-	}
-	
-	private InputStream httpGet(String urlStr) {
-		GetMethod get = new GetMethod(urlStr);
-		
-		get.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
-
-		if (username != null && password != null) {
-			String login = username + ":" + password;
-			String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
-			
-			get.setRequestHeader("Authorization", "Basic " + encodedLogin);
-		}
-		
-		HttpClient client = getConfiguredHttpClient(QualysRemoteProvider.class);
-		try {
-			int status = client.executeMethod(get);
-			if (status != 200) {
-				LOG.warn("Status was not 200.");
-				LOG.warn("Status : " + status);
-			}
-			
-			InputStream responseStream = get.getResponseBodyAsStream();
-			
-			if (responseStream != null) {
-				return responseStream;
-			}
-		} catch (IOException e) {
-			log.error("Encountered IOException while making request to Veracode.", e);
-		}
-		return null;
-	}
-
 	// PARSER CLASSES
 
 	private class QualysAppsParser extends HandlerWithBuilder {
 
-        @NotNull
+        @Nonnull
 		public List<RemoteProviderApplication> list = new ArrayList<>();
 		
 		private boolean getName = false;

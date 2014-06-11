@@ -23,12 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 
 public interface FindingProcessor {
 
-	public void process(@NotNull Finding finding);
+	public void process(@Nonnull Finding finding);
 	
 }

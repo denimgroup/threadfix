@@ -24,10 +24,12 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
-import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,13 +38,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/organizations/{orgId}/applications/new")
+@RequestMapping("/organizations/{orgId}/modalAddApp")
 @SessionAttributes("application")
 public class AddApplicationController {
 
@@ -88,47 +89,86 @@ public class AddApplicationController {
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BeanValidator());
 	}
-	
-	@RequestMapping(method = RequestMethod.POST)
-	public String newSubmit(@PathVariable("orgId") int orgId,
-			@Valid @ModelAttribute Application application, BindingResult result,
-			SessionStatus status, Model model) {
-		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
-			return "403";
-		}
 
-		if (application.getOrganization() == null) {
-			Organization org = organizationService.loadOrganization(orgId);
-			if (org != null) {
-				application.setOrganization(org);
-			}
-		}
-		
-		applicationService.validateAfterCreate(application, result);
-		
-		if (result.hasErrors()) {
+    @RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
+            produces="application/json")
+    public @ResponseBody
+    RestResponse<Application> submitAppFromDetailPage(@PathVariable("orgId") int orgId,
+                                                      @Valid @ModelAttribute Application application, BindingResult result,
+                                                      Model model) {
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+            return RestResponse.failure("Permissions Failure");
+        }
+
+        if (licenseService != null && !licenseService.canAddApps()) {
+            return RestResponse.failure("The current license does not allow the creation of any more applications.");
+        }
+
+        Organization team = organizationService.loadOrganization(orgId);
+
+        if (team == null) {
+            log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
+            throw new ResourceNotFoundException();
+        }
+
+        String submitResult = submitApp(orgId, application,result,model);
+
+        if (submitResult.equals("Success")) {
+            log.info("Successfully created application " + application.getName() + " in team " + team.getName());
+
+            model.addAttribute("application", new Application());
+
+            return RestResponse.success(application);
+        } else {
+            model.addAttribute("organization", team);
+
+            return FormRestResponse.failure(submitResult, result);
+        }
+    }
+
+    public String submitApp(int orgId, @Valid @ModelAttribute Application application,
+                            BindingResult result, Model model) {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+            return "403";
+        }
+        Organization org;
+        if (application.getOrganization() == null) {
+            org = organizationService.loadOrganization(orgId);
+            if (org != null) {
+                application.setOrganization(org);
+            }
+        } else {
+            org = application.getOrganization();
+        }
+
+        applicationService.validateAfterCreate(application, result);
+
+        if (result.hasErrors()) {
             PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,
-					Permission.CAN_MANAGE_WAFS);
-			
-			model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
-			
-			model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-					Permission.CAN_MANAGE_WAFS, orgId, null));
-			
-			return "applications/form";
-		} else {
+                    Permission.CAN_MANAGE_WAFS);
 
-			applicationService.storeApplication(application);
-			
-			String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			log.debug("User " + user + " has created an Application with the name " + application.getName() +
-					", the ID " + application.getId() +
-					", and the Organization " + application.getOrganization().getName());
-			
-			status.setComplete();
-			return "redirect:/organizations/" + String.valueOf(orgId) + "/applications/" + application.getId();
-		}
-	}
+            model.addAttribute("org",org);
+            model.addAttribute("applicationTypes", FrameworkType.values());
+            model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
+                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
+
+            model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
+                    Permission.CAN_MANAGE_WAFS, orgId, null));
+
+            model.addAttribute("contentPage", "applications/forms/newApplicationForm.jsp");
+
+            return "ajaxFailureHarness";
+        } else {
+
+            applicationService.storeApplication(application);
+
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            log.debug("User " + user + " has created an Application with the name " + application.getName() +
+                    ", the ID " + application.getId() +
+                    ", and the Organization " + application.getOrganization().getName());
+
+            return "Success";
+        }
+    }
 }

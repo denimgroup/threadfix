@@ -26,14 +26,14 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.io.StreamTokenizer;
 
 public class SpringJavaConfigurationChecker {
 
-    public static boolean checkJavaFile(@NotNull File file) {
+    public static boolean checkJavaFile(@Nonnull File file) {
 
         boolean result = false;
 

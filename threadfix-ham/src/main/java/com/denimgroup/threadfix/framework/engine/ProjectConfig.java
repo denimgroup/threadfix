@@ -28,8 +28,8 @@ import java.io.File;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ProjectConfig {
 
@@ -38,8 +38,8 @@ public class ProjectConfig {
 	private final File rootFile;
 	private final String urlPathRoot;
 	
-	public ProjectConfig(@NotNull FrameworkType frameworkType,
-                         @NotNull SourceCodeAccessLevel sourceCodeAccessLevel,
+	public ProjectConfig(@Nonnull FrameworkType frameworkType,
+                         @Nonnull SourceCodeAccessLevel sourceCodeAccessLevel,
                          @Nullable File rootFile,
                          @Nullable String urlPathRoot) {
 		this.frameworkType = frameworkType;
@@ -48,12 +48,12 @@ public class ProjectConfig {
 		this.urlPathRoot = urlPathRoot;
 	}
 
-    @NotNull
+    @Nonnull
 	public FrameworkType getFrameworkType() {
 		return frameworkType;
 	}
 
-    @NotNull
+    @Nonnull
 	public SourceCodeAccessLevel getSourceCodeAccessLevel() {
 		return sourceCodeAccessLevel;
 	}

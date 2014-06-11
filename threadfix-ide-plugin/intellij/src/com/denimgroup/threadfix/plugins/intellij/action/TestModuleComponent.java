@@ -35,7 +35,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class TestModuleComponent implements ModuleComponent {
             boolean hasBuiltTable = false;
 
             @Override
-            public void fileOpened(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+            public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
                 List<VulnerabilityMarker> markers = VulnerabilityMarkerService.getMarkersCache();
 
                 if (!hasBuiltTable) {
@@ -67,11 +67,11 @@ public class TestModuleComponent implements ModuleComponent {
             }
 
             @Override
-            public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+            public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
             }
 
             @Override
-            public void selectionChanged(@NotNull FileEditorManagerEvent event) {
+            public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
             }
         };
     }
@@ -84,7 +84,7 @@ public class TestModuleComponent implements ModuleComponent {
         // TODO: insert component disposal logic here
     }
 
-    @NotNull
+    @Nonnull
     public String getComponentName() {
         return "TestModuleComponent";
     }

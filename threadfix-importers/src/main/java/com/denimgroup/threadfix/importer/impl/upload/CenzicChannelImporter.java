@@ -48,10 +48,10 @@ class CenzicChannelImporter extends AbstractChannelImporter {
     private static final String EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet, Script, or Object",
             DB_EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet Script or Object";
 
-    private static final String payloadPattern = "\\?(.*)";
-    private static final String pathPattern = "(.*)\\?";
-    private static final String cwePattern = "CWE-(.*)";
-    private static final String paramPattern = ":(.*)";
+    private static final String PAYLOAD_PATTERN = "\\?(.*)",
+            PATH_PATTERN = "(.*)\\?",
+            CWE_PATTERN = "CWE-(.*)",
+            PARAM_PATTERN = ":(.*)";
 
 
 	public CenzicChannelImporter() {
@@ -140,7 +140,10 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 	    		getUrlText = false;
 	    	} else if (getParamText) {
 	    		String text = getBuilderText();
-                currentParameter = RegexUtils.getRegexResult(text, paramPattern).trim();
+                currentParameter = RegexUtils.getRegexResult(text, PARAM_PATTERN);
+                if (currentParameter != null) {
+                    currentParameter = currentParameter.trim();
+                }
                 getParamText = false;
             } else if (getSeverityText) {
 	    		currentSeverityCode = getBuilderText();
@@ -182,15 +185,15 @@ class CenzicChannelImporter extends AbstractChannelImporter {
 
                 if ("Vulnerable".equalsIgnoreCase(currentReportItemType)) {
 
-                    String possibleUrl = RegexUtils.getRegexResult(currentUrlText, pathPattern);
-                    String payload = RegexUtils.getRegexResult(currentUrlText, payloadPattern);
+                    String possibleUrl = RegexUtils.getRegexResult(currentUrlText, PATH_PATTERN);
+                    String payload = RegexUtils.getRegexResult(currentUrlText, PAYLOAD_PATTERN);
                     currentUrlText = (possibleUrl==null)? currentUrlText : possibleUrl;
 
                     findingMap.put(FindingKey.PATH, currentUrlText);
                     findingMap.put(FindingKey.PARAMETER, currentParameter);
                     findingMap.put(FindingKey.VULN_CODE, currentChannelVulnCode);
                     findingMap.put(FindingKey.SEVERITY_CODE, currentSeverityCode);
-                    findingMap.put(FindingKey.CWE, RegexUtils.getRegexResult(currentCweId, cwePattern));
+                    findingMap.put(FindingKey.CWE, RegexUtils.getRegexResult(currentCweId, CWE_PATTERN));
                     findingMap.put(FindingKey.VALUE, payload);
                     findingMap.put(FindingKey.REQUEST, currentRequest);
                     findingMap.put(FindingKey.RESPONSE, currentResponse);

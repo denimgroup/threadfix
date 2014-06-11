@@ -25,7 +25,7 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +42,7 @@ public class SpringDataBinderParser implements EventBasedTokenizer {
 
     int parenCount = 0, curlyCount = 0;
 
-    @NotNull // but you should check hasBlackList and hasWhitelist
+    @Nonnull // but you should check hasBlackList and hasWhitelist
     Set<String> parametersWhiteList = new HashSet<>(), parametersBlackList = new HashSet<>();
 
     private static final String

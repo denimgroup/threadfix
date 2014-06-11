@@ -31,8 +31,8 @@ import java.util.List;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -78,10 +78,10 @@ public class JspEndpointDatabaseTests {
 		}
 	}
 	
-	@NotNull
+	@Nonnull
     String dynamicRoot = "/bodgeit/", staticRoot = "/root/";
 	
-	@NotNull
+	@Nonnull
     String[] pages = {
 		"about.jsp",
 		"admin.jsp",
@@ -101,8 +101,8 @@ public class JspEndpointDatabaseTests {
 		"search.jsp",
 	};
 	
-	@NotNull
-    private String getStaticPath(@NotNull EndpointDatabase db, String dynamicPath) {
+	@Nonnull
+    private String getStaticPath(@Nonnull EndpointDatabase db, String dynamicPath) {
 		EndpointQuery query = EndpointQueryBuilder.start()
 				.setInformationSourceType(InformationSourceType.DYNAMIC)
 				.setDynamicPath(dynamicPath)

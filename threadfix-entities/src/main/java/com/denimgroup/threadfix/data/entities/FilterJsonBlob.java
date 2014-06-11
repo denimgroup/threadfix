@@ -41,6 +41,7 @@ public class FilterJsonBlob extends AuditableEntity {
     private String json, name;
 
     @JsonProperty
+    @JsonView(Object.class)
     @Column(length = 2048)
     public String getName() {
         return name;

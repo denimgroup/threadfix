@@ -82,15 +82,21 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <!-- TODO remove conflicting transitive dependencies: specifically javax and persistence -->
     <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.annotations</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${jetbrains-annotations.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -150,6 +156,11 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>${commons.beanutils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>${commons.httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -283,6 +294,13 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-entities</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
@@ -297,6 +315,12 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>${codehaus.jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

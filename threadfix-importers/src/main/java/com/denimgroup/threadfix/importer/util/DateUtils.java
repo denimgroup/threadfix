@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -35,8 +35,8 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
@@ -44,23 +44,23 @@ public class HttpRestUtils {
 
     public static final String API_KEY_SEGMENT = "?apiKey=";
 
-    @NotNull
+    @Nonnull
     final PropertiesManager propertiesManager;
 
     private static final SanitizedLogger LOGGER = new SanitizedLogger(HttpRestUtils.class);
 
-    public HttpRestUtils(@NotNull PropertiesManager manager) {
+    public HttpRestUtils(@Nonnull PropertiesManager manager) {
         this.propertiesManager = manager;
     }
 
-    @NotNull
-	public <T> RestResponse<T> httpPostFile(@NotNull String path,
-                                            @NotNull File file,
-                                            @NotNull String[] paramNames,
-                                            @NotNull String[] paramVals,
-                                            @NotNull Class<T> targetClass) {
+    @Nonnull
+	public <T> RestResponse<T> httpPostFile(@Nonnull String path,
+                                            @Nonnull File file,
+                                            @Nonnull String[] paramNames,
+                                            @Nonnull String[] paramVals,
+                                            @Nonnull Class<T> targetClass) {
 
-		//	TODO - Revisit how we handle certificate errors here
+        //	TODO - Revisit how we handle certificate errors here
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
         String completeUrl = makePostUrl(path);
@@ -104,11 +104,11 @@ public class HttpRestUtils {
         return response;
     }
 
-    @NotNull
-    public <T> RestResponse<T> httpPost(@NotNull String path,
-                                        @NotNull String[] paramNames,
-                                        @NotNull String[] paramVals,
-                                        @NotNull Class<T> targetClass) {
+    @Nonnull
+    public <T> RestResponse<T> httpPost(@Nonnull String path,
+                                        @Nonnull String[] paramNames,
+                                        @Nonnull String[] paramVals,
+                                        @Nonnull Class<T> targetClass) {
 
 		Protocol.registerProtocol("https", new Protocol("https", new AcceptAllTrustFactory(), 443));
 
@@ -148,14 +148,14 @@ public class HttpRestUtils {
         return response;
 	}
 
-    @NotNull
-    public <T> RestResponse<T> httpGet(@NotNull String path, @NotNull Class<T> targetClass) {
+    @Nonnull
+    public <T> RestResponse<T> httpGet(@Nonnull String path, @Nonnull Class<T> targetClass) {
         return httpGet(path, "", targetClass);
     }
 
-    @NotNull
-	public <T> RestResponse<T> httpGet(@NotNull String path, @NotNull String params,
-                                       @NotNull Class<T> targetClass) {
+    @Nonnull
+	public <T> RestResponse<T> httpGet(@Nonnull String path, @Nonnull String params,
+                                       @Nonnull Class<T> targetClass) {
 
         String urlString = makeGetUrl(path, params);
 
@@ -188,8 +188,8 @@ public class HttpRestUtils {
 		return response;
 	}
 
-    @NotNull
-    private String makeGetUrl(@NotNull String path, @NotNull String params) {
+    @Nonnull
+    private String makeGetUrl(@Nonnull String path, @Nonnull String params) {
         String baseUrl = propertiesManager.getUrl();
         String apiKey  = propertiesManager.getKey();
 
@@ -206,8 +206,8 @@ public class HttpRestUtils {
         return finishedUrl;
     }
 
-    @NotNull
-    private String makePostUrl(@NotNull String path) {
+    @Nonnull
+    private String makePostUrl(@Nonnull String path) {
         String baseUrl = propertiesManager.getUrl();
 
         LOGGER.debug("Building POST url with path " + path + " and base url " + baseUrl);

@@ -85,7 +85,7 @@
         </div>
 
         <!-- Teams and Applications section (should only show on Reports page -->
-        <div class="accordion-group" ng-if="!treeApplication && !treeTeam">
+        <div class="accordion-group" ng-show="!treeApplication && !treeTeam">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
                 <span id="expandTeamAndApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
             </div>
@@ -130,19 +130,19 @@
         </div>
 
         <!-- This is the same as the above control but only shows up on the team page. -->
-        <div class="accordion-group" ng-if="treeTeam">
+        <div class="accordion-group" ng-show="treeTeam">
             <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
-                <span id="expandTeamAndApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
+                <span id="expandApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
             </div>
             <div ng-show="showTeamAndApplicationControls" class="filter-group-body">
 
                 <div class="accordion-inner">
                     Applications
                     <a ng-hide="showApplicationInput" ng-click="showApplicationInput = !showApplicationInput">
-                        <span id="showApplicationInput" class="icon" ng-class="{ 'icon-minus': showApplicationInput, 'icon-plus': !showApplicationInput }"></span>
+                        <span id="showApplicationInput1" class="icon" ng-class="{ 'icon-minus': showApplicationInput, 'icon-plus': !showApplicationInput }"></span>
                     </a>
                     <br>
-                    <input id="applicationNameTypeahead"
+                    <input id="applicationNameTypeahead1"
                            focus-on="showApplicationInput"
                            ng-show="showApplicationInput"
                            typeahead="(treeTeam.name + ' / ' + application.name) for application in treeTeam.applications | filter:$viewValue | limitTo:8"
@@ -225,13 +225,15 @@
                 <div class="accordion-inner">
                     Path
                     <br>
-                    <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp" ng-model="parameters.path"/>
+                    <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp"
+                           ng-model="parameters.path" ng-blur="refresh()" ng-enter="refresh()"/>
                 </div>
 
                 <div class="accordion-inner">
                     Parameter
                     <br>
-                    <input id="parameterInput" style="width: 180px;" type="text" placeholder="Example: username" ng-model="parameters.parameter"/>
+                    <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username"
+                           ng-model="parameters.parameter" ng-blur="refresh()" ng-enter="refresh()"/>
                 </div>
 
                 <div class="accordion-inner">
@@ -291,7 +293,10 @@
                     <h4>Start Date</h4>
                     <div class="col-md-6">
                         <p class="input-group">
-                            <input id="startDateInput" type="text" class="form-control" ng-model="startDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate" is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close" />
+                            <input id="startDateInput" type="text" class="form-control" ng-model="startDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate"
+                                   is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
+                                   ng-change="refresh()"
+                                    />
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="icon icon-calendar"></i></button>
                           </span>
@@ -303,7 +308,10 @@
                     <h4>End Date</h4>
                     <div class="col-md-6">
                         <p class="input-group">
-                            <input id="endDateInput" type="text" class="form-control" ng-model="endDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="endDate" is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close" />
+                            <input id="endDateInput" type="text" class="form-control" ng-model="endDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="endDate"
+                                   is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
+                                   ng-change="refresh()"
+                                    />
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="icon icon-calendar"></i></button>
                             </span>

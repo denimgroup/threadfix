@@ -34,17 +34,17 @@ import java.util.regex.Pattern;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class JSPIncludeParser implements EventBasedTokenizer {
 	
-	@NotNull
+	@Nonnull
     private State currentState = State.START;
-	@NotNull
+	@Nonnull
     Set<File> returnFiles = new HashSet<>();
 
-    @NotNull
+    @Nonnull
     final File file;
 
 	private enum State {
@@ -53,12 +53,12 @@ class JSPIncludeParser implements EventBasedTokenizer {
 	
 	private static final Pattern slashPattern = Pattern.compile("[\\\\/]");
 
-	JSPIncludeParser(@NotNull File file) {
+	JSPIncludeParser(@Nonnull File file) {
         this.file = file;
 	}
 	
-	@NotNull
-    public static Set<File> parse(@NotNull File file) {
+	@Nonnull
+    public static Set<File> parse(@Nonnull File file) {
 		JSPIncludeParser parser = new JSPIncludeParser(file);
 		EventBasedTokenizerRunner.run(file, false, parser);
 		return parser.returnFiles;
@@ -134,7 +134,7 @@ class JSPIncludeParser implements EventBasedTokenizer {
 		}
 	}
 
-    @NotNull
+    @Nonnull
     private File getRelativeFile(String sval) {
         List<String>
                 inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(file.getParent()))),

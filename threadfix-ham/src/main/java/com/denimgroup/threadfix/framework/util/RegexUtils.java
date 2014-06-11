@@ -24,8 +24,7 @@
 
 package com.denimgroup.threadfix.framework.util;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -60,10 +59,7 @@ public class RegexUtils {
 		
 		Matcher matcher = pattern.matcher(targetString);
 
-		if (matcher.find())
-			return matcher.group(1);
-		else
-			return null;
+        return matcher.find() ? matcher.group(1) : null;
 	}
 	
 	/**

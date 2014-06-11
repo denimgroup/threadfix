@@ -30,17 +30,17 @@ import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import com.denimgroup.threadfix.framework.impl.spring.SpringJavaConfigurationChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
 
 public class JavaAndJspFrameworkChecker extends FrameworkChecker {
 
-    @NotNull
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public FrameworkType check(@NotNull ProjectDirectory directory) {
+    public FrameworkType check(@Nonnull ProjectDirectory directory) {
 
         FrameworkType frameworkType = FrameworkType.NONE;
 

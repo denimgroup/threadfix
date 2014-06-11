@@ -31,8 +31,8 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ServletMappings {
 
@@ -40,36 +40,36 @@ public class ServletMappings {
 
 	public final static String DEFAULT_SERVLET = "Default Servlet";
 	
-	@NotNull
+	@Nonnull
     private final List<UrlPatternMapping>
 		allServletMappings,
 		pathMappings = new ArrayList<>(),
 		extensionMappings = new ArrayList<>(),
 		exactMappings = new ArrayList<>();
 		
-	@NotNull
+	@Nonnull
     private final List<ClassMapping> servlets;
 	
-	@NotNull
+	@Nonnull
     private final ProjectDirectory projectDirectory;
 
-    @NotNull
+    @Nonnull
     private final Map<String, String> contextParams;
 	
-	@NotNull
+	@Nonnull
     private UrlPatternMapping defaultServlet = new UrlPatternMapping(DEFAULT_SERVLET,"/");
 
-    @NotNull
+    @Nonnull
     private UrlPatternMapping contextRootServlet = defaultServlet;
 	
 	///////////////////////////////////////////////////////////////////////////
 	//                     Initialization methods                            //
 	///////////////////////////////////////////////////////////////////////////
 	
-	public ServletMappings(@NotNull List<UrlPatternMapping> servletMappings,
-                           @NotNull List<ClassMapping> servlets,
-                           @NotNull ProjectDirectory projectDirectory,
-                           @NotNull Map<String, String> contextParams) {
+	public ServletMappings(@Nonnull List<UrlPatternMapping> servletMappings,
+                           @Nonnull List<ClassMapping> servlets,
+                           @Nonnull ProjectDirectory projectDirectory,
+                           @Nonnull Map<String, String> contextParams) {
 		this.allServletMappings = servletMappings;
 		this.servlets = servlets;
 		this.projectDirectory = projectDirectory;
@@ -127,8 +127,8 @@ public class ServletMappings {
 	 * Returns a list of URL patterns
 	 * @return List containing url patterns, or empty list if none are found.
 	 */
-	@NotNull
-    public List<String> getURLPatternsForClass(@NotNull String classWithPackage) {
+	@Nonnull
+    public List<String> getURLPatternsForClass(@Nonnull String classWithPackage) {
 		List<String> mappings = new ArrayList<>();
 
 		String servletName = null;
@@ -153,8 +153,8 @@ public class ServletMappings {
 	 * Get a class based on a URL
 	 * @return default servlet, or a class if one is found.
 	 */
-	@NotNull
-    public String getClassForURL(@NotNull String path) {
+	@Nonnull
+    public String getClassForURL(@Nonnull String path) {
 		String servletName = findServletName(path);
 		
 		for (ClassMapping entry : servlets) {
@@ -166,7 +166,7 @@ public class ServletMappings {
 		return DEFAULT_SERVLET;
 	}
 	
-	@NotNull
+	@Nonnull
     public FrameworkType guessApplicationType() {
 		// Since we're only looking at two types of applications, this logic is pretty simple
 		// In a full-blown implementation, this method would be able to return lots of other types too.
@@ -194,8 +194,8 @@ public class ServletMappings {
     /**
      * @return the servlet name, or null if none is found
      */
-    @NotNull
-	private String findServletName(@NotNull String path) {
+    @Nonnull
+	private String findServletName(@Nonnull String path) {
 		
 		if (path.equals("") || path.equals("/")) {
 			// Use context root servlet
@@ -263,7 +263,7 @@ public class ServletMappings {
         return defaultServlet.getServletName();
 	}
 	
-	private int getMatchLength(@NotNull String path, @NotNull String urlPattern) {
+	private int getMatchLength(@Nonnull String path, @Nonnull String urlPattern) {
 		String pathPart = getNextPathSegment(path),
 				urlPart = getNextPathSegment(urlPattern);
 		
@@ -276,8 +276,8 @@ public class ServletMappings {
 		}
 	}
 	
-	@NotNull
-    private String stringAfterSegment(@NotNull String string, @NotNull String segment) {
+	@Nonnull
+    private String stringAfterSegment(@Nonnull String string, @Nonnull String segment) {
 		return string.substring(string.indexOf(segment) + segment.length());
 	}
 	

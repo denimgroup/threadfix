@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -66,6 +67,7 @@ public class Organization extends AuditableEntity {
 
 	@OneToMany(mappedBy = "organization")
 	@OrderBy("name")
+    @JsonView(AllViews.TableRow.class)
 	public List<Application> getApplications() {
 		return applications;
 	}
@@ -84,29 +86,29 @@ public class Organization extends AuditableEntity {
 	public void setSurveyResults(List<SurveyResult> surveyResults) {
 		this.surveyResults = surveyResults;
 	}
-	
-	@Transient
-	@JsonIgnore
-	public List<Application> getActiveApplications() {
-		if (activeApps == null) {
-			activeApps = new ArrayList<Application>();
-			for (Application application : this.applications) {
-				if (application.isActive())
-					activeApps.add(application);
-			}
-		}
-		return activeApps;
-	}
-	
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public List<AccessControlTeamMap> getAccessControlTeamMaps() {
+        return accessControlTeamMaps;
+    }
+
+    @Transient
+    @JsonView(AllViews.RestViewTeam2_1.class)
+    public List<Application> getActiveApplications() {
+        if (activeApps == null && this.applications != null) {
+            activeApps = new ArrayList<Application>();
+            for (Application application : this.applications) {
+                if (application.isActive())
+                    activeApps.add(application);
+            }
+        }
+        return activeApps;
+    }
+
 	// This can be used to set temporary filtered lists of apps for a team
 	public void setActiveApplications(List<Application> apps) {
 		activeApps = apps;
-	}
-	
-	@OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-	@JsonIgnore
-	public List<AccessControlTeamMap> getAccessControlTeamMaps() {
-		return accessControlTeamMaps;
 	}
 
 	public void setAccessControlTeamMaps(List<AccessControlTeamMap> accessControlTeamMaps) {
@@ -141,6 +143,7 @@ public class Organization extends AuditableEntity {
 	}
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public Integer getTotalVulnCount() {
         return totalVulnCount;
     }
@@ -150,11 +153,13 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public Integer getInfoVulnCount() {
         return infoVulnCount;
     }
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public void setInfoVulnCount(Integer infoVulnCount) {
         this.infoVulnCount = infoVulnCount;
     }
@@ -164,6 +169,7 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public void setLowVulnCount(Integer lowVulnCount) {
         this.lowVulnCount = lowVulnCount;
     }
@@ -173,6 +179,7 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public void setMediumVulnCount(Integer mediumVulnCount) {
         this.mediumVulnCount = mediumVulnCount;
     }
@@ -182,11 +189,13 @@ public class Organization extends AuditableEntity {
     }
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public void setHighVulnCount(Integer highVulnCount) {
         this.highVulnCount = highVulnCount;
     }
 
     @Column
+    @JsonView({ AllViews.RestViewTeam2_1.class, AllViews.TableRow.class })
     public Integer getCriticalVulnCount() {
         return criticalVulnCount;
     }

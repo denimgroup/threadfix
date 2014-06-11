@@ -29,8 +29,8 @@ import java.util.Set;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.filefilter.IOFileFilter;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This class checks for annotations given by getClassAnnotations before the class
@@ -42,7 +42,7 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 	
 	private final SanitizedLogger log = new SanitizedLogger("AnnotationBasedFileFilter");
 	
-	@NotNull
+	@Nonnull
     protected abstract Set<String> getClassAnnotations();
 	
 	@Override
@@ -80,7 +80,7 @@ public abstract class ClassAnnotationBasedFileFilter implements IOFileFilter {
 	 * This should just proxy to the other method
 	 */
 	@Override
-	public boolean accept(@NotNull File file, String name) {
+	public boolean accept(@Nonnull File file, String name) {
 		return accept(new File(file.getAbsolutePath() + File.pathSeparator + name));
 	}
 }

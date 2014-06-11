@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.service.translator;
 import java.io.File;
 
 import org.eclipse.jgit.lib.Repository;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -40,9 +40,9 @@ import com.denimgroup.threadfix.service.repository.GitService;
 
 class FindingProcessorFactory {
 
-	@NotNull
-	public static FindingProcessor getProcessor(@NotNull Application application,
-			@NotNull Scan scan) {
+	@Nonnull
+	public static FindingProcessor getProcessor(@Nonnull Application application,
+			@Nonnull Scan scan) {
 		
 		SourceCodeAccessLevel accessLevel = getSourceCodeAccessLevel(application, scan);
 		File rootFile = getRootFile(application);
@@ -65,10 +65,10 @@ class FindingProcessorFactory {
 		return processor;
 	}
 	
-	@NotNull
+	@Nonnull
 	private static SourceCodeAccessLevel getSourceCodeAccessLevel(
-			@NotNull Application application,
-			@NotNull Scan scan) {
+			@Nonnull Application application,
+			@Nonnull Scan scan) {
 		
 		SourceCodeAccessLevel accessLevel = SourceCodeAccessLevel.NONE;
 		
@@ -128,7 +128,7 @@ class FindingProcessorFactory {
 		return applicationDirectory;
 	}
 
-	@NotNull
+	@Nonnull
 	private static FrameworkType getFrameworkType(Application application,
 			SourceCodeAccessLevel accessLevel, File rootFile, Scan scan) {
 		

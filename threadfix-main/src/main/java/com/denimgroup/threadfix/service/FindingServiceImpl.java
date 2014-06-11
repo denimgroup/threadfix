@@ -30,7 +30,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -252,8 +252,8 @@ public class FindingServiceImpl implements FindingService {
 	/**
 	 * 
 	 */
-    @NotNull
-    public String checkRequestForFindingParameters(@NotNull HttpServletRequest request) {
+    @Nonnull
+    public String checkRequestForFindingParameters(@Nonnull HttpServletRequest request) {
 		String longDescription = request.getParameter("longDescription");
 		if (longDescription == null || longDescription.trim().equals("") || 
 				longDescription.length() > Finding.LONG_DESCRIPTION_LENGTH) {

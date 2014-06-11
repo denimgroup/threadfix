@@ -38,7 +38,7 @@ import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.hibernate.SessionFactory;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -753,7 +753,7 @@ public class ReportsServiceImpl implements ReportsService {
                     vuln.getSurfaceLocation().getParameter(),
                     vuln.getGenericSeverity().getName(),
                     openedDate,
-                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getId().toString()));
+                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId().toString()));
         }
         return rowParamsList;
     }

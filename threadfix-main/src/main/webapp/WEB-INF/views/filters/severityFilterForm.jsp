@@ -1,6 +1,6 @@
 
 
-<div ng-show="severitySuccessMessage" class="alert alert-success">
+<div id="severitySuccessMessage" ng-show="severitySuccessMessage" class="alert alert-success">
     <button class="close" ng-click="severitySuccessMessage = undefined" type="button">&times;</button>
     {{ severitySuccessMessage }}
 </div>

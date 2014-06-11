@@ -23,19 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
 class BeanFieldSet implements Iterable<BeanField> {
 
-	@NotNull
+	@Nonnull
     private Map<String, BeanField> fieldMap = new HashMap<>();
 
-	@NotNull
+	@Nonnull
     private final Set<BeanField> fieldSet;
 	
-	public BeanFieldSet(@NotNull Set<BeanField> fields) {
+	public BeanFieldSet(@Nonnull Set<BeanField> fields) {
 		fieldSet = fields;
 		for (BeanField field : fields) {
 			fieldMap.put(field.getParameterKey(), field);
@@ -54,14 +54,14 @@ class BeanFieldSet implements Iterable<BeanField> {
 		return getField(paramName) != null;
 	}
 	
-	@NotNull
+	@Nonnull
     public BeanFieldSet add(BeanField beanField) {
 		this.fieldSet.add(beanField);
 		return this;
 	}
 	
-	@NotNull
-    public BeanFieldSet addAll(@NotNull BeanFieldSet beanFieldSet) {
+	@Nonnull
+    public BeanFieldSet addAll(@Nonnull BeanFieldSet beanFieldSet) {
 		this.fieldSet.addAll(beanFieldSet.fieldSet);
 		for (BeanField field : beanFieldSet.fieldSet) {
 			fieldMap.put(field.getParameterKey(), field);
@@ -69,7 +69,7 @@ class BeanFieldSet implements Iterable<BeanField> {
 		return this;
 	}
 	
-	@NotNull
+	@Nonnull
     public Collection<String> getPossibleParameters() {
 		List<String> strings = new ArrayList<>();
 		for (BeanField field : fieldSet) {
@@ -83,7 +83,7 @@ class BeanFieldSet implements Iterable<BeanField> {
         return fieldSet.toString();
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public Iterator<BeanField> iterator() {
 		return fieldSet.iterator();

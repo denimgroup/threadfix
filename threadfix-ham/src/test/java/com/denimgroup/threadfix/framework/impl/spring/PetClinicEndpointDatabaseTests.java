@@ -33,8 +33,8 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
@@ -64,7 +64,7 @@ public class PetClinicEndpointDatabaseTests {
 		}
 	}
 	
-	@NotNull
+	@Nonnull
     String[][] dynamicToStaticTests = new String[][] {
 			{ "/petclinic/owners", "/src/main/java/org/springframework/samples/petclinic/web/OwnerController.java" },
 			{ "/petclinic/owners.html", "/src/main/java/org/springframework/samples/petclinic/web/OwnerController.java" },
@@ -89,8 +89,8 @@ public class PetClinicEndpointDatabaseTests {
 			{ "/petclinic/owners/36/pets/new", "/src/main/java/org/springframework/samples/petclinic/web/PetController.java" },
 	};
 	
-	@NotNull
-    private String getStaticPath(@NotNull EndpointDatabase db, String dynamicPath) {
+	@Nonnull
+    private String getStaticPath(@Nonnull EndpointDatabase db, String dynamicPath) {
 		EndpointQuery query = EndpointQueryBuilder.start()
 				.setInformationSourceType(InformationSourceType.DYNAMIC)
 				.setDynamicPath(dynamicPath)
@@ -99,7 +99,7 @@ public class PetClinicEndpointDatabaseTests {
 		return db.findBestMatch(query).getFilePath();
 	}
 	
-	@NotNull
+	@Nonnull
     String[][] httpMethodTests = new String[][] {
 			{ "/petclinic/owners/new", "GET", "60" },
 			{ "/petclinic/owners/new", "POST", "67" },
@@ -165,7 +165,7 @@ public class PetClinicEndpointDatabaseTests {
 
 
     // TODO once we figure out what's going on with parameters let's patch these up
-	@NotNull
+	@Nonnull
     String[][] parameterTests = new String[][] {
 			{ "/petclinic/owners/new", null, "60" },
 			{ "/petclinic/owners/new", "lastName", "67" },

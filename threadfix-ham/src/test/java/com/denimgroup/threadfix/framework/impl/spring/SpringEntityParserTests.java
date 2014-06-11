@@ -28,18 +28,18 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.TestConstants;
 
 public class SpringEntityParserTests {
 	
-	@NotNull
+	@Nonnull
     File testFile = new File(TestConstants.PETCLINIC_SOURCE_LOCATION +
 			TestConstants.SPRING_MODELS_PREFIX + TestConstants.SPRING_OWNER_MODEL);
 
-	@NotNull
+	@Nonnull
     SpringEntityParser parser = SpringEntityParser.parse(testFile);
 	
 	@Test

@@ -23,22 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
-import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMappingDatabase;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMappingsDatabaseFactory;
-import org.jetbrains.annotations.Nullable;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class PartialSourceFindingProcessor implements FindingProcessor {
 
@@ -50,11 +50,11 @@ class PartialSourceFindingProcessor implements FindingProcessor {
     @Nullable
 	private final ParameterParser parameterParser;
 
-    @NotNull
+    @Nonnull
     private final FindingProcessor noSourceProcessor;
 	
-	public PartialSourceFindingProcessor(@NotNull ProjectConfig projectConfig,
-			@NotNull Scan scan) {
+	public PartialSourceFindingProcessor(@Nonnull ProjectConfig projectConfig,
+			@Nonnull Scan scan) {
         PathCleaner cleaner = PathCleanerFactory.getPathCleaner(
                 projectConfig.getFrameworkType(), ThreadFixInterface.toPartialMappingList(scan));
 
@@ -70,7 +70,7 @@ class PartialSourceFindingProcessor implements FindingProcessor {
         log.info("Initialized with ParameterParser = " + parameterParser);
 	}
 
-	public void train(@NotNull Application application) {
+	public void train(@Nonnull Application application) {
 		if (database != null && application.getScans() != null) {
 			for (Scan scan : application.getScans()) {
 				if (scan != null) {
@@ -81,7 +81,7 @@ class PartialSourceFindingProcessor implements FindingProcessor {
 	}
 	
 	@Override
-	public void process(@NotNull Finding finding) {
+	public void process(@Nonnull Finding finding) {
 		PartialMapping query = ThreadFixInterface.toPartialMapping(finding);
 		
 		PartialMapping endpoint = null;

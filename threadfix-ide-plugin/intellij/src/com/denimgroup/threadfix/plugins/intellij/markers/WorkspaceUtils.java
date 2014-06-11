@@ -31,7 +31,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VFileProperty;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.*;
 
@@ -95,7 +95,7 @@ public class WorkspaceUtils {
         return map;
     }
 
-    private static void visitChildrenRecursively(@NotNull VirtualFile file, Collector collector) {
+    private static void visitChildrenRecursively(@Nonnull VirtualFile file, Collector collector) {
 
         // IntelliJ warns about file.getChildren because of symlinks, but we check for symlinks.
         // This is the same protection afforded by their proposed VfsUtilCore solution.
@@ -110,14 +110,14 @@ public class WorkspaceUtils {
     }
 
     interface Collector {
-        void collect(@NotNull VirtualFile file);
+        void collect(@Nonnull VirtualFile file);
     }
 
     private static class MapEntryCollector implements Collector {
 
         private final Map<String, Set<VirtualFile>> fileMap = new HashMap<String, Set<VirtualFile>>();
 
-        public void collect(@NotNull VirtualFile file) {
+        public void collect(@Nonnull VirtualFile file) {
             if (!fileMap.containsKey(file.getName())) {
                 fileMap.put(file.getName(), new HashSet<VirtualFile>());
             }
@@ -129,7 +129,7 @@ public class WorkspaceUtils {
     private static class CollectionCollector implements Collector {
         private final Collection<VirtualFile> fileCollection = new ArrayList<VirtualFile>();
 
-        public void collect(@NotNull VirtualFile file) {
+        public void collect(@Nonnull VirtualFile file) {
             fileCollection.add(file);
         }
     }

@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +117,7 @@ public class ThreadFixInterface {
                 }
             }
 
-            @NotNull
+            @Nonnull
             @Override
             public FrameworkType guessFrameworkType() {
                 return FrameworkType.NONE;

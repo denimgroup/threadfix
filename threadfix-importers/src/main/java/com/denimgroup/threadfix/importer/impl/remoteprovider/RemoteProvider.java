@@ -23,16 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ProxyService;
-import org.apache.commons.httpclient.HttpClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -46,9 +43,6 @@ import java.io.Reader;
 import java.util.List;
 
 public abstract class RemoteProvider extends AbstractChannelImporter {
-
-    @Autowired(required = false)
-    protected ProxyService proxyService;
 
 	public RemoteProvider(ScannerType scannerType) {
 		super(scannerType);
@@ -65,22 +59,6 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	public void setRemoteProviderType(RemoteProviderType remoteProviderType) {
 		this.remoteProviderType = remoteProviderType;
 	}
-
-    private HttpClient instance = null;
-
-    protected <T> HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
-        if (instance == null) {
-            if (proxyService == null) {
-                instance = new HttpClient();
-            } else {
-                instance = proxyService.getClientWithProxyConfig(classToProxy);
-            }
-        }
-
-        assert instance != null;
-
-        return instance;
-    }
 
 	// These are to make AbstractChannelImporter happy while still getting all of the utility methods from it.
 	@Override
@@ -123,7 +101,7 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
                 inputStream.close();
 			} catch (IOException e) {
                 LOG.error("Failed to close the input stream in RemoteProvider.", e);
-			}
-		}
-	}
+            }
+        }
+    }
 }

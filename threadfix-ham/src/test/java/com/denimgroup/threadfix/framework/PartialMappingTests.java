@@ -27,7 +27,7 @@ package com.denimgroup.threadfix.framework;
 import static org.junit.Assert.assertTrue;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
@@ -40,7 +40,7 @@ public class PartialMappingTests {
 	private static final String JPA_REPO  = "java/org/springframework/samples/petclinic/repository/jpa/JpaOwnerRepositoryImpl.java";
 	private static final String JDBC_REPO = "java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java";
 	
-	@NotNull
+	@Nonnull
     private String[][] petClinicFortifyData = {
 		{ JDBC_REPO, "/owners" },
 		{ JPA_REPO, "/owners" },

@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -94,8 +94,8 @@ public interface FindingService {
 	 * @param request
 	 * @return
 	 */
-    @NotNull
-	String checkRequestForFindingParameters(@NotNull HttpServletRequest request);
+    @Nonnull
+	String checkRequestForFindingParameters(@Nonnull HttpServletRequest request);
 
 	/**
 	 * 

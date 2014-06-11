@@ -24,11 +24,14 @@
 
 package com.denimgroup.threadfix.service.util;
 
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import org.apache.poi.ss.formula.functions.T;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 public final class ControllerUtils {
 	
@@ -114,5 +117,18 @@ public final class ControllerUtils {
         mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
 
         return mapper.writerWithView(targetClass);
+    }
+
+    public static String writeSuccessObjectWithView(Object object, Class view) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
+
+        ObjectWriter writer = mapper.writerWithView(view);
+
+        try {
+            return writer.writeValueAsString(RestResponse.success(object));
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to write JSON Object.", e);
+        }
     }
 }

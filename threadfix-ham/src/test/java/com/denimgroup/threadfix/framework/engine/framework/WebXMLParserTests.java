@@ -36,7 +36,7 @@ import java.io.File;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 import org.junit.Test;
 
 public class WebXMLParserTests {

@@ -37,4 +37,8 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
         $scope.numVulns = numVulns;
     });
 
+    $scope.$on('successMessage', function(event, message) {
+        $scope.successMessage = message;
+    });
+
 });

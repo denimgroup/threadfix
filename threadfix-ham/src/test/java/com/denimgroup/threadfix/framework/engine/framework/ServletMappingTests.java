@@ -40,7 +40,7 @@ import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
 import com.denimgroup.threadfix.framework.engine.framework.UrlPatternMapping;
 import com.denimgroup.threadfix.framework.engine.framework.WebXMLParser;
 import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 public class ServletMappingTests {
@@ -49,7 +49,7 @@ public class ServletMappingTests {
     ///////////////////////// Sample Data //////////////////////////
     ////////////////////////////////////////////////////////////////
     
-    @NotNull
+    @Nonnull
     List<ClassMapping> sampleServlets = makeClassMappings(
 			// WebLogic examples
 			// http://docs.oracle.com/cd/E13222_01/wls/docs92/webapp/configureservlet.html#wp156745
@@ -67,7 +67,7 @@ public class ServletMappingTests {
 			"servlet4", "myservlets.servlet4"
 			);
 	
-	@NotNull
+	@Nonnull
     List<UrlPatternMapping> sampleServletMappings = makeUrlPatternMappings(
 			"watermelon", "/fruit/summer/*",
 			"garden", "/seeds/*",
@@ -184,13 +184,13 @@ public class ServletMappingTests {
         return new ServletMappings(sampleServletMappings, sampleServlets, new ProjectDirectory(File.createTempFile("test", "test")), null);
     }
 
-    @NotNull
+    @Nonnull
     private Entry<String,String> entry(String key, String value) {
     	return new SimpleEntry<>(key, value);
     }
 
-    @NotNull
-    private List<Entry<String,String>> makeMappingsList(@NotNull String... strings) {
+    @Nonnull
+    private List<Entry<String,String>> makeMappingsList(@Nonnull String... strings) {
     	List<Entry<String,String>> mappings = new ArrayList<>();
 
     	for (int i = 0; i < strings.length - 1; i += 2) {
@@ -200,8 +200,8 @@ public class ServletMappingTests {
     	return mappings;
     }
 
-    @NotNull
-    private List<ClassMapping> makeClassMappings(@NotNull String... strings) {
+    @Nonnull
+    private List<ClassMapping> makeClassMappings(@Nonnull String... strings) {
     	List<ClassMapping> mappings = new ArrayList<>();
     	
     	for (int i = 0; i < strings.length - 1; i += 2) {
@@ -211,8 +211,8 @@ public class ServletMappingTests {
     	return mappings;
     }
     
-    @NotNull
-    private List<UrlPatternMapping> makeUrlPatternMappings(@NotNull String... strings) {
+    @Nonnull
+    private List<UrlPatternMapping> makeUrlPatternMappings(@Nonnull String... strings) {
     	List<UrlPatternMapping> mappings = new ArrayList<>();
     	
     	for (int i = 0; i < strings.length - 1; i += 2) {

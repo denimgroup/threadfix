@@ -28,13 +28,13 @@ import static org.junit.Assert.assertTrue;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.junit.Test;
 
 public class EnumTests {
 	
-	@NotNull
-    private String upperAndUnderscore(@NotNull String input) {
+	@Nonnull
+    private String upperAndUnderscore(@Nonnull String input) {
 		return input.toUpperCase().replace(' ', '_');
 	}
 

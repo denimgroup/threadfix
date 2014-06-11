@@ -23,18 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class BeanField {
 	
-	public BeanField(@NotNull String fieldType, @NotNull String methodName) {
+	public BeanField(@Nonnull String fieldType, @Nonnull String methodName) {
 		this.fieldType = fieldType;
         this.parameterKey = getParameterKey(methodName);
 	}
 	
-	@NotNull
-    private String getParameterKey(@NotNull String methodCall) {
+	@Nonnull
+    private String getParameterKey(@Nonnull String methodCall) {
 		String propertyName = methodCall;
 		
 		if (methodCall.startsWith("get") && methodCall.length() > 3) {
@@ -46,15 +46,15 @@ class BeanField {
 		return propertyName;
 	}
 
-	@NotNull
+	@Nonnull
     private final String fieldType, parameterKey;
 
-	@NotNull
+	@Nonnull
     public String getType() {
 		return fieldType;
 	}
 
-	@NotNull
+	@Nonnull
     public String getParameterKey() {
 		return parameterKey;
 	}
@@ -63,7 +63,7 @@ class BeanField {
 		return "Integer".equals(fieldType) || "String".equals(fieldType) || "int".equals(fieldType);
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return parameterKey + ":" + fieldType;

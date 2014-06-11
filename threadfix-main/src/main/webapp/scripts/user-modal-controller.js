@@ -22,6 +22,14 @@ myAppModule.controller('UserModalController', function ($scope, $modalInstance, 
     $scope.ok = function (valid) {
 
         if (valid) {
+
+            var copy = angular.copy($scope.user)
+
+            if (!copy.hasGlobalGroupAccess) {
+                copy.globalRole = undefined;
+            }
+
+
             $scope.loading = true;
 
             threadFixModalService.post(url, $scope.user).

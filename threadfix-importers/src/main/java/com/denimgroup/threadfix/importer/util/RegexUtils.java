@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.annotation.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,10 +40,11 @@ public class RegexUtils {
     /**
      * Utility to prevent declaring a bunch of Matchers and Patterns.
      *
-     * @param targetString
-     * @param regex
+     * @param targetString string to have regex applied to it
+     * @param regex the regular expression
      * @return result of applying Regex
      */
+    @Nullable
     public static String getRegexResult(String targetString, String regex) {
         if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
             LOG.warn("getRegexResult got null or empty input.");
@@ -52,11 +54,7 @@ public class RegexUtils {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(targetString);
 
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return null;
-        }
+        return matcher.find() ? matcher.group(1) : null;
     }
 
 }

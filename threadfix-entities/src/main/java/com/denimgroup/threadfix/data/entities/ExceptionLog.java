@@ -49,7 +49,7 @@ public final class ExceptionLog extends BaseEntity {
 	 */
 	public ExceptionLog(){}
 	
-	public ExceptionLog(Exception e) {
+	public ExceptionLog(Throwable e) {
 		if (e == null || e.getStackTrace() == null)
 			return;
 		

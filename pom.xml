@@ -246,6 +246,30 @@
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <id>dependencycheck</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.owasp</groupId>
+                            <artifactId>dependency-check-maven</artifactId>
+                            <version>1.2.1</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>check</goal>
+                                    </goals>
+                                    <configuration>
+                                        <format>xml</format>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
     </profiles>
 
     <properties>
@@ -263,6 +287,7 @@
         <browserlauncher2.version>1.3</browserlauncher2.version>
         <codehaus.jackson.version>1.9.13</codehaus.jackson.version>
         <cglib.version>2.2.2</cglib.version>
+        <findbugs.jsr305.version>2.0.3</findbugs.jsr305.version>
         <commons.beanutils.version>1.8.3</commons.beanutils.version>
         <commons.codec.version>1.4</commons.codec.version>
         <commons.collections.version>3.2.1</commons.collections.version>
@@ -286,7 +311,6 @@
         <javassist.version>3.12.0.GA</javassist.version>
         <jdom.version>2.0.2</jdom.version>
         <jericho.version>3.1</jericho.version>
-        <jetbrains-annotations.version>13</jetbrains-annotations.version>
         <jgit.version>2.3.1.201302201838-r</jgit.version>
         <jgoodies-looks.version>2.4.0</jgoodies-looks.version>
         <jh.version>2.0</jh.version>
@@ -302,7 +326,7 @@
         <persistence.version>1.0</persistence.version>
         <quartz.version>1.8.6</quartz.version>
         <rsyntaxtextarea.version>2.5.0</rsyntaxtextarea.version>
-        <selenium.version>2.41.0</selenium.version>
+        <selenium.version>2.38.0</selenium.version>
         <servlet-api.version>3.0.1</servlet-api.version>
         <sitemesh.version>2.4.2</sitemesh.version>
         <slf4j.version>1.6.1</slf4j.version>

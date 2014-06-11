@@ -185,7 +185,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
     $scope.openAppModal = function(provider, app) {
         var modalInstance = $modal.open({
             templateUrl: 'editRemoteProviderApplicationMapping.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'RemoteProviderModalMappingController',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/edit");

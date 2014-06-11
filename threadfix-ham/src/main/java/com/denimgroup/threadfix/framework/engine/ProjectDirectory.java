@@ -33,8 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 
@@ -43,28 +43,28 @@ public class ProjectDirectory {
 	
 	private File directory;
 	
-	@NotNull
+	@Nonnull
     private final Map<String, Set<String>> fileMap;
 	
 	private final SanitizedLogger log = new SanitizedLogger("ProjectDirectory");
 	
-	public ProjectDirectory(@NotNull File directory) {
+	public ProjectDirectory(@Nonnull File directory) {
 		this.directory = directory;
 		fileMap = buildMaps(directory);
 	}
 
-    @NotNull
+    @Nonnull
     public File getDirectory() {
         return directory;
     }
 	
-	@NotNull
+	@Nonnull
 	public String getDirectoryPath() {
 		return directory.getAbsolutePath();
 	}
 
-    @NotNull
-    private Map<String, Set<String>> buildMaps(@NotNull File startingFile) {
+    @Nonnull
+    private Map<String, Set<String>> buildMaps(@Nonnull File startingFile) {
 		Map<String, Set<String>> returnMap = new HashMap<>();
 		
 		if (startingFile.isDirectory()) {
@@ -79,7 +79,7 @@ public class ProjectDirectory {
         return directory.toString();
     }
 	
-	private void recurseMap(@NotNull File currentDirectory, @NotNull Map<String, Set<String>> map) {
+	private void recurseMap(@Nonnull File currentDirectory, @Nonnull Map<String, Set<String>> map) {
 		if (!currentDirectory.isDirectory() || !currentDirectory.exists()) {
 			return;
 		}
@@ -106,7 +106,7 @@ public class ProjectDirectory {
     	}
 	}
 	
-	private void addToMap(@NotNull Map<String, Set<String>> map, @NotNull File file) {
+	private void addToMap(@Nonnull Map<String, Set<String>> map, @Nonnull File file) {
 		if (!map.containsKey(file.getName())) {
 			map.put(file.getName(), new HashSet<String>());
 		}
@@ -128,8 +128,8 @@ public class ProjectDirectory {
 		return findFile("web.xml", "WEB-INF", "web.xml");
 	}
 
-    @NotNull
-	public List<File> findFiles(@NotNull String pathWithStars) {
+    @Nonnull
+	public List<File> findFiles(@Nonnull String pathWithStars) {
 		List<File> files;
 		
 		if (pathWithStars.contains("*")) {
@@ -143,8 +143,8 @@ public class ProjectDirectory {
 		return files;
 	}
 
-    @NotNull
-    private List<File> findFilesWithStar(@NotNull String path) {
+    @Nonnull
+    private List<File> findFilesWithStar(@Nonnull String path) {
 		List<File> returnFile = new ArrayList<>();
 		String[] pathSegments = breakUpPath(path);
 		
@@ -155,8 +155,8 @@ public class ProjectDirectory {
 		return returnFile;
 	}
 
-    @NotNull
-    private List<File> findFilesWithStar(@NotNull String fileName, @NotNull String... pathSegments) {
+    @Nonnull
+    private List<File> findFilesWithStar(@Nonnull String fileName, @Nonnull String... pathSegments) {
 		List<File> returnFile = new ArrayList<>();
 		
 		if (fileName.contains("*")) {
@@ -190,7 +190,7 @@ public class ProjectDirectory {
 		return returnFile;
 	}
 	
-	private boolean matches(@NotNull String item, @NotNull String[] segments) {
+	private boolean matches(@Nonnull String item, @Nonnull String[] segments) {
 		int size = segments.length;
 		
 		boolean result = false;
@@ -228,7 +228,7 @@ public class ProjectDirectory {
 	 * This will find the file on the file system with the same name and longest common
 	 */
     @Nullable
-	public File findFile(@NotNull String path) {
+	public File findFile(@Nonnull String path) {
 		File returnFile = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -240,7 +240,7 @@ public class ProjectDirectory {
 	}
 
     @Nullable
-    private File findFile(@NotNull String fileName, @NotNull String... pathSegments) {
+    private File findFile(@Nonnull String fileName, @Nonnull String... pathSegments) {
 		File returnFile = null;
 		
 		if (fileMap.containsKey(fileName) && !fileMap.get(fileName).isEmpty()) {
@@ -257,7 +257,7 @@ public class ProjectDirectory {
 	}
 
     @Nullable
-	public String findCanonicalFilePath(@NotNull String path, @NotNull String root) {
+	public String findCanonicalFilePath(@Nonnull String path, @Nonnull String root) {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -277,7 +277,7 @@ public class ProjectDirectory {
 	}
 
     @Nullable
-    public String findCanonicalFilePath(@NotNull String path) {
+    public String findCanonicalFilePath(@Nonnull String path) {
 		String returnString = null;
 		String[] pathSegments = breakUpPath(path);
 		
@@ -297,7 +297,7 @@ public class ProjectDirectory {
 	}
 
     @Nullable
-    public String findCanonicalFilePath(@NotNull File file) {
+    public String findCanonicalFilePath(@Nonnull File file) {
         String filePath = null;
 
         if (file.exists() && file.getAbsolutePath().startsWith(directory.getAbsolutePath())) {
@@ -308,7 +308,7 @@ public class ProjectDirectory {
     }
 	
 	@Nullable
-    private String findFilePath(String name, @NotNull String... pathSegments) {
+    private String findFilePath(String name, @Nonnull String... pathSegments) {
 		String returnPath = null;
 		
 		if (fileMap.containsKey(name) && !fileMap.get(name).isEmpty()) {
@@ -320,7 +320,7 @@ public class ProjectDirectory {
 
 	// score all the items in the set of choices against the given path segments
 	@Nullable
-    private String calculateBestOption(@NotNull String[] pathSegments, @NotNull Set<String> choices) {
+    private String calculateBestOption(@Nonnull String[] pathSegments, @Nonnull Set<String> choices) {
 		String returnOption = null;
 		
 		int highestScore = -1;
@@ -342,8 +342,8 @@ public class ProjectDirectory {
 	}
 
 	// split along / or \ or just return the whole path
-    @NotNull
-	private String[] breakUpPath(@NotNull String choice) {
+    @Nonnull
+	private String[] breakUpPath(@Nonnull String choice) {
 		String[] results;
 		
 		if (choice.indexOf('/') != -1) {
@@ -358,7 +358,7 @@ public class ProjectDirectory {
 	}
 	
 	// calculates the length of the common end elements
-	private int calculateScore(@NotNull String[] option, @NotNull String[] path) {
+	private int calculateScore(@Nonnull String[] option, @Nonnull String[] path) {
 		int score = 0;
 		
 		if (option.length != 0 && path.length != 0) {

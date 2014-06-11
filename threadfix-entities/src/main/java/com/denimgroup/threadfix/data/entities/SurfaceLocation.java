@@ -35,6 +35,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "SurfaceLocation")
@@ -101,7 +103,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PARAMETER_LENGTH)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
 	public String getParameter() {
 		return parameter;
 	}
@@ -111,7 +113,7 @@ public class SurfaceLocation extends BaseEntity {
 	}
 
 	@Column(length = PATH_LENGTH)
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
 	public String getPath() {
 		return path;
 	}
@@ -168,20 +170,24 @@ public class SurfaceLocation extends BaseEntity {
 	 */
 	@Transient
     @JsonIgnore
+    @JsonView(AllViews.RestView2_1.class)
 	public URL getUrl() {
 		if (url == null) {
 			try {
 				int tempPort = -1;
 				// 0 is the default (and the field can't be null), but -1 is the
-				// default for the URL
-				// constructor
+				// default for the URL constructor
 				if (port != 0)
 					tempPort = port;
 
 				if ((protocol != null) && (host != null) && (tempPort != -1) && (path != null)) {
 					url = new URL(protocol, host, tempPort, path + '?' + query);
 				} else if (path != null && host != null) {
-					url = new URL("http", host, tempPort, path);
+
+                    String HOST_PATTERN = "http://([a-zA-Z0-9_.]*)";
+                    String tempHost = getRegexResult(host, HOST_PATTERN);
+                    tempHost = (tempHost != null && !tempHost.isEmpty()) ? tempHost : host;
+					url = new URL("http", tempHost, tempPort, path);
 				} else if (path != null) {
 					url = new URL("http", "localhost", tempPort, path);
 				} else {
@@ -195,6 +201,19 @@ public class SurfaceLocation extends BaseEntity {
 		
 		return url;
 	}
+
+
+    private String getRegexResult(String targetString, String regex) {
+        if (targetString == null || targetString.isEmpty() || regex == null || regex.isEmpty()) {
+            LOGGER.warn("getRegexResult got null or empty input.");
+            return null;
+        }
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(targetString);
+
+        return matcher.find() ? matcher.group(1) : null;
+    }
 
 	/**
 	 * Sets the url's constituent parts for db stored. Stores a reference to the

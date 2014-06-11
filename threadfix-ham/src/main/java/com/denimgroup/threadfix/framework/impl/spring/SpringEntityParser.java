@@ -25,8 +25,8 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.HashSet;
@@ -34,13 +34,13 @@ import java.util.Set;
 
 public class SpringEntityParser implements EventBasedTokenizer {
 
-	@NotNull
+	@Nonnull
     private Set<BeanField> fieldMappings = new HashSet<>();
 	@Nullable
     private String className = null, superClass = null, currentParamType = null;
 	
-	@NotNull
-    public static SpringEntityParser parse(@NotNull File file) {
+	@Nonnull
+    public static SpringEntityParser parse(@Nonnull File file) {
 		SpringEntityParser parser = new SpringEntityParser();
 		EventBasedTokenizerRunner.run(file, parser);
 		return parser;
@@ -49,7 +49,7 @@ public class SpringEntityParser implements EventBasedTokenizer {
 	enum State {
 		START, CLASS, EXTENDS, PUBLIC, PARAM_TYPE
 	}
-	@NotNull
+	@Nonnull
     private State state = State.START;
 
     @Override
@@ -101,7 +101,7 @@ public class SpringEntityParser implements EventBasedTokenizer {
 		}
 	}
 
-	@NotNull
+	@Nonnull
     public Set<BeanField> getFieldMappings() {
 		return fieldMappings;
 	}

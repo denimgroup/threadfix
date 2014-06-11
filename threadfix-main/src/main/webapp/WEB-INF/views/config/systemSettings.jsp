@@ -17,28 +17,31 @@
 	<spring:url value="" var="emptyUrl"/>
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
         <div class="panel panel-default">
-            <div class="panel-heading pointer" style="width:200px" ng-click="editDefaultPermissions = !editDefaultPermissions">
+            <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDefaultPermissions = !editDefaultPermissions">
                 <h3 class="panel-title">
                     <span ng-hide="editDefaultPermissions" class="icon icon-chevron-right"></span>
                     <span ng-show="editDefaultPermissions" class="icon icon-chevron-down"></span>
-                    Default Permissions
+                    Default LDAP Role
                 </h3>
             </div>
             <div class="panel-body" ng-show="editDefaultPermissions">
                 <table class="dataTable">
                     <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_ROLES">
                         <tr>
-                            <td>Global Group enabled for new users?</td>
-                            <td class="inputValue" style="text-align: left;">
+                            <td>
+                                Default role enabled for LDAP users
+                            </td>
+                            <td class="inputValue" style="text-align: left;" ng-init="globalGroupEnabled = <c:out value="${ defaultConfiguration.globalGroupEnabled }"/>">
                                 <form:checkbox id="globalGroupEnabledCheckbox" path="globalGroupEnabled" ng-model="globalGroupEnabled"/>
                             </td>
                             <td class="inputValue">
                                 <form:select ng-disabled="!globalGroupEnabled" id="roleSelect" path="defaultRoleId">
-                                    <form:option value="0" label="Select a role" />
+                                    <form:option value="0" label="Read Access" />
                                     <form:options items="${ roleList }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </td>
                             <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+                                <a class="btn" popover="When LDAP users log in, ThreadFix can assign them a default role. If no role is selected here, the user will be unable to access any data in ThreadFix. To configure per-team and per-application permissions for an LDAP user, create a ThreadFix user with the same username.">?</a>
                                 <form:errors id="globalGroupEnabledErrors" path="globalGroupEnabled" cssClass="errors" />
                             </td>
                         </tr>
@@ -49,7 +52,7 @@
 
         <c:if test="${ isEnterprise }">
             <div class="panel panel-default">
-                <div class="panel-heading pointer" style="width:150px" ng-click="editLdapSettings = !editLdapSettings">
+                <div id="ldapSettingsPanel" class="panel-heading pointer" style="width:150px" ng-click="editLdapSettings = !editLdapSettings">
                     <h3 class="panel-title">
                         <span ng-hide="editLdapSettings" class="icon icon-chevron-right"></span>
                         <span ng-show="editLdapSettings" class="icon icon-chevron-down"></span>
@@ -98,7 +101,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading pointer" style="width:150px" ng-click="configureProxySettings = !configureProxySettings">
+                <div id="proxySettingsPanel" class="panel-heading pointer" style="width:150px" ng-click="configureProxySettings = !configureProxySettings">
                     <h3 class="panel-title">
                         <span ng-hide="configureProxySettings" class="icon icon-chevron-right"></span>
                         <span ng-show="configureProxySettings" class="icon icon-chevron-down"></span>

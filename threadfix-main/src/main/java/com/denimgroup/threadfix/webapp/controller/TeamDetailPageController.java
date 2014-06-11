@@ -30,28 +30,20 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.ApplicationCriticalityService;
-import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.service.LicenseService;
+import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
-import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -75,8 +67,6 @@ public class TeamDetailPageController {
 
     @Autowired
     private OrganizationService organizationService;
-    @Autowired
-    private ApplicationService applicationService;
     @Autowired
     private ApplicationCriticalityService applicationCriticalityService;
     @Autowired
@@ -116,6 +106,7 @@ public class TeamDetailPageController {
                 mav.addObject("canAddApps", true);
             }
 
+            mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());
             mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
@@ -142,6 +133,9 @@ public class TeamDetailPageController {
             Map<String, Object> map = new HashMap<>();
             map.put("team", organization);
             map.put("applications", apps);
+            if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
+                map.put("users", userService.getPermissibleUsers(orgId, null));
+            }
             restResponse = RestResponse.success(map);
         }
 
@@ -172,83 +166,6 @@ public class TeamDetailPageController {
             ControllerUtils.addSuccessMessage(request,
                     "Team " + teamName + " has been deleted successfully.");
             return "redirect:/";
-        }
-    }
-
-    @RequestMapping(value="/modalAddApp", method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
-            produces="application/json")
-    public @ResponseBody RestResponse<Application> submitAppFromDetailPage(@PathVariable("orgId") int orgId,
-               @Valid @ModelAttribute Application application, BindingResult result,
-               Model model) {
-        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
-            return RestResponse.failure("Permissions Failure");
-        }
-
-        Organization team = organizationService.loadOrganization(orgId);
-
-        if (team == null) {
-            log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
-            throw new ResourceNotFoundException();
-        }
-
-        String submitResult = submitApp(orgId, application,result,model);
-
-        if (submitResult.equals("Success")) {
-            log.info("Successfully created application " + application.getName() + " in team " + team.getName());
-
-            model.addAttribute("application", new Application());
-
-            return RestResponse.success(application);
-        } else {
-            model.addAttribute("organization", team);
-
-            return FormRestResponse.failure(submitResult, result);
-        }
-    }
-
-    public String submitApp(int orgId, @Valid @ModelAttribute Application application,
-                            BindingResult result, Model model) {
-
-        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
-            return "403";
-        }
-        Organization org;
-        if (application.getOrganization() == null) {
-            org = organizationService.loadOrganization(orgId);
-            if (org != null) {
-                application.setOrganization(org);
-            }
-        } else {
-            org = application.getOrganization();
-        }
-
-        applicationService.validateAfterCreate(application, result);
-
-        if (result.hasErrors()) {
-            PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_DEFECT_TRACKERS,
-                    Permission.CAN_MANAGE_WAFS);
-
-            model.addAttribute("org",org);
-            model.addAttribute("applicationTypes", FrameworkType.values());
-            model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
-                    Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
-
-            model.addAttribute("canSetWaf", PermissionUtils.isAuthorized(
-                    Permission.CAN_MANAGE_WAFS, orgId, null));
-
-            model.addAttribute("contentPage", "applications/forms/newApplicationForm.jsp");
-
-            return "ajaxFailureHarness";
-        } else {
-
-            applicationService.storeApplication(application);
-
-            String user = SecurityContextHolder.getContext().getAuthentication().getName();
-            log.debug("User " + user + " has created an Application with the name " + application.getName() +
-                    ", the ID " + application.getId() +
-                    ", and the Organization " + application.getOrganization().getName());
-
-            return "Success";
         }
     }
 }

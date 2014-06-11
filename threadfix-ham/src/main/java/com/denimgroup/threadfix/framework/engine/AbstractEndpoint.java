@@ -25,8 +25,8 @@
 package com.denimgroup.threadfix.framework.engine;
 
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 
 public abstract class AbstractEndpoint implements Endpoint {
@@ -50,17 +50,17 @@ public abstract class AbstractEndpoint implements Endpoint {
 	}
 	
 	// TODO finalize this
-	@NotNull
+	@Nonnull
     @Override
 	public String getCSVLine() {
 		return getToStringNoCommas(getHttpMethods()) + "," + getUrlPath() + "," + getToStringNoCommas(getParameters());
 	}
 	
-	private String getToStringNoCommas(@NotNull Object object) {
+	private String getToStringNoCommas(@Nonnull Object object) {
         return object.toString().replaceAll(",", "");
 	}
 	
-	@NotNull
+	@Nonnull
     @Override
 	public String toString() {
 		return getCSVLine();

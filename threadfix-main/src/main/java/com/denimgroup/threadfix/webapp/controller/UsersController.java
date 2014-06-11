@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -98,18 +97,7 @@ public class UsersController {
 		model.addAttribute("ldap_plugin", EnterpriseTest.isEnterprise());
 		model.addAttribute("users", users);
 		
-		User user = new User();
-		
-		DefaultConfiguration defaultsModel = defaultConfigService.loadCurrentConfiguration();
-		
-		if (defaultsModel != null) {
-			user.setHasGlobalGroupAccess(defaultsModel.getGlobalGroupEnabled());
-			if (user.getHasGlobalGroupAccess()) {
-				user.setGlobalRole(roleService.loadRole(defaultsModel.getDefaultRoleId()));
-			}
-		}
-		
-		model.addAttribute("user", user);
+		model.addAttribute("user", new User());
 		model.addAttribute("accessControlMapModel", new AccessControlMapModel());
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
@@ -118,7 +106,7 @@ public class UsersController {
 	}
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> Map() {
+    public @ResponseBody RestResponse<Map<String, Object>> map() {
         List<User> users = userService.loadAllUsers();
 
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();

@@ -81,7 +81,7 @@ public class ResponseParserTests {
 
         assertFalse("Response was null.", response == null);
 
-        assertTrue("Response string was null.", response.getObjectAsJsonString() != null);
+        assertTrue("Response string was null.", response.getOriginalJson() != null);
 
 
     }

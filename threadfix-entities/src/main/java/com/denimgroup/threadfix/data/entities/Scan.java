@@ -115,7 +115,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
     public Calendar getImportTime() {
 		return importTime;
 	}
@@ -147,6 +147,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+    @JsonView(AllViews.RestViewScan2_1.class)
 	public List<Finding> getFindings() {
 		return findings;
 	}
@@ -174,6 +175,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+    @JsonIgnore
 	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
 		return scanRepeatFindingMaps;
 	}
@@ -201,6 +203,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
+    @JsonView(AllViews.RestView2_1.class)
 	public Integer getNumberClosedVulnerabilities() {
 		return numberClosedVulnerabilities;
 	}
@@ -209,6 +212,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 		this.numberClosedVulnerabilities = numberClosedVulnerabilities;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
 	@Column
 	public Integer getNumberNewVulnerabilities() {
 		return numberNewVulnerabilities;
@@ -218,6 +222,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 		this.numberNewVulnerabilities = numberNewVulnerabilities;
 	}
 
+    @JsonView(AllViews.RestView2_1.class)
 	@Column
 	public Integer getNumberOldVulnerabilities() {
 		return numberOldVulnerabilities;
@@ -246,7 +251,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-	public Integer getNumberResurfacedVulnerabilities() {
+    @JsonView(AllViews.RestView2_1.class)
+    public Integer getNumberResurfacedVulnerabilities() {
 		return numberResurfacedVulnerabilities;
 	}
 
@@ -255,7 +261,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
     public Integer getNumberTotalVulnerabilities() {
 		return numberTotalVulnerabilities;
 	}
@@ -263,8 +269,9 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberTotalVulnerabilities(Integer numberTotalVulnerabilities) {
 		this.numberTotalVulnerabilities = numberTotalVulnerabilities;
 	}
-	
-	@Column
+
+    @JsonView(AllViews.RestView2_1.class)
+    @Column
 	public Integer getNumberRepeatFindings() {
 		return numberRepeatFindings;
 	}
@@ -272,8 +279,9 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setNumberRepeatFindings(Integer numberRepeatFindings) {
 		this.numberRepeatFindings = numberRepeatFindings;
 	}
-	
-	@Column
+
+    @JsonView(AllViews.RestView2_1.class)
+    @Column
 	public Integer getNumberRepeatResults() {
 		return numberRepeatResults;
 	}
@@ -360,7 +368,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public Long getNumberInfoVulnerabilities() {
 		return numberInfoVulnerabilities;
 	}
@@ -370,7 +378,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public Long getNumberLowVulnerabilities() {
 		return numberLowVulnerabilities;
 	}
@@ -380,7 +388,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public Long getNumberMediumVulnerabilities() {
 		return numberMediumVulnerabilities;
 	}
@@ -390,7 +398,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class })
 	public Long getNumberHighVulnerabilities() {
 		return numberHighVulnerabilities;
 	}
@@ -400,7 +408,7 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	}
 	
 	@Column
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class })
     public Long getNumberCriticalVulnerabilities() {
 		return numberCriticalVulnerabilities;
 	}
@@ -464,11 +472,17 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     // TODO figure out JSON serialization better
     @JsonView(AllViews.TableRow.class)
     @Transient
-    private Application getApp() {
-        return getApplication();
+    private Map<String, Object> getApp() {
+        Application app = getApplication();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", app.getId());
+        map.put("name", app.getName());
+
+        return map;
     }
 
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class})
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
     @Transient
     private String getScannerName() {
         return getApplicationChannel().getChannelType().getName();
@@ -476,7 +490,13 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
     @JsonView(AllViews.TableRow.class)
     @Transient
-    private Organization getTeam() {
-        return getApplication().getOrganization();
+    private Map<String, Object> getTeam() {
+        Organization team = getApplication().getOrganization();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", team.getId());
+        map.put("name", team.getName());
+
+        return map;
     }
 }

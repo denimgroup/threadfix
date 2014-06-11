@@ -305,7 +305,7 @@ public class CommandLineParser {
 
         if (response.success) {
             LOGGER.info("Operation successful, printing JSON output.");
-            System.out.println(response.getObjectAsJsonString());
+            System.out.println(response.getOriginalJson());
         } else {
             LOGGER.error("Operation unsuccessful, printing error message.");
             LOGGER.error(response.message);

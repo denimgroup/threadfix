@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.framework.impl.jsp;
 import java.io.File;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 class JSPFileFilter implements IOFileFilter {
 	
@@ -34,11 +34,11 @@ class JSPFileFilter implements IOFileFilter {
 	private JSPFileFilter(){}
 	
 	@Override
-	public boolean accept(@NotNull File file) {
+	public boolean accept(@Nonnull File file) {
 		return file.getName().contains(".jsp");
 	}
 	@Override
-	public boolean accept(File dir, @NotNull String name) {
+	public boolean accept(File dir, @Nonnull String name) {
 		return name.contains(".jsp");
 	}
 }

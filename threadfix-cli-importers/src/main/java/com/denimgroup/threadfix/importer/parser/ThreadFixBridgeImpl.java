@@ -68,6 +68,41 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
         return importer.checkFile();
     }
 
+    @Override
+    public void injectDependenciesManually(ChannelImporter importer) {
+        // We have to inject dependencies in right now
+        // TODO fix this, reflection = dirty. Maybe move DAO impls into entities package?
+
+        try {
+
+            Field field = AbstractChannelImporter.class.getDeclaredField("channelVulnerabilityDao");
+            field.setAccessible(true); // this is probably not a good idea
+            field.set(importer, channelVulnerabilityDao);
+
+            field = AbstractChannelImporter.class.getDeclaredField("channelTypeDao");
+            field.setAccessible(true);
+            field.set(importer, channelTypeDao);
+
+            field = AbstractChannelImporter.class.getDeclaredField("genericVulnerabilityDao");
+            field.setAccessible(true);
+            field.set(importer, genericVulnerabilityDao);
+
+            field = AbstractChannelImporter.class.getDeclaredField("channelSeverityDao");
+            field.setAccessible(true);
+            field.set(importer, channelSeverityDao);
+
+            if (importer instanceof AbstractChannelImporter) {
+                ((AbstractChannelImporter) importer).shouldDeleteAfterParsing = false;
+            } else {
+                throw new IllegalStateException("All channel importers need to extend " +
+                        "AbstractChannelImporter for this module to work.");
+            }
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Scan getScan(ScannerType type, File inputFile) {
         ChannelImporter importer = getImporter(type);
 
@@ -101,34 +136,7 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
         // We have to inject dependencies in right now
         // TODO fix this, reflection = dirty. Maybe move DAO impls into entities package?
 
-        try {
-
-            Field field = AbstractChannelImporter.class.getDeclaredField("channelVulnerabilityDao");
-            field.setAccessible(true); // this is probably not a good idea
-            field.set(importer, channelVulnerabilityDao);
-
-            field = AbstractChannelImporter.class.getDeclaredField("channelTypeDao");
-            field.setAccessible(true);
-            field.set(importer, channelTypeDao);
-
-            field = AbstractChannelImporter.class.getDeclaredField("genericVulnerabilityDao");
-            field.setAccessible(true);
-            field.set(importer, genericVulnerabilityDao);
-
-            field = AbstractChannelImporter.class.getDeclaredField("channelSeverityDao");
-            field.setAccessible(true);
-            field.set(importer, channelSeverityDao);
-
-            if (importer instanceof AbstractChannelImporter) {
-                ((AbstractChannelImporter) importer).shouldDeleteAfterParsing = false;
-            } else {
-                throw new IllegalStateException("All channel importers need to extend " +
-                        "AbstractChannelImporter for this module to work.");
-            }
-
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        injectDependenciesManually(importer);
 
         return importer;
     }

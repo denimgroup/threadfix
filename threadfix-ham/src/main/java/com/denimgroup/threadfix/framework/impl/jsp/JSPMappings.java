@@ -32,8 +32,8 @@ import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -51,7 +51,7 @@ public class JSPMappings implements EndpointGenerator {
     private final File projectRoot, jspRoot;
 	
 	@SuppressWarnings("unchecked")
-	public JSPMappings(@NotNull File rootFile) {
+	public JSPMappings(@Nonnull File rootFile) {
 		if (rootFile.exists()) {
 
 			this.projectRoot = rootFile;
@@ -167,7 +167,7 @@ public class JSPMappings implements EndpointGenerator {
         return params;
     }
 
-    @NotNull
+    @Nonnull
     private String getInputOrEmptyString(@Nullable String input) {
         return input == null ? "" : input;
     }
@@ -202,7 +202,7 @@ public class JSPMappings implements EndpointGenerator {
 		return FilePathUtils.getRelativePath(dataFlowLocation, projectRoot);
 	}
 
-	@NotNull
+	@Nonnull
     @Override
 	public List<Endpoint> generateEndpoints() {
 		return endpoints;

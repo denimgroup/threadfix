@@ -30,7 +30,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -420,7 +420,7 @@ public class HibernateScanDao implements ScanDao {
 				.add(Restrictions.eq("app.active", true));
 	}
 
-    @NotNull
+    @Nonnull
 	private Criteria addFiltering(Criteria criteria, Set<Integer> teamIds, Set<Integer> appIds) {
 		
 		boolean useAppIds = appIds != null && !appIds.isEmpty(),

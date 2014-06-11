@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -85,6 +86,7 @@ public class ChannelType extends BaseEntity {
 	private String exportInfo;
 
 	@Column(length = 50, nullable = false)
+    @JsonView(Object.class)
 	public String getName() {
 		return name;
 	}
