@@ -28,6 +28,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.List;
+
 public class UserIndexPage extends BasePage {
 
 
@@ -48,7 +50,7 @@ public class UserIndexPage extends BasePage {
         handleAlert();
         return new UserIndexPage(driver);
     }
-	
+
 	public UserPermissionsPage clickEditPermissions(String name){
 		driver.findElementById("editPermissions" + (name)).click();
 		sleep(500);

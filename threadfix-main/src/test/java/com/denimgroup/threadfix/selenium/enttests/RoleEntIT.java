@@ -38,13 +38,9 @@ import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
 public class RoleEntIT extends BaseIT {
-	/**
-	 * Also tests delete
-	 */
+
 	@Test
 	public void testCreateRole() {
-		// needs to be alphabetically before "Admin" preset role
-		//String roleName = "Aa" + getRandomString(8);
         String roleName = getRandomString(8);
 
 		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
@@ -239,64 +235,6 @@ public class RoleEntIT extends BaseIT {
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
-	
-	// these tests are to ensure that threadfix cannot enter a state with no users that
-	// have permissions to manage users / roles / groups
-    // TODO: bug filed for Read Access not an option in Roles
-    @Ignore
-	@Test
-	public void testRemoveRolesFromUser() {
-		String admin = "Administrator";
-		
-		 UserIndexPage userIndexPage = loginPage.login("user", "password")
-				.clickManageUsersLink()
-				.clickAddUserLink();
-
-		 userIndexPage.enterName("RoleRemoval")
-                 .enterPassword("passwordpassword")
-                 .enterConfirmPassword("passwordpassword")
-                 .chooseRoleForGlobalAccess(admin, null)
-                 .clickAddNewUserBtn()
-                 .clickEditLink("user")
-                 .enterPassword("passwordpassword")
-                 .enterConfirmPassword("passwordpassword")
-                 .chooseRoleForGlobalAccess("Read Access", "user")
-                 .clickUpdateUserBtn("user");
-		
-		RolesIndexPage rolesIndexPage = userIndexPage.clickManageRolesLink()
-				.clickEditLink(admin);
-		
-		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
-                assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
-            }
-		}
-		
-		for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-			rolesIndexPage.setPermissionValue(protectedPermission, false);
-		}
-
-		rolesIndexPage.clickSaveRoleInvalid();
-
-        assertTrue("Protected permission was not protected correctly.",
-				rolesIndexPage.getDisplayNameError().contains("You cannot remove the Manage Users privilege from this role."));
-
-		rolesIndexPage = rolesIndexPage.clickCloseModal()
-                .clickManageRolesLink()
-                .clickEditLink(admin);
-		
-		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
-                assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
-            }
-		}
-		
-		rolesIndexPage.clickManageUsersLink()
-                .clickEditLink("user")
-                .chooseRoleForGlobalAccess(admin, "user")
-                .clickUpdateUserBtn("user")
-                .clickDeleteButton("RoleRemoval");
-	}
 
 	@Test
 	public void testDeleteRoleWithUserAttached(){
@@ -330,4 +268,28 @@ public class RoleEntIT extends BaseIT {
 
 		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
+
+    //TODO fix when error message is shown when attempting to remove protected permissions
+    @Ignore
+    @Test
+    public void testProtectedPermissionsRemoval() {
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickEditLink("Administrator");
+
+        for (String permission : Role.ALL_PERMISSIONS) {
+            if (permission != "enterprise") {
+                assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
+            }
+        }
+
+        for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
+            rolesIndexPage.setPermissionValue(protectedPermission, false);
+        }
+
+        rolesIndexPage.clickSaveRoleInvalid();
+
+        assertTrue("Protected permission was not protected correctly.",
+                rolesIndexPage.getDisplayNameError().contains("You cannot remove the Manage Users privilege from this role."));
+    }
 }

@@ -127,20 +127,20 @@ public class UserEntIT extends BaseIT {
 				.enterPassword("TestPassword")
 				.enterConfirmPassword("TestPassword")
                 .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess("User", userName)
+                .chooseRoleForGlobalAccess("User")
 				.clickAddNewUserBtn()
 				.clickEditLink(userName);
 
 		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 
         // Change role to 'Read Access'
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access",userName)
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
 				.clickUpdateUserBtn(userName)
 				.clickEditLink(userName);
 		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
 
         // Revoke Global Access
-		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator",userName)
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator")
 				.clickUpdateUserBtn(userName)
 				.clickEditLink(userName)
 				.toggleGlobalAccess()
@@ -155,8 +155,7 @@ public class UserEntIT extends BaseIT {
 		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
 	}
 
-	// If this test fails with the defaults changed it could cause the other user tests to fail
-    // TODO: Ignored because Read Access is not an option in Roles, bug filed.
+    // TODO this is test is ignored because this feature seems to have changed to be LDAP specific
     @Ignore
 	@Test
 	public void defaultRoleTest(){
