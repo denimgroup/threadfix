@@ -137,8 +137,6 @@ public class SeverityFilterController {
 			severityFilterService.save(severityFilter, orgId, appId);
 			vulnerabilityFilterService.updateVulnerabilities(orgId, appId);
 
-            queueSender.updateAllCachedStatistics();
-			
 	    	return RestResponse.success(severityFilter);
 		}
 	}
