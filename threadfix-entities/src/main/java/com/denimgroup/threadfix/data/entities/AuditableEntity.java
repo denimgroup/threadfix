@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -47,7 +49,6 @@ public class AuditableEntity extends BaseEntity {
 
 	private boolean active = true;
 
-    // @JsonIgnore-ing things like this makes it easier to
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
     @JsonIgnore
@@ -71,6 +72,7 @@ public class AuditableEntity extends BaseEntity {
 	}
 
 	@Column(nullable = false)
+    @JsonView(AllViews.TableRow.class)
 	public boolean isActive() {
 		return active;
 	}
