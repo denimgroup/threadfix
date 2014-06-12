@@ -23,14 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ExceptionLogDao;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.ExceptionLogDao;
-import com.denimgroup.threadfix.data.entities.ExceptionLog;
+import java.util.List;
 
 /**
  * 
@@ -56,6 +55,7 @@ public class HibernateExceptionLogDao implements ExceptionLogDao {
 	public List<ExceptionLog> retrieveAll() {
 		return sessionFactory.getCurrentSession()
 				.createQuery("from ExceptionLog log order by log.time desc")
+                .setMaxResults(50)
 				.list();
 	}
 
