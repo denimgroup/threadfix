@@ -40,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class FilterIT extends BaseIT {
     // TODO if a notification system is implemented then get rid of sleeps...just refresh the page when the work is done
+    // TODO check on bug 184, if fixed...create test
 
     @Test
     public void testApplicationFilters() {
@@ -188,7 +189,6 @@ public class FilterIT extends BaseIT {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
-        TeamIndexPage teamIndexPage;
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
@@ -210,9 +210,9 @@ public class FilterIT extends BaseIT {
                 .saveFilterChanges()
                 .waitForChanges();
 
-        teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
         
-        // Set teamName1 to show 'Medium' vulnerabilities
+        // Set teamName to show 'Medium' vulnerabilities
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         FilterPage teamFilterPage = teamDetailPage.clickActionButton()
@@ -223,7 +223,7 @@ public class FilterIT extends BaseIT {
 
         teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
 
-        // Set appName1 to  to hide 'Critical'
+        // Set appName1 to hide 'Critical'
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
@@ -251,11 +251,81 @@ public class FilterIT extends BaseIT {
         clearGlobalFilter();
     }
 
-    // TODO test if you can edit an existing filter and ensure the results are correct
-    @Ignore
     @Test
     public void testEditFilters() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String file = ScanContents.getScanFilePath();
 
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, file);
+
+        // Set teamName to show 'Medium' vulnerabilities
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        FilterPage teamFilterPage = teamDetailPage.clickActionButton()
+                .clickEditTeamFilters()
+                .enableSeverityFilters()
+                .hideMedium()
+                .saveFilterChanges();
+
+        TeamIndexPage teamIndexPage = teamFilterPage.clickOrganizationHeaderLink();
+
+        // Set appName1 to hide 'Critical'
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        FilterPage applicationFilterPage = applicationDetailPage.clickActionButton()
+                .clickEditVulnerabilityFilters()
+                .enableSeverityFilters()
+                .hideCritical()
+                .saveFilterChanges();
+
+        // Check TeamIndexPage to for the results
+        teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink();
+
+        assertTrue("Critical vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "0"));
+        assertTrue("High vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "High", "0"));
+        assertTrue("Medium vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "0"));
+        assertTrue("Low vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "4"));
+        assertTrue("Info vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "10"));
+
+        teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
+                .clickActionButton()
+                .clickEditTeamFilters()
+                .enableSeverityFilters()
+                .hideMedium()
+                .saveFilterChanges();
+
+        applicationFilterPage = teamFilterPage.clickOrganizationHeaderLink()
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton()
+                .clickEditVulnerabilityFilters()
+                .enableSeverityFilters()
+                .showCritical()
+                .hideInfo()
+                .saveFilterChanges();
+
+        teamIndexPage = applicationFilterPage.clickOrganizationHeaderLink();
+
+        assertTrue("Critical vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Critical", "6"));
+        assertTrue("High vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "High", "0"));
+        assertTrue("Medium vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "0"));
+        assertTrue("Low vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "4"));
+        assertTrue("Info vulnerability count was not correct.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "0"));
     }
 
     public void clearGlobalFilter() {
