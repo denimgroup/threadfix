@@ -223,9 +223,9 @@
                            is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="icon icon-calendar"></i></button>
-                          </span>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openStartDate($event)"><i class="icon icon-calendar"></i></button>
+                    </span>
                 </p>
             </div>
         </div>
@@ -238,9 +238,9 @@
                            is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="icon icon-calendar"></i></button>
-                            </span>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="icon icon-calendar"></i></button>
+                    </span>
                 </p>
             </div>
         </div>
