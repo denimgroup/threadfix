@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 
@@ -54,7 +53,7 @@ public class Document extends AuditableEntity {
 	private Blob file;
 
 	@Column(length = 50, nullable = false)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearch.class})
+    @JsonView(Object.class)
     public String getName() {
 		return name;
 	}
@@ -64,7 +63,7 @@ public class Document extends AuditableEntity {
 	}
 
     @Transient
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearch.class})
+    @JsonView(Object.class)
     public Date getUploadedDate() {
         return super.getCreatedDate();
     }
@@ -92,7 +91,7 @@ public class Document extends AuditableEntity {
 	}
 
 	@Column(length = 10, nullable = true)
-    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearch.class})
+    @JsonView(Object.class)
     public String getType() {
 		return type;
 	}
@@ -102,7 +101,8 @@ public class Document extends AuditableEntity {
 	}
 
 	@Column(length = 255)
-	public String getContentType() {
+    @JsonView(Object.class)
+    public String getContentType() {
 		return contentType;
 	}
 

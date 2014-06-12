@@ -65,7 +65,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Column(length = SOURCE_FILE_NAME_LENGTH)
-    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public String getSourceFileName() {
 		return sourceFileName;
 	}
@@ -75,7 +75,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Basic
-    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public int getLineNumber() {
 		return lineNumber;
 	}
@@ -85,7 +85,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Basic
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({ AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public int getColumnNumber() {
 		return columnNumber;
 	}
@@ -95,7 +95,7 @@ public class DataFlowElement extends BaseEntity implements Comparable<DataFlowEl
 	}
 
 	@Column(length = LINE_TEXT_LENGTH)
-    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public String getLineText() {
 		return lineText;
 	}

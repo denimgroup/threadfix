@@ -138,7 +138,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "channelVulnerabilityId")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.VulnerabilityDetail.class})
 	public ChannelVulnerability getChannelVulnerability() {
 		return channelVulnerability;
 	}
@@ -149,7 +149,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = NATIVE_ID_LENGTH)
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
     public String getNativeId() {
 		return nativeId;
 	}
@@ -159,7 +159,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = NATIVE_ID_LENGTH)
-    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class })
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public String getDisplayId() {
 		return displayId;
 	}
@@ -170,7 +170,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@ManyToOne
 	@JoinColumn(name = "channelSeverityId")
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({AllViews.TableRow.class, AllViews.VulnerabilityDetail.class})
 	public ChannelSeverity getChannelSeverity() {
 		return channelSeverity;
 	}
@@ -181,7 +181,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "surfaceLocationId")
-	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
+	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
 	public SurfaceLocation getSurfaceLocation() {
 		return surfaceLocation;
 	}
@@ -204,7 +204,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@OneToMany(mappedBy = "finding")
 	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
 	@OrderBy("sequence DESC")
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({ AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public List<DataFlowElement> getDataFlowElements() {
 		return dataFlowElements;
 	}
@@ -244,7 +244,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column
-	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class })
+	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public String getCalculatedUrlPath() {
 		return calculatedUrlPath;
 	}
@@ -254,7 +254,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column
-    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class })
+    @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public String getCalculatedFilePath() {
 		return calculatedFilePath;
 	}
@@ -383,7 +383,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "dependencyId")
-	@JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class})
+	@JsonView({ AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public Dependency getDependency() {
 		return dependency;
 	}
@@ -393,13 +393,13 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Transient
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class })
 	private String getScannerName() {
 		return getScan().getApplicationChannel().getChannelType().getName();
 	}
 
 	@Transient
-	@JsonView(AllViews.TableRow.class)
+	@JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class })
 	private Integer getScanId() {
 		return getScan().getId();
 	}

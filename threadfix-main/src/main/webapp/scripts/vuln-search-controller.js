@@ -226,7 +226,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.updateElementTable(element, 10, 1);
     }
 
-    $scope.deleteFilter = function() {
+    $scope.deleteCurrentFilter = function() {
         $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
             success(function(data, status, headers, config) {
                 console.log("Successfully deleted filter.");
@@ -249,7 +249,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             });
     }
 
-    $scope.loadFilter = function() {
+    $scope.loadFilter = function(filter) {
+
+        $scope.selectedFilter = filter;
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
         $scope.refresh();
         $scope.lastLoadedFilterName = $scope.selectedFilter.name;
@@ -272,6 +274,13 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
                     if (data.success) {
                         $scope.savedFilters = data.object;
+
+                        $scope.savedFilters.forEach(function(filter) {
+                            if (filter.name === $scope.currentFilterNameInput) {
+                                $scope.selectedFilter = filter;
+                            }
+                        });
+
                         $scope.currentFilterNameInput = '';
                         $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
                     } else {
