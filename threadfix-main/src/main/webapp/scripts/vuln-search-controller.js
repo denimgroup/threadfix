@@ -4,6 +4,12 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
     $scope.parameters = {};
 
+    $scope.resetFiltersIfEnabled = function() {
+        if ($scope.selectedFilter) {
+            $scope.resetFilters();
+        }
+    }
+
     $scope.resetFilters = function() {
         $scope.parameters = {
             teams: [],
@@ -19,6 +25,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         };
 
         $scope.endDate = undefined;
+        $scope.selectedFilter = undefined;
         $scope.startDate = undefined;
 
         $scope.refresh();
@@ -227,26 +234,28 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     }
 
     $scope.deleteCurrentFilter = function() {
-        $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
-            success(function(data, status, headers, config) {
-                console.log("Successfully deleted filter.");
-                $scope.initialized = true;
+        if ($scope.selectedFilter) {
+            $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
+                success(function(data, status, headers, config) {
+                    console.log("Successfully deleted filter.");
+                    $scope.initialized = true;
 
-                if (data.success) {
-                    $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
-                    $scope.selectedFilter = undefined;
-                    $scope.savedFilters = data.object;
-                } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                }
+                    if (data.success) {
+                        $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
+                        $scope.selectedFilter = undefined;
+                        $scope.savedFilters = data.object;
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
 
-                $scope.loading = false;
-            }).
-            error(function(data, status, headers, config) {
-                console.log("Failed to save filters.");
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                $scope.loading = false;
-            });
+                    $scope.loading = false;
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("Failed to save filters.");
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                    $scope.loading = false;
+                });
+        }
     }
 
     $scope.loadFilter = function(filter) {
