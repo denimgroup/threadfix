@@ -183,6 +183,14 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
     }
 
     $scope.openAppModal = function(provider, app) {
+
+        var filterActiveApp = function(app) {
+            return app.active;
+        };
+        $scope.teams.forEach(function(team) {
+            team.applications = team.applications.filter(filterActiveApp);
+        });
+
         var modalInstance = $modal.open({
             templateUrl: 'editRemoteProviderApplicationMapping.html',
             controller: 'RemoteProviderModalMappingController',
@@ -209,7 +217,10 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                             return app.id === appId;
                         }
 
+
+
                         var team = $scope.teams.filter(filterTeam)[0]
+                        team.applications = team.applications.filter(filterActiveApp);
                         var application = team.applications.filter(filterApp)[0];
 
                         return {
