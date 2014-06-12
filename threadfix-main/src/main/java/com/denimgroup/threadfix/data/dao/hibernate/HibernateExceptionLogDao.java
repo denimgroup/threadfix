@@ -55,7 +55,7 @@ public class HibernateExceptionLogDao implements ExceptionLogDao {
 	public List<ExceptionLog> retrieveAll() {
 		return sessionFactory.getCurrentSession()
 				.createQuery("from ExceptionLog log order by log.time desc")
-                .setMaxResults(100)
+                .setMaxResults(50)
 				.list();
 	}
 
