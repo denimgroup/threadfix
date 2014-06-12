@@ -147,31 +147,32 @@ public class RoleEntIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
 
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-					 .clickOrganizationHeaderLink()
-					 .clickManageRolesLink()
-					 .clickCreateRole()
-					 .setRoleName(roleName)
-					 .setPermissionValue("canManageApplications", true)
-					 .clickSaveRole()
-                     .clickOrganizationHeaderLink();
+                 .clickOrganizationHeaderLink()
+                 .clickManageRolesLink()
+                 .clickCreateRole()
+                 .setRoleName(roleName)
+                 .setPermissionValue("canManageApplications", true)
+                 .clickSaveRole()
+                 .clickOrganizationHeaderLink();
 
         teamIndexPage.clickManageUsersLink()
-                     .clickAddUserLink()
-                     .enterName(userName)
-                     .enterPassword(password)
-                     .enterConfirmPassword(password)
-                     .chooseRoleForGlobalAccess(roleName)
-                     .clickAddNewUserBtn()
-                     .logout();
+                 .clickAddUserLink()
+                 .enterName(userName)
+                 .enterPassword(password)
+                 .enterConfirmPassword(password)
+                 .toggleGlobalAccess()
+                 .chooseRoleForGlobalAccess(roleName)
+                 .clickAddNewUserBtn();
 
-		ApplicationDetailPage applicationDetailPage = loginPage.login(userName, password)
-					.clickOrganizationHeaderLink()
-					.expandTeamRowByName(teamName)
-					.addNewApplication(teamName, appName, "", "Low")
-				    .saveApplication()
-					.clickOrganizationHeaderLink()
-					.expandTeamRowByName(teamName)
-					.clickViewAppLink(appName, teamName);
+		ApplicationDetailPage applicationDetailPage = teamIndexPage.logout()
+                .login(userName, password)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .addNewApplication(teamName, appName, "", "Low")
+                .saveApplication()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
 
 		assertTrue("new role user was not able to add an application",
                 applicationDetailPage.getNameText().contains(appName));
