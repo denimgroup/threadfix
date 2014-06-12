@@ -59,11 +59,15 @@ public class FormRestResponse<T> extends RestResponse<T> {
     public static <T> FormRestResponse<T> failure(String response, BindingResult result) {
         FormRestResponse<T> restResponse = new FormRestResponse<>();
 
-        Map<String, String> resultMap = new HashMap<>();
-        for (FieldError error : result.getFieldErrors()) {
-            String value = getErrorMessage(error);
-            String field = error.getField().replace(".","_");
-            resultMap.put(field, value);
+        Map<String, String> resultMap = null;
+        if (result != null) {
+            if (result.getFieldErrors() != null && result.getFieldErrors().size() > 0)
+                resultMap = new HashMap<>();
+            for (FieldError error : result.getFieldErrors()) {
+                String value = getErrorMessage(error);
+                String field = error.getField().replace(".","_");
+                resultMap.put(field, value);
+            }
         }
 
         restResponse.errorMap = resultMap;

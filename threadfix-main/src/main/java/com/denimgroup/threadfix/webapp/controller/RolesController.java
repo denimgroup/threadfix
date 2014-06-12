@@ -160,12 +160,7 @@ public class RolesController {
 		
 		String resultString = roleService.validateRole(role, result);
 		if (!resultString.equals(RoleService.SUCCESS)) {
-			if (!resultString.equals(RoleService.FIELD_ERROR)) {
-				model.addAttribute("errorMessage", resultString);
-			}
-			model.addAttribute("editRole", role);
-			model.addAttribute("contentPage", "config/roles/form.jsp");
-			return FormRestResponse.failure("Failed validation check.", result);
+			return FormRestResponse.failure(resultString, result);
 		}
 		
 		if (role.getDisplayName() != null) {
