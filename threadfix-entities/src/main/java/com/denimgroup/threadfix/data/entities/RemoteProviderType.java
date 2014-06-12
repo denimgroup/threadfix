@@ -24,7 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -80,6 +82,7 @@ public class RemoteProviderType extends BaseEntity  {
 	private ChannelType channelType;
 
 	@Transient
+    @JsonView(AllViews.TableRow.class)
 	public String getUsername() {
 		return username;
 	}
@@ -89,6 +92,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Transient
+    @JsonView(AllViews.TableRow.class)
 	public String getPassword() {
 		return password;
 	}
@@ -98,6 +102,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Transient
+    @JsonView(AllViews.TableRow.class)
 	public String getApiKey() {
 		return apiKey;
 	}
@@ -107,6 +112,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 	
 	@Column(nullable = false)
+    @JsonView(AllViews.TableRow.class)
 	public boolean getHasApiKey() {
 		return hasApiKey;
 	}
@@ -126,6 +132,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(nullable = false)
+    @JsonView(AllViews.TableRow.class)
 	public boolean getHasUserNamePassword() {
 		return hasUserNamePassword;
 	}
@@ -166,6 +173,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Column(length = NAME_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getName() {
 		return name;
 	}
@@ -179,6 +187,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@OneToMany(mappedBy = "remoteProviderType")
+    @JsonView(AllViews.TableRow.class)
 	public List<RemoteProviderApplication> getRemoteProviderApplications() {
 		return remoteProviderApplications;
 	}
@@ -202,6 +211,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	// These have clunky names to make Hibernate happy.
+    @JsonView(AllViews.TableRow.class)
 	public boolean getIsEuropean() {
 		return isEuropean;
 	}
@@ -211,6 +221,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
 	@Transient
+    @JsonView(AllViews.TableRow.class)
 	public List<RemoteProviderApplication> getFilteredApplications() {
 		return filteredApplications;
 	}
@@ -220,6 +231,7 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 	
 	@Transient
+    @JsonView(AllViews.TableRow.class)
 	public boolean getIsQualys() {
 		return name != null && name.equals(QUALYSGUARD_WAS);
 	}

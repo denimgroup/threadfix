@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
@@ -36,6 +35,7 @@ import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -242,13 +242,13 @@ public class RemoteProvidersController {
 	}
 
 	@RequestMapping(value="/getMap", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<Map<String, Object>> list() {
+	public @ResponseBody Object list() {
 
         Map<String, Object> map = new HashMap<>();
 
         map.put("remoteProviders", remoteProviderTypeService.loadAll());
         map.put("teams", organizationService.loadAllActive());
 
-		return RestResponse.success(map);
+		return ControllerUtils.writeSuccessObjectWithView(map, AllViews.TableRow.class);
 	}
 }

@@ -24,7 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -60,6 +62,7 @@ public class RemoteProviderApplication extends AuditableEntity  {
 	}
 	
 	@Column(length = NATIVE_ID_LENGTH)
+    @JsonView(AllViews.TableRow.class)
 	public String getNativeId() {
 		return nativeId;
 	}
@@ -81,6 +84,7 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
+    @JsonView(AllViews.TableRow.class)
 	public Application getApplication() {
 		return application;
 	}
