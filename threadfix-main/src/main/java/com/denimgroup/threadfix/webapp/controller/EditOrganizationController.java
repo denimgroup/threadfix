@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +40,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/edit")
@@ -61,7 +64,7 @@ public class EditOrganizationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Organization> editSubmit(@PathVariable("orgId") int orgId,
+	public @ResponseBody Object editSubmit(@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Organization organization, BindingResult result) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_TEAMS, orgId, null) ||
@@ -92,7 +95,7 @@ public class EditOrganizationController {
                 application.setWaf(null);
             }
 			
-			return RestResponse.success(organization);
+            return  writeSuccessObjectWithView(organization, AllViews.TableRow.class);
 		}
 	}
 
