@@ -462,7 +462,8 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage expandSavedFilters() {
         sleep(2000);
-        driver.findElementById("savedFiltersExpand").click();
+        //driver.findElementById("savedFiltersExpand").click();
+        driver.findElementByLinkText("Saved Filters").click();
         sleep(2000);
         return new ApplicationDetailPage(driver);
     }
@@ -474,8 +475,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage loadSavedFilter(String savedFilter) {
-        new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
-        driver.findElementById("loadFilterButton").click();
+        //new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
+        //driver.findElementById("loadFilterButton").click();
+        driver.findElementByLinkText(savedFilter).click();
         waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
