@@ -6,6 +6,8 @@ public class AllViews {
 
     public static interface FormInfo {}
 
+    public static interface VulnerabilityDetail {}
+
     public static interface VulnSearch {}
 
     public static interface UIVulnSearch extends VulnSearch {}

@@ -14,7 +14,13 @@
     <br>
     <div class="vuln-tree-label">Parameter</div>
     <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
-    <br>
+        <br>
+    <div ng-show="vulnerability.dependency" class="vuln-tree-label">Dependency</div>
+    <span ng-show="vulnerability.dependency" id="cve{{ $index }}">
+        {{ vulnerability.dependency.cve }}
+        (<a target="_blank" id="linkCve{{ $index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vulnerability.dependency.cve }}">View</a>)
+    </span>
+    <br ng-show="vulnerability.dependency">
     <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
     <br>
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
