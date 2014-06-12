@@ -17,7 +17,7 @@ def deploy_war():
     sudo('service tomcat7 stop')   #stop tomcat
     with settings(warn_only=True):
         sudo('rm -rf %s/threadfix' % (server_base_loc))
-    sudo('mv %s/threadfix-main/target/threadfix-2.0FINAL-SNAPSHOT.war %s/threadfix.war' % (local_working_folder_loc, server_base_loc))
+    sudo('mv %s/threadfix-main/target/threadfix-2.1-SNAPSHOT.war %s/threadfix.war' % (local_working_folder_loc, server_base_loc))
     sudo('service tomcat7 start')  #start tomcat
 
 # moves the WAR file to the remote server, updates the database and restarts tomcat
