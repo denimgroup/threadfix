@@ -23,14 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.ExceptionLogDao;
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ExceptionLogDao;
-import com.denimgroup.threadfix.data.entities.ExceptionLog;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false)
@@ -48,5 +47,15 @@ public class ExceptionLogServiceImpl implements ExceptionLogService {
 	public List<ExceptionLog> loadAll() {
 		return exceptionLogDao.retrieveAll();
 	}
-	
+
+    @Override
+    public List<ExceptionLog> loadPage(int page) {
+        return exceptionLogDao.retrievePage(page);
+    }
+
+    @Override
+    public Long countLogs() {
+        return exceptionLogDao.countLogs();
+    }
+
 }

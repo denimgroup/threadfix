@@ -25,7 +25,7 @@
         <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
         <div ng-show="errorMessage" class="alert alert-success">
-            <button class="close" data-dismiss="errorMessage = false" type="button">x</button>
+            <button class="close" data-dismiss="errorMessage = false" type="button">&times;</button>
             {{ errorMessage }}
         </div>
 
