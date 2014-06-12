@@ -159,8 +159,8 @@ public class FilterPage extends BasePage {
 
     /*_____________ Page Methods ______________*/
     public FilterPage waitForChanges() {
-        //sleep(240000);
-        sleep(30000);
+        sleep(240000);
+        //sleep(30000);
         return this;
     }
 
