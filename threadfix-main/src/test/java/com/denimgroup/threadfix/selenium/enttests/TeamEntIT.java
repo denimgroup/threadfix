@@ -24,19 +24,42 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
-import com.denimgroup.threadfix.selenium.pages.RolesIndexPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
 public class TeamEntIT extends BaseIT {
 
+    @Test
+    public void viewBasicPermissibleUsers(){
+        String teamName = getRandomString(8);
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+        DatabaseUtils.createTeam(teamName);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        TeamDetailPage teamDetailPage = userIndexPage
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickUserPermLink();
+
+        assertTrue("A user with the correct permissions is not in the permissible user list.",
+                teamDetailPage.isUserPresentPerm("user"));
+        assertFalse("A user without the correct permissions is in the permissible user list.",
+                teamDetailPage.isUserPresentPerm(userName));
+    }
 }

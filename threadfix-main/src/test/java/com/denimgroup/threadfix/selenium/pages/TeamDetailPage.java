@@ -185,7 +185,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isPUClosePresent(){
-        return driver.findElementById("usersModal").findElement(By.className("btn")).isDisplayed();
+        return driver.findElementByClassName("modal-footer").findElement(By.className("btn")).isDisplayed();
     }
 
     //correct to work with classes and stuff expectedConditions

@@ -35,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class TeamIT extends BaseIT {
+    //TODO check status of bug 334 and if fixed create test
 
 	@Test
 	public void testCreateTeam(){

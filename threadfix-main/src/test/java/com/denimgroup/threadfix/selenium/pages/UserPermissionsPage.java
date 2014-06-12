@@ -90,9 +90,7 @@ public class UserPermissionsPage extends BasePage {
 				break;
 			}
 		}
-		
 		return new UserPermissionsPage(driver);
-		
 	}
 	
 	public UserPermissionsPage clickAddMappingNewPerm(){

@@ -125,7 +125,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickViewPermUsers() {
         clickActionButton();
         driver.findElementById("userListModelButton").click();
-        waitForElement(driver.findElementById("usersModal"));
+        waitForElement(driver.findElementById("myModalLabel"));
         return new ApplicationDetailPage(driver);
     }
 
