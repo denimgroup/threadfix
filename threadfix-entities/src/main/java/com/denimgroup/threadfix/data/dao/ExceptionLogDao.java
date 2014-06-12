@@ -41,4 +41,8 @@ public interface ExceptionLogDao {
 	 * Load all the exception logs - used in the admin view error log page.
 	 */
 	List<ExceptionLog> retrieveAll();
+
+    List<ExceptionLog> retrievePage(int page);
+
+    Long countLogs();
 }

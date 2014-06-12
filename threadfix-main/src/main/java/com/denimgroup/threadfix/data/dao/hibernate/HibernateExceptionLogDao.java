@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.ExceptionLogDao;
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -55,8 +56,26 @@ public class HibernateExceptionLogDao implements ExceptionLogDao {
 	public List<ExceptionLog> retrieveAll() {
 		return sessionFactory.getCurrentSession()
 				.createQuery("from ExceptionLog log order by log.time desc")
-                .setMaxResults(50)
 				.list();
 	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ExceptionLog> retrievePage(int page) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from ExceptionLog log order by log.time desc")
+                .setMaxResults(50)
+                .setFirstResult((page - 1) * 50)
+                .list();
+    }
+
+    @Override
+    public Long countLogs() {
+        return (Long) sessionFactory
+                .getCurrentSession()
+                .createCriteria(ExceptionLog.class)
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
+    }
 
 }

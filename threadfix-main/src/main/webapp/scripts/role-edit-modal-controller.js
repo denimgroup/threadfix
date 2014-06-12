@@ -31,12 +31,7 @@ myAppModule.controller('RoleEditModalController', function ($scope, $rootScope, 
                         if (data.errorMap) {
                             for (var index in data.errorMap) {
                                 if (data.errorMap.hasOwnProperty(index)) {
-
-                                    if (data.errorMap[index] === 'errors.self.certificate') {
-                                        $scope.showKeytoolLink = true;
-                                    } else {
-                                        $scope.object[index + "_error"] = data.errorMap[index];
-                                    }
+                                    $scope.object[index + "_error"] = data.errorMap[index];
                                 }
                             }
                         } else {

@@ -24,8 +24,9 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.ExceptionLogService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,8 +35,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.denimgroup.threadfix.service.ExceptionLogService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/configuration/logs")
@@ -53,6 +58,16 @@ public class ErrorLogController {
 		model.addAttribute("exceptionLogList", exceptionLogService.loadAll());
 		return "config/logs";
 	}
+
+    @RequestMapping(value="/page/{page}", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> getPage(@PathVariable int page) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("logs", exceptionLogService.loadPage(page));
+        map.put("totalLogs", exceptionLogService.countLogs());
+
+        return RestResponse.success(map);
+    }
 	
 	@RequestMapping(value="/{logId}", method = RequestMethod.GET)
 	public String manageUsers(ModelMap model, HttpServletRequest request,

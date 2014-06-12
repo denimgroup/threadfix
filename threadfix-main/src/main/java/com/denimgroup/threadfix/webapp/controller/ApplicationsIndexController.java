@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -144,6 +145,10 @@ public class ApplicationsIndexController {
                                                        HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 
         log.info("Received REST request to upload a scan to application " + appId + ".");
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+            return failure("You don't have permission to upload scans.");
+        }
 
         Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
 
