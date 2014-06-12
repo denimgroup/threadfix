@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.selenium.pages.FilterPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.denimgroup.threadfix.webapp.controller.GlobalFilterController;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.NoSuchElementException;
@@ -37,13 +39,13 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class FilterIT extends BaseIT {
-    // TODO test if you can edit an existing filter and ensure the results are correct
+    // TODO if a notification system is implemented then get rid of sleeps...just refresh the page when the work is done
 
     @Test
     public void testApplicationFilters() {
         String teamName = getRandomString(8);
-        String appName1 = "AppnameOne" + getRandomString(8);
-        String appName2 = "AppnameTwo" + getRandomString(8);
+        String appName1 = getRandomString(8);
+        String appName2 = getRandomString(8);
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
@@ -134,12 +136,11 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void testGlobalFilters() {
-        String teamName1 = "teamOne" + getRandomString(8);
-        String teamName2 = "teamTwo" + getRandomString(8);
-        String appName1 = "appOne" + getRandomString(8);
-        String appName2 = "appTwo" + getRandomString(8);
+        String teamName1 = getRandomString(8);
+        String teamName2 = getRandomString(8);
+        String appName1 = getRandomString(8);
+        String appName2 = getRandomString(8);
         String file = ScanContents.getScanFilePath();
-        TeamIndexPage teamIndexPage;
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
@@ -151,32 +152,30 @@ public class FilterIT extends BaseIT {
         DatabaseUtils.createApplication(teamName2, appName2);
         DatabaseUtils.uploadScan(teamName2, appName2, file);
 
-        TeamIndexPage globalFilterPage = loginPage.login("user", "password")
+        FilterPage globalFilterPage = loginPage.login("user", "password")
                 .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity)
                 .closeSuccessNotification()
                 .enableSeverityFilters()
                 .hideMedium()
-                .hideInfo()
                 .saveFilterChanges()
-                .clickOrganizationHeaderLink();
+                .waitForChanges();
 
-        sleep(3000);
-        teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
+        TeamIndexPage teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
         sleep(3000);
 
-        assertTrue("The global filter for team1 was not implemented correctly - medium should be 0.",
+        assertTrue("The global filter for " + teamName1 + " was not implemented correctly - medium should be 0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Medium", "0"));
-        assertTrue("The global filter for team1 was not implemented correctly - Info should be  0.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Info","0"));
+        assertTrue("The global filter for team1 was not implemented correctly - Info should be  10.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "Info","10"));
         assertTrue("The global severity filter for team1 was not set properly - High should be 2.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName1, "High", "2"));
 
         assertTrue("The global filter for team2 was not implemented correctly - medium should be 0.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "Medium", "0"));
-        assertTrue("The global filter for team2 was not implemented correctly - Info should be 0.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "Info","0"));
+        assertTrue("The global filter for team2 was not implemented correctly - Info should be 10.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "Info","10"));
         assertTrue("The global severity filter for team2 was not set properly - High should be 2.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName2, "High", "2"));
 
@@ -208,7 +207,8 @@ public class FilterIT extends BaseIT {
                 .hideMedium()
                 .hideLow()
                 .hideInfo()
-                .saveFilterChanges();
+                .saveFilterChanges()
+                .waitForChanges();
 
         teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
         
@@ -251,6 +251,13 @@ public class FilterIT extends BaseIT {
         clearGlobalFilter();
     }
 
+    // TODO test if you can edit an existing filter and ensure the results are correct
+    @Ignore
+    @Test
+    public void testEditFilters() {
+
+    }
+
     public void clearGlobalFilter() {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
@@ -272,7 +279,8 @@ public class FilterIT extends BaseIT {
                 .showLow()
                 .showInfo()
                 .disableSeverityFilters()
-                .saveFilterChanges();
+                .saveFilterChanges()
+                .waitForChanges();
 
         loginPage = globalFilterPage.logout();
     }
