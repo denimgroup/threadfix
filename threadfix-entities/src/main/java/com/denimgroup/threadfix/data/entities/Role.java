@@ -23,14 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,6 +41,8 @@ public class Role extends AuditableEntity {
 	public static final int NAME_LENGTH = 25;
 	public static final int DISPLAY_NAME_LENGTH = 25;
 
+    private List<User> users;
+
 	private static final long serialVersionUID = -1609499610449048270L;
 	
 	private Boolean canGenerateReports, canGenerateWafRules, canManageApiKeys,
@@ -49,11 +50,10 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs,
-    			canViewJobStatuses,enterprise;
-//            enterprise;
-	
+            canViewJobStatuses, enterprise;
+
 	public static final String[] PROTECTED_PERMISSIONS = new String[]{
-			"canManageRoles", "canManageUsers"
+        "canManageRoles", "canManageUsers"
 	};
 	
 	public static final String[] ALL_PERMISSIONS = new String[] {
@@ -61,7 +61,6 @@ public class Role extends AuditableEntity {
 		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
 		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
 		"canGenerateReports", "canManageApplications", "enterprise"
-//            "canGenerateReports", "canViewJobStatuses", "canManageApplications", "enterprise"
 	};
 	
 	@NotEmpty(message = "{errors.required}")
@@ -267,9 +266,6 @@ public class Role extends AuditableEntity {
 		if (getCanViewErrorLogs())
 			permissions.add(Permission.CAN_VIEW_ERROR_LOGS);
 
-//		if (getCanViewJobStatuses())
-//			permissions.add(Permission.CAN_VIEW_JOB_STATUSES);
-		
 		if (getEnterprise())
 			permissions.add(Permission.ENTERPRISE);
 
@@ -286,5 +282,15 @@ public class Role extends AuditableEntity {
 	public void setCanDelete(boolean canDelete) {
 		this.canDelete = canDelete;
 	}
+
+    @OneToMany(mappedBy = "globalRole")
+    @JsonIgnore
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }
 
