@@ -24,7 +24,7 @@
 	  	 	</div>
 	  	</security:authorize>
   	 	
-		<security:authorize ifNotGranted="ROLE_CAN_MANAGE_TEAMS">
+		<security:authorize ifNotGranted="ROLE_READ_ACCESS">
 			<div class="alert alert-error">
 				You don't have permission to access any ThreadFix applications or to create one for yourself. 
 				Contact your administrator to get help.
@@ -33,7 +33,7 @@
 	</c:if>
 
     <c:if test="${ not empty teams }">
-        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+        <security:authorize ifAnyGranted="ROLE_READ_ACCESS">
 
 
         <div ng-controller="DashboardController" class="container-fluid">

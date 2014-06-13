@@ -31,7 +31,9 @@
 	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings
 		<span>
 			<a ng-click="statistic()" id="statisticButton" class="btn header-button" >{{ statisticText }}</a>
-			<a ng-click="deleteScan()" class="btn btn-danger header-button">Delete Scan</a>
+			<c:if test="${ canUploadScans }">
+                <a ng-click="deleteScan()" class="btn btn-danger header-button">Delete Scan</a>
+            </c:if>
 		</span>
 	</h2>
 	

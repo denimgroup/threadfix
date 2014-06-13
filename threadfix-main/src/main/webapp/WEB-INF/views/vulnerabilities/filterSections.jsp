@@ -248,8 +248,10 @@
 </div>
 
 <!-- Export buttons -->
-<div class="accordion-group">
-    <div class="accordion-heading" style="text-align:center">
-        <a id="exportCSVButton" ng-click="exportCSV()" class="btn">Export CSV</a>
+<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
+    <div class="accordion-group">
+        <div class="accordion-heading" style="text-align:center">
+            <a id="exportCSVButton" ng-click="exportCSV()" class="btn">Export CSV</a>
+        </div>
     </div>
-</div>
+</security:authorize>
