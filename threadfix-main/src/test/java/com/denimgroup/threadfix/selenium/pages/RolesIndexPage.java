@@ -74,8 +74,8 @@ public class RolesIndexPage extends BasePage {
 		return new RolesIndexPage(driver);
 	}
 
-	public String getDisplayNameError() {
-		return driver.findElementByClassName("alert-error").getText();
+	public String getEditRoleError() {
+		return driver.findElementById("errorSpan").getText();
 	}
 
     public String getDupNameError() {

@@ -270,8 +270,6 @@ public class RoleEntIT extends BaseIT {
 		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
 
-    //TODO fix when error message is shown when attempting to remove protected permissions
-    @Ignore
     @Test
     public void testProtectedPermissionsRemoval() {
         RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
@@ -284,13 +282,10 @@ public class RoleEntIT extends BaseIT {
             }
         }
 
-        for (String protectedPermission : Role.PROTECTED_PERMISSIONS) {
-            rolesIndexPage.setPermissionValue(protectedPermission, false);
-        }
-
-        rolesIndexPage.clickSaveRoleInvalid();
+        rolesIndexPage.toggleAllPermissions(false)
+                .clickSaveRoleInvalid();
 
         assertTrue("Protected permission was not protected correctly.",
-                rolesIndexPage.getDisplayNameError().contains("You cannot remove the Manage Users privilege from this role."));
+                rolesIndexPage.getEditRoleError().contains("You cannot remove the Manage Users privilege from this role."));
     }
 }
