@@ -26,11 +26,13 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
@@ -200,5 +202,48 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
 
+    }
+
+    @Test
+    public void testVulnCountAfterImport() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        remoteProvidersIndexPage.clickConfigureWhiteHat();
+        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
+        remoteProvidersIndexPage.saveWhiteHat();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
+        sleep(25000);
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().accept();
+
+        assertTrue("The critical vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "8"));
+        assertTrue("The high vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountCorrect("High", "6"));
+        assertTrue("The medium vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "12"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("The vulnerability count was not updated.",
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName, "Total", "26"));
+
+        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 }

@@ -91,8 +91,6 @@ public class TeamIT extends BaseIT {
 		assertTrue("Header width was incorrect with long team name",teamIndexPage.getLengthError().contains("Maximum length is 60."));
 	}
 
-    //TODO check status of bug 334 and if fixed create test
-    @Ignore
     @Test
     public void testEditTeamNameWithApplication() {
         String originalTeamName = getRandomString(8);
@@ -105,11 +103,12 @@ public class TeamIT extends BaseIT {
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(originalTeamName)
-                .clickActionButton()
                 .clickEditOrganizationLink()
                 .setNameInput(editedTeamName)
                 .clickModalSubmit();
 
+        assertTrue("Success alert was not displayed.", teamDetailPage.isSuccessMessageDisplayed());
+        assertTrue("Team name was not edited correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(editedTeamName));
     }
 
     //TODO Need to update this when the validation is done in the form and not return a failure

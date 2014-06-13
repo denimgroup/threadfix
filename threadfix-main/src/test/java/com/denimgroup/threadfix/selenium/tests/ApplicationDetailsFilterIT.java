@@ -116,8 +116,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
     }
 
     /* Saved Filters */
-    // TODO fix this when ids are back and
-    @Ignore
     @Test
     public void testSavedFilters() {
         String teamName = getRandomString(8);

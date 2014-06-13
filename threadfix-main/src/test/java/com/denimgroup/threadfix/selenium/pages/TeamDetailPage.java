@@ -230,6 +230,10 @@ public class TeamDetailPage extends BasePage {
         return ExpectedConditions.elementToBeClickable(By.linkText(appName)) != null;
     }
 
+    public boolean isSuccessMessageDisplayed() {
+        return driver.findElementByClassName("alert-success").isDisplayed();
+    }
+
     public TeamDetailPage clickUserPermLink() {
         clickActionButton();
         sleep(3000);
