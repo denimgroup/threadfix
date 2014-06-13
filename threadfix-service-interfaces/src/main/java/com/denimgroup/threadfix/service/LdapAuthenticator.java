@@ -43,15 +43,20 @@ public class LdapAuthenticator implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) {
         try {
             return ldapService != null ? ldapService.authenticate(authentication) : null;
-        } catch (Exception e) {
-            log.error("Encountered an exception. Returning null.", e);
+        } catch (Exception e) { // this is to prevent bad input
+            log.error("Encountered exception. Your LDAP configuration is probably invalid.", e);
             return null;
         }
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return ldapService != null && ldapService.supports(authentication);
+        try {
+            return ldapService != null && ldapService.supports(authentication);
+        } catch (Exception e) { // this is to prevent bad input
+            log.error("Encountered exception. Your LDAP configuration is probably invalid.", e);
+            return false;
+        }
     }
 
 }
