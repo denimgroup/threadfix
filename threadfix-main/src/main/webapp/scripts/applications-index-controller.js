@@ -23,7 +23,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     $scope.teams = data.object;
                     $scope.teams.sort(nameCompare)
 
-                    if ($scope.teams.length == 0) {
+                    if ($scope.teams.length == 0 && $scope.canCreateTeams) {
                         $scope.openTeamModal();
                     }
                 } else {

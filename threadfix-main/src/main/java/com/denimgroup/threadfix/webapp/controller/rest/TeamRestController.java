@@ -79,9 +79,7 @@ public class TeamRestController extends RestController {
      * @return
      */
     @RequestMapping(headers = "Accept=application/json", value = "/{teamID}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    Object teamIDLookup(@PathVariable("teamID") int teamId,
+    public @ResponseBody Object teamIDLookup(@PathVariable("teamID") int teamId,
                         HttpServletRequest request) {
         log.info("Received REST request for Team with ID " + teamId + ".");
 
