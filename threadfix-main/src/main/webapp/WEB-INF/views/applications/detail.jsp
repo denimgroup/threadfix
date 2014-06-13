@@ -79,4 +79,5 @@
     <%@ include file="/WEB-INF/views/applications/forms/manualFindingForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScanQueueForm.jsp" %>
+    <%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>
 </body>

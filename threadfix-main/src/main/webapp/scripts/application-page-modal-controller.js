@@ -407,4 +407,25 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         });
     };
 
+    $scope.viewApplicationDetail = function() {
+        $modal.open({
+            templateUrl: 'detailApplicationModal.html',
+            controller: 'ModalControllerWithConfig',
+            resolve: {
+                url: function() {
+                    return {};
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {};
+                },
+                buttonText: function() {
+                    return {};
+                }
+            }
+        });
+    };
+
 })

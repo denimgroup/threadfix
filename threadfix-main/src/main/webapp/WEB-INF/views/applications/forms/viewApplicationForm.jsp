@@ -1,4 +1,4 @@
-<%@ include file="/common/taglibs.jsp"%>
+<script type="text/ng-template" id="detailApplicationModal.html">
 
 	<div class="modal-header">
 		<h4 id="myModalLabel">Application Detail
@@ -6,9 +6,8 @@
 		</h4>
 	</div>
 
-	<form:form style="margin-bottom:0px;" id="viewAppForm" modelAttribute="application" autocomplete="off">
 	<div class="modal-body">
-		<table>
+		<table class="left-align">
 			<tr class="left-align">
 				<td style="padding:5px;">Name</td> 
 				<td style="padding:5px;">
@@ -39,6 +38,32 @@
 					<c:out value="${ application.applicationCriticality.name }"/>
 				</td>
 			</tr>
+
+            <tr>
+                <td style="padding:5px;">Application Type</td>
+                <td style="padding:5px;">
+                    <c:out value="${ application.frameworkType }"/>
+                </td>
+            </tr>
+            <tr>
+                <td  style="padding:5px;">Source Code URL</td>
+                <td  style="padding:5px;">
+                    <c:out value="${ application.repositoryUrl }"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">Source Code Revision</td>
+                <td style="padding:5px;">
+                    <c:out value="${ application.repositoryBranch }"/>
+                </td>
+            </tr>
+            <tr>
+                <td  style="padding:5px;">Source Code Folder</td>
+                <td  style="padding:5px;">
+                    <c:out value="${ application.repositoryFolder }"/>
+                </td>
+            </tr>
+
 			<tr class="left-align">
 				<td style="padding:5px;">Defect Tracker</td>
 				<td style="padding:5px;">
@@ -59,11 +84,19 @@
 					</a></em>  
 					  <c:out value="${ application.waf.wafType.name }"/>
 				</td>				
-			</tr>			
+			</tr>
+            <tr>
+                <td style="padding:5px;">
+                    Disable Vulnerability Merging
+                </td>
+                <td style="padding:5px;">
+                    <c:out value="${ application.skipApplicationMerge }"/>
+                </td>
+            </tr>
 		</table>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">Close</button>
 		
 	</div>
-</form:form>
+</script>

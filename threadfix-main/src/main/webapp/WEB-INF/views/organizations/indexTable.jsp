@@ -113,10 +113,12 @@
                                 <td class="centered" id="numLowVulns{{ team.name }}-{{ app.name }}">{{ app.lowVulnCount }}</td>
                                 <td class="centered" id="numInfoVulns{{ team.name }}-{{ app.name }}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
-                                    <a id="uploadScanModalLink{{ team.name }}-{{ app.name }}" class="btn"
-                                            ng-click="showUploadForm(team, app)">
-                                        Upload Scan
-                                    </a>
+                                    <security:authorize ifAnyGranted="ROLE_CAN_UPLOAD_SCANS">
+                                        <a id="uploadScanModalLink{{ team.name }}-{{ app.name }}" class="btn"
+                                           ng-click="showUploadForm(team, app)">
+                                            Upload Scan
+                                        </a>
+                                    </security:authorize>
                                 </td>
                             </tr>
                         </table>
