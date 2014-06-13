@@ -24,8 +24,10 @@
 
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.RoleDao;
+import com.denimgroup.threadfix.data.dao.UserDao;
+import com.denimgroup.threadfix.data.entities.Role;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
-import com.denimgroup.threadfix.data.dao.RoleDao;
-import com.denimgroup.threadfix.data.dao.UserDao;
-import com.denimgroup.threadfix.data.entities.Role;
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -73,7 +73,13 @@ public class RoleServiceImpl implements RoleService {
 		Role role = loadRole(id);
 		if (role != null && canDelete(role)) {
 			role.setActive(false);
-			
+
+            for (User user : role.getUsers()) {
+                user.setGlobalRole(null);
+                user.setHasGlobalGroupAccess(false);
+                userDao.saveOrUpdate(user);
+            }
+
 			// This deactivates all the maps
 			roleDao.saveOrUpdate(role);
 		}
