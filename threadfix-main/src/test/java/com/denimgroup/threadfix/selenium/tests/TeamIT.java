@@ -27,6 +27,8 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.microsoft.tfs.core.clients.registration.Database;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -35,7 +37,6 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class TeamIT extends BaseIT {
-    //TODO check status of bug 334 and if fixed create test
 
 	@Test
 	public void testCreateTeam(){
@@ -89,6 +90,27 @@ public class TeamIT extends BaseIT {
 		
 		assertTrue("Header width was incorrect with long team name",teamIndexPage.getLengthError().contains("Maximum length is 60."));
 	}
+
+    //TODO check status of bug 334 and if fixed create test
+    @Ignore
+    @Test
+    public void testEditTeamNameWithApplication() {
+        String originalTeamName = getRandomString(8);
+        String editedTeamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(originalTeamName);
+        DatabaseUtils.createApplication(originalTeamName, appName);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(originalTeamName)
+                .clickActionButton()
+                .clickEditOrganizationLink()
+                .setNameInput(editedTeamName)
+                .clickModalSubmit();
+
+    }
 
     //TODO Need to update this when the validation is done in the form and not return a failure
 	@Test
