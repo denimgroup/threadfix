@@ -32,6 +32,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class PermissionUtils {
+public class PermissionUtils extends SpringBeanAutowiringSupport {
 
     @Autowired(required = false)
     private PermissionService permissionService;
@@ -54,6 +55,8 @@ public class PermissionUtils {
     private static PermissionUtils getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new PermissionUtils();
+            assert INSTANCE.permissionService != null :
+                    "Spring configuration is wrong, try again.";
         }
 
         return INSTANCE;
