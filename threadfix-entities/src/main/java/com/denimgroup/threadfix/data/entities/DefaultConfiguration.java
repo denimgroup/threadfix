@@ -89,11 +89,7 @@ public class DefaultConfiguration extends BaseEntity {
 	}
 	
 	public String getActiveDirectoryURL() {
-		if (activeDirectoryURL == null) {
-			return "";
-		} else {
-			return activeDirectoryURL;
-		}
+        return activeDirectoryURL == null ? "" : activeDirectoryURL;
 	}
 	
 	@Column(length=256)
@@ -101,11 +97,7 @@ public class DefaultConfiguration extends BaseEntity {
 		this.activeDirectoryURL = activeDirectoryURL;
 	}
 	public String getActiveDirectoryUsername() {
-		if (activeDirectoryUsername == null) {
-			return "";
-		} else {
-			return activeDirectoryUsername;
-		}
+		return activeDirectoryUsername == null ? "" : activeDirectoryUsername;
 	}
 	
 	@Column(length=256)
@@ -114,11 +106,7 @@ public class DefaultConfiguration extends BaseEntity {
 	}
 	
 	public String getActiveDirectoryCredentials() {
-		if (activeDirectoryCredentials == null) {
-			return "";
-		} else {
-			return activeDirectoryCredentials;
-		}
+		return activeDirectoryCredentials == null ? "" : activeDirectoryCredentials;
 	}
 	
 	@Column(length=256)
@@ -127,11 +115,7 @@ public class DefaultConfiguration extends BaseEntity {
 	}
 	
 	public String getActiveDirectoryBase() {
-		if (activeDirectoryCredentials == null) {
-			return "";
-		} else {
-			return activeDirectoryBase;
-		}
+		return activeDirectoryCredentials == null ? "" : activeDirectoryBase;
 	}
 
 	@Column
