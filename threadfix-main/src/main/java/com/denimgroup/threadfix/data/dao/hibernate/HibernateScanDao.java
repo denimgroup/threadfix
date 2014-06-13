@@ -30,11 +30,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -423,9 +423,17 @@ public class HibernateScanDao implements ScanDao {
     @Nonnull
 	private Criteria addFiltering(Criteria criteria, Set<Integer> teamIds, Set<Integer> appIds) {
 		
-		boolean useAppIds = appIds != null && !appIds.isEmpty(),
-				useTeamIds = teamIds != null && !teamIds.isEmpty();
-		
+		boolean useAppIds = appIds != null,
+				useTeamIds = teamIds != null;
+
+        if (teamIds != null && teamIds.isEmpty()) {
+            teamIds = new HashSet<>(Arrays.asList(0));
+        }
+
+        if (appIds != null && appIds.isEmpty()) {
+            appIds = new HashSet<>(Arrays.asList(0));
+        }
+
 		if (!useAppIds && !useTeamIds) {
 			return criteria;
 		}
