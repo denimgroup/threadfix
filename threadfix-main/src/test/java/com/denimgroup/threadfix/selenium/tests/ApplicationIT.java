@@ -497,7 +497,8 @@ public class ApplicationIT extends BaseIT {
     public void testEditDynamicManualFinding() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
-        String cwe = "Improper Validation of Certificate Expiration";
+        String originalCwe = "Improper Validation of Certificate Expiration";
+        String editedCwe = "Improper Resolution of Path Equivalence";
         String originalParameter = "testParameter";
         String editedParameter = "testParameter-edited";
         String originalDescription = "Test Description: This is a test, this is only a test.";
@@ -513,7 +514,7 @@ public class ApplicationIT extends BaseIT {
 
         applicationDetailPage.clickActionButton()
                 .clickManualFindingButton()
-                .setCWE(cwe)
+                .setCWE(originalCwe)
                 .setParameter(originalParameter)
                 .setDescription(originalDescription)
                 .clickDynamicSubmit();
@@ -523,6 +524,7 @@ public class ApplicationIT extends BaseIT {
                 .clickViewFinding()
                 .clickViewVulnerability()
                 .clickEditFinding()
+                .setCwe(editedCwe)
                 .setDescription(editedDescription)
                 .setParameter(editedParameter)
                 .clickModalSubmit();
@@ -534,6 +536,8 @@ public class ApplicationIT extends BaseIT {
                 .clickViewScan()
                 .clickViewFinding();
 
+        assertTrue("Scanner Vulnerability did not match the given input.",
+                editedCwe.equals(findingDetailPage.getDetail("scannerVulnerabilityType")));
         assertTrue("Finding description did not match the given input.",
                 editedDescription.equals(findingDetailPage.getDetail("longDescription")));
         assertTrue("Finding parameter did not match the given input.",
@@ -583,7 +587,8 @@ public class ApplicationIT extends BaseIT {
     public void testEditStaticManualFinding() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
-        String cwe = "Improper Validation of Certificate Expiration";
+        String originalCwe = "Improper Validation of Certificate Expiration";
+        String editedCwe = "Improper Resolution of Path Equivalence";
         String originalParameter = "testParameter";
         String editedParameter = "testParameter-edited";
         String originalDescription = "Test Description: This is a test, this is only a test.";
@@ -600,7 +605,7 @@ public class ApplicationIT extends BaseIT {
         applicationDetailPage.clickActionButton()
                 .clickManualFindingButton()
                 .clickStaticRadioButton()
-                .setCWE(cwe)
+                .setCWE(originalCwe)
                 .setParameter(originalParameter)
                 .setDescription(originalDescription)
                 .clickDynamicSubmit();
@@ -610,6 +615,7 @@ public class ApplicationIT extends BaseIT {
                 .clickViewFinding()
                 .clickViewVulnerability()
                 .clickEditFinding()
+                .setCwe(editedCwe)
                 .setDescription(editedDescription)
                 .setParameter(editedParameter)
                 .clickModalSubmit();
@@ -621,6 +627,8 @@ public class ApplicationIT extends BaseIT {
                 .clickViewScan()
                 .clickViewFinding();
 
+        assertTrue("Scanner Vulnerability did not match the given input.",
+                editedCwe.equals(findingDetailPage.getDetail("scannerVulnerabilityType")));
         assertTrue("Finding description did not match the given input.",
                 editedDescription.equals(findingDetailPage.getDetail("longDescription")));
         assertTrue("Finding parameter did not match the given input.",
