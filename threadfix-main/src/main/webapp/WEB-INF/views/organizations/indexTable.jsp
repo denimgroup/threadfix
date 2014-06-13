@@ -7,7 +7,11 @@
     <a ng-show="teams" class="btn" id="collapseAllButton" ng-click="contract()">Collapse All</a>
 </div>
 
-<table ng-show="teams" class="table table-hover white-inner-table">
+<table ng-show="teams" class="table table-hover white-inner-table"
+        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+            ng-init="canCreateTeams = true"
+        </security:authorize>
+        >
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>
     <%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
@@ -43,16 +47,18 @@
             <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ team.name }}">{{ team.infoVulnCount }}</td>
             <td ng-click="toggle(team)"></td>
             <td>
-                <c:if test="${ canAddApps }">
-                    <a id="addApplicationModalButton{{ team.name }}" ng-click="openAppModal(team)" class="btn btn-default">
-                        Add Application
-                    </a>
-                </c:if>
-                <c:if test="${ not canAddApps }">
-                    <a id="addApplicationModalButton{{ team.name }}" class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
-                        Add Application
-                    </a>
-                </c:if>
+                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+                    <c:if test="${ underEnterpriseLimit }">
+                        <a id="addApplicationModalButton{{ team.name }}" ng-click="openAppModal(team)" class="btn btn-default">
+                            Add Application
+                        </a>
+                    </c:if>
+                    <c:if test="${ not underEnterpriseLimit }">
+                        <a id="addApplicationModalButton{{ team.name }}" class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
+                            Add Application
+                        </a>
+                    </c:if>
+                </security:authorize>
             <td>
                 <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-click="goTo(team)">View Team</a>
             </td>
@@ -114,7 +120,6 @@
                                 </td>
                             </tr>
                         </table>
-
                     </div>
                 </div>
             </td>

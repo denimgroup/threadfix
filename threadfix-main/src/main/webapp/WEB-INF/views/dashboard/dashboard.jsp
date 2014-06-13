@@ -32,7 +32,11 @@
 		</security:authorize>
 	</c:if>
 
-    <div ng-controller="DashboardController" class="container-fluid">
+    <c:if test="${ not empty teams }">
+        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">
+
+
+        <div ng-controller="DashboardController" class="container-fluid">
 		<%@include file="/WEB-INF/views/applications/reports.jspf"%>
 
 	    <div class="row-fluid">
@@ -156,4 +160,8 @@
 			</div>
 	    </div>
 	</div>
+
+        </security:authorize>
+
+    </c:if>
 </body>

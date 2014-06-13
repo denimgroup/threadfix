@@ -19,7 +19,7 @@
                         <span id="name.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
                     </td>
                 </tr>
-                <tr>
+                <tr ng-if="!user.isLdapUser">
                     <td>Password</td>
                     <td class="inputValue">
                         <input password-validate="{{ user.passwordConfirm }}" id="password" ng-model="user.unencryptedPassword" required type="password" id="passwordInput" name="unencryptedPassword" size="30"/>
@@ -29,7 +29,7 @@
                         <span id="password.error" class="errors" ng-show="user.password_error"> {{ user.password_error }}</span>
                     </td>
                 </tr>
-                <tr>
+                <tr ng-if="!user.isLdapUser">
                     <td>Confirm Password</td>
                     <td class="inputValue">
                         <input ng-model="user.passwordConfirm" id="confirm" required type="password" style="margin-bottom:0" id="passwordConfirmInput" name="passwordConfirm" size="30" />

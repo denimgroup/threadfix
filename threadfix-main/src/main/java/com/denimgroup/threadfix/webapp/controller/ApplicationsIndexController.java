@@ -95,17 +95,19 @@ public class ApplicationsIndexController {
         model.addAttribute("applicationTypes", FrameworkType.values());
 
         if (licenseService != null) {
-            model.addAttribute("canAddApps", licenseService.canAddApps());
+            model.addAttribute("underEnterpriseLimit", licenseService.canAddApps());
+            model.addAttribute("canManageTeams", PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_TEAMS));
             model.addAttribute("appLimit", licenseService.getAppLimit());
         } else {
-            model.addAttribute("canAddApps", true);
+            model.addAttribute("canManageTeams");
+            model.addAttribute("underEnterpriseLimit", true);
         }
 		return "organizations/index";
 	}
 
 	@RequestMapping(value="/jsonList", method = RequestMethod.GET)
 	public @ResponseBody Object jsonList() {
-        List<Organization> organizations = organizationService.loadAllActive();
+        List<Organization> organizations = organizationService.loadAllActiveFilter();
 
         if (organizations == null) {
             return failure("No organizations found.");

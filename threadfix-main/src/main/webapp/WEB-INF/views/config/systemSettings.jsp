@@ -64,7 +64,7 @@
                         <tr>
                             <td style="width:150px" class="no-color">LDAP Search Base</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryBase" path="activeDirectoryBase" cssClass="focus" size="60" maxlength="255" value="${user.name}"/>
+                                <form:input id="activeDirectoryBase" path="activeDirectoryBase" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryBase }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryBase" cssClass="errors" />
@@ -73,7 +73,7 @@
                         <tr>
                             <td class="no-color">LDAP User DN</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryUsername" path="activeDirectoryUsername" cssClass="focus" size="60" maxlength="255" value="${user.name}"/>
+                                <form:input id="activeDirectoryUsername" path="activeDirectoryUsername" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryUsername }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryUsername" cssClass="errors" />
@@ -82,7 +82,7 @@
                         <tr>
                             <td class="no-color">LDAP Password</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryCredentials" path="activeDirectoryCredentials" cssClass="focus" size="60" maxlength="255" value="${user.name}"/>
+                                <form:input id="activeDirectoryCredentials" path="activeDirectoryCredentials" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryCredentials }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryCredentials" cssClass="errors" />
@@ -91,7 +91,7 @@
                         <tr>
                             <td class="no-color">LDAP URL</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryURL" path="activeDirectoryURL" cssClass="focus" size="60" maxlength="255" value="${user.name}"/>
+                                <form:input id="activeDirectoryURL" path="activeDirectoryURL" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryURL }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryURL" cssClass="errors" />
