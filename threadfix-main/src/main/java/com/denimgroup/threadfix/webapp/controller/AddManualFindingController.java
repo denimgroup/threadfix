@@ -34,7 +34,6 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
@@ -46,74 +45,65 @@ import java.util.List;
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/scans/new")
 @SessionAttributes("application")
-public class AddFindingController {
-	
-	protected final SanitizedLogger log = new SanitizedLogger(AddFindingController.class);
+public class AddManualFindingController {
+
+    protected final SanitizedLogger log = new SanitizedLogger(AddManualFindingController.class);
 
     @Autowired
-	private ApplicationService applicationService;
+    private ApplicationService          applicationService;
     @Autowired
-	private ManualFindingService manualFindingService;
+    private ManualFindingService        manualFindingService;
     @Autowired
-	private ChannelVulnerabilityService channelVulnerabilityService;
+    private ChannelVulnerabilityService channelVulnerabilityService;
     @Autowired
-	private FindingService findingService;
+    private FindingService              findingService;
 
-	@ModelAttribute
-	public List<ChannelSeverity> populateChannelSeverity() {
-		return findingService.getManualSeverities();
-	}
-	
-	@ModelAttribute("staticChannelVulnerabilityList")
-	public List<String> populateStaticChannelVulnerablility(@PathVariable("appId") int appId){
-		return findingService.getRecentStaticVulnTypes(appId);
-	}
-	
-	@ModelAttribute("dynamicChannelVulnerabilityList")
-	public List<String> populateDynamicChannelVulnerablility(@PathVariable("appId") int appId){
-		return findingService.getRecentDynamicVulnTypes(appId);
-	}
-	
-	@ModelAttribute("staticPathList")
-	public List<String> populateStaticPath(@PathVariable("appId") int appId) {
-		return findingService.getRecentStaticPaths(appId);
-	}
-	
-	@ModelAttribute("dynamicPathList")
-	public List<String> populateDynamicPath(@PathVariable("appId") int appId) {
-		return findingService.getRecentDynamicPaths(appId);
-	}
+    @ModelAttribute
+    public List<ChannelSeverity> populateChannelSeverity() {
+        return findingService.getManualSeverities();
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView addNewFinding(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId) {
-		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
-			return new ModelAndView("403");
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		if (application == null)
-			return new ModelAndView("redirect:/organizations/" + orgId);
-			
-		ModelAndView mav = new ModelAndView("scans/form");
-		mav.addObject(new Finding());
-		mav.addObject(application);
-		return mav;
-	}
-	
-	private String returnForm(ModelMap model, int appId) {
-		model.addAttribute("contentPage", "applications/forms/manualFindingForm.jsp");
-		model.addAttribute("application", applicationService.loadApplication(appId));
-		model.addAttribute("manualSeverities", findingService.getManualSeverities());
-		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
-		model.addAttribute("manualChannelVulnerabilities", channelVulnerabilityService.loadAllManual());
-		return "ajaxFailureHarness";
-	}
+    @ModelAttribute("staticChannelVulnerabilityList")
+    public List<String> populateStaticChannelVulnerablility(@PathVariable("appId") int appId) {
+        return findingService.getRecentStaticVulnTypes(appId);
+    }
 
-	@RequestMapping(params = "group=static", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> staticSubmit(@PathVariable("appId") int appId,
-			@PathVariable("orgId") int orgId,
+    @ModelAttribute("dynamicChannelVulnerabilityList")
+    public List<String> populateDynamicChannelVulnerablility(@PathVariable("appId") int appId) {
+        return findingService.getRecentDynamicVulnTypes(appId);
+    }
+
+    @ModelAttribute("staticPathList")
+    public List<String> populateStaticPath(@PathVariable("appId") int appId) {
+        return findingService.getRecentStaticPaths(appId);
+    }
+
+    @ModelAttribute("dynamicPathList")
+    public List<String> populateDynamicPath(@PathVariable("appId") int appId) {
+        return findingService.getRecentDynamicPaths(appId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView addNewFinding(@PathVariable("appId") int appId,
+                                      @PathVariable("orgId") int orgId) {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
+            return new ModelAndView("403");
+        }
+
+        Application application = applicationService.loadApplication(appId);
+        if (application == null)
+            return new ModelAndView("redirect:/organizations/" + orgId);
+
+        ModelAndView mav = new ModelAndView("scans/form");
+        mav.addObject(new Finding());
+        mav.addObject(application);
+        return mav;
+    }
+
+    @RequestMapping(params = "group=static", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<String> staticSubmit(@PathVariable("appId") int appId,
+                                      @PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Finding finding, BindingResult result,
 			SessionStatus status) {
 	    return submitBackend(appId, orgId, finding, result, status, true);

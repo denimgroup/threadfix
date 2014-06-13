@@ -47,13 +47,13 @@
             <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ team.name }}">{{ team.infoVulnCount }}</td>
             <td ng-click="toggle(team)"></td>
             <td>
-                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPS">
-                    <c:if test="${ canAddApps }">
+                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+                    <c:if test="${ underEnterpriseLimit }">
                         <a id="addApplicationModalButton{{ team.name }}" ng-click="openAppModal(team)" class="btn btn-default">
                             Add Application
                         </a>
                     </c:if>
-                    <c:if test="${ not canAddApps }">
+                    <c:if test="${ not underEnterpriseLimit }">
                         <a id="addApplicationModalButton{{ team.name }}" class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
                             Add Application
                         </a>
