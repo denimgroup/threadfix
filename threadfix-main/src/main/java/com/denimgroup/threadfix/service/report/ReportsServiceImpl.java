@@ -746,14 +746,20 @@ public class ReportsServiceImpl implements ReportsService {
             }
 
             String openedDate = formatter.format(vuln.getOpenTime().getTime());
-            // Orders of positions: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID
-            rowParamsList.add(Arrays.asList(vuln.getGenericVulnerability().getId().toString(),
+            // Order of fields: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID, Application, Team, Payload, Attack surface path
+            rowParamsList.add(Arrays.asList(
+                    vuln.getGenericVulnerability().getId().toString(),
                     vuln.getGenericVulnerability().getName(),
                     vuln.getSurfaceLocation().getPath(),
                     vuln.getSurfaceLocation().getParameter(),
                     vuln.getGenericSeverity().getName(),
                     openedDate,
-                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId().toString()));
+                    (vuln.getDefect() == null) ? "" : vuln.getDefect().getNativeId().toString(),
+                    vuln.getApplication().getName(),
+                    vuln.getApplication().getOrganization().getName(),
+                    vuln.getSurfaceLocation().getQuery() == null ? "" : vuln.getSurfaceLocation().getQuery(),
+                    vuln.getSurfaceLocation().getUrl() == null ? "" : vuln.getSurfaceLocation().getUrl().toString()
+            ));
         }
         return rowParamsList;
     }
@@ -779,7 +785,7 @@ public class ReportsServiceImpl implements ReportsService {
             data.append("Application: ").append(appName).append(" \n \n");
         }
 
-		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID \n");
+		data.append("CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID, Application Name, Team Name, Payload, Attack Surface Path \n");
 		for (List<String> row: rowParamsList) {
 			for (int i=0;i<row.size();i++) {
 				String str = "";
