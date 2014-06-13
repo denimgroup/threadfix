@@ -24,12 +24,13 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +43,6 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/organizations/modalAdd")
-@PreAuthorize("hasRole('ROLE_CAN_MANAGE_TEAMS')")
 public class AddOrganizationController {
 
     @Autowired
@@ -65,6 +65,10 @@ public class AddOrganizationController {
 	public @ResponseBody RestResponse<Organization> newSubmit2(@Valid @ModelAttribute Organization organization,
                                                                BindingResult result, SessionStatus status,
                                                                Model model) {
+        if (!PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_TEAMS)) {
+            return RestResponse.failure("You don't have permission to add new teams.");
+        }
+
 		model.addAttribute("contentPage", "organizations/newTeamForm.jsp");
 		if (result.hasErrors()) {
 			return RestResponse.failure("Failed to add the team.");
