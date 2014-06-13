@@ -35,6 +35,8 @@ public class TeamDetailPage extends BasePage {
         driver.findElementById("applicationsTableBody");
     }
 
+    /*________________ Action Methods ________________*/
+
     public String getOrgName() {
         return driver.findElementById("name").getText();
     }
@@ -45,12 +47,6 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public FilterPage clickEditTeamFilters() {
-        driver.findElementById("editfiltersButton1").click();
-        waitForElement(driver.findElementById("createNewKeyModalButton"));
-        return new FilterPage(driver);
-    }
-
     public TeamDetailPage clickEditOrganizationLink() {
         clickActionButton();
         driver.findElementById("teamModalButton").click();
@@ -58,8 +54,34 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public boolean isAppPresent(String appName){
-        return driver.findElementsByLinkText(appName).size() != 0;
+    public FilterPage clickEditTeamFilters() {
+        driver.findElementById("editfiltersButton1").click();
+        waitForElement(driver.findElementById("createNewKeyModalButton"));
+        return new FilterPage(driver);
+    }
+
+    public TeamDetailPage clickUserPermLink() {
+        clickActionButton();
+        sleep(3000);
+        driver.findElementById("userListModelButton").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickVulnerabilitiesTab() {
+        driver.findElementByLinkText("0 Vulnerabilities").click();
+        waitForElement(driver.findElementByClassName("filter-controls"));
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleAllFilters() {
+        driver.findElementById("toggleAllButton").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public int getFilterDivHeight() {
+        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
     }
 
     public int getEditModalHeaderWidth(){
@@ -100,6 +122,8 @@ public class TeamDetailPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    /*________________ Get Methods ________________*/
+
     //TODO When ids are added change this!
     public String getErrorText() {
         return driver.findElementById("name.errors").getText().trim();
@@ -116,8 +140,18 @@ public class TeamDetailPage extends BasePage {
         return 0;
     }
 
+    public int getNumPermUsers(){
+        return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
+    }
+
     public boolean applicationVulnerabilitiesFiltered(String appName, String level, String expected) {
         return driver.findElementById("app" + level + "Vulns0").getText().equals(expected);
+    }
+
+    /*________________ Boolean Methods ________________*/
+
+    public boolean isAppPresent(String appName){
+        return driver.findElementsByLinkText(appName).size() != 0;
     }
 
     public boolean isActionBtnPresent(){
@@ -232,18 +266,6 @@ public class TeamDetailPage extends BasePage {
 
     public boolean isSuccessMessageDisplayed() {
         return driver.findElementByClassName("alert-success").isDisplayed();
-    }
-
-    public TeamDetailPage clickUserPermLink() {
-        clickActionButton();
-        sleep(3000);
-        driver.findElementById("userListModelButton").click();
-        sleep(2000);
-        return new TeamDetailPage(driver);
-    }
-
-    public int getNumPermUsers(){
-        return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
     }
 
     public boolean isUserPresentPerm(String user){
