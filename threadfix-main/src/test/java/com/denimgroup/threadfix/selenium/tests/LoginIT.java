@@ -37,22 +37,22 @@ public class LoginIT extends BaseIT {
 	@Test
 	public void badUsernameTest(){
 		loginPage = loginPage.loginInvalid("WRONG!!!","password");
-		assertTrue("Invalid login username error message was incorrect",loginPage.isloginError());
+		assertTrue("Invalid login username error message was incorrect",loginPage.isLoginErrorPresent());
 	}
 	
 	@Test
 	public void badPasswordTest(){
 		//wrong password
 		loginPage = loginPage.loginInvalid("user","WRONG!!!");
-		assertTrue("Invalid login password error message was incorrect",loginPage.isloginError());
+		assertTrue("Invalid login password error message was incorrect",loginPage.isLoginErrorPresent());
 		//case check
 		loginPage = loginPage.loginInvalid("user","PASSWORD");
-		assertTrue("Invalid login password error message was incorrect",loginPage.isloginError());
+		assertTrue("Invalid login password error message was incorrect",loginPage.isLoginErrorPresent());
 		//white space
 		loginPage = loginPage.loginInvalid("user","p a s s w o r d");
-		assertTrue("Invalid login password error message was incorrect",loginPage.isloginError());
+		assertTrue("Invalid login password error message was incorrect",loginPage.isLoginErrorPresent());
 		loginPage = loginPage.loginInvalid("user"," password ");
-		assertTrue("Invalid login password error message was incorrect",loginPage.isloginError());
+		assertTrue("Invalid login password error message was incorrect",loginPage.isLoginErrorPresent());
 	}
 	
 	@Test

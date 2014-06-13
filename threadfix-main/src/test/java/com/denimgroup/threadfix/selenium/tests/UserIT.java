@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -46,9 +45,9 @@ public class UserIT extends BaseIT {
 												.clickManageUsersLink();
 
 		userIndexPage.clickAddUserLink()
-                    .enterName(userName,null)
-                    .enterPassword(password,null)
-                    .enterConfirmPassword(password,null)
+                    .enterName(userName)
+                    .enterPassword(password)
+                    .enterConfirmPassword(password)
                     .clickAddNewUserBtn();
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
@@ -60,9 +59,9 @@ public class UserIT extends BaseIT {
                 .clickManageUsersLink()
                 .clickAddUserLink();
 
-        userIndexPage.enterName("        ",null);
-        userIndexPage.enterPassword("  ",null);
-        userIndexPage.enterConfirmPassword("  ",null);
+        userIndexPage.enterName("        ");
+        userIndexPage.enterPassword("  ");
+        userIndexPage.enterConfirmPassword("  ");
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         sleep(5000);
@@ -75,19 +74,18 @@ public class UserIT extends BaseIT {
                 userIndexPage.getConfirmPasswordRequiredError().equals("Confirm Password is required."));
 
         // Test length
-        userIndexPage.enterName("Test User",null);
-        userIndexPage.enterPassword("test",null);
-        userIndexPage.enterConfirmPassword("test",null);
-
+        userIndexPage.enterName("Test User");
+        userIndexPage.enterPassword("test");
+        userIndexPage.enterConfirmPassword("test");
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
 
         assertTrue("Password length error not present", userIndexPage.getPasswordLengthError().equals("8 characters needed"));
 
         // Test non-matching passwords
-        userIndexPage.enterName("new name",null);
-        userIndexPage.enterPassword("lengthy password 1",null);
-        userIndexPage.enterConfirmPassword("lengthy password 2",null);
+        userIndexPage.enterName("new name");
+        userIndexPage.enterPassword("lengthy password 1");
+        userIndexPage.enterConfirmPassword("lengthy password 2");
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         assertTrue("Password matching error is not correct.", userIndexPage.getPasswordMatchError().equals("Passwords do not match."));
     }
@@ -95,13 +93,14 @@ public class UserIT extends BaseIT {
     @Test
     public void testCreateDuplicateUser(){
         String userName = "testDuplicateUser" + getRandomString(3);
+        String password = getRandomString(15);
         // Create a user
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink();
-        userIndexPage.enterName(userName,null);
-        userIndexPage.enterPassword(userName,null);
-        userIndexPage.enterConfirmPassword(userName,null);
+        userIndexPage.enterName(userName);
+        userIndexPage.enterPassword(password);
+        userIndexPage.enterConfirmPassword(password);
 
         userIndexPage = userIndexPage.clickAddNewUserBtn();
 
@@ -109,7 +108,7 @@ public class UserIT extends BaseIT {
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 
         DashboardPage dashboardPage = userIndexPage.logout()
-                .login(userName, userName);
+                .login(userName, password);
 
         assertTrue("user: "+userName+" was not logged in.",dashboardPage.isLoggedInUser(userName));
 
@@ -119,9 +118,9 @@ public class UserIT extends BaseIT {
                 .clickAddUserLink();
         // Test name uniqueness check
 
-        userIndexPage.enterName(userName,null);
-        userIndexPage.enterPassword("dummy password",null);
-        userIndexPage.enterConfirmPassword("dummy password",null);
+        userIndexPage.enterName(userName);
+        userIndexPage.enterPassword("dummy password");
+        userIndexPage.enterConfirmPassword("dummy password");
 
         userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         sleep(5000);
@@ -205,16 +204,16 @@ public class UserIT extends BaseIT {
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .enterName(baseUserName)
-                .enterPassword("lengthy password 2", null)
-                .enterConfirmPassword("lengthy password 2", null)
+                .enterPassword("lengthy password 2")
+                .enterConfirmPassword("lengthy password 2")
                 .clickAddNewUserBtn();
 
         userIndexPage = userIndexPage.clickOrganizationHeaderLink()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .enterName(userNameDuplicateTest)
-                .enterPassword("lengthy password 2", null)
-                .enterConfirmPassword("lengthy password 2", null)
+                .enterPassword("lengthy password 2")
+                .enterConfirmPassword("lengthy password 2")
                 .clickAddNewUserBtn();
 
 		// Test submission with no changes
@@ -228,8 +227,8 @@ public class UserIT extends BaseIT {
 		// Test Empty
 		userIndexPage = userIndexPage.clickEditLink(baseUserName)
                 .enterName("")
-                .enterPassword("", baseUserName)
-                .enterConfirmPassword("", baseUserName)
+                .enterPassword("")
+                .enterConfirmPassword("")
                 .clickUpdateUserBtnInvalid(baseUserName);
 
 		assertTrue("Name error not present", userIndexPage.isSaveChangesButtonClickable(baseUserName));
@@ -245,17 +244,17 @@ public class UserIT extends BaseIT {
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName, null)
-                .enterPassword(passWord, null)
-                .enterConfirmPassword(passWord, null)
+                .enterName(userName)
+                .enterPassword(passWord)
+                .enterConfirmPassword(passWord)
                 .clickAddNewUserBtn();
 
 		// Test White Space
 		userIndexPage = userIndexPage.clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName("        ", null)
-                .enterPassword("             ", null)
-                .enterConfirmPassword("             ", null)
+                .enterName("        ")
+                .enterPassword("             ")
+                .enterConfirmPassword("             ")
                 .clickAddNewUserBtn();
 
         sleep(5000);
@@ -269,9 +268,9 @@ public class UserIT extends BaseIT {
         UserIndexPage userIndexPage = loginPage.login("user", "password").clickManageUsersLink();
 		// Test non-matching passwords
 		userIndexPage = userIndexPage.clickAddUserLink()
-                .enterName(userName, null)
-                .enterPassword("lengthy password 1", null)
-                .enterConfirmPassword("lengthy password 2", null)
+                .enterName(userName)
+                .enterPassword("lengthy password 1")
+                .enterConfirmPassword("lengthy password 2")
                 .clickAddNewUserBtn();
 
         sleep(5000);
@@ -281,16 +280,14 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationLength(){
-
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink();
 
-
 		// Test length
 		userIndexPage = userIndexPage.clickAddUserLink()
-                .enterName("Test User", null)
-                .enterPassword("test", null)
-                .enterConfirmPassword("test", null)
+                .enterName("Test User")
+                .enterPassword("test")
+                .enterConfirmPassword("test")
                 .clickAddNewUserBtn();
 
         sleep(5000);
@@ -300,25 +297,24 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationUnique(){
-        DashboardPage dashboardPage;
         String userName = "userName"+ getRandomString(5);
         String passWord = "passWord"+ getRandomString(5);
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName, null)
-                .enterPassword(passWord, null)
-                .enterConfirmPassword(passWord, null)
+                .enterName(userName)
+                .enterPassword(passWord)
+                .enterConfirmPassword(passWord)
                 .clickAddNewUserBtn();
 	
 		// Test name uniqueness check
 		userIndexPage = userIndexPage
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName,null)
-				.enterPassword("lengthy password 2",null)
-				.enterConfirmPassword("lengthy password 2",null)
+				.enterName(userName)
+				.enterPassword("lengthy password 2")
+				.enterConfirmPassword("lengthy password 2")
 				.clickAddNewUserBtn();
 
         sleep(5000);
@@ -380,9 +376,9 @@ public class UserIT extends BaseIT {
                 .clickManageUsersLink();
 
         userIndexPage.clickAddUserLink()
-                .enterName(userName,null)
-                .enterPassword(password,null)
-                .enterConfirmPassword(password,null)
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
                 .clickAddNewUserBtn()
                 .clickEditLink(userName)
                 .clickDelete(userName);
@@ -399,9 +395,9 @@ public class UserIT extends BaseIT {
 		DashboardPage dashboardPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName, null)
-				.enterPassword(password, null)
-				.enterConfirmPassword(password, null)
+				.enterName(userName)
+				.enterPassword(password)
+				.enterConfirmPassword(password)
 				.clickAddNewUserBtn()
 				.logout()
 				.login(userName, password)
@@ -423,9 +419,9 @@ public class UserIT extends BaseIT {
 		DashboardPage dashboardPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(baseUserName,null)
-				.enterPassword("lengthy password 2",null)
-				.enterConfirmPassword("lengthy password 2",null)
+				.enterName(baseUserName)
+				.enterPassword("lengthy password 2")
+				.enterConfirmPassword("lengthy password 2")
 				.clickAddNewUserBtn()
 				.logout()
 				.login(baseUserName, "lengthy password 2");
@@ -479,7 +475,7 @@ public class UserIT extends BaseIT {
         //TODO FIGURE OUT HOW TO GET THE ERRORS FROM PAGE
 		loginPage = passwordChangePage.logout().loginInvalid(baseUserName,"password");
 
-		assertTrue("Incorrect password and no error message shown.",loginPage.isloginError());
+		assertTrue("Incorrect password and no error message shown.",loginPage.isLoginErrorPresent());
 		
 		dashboardPage = loginPage.login(baseUserName,"lengthy password 3");
 		

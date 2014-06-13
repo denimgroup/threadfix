@@ -66,6 +66,8 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testValidLDAPSettings() {
+        String invalidUserPassword = getRandomString(15);
+
         SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
@@ -81,6 +83,11 @@ public class SystemSettingsEntIT extends BaseIT{
                 .login(LDAP_USERNAME, LDAP_USERPASSWORD);
 
         assertTrue("Valid LDAP user was unable to login using valid LDAP settings.", dashboardPage.isLoggedin());
+
+        loginPage = dashboardPage.logout()
+                .loginInvalid(LDAP_USERNAME, invalidUserPassword);
+
+        assertTrue("Invalid LDAP user was not able to log in.", loginPage.isLoginErrorPresent());
     }
 
     @Test
@@ -99,9 +106,47 @@ public class SystemSettingsEntIT extends BaseIT{
         loginPage = systemSettingsPage.logout()
                 .loginInvalid(LDAP_USERNAME, LDAP_USERPASSWORD);
 
-        assertTrue("Valid LDAP user was able to login using invalid LDAP settings.", loginPage.isloginError());
+        assertTrue("Valid LDAP user was able to login using invalid LDAP settings.", loginPage.isLoginErrorPresent());
     }
 
+    @Test
+    public void testValidLDAPUserAndWipedSystemSettings() {
+        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+                .clickSystemSettingsLink()
+                .expandLDAPSettings()
+                .setLDAPSearchBase(LDAP_SEARCHBASE)
+                .setLDAPUserDN(LDAP_USERDN)
+                .setLDAPPassword(LDAP_PASSWORD)
+                .setLDAPUrl(LDAP_URL)
+                .clickSaveChanges();
+
+        assertTrue("Save validation alert was not present." ,systemSettingsPage.isSaveSuccessful());
+
+        DashboardPage dashboardPage = systemSettingsPage.logout()
+                .login(LDAP_USERNAME, LDAP_USERPASSWORD);
+
+        assertTrue("Valid LDAP user was unable to login using valid LDAP settings.", dashboardPage.isLoggedin());
+
+        systemSettingsPage = dashboardPage.logout()
+                .login("user", "password")
+                .clickSystemSettingsLink()
+                .expandLDAPSettings()
+                .setLDAPSearchBase("")
+                .setLDAPUserDN("")
+                .setLDAPPassword("")
+                .setLDAPUrl("")
+                .clickSaveChanges();
+
+        assertTrue("Save validation alert was not present." ,systemSettingsPage.isSaveSuccessful());
+
+        loginPage = systemSettingsPage.logout()
+                .loginInvalid(LDAP_USERNAME, LDAP_PASSWORD);
+
+        assertTrue("LDAP user was able to log in after LDAP credentials were cleared from System Settings.",
+                loginPage.isLoginErrorPresent());
+    }
+
+    //TODO Fix this when issue 43 is closed on satgit2
     @Test
     public void testDefaultLDAPRole() {
         SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
@@ -137,7 +182,7 @@ public class SystemSettingsEntIT extends BaseIT{
         dashboardPage = systemSettingsPage.logout()
                 .login(LDAP_USERNAME, LDAP_USERPASSWORD);
 
-        assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertDisplayed());
+        //assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertDisplayed());
     }
 
     // TODO decide if this is best done in automation

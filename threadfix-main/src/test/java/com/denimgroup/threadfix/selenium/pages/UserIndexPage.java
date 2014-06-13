@@ -32,7 +32,6 @@ import java.util.List;
 
 public class UserIndexPage extends BasePage {
 
-
     public UserIndexPage(WebDriver webdriver) {
         super(webdriver);
     }
@@ -69,14 +68,6 @@ public class UserIndexPage extends BasePage {
 		return new UserIndexPage(driver);
 	}
 
-    @Deprecated
-	public UserIndexPage enterName(String name,String oldName){
-		WebElement nameField = driver.findElementById("name");
-        nameField.clear();
-        nameField.sendKeys(name);
-		return new UserIndexPage(driver);
-	}
-
     public UserIndexPage enterName(String username) {
         WebElement nameField = driver.findElementById("name");
         nameField.clear();
@@ -84,35 +75,11 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
     }
 
-    @Deprecated
-	public UserIndexPage enterPassword(String password,String oldName){
-		if(oldName == null){
-			driver.findElementById("password").clear();
-			driver.findElementById("password").sendKeys(password);
-		}else{
-			driver.findElementById("password").clear();
-			driver.findElementById("password").sendKeys(password);
-		}
-		return new UserIndexPage(driver);
-	}
-
     public UserIndexPage enterPassword(String password) {
         driver.findElementById("password").clear();
         driver.findElementById("password").sendKeys(password);
         return new UserIndexPage(driver);
     }
-
-    @Deprecated
-	public UserIndexPage enterConfirmPassword(String password,String oldName){
-		if(oldName == null){
-			driver.findElementById("confirm").clear();
-			driver.findElementById("confirm").sendKeys(password);
-		}else{
-			driver.findElementById("confirm").clear();
-			driver.findElementById("confirm").sendKeys(password);
-		}
-		return new UserIndexPage(driver);
-	}
 
     public UserIndexPage enterConfirmPassword(String password) {
         driver.findElementById("confirm").clear();
@@ -120,56 +87,23 @@ public class UserIndexPage extends BasePage {
         return new UserIndexPage(driver);
     }
 
-    @Deprecated
-	public UserIndexPage clickLDAP(String oldName){
-		if(oldName == null){
-			driver.findElementById("newUserModal").findElement(By.id("isLdapUserCheckbox")).click();
-		}else{
-			driver.findElementById("isLdapUserCheckbox"+(oldName)).click();
-		}
-		return new UserIndexPage(driver);
-	}
+    public boolean isPasswordFieldPresent() {
+        return driver.findElementsById("password").size() != 0;
+    }
 
     public UserIndexPage toggleLDAP() {
         driver.findElementById("isLdapUserCheckbox").click();
         return this;
     }
 
-    @Deprecated
-	public boolean isLDAPSelected(String oldName){
-		//return driver.findElementById("isLdapUserCheckbox"+(oldName)).isSelected();
-        return driver.findElementByClassName("ldapCheckbox").isSelected();
-	}
-
     public boolean isLDAPSelected() {
         return driver.findElementById("isLdapUserCheckbox").isSelected();
     }
-
-    @Deprecated
-	public UserIndexPage clickGlobalAccess(String oldName){
-		if(oldName == null){
-			driver.findElementById("hasGlobalGroupAccessCheckbox").click();
-		}else{
-			driver.findElementById("hasGlobalGroupAccessCheckbox" + (oldName)).click();
-		}
-		return new UserIndexPage(driver);
-	}
 
     public UserIndexPage toggleGlobalAccess() {
         driver.findElementById("hasGlobalGroupAccessCheckbox").click();
         return this;
     }
-
-    @Deprecated
-	public UserIndexPage chooseRoleForGlobalAccess(String role,String oldName){
-		if(oldName == null){
-            driver.findElementById("hasGlobalGroupAccessCheckbox").click();
-			new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
-		}else{
-			new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
-		}
-		return new UserIndexPage(driver);
-	}
 
     public UserIndexPage chooseRoleForGlobalAccess(String role) {
         new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
@@ -268,11 +202,6 @@ public class UserIndexPage extends BasePage {
 		}
 
 	}
-	
-	public boolean isGlobalAccessSelected(String oldName){
-		return driver.findElementById("hasGlobalGroupAccessCheckbox" + (oldName)).isSelected();
-	}
-
     public boolean isGlobalAccessSelected() {
         return driver.findElementById("hasGlobalGroupAccessCheckbox").isSelected();
     }

@@ -73,7 +73,7 @@ public class LoginPage extends BasePage {
 	}
 	
 	/*----------------get Functions----------------*/
-	public boolean isloginError(){
+	public boolean isLoginErrorPresent(){
 		return driver.findElementById("loginError").getText().trim().equals("Error: Username or Password incorrect");
 	}
 	

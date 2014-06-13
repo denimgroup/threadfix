@@ -24,9 +24,7 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
-import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -84,36 +82,40 @@ public class UserEntIT extends BaseIT {
         assertFalse("Alert was shown on dashboard page", dashboardPage.isAlertDisplayed());
     }
 
-    //TODO Fix this when LDAP user creation has changed.
-    @Ignore
 	@Test
 	public void createLdapUser(){
 		String userName = getRandomString(8);
+        String password = getRandomString(15);
 
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
                 .clickAddUserLink()
                 .enterName(userName)
-                .enterPassword("TestPassword")
-                .enterConfirmPassword("TestPassword")
-				.toggleLDAP()
-				.clickAddNewUserBtn()
-				.clickEditLink(userName);
+				.toggleLDAP();
+        assertFalse("Password fields are still present.", userIndexPage.isPasswordFieldPresent());
 
-		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected());
+        userIndexPage.clickAddNewUserBtn();
+        assertTrue("LDAP user is not present in the user list.", userIndexPage.isUserNamePresent(userName));
+
+	    userIndexPage.clickEditLink(userName);
+		assertTrue("LDAP did not remain selected on creation.", userIndexPage.isLDAPSelected());
 
 		//turn ldap off
-		userIndexPage = userIndexPage.toggleLDAP()
+		userIndexPage = userIndexPage.toggleLDAP();
+        assertTrue("Password fields are not present when switching from a LDAP user to regular user.",
+                userIndexPage.isPasswordFieldPresent());
+
+        userIndexPage.enterPassword(password)
+                .enterConfirmPassword(password)
                 .clickUpdateUserBtn(userName)
                 .clickEditLink(userName);
-		assertFalse("LDAP remained selected on creation", userIndexPage.isLDAPSelected());
+		assertFalse("LDAP remained selected after editing.", userIndexPage.isLDAPSelected());
 
 		//turn ldap on
 		userIndexPage = userIndexPage.toggleLDAP()
                 .clickUpdateUserBtn(userName)
-                .clickEditLink(userName)
-                .clickCancel(userName);
-		assertTrue("LDAP did not remain selected on creation", userIndexPage.isLDAPSelected());
+                .clickEditLink(userName);
+		assertTrue("LDAP did not remain selected after editing.", userIndexPage.isLDAPSelected());
 	}
 
 	@Test
@@ -155,72 +157,6 @@ public class UserEntIT extends BaseIT {
 		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
 	}
 
-    // TODO this is test is ignored because this feature seems to have changed to be LDAP specific
-    @Ignore
-	@Test
-	public void defaultRoleTest(){
-		String userName = "configureDefaultsUser" + getRandomString(3);
-
-		SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
-                .clickSystemSettingsLink()
-                .defaultPermissions()
-                .toggleDefaultRoleCheckbox()
-                .setRole("User")
-                .clickSaveChanges();
-
-		assertTrue("Default permissions changes were not saved", systemSettingsPage.isSaveSuccessful());
-		
-		UserIndexPage userIndexPage = systemSettingsPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword("TestPassword")
-                .enterConfirmPassword("TestPassword")
-                .clickAddNewUserBtn()
-                .clickEditLink(userName);
-
-		assertTrue("User role was not selected", userIndexPage.isRoleSelected(userName, "User"));
-		
-		systemSettingsPage = userIndexPage.clickCancel(userName)
-                .clickDelete(userName)
-                .clickSystemSettingsLink()
-                .defaultPermissions()
-                .toggleDefaultRoleCheckbox()
-                .setRole("Administrator")
-                .clickSaveChanges();
-
-		assertTrue("Default changes not Saved",systemSettingsPage.isSaveSuccessful());
-		
-		userIndexPage = systemSettingsPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword("TestPassword")
-                .enterConfirmPassword("TestPassword")
-                .clickAddNewUserBtn()
-                .clickEditLink(userName);
-
-		assertTrue("Administrator role was not selected", userIndexPage.isRoleSelected(userName, "Administrator"));
-		
-		systemSettingsPage = userIndexPage.clickCancel(userName)
-                .clickDelete(userName)
-                .clickSystemSettingsLink()
-                .defaultPermissions()
-                .toggleDefaultRoleCheckbox()
-                .setRole("Read Access")
-                .clickSaveChanges();
-
-		assertTrue("Default Changes not Saved",systemSettingsPage.isSaveSuccessful());
-		
-		userIndexPage = systemSettingsPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword("TestPassword")
-                .enterConfirmPassword("TestPassword")
-                .clickAddNewUserBtn()
-                .clickEditLink(userName);
-
-		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
-	}
-
     //If this test fails it can cascade and cause several other tests to fail
     // TODO this test will not run correctly because of bugs involved with user creation
     @Ignore
@@ -234,7 +170,7 @@ public class UserEntIT extends BaseIT {
 
         assertTrue("User was deleted", userIndexPage.isUserNamePresent("user"));
 
-        userIndexPage = userIndexPage.chooseRoleForGlobalAccess(newRole, "user")
+        userIndexPage = userIndexPage.chooseRoleForGlobalAccess(newRole)
                 .clickUpdateUserBtnInvalid("user");
 
         assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
