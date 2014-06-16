@@ -88,7 +88,7 @@ public class RemoteProvidersController {
 		model.addAttribute("remoteProviderApplication", new RemoteProviderApplication());
 		model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
 
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS, Permission.CAN_UPLOAD_SCANS);
 		return "config/remoteproviders/index";
 	}
 
