@@ -109,6 +109,8 @@ public class ApplicationsIndexController {
 	public @ResponseBody Object jsonList() {
         List<Organization> organizations = organizationService.loadAllActiveFilter();
 
+        organizations = PermissionUtils.filterTeamList(organizations);
+
         if (organizations == null) {
             return failure("No organizations found.");
         } else {

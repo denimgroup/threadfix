@@ -152,6 +152,7 @@ public class RolesController {
 				roleService.deactivateRole(roleId);
 
                 if (shouldForceLogout) {
+                    // This invalidates the current session
                     SecurityContextHolder.getContext().setAuthentication(null);
                     // TODO improve this system.
                     return RestResponse.success("Role was deleted successfully. " +
