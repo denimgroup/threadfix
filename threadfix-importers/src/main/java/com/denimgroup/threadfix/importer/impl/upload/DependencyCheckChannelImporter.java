@@ -64,6 +64,9 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 		
 		private boolean getDate   = false;
 		private boolean inFinding = false;
+
+        private boolean getFileName = false, getDescription = false;
+        private String lastFileName = null, lastDescription = null;
 		
 		private FindingKey itemKey = null;
 	
@@ -71,7 +74,6 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
-//    			finding.setNativeId(getNativeId(finding));
     			finding.setNativeId(finding.getDependency().getCve());
 	    		saxFindingList.add(finding);
     		}
@@ -92,7 +94,13 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		inFinding = true;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
-	    	}
+	    	} else if (!inFinding && "fileName".equals(qName)) {
+	    	    // this should be the JAR's name, like activeio-core-3.1.2.jar
+
+                getFileName = true;
+            } else if (inFinding && "description".equals(qName)) {
+                getDescription = true;
+            }
 	    }
 	    
 	    @Override
@@ -105,6 +113,8 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
                 if (finding != null) {
                     Dependency dependency = new Dependency();
                     dependency.setCve(findingMap.get(FindingKey.CVE));
+                    dependency.setComponentName(lastFileName);
+                    dependency.setDescription(lastDescription);
                     finding.setDependency(dependency);
                     add(finding);
                 }
@@ -117,7 +127,13 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    			findingMap.put(itemKey, currentItem);
 	    		}
 	    		itemKey = null;
-	    	}
+	    	} else if (getFileName) {
+                lastFileName = getBuilderText();
+                getFileName = false;
+            } else if (getDescription) {
+                lastDescription = getBuilderText();
+                getDescription = false;
+            }
 	    	
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
@@ -131,7 +147,7 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 
 	    @Override
 		public void characters (char ch[], int start, int length) {
-	    	if (getDate || itemKey != null) {
+	    	if (getDate || getFileName || getDescription || itemKey != null) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
