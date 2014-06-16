@@ -39,6 +39,10 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
 
     public static final SanitizedLogger LOG = new SanitizedLogger(DotNetRoutesParser.class);
 
+    public boolean hasValidMappings() {
+        return !mappings.routes.isEmpty();
+    }
+
     @Nonnull
     public static DotNetRouteMappings parse(@Nonnull File file) {
         DotNetRoutesParser parser = new DotNetRoutesParser();

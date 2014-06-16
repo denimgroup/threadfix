@@ -43,8 +43,12 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
         return parser.mappings;
     }
 
-    private DotNetControllerParser(File file) {
+    DotNetControllerParser(File file) {
         mappings = new DotNetControllerMappings(file.getAbsolutePath());
+    }
+
+    public boolean hasValidControllerMappings() {
+        return !mappings.getActions().isEmpty();
     }
 
     @Override

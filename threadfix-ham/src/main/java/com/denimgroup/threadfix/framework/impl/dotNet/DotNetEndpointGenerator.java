@@ -34,14 +34,18 @@ import java.util.*;
  */
 public class DotNetEndpointGenerator implements EndpointGenerator {
 
-    private final DotNetControllerMappings[] dotNetControllerMappings;
+    private final List<DotNetControllerMappings> dotNetControllerMappings;
     private final DotNetRouteMappings        dotNetRouteMappings;
-    private final Set<Endpoint> endpoints = new HashSet<>();
+    private final List<Endpoint> endpoints = new ArrayList<>();
 
     public DotNetEndpointGenerator(DotNetRouteMappings routeMappings, DotNetControllerMappings... controllerMappings) {
+        this(routeMappings, Arrays.asList(controllerMappings));
+    }
+
+    public DotNetEndpointGenerator(DotNetRouteMappings routeMappings, List<DotNetControllerMappings> controllerMappings) {
         assert routeMappings != null;
         assert controllerMappings != null;
-        assert controllerMappings.length != 0;
+        assert controllerMappings.size() != 0;
 
         dotNetControllerMappings = controllerMappings;
         dotNetRouteMappings = routeMappings;
@@ -61,7 +65,7 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
                         .replaceAll("\\{\\w*controller\\w*\\}", mappings.getControllerName())
                         // substitute in action for {action}
                         .replaceAll("\\{\\w*action\\w*\\}", action)
-                        // parse out parameters instead of ignoring them.
+                        // TODO parse out parameters instead of ignoring them.
                         .replaceAll("\\{[^\\}]*\\}", ""); // strip all of the other things
 
                 endpoints.add(
@@ -70,10 +74,11 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
         }
     }
 
+    // TODO consider making this read-only with Collections.unmodifiableList() or returning a defensive copy
     @Nonnull
     @Override
     public List<Endpoint> generateEndpoints() {
-        return new ArrayList<>(endpoints);
+        return endpoints;
     }
 
     @Override
