@@ -4,6 +4,12 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
     $scope.parameters = {};
 
+    $scope.resetFiltersIfEnabled = function() {
+        if ($scope.selectedFilter) {
+            $scope.resetFilters();
+        }
+    }
+
     $scope.resetFilters = function() {
         $scope.parameters = {
             teams: [],
@@ -19,6 +25,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         };
 
         $scope.endDate = undefined;
+        $scope.selectedFilter = undefined;
         $scope.startDate = undefined;
 
         $scope.refresh();
@@ -226,30 +233,34 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.updateElementTable(element, 10, 1);
     }
 
-    $scope.deleteFilter = function() {
-        $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
-            success(function(data, status, headers, config) {
-                console.log("Successfully deleted filter.");
-                $scope.initialized = true;
+    $scope.deleteCurrentFilter = function() {
+        if ($scope.selectedFilter) {
+            $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
+                success(function(data, status, headers, config) {
+                    console.log("Successfully deleted filter.");
+                    $scope.initialized = true;
 
-                if (data.success) {
-                    $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
-                    $scope.selectedFilter = undefined;
-                    $scope.savedFilters = data.object;
-                } else {
-                    $scope.errorMessage = "Failure. Message was : " + data.message;
-                }
+                    if (data.success) {
+                        $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
+                        $scope.selectedFilter = undefined;
+                        $scope.savedFilters = data.object;
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
 
-                $scope.loading = false;
-            }).
-            error(function(data, status, headers, config) {
-                console.log("Failed to save filters.");
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                $scope.loading = false;
-            });
+                    $scope.loading = false;
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("Failed to save filters.");
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                    $scope.loading = false;
+                });
+        }
     }
 
-    $scope.loadFilter = function() {
+    $scope.loadFilter = function(filter) {
+
+        $scope.selectedFilter = filter;
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
         $scope.refresh();
         $scope.lastLoadedFilterName = $scope.selectedFilter.name;
@@ -272,6 +283,13 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
                     if (data.success) {
                         $scope.savedFilters = data.object;
+
+                        $scope.savedFilters.forEach(function(filter) {
+                            if (filter.name === $scope.currentFilterNameInput) {
+                                $scope.selectedFilter = filter;
+                            }
+                        });
+
                         $scope.currentFilterNameInput = '';
                         $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
                     } else {
@@ -411,7 +429,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
 
     $scope.exportCSV = function() {
-        console.log('Updating element table');
+        console.log('Downloading vulnerabilities list');
 
         var parameters = angular.copy($scope.parameters);
 
@@ -419,12 +437,72 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
         $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
             success(function(data, status, headers, config, response) {
-                var element = angular.element('<a/>');
-                element.attr({
-                    href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
-                    target: '_blank',
-                    download: 'search_export.csv'
-                })[0].click();
+//                var element = angular.element('<a/>');
+//                element.attr({
+//                    href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
+//                    target: '_blank',
+//                    download: 'search_export.csv'
+//                })[0].click();
+//
+
+                var octetStreamMime = "application/octet-stream";
+
+                // Get the headers
+                headers = headers();
+
+                // Get the filename from the x-filename header or default to "download.bin"
+                var filename = headers["x-filename"] || "search_export.csv";
+
+                // Determine the content type from the header or default to "application/octet-stream"
+                var contentType = headers["content-type"] || octetStreamMime;
+
+                if(navigator.msSaveBlob)
+                {
+                    // Save blob is supported, so get the blob as it's contentType and call save.
+                    var blob = new Blob([data], { type: contentType });
+                    navigator.msSaveBlob(blob, filename);
+                    console.log("SaveBlob Success");
+                }
+                else
+                {
+                    // Get the blob url creator
+                    var urlCreator = window.URL || window.webkitURL || window.mozURL || window.msURL;
+                    if(urlCreator)
+                    {
+                        // Try to use a download link
+                        var link = document.createElement("a");
+                        if("download" in link)
+                        {
+                            // Prepare a blob URL
+                            var blob = new Blob([data], { type: contentType });
+                            var url = urlCreator.createObjectURL(blob);
+                            link.setAttribute("href", url);
+
+                            // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
+                            link.setAttribute("download", filename);
+
+                            // Simulate clicking the download link
+                            var event = document.createEvent('MouseEvents');
+                            event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                            link.dispatchEvent(event);
+
+                            console.log("Download link Success");
+
+                        } else {
+                            // Prepare a blob URL
+                            // Use application/octet-stream when using window.location to force download
+                            var blob = new Blob([data], { type: octetStreamMime });
+                            var url = urlCreator.createObjectURL(blob);
+                            window.location = url;
+
+                            console.log("window.location Success");
+                        }
+
+                    } else {
+                        console.log("Not supported");
+                    }
+                }
+
             }).
             error(function(data, status, headers, config) {
                 $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;

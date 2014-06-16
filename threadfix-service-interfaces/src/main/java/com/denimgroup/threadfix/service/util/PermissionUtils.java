@@ -32,6 +32,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class PermissionUtils {
+public class PermissionUtils extends SpringBeanAutowiringSupport {
 
     @Autowired(required = false)
     private PermissionService permissionService;
@@ -65,7 +66,7 @@ public class PermissionUtils {
 		}
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
+
 		return authentication != null && authentication
 				.getAuthorities().contains(new SimpleGrantedAuthority(permission.getText()));
 	}
@@ -147,4 +148,32 @@ public class PermissionUtils {
             return getInstance().permissionService.getAuthenticatedTeamIds();
         }
     }
+
+    public static List<Organization> filterTeamList(List<Organization> organizations) {
+
+        Set<Integer> teamIds = getAuthenticatedTeamIds();
+
+        // If community or global read access, return all teams.
+        if (teamIds == null) { // TODO use something other than null to indicate all permissions
+            return organizations;
+        }
+
+        List<Organization> returnList = new ArrayList<>();
+        for (Organization organization : organizations) {
+            if (teamIds.contains(organization.getId())) {
+                returnList.add(organization);
+            } else {
+                List<Application> applications = filterApps(organization);
+
+                if (applications != null && !applications.isEmpty()) {
+                    organization.setActiveApplications(applications);
+                    returnList.add(organization);
+                }
+            }
+        }
+
+        return returnList;
+    }
+
+
 }

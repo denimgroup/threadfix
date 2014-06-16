@@ -92,7 +92,7 @@ public class AddUserController {
 	public @ResponseBody RestResponse<User> processNew(@Valid @ModelAttribute User user, BindingResult result) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
-			return FormRestResponse.failure("Errors", result);
+            return FormRestResponse.failure("Errors", result);
 		} else {
 			User databaseUser = userService.loadUser(user.getName().trim());
 			if (databaseUser != null) {

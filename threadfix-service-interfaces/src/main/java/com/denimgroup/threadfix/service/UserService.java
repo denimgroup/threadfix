@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 
 /**
@@ -138,4 +139,11 @@ public interface UserService {
 	 * @return
 	 */
 	List<User> getPermissibleUsers(Integer orgId, Integer appId);
+
+    /**
+     *
+     * @param role
+     * @return
+     */
+    boolean shouldReloadUserIfRoleChanged(Role role);
 }

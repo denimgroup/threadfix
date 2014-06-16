@@ -267,7 +267,7 @@ threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
         timer = $timeout(function(){
             alert('Timeout, exiting system. Please logon and try again.');
             window.location.href = tfEncoder.encode("/j_spring_security_logout");
-        },30000);
+        },60000);
     };
 
     timeoutService.cancel = function() {

@@ -10,12 +10,9 @@
             <tr>
                 <th class="first">Channel</th>
                 <th>Scan Date</th>
-                <c:if test="${ not canUploadScans }">
-                    <th>Total Vulns</th>
-                </c:if>
+                <th style="text-align:center">Total Vulns</th>
+                <th style="text-align:center">Hidden Vulns</th>
                 <c:if test="${ canUploadScans }">
-                    <th style="text-align:center">Total Vulns</th>
-                    <th style="text-align:center">Hidden Vulns</th>
                     <th class="medium"></th>
                 </c:if>
                 <th class="medium"></th>
@@ -41,10 +38,10 @@
                             Deleting
                         </a>
                     </td>
-                    <td>
-                        <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
-                    </td>
                 </c:if>
+                <td>
+                    <a class="pointer" ng-click="viewScan(scan)">View Scan</a>
+                </td>
             </tr>
         </tbody>
     </table>

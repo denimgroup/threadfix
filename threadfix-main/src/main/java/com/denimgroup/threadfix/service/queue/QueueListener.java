@@ -69,6 +69,8 @@ public class QueueListener implements MessageListener {
     @Autowired(required=false)
     @Nullable
     private ScanQueueService scanQueueService = null;
+    @Autowired
+    private VulnerabilityFilterService vulnerabilityFilterService;
 
 	/*
 	 * (non-Javadoc)
@@ -126,6 +128,10 @@ public class QueueListener implements MessageListener {
                         break;
                     case QueueConstants.STATISTICS_UPDATE:
                         processStatisticsUpdate(map.getInt("appId"));
+                        break;
+                    case QueueConstants.VULNS_FILTER:
+                        updateVulnsFilter();
+                        break;
 				}
 			}
 			
@@ -134,6 +140,12 @@ public class QueueListener implements MessageListener {
 			e.printStackTrace();
 		}
 	}
+
+    private void updateVulnsFilter() {
+        log.info("Starting updating all filter vulnerabilities");
+        vulnerabilityFilterService.updateAllVulnerabilities();
+        log.info("Updating all filter vulnerabilities finished.");
+    }
 
     private void processStatisticsUpdate(int appId) {
         if (appId == -1) {

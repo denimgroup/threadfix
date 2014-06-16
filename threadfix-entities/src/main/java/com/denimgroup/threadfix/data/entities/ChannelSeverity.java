@@ -94,7 +94,7 @@ public class ChannelSeverity extends BaseEntity {
 		this.findings = findings;
 	}
 
-    @JsonView(AllViews.TableRow.class)
+    @JsonView({ AllViews.TableRow.class, AllViews.VulnerabilityDetail.class })
 	public int getNumericValue() {
 		return numericValue;
 	}

@@ -259,6 +259,22 @@ public class QueueSenderImpl implements QueueSender {
         sendMap(scheduledScanMap);
     }
 
+    @Override
+    public void updateVulnFilter() {
+
+        MapMessage scheduledScanMap = new ActiveMQMapMessage();
+
+        try {
+            scheduledScanMap.setString("type", QueueConstants.VULNS_FILTER);
+        } catch (JMSException e) {
+            log.error(jmsErrorString);
+            e.printStackTrace();
+        }
+
+        sendMap(scheduledScanMap);
+    }
+
+
     private void send(String message) {
 		jmsTemplate.convertAndSend("requestQueue", message);
 	}

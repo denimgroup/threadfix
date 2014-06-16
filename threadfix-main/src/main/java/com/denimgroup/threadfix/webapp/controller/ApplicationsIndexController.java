@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -94,17 +95,21 @@ public class ApplicationsIndexController {
         model.addAttribute("applicationTypes", FrameworkType.values());
 
         if (licenseService != null) {
-            model.addAttribute("canAddApps", licenseService.canAddApps());
+            model.addAttribute("underEnterpriseLimit", licenseService.canAddApps());
+            model.addAttribute("canManageTeams", PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_TEAMS));
             model.addAttribute("appLimit", licenseService.getAppLimit());
         } else {
-            model.addAttribute("canAddApps", true);
+            model.addAttribute("canManageTeams");
+            model.addAttribute("underEnterpriseLimit", true);
         }
 		return "organizations/index";
 	}
 
 	@RequestMapping(value="/jsonList", method = RequestMethod.GET)
 	public @ResponseBody Object jsonList() {
-        List<Organization> organizations = organizationService.loadAllActive();
+        List<Organization> organizations = organizationService.loadAllActiveFilter();
+
+        organizations = PermissionUtils.filterTeamList(organizations);
 
         if (organizations == null) {
             return failure("No organizations found.");
@@ -144,6 +149,10 @@ public class ApplicationsIndexController {
                                                        HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 
         log.info("Received REST request to upload a scan to application " + appId + ".");
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
+            return failure("You don't have permission to upload scans.");
+        }
 
         Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
 

@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -60,7 +59,6 @@ public class GenericSeverity extends BaseEntity {
 
 	@NotEmpty(message = "{errors.required}")
 	@Size(max = 50, message = "{errors.maxlength}")
-    @JsonView(AllViews.TableRow.class)
 	private String name;
 	
 	private Integer intValue;
@@ -69,6 +67,7 @@ public class GenericSeverity extends BaseEntity {
 	private List<Vulnerability> vulnerabilities;
 
 	@Column(length = 50, nullable = false)
+    @JsonView(Object.class)
 	public String getName() {
 		return name;
 	}

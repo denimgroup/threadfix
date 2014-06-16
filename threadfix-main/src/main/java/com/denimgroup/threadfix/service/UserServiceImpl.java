@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -351,5 +352,41 @@ public class UserServiceImpl implements UserService {
 		if (appId != null && orgId != null) resultList = userDao.retrieveAppPermissibleUsers(orgId, appId);			
 		return resultList;
 	}
+
+    @Override
+    public boolean shouldReloadUserIfRoleChanged(Role role) {
+
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (name == null) {
+            assert false;
+            return true;
+        }
+
+        User user = loadUser(name);
+
+        if (user == null) {
+            assert false;
+            return true;
+        }
+
+        if (user.getGlobalRole() != null && user.getGlobalRole().getId().equals(role.getId())) {
+            return true;
+        }
+
+        for (AccessControlTeamMap map : user.getAccessControlTeamMaps()) {
+            if (map.isActive() && map.getRole().getId().equals(role.getId())) {
+                return true;
+            }
+
+            for (AccessControlApplicationMap applicationMapping : map.getAccessControlApplicationMaps()) {
+                if (applicationMapping.isActive() && applicationMapping.getRole().getId().equals(role.getId())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
 }

@@ -40,7 +40,7 @@ import org.junit.experimental.categories.Category;
 @Category(CommunityTests.class)
 public class TeamRestIT {
 
-    String[] teamFields = { "id", "name", "activeApplications", "totalVulnCount",
+    String[] teamFields = { "id", "name", "applications", "totalVulnCount",
             "criticalVulnCount", "highVulnCount", "mediumVulnCount", "lowVulnCount", "infoVulnCount" };
 
     @Test
@@ -102,7 +102,7 @@ public class TeamRestIT {
 
         response = client.searchForTeamById(JsonTestUtils.getId(response));
 
-        JsonTestUtils.assertHasArrayOfObjectsWithFields(response, "activeApplications", "name", "id");
+        JsonTestUtils.assertHasArrayOfObjectsWithFields(response, "applications", "name", "id");
     }
 
 
