@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.List;
 
@@ -67,25 +69,44 @@ public class FindingsController {
 		if (finding == null){
 			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
 			throw new ResourceNotFoundException();
-		}
-		
-		ModelAndView mav = new ModelAndView("scans/findingDetail");
-		mav.addObject(finding);
-        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		return mav;
-	}
+        }
 
-	@RequestMapping(value = "merge", method = RequestMethod.GET)
-	public String merge(@PathVariable("findingId") int findingId,
-			Model model,
-			@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId) {
-		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
-		}
-		
-		Finding finding = findingService.loadFinding(findingId);
+        ModelAndView mav = new ModelAndView("scans/findingDetail");
+        decodeFinding(finding);
+        mav.addObject(finding);
+        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
+        return mav;
+    }
+
+    private void decodeFinding(Finding finding) {
+        try {
+            if (finding.getAttackString() != null)
+                finding.setAttackString(URLDecoder.decode(finding.getAttackString(), "UTF-8"));
+            if (finding.getScannerDetail() != null)
+                finding.setScannerDetail(URLDecoder.decode(finding.getScannerDetail(), "UTF-8"));
+            if (finding.getScannerRecommendation() != null)
+                finding.setScannerRecommendation(URLDecoder.decode(finding.getScannerRecommendation(), "UTF-8"));
+            if (finding.getAttackRequest() != null)
+                finding.setAttackRequest(URLDecoder.decode(finding.getAttackRequest(), "UTF-8"));
+            if (finding.getAttackResponse() != null)
+                finding.setAttackResponse(URLDecoder.decode(finding.getAttackResponse(), "UTF-8"));
+            if (finding.getRawFinding() != null)
+                finding.setRawFinding(URLDecoder.decode(finding.getRawFinding(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            log.warn("Error encounters when decoding finding.");
+        }
+    }
+    @RequestMapping(value = "merge", method = RequestMethod.GET)
+    public String merge(@PathVariable("findingId") int findingId,
+                        Model model,
+                        @PathVariable("orgId") int orgId,
+                        @PathVariable("appId") int appId) {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+            return "403";
+        }
+
+        Finding finding = findingService.loadFinding(findingId);
 
 		if (finding != null && finding.getVulnerability() != null) {
 			Vulnerability vuln = vulnerabilityService.loadVulnerability(finding.getVulnerability()
