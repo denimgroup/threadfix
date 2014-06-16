@@ -73,7 +73,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.openEditModal = function(user) {
         var modalInstance = $modal.open({
-            templateUrl: 'userForm.html',
+            templateUrl: 'editUserForm.html',
             controller: 'UserModalController',
             resolve: {
                 url: function() {
