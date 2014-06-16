@@ -333,7 +333,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		findingDateStatusMap = new HashMap<>();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
-                vulnTag = makeTag(name, qName, atts);
+                vulnTag = makeTag(name, qName, atts) + "\n";
 	    		map.clear();
 	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
@@ -373,7 +373,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
             }
 
             if (qName.equals("attack_vector")) {
-                currentRawFinding.append("</").append("vulnerability").append(">");
+                currentRawFinding.append("\n</").append("vulnerability").append(">");
                 map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
 	    		addFinding();
 	    		creatingVuln = false;
