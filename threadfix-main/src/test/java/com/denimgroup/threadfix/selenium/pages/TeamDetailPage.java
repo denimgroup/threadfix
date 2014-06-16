@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -74,18 +75,10 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public TeamDetailPage toggleAllFilters() {
-        driver.findElementById("toggleAllButton").click();
-        sleep(2000);
+    public TeamDetailPage clickVulnerabilitiesTab(String number) {
+        driver.findElementByLinkText(number + " Vulnerabilities").click();
+        waitForElement(driver.findElementByClassName("filter-controls"));
         return new TeamDetailPage(driver);
-    }
-
-    public int getFilterDivHeight() {
-        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
-    }
-
-    public int getEditModalHeaderWidth(){
-        return driver.findElementById("editFormDiv").findElement(By.className("ellipsis")).getSize().width;
     }
 
     public TeamDetailPage clickCloseEditModal(){
@@ -122,6 +115,166 @@ public class TeamDetailPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public TeamDetailPage toggleAllFilters() {
+        driver.findElementById("toggleAllButton").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickClearFilters() {
+        driver.findElementById("clearFiltersButton").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage expandSavedFilters() {
+        sleep(2000);
+        driver.findElementByLinkText("Saved Filters").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage addSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        driver.findElementById("saveFilterButton").click();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage loadSavedFilter(String savedFilter) {
+        driver.findElementByLinkText(savedFilter).click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage expandFieldControls() {
+        sleep(2000);
+        driver.findElementById("showFieldControls").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage addVulnerabilityTypeFilter(String vulnerabilityType) {
+        driver.findElementById("showTypeInput").click();
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
+        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage setPathFilter(String path) {
+        driver.findElementById("pathInput").sendKeys(path);
+        driver.findElementById("pathInput").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage setParameterFilter(String parameter) {
+        driver.findElementById("parameterFilterInput").sendKeys(parameter);
+        driver.findElementById("parameterFilterInput").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleSeverityFilter(String level) {
+        driver.findElementById("show" + level).click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleStatusFilter(String status) {
+        driver.findElementById("show" + status).click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage expandScannerAndMerged() {
+        sleep(2000);
+        driver.findElementById("expandScannerFilters").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleTwoPlus() {
+        driver.findElementByLinkText("2+").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleThreePlus() {
+        driver.findElementByLinkText("3+").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleFourPlus() {
+        driver.findElementByLinkText("4+").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleFivePlus() {
+        driver.findElementByLinkText("5+").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage addScannerFilter(String scanner) {
+        driver.findElementById("showScannerInput").click();
+        driver.findElementById("scannerTypeahead").sendKeys(scanner);
+        driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage expandAging() {
+        sleep(2000);
+        driver.findElementById("showDateControls").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleLessThan() {
+        driver.findElementByLinkText("Less Than").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleMoreThan() {
+        driver.findElementByLinkText("More Than").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggleOneWeek() {
+        driver.findElementByLinkText("1 Week").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggle30Days() {
+        driver.findElementByLinkText("30 days").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggle60Days() {
+        driver.findElementByLinkText("60 days").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage toggle90Days() {
+        driver.findElementByLinkText("90 days").click();
+        waitForResultsToLoad();
+        return new TeamDetailPage(driver);
+    }
+
+    public void waitForResultsToLoad() {
+        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
+            sleep(1000);
+        }
+    }
+
     /*________________ Get Methods ________________*/
 
     //TODO When ids are added change this!
@@ -144,8 +297,12 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("userTableBody").findElements(By.className("bodyRow")).size();
     }
 
-    public boolean applicationVulnerabilitiesFiltered(String appName, String level, String expected) {
-        return driver.findElementById("app" + level + "Vulns0").getText().equals(expected);
+    public int getFilterDivHeight() {
+        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
+    }
+
+    public int getEditModalHeaderWidth(){
+        return driver.findElementById("editFormDiv").findElement(By.className("ellipsis")).getSize().width;
     }
 
     /*________________ Boolean Methods ________________*/
@@ -277,4 +434,19 @@ public class TeamDetailPage extends BasePage {
         return false;
     }
 
+    public boolean applicationVulnerabilitiesFiltered(String appName, String level, String expected) {
+        return driver.findElementById("app" + level + "Vulns0").getText().equals(expected);
+    }
+
+    public boolean isSeverityLevelShown(String level) {
+        return driver.findElementsById("expand" + level).size() != 0;
+    }
+
+    public boolean isVulnerabilityCountCorrect(String level, String expected) {
+        return expected.equals(driver.findElementById("totalBadge" + level).getText());
+    }
+
+    public boolean areAllVulnerabilitiesHidden() {
+        return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
+    }
 }
