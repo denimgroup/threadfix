@@ -24,8 +24,10 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.map.annotate.JsonView;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -35,22 +37,47 @@ import javax.validation.constraints.Size;
 @Table(name = "Dependency")
 public class Dependency extends AuditableEntity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3647499545381978852L;
 	
 	@Size(max = 20, message = "{errors.maxlength} 20.")
 	private String cve;
 
-	@Column(length = 20)
+    @Size(max = 1024)
+    private String componentName = null;
+
+    @Size(max = 1024000)
+    private String description = null;
+
+    @Nullable
+    @Column(nullable = true)
+    @JsonView(AllViews.UIVulnSearch.class)
+    public String getComponentName() {
+        return componentName;
+    }
+
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    @Nullable
+    @Column(nullable = true)
+    @JsonView(AllViews.UIVulnSearch.class)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column(length = 20)
     @JsonView(Object.class)
     public String getCve() {
-		return cve;
-	}
+        return cve;
+    }
 
-	public void setCve(String cve) {
-		this.cve = cve;
-	}
+    public void setCve(String cve) {
+        this.cve = cve;
+    }
 
 }

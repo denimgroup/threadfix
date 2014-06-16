@@ -9,18 +9,37 @@
         <input id="checkbox{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" type="checkbox" ng-model="vulnerability.checked" ng-change="applyVulnerabilityChecked(element, vulnerability)"/>
     </span>
 
-    <div class="vuln-tree-label">Path</div>
-    <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
-    <br>
-    <div class="vuln-tree-label">Parameter</div>
-    <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
+    <!-- Path + Parameter -->
+    <div ng-if="!vulnerability.dependency">
+        <div class="vuln-tree-label">Path</div>
+        <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
         <br>
-    <div ng-show="vulnerability.dependency" class="vuln-tree-label">Dependency</div>
-    <span ng-show="vulnerability.dependency" id="cve{{ $index }}">
-        {{ vulnerability.dependency.cve }}
-        (<a target="_blank" id="linkCve{{ $index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vulnerability.dependency.cve }}">View</a>)
-    </span>
-    <br ng-show="vulnerability.dependency">
+        <div class="vuln-tree-label">Parameter</div>
+        <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
+        <br>
+    </div>
+
+    <!-- Dependency -->
+    <div ng-if="vulnerability.dependency">
+        <div class="vuln-tree-label">CVE</div>
+        <span id="cve{{ $index }}">
+            {{ vulnerability.dependency.cve }}
+            (<a target="_blank" id="linkCve{{ $index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vulnerability.dependency.cve }}">View</a>)
+        </span>
+        <br>
+        <div class="vuln-tree-label">Component</div>
+        <span id="cveComponent{{ $index }}">
+            {{ vulnerability.dependency.componentName }}
+        </span>
+        <br>
+        <div class="vuln-tree-label">Description</div>
+        <span id="cveDescription{{ $index }}">
+            {{ vulnerability.dependency.description }}
+        </span>
+        <br>
+    </div>
+
+    <!-- Scanner Badges -->
     <span id="channel{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}{{ name }}" ng-repeat="name in vulnerability.channelNames" class="badge">{{ name }}</span>
     <br>
     <a id="defectBadge{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
@@ -35,6 +54,8 @@
         Issue {{ vulnerability.defect.nativeId }} ({{ vulnerability.defect.status }})
     </a>
     <br ng-show="vulnerability.defect">
+
+    <!-- Comments + Documents -->
     <span id="commentsButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showComments = !vulnerability.showComments">
         {{ vulnerability.vulnerabilityComments.length ? vulnerability.vulnerabilityComments.length : 0 }} <span class="icon icon-comment"></span>
     </span>
@@ -43,6 +64,8 @@
     </span>
     <span class="pointer"><a id="viewMoreLink{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" ng-click="goTo(vulnerability)">View More</a></span>
     <br>
+
+    <!-- Comments body -->
     <div ng-show="vulnerability.showComments" style="display:inline-block">
         <h4>Comments</h4>
         <div id="commentDiv{{ $index }}" >
@@ -50,6 +73,8 @@
         </div>
         <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability)">Add Comment</a>
     </div>
+
+    <!-- Documents body -->
     <br ng-show="vulnerability.showDocuments">
     <div ng-show="vulnerability.showDocuments">
         <h4>Files</h4>
