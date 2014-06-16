@@ -191,22 +191,22 @@ public class RoleEntIT extends BaseIT {
             if (permission != "enterprise") {
                 assertFalse("Permission was set to yes when it should have been set to no.",
                         rolesIndexPage.getPermissionValue(permission));
-                rolesIndexPage.setPermissionValue(permission, true);
             }
 		}
 
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
+		rolesIndexPage = rolesIndexPage.toggleAllPermissions(true)
+                .clickSaveRole()
                 .clickEditLink(roleName);
 
 		for (String permission : Role.ALL_PERMISSIONS) {
             if (permission != "enterprise") {
                 assertTrue("Permission was set to no when it should have been set to yes."
                         , rolesIndexPage.getPermissionValue(permission));
-                rolesIndexPage.setPermissionValue(permission, false);
             }
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
+		rolesIndexPage = rolesIndexPage.toggleAllPermissions(false)
+                .clickSaveRole()
                 .clickEditLink(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {

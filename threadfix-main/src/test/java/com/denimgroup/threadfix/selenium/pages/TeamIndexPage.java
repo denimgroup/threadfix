@@ -129,13 +129,9 @@ public class TeamIndexPage extends BasePage {
         return setPage();
     }
 
-    public TeamIndexPage addNewTeam() {
+    public TeamIndexPage addNewTeam(String teamName) {
         driver.findElementById("submit").click();
-
-        String teamName = driver.findElementByClassName("alert-success").getText().trim();
-        teamName = teamName.substring(26,teamName.length());
         waitForElement(driver.findElementById("teamName"+teamName));
-
         sleep(1000);
         return setPage();
     }

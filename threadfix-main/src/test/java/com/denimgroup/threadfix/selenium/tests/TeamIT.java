@@ -40,17 +40,17 @@ public class TeamIT extends BaseIT {
 
 	@Test
 	public void testCreateTeam(){
-		String newOrgName = "testCreateOrganization" + getRandomString(3);
+		String teamName = "testCreateOrganization" + getRandomString(3);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
-		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(newOrgName));
+		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(teamName));
 
         teamIndexPage = teamIndexPage.clickAddTeamButton()
-                .setTeamName(newOrgName)
-                .addNewTeam();
+                .setTeamName(teamName)
+                .addNewTeam(teamName);
 
-		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(newOrgName));
-		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(newOrgName));
+		assertTrue("The validation is not present", teamIndexPage.isCreateValidationPresent(teamName));
+		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(teamName));
 	}
 
     
