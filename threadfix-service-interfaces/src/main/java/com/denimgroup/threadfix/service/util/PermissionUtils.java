@@ -55,8 +55,6 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
     private static PermissionUtils getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new PermissionUtils();
-            assert INSTANCE.permissionService != null :
-                    "Spring configuration is wrong, try again.";
         }
 
         return INSTANCE;
@@ -68,7 +66,7 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 		}
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
+
 		return authentication != null && authentication
 				.getAuthorities().contains(new SimpleGrantedAuthority(permission.getText()));
 	}
@@ -150,4 +148,32 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
             return getInstance().permissionService.getAuthenticatedTeamIds();
         }
     }
+
+    public static List<Organization> filterTeamList(List<Organization> organizations) {
+
+        Set<Integer> teamIds = getAuthenticatedTeamIds();
+
+        // If community or global read access, return all teams.
+        if (teamIds == null) { // TODO use something other than null to indicate all permissions
+            return organizations;
+        }
+
+        List<Organization> returnList = new ArrayList<>();
+        for (Organization organization : organizations) {
+            if (teamIds.contains(organization.getId())) {
+                returnList.add(organization);
+            } else {
+                List<Application> applications = filterApps(organization);
+
+                if (applications != null && !applications.isEmpty()) {
+                    organization.setActiveApplications(applications);
+                    returnList.add(organization);
+                }
+            }
+        }
+
+        return returnList;
+    }
+
+
 }

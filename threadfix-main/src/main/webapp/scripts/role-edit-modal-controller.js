@@ -6,7 +6,9 @@ myAppModule.value('deleteUrl', null);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('RoleEditModalController', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl) {
+myAppModule.controller('RoleEditModalController',
+    function ($scope, $rootScope, $modalInstance, tfEncoder, $http,
+              threadFixModalService, object, config, url, buttonText, deleteUrl) {
 
     $scope.object = object;
 
@@ -80,7 +82,13 @@ myAppModule.controller('RoleEditModalController', function ($scope, $rootScope, 
             if (confirm("Are you sure you want to delete this role?")) {
                 $http.post(deleteUrl).
                     success(function(data, status, headers, config) {
-                        $modalInstance.close(false);
+
+                        if (data.success && data.object.indexOf("invalidate") != -1) {
+                            alert("You have deleted a role that was part of your account. Please log back in.");
+                            window.location.href = tfEncoder.encode("/spring_security_logout");
+                        } else {
+                            $modalInstance.close(false);
+                        }
                     }).
                     error(function(data, status, headers, config) {
                         $scope.error = "Failure. HTTP status was " + status;

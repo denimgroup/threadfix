@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
+import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
@@ -53,94 +54,111 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_ROLES')")
 public class RolesController {
 
-	private final SanitizedLogger log = new SanitizedLogger(RolesController.class);
+    private final SanitizedLogger log = new SanitizedLogger(RolesController.class);
 
     @Autowired
-	private RoleService roleService;
+    private RoleService roleService;
+    @Autowired
+    private UserService userService;
 
-	@InitBinder
-	public void initBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new BeanValidator());
-	}
-	
-	@InitBinder
-	public void setAllowedFields(WebDataBinder dataBinder) {
-		if (EnterpriseTest.isEnterprise()) {
-			dataBinder.setAllowedFields((String[])ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
-		}
-	}
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
-		
-		List<Role> roles = roleService.loadAll();
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        dataBinder.setValidator(new BeanValidator());
+    }
 
-		for (Role listRole : roles) {
-			listRole.setCanDelete(roleService.canDelete(listRole));
-		}
-		
-		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
-		model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
-		model.addAttribute("role", new Role());
-		model.addAttribute("editRole", new Role());
-		return "config/roles/index";
-	}
+    @InitBinder
+    public void setAllowedFields(WebDataBinder dataBinder) {
+        if (EnterpriseTest.isEnterprise()) {
+            dataBinder.setAllowedFields((String[]) ArrayUtils.add(Role.ALL_PERMISSIONS, "displayName"));
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String index(Model model, HttpServletRequest request) {
+
+        List<Role> roles = roleService.loadAll();
+
+        for (Role listRole : roles) {
+            listRole.setCanDelete(roleService.canDelete(listRole));
+        }
+
+        model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
+        model.addAttribute("errorMessage", ControllerUtils.getErrorMessage(request));
+        model.addAttribute("role", new Role());
+        model.addAttribute("editRole", new Role());
+        return "config/roles/index";
+    }
 
 
-	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<List<Role>> map() {
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RestResponse<List<Role>> map() {
 
-		List<Role> roles = roleService.loadAll();
+        List<Role> roles = roleService.loadAll();
 
-		for (Role listRole : roles) {
-			listRole.setCanDelete(roleService.canDelete(listRole));
-		}
+        for (Role listRole : roles) {
+            listRole.setCanDelete(roleService.canDelete(listRole));
+        }
 
         return RestResponse.success(roles);
-	}
+    }
 
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Role> newSubmit(Model model, @Valid @ModelAttribute Role role,
-			BindingResult result) {
-		role.setId(null);
-		
-		String resultString = roleService.validateRole(role, result);
-		if (!resultString.equals(RoleService.SUCCESS)) {
-			if (!resultString.equals(RoleService.FIELD_ERROR)) {
-				model.addAttribute("errorMessage", resultString);
-			}
-			model.addAttribute("editRole", role);
-			model.addAttribute("contentPage", "config/roles/newForm.jsp");
-			return FormRestResponse.failure("Found some errors", result);
-		}
-		
-		role.setDisplayName(role.getDisplayName().trim());
-		
-		roleService.storeRole(role);
-		
-		String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-		log.debug(currentUser + " has created a Role with the name" + role.getDisplayName() +
-				", and the ID " + role.getId());
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RestResponse<Role> newSubmit(Model model, @Valid @ModelAttribute Role role,
+                                 BindingResult result) {
+        role.setId(null);
 
-		List<Role> roles = roleService.loadAll();
+        String resultString = roleService.validateRole(role, result);
+        if (!resultString.equals(RoleService.SUCCESS)) {
+            if (!resultString.equals(RoleService.FIELD_ERROR)) {
+                model.addAttribute("errorMessage", resultString);
+            }
+            model.addAttribute("editRole", role);
+            model.addAttribute("contentPage", "config/roles/newForm.jsp");
+            return FormRestResponse.failure("Found some errors", result);
+        }
 
-		for (Role listRole : roles) {
-			listRole.setCanDelete(roleService.canDelete(listRole));
-		}
-		
-		model.addAttribute("roleList", roles);
+        role.setDisplayName(role.getDisplayName().trim());
 
-		return RestResponse.success(role);
-	}
-	
-	@RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> delete(@PathVariable("roleId") int roleId) {
+        roleService.storeRole(role);
+
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.debug(currentUser + " has created a Role with the name" + role.getDisplayName() +
+                ", and the ID " + role.getId());
+
+        List<Role> roles = roleService.loadAll();
+
+        for (Role listRole : roles) {
+            listRole.setCanDelete(roleService.canDelete(listRole));
+        }
+
+        model.addAttribute("roleList", roles);
+
+        return RestResponse.success(role);
+    }
+
+    @RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
+	public @ResponseBody Object delete(@PathVariable("roleId") int roleId) {
 		Role role = roleService.loadRole(roleId);
 		
 		if (role != null) {
 			String roleName = role.getDisplayName();
 			if (roleService.canDelete(role)) {
+                boolean shouldForceLogout = userService.shouldReloadUserIfRoleChanged(role);
+
 				roleService.deactivateRole(roleId);
+
+                if (shouldForceLogout) {
+                    // This invalidates the current session
+                    SecurityContextHolder.getContext().setAuthentication(null);
+                    // TODO improve this system.
+                    return RestResponse.success("Role was deleted successfully. " +
+                            "Your session has been invalidated and you should be redirected to the login page now.");
+                }
+
                 return RestResponse.success("Role " + roleName + " was deleted successfully.");
 			} else {
 				return RestResponse.failure("Role " + roleName + " was not deleted successfully.");

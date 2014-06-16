@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -67,7 +68,7 @@ public class Organization extends AuditableEntity {
 
 	@OneToMany(mappedBy = "organization")
 	@OrderBy("name")
-    @JsonView(AllViews.TableRow.class)
+    @JsonIgnore
 	public List<Application> getApplications() {
 		return applications;
 	}
@@ -94,7 +95,8 @@ public class Organization extends AuditableEntity {
     }
 
     @Transient
-    @JsonView(AllViews.RestViewTeam2_1.class)
+    @JsonView({AllViews.TableRow.class, AllViews.RestViewTeam2_1.class })
+    @JsonProperty("applications")
     public List<Application> getActiveApplications() {
         if (activeApps == null && this.applications != null) {
             activeApps = new ArrayList<Application>();
