@@ -11,12 +11,14 @@
 
     <!-- Path + Parameter -->
     <div ng-if="!vulnerability.dependency">
-        <div class="vuln-tree-label">Path</div>
-        <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
-        <br>
-        <div class="vuln-tree-label">Parameter</div>
-        <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
-        <br>
+        <div ng-if="vulnerability.path || vulnerability.parameter">
+            <div class="vuln-tree-label">Path</div>
+            <span id="path{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.path }}</span>
+            <br>
+            <div class="vuln-tree-label">Parameter</div>
+            <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
+            <br>
+        </div>
         <div ng-if="vulnerability.calculatedFilePath">
             <div class="vuln-tree-label">File</div>
             <span id="file{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
