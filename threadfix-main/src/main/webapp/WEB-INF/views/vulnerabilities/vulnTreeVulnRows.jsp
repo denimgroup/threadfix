@@ -17,6 +17,11 @@
         <div class="vuln-tree-label">Parameter</div>
         <span id="parameter{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.parameter }}</span>
         <br>
+        <div ng-if="vulnerability.calculatedFilePath">
+            <div class="vuln-tree-label">File</div>
+            <span id="file{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}">{{ vulnerability.calculatedFilePath }}</span>
+            <br>
+        </div>
     </div>
 
     <!-- Dependency -->
