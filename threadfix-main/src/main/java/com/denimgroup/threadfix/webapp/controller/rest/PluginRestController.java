@@ -171,39 +171,44 @@ public class PluginRestController extends RestController {
     }
 
     // TODO rewrite / move
-    class VulnMarkerComparator implements Comparator<VulnerabilityMarker> {
+    public static class VulnMarkerComparator implements Comparator<VulnerabilityMarker> {
 
         @Override
         public int compare(VulnerabilityMarker marker1, VulnerabilityMarker marker2) {
-            int score = 0;
+            int score = nullSafeCompare(marker1.getFilePath(), marker2.getFilePath());
 
-            score += nullSafeCompare(marker1.getFilePath(), marker2.getFilePath()) * 4;
-            score += nullSafeStringToIntCompare(marker1.getLineNumber(), marker2.getLineNumber()) * 2;
-            score += nullSafeStringToIntCompare(marker1.getGenericVulnId(), marker2.getGenericVulnId());
+            if (score != 0) {
+                return score;
+            }
+
+            score = nullSafeStringToIntCompare(marker1.getLineNumber(), marker2.getLineNumber());
+
+            if (score != 0) {
+                return score;
+            }
+
+            score = nullSafeStringToIntCompare(marker1.getGenericVulnId(), marker2.getGenericVulnId());
 
             return score;
         }
 
         int nullSafeCompare(String a, String b) {
-            if (a == null) {
-                return b == null ? 0 : -1;
-            } else if (b == null) {
-                return 1;
-            } else {
-                return a.compareTo(b);
-            }
+            return a == null && b == null ? 0 :
+                    a == null ? -1 :
+                    b == null ?  1 :
+                    a.compareTo(b);
         }
 
-
         int nullSafeStringToIntCompare(String a, String b) {
-            if (a == null || IntegerUtils.getIntegerOrNull(a) == null) {
-                return b == null ? 0 : -1;
-            } else if (b == null || IntegerUtils.getIntegerOrNull(b) == null) {
-                return 1;
-            } else {
-                return IntegerUtils.getIntegerOrNull(a).compareTo(
-                        IntegerUtils.getIntegerOrNull(b));
-            }
+
+            Integer aAsInt = a == null ? null : IntegerUtils.getIntegerOrNull(a);
+            Integer bAsInt = b == null ? null : IntegerUtils.getIntegerOrNull(b);
+
+            return aAsInt == null && bAsInt == null ? 0 :
+                    aAsInt == null ? -1 :
+                    bAsInt == null ?  1 :
+                    aAsInt.compareTo(bAsInt);
+
         }
     }
 }
