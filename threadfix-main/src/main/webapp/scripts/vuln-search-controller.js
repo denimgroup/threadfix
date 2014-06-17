@@ -4,6 +4,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
     $scope.parameters = {};
 
+    $scope.loadingTree = true;
+
     $scope.resetFiltersIfEnabled = function() {
         if ($scope.selectedFilter) {
             $scope.resetFilters();

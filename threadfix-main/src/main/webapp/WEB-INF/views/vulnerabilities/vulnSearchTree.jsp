@@ -4,11 +4,11 @@
             Results
         </span>
         <span class="spinner-div">
-            <span id="vulnTreeLoadingSpinner" ng-show="loadingTree" class="spinner dark"></span>
+            <span id="vulnTreeLoadingSpinner" ng-show="loadingTree || !vulnTree" class="spinner dark"></span>
         </span>
     </h3>
 
-    <div id="noResultsFound" ng-if="!vulnTree || vulnTree.length == 0">
+    <div id="noResultsFound" ng-if="vulnTree && vulnTree.length == 0">
         No results found.
     </div>
 
