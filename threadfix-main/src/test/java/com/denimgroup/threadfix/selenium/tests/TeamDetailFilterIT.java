@@ -157,6 +157,12 @@ public class TeamDetailFilterIT extends BaseIT{
 
     /*_________________ Teams and Applications _________________*/
 
+    //TODO when name length is limited GitHub issue: 345
+    @Ignore
+    @Test
+    public void testApplicationFilter() {
+
+    }
 
     /*_________________ Scanner and Merged _________________*/
 
