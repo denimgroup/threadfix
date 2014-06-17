@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.engine.framework;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.impl.dotNet.DotNetFrameworkChecker;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
@@ -49,6 +50,7 @@ public class FrameworkCalculator {
         // TODO incorporate python code
         // TODO add .NET code
         register(new JavaAndJspFrameworkChecker());
+        register(new DotNetFrameworkChecker());
     }
 
     public static void register(FrameworkChecker checker) {

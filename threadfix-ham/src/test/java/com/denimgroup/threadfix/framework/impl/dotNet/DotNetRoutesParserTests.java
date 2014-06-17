@@ -26,15 +26,21 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
-/**
- * Created by mac on 6/11/14.
- */
 public class DotNetRoutesParserTests {
 
     @Test
-    public void testRouteConfigCSBasic() {
+    public void testBasicRouteConfig() {
+        testFile("code.dotNet.mvc/routeConfig.cs", "Chat", "Index");
+    }
+
+    @Test
+    public void testGlobalAsaxFile() {
+        testFile("code.dotNet.mvc/Global.asax.cs", "Ajax", "JQueryHelper");
+    }
+
+    public void testFile(String fileExtension, String controller, String action) {
         DotNetRouteMappings mappings =
-                DotNetRoutesParser.parse(ResourceManager.getFile("code.dotNet.mvc/routeConfig.cs"));
+                DotNetRoutesParser.parse(ResourceManager.getFile(fileExtension));
 
         assert mappings.routes.size() == 1 : mappings.routes.size() + " routes were found, but 1 was expected.";
 
@@ -46,12 +52,9 @@ public class DotNetRoutesParserTests {
                 "URL should have been {controller}/{action}/{id} but was " + route.url;
         assert route.defaultRoute != null :
                 "Default route was null.";
-        assert route.defaultRoute.controller.equals("Chat") :
+        assert route.defaultRoute.controller.equals(controller) :
                 "Was expecting Chat but got " + route.defaultRoute.controller;
-        assert route.defaultRoute.action.equals("Index") :
+        assert route.defaultRoute.action.equals(action) :
                 "Was expecting Index but got " + route.defaultRoute.action;
-
     }
-
-
 }

@@ -40,7 +40,8 @@ public interface DotNetKeywords {
             DEFAULTS = "defaults",
             NEW = "new",
             CONTROLLER = "controller",
-            ACTION = "action";
+            ACTION = "action",
+            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication";
 
 
 }

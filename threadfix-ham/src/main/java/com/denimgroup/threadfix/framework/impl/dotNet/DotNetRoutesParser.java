@@ -57,7 +57,7 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
 
     private void log(Object string) {
         if (string != null) {
-            LOG.info(string.toString());
+            System.out.println(string.toString());
         }
     }
 
@@ -75,8 +75,8 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
 
-        log(type);
-        log(stringValue);
+        log("type  : " + type);
+        log("string: " + stringValue);
 
         if (type == '(') {
             parenCount += 1;
@@ -88,7 +88,7 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
             log("Paren current: " + currentParenCount);
         }
 
-        log(currentPhase + " ");
+        log("phase: " + currentPhase + " ");
 
         switch (currentPhase) {
             case IDENTIFICATION:
@@ -104,7 +104,7 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
     }
 
     enum IdentificationState {
-        START, PUBLIC, CLASS, ROUTE_CONFIG
+        START, PUBLIC, CLASS, ROUTE_CONFIG, COLON,
     }
     private void processIdentification(String stringValue) {
         log(currentIdentificationState);
@@ -112,6 +112,8 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
             case START:
                 if (PUBLIC.equals(stringValue)) {
                     currentIdentificationState = IdentificationState.PUBLIC;
+                } else if (":".equals(stringValue)) {
+                    currentIdentificationState = IdentificationState.COLON;
                 }
                 break;
             case PUBLIC:
@@ -126,6 +128,13 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
                 break;
             case ROUTE_CONFIG:
                 currentPhase = Phase.IN_CLASS;
+                break;
+            case COLON:
+                if (SYSTEM_HTTP_APPLICATION.equals(stringValue)) {
+                    currentPhase = Phase.IN_CLASS;
+                } else {
+                    currentIdentificationState = IdentificationState.START;
+                }
                 break;
         }
     }
@@ -192,8 +201,17 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
         DEFAULTS_COLON, DEFAULTS_NEW, DEFAULTS_OBJECT, DEFAULTS_CONTROLLER, DEFAULTS_CONTROLLER_EQUALS,
         DEFAULTS_ACTION, DEFAULTS_ACTION_EQUALS
     }
+
+    int commaCount = 0;
+
     private void processMethod(int type, String stringValue) {
         log(currentMapRouteState);
+
+        if (type == ',') {
+            commaCount ++;
+            System.out.println("Comma count is " + commaCount);
+        }
+
         switch (currentMapRouteState) {
             case START:
                 if (URL.equals(stringValue)) {
@@ -208,6 +226,14 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
                     currentMapRouteState = MapRouteState.DEFAULTS;
                 } else if ((DEFAULTS + ":").equals(stringValue)) {
                     currentMapRouteState = MapRouteState.DEFAULTS_COLON;
+                } else if ('"' == type) {
+                    if (commaCount == 0) {
+                        currentName = stringValue; // name
+                    } else if (commaCount == 1) {
+                        currentUrl = stringValue; // url
+                    }
+                } else if (NEW.equals(stringValue) && commaCount == 2) {
+                    currentMapRouteState = MapRouteState.DEFAULTS_NEW;
                 }
                 break;
             case URL:
@@ -276,6 +302,7 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
             log("Paren count: " + parenCount);
             log("Paren current: " + currentParenCount);
             mappings.addRoute(currentName, currentUrl, currentDefaultController, currentDefaultAction);
+            commaCount = 0;
             currentPhase = Phase.IN_CLASS;
         }
 
