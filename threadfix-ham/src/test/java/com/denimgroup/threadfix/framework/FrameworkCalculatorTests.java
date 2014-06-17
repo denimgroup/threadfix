@@ -51,4 +51,5 @@ public class FrameworkCalculatorTests {
 		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.DOT_NET_SAMPLE));
 		assertTrue("Didn't find DOT_NET_MVC, found " + type + ".", type == FrameworkType.DOT_NET_MVC);
 	}
+
 }

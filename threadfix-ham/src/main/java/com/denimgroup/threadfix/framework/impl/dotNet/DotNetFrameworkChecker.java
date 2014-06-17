@@ -26,8 +26,12 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkChecker;
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 
 /**
  * Created by mac on 6/17/14.
@@ -37,10 +41,12 @@ public class DotNetFrameworkChecker extends FrameworkChecker {
     @Nonnull
     @Override
     public FrameworkType check(@Nonnull ProjectDirectory directory) {
+        Collection files = FileUtils.listFiles(directory.getDirectory(),
+                new FileExtensionFileFilter("cs"), TrueFileFilter.INSTANCE);
 
-        directory.findFile("");
+        System.out.println("." + files);
 
-        return FrameworkType.DOT_NET_MVC;
+        return files.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
     }
 
 }
