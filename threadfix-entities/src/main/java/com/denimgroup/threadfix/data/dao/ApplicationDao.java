@@ -34,42 +34,22 @@ import java.util.Set;
  * 
  * @author bbeverly
  */
-public interface ApplicationDao {
+public interface ApplicationDao extends GenericObjectDao<Application> {
 
-	/**
-	 * @return
-	 */
-	List<Application> retrieveAll();
+    /**
+     *
+     * @param name
+     * @param teamId
+     * @return
+     */
+    public Application retrieveByName(String name, int teamId);
 
-	/**
-	 * @return
-	 */
-	List<Application> retrieveAllActive();
-	
-	/**
+    /**
 	 * 
 	 * @param authenticatedTeamIds
 	 * @return
 	 */
 	List<Application> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds);
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	Application retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @param teamId 
-	 * @return
-	 */
-	Application retrieveByName(String name, int teamId);
-
-	/**
-	 * @param application
-	 */
-	void saveOrUpdate(Application application);
 
 	/**
 	 * 
