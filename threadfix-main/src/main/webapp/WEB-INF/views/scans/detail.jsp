@@ -5,12 +5,14 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-detail-page-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-mapped-finding-table-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-unmapped-finding-table-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
 </head>
 
 <body id="scanDetail"
       ng-controller="ScanDetailPageController" ng-init="showStatistic = false; statisticText = 'Show Statistics'">
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="createMappingModal.jsp"%>
 
 	<spring:url value="/organizations/{orgId}" var="orgUrl">
 		<spring:param name="orgId" value="${ scan.application.organization.id }" />
@@ -30,7 +32,7 @@
 	<h2><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> 
 	<c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan Findings
 		<span>
-			<a ng-click="statistic()" id="statisticButton" class="btn header-button" >{{ statisticText }}</a>
+			<a ng-click="showStatistic = !showStatistic" id="statisticButton" class="btn header-button" >{{ showStatistic ? "Hide Statistics" : "Show Statistics" }}</a>
 			<c:if test="${ canUploadScans }">
                 <a ng-click="deleteScan()" class="btn btn-danger header-button">Delete Scan</a>
             </c:if>

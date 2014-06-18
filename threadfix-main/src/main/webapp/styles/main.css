@@ -1171,3 +1171,14 @@ body.dragover.drag-enabled .uploadable {
     width: 194px;
     margin-bottom: 5px;
 }
+
+div.mapping-filter-modal.modal {
+    margin-left:-340px;
+    width: 700px;
+    max-width:700px;
+    text-align:left;
+}
+
+div.mapping-filter-modal .modal-body {
+    overflow-y: inherit;
+}

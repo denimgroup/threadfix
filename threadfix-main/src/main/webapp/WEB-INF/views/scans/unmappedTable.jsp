@@ -11,6 +11,8 @@
         <span class="errors" ng-show="unmappedForm.pageUnmappedInput.$dirty && unmappedForm.pageUnmappedInput.$error.number">Not a valid number</span>
     </div>
 
+    <div ng-show="loading" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
 	<table class="table" id="1">
 		<thead>
 			<tr>
@@ -20,36 +22,40 @@
 				<th style="min-width:90px;">Parameter</th>
 				<th class="last">Number Merged Results</th>
 				<th style="width:80px"></th>
+				<th style="width:80px"></th>
 			</tr>
 		</thead>
 		<tbody>
+            <tr ng-hide="findingList || loading" class="bodyRow">
+                <td colspan="6" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
+            </tr>
 
-        <div ng-show="loading" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
-
-        <tr ng-hide="findingList || loading" class="bodyRow">
-            <td colspan="6" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
-        </tr>
-
-        <tr ng-repeat="finding in findingList" class="bodyRow" ng-class="{
-                        error: finding.channelSeverity.numericValue === 5,
-                        warning: finding.channelSeverity.numericValue === 4,
-                        success: finding.channelSeverity.numericValue === 3,
-                        info: finding.channelSeverity.numericValue === 2 || finding.channelSeverity.numericValue === 1
-                        }">
-            <td id="unmappedSeverity{{ index }}">{{ finding.channelSeverity.name }}</td><td>{{ finding.channelVulnerability.name }}</td>
-            <td ng-hide="finding.dependency" id="unmappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
-            <td ng-hide="finding.dependency" id="unmappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>
-            <td ng-show="finding.dependency" colspan="2" class="pointer">
-                {{ finding.dependency.cve }}
-                (<a target="_blank" id="cve{{ index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ finding.dependency.cve }}">View</a>)
-            </td>
-            <td>{{ finding.numberMergedResults }}</td>
-            <td class="pointer">
-                <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">
-                    View Finding
-                </a>
-            </td>
-        </tr>
+            <tr ng-repeat="finding in findingList" class="bodyRow" ng-class="{
+                            error: finding.channelSeverity.numericValue === 5,
+                            warning: finding.channelSeverity.numericValue === 4,
+                            success: finding.channelSeverity.numericValue === 3,
+                            info: finding.channelSeverity.numericValue === 2 || finding.channelSeverity.numericValue === 1
+                            }">
+                <td id="unmappedSeverity{{ index }}">{{ finding.channelSeverity.name }}</td>
+                <td>{{ finding.channelVulnerability.name }}</td>
+                <td ng-hide="finding.dependency" id="unmappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
+                <td ng-hide="finding.dependency" id="unmappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>
+                <td ng-show="finding.dependency" colspan="2" class="pointer">
+                    {{ finding.dependency.cve }}
+                    (<a target="_blank" id="cve{{ index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ finding.dependency.cve }}">View</a>)
+                </td>
+                <td>{{ finding.numberMergedResults }}</td>
+                <td class="pointer">
+                    <a id="createMapping{{ index }}" ng-click="createMapping(finding)">
+                        Create Mapping
+                    </a>
+                </td>
+                <td class="pointer">
+                    <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">
+                        View Finding
+                    </a>
+                </td>
+            </tr>
 
 		</tbody>
 	</table>
