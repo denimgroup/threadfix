@@ -53,7 +53,12 @@ public class HibernateChannelTypeDao implements ChannelTypeDao {
 		return (ChannelType) sessionFactory.getCurrentSession().get(ChannelType.class, id);
 	}
 
-	@Override
+    @Override
+    public List<ChannelType> retrieveAllActive() {
+        return null;
+    }
+
+    @Override
 	public ChannelType retrieveByName(String name) {
 		return (ChannelType) sessionFactory.getCurrentSession()
 				.createQuery("from ChannelType channelType where channelType.name = :name")
