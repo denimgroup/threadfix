@@ -34,10 +34,10 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public abstract class AbstractHibernateGenericObjectDao<T> implements GenericObjectDao<T> {
 
-    private SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
 
     public AbstractHibernateGenericObjectDao(SessionFactory sessionFactory) {
-        assert sessionFactory != null;
+        assert sessionFactory != null : "SessionFactory was null, check your Spring configuration.";
         this.sessionFactory = sessionFactory;
     }
 

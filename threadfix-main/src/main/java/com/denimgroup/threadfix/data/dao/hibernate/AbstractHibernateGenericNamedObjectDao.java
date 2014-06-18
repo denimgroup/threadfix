@@ -23,38 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.Restrictions;
 
-import java.util.List;
+@SuppressWarnings("unchecked")
+public abstract class AbstractHibernateGenericNamedObjectDao<T> extends AbstractHibernateGenericObjectDao<T> implements GenericNamedObjectDao<T> {
 
-@Repository
-public class HibernateChannelTypeDao extends AbstractHibernateGenericObjectDao<ChannelType> implements ChannelTypeDao {
+    protected SessionFactory sessionFactory;
 
-	@Autowired
-	public HibernateChannelTypeDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ChannelType> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from ChannelType channelType order by channelType.name").list();
-	}
-
-    @Override
-	public ChannelType retrieveByName(String name) {
-		return (ChannelType) sessionFactory.getCurrentSession()
-				.createQuery("from ChannelType channelType where channelType.name = :name")
-				.setString("name", name).uniqueResult();
-	}
-
-    @Override
-    public Class<ChannelType> getClassReference() {
-        return ChannelType.class;
+    public AbstractHibernateGenericNamedObjectDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
+
+    @Override
+    public T retrieveByName(String name) {
+        return (T) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("name", name))
+                .uniqueResult();
+    }
+
 }

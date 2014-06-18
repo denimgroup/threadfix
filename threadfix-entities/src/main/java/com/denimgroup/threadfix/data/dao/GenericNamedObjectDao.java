@@ -23,21 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.ChannelType;
-
 /**
- * @author bbeverly
- * 
+ * Created by mac on 6/18/14.
  */
-public interface ChannelTypeDao extends GenericObjectDao<ChannelType> {
+public interface GenericNamedObjectDao<T> extends GenericObjectDao<T> {
 
-
-	/**
-	 * Retrieves a channel by its name.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	ChannelType retrieveByName(String name);
+    T retrieveByName(String name);
 
 }

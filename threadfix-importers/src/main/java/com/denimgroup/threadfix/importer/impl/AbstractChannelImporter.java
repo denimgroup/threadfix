@@ -479,18 +479,16 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      * @param code channel vulnerability's code
      * @return vulnerability from the DB
      */
-
     protected ChannelVulnerability getChannelVulnerability(String code) {
-        if (getChannelType() == null || code == null || channelVulnerabilityDao == null) {
+        assert channelVulnerabilityDao != null;
+
+        if (getChannelType() == null || code == null) {
             return null;
         }
 
         if (channelVulnerabilityMap == null) {
             initializeMaps();
-        }
-
-        if (channelVulnerabilityMap == null) {
-            return null;
+            assert channelVulnerabilityMap != null;
         }
 
         if (channelVulnerabilityMap.containsKey(code)) {
@@ -499,10 +497,11 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             ChannelVulnerability vuln = channelVulnerabilityDao.retrieveByCode(getChannelType(), code);
             if (vuln == null) {
                 if (getChannelType() != null) {
-                    log.warn("A " + getChannelType().getName() + " channel vulnerability with code "
-                            + StringEscapeUtils.escapeHtml4(code) + " was requested but not found.");
+                    log.info("A " + getChannelType().getName() + " channel vulnerability with code "
+                            + StringEscapeUtils.escapeHtml4(code) + " was requested but not found. " +
+                            "Creating new ChannelVulnerability.");
                 }
-                return null;
+                vuln = createNewChannelVulnerability(getChannelType(), code);
             } else {
                 if (channelVulnerabilityDao.hasMappings(vuln.getId())) {
                     log.info("The " + getChannelType().getName() + " channel vulnerability with code "
@@ -513,6 +512,17 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             channelVulnerabilityMap.put(code, vuln);
             return vuln;
         }
+    }
+
+    // Create and save a new mapping
+    // TODO Actually parse the name out too
+    private ChannelVulnerability createNewChannelVulnerability(ChannelType channelType, String code) {
+        ChannelVulnerability newChannelVulnerability = new ChannelVulnerability();
+        newChannelVulnerability.setChannelType(channelType);
+        newChannelVulnerability.setCode(code);
+        newChannelVulnerability.setName(code);
+        channelVulnerabilityDao.saveOrUpdate(newChannelVulnerability);
+        return newChannelVulnerability;
     }
 
     /*
