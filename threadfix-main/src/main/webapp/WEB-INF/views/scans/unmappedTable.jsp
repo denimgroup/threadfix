@@ -13,6 +13,8 @@
 
     <div ng-show="loading" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
+    <%@ include file="../successMessage.jspf" %>
+
 	<table class="table" id="1">
 		<thead>
 			<tr>
@@ -20,8 +22,8 @@
 				<th>Vulnerability Type</th>
 				<th>Path</th>
 				<th style="min-width:90px;">Parameter</th>
-				<th class="last">Number Merged Results</th>
-				<th style="width:80px"></th>
+				<th class="last"># Merged Results</th>
+				<th>CWE</th>
 				<th style="width:80px"></th>
 			</tr>
 		</thead>
@@ -45,10 +47,13 @@
                     (<a target="_blank" id="cve{{ index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ finding.dependency.cve }}">View</a>)
                 </td>
                 <td>{{ finding.numberMergedResults }}</td>
-                <td class="pointer">
-                    <a id="createMapping{{ index }}" ng-click="createMapping(finding)">
+                <td>
+                    <a class="pointer" ng-if="!finding.genericVulnerabilityName" id="createMapping{{ index }}" ng-click="createMapping(finding)">
                         Create Mapping
                     </a>
+                    <div ng-if="finding.genericVulnerabilityName">
+                        {{ finding.genericVulnerabilityName }}
+                    </div>
                 </td>
                 <td class="pointer">
                     <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">

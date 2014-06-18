@@ -90,6 +90,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
 
         modalInstance.result.then(function (object) {
             $scope.successMessage = "Successfully created mapping. You should re-upload your scan.";
+            $scope.refresh(true, false);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

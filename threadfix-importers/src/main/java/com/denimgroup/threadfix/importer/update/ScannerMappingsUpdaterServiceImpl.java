@@ -189,7 +189,6 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
     @Override
     public void updateUpdatedDate() {
-//        DefaultConfiguration config = getDefaultConfiguration();
         List<DefaultConfiguration> configurationList = defaultConfigurationDao.retrieveAll();
         DefaultConfiguration config;
         if (configurationList.size() == 0) {
@@ -341,7 +340,6 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         return changed;
     }
 
-//    @Transactional(readOnly = false)
     private boolean isUpdateGenericVuln(int genericIdInt, String genericNewName, ChannelType manualType) {
 
         GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveByDisplayId(genericIdInt);
@@ -368,7 +366,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     private void updateManualVuln(GenericVulnerability genericVulnerability, String oldName, String newName, ChannelType channelType) {
         if (channelType == null) return;
 
-        ChannelVulnerability vulnerability = null;
+        ChannelVulnerability vulnerability;
         if (oldName != null) {
             log.info("Update Manual Vulnerability: " + oldName + " to: " + newName);
             vulnerability = channelVulnerabilityDao.retrieveByName(channelType, oldName);

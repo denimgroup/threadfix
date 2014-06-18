@@ -43,7 +43,7 @@ public abstract class AbstractHibernateGenericObjectDao<T> implements GenericObj
 
     @Override
     public T retrieveById(int id) {
-        return (T) getSession().load(getClassReference(), id);
+        return (T) getSession().get(getClassReference(), id);
     }
 
     @Override

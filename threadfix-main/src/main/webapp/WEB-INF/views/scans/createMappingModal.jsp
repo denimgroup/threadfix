@@ -10,10 +10,6 @@
                     <td>{{ object.channelName }}</td>
                 </tr>
                 <tr>
-                    <td>Object</td>
-                    <td>{{ object | json }}</td>
-                </tr>
-                <tr>
                     <td>Scanner Type</td>
                     <td>{{ object.channelVulnerabilityCode }}</td>
                 </tr>
