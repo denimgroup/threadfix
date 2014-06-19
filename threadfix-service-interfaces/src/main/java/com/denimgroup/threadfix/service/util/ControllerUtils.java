@@ -93,10 +93,6 @@ public final class ControllerUtils {
 		}
 	}
 
-    public static void setActiveTab(HttpServletRequest request, String activeTab) {
-        addMessage(request, ACTIVE_TAB, activeTab);
-    }
-
     public static String getActiveTab(@Nonnull HttpServletRequest request) {
         Object activeTab = getAttribute(request, ACTIVE_TAB);
         if (activeTab != null)

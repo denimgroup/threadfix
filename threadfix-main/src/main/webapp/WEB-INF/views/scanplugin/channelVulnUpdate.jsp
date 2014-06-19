@@ -35,6 +35,13 @@
 		<a href="${ fn:escapeXml(updateUrl) }" class="btn btn-primary">Update Mappings</a>
 	</c:if>
 
+    <c:if test="${ canUpdate }">
+        <br>
+        <a class="btn" href="mailto:mcollins@denimgroup.com?subject=Mappings-Update&body=<c:out value="${ fn:escapeXml(exportText) }"/>" target="_top">
+            Export Mappings (through email)
+        </a>
+    </c:if>
+
     <%--TODO adding display for updated generic vulnerabilities--%>
     <c:if test="${ not empty genericVulnUpdateResults }">
         <h3 style="padding-bottom: 15px;">Generic Vulnerabilities</h3>
