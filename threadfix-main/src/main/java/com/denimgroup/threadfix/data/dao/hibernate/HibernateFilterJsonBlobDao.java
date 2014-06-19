@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class HibernateFilterJsonBlobDao extends AbstractHibernateGenericObjectDao<FilterJsonBlob> implements FilterJsonBlobDao {
+public class HibernateFilterJsonBlobDao extends AbstractObjectDao<FilterJsonBlob> implements FilterJsonBlobDao {
 
     @Autowired
     public HibernateFilterJsonBlobDao(SessionFactory sessionFactory) {

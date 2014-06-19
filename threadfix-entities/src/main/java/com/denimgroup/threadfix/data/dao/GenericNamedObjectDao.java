@@ -23,12 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.Role;
-
 /**
- * Basic DAO class for the Role entity.
- * 
- * @author dshannon
+ * Created by mac on 6/18/14.
  */
-public interface RoleDao extends GenericNamedObjectDao<Role> {
+public interface GenericNamedObjectDao<T> extends GenericObjectDao<T> {
+
+    T retrieveByName(String name);
+
 }

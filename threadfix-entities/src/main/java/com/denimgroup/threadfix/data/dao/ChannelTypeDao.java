@@ -23,31 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.ChannelType;
 
 /**
  * @author bbeverly
  * 
  */
-public interface ChannelTypeDao {
+public interface ChannelTypeDao extends GenericObjectDao<ChannelType> {
 
-	/**
-	 * Retrieves all Channels.
-	 * 
-	 * @param
-	 * @return
-	 */
-	List<ChannelType> retrieveAll();
-
-	/**
-	 * Retrieves an individual channel by its primary key.
-	 * 
-	 * @param id
-	 * @return
-	 */
-	ChannelType retrieveById(int id);
 
 	/**
 	 * Retrieves a channel by its name.
@@ -57,11 +40,4 @@ public interface ChannelTypeDao {
 	 */
 	ChannelType retrieveByName(String name);
 
-	/**
-	 * Creates or stores a new channel based on the validity of the Channel's ID
-	 * field.
-	 * 
-	 * @param channelType
-	 */
-	void saveOrUpdate(ChannelType channelType);
 }

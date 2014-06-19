@@ -32,7 +32,6 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import javax.annotation.Nullable;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -447,8 +447,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 		}
 	}
-	
-	@Override
+
+    @Override
+    public long getUnmappedFindingCount(Integer appId) {
+        return applicationDao.getUnmappedFindingCount(appId);
+    }
+
+    @Override
 	public void updateProjectRoot(Application application) {
 		if (application != null && application.getProjectRoot() != null
 				&& !application.getProjectRoot().trim().equals("")) {

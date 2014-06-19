@@ -23,28 +23,28 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Hibernate Application DAO implementation. Most basic methods are implemented
  * in the AbstractGenericDao
  * 
  * @author bbeverly
- * @see AbstractGenericDao
  */
 @Repository
 public class HibernateApplicationDao implements ApplicationDao {
@@ -173,4 +173,15 @@ public class HibernateApplicationDao implements ApplicationDao {
 				.setMaxResults(numApps)
 				.list();
 	}
+
+    @Override
+    public long getUnmappedFindingCount(Integer appId) {
+        return (long) sessionFactory.getCurrentSession().createCriteria(Finding.class)
+                .add(Restrictions.isNull("vulnerability"))
+                .createAlias("scan", "scanAlias")
+                .createAlias("scanAlias.application", "applicationAlias")
+                .add(Restrictions.eq("applicationAlias.id", appId))
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
+    }
 }

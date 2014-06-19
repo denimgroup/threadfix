@@ -18,7 +18,7 @@
 				<th>Vulnerability Type</th>
 				<th>Path</th>
 				<th style="min-width:90px;">Parameter</th>
-				<th>Number Merged Results</th>
+				<th># Merged Results</th>
 				<th style="width:80px"></th>
 			</tr>
 		</thead>

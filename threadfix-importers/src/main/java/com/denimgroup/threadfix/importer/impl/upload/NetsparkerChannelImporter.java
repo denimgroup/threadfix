@@ -259,9 +259,8 @@ class NetsparkerChannelImporter extends AbstractChannelImporter {
             setTestStatus();
         }
 
-        public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
-            if ("netsparker".equals(qName)) {
-//	    		testDate = getCalendarFromString("MM/dd/yyyy hh:mm:ss a", atts.getValue("generated"));
+	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
+	    	if ("netsparker".equals(qName)) {
                 testDate = getCalendar(atts.getValue("generated"));
                 if (testDate != null)
                     hasDate = true;

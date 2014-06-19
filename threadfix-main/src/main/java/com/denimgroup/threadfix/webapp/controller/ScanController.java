@@ -42,7 +42,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +63,8 @@ public class ScanController {
     private VulnerabilityService vulnerabilityService;
     @Autowired
     private ApplicationService applicationService;
+    @Autowired
+    private GenericVulnerabilityService genericVulnerabilityService;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -107,8 +108,7 @@ public class ScanController {
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
-			@PathVariable("scanId") Integer scanId,
-			HttpServletRequest request) {
+			@PathVariable("scanId") Integer scanId) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)) {
 			return RestResponse.failure("You do not have permission to delete scans.");
@@ -127,7 +127,7 @@ public class ScanController {
 	}
 	
 	@RequestMapping(value = "/{scanId}/table", method = RequestMethod.POST)
-	public @ResponseBody String scanTable(Model model,
+	public @ResponseBody String scanTable(
 			@ModelAttribute TableSortBean bean,
 			@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
@@ -208,5 +208,10 @@ public class ScanController {
         responseMap.put("scan", scan);
 
         return writer.writeValueAsString(RestResponse.success(responseMap));
+	}
+
+	@RequestMapping(value = "/{scanId}/cwe", method = RequestMethod.GET)
+	public @ResponseBody Object getGenericVulnerabilities() throws IOException {
+        return writer.writeValueAsString(RestResponse.success(genericVulnerabilityService.loadAll()));
 	}
 }

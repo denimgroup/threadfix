@@ -63,7 +63,12 @@ public class HibernateRoleDao implements RoleDao {
 		return (Role) getActiveRoleCriteria().add(Restrictions.eq("id", id)).uniqueResult();
 	}
 
-	@Override
+    @Override
+    public List<Role> retrieveAllActive() {
+        return retrieveAll();
+    }
+
+    @Override
 	public Role retrieveByName(String name) {
 		return (Role) getActiveRoleCriteria().add(Restrictions.eq("displayName", name)).uniqueResult();
 	}

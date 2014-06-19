@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
-import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,6 +38,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -301,6 +301,11 @@ public class FindingServiceImpl implements FindingService {
 	@Override
 	public Object getUnmappedFindingTable(Integer scanId, TableSortBean bean) {
 		return findingDao.retrieveUnmappedFindingsByScanIdAndPage(scanId, bean.getPage());
+	}
+
+	@Override
+	public List<Finding> getUnmappedFindingTable(TableSortBean bean) {
+		return findingDao.retrieveUnmappedFindingsByPage(bean.getPage());
 	}
 
 	@Override

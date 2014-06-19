@@ -24,36 +24,55 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.GenericObjectDao;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractHibernateGenericObjectDao<T> implements GenericObjectDao<T> {
+public abstract class AbstractObjectDao<T> implements GenericObjectDao<T> {
 
-    private SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
 
-    public AbstractHibernateGenericObjectDao(SessionFactory sessionFactory) {
-        assert sessionFactory != null;
+    public AbstractObjectDao(SessionFactory sessionFactory) {
+        assert sessionFactory != null : "SessionFactory was null, check your Spring configuration.";
         this.sessionFactory = sessionFactory;
     }
 
     @Override
     public T retrieveById(int id) {
-        return (T) getSession().load(getClassReference(), id);
+        return (T) getSession().get(getClassReference(), id);
     }
 
     @Override
     public List<T> retrieveAllActive() {
-        return getSession().createCriteria(getClassReference()).add(Restrictions.eq("active", true)).list();
+
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
     }
 
     @Override
     public List<T> retrieveAll() {
-        return getSession().createCriteria(getClassReference()).list();
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference());
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
     }
 
     @Override
@@ -66,5 +85,9 @@ public abstract class AbstractHibernateGenericObjectDao<T> implements GenericObj
     }
 
     abstract Class<T> getClassReference();
+
+    protected Order getOrder() {
+        return null;
+    }
 
 }
