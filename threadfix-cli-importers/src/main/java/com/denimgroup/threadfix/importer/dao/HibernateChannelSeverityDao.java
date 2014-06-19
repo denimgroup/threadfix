@@ -35,43 +35,44 @@ import java.util.List;
 @Repository
 public class HibernateChannelSeverityDao implements ChannelSeverityDao {
 
-	private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
-	@Autowired
-	public HibernateChannelSeverityDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Autowired
+    public HibernateChannelSeverityDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ChannelSeverity> retrieveByChannel(ChannelType channelType) {
-		return sessionFactory
-				.getCurrentSession()
-				.createQuery(
-						"from ChannelSeverity cs where cs.channelType = :channelTypeId")
-				.setInteger("channelTypeId", channelType.getId()).list();
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ChannelSeverity> retrieveByChannel(ChannelType channelType) {
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "from ChannelSeverity cs where cs.channelType = :channelTypeId")
+                .setInteger("channelTypeId", channelType.getId()).list();
+    }
 
-	@Override
-	public ChannelSeverity retrieveByCode(ChannelType channelType, String code) {
-		return (ChannelSeverity) sessionFactory
-				.getCurrentSession()
-				.createQuery("from ChannelSeverity cs where cs.code = :code "
-								+ "and cs.channelType = :channelTypeId")
-				.setString("code", code)
-				.setInteger("channelTypeId", channelType.getId())
-				.uniqueResult();
-	}
+    @Override
+    public ChannelSeverity retrieveByCode(ChannelType channelType, String code) {
+        return (ChannelSeverity) sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "from ChannelSeverity cs where cs.code = :code "
+                                + "and cs.channelType = :channelTypeId")
+                .setString("code", code)
+                .setInteger("channelTypeId", channelType.getId())
+                .uniqueResult();
+    }
 
-	@Override
-	public ChannelSeverity retrieveById(int id) {
-		return (ChannelSeverity) sessionFactory.getCurrentSession().get(
-				ChannelSeverity.class, id);
-	}
+    @Override
+    public ChannelSeverity retrieveById(int id) {
+        return (ChannelSeverity) sessionFactory.getCurrentSession().get(
+                ChannelSeverity.class, id);
+    }
 
-	@Override
-	public void saveOrUpdate(ChannelSeverity channelSeverity) {
+    @Override
+    public void saveOrUpdate(ChannelSeverity channelSeverity) {
         sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity.getSeverityMap());
-		sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
-	}
+        sessionFactory.getCurrentSession().saveOrUpdate(channelSeverity);
+    }
 }

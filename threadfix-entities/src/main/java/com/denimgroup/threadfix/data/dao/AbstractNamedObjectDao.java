@@ -21,9 +21,8 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao.hibernate;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 

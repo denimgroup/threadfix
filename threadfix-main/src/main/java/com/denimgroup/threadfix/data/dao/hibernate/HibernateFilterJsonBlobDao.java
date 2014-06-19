@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import org.hibernate.SessionFactory;
