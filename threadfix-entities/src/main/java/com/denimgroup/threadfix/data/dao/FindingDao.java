@@ -23,9 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.Finding;
+
+import java.util.List;
 
 /**
  * Basic DAO class for the Finding entity.
@@ -99,4 +99,5 @@ public interface FindingDao {
 
 	List<String> retrieveManualUrls(Integer appId);
 
+    List<Finding> retrieveUnmappedFindingsByPage(int page);
 }

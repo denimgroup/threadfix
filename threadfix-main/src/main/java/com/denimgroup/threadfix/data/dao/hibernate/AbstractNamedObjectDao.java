@@ -28,9 +28,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractHibernateGenericNamedObjectDao<T> extends AbstractHibernateGenericObjectDao<T> implements GenericNamedObjectDao<T> {
+public abstract class AbstractNamedObjectDao<T> extends AbstractObjectDao<T> implements GenericNamedObjectDao<T> {
 
-    public AbstractHibernateGenericNamedObjectDao(SessionFactory sessionFactory) {
+    public AbstractNamedObjectDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 

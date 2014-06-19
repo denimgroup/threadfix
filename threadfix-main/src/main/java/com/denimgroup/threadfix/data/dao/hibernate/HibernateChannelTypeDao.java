@@ -32,7 +32,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class HibernateChannelTypeDao extends AbstractHibernateGenericObjectDao<ChannelType> implements ChannelTypeDao {
+public class HibernateChannelTypeDao extends AbstractObjectDao<ChannelType> implements ChannelTypeDao {
 
 	@Autowired
 	public HibernateChannelTypeDao(SessionFactory sessionFactory) {

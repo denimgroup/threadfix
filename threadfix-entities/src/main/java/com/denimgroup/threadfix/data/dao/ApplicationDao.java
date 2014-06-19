@@ -75,4 +75,6 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
 	 */
 	List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> applicationIdList);
 
+    long getUnmappedFindingCount(Integer appId);
+
 }

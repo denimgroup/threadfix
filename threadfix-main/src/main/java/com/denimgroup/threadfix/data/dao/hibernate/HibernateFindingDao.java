@@ -255,4 +255,22 @@ public class HibernateFindingDao implements FindingDao {
 								+ "order by path")
 				.setInteger("scanId", scanId).list();
 	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Finding> retrieveUnmappedFindingsByPage(int page) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.isNull("vulnerability"));
+
+        return criteria.createAlias("channelSeverity", "severity")
+                .createAlias("channelVulnerability", "vuln")
+                .createAlias("surfaceLocation", "surface")
+                .setFirstResult((page - 1) * ControllerUtils.NUMBER_ITEM_PER_PAGE)
+                .setMaxResults(ControllerUtils.NUMBER_ITEM_PER_PAGE)
+                .addOrder(Order.desc("severity.numericValue"))
+                .addOrder(Order.asc("vuln.name"))
+                .addOrder(Order.asc("surface.path"))
+                .list();
+    }
 }

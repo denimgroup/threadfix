@@ -158,7 +158,14 @@
                     <%@ include file="/WEB-INF/views/scans/table.jsp" %>
                 </div>
                 <div>
-                    <%@ include file="/WEB-INF/views/scans/unmappedTable.jsp" %>
+                    <div ng-controller="ScanUnmappedFindingTableController" ng-init="loading = true">
+
+                        <h4 style="padding-top:8px">Unmapped Findings</h4>
+
+                        <%@ include file="../successMessage.jspf" %>
+                        <%@ include file="/WEB-INF/views/scans/unmappedTable.jsp" %>
+
+                    </div>
                 </div>
 			</c:if>
 		</div>

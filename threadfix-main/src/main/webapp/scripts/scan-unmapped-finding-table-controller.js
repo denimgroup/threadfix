@@ -6,6 +6,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
 
     $scope.page = 1;
 
+    $scope.heading = "Unmapped Findings"
+
     $scope.$on('rootScopeInitialized', function() {
 
         $http.get(tfEncoder.encode($scope.$parent.currentUrl + "/cwe"), getTableSortBean()).
@@ -24,6 +26,14 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         return $scope.refresh(true, false);
     });
 
+    $scope.$on('scanUploaded', function() {
+        $scope.refresh(true, false);
+    });
+
+    $scope.$on('scanDeleted', function() {
+        $scope.refresh(true, false);
+    });
+
     $scope.refresh = function(newValue, oldValue) {
         if (newValue !== oldValue) {
             $scope.loading = true;
@@ -34,6 +44,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                         $scope.numPages = data.object.numPages;
                         $scope.page = data.object.page;
                         $scope.numFindings = data.object.numFindings;
+                        $scope.heading = $scope.numFindings + " Unmapped Findings";
                         $scope.numberOfUnmappedPages = Math.ceil(data.object.numFindings/100);
                         $scope.findingList = data.object.findingList;
                         $scope.scan = data.object.scan;

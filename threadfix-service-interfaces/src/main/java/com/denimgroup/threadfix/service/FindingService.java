@@ -26,9 +26,9 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
-import javax.annotation.Nonnull;
 import org.springframework.validation.BindingResult;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -112,6 +112,13 @@ public interface FindingService {
 	 * @return
 	 */
 	Object getUnmappedFindingTable(Integer scanId, TableSortBean bean);
+
+	/**
+	 * This one is for the application page; it doesn't need scan ID because all scan IDs are included.
+	 * @param bean sort bean, including the page number
+	 * @return
+	 */
+	List<Finding> getUnmappedFindingTable(TableSortBean bean);
 
 	/**
 	 * 
