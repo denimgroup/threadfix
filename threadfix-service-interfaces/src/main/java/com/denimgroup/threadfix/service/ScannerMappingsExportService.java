@@ -21,25 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao.hibernate;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
+/**
+ * Created by mac on 6/19/14.
+ */
+public interface ScannerMappingsExportService {
 
-@SuppressWarnings("unchecked")
-public abstract class AbstractNamedObjectDao<T> extends AbstractObjectDao<T> implements GenericNamedObjectDao<T> {
+    boolean canUpdate();
 
-    public AbstractNamedObjectDao(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
-
-    @Override
-    public T retrieveByName(String name) {
-        return (T) getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("name", name))
-                .uniqueResult();
-    }
+    String getUserAddedMappingsInCSV();
 
 }

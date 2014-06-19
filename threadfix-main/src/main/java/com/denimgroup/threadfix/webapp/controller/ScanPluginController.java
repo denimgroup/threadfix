@@ -25,9 +25,9 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ScannerMappingsExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,21 +41,21 @@ import java.util.List;
 @RequestMapping("/scanplugin")
 public class ScanPluginController {
 
-	private ScannerMappingsUpdaterService scannerMappingsUpdaterService = null;
-	
+    @Autowired
+	private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
+    @Autowired
+    private ScannerMappingsExportService scannerMappingsExportService;
+
 	private final SanitizedLogger log = new SanitizedLogger(ScanPluginController.class);
 
-	@Autowired
-	public ScanPluginController(ScannerMappingsUpdaterService scannerMappingsUpdaterService) {
-		this.scannerMappingsUpdaterService = scannerMappingsUpdaterService;
-	}
-	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model) {
 		
 		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
         model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
-		
+		model.addAttribute("exportText", scannerMappingsExportService.getUserAddedMappingsInCSV());
+        model.addAttribute("canUpdate", scannerMappingsExportService.canUpdate());
+
 		return "scanplugin/channelVulnUpdate";
 	}
 

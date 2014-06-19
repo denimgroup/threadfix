@@ -21,9 +21,8 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao.hibernate;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.dao.GenericObjectDao;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
@@ -84,7 +83,7 @@ public abstract class AbstractObjectDao<T> implements GenericObjectDao<T> {
         return sessionFactory.getCurrentSession();
     }
 
-    abstract Class<T> getClassReference();
+    protected abstract Class<T> getClassReference();
 
     protected Order getOrder() {
         return null;

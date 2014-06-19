@@ -21,25 +21,24 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao.hibernate;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
-import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
-import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.hibernate.criterion.Restrictions;
 
-@Repository
-public class HibernateFilterJsonBlobDao extends AbstractObjectDao<FilterJsonBlob> implements FilterJsonBlobDao {
+@SuppressWarnings("unchecked")
+public abstract class AbstractNamedObjectDao<T> extends AbstractObjectDao<T> implements GenericNamedObjectDao<T> {
 
-    @Autowired
-    public HibernateFilterJsonBlobDao(SessionFactory sessionFactory) {
+    public AbstractNamedObjectDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
     @Override
-    public Class<FilterJsonBlob> getClassReference() {
-        return FilterJsonBlob.class;
+    public T retrieveByName(String name) {
+        return (T) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("name", name))
+                .uniqueResult();
     }
+
 }
