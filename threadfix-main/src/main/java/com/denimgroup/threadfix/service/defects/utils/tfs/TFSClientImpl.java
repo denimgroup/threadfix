@@ -32,7 +32,9 @@ import com.denimgroup.threadfix.service.defects.TFSDefectTracker;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.WorkItemClient;
+import com.microsoft.tfs.core.clients.workitem.fields.Field;
 import com.microsoft.tfs.core.clients.workitem.fields.FieldDefinitionCollection;
+import com.microsoft.tfs.core.clients.workitem.fields.FieldStatus;
 import com.microsoft.tfs.core.clients.workitem.project.Project;
 import com.microsoft.tfs.core.clients.workitem.project.ProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.query.WorkItemCollection;
@@ -335,11 +337,25 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             item.getFields().getField("Description").setValue(description);
             item.getFields().getField("Priority").setValue(metadata.getPriority());
 
-            item.save();
+            boolean valid = true;
 
-            String itemId = String.valueOf(item.getID());
+            for (Field field :  item.getFields()) {
+                if (field.getStatus() != FieldStatus.VALID) {
+                    valid = false;
+                    LOG.error("Received error message for field " + field.getName() +
+                            ": " + field.getStatus().getInvalidMessage(field));
+                }
+            }
 
-            client.close();
+            String itemId = null;
+
+            if (valid) {
+                item.save();
+                itemId = String.valueOf(item.getID());
+            } else {
+                LOG.error("Failed to create issue because one or more fields were invalid. " +
+                        "Check the above logs for more details.");
+            }
 
             return itemId;
 
