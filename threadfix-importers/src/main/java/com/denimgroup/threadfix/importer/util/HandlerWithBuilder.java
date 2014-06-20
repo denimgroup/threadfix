@@ -23,13 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.util;
 
-import javax.xml.stream.events.StartDocument;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public abstract class HandlerWithBuilder extends DefaultHandler {
 	protected StringBuilder builder = new StringBuilder();
@@ -47,28 +42,24 @@ public abstract class HandlerWithBuilder extends DefaultHandler {
 	//used for synthesizing raw XML from SAX startElement events
     protected String makeTag(String name, String qName, Attributes attrs){
 	    
-    	StringBuffer tag = new StringBuffer();
-        try {
-            tag.append("<");
-            if (name != null && name.length()>0){
-                tag.append(URLEncoder.encode(name, "UTF-8"));
-            } else {
-                tag.append(URLEncoder.encode(qName, "UTF-8"));
-            }
+    	StringBuilder tag = new StringBuilder();
 
-            for (int i = 0; i < attrs.getLength(); i++){
-                tag.append(" ");
-                tag.append(URLEncoder.encode(attrs.getQName(i), "UTF-8"));
-                tag.append("=\"");
-                //this will probably need entity encoding
-                tag.append(URLEncoder.encode(attrs.getValue(i), "UTF-8"));
-                tag.append("\"");
-            }
-        } catch (UnsupportedEncodingException e) {
-            // we should make threadfix die at this point
-            throw new RuntimeException("UTF-8 was not supported.", e);
+        tag.append("<");
+        if (name != null && name.length()>0){
+            tag.append(name);
+        } else {
+            tag.append(qName);
         }
-    	
+
+        for (int i = 0; i < attrs.getLength(); i++){
+            tag.append(" ");
+            tag.append(attrs.getQName(i));
+            tag.append("=\"");
+            //this will probably need entity encoding
+            tag.append(attrs.getValue(i));
+            tag.append("\"");
+        }
+
     	tag.append(">");
     	return tag.toString();
     }
