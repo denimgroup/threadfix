@@ -32,9 +32,7 @@ import com.denimgroup.threadfix.service.defects.TFSDefectTracker;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.WorkItemClient;
-import com.microsoft.tfs.core.clients.workitem.fields.Field;
-import com.microsoft.tfs.core.clients.workitem.fields.FieldDefinitionCollection;
-import com.microsoft.tfs.core.clients.workitem.fields.FieldStatus;
+import com.microsoft.tfs.core.clients.workitem.fields.*;
 import com.microsoft.tfs.core.clients.workitem.project.Project;
 import com.microsoft.tfs.core.clients.workitem.project.ProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.query.WorkItemCollection;
@@ -337,19 +335,9 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             item.getFields().getField("Description").setValue(description);
             item.getFields().getField("Priority").setValue(metadata.getPriority());
 
-            boolean valid = true;
-
-            for (Field field :  item.getFields()) {
-                if (field.getStatus() != FieldStatus.VALID) {
-                    valid = false;
-                    LOG.error("Received error message for field " + field.getName() +
-                            ": " + field.getStatus().getInvalidMessage(field));
-                }
-            }
-
             String itemId = null;
 
-            if (valid) {
+            if (checkItemValues(item)) {
                 item.save();
                 itemId = String.valueOf(item.getID());
             } else {
@@ -365,6 +353,70 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         } finally {
             client.close();
         }
+    }
+
+    // This method checks all the item values and tries to patch them when necessary.
+    private boolean checkItemValues(WorkItem item) {
+
+        boolean valid = true;
+
+        // we want to exit early if we find a field that we can't patch
+        OUTER: for (Field field : item.getFields()) {
+            if (field.getStatus() != FieldStatus.VALID) {
+
+                if (field.getStatus() == FieldStatus.INVALID_EMPTY) {
+                    LOG.info("Found INVALID_EMPTY error on field " + field.getName() +
+                            ". Attempting to assign the string \"<None>\" to the field.");
+                    field.setValue("<None>");
+                }
+
+                if (field.getStatus() == FieldStatus.INVALID_NOT_EMPTY) {
+                    LOG.info("Found INVALID_NOT_EMPTY on field " + field.getName() + ". Setting field value to null. ");
+                    field.setValue(null);
+                }
+
+                if (field.getStatus() != FieldStatus.VALID) {
+                    valid = false;
+                    LOG.error("Received error message for field " + field.getName() +
+                            ": " + field.getStatus().getInvalidMessage(field));
+
+                    LOG.info("Attempting to patch fields. " +
+                            "This could result in different values for fields that you have set.");
+
+                    // Read all field definitions to find the correct possible values for the field.
+                    for (FieldDefinition definition : client.getFieldDefinitions()) {
+                        if (definition.getName().equals(field.getName())) {
+                            AllowedValuesCollection allowedValues = definition.getAllowedValues();
+
+                            if (allowedValues.size() > 0) {
+
+                                Object newValue = allowedValues.get(0);
+
+                                LOG.info("List of allowed values for field " + field.getName() +
+                                        " was not empty. Setting field value to the first available (" +
+                                        newValue + ").");
+                                field.setValue(newValue);
+
+                                valid = field.getStatus() == FieldStatus.VALID;
+                                if (field.getStatus() != FieldStatus.VALID) {
+                                    LOG.error("Setting " + field.getName() + " to a known allowed value (" +
+                                            newValue + ") failed. Giving up.");
+                                    break OUTER;
+                                } else {
+                                    LOG.info("Setting " + field.getName() + " to " + newValue + " worked. Moving on.");
+                                }
+                            } else {
+                                LOG.error("Set of possible values was empty. Giving up.");
+                                valid = false;
+                                break OUTER;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return valid;
     }
 
     @Override
