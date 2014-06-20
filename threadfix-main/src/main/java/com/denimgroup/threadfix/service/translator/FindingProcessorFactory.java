@@ -23,72 +23,79 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.translator;
 
-import java.io.File;
-
-import org.eclipse.jgit.lib.Repository;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
-import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.framework.engine.ProjectConfig;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.repository.GitService;
+import org.eclipse.jgit.lib.Repository;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
 
 class FindingProcessorFactory {
 
-	@Nonnull
-	public static FindingProcessor getProcessor(@Nonnull Application application,
-			@Nonnull Scan scan) {
-		
-		SourceCodeAccessLevel accessLevel = getSourceCodeAccessLevel(application, scan);
-		File rootFile = getRootFile(application);
-		FrameworkType frameworkType = getFrameworkType(application, accessLevel, rootFile, scan);
-		
-		ProjectConfig config = new ProjectConfig(frameworkType, accessLevel, rootFile, "/");
-		
-		FindingProcessor processor;
-		
-		if (accessLevel == SourceCodeAccessLevel.FULL) {
-			processor = new FullSourceFindingProcessor(config, scan);
-		} else if (accessLevel == SourceCodeAccessLevel.PARTIAL) {
-			PartialSourceFindingProcessor partialProcessor = new PartialSourceFindingProcessor(config, scan);
-			partialProcessor.train(application);
-			processor = partialProcessor;
-		} else {
-			processor = new NoSourceFindingProcessor(frameworkType, scan);
-		}
-		
-		return processor;
-	}
-	
-	@Nonnull
-	private static SourceCodeAccessLevel getSourceCodeAccessLevel(
-			@Nonnull Application application,
-			@Nonnull Scan scan) {
-		
-		SourceCodeAccessLevel accessLevel = SourceCodeAccessLevel.NONE;
-		
-		if (application.getSourceCodeAccessLevelEnum() != SourceCodeAccessLevel.DETECT) {
-			accessLevel = application.getSourceCodeAccessLevelEnum();
-		} else if (!nullOrEmpty(application.getRepositoryUrl()) ||
+    private static final SanitizedLogger LOG = new SanitizedLogger(FindingProcessorFactory.class);
+
+    @Nonnull
+    public static FindingProcessor getProcessor(@Nonnull Application application,
+                                                @Nonnull Scan scan) {
+
+        LOG.info("Determining proper FindingProcesser implementation for application " + application.getName() + " and new scan.");
+
+        SourceCodeAccessLevel accessLevel = getSourceCodeAccessLevel(application, scan);
+        File rootFile = getRootFile(application);
+        FrameworkType frameworkType = getFrameworkType(application, accessLevel, rootFile, scan);
+
+        ProjectConfig config = new ProjectConfig(frameworkType, accessLevel, rootFile, "/");
+
+        FindingProcessor processor;
+
+        if (accessLevel == SourceCodeAccessLevel.FULL) {
+            LOG.info("Got full source code access from configured code location. Returning FullSourceFindingProcessor.");
+            processor = new FullSourceFindingProcessor(config, scan);
+        } else if (accessLevel == SourceCodeAccessLevel.PARTIAL) {
+            LOG.info("Got partial source code access through static scans. Returning PartialSourceFindingProcessor.");
+            PartialSourceFindingProcessor partialProcessor = new PartialSourceFindingProcessor(config, scan);
+            partialProcessor.train(application);
+            processor = partialProcessor;
+        } else {
+            LOG.info("Got no source code access. Returning NoSourceFindingProcessor.");
+            processor = new NoSourceFindingProcessor(frameworkType, scan);
+        }
+
+        return processor;
+    }
+
+    @Nonnull
+    private static SourceCodeAccessLevel getSourceCodeAccessLevel(
+            @Nonnull Application application,
+            @Nonnull Scan scan) {
+
+        SourceCodeAccessLevel accessLevel = SourceCodeAccessLevel.NONE;
+
+        if (application.getSourceCodeAccessLevelEnum() != SourceCodeAccessLevel.DETECT) {
+            accessLevel = application.getSourceCodeAccessLevelEnum();
+        } else if (!nullOrEmpty(application.getRepositoryUrl()) ||
                 !nullOrEmpty(application.getRepositoryFolder())) {
-			accessLevel = SourceCodeAccessLevel.FULL;
-		} else if (scan.isStatic() || hasStaticScan(application)) {
-			accessLevel = SourceCodeAccessLevel.PARTIAL;
-		}
-		
-		return accessLevel;
-	}
+            accessLevel = SourceCodeAccessLevel.FULL;
+        } else if (scan.isStatic() || hasStaticScan(application)) {
+            accessLevel = SourceCodeAccessLevel.PARTIAL;
+        }
+
+        return accessLevel;
+    }
 
     private static boolean nullOrEmpty(String input) {
         return input == null || input.trim().isEmpty();
     }
 
-	private static boolean hasStaticScan(Application application) {
+    private static boolean hasStaticScan(Application application) {
 		boolean hasStatic = false;
 		
 		for (Scan scan : application.getScans()) {
@@ -133,7 +140,9 @@ class FindingProcessorFactory {
 			SourceCodeAccessLevel accessLevel, File rootFile, Scan scan) {
 		
 		FrameworkType frameworkType = application.getFrameworkTypeEnum();
-		
+
+        LOG.info("Initial frameworkType was " + frameworkType);
+
 		if (frameworkType == FrameworkType.DETECT) {
 			if (accessLevel == SourceCodeAccessLevel.FULL) {
 				if (rootFile != null) {
@@ -148,6 +157,8 @@ class FindingProcessorFactory {
 				frameworkType = FrameworkType.NONE;
 			}
 		}
+
+        LOG.info("Final frameworkType was " + frameworkType);
 		return frameworkType;
 	}
 	
@@ -170,6 +181,9 @@ class FindingProcessorFactory {
 	
 	// TODO improve this
 	private static FrameworkType guessFrameworkType(Scan scan) {
+
+        LOG.info("Guessing framework type.");
+
 		FrameworkType type = FrameworkType.NONE;
 		
 		if (scan != null && scan.isStatic() && scan.getFindings() != null &&
@@ -187,8 +201,10 @@ class FindingProcessorFactory {
 				}
 			}
 		}
-		
-		return type;
+
+        LOG.info("Guessing framework type returned " + type + ".");
+
+        return type;
 	}
 	
 }

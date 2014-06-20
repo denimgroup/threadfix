@@ -34,24 +34,24 @@ import javax.annotation.Nonnull;
 
 class NoSourceFindingProcessor implements FindingProcessor {
 
-    protected final SanitizedLogger log = new SanitizedLogger(NoSourceFindingProcessor.class);
-	
-	private final PathCleaner cleaner;
-	
-	public NoSourceFindingProcessor(PathCleaner cleaner) {
-		this.cleaner = cleaner;
-	}
-	
-	public NoSourceFindingProcessor(FrameworkType frameworkType,
-			Scan scan) {
-		this.cleaner = PathCleanerFactory.getPathCleaner(frameworkType,
+    private static final SanitizedLogger LOG = new SanitizedLogger(NoSourceFindingProcessor.class);
+
+    private final PathCleaner cleaner;
+
+    public NoSourceFindingProcessor(PathCleaner cleaner) {
+        this.cleaner = cleaner;
+    }
+
+    public NoSourceFindingProcessor(FrameworkType frameworkType,
+                                    Scan scan) {
+        this.cleaner = PathCleanerFactory.getPathCleaner(frameworkType,
                 ThreadFixInterface.toPartialMappingList(scan));
 
-        log.info("NoSourceFindingProcessor with cleaner = " + cleaner);
-	}
+        LOG.info("NoSourceFindingProcessor with cleaner = " + cleaner);
+    }
 
-	@Override
-	public void process(@Nonnull Finding finding) {
+    @Override
+    public void process(@Nonnull Finding finding) {
 
         if (finding.getIsStatic()) {
             if (finding.getSourceFileLocation() != null) {
@@ -77,6 +77,11 @@ class NoSourceFindingProcessor implements FindingProcessor {
                         finding.getSourceFileLocation()));
             }
         }
-	}
+    }
+
+    @Override
+    public void printStatistics() {
+
+    }
 
 }

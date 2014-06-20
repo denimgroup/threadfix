@@ -35,52 +35,55 @@ import com.denimgroup.threadfix.service.translator.PathGuesser;
 
 @Service
 public class ScanMergerImpl implements ScanMerger {
-	
-	private final SanitizedLogger log = new SanitizedLogger("ScanMergerImpl");
-	
-	private ChannelMerger channelMerger = null;
-	@Autowired private ApplicationMerger applicationMerger;
-	@Autowired private ScanDao scanDao;
-	@Autowired private VulnerabilityDao vulnerabilityDao;
-	
-	@Override
-	public void merge(Scan scan, ApplicationChannel applicationChannel) {
-		if (channelMerger == null) {
-			channelMerger = new ChannelMerger(vulnerabilityDao);
-		}
-		
-		if (scan.getFindings() != null && applicationChannel != null
-				&& applicationChannel.getChannelType() != null
-				&& applicationChannel.getChannelType().getName() != null) {
-			log.info("The " + applicationChannel.getChannelType().getName()
-					+ " import was successful" + " and found "
-					+ scan.getFindings().size() + " findings.");
-		}
-	
-		if (applicationChannel == null
-				|| applicationChannel.getApplication() == null
-				|| applicationChannel.getApplication().getId() == null) {
-			log.error("An incorrectly configured application made it to processRemoteScan()");
-			return;
-		}
-	
-		PathGuesser.generateGuesses2(applicationChannel.getApplication(), scan);
-		channelMerger.channelMerge(scan, applicationChannel);
-		applicationMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
-	
-		scan.setApplicationChannel(applicationChannel);
-		scan.setApplication(applicationChannel.getApplication());
-	
-		if (scan.getNumberTotalVulnerabilities() != null
-				&& scan.getNumberNewVulnerabilities() != null) {
-			log.info(applicationChannel.getChannelType().getName()
-					+ " scan completed processing with "
-					+ scan.getNumberTotalVulnerabilities()
-					+ " total Vulnerabilities ("
-					+ scan.getNumberNewVulnerabilities() + " new).");
-		} else {
-			log.info(applicationChannel.getChannelType().getName()
-					+ " scan completed.");
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(ScanMergerImpl.class);
+
+    private ChannelMerger channelMerger = null;
+    @Autowired
+    private ApplicationMerger applicationMerger;
+    @Autowired
+    private ScanDao           scanDao;
+    @Autowired
+    private VulnerabilityDao  vulnerabilityDao;
+
+    @Override
+    public void merge(Scan scan, ApplicationChannel applicationChannel) {
+        if (channelMerger == null) {
+            channelMerger = new ChannelMerger(vulnerabilityDao);
+        }
+
+        if (scan.getFindings() != null && applicationChannel != null
+                && applicationChannel.getChannelType() != null
+                && applicationChannel.getChannelType().getName() != null) {
+            LOG.info("The " + applicationChannel.getChannelType().getName()
+                    + " import was successful" + " and found "
+                    + scan.getFindings().size() + " findings.");
+        }
+
+        if (applicationChannel == null
+                || applicationChannel.getApplication() == null
+                || applicationChannel.getApplication().getId() == null) {
+            LOG.error("An incorrectly configured application made it to processRemoteScan()");
+            return;
+        }
+
+        PathGuesser.generateGuesses(applicationChannel.getApplication(), scan);
+        channelMerger.channelMerge(scan, applicationChannel);
+        applicationMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
+
+        scan.setApplicationChannel(applicationChannel);
+        scan.setApplication(applicationChannel.getApplication());
+
+        if (scan.getNumberTotalVulnerabilities() != null
+                && scan.getNumberNewVulnerabilities() != null) {
+            LOG.info(applicationChannel.getChannelType().getName()
+                    + " scan completed processing with "
+                    + scan.getNumberTotalVulnerabilities()
+                    + " total Vulnerabilities ("
+                    + scan.getNumberNewVulnerabilities() + " new).");
+        } else {
+            LOG.info(applicationChannel.getChannelType().getName()
+                    + " scan completed.");
 		}
 	
 		ScanCleanerUtils.clean(scan);

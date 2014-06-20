@@ -80,6 +80,8 @@ public class JSPMappings implements EndpointGenerator {
             addParametersFromIncludedFiles();
 
 		} else {
+            LOG.error("Root file didn't exist. Exiting.");
+
             projectDirectory = null;
 			projectRoot = null;
 			jspRoot = null;
