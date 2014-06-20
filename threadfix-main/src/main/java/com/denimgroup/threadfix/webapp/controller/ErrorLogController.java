@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ExceptionLogService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -55,7 +53,6 @@ public class ErrorLogController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String manageUsers(ModelMap model, HttpServletRequest request) {
 		model.addAttribute("logId", ControllerUtils.getItem(request, "logId"));
-		model.addAttribute("exceptionLogList", exceptionLogService.loadAll());
 		return "config/logs";
 	}
 
