@@ -89,6 +89,15 @@ public class EndpointDatabaseFactory {
 	
 	@Nullable
     public static EndpointDatabase getDatabase(@Nonnull File rootFile, @Nonnull FrameworkType frameworkType, PathCleaner cleaner) {
+
+        log.info("Creating database with root file = " +
+                rootFile.getAbsolutePath() +
+                " and framework type = " +
+                frameworkType +
+                " and path cleaner = " +
+                cleaner);
+
+
 		EndpointGenerator generator = null;
 		
 		switch (frameworkType) {

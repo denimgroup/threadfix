@@ -26,30 +26,35 @@ package com.denimgroup.threadfix.service.translator;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
-import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
-import com.denimgroup.threadfix.service.merge.ScanMergeConfiguration;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 public class PathGuesser {
 	
 	private PathGuesser(){}
-	
-	public static void generateGuesses2(Application application, Scan scan) {
-		if (scan == null || scan.getFindings() == null || scan.getFindings().isEmpty()) {
-			return;
-		}
-		
-		FindingProcessor processor = FindingProcessorFactory.getProcessor(application, scan);
-		
-		calculateLocations2(scan, processor);
-	}
 
-	private static void calculateLocations2(Scan scan, FindingProcessor processor) {
-		
-		for (Finding finding : scan.getFindings()) {
-			if (finding != null) {
-				processor.process(finding);
-			}
-		}
-	}
+    private static final SanitizedLogger LOG = new SanitizedLogger(PathGuesser.class);
+
+    public static void generateGuesses(Application application, Scan scan) {
+        if (scan == null || scan.getFindings() == null || scan.getFindings().isEmpty()) {
+            LOG.error("Unable to generate guesses because the scan was null or empty.");
+            return;
+        }
+
+        LOG.info("Starting HAM-based url and file path calculations.");
+
+        FindingProcessor processor = FindingProcessorFactory.getProcessor(application, scan);
+
+        calculateLocations(scan, processor);
+    }
+
+    private static void calculateLocations(Scan scan, FindingProcessor processor) {
+
+        for (Finding finding : scan.getFindings()) {
+            if (finding != null) {
+                processor.process(finding);
+            }
+        }
+
+        processor.printStatistics();
+    }
 }

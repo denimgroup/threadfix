@@ -42,49 +42,49 @@ import javax.annotation.Nullable;
 
 class PartialSourceFindingProcessor implements FindingProcessor {
 
-    protected final SanitizedLogger log = new SanitizedLogger(PartialSourceFindingProcessor.class);
+    protected static final SanitizedLogger LOG = new SanitizedLogger(PartialSourceFindingProcessor.class);
 
     @Nullable
-	private final PartialMappingDatabase database;
+    private final PartialMappingDatabase database;
 
     @Nullable
-	private final ParameterParser parameterParser;
+    private final ParameterParser parameterParser;
 
     @Nonnull
     private final FindingProcessor noSourceProcessor;
-	
-	public PartialSourceFindingProcessor(@Nonnull ProjectConfig projectConfig,
-			@Nonnull Scan scan) {
+
+    public PartialSourceFindingProcessor(@Nonnull ProjectConfig projectConfig,
+                                         @Nonnull Scan scan) {
         PathCleaner cleaner = PathCleanerFactory.getPathCleaner(
                 projectConfig.getFrameworkType(), ThreadFixInterface.toPartialMappingList(scan));
 
         noSourceProcessor = new NoSourceFindingProcessor(cleaner);
 
-		database = PartialMappingsDatabaseFactory.getPartialMappingsDatabase(
-				ThreadFixInterface.toPartialMappingList(scan), projectConfig.getFrameworkType());
-		
-		parameterParser = ParameterParserFactory.getParameterParser(projectConfig);
+        database = PartialMappingsDatabaseFactory.getPartialMappingsDatabase(
+                ThreadFixInterface.toPartialMappingList(scan), projectConfig.getFrameworkType());
 
-        log.info("Initialized with EndpointDatabase = " + database);
-        log.info("Initialized with PathCleaner = " + cleaner);
-        log.info("Initialized with ParameterParser = " + parameterParser);
-	}
+        parameterParser = ParameterParserFactory.getParameterParser(projectConfig);
 
-	public void train(@Nonnull Application application) {
-		if (database != null && application.getScans() != null) {
-			for (Scan scan : application.getScans()) {
-				if (scan != null) {
-					database.addMappings(ThreadFixInterface.toPartialMappingList(scan));
-				}
-			}
-		}
-	}
-	
-	@Override
-	public void process(@Nonnull Finding finding) {
-		PartialMapping query = ThreadFixInterface.toPartialMapping(finding);
-		
-		PartialMapping endpoint = null;
+        LOG.info("Initialized with EndpointDatabase = " + database);
+        LOG.info("Initialized with PathCleaner = " + cleaner);
+        LOG.info("Initialized with ParameterParser = " + parameterParser);
+    }
+
+    public void train(@Nonnull Application application) {
+        if (database != null && application.getScans() != null) {
+            for (Scan scan : application.getScans()) {
+                if (scan != null) {
+                    database.addMappings(ThreadFixInterface.toPartialMappingList(scan));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void process(@Nonnull Finding finding) {
+        PartialMapping query = ThreadFixInterface.toPartialMapping(finding);
+
+        PartialMapping endpoint = null;
 
         if (database != null) {
             endpoint = database.findBestMatch(query);
@@ -94,13 +94,18 @@ class PartialSourceFindingProcessor implements FindingProcessor {
             String parameter = parameterParser.parse(ThreadFixInterface.toEndpointQuery(finding));
             finding.getSurfaceLocation().setParameter(parameter);
         }
-		
-		if (endpoint != null) {
-			finding.setCalculatedFilePath(endpoint.getStaticPath());
-			finding.setCalculatedUrlPath(endpoint.getDynamicPath());
-		} else {
+
+        if (endpoint != null) {
+            finding.setCalculatedFilePath(endpoint.getStaticPath());
+            finding.setCalculatedUrlPath(endpoint.getDynamicPath());
+        } else {
             noSourceProcessor.process(finding);
-		}
-	}
+        }
+    }
+
+    @Override
+    public void printStatistics() {
+
+    }
 
 }
