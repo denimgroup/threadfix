@@ -483,7 +483,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 						application.getApplicationCriticality().getId()) == null) {
 			result.rejectValue("applicationCriticality.id", "errors.invalid",
 					new String [] { "Criticality" }, null);
-		}
+		} else {
+            application.getApplicationCriticality().setName(applicationCriticalityDao.retrieveById(
+                    application.getApplicationCriticality().getId()).getName());
+        }
 		
 		boolean canManageWafs = false, canManageDefectTrackers = false;
 

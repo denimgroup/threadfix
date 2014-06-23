@@ -69,8 +69,8 @@
                     <td class="left-align" >
                         <select name="frameworkType" ng-model="object.frameworkType" id="frameworkTypeSelect{{ object.team.id }}">
                             <c:forEach items="${applicationTypes}" var="type">
-                                <option value="<c:out value='${type.displayName}'/>">
-                                    <c:out value='${type.displayName}'/>
+                                <option value="<c:out value='${type}'/>">
+                                    <c:out value='${type}'/>
                                 </option>
                             </c:forEach>
                         </select>
