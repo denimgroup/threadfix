@@ -10,7 +10,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         if ($scope.selectedFilter) {
             $scope.resetFilters();
         }
-    }
+    };
 
     $scope.resetFilters = function() {
         $scope.parameters = {
@@ -31,7 +31,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.startDate = undefined;
 
         $scope.refresh();
-    }
+    };
 
     $scope.toggleAllFilters = function() {
         if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showDetailsControls || $scope.showDateControls || $scope.showDateRange || $scope.showTypeAndMergedControls) {
@@ -49,7 +49,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showDateRange = true;
             $scope.showTypeAndMergedControls = true;
         }
-    }
+    };
 
     $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);
 
