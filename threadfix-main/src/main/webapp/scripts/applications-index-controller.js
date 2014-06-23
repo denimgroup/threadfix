@@ -147,7 +147,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             applicationCriticality: {
                 id: 2
             },
-            frameworkType: 'Detect'
+            frameworkType: 'DETECT'
         };
 
         var modalInstance = $modal.open({

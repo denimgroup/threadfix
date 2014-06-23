@@ -98,7 +98,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             applicationCriticality: {
                 id: 2
             },
-            frameworkType: 'Detect'
+            frameworkType: 'DETECT'
         };
 
         var modalInstance = $modal.open({
