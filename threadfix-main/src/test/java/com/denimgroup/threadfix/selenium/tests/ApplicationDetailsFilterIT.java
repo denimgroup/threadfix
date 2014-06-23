@@ -419,8 +419,6 @@ public class ApplicationDetailsFilterIT extends BaseIT{
     }
 
     /* Date Range */
-    //TODO Put on hold because of bugs and ids to check for 'No Results Found' better
-    @Ignore
     @Test
     public void testDateFilter() {
         String teamName = getRandomString(8);
@@ -437,9 +435,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .clickViewAppLink(appName, teamName);
 
         applicationDetailPage = applicationDetailPage.expandDateRange()
-                .enterStartDate("14-June-2012")
-                .expandFieldControls()
-                .toggleStatusFilter("Open");
+                .enterStartDate("14-June-2012");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -456,6 +452,4 @@ public class ApplicationDetailsFilterIT extends BaseIT{
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
 
     }
-
-
 }

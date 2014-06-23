@@ -186,9 +186,8 @@ public class SystemSettingsEntIT extends BaseIT{
     }
 
     // TODO decide if this is best done in automation
-    @Ignore
-    @Test
+    /*@Test
     public void testProxySettings() {
 
-    }
+    }*/
 }

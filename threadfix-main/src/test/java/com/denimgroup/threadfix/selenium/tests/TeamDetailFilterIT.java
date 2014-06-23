@@ -103,11 +103,10 @@ public class TeamDetailFilterIT extends BaseIT{
     /*_________________ Saved Filters _________________*/
 
     //TODO when name length is limited GitHub issue: 344
-    @Ignore
-    @Test
+    /*@Test
     public void testSavedFilterValidation() {
 
-    }
+    }*/
 
     @Test
     public void testSavedFilters() {

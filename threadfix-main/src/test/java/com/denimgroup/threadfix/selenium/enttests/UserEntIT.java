@@ -160,9 +160,8 @@ public class UserEntIT extends BaseIT {
 
     //If this test fails it can cascade and cause several other tests to fail
     // TODO this test will not run correctly because of bugs involved with user creation
-    @Ignore
-    @Test
-    public void testDeleteLastUserRemoveLastRole(){
+    /*@Test
+      public void testDeleteLastUserRemoveLastRole(){
         String newRole = getRandomString(8);
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
@@ -177,6 +176,6 @@ public class UserEntIT extends BaseIT {
         assertTrue("Global access removed.",userIndexPage.isGlobalAccessErrorPresent());
 
         userIndexPage.clickCancel("user");
-    }
+    }*/
 
 }
