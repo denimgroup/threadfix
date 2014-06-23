@@ -36,11 +36,12 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
@@ -101,6 +102,7 @@ public class ScanServiceImpl implements ScanService {
 	}
 
 	@Override
+    @Nonnull
 	public ScanCheckResultBean checkFile(Integer channelId, String fileName) {
 		if (channelId == null || fileName == null) {
 			log.warn("Scan file checking failed because there was null input.");
@@ -125,15 +127,14 @@ public class ScanServiceImpl implements ScanService {
 		
 		ScanCheckResultBean result = importer.checkFile();
 		
-		if (result == null || result.getScanCheckResult() == null || 
-				(!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)
+		if ((!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)
 				&& !result.getScanCheckResult().equals(ScanImportStatus.EMPTY_SCAN_ERROR))) {
 			importer.deleteScanFile();
 		}
 		
 		Calendar scanQueueDate = applicationChannelDao.getMostRecentQueueScanTime(channel.getId());
 		
-		if (scanQueueDate != null && result != null && result.getTestDate() != null &&
+		if (scanQueueDate != null && result.getTestDate() != null &&
 				!result.getTestDate().after(scanQueueDate)) {
 			log.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
 			return new ScanCheckResultBean(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE, result.getTestDate());

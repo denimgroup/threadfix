@@ -142,7 +142,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                     if (domain != null) {
                         for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
                             if (project != null) {
-                                builder.append(domain.getName() + "/" + project.getProjectName());
+                                builder.append(domain.getName()).append("/").append(project.getProjectName());
                                 builder.append(',');
                             }
                         }

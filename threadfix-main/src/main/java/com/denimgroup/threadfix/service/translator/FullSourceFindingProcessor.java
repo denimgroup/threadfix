@@ -122,5 +122,7 @@ class FullSourceFindingProcessor implements FindingProcessor {
                 " out of " + total + " findings " +
                 "(" + (100.0 * foundParameter / total) + "%)");
         LOG.info("Processing took " + (System.currentTimeMillis() - startTime) + " ms.");
+
+        noSourceProcessor.printStatistics();
     }
 }

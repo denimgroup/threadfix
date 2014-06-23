@@ -35,6 +35,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -267,8 +268,10 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
+        // TODO more validation
 		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
 		
 		//return testSAXInput(new AppScanSourceSAXValidator());

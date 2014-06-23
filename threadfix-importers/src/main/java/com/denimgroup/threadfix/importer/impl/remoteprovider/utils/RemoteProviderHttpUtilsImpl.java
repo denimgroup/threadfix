@@ -129,7 +129,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
         return HttpResponse.failure();
     }
 
-    protected <T> HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
+    protected <C> HttpClient getConfiguredHttpClient(Class<C> classToProxy) {
         if (HttpClientInstance == null) {
             if (proxyService == null) {
                 HttpClientInstance = new HttpClient();

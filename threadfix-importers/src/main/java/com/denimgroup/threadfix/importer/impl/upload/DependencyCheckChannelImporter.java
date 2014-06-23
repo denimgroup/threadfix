@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -180,7 +181,8 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new DependencyCheckSAXValidator());
 	}

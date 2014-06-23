@@ -36,6 +36,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -742,7 +743,8 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 		}
 	}
 	    
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
         try {
             InputStream auditXmlStream = null;

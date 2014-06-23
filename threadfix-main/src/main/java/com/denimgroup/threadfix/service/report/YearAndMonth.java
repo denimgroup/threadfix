@@ -78,14 +78,13 @@ public class YearAndMonth implements Comparable<YearAndMonth> {
 		
 		int retVal;
 		
-		YearAndMonth other = ((YearAndMonth) o);
-		if (other.year > this.year) {
+		if (o.year > this.year) {
 			retVal = -1;
-		} else if (this.year > other.year) {
+		} else if (this.year > o.year) {
 			retVal = 1;
-		} else if (other.month > this.month)  {
+		} else if (o.month > this.month)  {
 			retVal = -1;
-		} else if (this.month > other.month) {
+		} else if (this.month > o.month) {
 			retVal = 1;
 		} else {
 			retVal = 0;

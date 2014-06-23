@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -182,7 +183,8 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 	
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		
 		boolean valid = false;
@@ -192,6 +194,10 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 
             if (schemaFile == null) {
                 throw new IllegalStateException("ssvl.xsd file not available from ClassLoader. Fix that.");
+            }
+
+            if (inputFileName == null) {
+                throw new IllegalStateException("inputFileName was null, unable to load scan file.");
             }
 
 			Source xmlFile = new StreamSource(new File(inputFileName));

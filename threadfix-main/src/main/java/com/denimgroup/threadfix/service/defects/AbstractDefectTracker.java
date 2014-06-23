@@ -191,16 +191,28 @@ public abstract class AbstractDefectTracker {
 				if (vulnerability.getGenericVulnerability() != null &&
 						vulnerability.getSurfaceLocation() != null) {
 
-					stringBuilder.append("Vulnerability[" + vulnIndex + "]:\n" +
-							vulnerability.getGenericVulnerability().getName() + '\n' +
-							"CWE-ID: " + vulnerability.getGenericVulnerability().getId() + '\n' + 
-							"http://cwe.mitre.org/data/definitions/" + 
-							vulnerability.getGenericVulnerability().getId() + ".html" + '\n');
+                    stringBuilder
+                            .append("Vulnerability[")
+                            .append(vulnIndex)
+                            .append("]:\n")
+                            .append(vulnerability.getGenericVulnerability().getName())
+                            .append('\n')
+                            .append("CWE-ID: ")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append('\n')
+                            .append("http://cwe.mitre.org/data/definitions/")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append(".html")
+                            .append('\n');
 	
 					SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
-					stringBuilder.append("Vulnerability attack surface location:\n" +
-											"URL: " + surfaceLocation.getUrl() + "\n" +
-											"Parameter: " + surfaceLocation.getParameter());
+                    stringBuilder
+                            .append("Vulnerability attack surface location:\n")
+                            .append("URL: ")
+                            .append(surfaceLocation.getUrl())
+                            .append("\n")
+                            .append("Parameter: ")
+                            .append(surfaceLocation.getParameter());
 					
 					addNativeIds(vulnerability, stringBuilder);
 					
@@ -223,7 +235,10 @@ public abstract class AbstractDefectTracker {
 						finding.getScan().getApplicationChannel().getChannelType().getName() != null) {
 					String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
 					if (ChannelType.NATIVE_ID_SCANNERS.contains(channelName)) {
-						builder.append("\n" + channelName + " ID: " + finding.getNativeId());
+                        builder.append("\n")
+                                .append(channelName)
+                                .append(" ID: ")
+                                .append(finding.getNativeId());
 					}
 				}
 			}

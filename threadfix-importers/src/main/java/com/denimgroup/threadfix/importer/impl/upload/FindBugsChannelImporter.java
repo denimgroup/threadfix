@@ -35,6 +35,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -182,7 +183,8 @@ class FindBugsChannelImporter extends AbstractChannelImporter {
         }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new FindBugsSAXValidator());
 	}

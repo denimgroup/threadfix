@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -46,6 +48,7 @@ public interface ChannelImporter {
 	 * @return
 	 */
 	@Transactional
+    @Nullable
 	Scan parseInput();
 
 	/**
@@ -55,6 +58,7 @@ public interface ChannelImporter {
 	 * in the ChannelImporter interface. Other return codes are also given in
 	 * the interface and are all simply echoed to the user as an error.
 	 */
+    @Nonnull
 	ScanCheckResultBean checkFile();
 
 	/**

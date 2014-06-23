@@ -141,16 +141,14 @@ public class UploadScanController {
 			throw new ResourceNotFoundException();
 		}
 
-		if (returnValue != null && returnValue.getScanCheckResult() != null &&
-				ScanImportStatus.SUCCESSFUL_SCAN.equals(returnValue.getScanCheckResult())) {
+		if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
 			if (app.getScans() == null) {
 				ControllerUtils.addItem(request, "numScansBeforeUpload", 0);
 			} else {
 				ControllerUtils.addItem(request, "numScansBeforeUpload", app.getScans().size());
 			}
 			scanService.addFileToQueue(myChannelId, fileName, returnValue.getTestDate());
-		} else if (returnValue != null && returnValue.getScanCheckResult() != null &&
-				ScanImportStatus.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
+		} else if (ScanImportStatus.EMPTY_SCAN_ERROR.equals(returnValue.getScanCheckResult())) {
 			Integer emptyScanId = scanService.saveEmptyScanAndGetId(myChannelId, fileName);
 			ModelAndView confirmPage = new ModelAndView("scans/confirm");
 			confirmPage.addObject("scanId", emptyScanId);
@@ -160,15 +158,14 @@ public class UploadScanController {
 					&& app.getOrganization().getId() != null) {
 				ChannelType channelType = null;
 				
-				if (returnValue != null && returnValue.getScanCheckResult() != null &&
-						(returnValue.getScanCheckResult().equals(ScanImportStatus.BADLY_FORMED_XML) ||
+				if ((returnValue.getScanCheckResult().equals(ScanImportStatus.BADLY_FORMED_XML) ||
 						returnValue.getScanCheckResult().equals(ScanImportStatus.WRONG_FORMAT_ERROR) ||
 						returnValue.getScanCheckResult().equals(ScanImportStatus.OTHER_ERROR))) {
 					ApplicationChannel appChannel = applicationChannelService.loadApplicationChannel(myChannelId);
 					channelType = appChannel.getChannelType();
 				}
- 				
-				return index(app.getOrganization().getId(), app.getId(), 
+
+				return index(app.getOrganization().getId(), app.getId(),
 								returnValue.getScanCheckResult().toString(), channelType);
 			} else {
 				log.warn("The request included an invalidly configured " +
