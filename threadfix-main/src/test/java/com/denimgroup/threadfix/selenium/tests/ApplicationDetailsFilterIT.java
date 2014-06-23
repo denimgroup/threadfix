@@ -50,8 +50,8 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
     @Test
     public void testExpandCollapse() {
-        int filtersExpandedControlSize;
-        int filtersCollapsedControlSize;
+        int filtersExpandedSize;
+        int filtersCollapsedSize;
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -64,15 +64,15 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        filtersCollapsedControlSize = applicationDetailPage.getFilterDivHeight();
+        filtersCollapsedSize = applicationDetailPage.getFilterDivHeight();
         applicationDetailPage = applicationDetailPage.toggleAll();
 
-        filtersExpandedControlSize = applicationDetailPage.getFilterDivHeight();
-        assertFalse("Filters were not expanded.", filtersCollapsedControlSize == filtersExpandedControlSize);
+        filtersExpandedSize = applicationDetailPage.getFilterDivHeight();
+        assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
         applicationDetailPage = applicationDetailPage.toggleAll();
         assertFalse("Filters were not collapsed.",
-                filtersCollapsedControlSize == applicationDetailPage.getFilterDivHeight());
+                filtersExpandedSize == applicationDetailPage.getFilterDivHeight());
     }
 
     @Test
