@@ -35,13 +35,13 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringEscapeUtils;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -224,6 +224,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      *            The vulnerable parameter (optional)
      * @return The three strings concatenated, downcased, trimmed, and hashed.
      */
+    @Nonnull
     protected String hashFindingInfo(String type, String url, String param) {
         StringBuffer toHash = new StringBuffer();
 
@@ -252,7 +253,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             return hash;
         } catch (NoSuchAlgorithmException e) {
             log.error("Can't find MD5 hash function to hash finding info", e);
-            return null;
+            throw new IllegalStateException("MD5 library couldn't be loaded.");
         }
     }
 
@@ -625,11 +626,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      * the handlers are putting their Findings in, and the variable date that the parsers are putting
      * the date in.
      */
+    @Nonnull
     protected Scan parseSAXInput(DefaultHandler handler) {
         log.debug("Starting SAX Parsing.");
 
         if (inputStream == null) {
-            return null;
+            throw new IllegalStateException("InputStream was null. Can't parse SAX input. This is probably a coding error.");
         }
 
         saxFindingList = new ArrayList<>();
@@ -668,6 +670,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      * the handlers are putting their Findings in, and the variable date that the parsers are putting
      * the date in.
      */
+    @Nonnull
     protected ScanCheckResultBean testSAXInput(DefaultHandler handler) {
         log.debug("Starting SAX Test.");
 
@@ -708,6 +711,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
      * It returns either a duplicate, old scan, or unidentified error,
      * or a success code.
      */
+    @Nonnull
     protected ScanImportStatus checkTestDate() {
         if (applicationChannel == null || testDate == null) {
             return ScanImportStatus.OTHER_ERROR;

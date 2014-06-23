@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -205,6 +206,7 @@ class W3afChannelImporter extends AbstractChannelImporter {
         }
     }
 
+    @Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
 

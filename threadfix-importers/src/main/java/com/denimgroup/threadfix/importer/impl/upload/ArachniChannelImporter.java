@@ -38,6 +38,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 /**
  * 
  * @author mcollins
@@ -214,7 +216,8 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new ArachniSAXValidator());
 	}

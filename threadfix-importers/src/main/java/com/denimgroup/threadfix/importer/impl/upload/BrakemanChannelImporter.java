@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -266,7 +267,8 @@ class BrakemanChannelImporter extends AbstractChannelImporter {
     	return testStatus;
     }
 	
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		
 		boolean done = false;

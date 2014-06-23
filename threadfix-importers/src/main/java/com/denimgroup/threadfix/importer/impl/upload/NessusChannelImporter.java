@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -307,7 +308,8 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new NessusSAXValidator());
 	}

@@ -286,11 +286,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			return null;
 		}
 		
-		if (applicationChannel.getScanCounter() == null) {
-			applicationChannel.setScanCounter(1);
-		}
-		
-		String inputFileName = "scan-file-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
+		String inputFileName = applicationChannel.getNextFileHandle();
 
 		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
 		

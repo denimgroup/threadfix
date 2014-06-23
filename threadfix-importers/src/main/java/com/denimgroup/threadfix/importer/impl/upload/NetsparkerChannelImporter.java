@@ -37,6 +37,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;

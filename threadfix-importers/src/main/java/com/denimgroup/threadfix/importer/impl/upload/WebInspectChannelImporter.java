@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -246,7 +247,8 @@ class WebInspectChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new WebInspectSAXValidator());
 	}

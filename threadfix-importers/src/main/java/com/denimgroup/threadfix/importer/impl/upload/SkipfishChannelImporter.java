@@ -456,7 +456,8 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 		return null;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
         try (InputStream sampleFileInputStream = getSampleFileInputStream()) {
 

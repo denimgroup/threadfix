@@ -40,6 +40,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -220,6 +221,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
         }
     }
 
+    @Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
         return testSAXInput(new CheckMarxScanValidator());

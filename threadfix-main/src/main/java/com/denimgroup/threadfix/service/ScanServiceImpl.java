@@ -36,11 +36,12 @@ import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
@@ -51,108 +52,117 @@ import java.util.Set;
 @Service
 @Transactional(readOnly = false)
 public class ScanServiceImpl implements ScanService {
-	
-	private final SanitizedLogger log = new SanitizedLogger("ScanService");
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(ScanServiceImpl.class);
 
     @Autowired
-    private ScanDao scanDao = null;
+    private ScanDao                scanDao                = null;
     @Autowired
-    private ApplicationChannelDao applicationChannelDao = null;
+    private ApplicationChannelDao  applicationChannelDao  = null;
     @Autowired
-    private EmptyScanDao emptyScanDao = null;
+    private EmptyScanDao           emptyScanDao           = null;
     @Autowired
-    private QueueSender queueSender = null;
-    @Autowired(required=false)
+    private QueueSender            queueSender            = null;
+    @Autowired(required = false)
     @Nullable
-    private PermissionService permissionService = null;
+    private PermissionService      permissionService      = null;
     @Autowired
     private ChannelImporterFactory channelImporterFactory = null;
 
-	@Override
-	public List<Scan> loadAll() {
-		return scanDao.retrieveAll();
-	}
-	
-	@Override
-	public Scan loadScan(Integer scanId) {
-		return scanDao.retrieveById(scanId);
-	}
+    @Override
+    public List<Scan> loadAll() {
+        return scanDao.retrieveAll();
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void storeScan(Scan scan) {
-		scanDao.saveOrUpdate(scan);
-	}
+    @Override
+    public Scan loadScan(Integer scanId) {
+        return scanDao.retrieveById(scanId);
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void addFileToQueue(Integer channelId, String fileName, Calendar scanDate) {
-		if (fileName == null || channelId == null)
-			return;
-		
-		ApplicationChannel applicationChannel = applicationChannelDao
-			.retrieveById(channelId);
-		
-		Integer appId = applicationChannel.getApplication().getId();
-		Integer orgId = applicationChannel.getApplication()
-				.getOrganization().getId();
+    @Override
+    @Transactional(readOnly = false)
+    public void storeScan(Scan scan) {
+        scanDao.saveOrUpdate(scan);
+    }
 
-		queueSender.addScanToQueue(fileName, channelId, orgId, appId, scanDate, applicationChannel);
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public void addFileToQueue(@Nonnull Integer channelId, @Nonnull String fileName, @Nonnull Calendar scanDate) {
 
-	@Override
-	public ScanCheckResultBean checkFile(Integer channelId, String fileName) {
-		if (channelId == null || fileName == null) {
-			log.warn("Scan file checking failed because there was null input.");
-			return new ScanCheckResultBean(ScanImportStatus.NULL_INPUT_ERROR);
-		}
+        if (!ApplicationChannel.matchesFileHandleFormat(fileName)) {
+            String message = "Bad file name (" + fileName + ") passed into addFileToQueue. Exiting.";
+            LOG.error(message);
+            throw new IllegalArgumentException(message);
+        }
+
+        ApplicationChannel applicationChannel = applicationChannelDao
+                .retrieveById(channelId);
+
+        Integer appId = applicationChannel.getApplication().getId();
+        Integer orgId = applicationChannel.getApplication()
+                .getOrganization().getId();
+
+        queueSender.addScanToQueue(fileName, channelId, orgId, appId, scanDate, applicationChannel);
+    }
+
+    @Override
+    @Nonnull
+    public ScanCheckResultBean checkFile(Integer channelId, String fileName) {
+        if (channelId == null || fileName == null) {
+            LOG.warn("Scan file checking failed because there was null input.");
+            return new ScanCheckResultBean(ScanImportStatus.NULL_INPUT_ERROR);
+        }
+
+        if (!ApplicationChannel.matchesFileHandleFormat(fileName)) {
+            String message = "Bad file name (" + fileName + ") passed into addFileToQueue. Exiting.";
+            LOG.error(message);
+            throw new IllegalArgumentException(message);
+        }
+
+        ApplicationChannel channel = applicationChannelDao.retrieveById(channelId);
+
+        if (channel == null) {
+            LOG.warn("The ApplicationChannel could not be loaded.");
+            return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
+        }
+
+        ChannelImporter importer = channelImporterFactory.getChannelImporter(channel);
+
+        if (importer == null) {
+            LOG.warn("No importer could be loaded for the ApplicationChannel.");
+            return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
+        }
+
+        importer.setFileName(fileName);
+
+        ScanCheckResultBean result = importer.checkFile();
+
+        if ((!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)
+                && !result.getScanCheckResult().equals(ScanImportStatus.EMPTY_SCAN_ERROR))) {
+            importer.deleteScanFile();
+        }
+
+        Calendar scanQueueDate = applicationChannelDao.getMostRecentQueueScanTime(channel.getId());
 		
-		ApplicationChannel channel = applicationChannelDao.retrieveById(channelId);
-		
-		if (channel == null) {
-			log.warn("The ApplicationChannel could not be loaded.");
-			return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
-		}
-		
-		ChannelImporter importer = channelImporterFactory.getChannelImporter(channel);
-		
-		if (importer == null) {
-			log.warn("No importer could be loaded for the ApplicationChannel.");
-			return  new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
-		}
-				
-		importer.setFileName(fileName);
-		
-		ScanCheckResultBean result = importer.checkFile();
-		
-		if (result == null || result.getScanCheckResult() == null || 
-				(!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)
-				&& !result.getScanCheckResult().equals(ScanImportStatus.EMPTY_SCAN_ERROR))) {
-			importer.deleteScanFile();
-		}
-		
-		Calendar scanQueueDate = applicationChannelDao.getMostRecentQueueScanTime(channel.getId());
-		
-		if (scanQueueDate != null && result != null && result.getTestDate() != null &&
+		if (scanQueueDate != null && result.getTestDate() != null &&
 				!result.getTestDate().after(scanQueueDate)) {
-			log.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
+			LOG.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
 			return new ScanCheckResultBean(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE, result.getTestDate());
 		}
 
-		if (result == null) {
-			log.warn("The checkFile() method of the importer returned null, check to make sure that it is implemented correctly.");
-			return new ScanCheckResultBean(ScanImportStatus.OTHER_ERROR);
-		} else {
-			return result;
-		}
+		return result;
 	}
 
 	@Override
 	public Integer saveEmptyScanAndGetId(Integer channelId, String fileName) {
 			
 		if (fileName == null) {
-			log.warn("Saving the empty file failed. Check filesystem permissions.");
-			return null;
+            LOG.warn("Saving the empty file failed. Check filesystem permissions.");
+            return null;
+        } else if (!ApplicationChannel.matchesFileHandleFormat(fileName)) {
+            String message = "Bad file name (" + fileName + ") passed into addFileToQueue. Exiting.";
+            LOG.error(message);
+            throw new IllegalArgumentException(message);
 		} else {
 			EmptyScan emptyScan = new EmptyScan();
 			emptyScan.setApplicationChannel(applicationChannelDao.retrieveById(channelId));
@@ -176,7 +186,7 @@ public class ScanServiceImpl implements ScanService {
 				emptyScan.getApplicationChannel().getApplication().getOrganization() == null ||
 				emptyScan.getApplicationChannel().getApplication().getOrganization().getId() == null ||
 				emptyScan.getFileName() == null) {
-			log.warn("The empty scan was not added to the queue. It was either already processed or incorrectly configured.");
+			LOG.warn("The empty scan was not added to the queue. It was either already processed or incorrectly configured.");
 			return;
 		}
 		
