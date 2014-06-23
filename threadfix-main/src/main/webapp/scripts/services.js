@@ -6,11 +6,11 @@ threadfixModule.factory('tfEncoder', function($rootScope, $location) {
 
     tfEncoder.encode = function(path) {
         return $rootScope.urlRoot + path + $rootScope.csrfToken;
-    }
+    };
 
     tfEncoder.encodeRelative = function(path) {
         return $location.path() + path + $rootScope.csrfToken;
-    }
+    };
 
     tfEncoder.urlRoot = $rootScope.urlRoot;
 
@@ -56,7 +56,7 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
             method: 'GET',
             url: $location.path() + "/vulns" + $rootScope.csrfToken
         });
-    }
+    };
 
     return threadfixAPIService;
 });
@@ -154,6 +154,12 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 parameters.applications.forEach(function(filteredApp) {
                     if (filteredApp.name === (app.team.name + " / " + app.name)) {
                         filteredApp.id = app.id;
+
+                        // If we're on the teams page, we should remove the teams restriction
+                        // because there's an application now.
+                        if ($scope.treeTeam) {
+                            $scope.parameters.teams = [];
+                        }
                     }
                 });
             });
@@ -203,18 +209,18 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 parameters.startDate = date.getTime();
             }
         }
-    }
+    };
 
     updater.serialize = function($scope, parameters) {
 
-        var myParameters = angular.copy(parameters)
+        var myParameters = angular.copy(parameters);
 
         updater.updateParameters($scope, myParameters);
 
         return {
             json: JSON.stringify(myParameters)
         };
-    }
+    };
 
     return updater;
 });
@@ -229,7 +235,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
             name: name,
             intValue: intValue
         }
-    }
+    };
 
     transformer.transform = function(serverResponse) {
         var initialCategories = [getCategory('Critical', 5), getCategory('High', 4), getCategory('Medium', 3), getCategory('Low', 2), getCategory('Info', 1)];
@@ -253,7 +259,7 @@ threadfixModule.factory('vulnTreeTransformer', function() {
         }
 
         return newTree;
-    }
+    };
 
     return transformer;
 });
@@ -264,10 +270,10 @@ threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
     var timer;
 
     timeoutService.timeout = function() {
-        timer = $timeout(function(){
-            alert('Timeout, exiting system. Please logon and try again.');
-            window.location.href = tfEncoder.encode("/j_spring_security_logout");
-        },60000);
+        timer = $timeout(function() {
+            alert('It\'s been 60 seconds. Your request may have timed out.');
+            //window.location.href = tfEncoder.encode("/j_spring_security_logout");
+        }, 60000);
     };
 
     timeoutService.cancel = function() {
