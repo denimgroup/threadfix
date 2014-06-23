@@ -146,6 +146,20 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage expandTeamApplication() {
+        sleep(2000);
+        driver.findElementById("expandApplicationFilters").click();
+        sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage addApplicationFilter(String application) {
+        driver.findElementById("showApplicationInput1").click();
+        driver.findElementById("applicationNameTypeahead1").sendKeys(application);
+        driver.findElementById("applicationNameTypeahead1").sendKeys(Keys.RETURN);
+        return new TeamDetailPage(driver);
+    }
+
     public TeamDetailPage expandFieldControls() {
         sleep(2000);
         driver.findElementById("showFieldControls").click();

@@ -157,8 +157,6 @@ public class TeamDetailFilterIT extends BaseIT{
 
     /*_________________ Teams and Applications _________________*/
 
-    //TODO when name length is limited GitHub issue: 345
-    @Ignore
     @Test
     public void testApplicationFilter() {
         String teamName = getRandomString(8);
@@ -171,8 +169,44 @@ public class TeamDetailFilterIT extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName2, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab("71");
 
+        teamDetailPage.expandTeamApplication()
+                .addApplicationFilter(appName1);
+
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "5"));
+
+        teamDetailPage.clickClearFilters();
+
+        assertTrue("Only 16 critical vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
+        assertTrue("Only 15 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "15"));
+        assertTrue("Only 25 low vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Low", "25"));
+        assertTrue("Only 15 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "15"));
+
+        teamDetailPage.addApplicationFilter(appName2);
+
+        assertTrue("Only 6 critical vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
+        assertTrue("Only 6 medium vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
+        assertTrue("Only 4 low vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Low", "4"));
+        assertTrue("Only 10 info vulnerabilities should be shown.",
+                teamDetailPage.isVulnerabilityCountCorrect("Info", "10"));
     }
 
     /*_________________ Scanner and Merged _________________*/
