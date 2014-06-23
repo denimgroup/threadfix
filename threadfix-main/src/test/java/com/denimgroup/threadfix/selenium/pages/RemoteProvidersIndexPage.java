@@ -364,6 +364,12 @@ public class RemoteProvidersIndexPage extends BasePage {
         handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }
+
+    public RemoteProvidersIndexPage clearQualys() {
+        driver.findElementById("clearConfig3").click();
+        handleAlert();
+        return new RemoteProvidersIndexPage(driver);
+    }
 	
 	public String successAlert(){
         waitForElement(driver.findElementByClassName("alert-success"));

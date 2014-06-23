@@ -44,6 +44,28 @@ public class RemoteProvidersIT extends BaseIT {
 	private static String QUALYS_USER = System.getProperty("QUALYS_USER");
 	private static String QUALYS_PASS = System.getProperty("QUALYS_PASS");
 
+    static {
+        if (SENTINEL_API_KEY == null) {
+            throw new RuntimeException("Please set WHITEHAT_KEY in run configuration.");
+        }
+
+        if (VERACODE_USER == null) {
+            throw new RuntimeException("Please set VERACODE_USERNAME in run configuration.");
+        }
+
+        if (VERACODE_PASSWORD == null) {
+            throw new RuntimeException("Please set VERACODE_PASSWORD in run configuration.");
+        }
+
+        if (QUALYS_USER == null) {
+            throw new RuntimeException("Please set QUALYS_USER in run configuration.");
+        }
+
+        if (QUALYS_PASS == null) {
+            throw new RuntimeException("Please set QUALYS_PASS in run configuration.");
+        }
+    }
+
 	@Test
 	public void navigationTest() {
 		String pageHeader = loginPage.login("user", "password")
@@ -118,8 +140,6 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
-    //TODO need valid QualysGuard credentials
-	@Ignore
 	@Test
 	public void configureQualys() {
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
@@ -128,6 +148,14 @@ public class RemoteProvidersIT extends BaseIT {
                 .setQualysUsername(QUALYS_USER)
                 .setQualysPassword(QUALYS_PASS)
                 .clickModalSubmit();
+
+        assertTrue("Qualys was not configured properly",
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider QualysGuard WAS"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
+
+        assertTrue("Qualys configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
 	}
 	
 	@Test
