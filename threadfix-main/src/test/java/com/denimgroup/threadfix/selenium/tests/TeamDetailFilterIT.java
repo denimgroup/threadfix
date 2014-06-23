@@ -161,6 +161,17 @@ public class TeamDetailFilterIT extends BaseIT{
     @Ignore
     @Test
     public void testApplicationFilter() {
+        String teamName = getRandomString(8);
+        String appName1 = getRandomString(8);
+        String appName2 = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName1);
+        DatabaseUtils.createApplication(teamName, appName2);
+        DatabaseUtils.uploadScan(teamName, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName, appName2, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        
 
     }
 
