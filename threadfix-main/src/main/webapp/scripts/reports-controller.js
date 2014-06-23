@@ -17,15 +17,23 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
     var loadReports = function() {
         threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
-                // TODO figure out Jasper better, it's a terrible way to access the report images.
-                var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
-                if (matches !== null && matches[1] !== null) {
-                    $scope.leftReport = matches[1];
-                } else if (data.indexOf("No data found") !== -1) {
+
+                $scope.XMonthSummaryData = data.object;
+
+//                // TODO figure out Jasper better, it's a terrible way to access the report images.
+//                var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
+//                if (matches !== null && matches[1] !== null) {
+//                    $scope.leftReport = matches[1];
+//                } else if (data.indexOf("No data found") !== -1) {
+//                    $scope.empty = true;
+//                } else {
+//                    $scope.leftReportFailed = true;
+//                }
+
+                if (!$scope.XMonthSummaryData) {
                     $scope.empty = true;
-                } else {
-                    $scope.leftReportFailed = true;
                 }
+
                 $scope.loadingLeft = false;
             }).
             error(function(data, status, headers, config) {

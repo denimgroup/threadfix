@@ -33,6 +33,9 @@
 	</c:if>
 
     <div ng-controller="DashboardController" class="container-fluid">
+
+        <%--<d3-bars data="data" label="greeting"></d3-bars>--%>
+
 		<%@include file="/WEB-INF/views/applications/reports.jspf"%>
 
 	    <div class="row-fluid">

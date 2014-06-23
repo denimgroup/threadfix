@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
@@ -35,9 +36,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author bbeverly
@@ -91,9 +94,10 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.GET)
-	public String leftReport(Model model, HttpServletRequest request) {
+	public @ResponseBody RestResponse<List<Map<String, Object>>> leftReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
-		return report(model, request, ReportFormat.SIX_MONTH_SUMMARY);
+        ReportCheckResultBean report = reportD3(model, request, ReportFormat.SIX_MONTH_SUMMARY);
+        return RestResponse.success(report.getReportList());
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
@@ -126,6 +130,24 @@ public class DashboardController {
 		}
 		return "reports/report";
 	}
+
+    public ReportCheckResultBean reportD3(Model model, HttpServletRequest request, ReportFormat reportFormat) {
+
+        int orgId = -1, appId = -1;
+        if (request.getParameter("orgId") != null) {
+            orgId = safeParseInt(request.getParameter("orgId"));
+        }
+        if (request.getParameter("appId") != null) {
+            appId = safeParseInt(request.getParameter("appId"));
+        }
+        ReportParameters parameters = new ReportParameters();
+        parameters.setApplicationId(appId);
+        parameters.setOrganizationId(orgId);
+        parameters.setFormatId(1);
+        parameters.setReportFormat(reportFormat);
+        ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
+        return resultBean;
+    }
 	
 	public int safeParseInt(String string) {
 		if (string.matches("^[0-9]+$")) {
