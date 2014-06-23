@@ -395,16 +395,14 @@ public class ApplicationIT extends BaseIT {
 		String teamName2 = getRandomString(8);
 
         DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createApplication(teamName1, appName);
         DatabaseUtils.createTeam(teamName2);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
         //Add an app with same name to both teams
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName1)
-				.addNewApplication(teamName1, appName, "", "Low")
-				.saveApplication()
-				.expandTeamRowByName(teamName2)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName2)
 				.addNewApplication(teamName2, appName, "", "Low")
 				.saveApplication()
 				.clickOrganizationHeaderLink()

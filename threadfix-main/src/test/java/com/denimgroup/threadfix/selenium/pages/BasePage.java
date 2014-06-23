@@ -79,8 +79,8 @@ public abstract class BasePage {
     }
 
 	public TeamIndexPage clickOrganizationHeaderLink() {
-            driver.findElementById("orgHeader").click();
-			return new TeamIndexPage(driver);
+        driver.findElementById("orgHeader").click();
+        return new TeamIndexPage(driver);
 	}
 	
 	public ScanIndexPage clickScansHeaderLink(){

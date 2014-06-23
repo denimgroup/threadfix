@@ -103,8 +103,8 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testApplicationName() {
-        ApplicationDetailPage ap =  buildTeamAppandScan();
-        assertTrue("Application Name is not present", ap.isApplicationNamePresent());
+        ApplicationDetailPage applicationDetailPage = buildTeamAppandScan();
+        assertTrue("Application Name is not present", applicationDetailPage.isApplicationNamePresent());
     }
 
     @Test
