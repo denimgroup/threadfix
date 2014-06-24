@@ -37,7 +37,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Top 20 Vulnerable Applications]]></text>
+				<text><![CDATA[Most Vulnerable Applications]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="40" width="675" height="20"/>
