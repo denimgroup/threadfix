@@ -80,6 +80,7 @@ public class DashboardIT extends BaseIT {
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .expandResultsByLevel("High")
                 .expandVulnerabilityByType("High79")

@@ -306,6 +306,7 @@ public class FilterIT extends BaseIT {
                 .saveFilterChanges();
 
         applicationFilterPage = teamFilterPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()

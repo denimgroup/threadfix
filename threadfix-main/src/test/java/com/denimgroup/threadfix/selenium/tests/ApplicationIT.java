@@ -162,6 +162,7 @@ public class ApplicationIT extends BaseIT {
 				.clickUpdateApplicationButton();
 
         applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName2, teamName);
 		
 		assertTrue("The name was not preserved correctly on Application Detail Page.",
