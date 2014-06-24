@@ -21,9 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 
-public interface FilterJsonBlobDao extends GenericNamedObjectDao<FilterJsonBlob> {
+/**
+ * Created by mac on 5/13/14.
+ */
+public abstract class AbstractNamedObjectService<T>
+        extends AbstractGenericObjectService<T>
+        implements GenericNamedObjectService<T> {
+
+    abstract GenericNamedObjectDao<T> getDao();
+
+    @Override
+    public T loadByName(String name) {
+        return getDao().retrieveByName(name);
+    }
+
+    @Override
+    public boolean nameExists(String name) {
+        return getDao().retrieveByName(name) != null;
+    }
 }

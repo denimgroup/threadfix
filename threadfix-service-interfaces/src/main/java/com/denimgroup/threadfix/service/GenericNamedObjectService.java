@@ -21,9 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
+/**
+ * Created by mac on 5/13/14.
+ */
+public interface GenericNamedObjectService<T> extends GenericObjectService<T> {
 
-public interface FilterJsonBlobDao extends GenericNamedObjectDao<FilterJsonBlob> {
+    T loadByName(String name);
+
+    boolean nameExists(String name);
+
 }

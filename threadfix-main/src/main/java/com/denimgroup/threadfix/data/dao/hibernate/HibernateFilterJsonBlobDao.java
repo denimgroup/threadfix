@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import org.hibernate.SessionFactory;
@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class HibernateFilterJsonBlobDao extends AbstractObjectDao<FilterJsonBlob> implements FilterJsonBlobDao {
+public class HibernateFilterJsonBlobDao extends AbstractNamedObjectDao<FilterJsonBlob> implements FilterJsonBlobDao {
 
     @Autowired
     public HibernateFilterJsonBlobDao(SessionFactory sessionFactory) {

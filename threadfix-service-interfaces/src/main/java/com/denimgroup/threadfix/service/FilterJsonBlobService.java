@@ -25,5 +25,5 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 
-public interface FilterJsonBlobService extends GenericObjectService<FilterJsonBlob> {
+public interface FilterJsonBlobService extends GenericNamedObjectService<FilterJsonBlob> {
 }
