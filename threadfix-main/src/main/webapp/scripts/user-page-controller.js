@@ -85,7 +85,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                     if (!userCopy.globalRole) {
                         userCopy.globalRole = { id: 0 };
                     }
-                    
+
                     return userCopy;
                 },
                 deleteUrl: function() {

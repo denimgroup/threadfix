@@ -183,7 +183,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
 		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
 	}
-	
+
+    @JsonIgnore
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
 	public List<ScanReopenVulnerabilityMap> getScanReopenVulnerabilityMaps() {
 		return scanReopenVulnerabilityMaps;
@@ -192,7 +193,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	public void setScanReopenVulnerabilityMaps(List<ScanReopenVulnerabilityMap> ScanReopenVulnerabilityMaps) {
 		this.scanReopenVulnerabilityMaps = ScanReopenVulnerabilityMaps;
 	}
-	
+
+    @JsonIgnore
 	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
 	public List<ScanCloseVulnerabilityMap> getScanCloseVulnerabilityMaps() {
 		return scanCloseVulnerabilityMaps;
