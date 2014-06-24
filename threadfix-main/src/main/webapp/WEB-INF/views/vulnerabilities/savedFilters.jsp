@@ -17,6 +17,7 @@
         {{ saveFilterErrorMessage }}
     </div>
     <input id="filterNameInput"
+           ng-maxlength="25"
            placeholder="Enter a name for the filter"
            ng-model="$parent.currentFilterNameInput"
            type="text"/>
