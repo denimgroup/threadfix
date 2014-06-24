@@ -34,7 +34,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve user list. HTTP status was " + status;
             });
-    }
+    };
 
     $scope.$on('rootScopeInitialized', function() {
         reloadList();
@@ -42,7 +42,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
 
     $scope.goToEditPermissionsPage = function(user) {
         window.location.href = tfEncoder.encode("/configuration/users/" + user.id + "/permissions");
-    }
+    };
 
     $scope.openNewModal = function() {
         var modalInstance = $modal.open({
@@ -69,7 +69,7 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openEditModal = function(user) {
         var modalInstance = $modal.open({
@@ -81,6 +81,11 @@ myAppModule.controller('UserPageController', function ($scope, $modal, $http, $l
                 },
                 user: function() {
                     var userCopy = angular.copy(user);
+
+                    if (!userCopy.globalRole) {
+                        userCopy.globalRole = { id: 0 };
+                    }
+
                     return userCopy;
                 },
                 deleteUrl: function() {
