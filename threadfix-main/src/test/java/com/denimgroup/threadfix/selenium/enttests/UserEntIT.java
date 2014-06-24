@@ -118,7 +118,6 @@ public class UserEntIT extends BaseIT {
 		assertTrue("LDAP did not remain selected after editing.", userIndexPage.isLDAPSelected());
 	}
 
-    //TODO fix when issue is closed
 	@Test
 	public void editUserRoleTest(){
 		String userName = getRandomString(8);
@@ -137,10 +136,10 @@ public class UserEntIT extends BaseIT {
 		assertTrue("User role was not selected",userIndexPage.isRoleSelected(userName, "User"));
 
         // Change role to 'Read Access'
-//		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
-//				.clickUpdateUserBtn(userName)
-//				.clickEditLink(userName);
-//		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
+		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Read Access")
+				.clickUpdateUserBtn(userName)
+				.clickEditLink(userName);
+		assertTrue("Read Access role was not selected",userIndexPage.isRoleSelected(userName, "Read Access"));
 
         // Revoke Global Access
 		userIndexPage = userIndexPage.chooseRoleForGlobalAccess("Administrator")
