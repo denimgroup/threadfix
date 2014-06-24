@@ -262,7 +262,7 @@
                             type="button">&times;</button>
                     {{ saveFilterSuccessMessage }}
                 </div>
-                <div id="saveFilterErrorMessage" ng-show="saveFilterErrorMessage" class="alert alert-success">
+                <div id="saveFilterErrorMessage" ng-show="saveFilterErrorMessage" class="alert alert-error">
                     <button id="closeSaveFilterErrorMessage"
                             class="close"
                             ng-click="saveFilterErrorMessage = undefined"
@@ -272,7 +272,7 @@
                 <input id="filterNameInput"
                        ng-maxlength="25"
                        placeholder="Enter a name for the filter"
-                       ng-model="$parent.currentFilterNameInput"
+                       ng-model="currentFilterNameInput"
                        type="text"/>
 
                 <!-- Save button and save button with spinner. -->

@@ -212,7 +212,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.refresh();
             }
         }
-    }
+    };
 
     var resetDateRange = function(){
         // Reset Date Range
@@ -220,7 +220,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.startDateOpened = false;
         $scope.endDate = null;
         $scope.endDateOpened = false;
-    }
+    };
 
     $scope.setNumberMerged = function(numberMerged) {
         if ($scope.parameters.numberMerged === numberMerged) {
@@ -230,11 +230,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.parameters.numberMerged = numberMerged;
             $scope.refresh();
         }
-    }
+    };
 
     $scope.expandAndRetrieveTable = function(element) {
         $scope.updateElementTable(element, 10, 1);
-    }
+    };
 
     $scope.deleteCurrentFilter = function() {
         if ($scope.selectedFilter) {
@@ -273,6 +273,16 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         console.log("Saving filters");
 
         if ($scope.currentFilterNameInput) {
+
+            var matches = $scope.savedFilters.filter(function(filter) {
+                return filter.name === $scope.currentFilterNameInput;
+            });
+
+            if (matches && matches.length !== 0) {
+                $scope.saveFilterErrorMessage = "A filter with that name already exists.";
+                return;
+            }
+
             $scope.savingFilter = true;
 
             var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
