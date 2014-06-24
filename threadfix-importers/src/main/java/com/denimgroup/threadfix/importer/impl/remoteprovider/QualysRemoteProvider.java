@@ -29,10 +29,10 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import javax.annotation.Nonnull;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 
@@ -263,25 +263,25 @@ public class QualysRemoteProvider extends RemoteProvider {
 		return scanIds;
 	}
 	
-	private String getScansForAppUrl(RemoteProviderType type) {
+	public static String getScansForAppUrl(RemoteProviderType type) {
 		return "https://qualysapi.qualys." + 
 				getLocation(type.getIsEuropean()) + 
 				"/qps/rest/3.0/search/was/wasscan";
 	}
-	
-	private String getScanUrl(RemoteProviderType type) {
+
+    public static String getScanUrl(RemoteProviderType type) {
 		return "https://qualysapi.qualys." + 
 				getLocation(type.getIsEuropean()) + 
 				"/qps/rest/3.0/download/was/wasscan/";
 	}
-	
-	private String getAppsUrl(RemoteProviderType type) {
+
+    public static String getAppsUrl(RemoteProviderType type) {
 		return "https://qualysapi.qualys." + 
 				getLocation(type.getIsEuropean()) + 
 				"/qps/rest/3.0/search/was/webapp";
 	}
 	
-	private String getLocation(boolean isEuropean) {
+	private static String getLocation(boolean isEuropean) {
 		return isEuropean ? "eu" : "com";
 	}
 	
