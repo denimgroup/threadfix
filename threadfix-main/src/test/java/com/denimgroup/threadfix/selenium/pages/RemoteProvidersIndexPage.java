@@ -105,8 +105,8 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 	
 	public RemoteProvidersIndexPage saveQualys(){
-		driver.findElementById("submitRemoteProviderFormButton3").click();
-		waitForInvisibleElement(driver.findElementById("remoteProviderEditModal3"));
+		driver.findElementById("submit").click();
+		waitForInvisibleElement(driver.findElementById("configure0"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
