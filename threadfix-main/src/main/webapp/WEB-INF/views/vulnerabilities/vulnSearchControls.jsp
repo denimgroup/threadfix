@@ -34,7 +34,6 @@
     <div class="filter-controls">
         <h3>Filters</h3>
 
-
         <tabset ng-init="showFilterSections = true">
             <tab heading="Filters" ng-click="$parent.showFilterSections = true; $parent.showSavedFilters = false">
             </tab>
