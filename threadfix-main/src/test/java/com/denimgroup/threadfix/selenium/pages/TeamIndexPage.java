@@ -93,8 +93,7 @@ public class TeamIndexPage extends BasePage {
 
     public ApplicationDetailPage clickViewAppLink(String appName, String teamName) {
         sleep(500);
-        driver.findElementById("organizationLink" + teamName).click();
-        driver.findElementByLinkText(appName).click();
+        driver.findElementById("applicationLink" + teamName + "-" + appName).click();
         return new ApplicationDetailPage(driver);
     }
 

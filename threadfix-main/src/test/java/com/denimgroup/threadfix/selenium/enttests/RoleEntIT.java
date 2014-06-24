@@ -80,23 +80,20 @@ public class RoleEntIT extends BaseIT {
 				.clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(originalRoleName)
-				.clickSaveRole()
-				.clickEditLink(originalRoleName)
 				.clickSaveRole();
 
 		assertTrue("Role not added.", rolesIndexPage.isNamePresent(originalRoleName));
-		assertTrue("Validation message is Present.",rolesIndexPage.isEditValidationPresent(originalRoleName));
-		
+
 		rolesIndexPage = rolesIndexPage.clickEditLink(originalRoleName)
 				.setRoleName(editedRoleName)
 				.clickSaveRole();
 		
 		assertTrue("Role not Edited Correctly.", rolesIndexPage.isNamePresent(editedRoleName));
-		assertTrue("Validation message is Present.",rolesIndexPage.isEditValidationPresent(editedRoleName));
+		assertTrue("Validation message not present.",rolesIndexPage.isEditValidationPresent(editedRoleName));
 		
 		rolesIndexPage = rolesIndexPage.clickDeleteButton(editedRoleName);
 
-		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(editedRoleName));
+		assertTrue("Validation message not present.",rolesIndexPage.isDeleteValidationPresent(editedRoleName));
 		assertFalse("Role not removed.", rolesIndexPage.isNamePresent(editedRoleName));
 
 	}

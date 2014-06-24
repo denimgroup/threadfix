@@ -79,8 +79,7 @@ public class ApiKeysIndexPage extends BasePage {
     }
 
     public ApiKeysIndexPage setRestricted() {
-       driver.findElementById("modalRestricted").click();
-
+        driver.findElementById("modalRestricted").click();
         return new ApiKeysIndexPage(driver);
     }
 

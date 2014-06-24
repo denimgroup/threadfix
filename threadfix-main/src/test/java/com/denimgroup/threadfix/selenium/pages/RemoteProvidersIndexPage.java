@@ -313,6 +313,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public ApplicationDetailPage clickWhiteHatImportScan(int appRow) {
         String elementToClick = "provider1import" + appRow;
+        waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
         }

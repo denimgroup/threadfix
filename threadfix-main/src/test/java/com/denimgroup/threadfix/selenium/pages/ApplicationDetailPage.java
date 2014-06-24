@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -149,6 +150,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameText() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("nameText")));
         return driver.findElementById("nameText").getText();
     }
 

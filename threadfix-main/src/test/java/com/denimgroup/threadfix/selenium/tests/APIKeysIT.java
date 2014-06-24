@@ -82,17 +82,18 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void markRestrictedTest() {
+        String note = getRandomString(5);
         //Create API Key
         apiIndexPage = apiIndexPage.clickNewLink()
-                .setNote("markRestricted")
+                .setNote(note)
                 .clickSubmitButton();
 
         //Mark the API restricted
-		apiIndexPage =	apiIndexPage.clickEdit("markRestricted")
+		apiIndexPage =	apiIndexPage.clickEdit(note)
                 .setRestricted()
                 .clickSubmitButton();
 
-		assertTrue("Api was not marked restricted.", apiIndexPage.isAPIRestricted("markRestricted"));
+		assertTrue("Api was not marked restricted.", apiIndexPage.isAPIRestricted(note));
 	}
 
 	@Test

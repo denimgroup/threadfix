@@ -106,6 +106,7 @@ public class RolesIndexPage extends BasePage {
         } else {
             driver.findElementByLinkText("Select None").click();
         }
+        sleep(1000);
         return this;
     }
 	
