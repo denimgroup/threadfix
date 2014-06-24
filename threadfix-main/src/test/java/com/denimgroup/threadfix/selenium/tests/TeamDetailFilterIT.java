@@ -145,7 +145,7 @@ public class TeamDetailFilterIT extends BaseIT{
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71")
                 .clickClearFilters()
-                .expandSavedFilters()
+                .clickLoadFilters()
                 .loadSavedFilter(newFilter);
 
         assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",

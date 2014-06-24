@@ -153,7 +153,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .toggleClear()
-                .expandSavedFilters()
+                .clickLoadFilters()
                 .loadSavedFilter(newFilter);
 
         assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",

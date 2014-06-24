@@ -28,6 +28,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
 public class TeamDetailPage extends BasePage {
 
@@ -127,9 +128,15 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage clickLoadFilters() {
+        driver.findElementByLinkText("Load Filters").click();
+        waitForElement(driver.findElementById("filterSelect"));
+        return new TeamDetailPage(driver);
+    }
+
     public TeamDetailPage expandSavedFilters() {
         sleep(2000);
-        driver.findElementByLinkText("Saved Filters").click();
+        driver.findElementById("showSaveFilter").click();
         sleep(2000);
         return new TeamDetailPage(driver);
     }
@@ -141,7 +148,7 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage loadSavedFilter(String savedFilter) {
-        driver.findElementByLinkText(savedFilter).click();
+        new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
         waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
