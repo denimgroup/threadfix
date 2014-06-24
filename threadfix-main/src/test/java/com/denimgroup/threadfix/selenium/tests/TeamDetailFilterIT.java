@@ -129,7 +129,6 @@ public class TeamDetailFilterIT extends BaseIT{
         assertTrue("Saved filter should be in list of saved filters.", teamDetailPage.isSavedFilterPresent(goodLength));
     }
 
-    //TODO finish up checking for duplicate name change
     @Test
     public void testDuplicateNameSavedFilter() {
         String teamName = getRandomString(8);
@@ -148,8 +147,9 @@ public class TeamDetailFilterIT extends BaseIT{
 
         assertTrue("Success message not present.", teamDetailPage.isSavedFilterSuccessMessageDisplayed());
 
-        teamDetailPage.addInvalidNameSavedFilter(filterName);
+        teamDetailPage.addSavedFilter(filterName);
 
+        assertTrue("Error message not displayed.", teamDetailPage.isDuplicateNameErrorMessageDisplayed());
     }
 
     @Test

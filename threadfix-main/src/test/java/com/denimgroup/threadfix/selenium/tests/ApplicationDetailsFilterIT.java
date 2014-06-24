@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -116,6 +117,57 @@ public class ApplicationDetailsFilterIT extends BaseIT{
     }
 
     /* Saved Filters */
+    @Test
+    public void testSavedFilterFieldValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String tooLong = getRandomString(26);
+        String goodLength = getRandomString(25);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .expandSavedFilters()
+                .addInvalidNameSavedFilter(tooLong);
+
+        assertTrue("The name should be too long to save.", applicationDetailPage.isSaveFilterDisabled());
+
+        applicationDetailPage.addSavedFilter(goodLength);
+
+        assertTrue("Success message not present.", applicationDetailPage.isSavedFilterSuccessMessageDisplayed());
+
+        applicationDetailPage.clickLoadFilters();
+
+        assertTrue("Saved filter should be in list of saved filters.", applicationDetailPage.isSavedFilterPresent(goodLength));
+    }
+
+    @Test
+    public void testDuplicateNameSavedFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String filterName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .expandSavedFilters()
+                .addSavedFilter(filterName);
+
+        assertTrue("Success message not present.", applicationDetailPage.isSavedFilterSuccessMessageDisplayed());
+
+        applicationDetailPage.addSavedFilter(filterName);
+
+        assertTrue("Error message not displayed.", applicationDetailPage.isDuplicateNameErrorMessageDisplayed());
+    }
+
     @Test
     public void testSavedFilters() {
         String teamName = getRandomString(8);

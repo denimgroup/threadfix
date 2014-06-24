@@ -494,6 +494,10 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("saveFilterSuccessMessage").isDisplayed();
     }
 
+    public boolean isDuplicateNameErrorMessageDisplayed() {
+        return driver.findElementById("saveFilterErrorMessage").isDisplayed();
+    }
+
     public boolean isSavedFilterPresent(String savedFilter) {
         try {
             new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);

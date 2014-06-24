@@ -476,10 +476,18 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage addSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(newFilter);
         driver.findElementById("saveFilterButton").click();
         return new ApplicationDetailPage(driver);
     }
+
+    public ApplicationDetailPage addInvalidNameSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        return this;
+    }
+
 
     public ApplicationDetailPage loadSavedFilter(String savedFilter) {
         new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
@@ -862,5 +870,30 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean areAllVulnerabilitiesHidden() {
         return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
+    }
+
+    public boolean isSavedFilterSuccessMessageDisplayed() {
+        return driver.findElementById("saveFilterSuccessMessage").isDisplayed();
+    }
+
+    public boolean isDuplicateNameErrorMessageDisplayed() {
+        return driver.findElementById("saveFilterErrorMessage").isDisplayed();
+    }
+
+    public boolean isSaveFilterDisabled() {
+        String attributeValue = driver.findElementById("saveFilterButton").getAttribute("disabled");
+        if (attributeValue != null) {
+            return attributeValue.contains("true");
+        }
+        return false;
+    }
+
+    public boolean isSavedFilterPresent(String savedFilter) {
+        try {
+            new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
+            return true;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
     }
 }

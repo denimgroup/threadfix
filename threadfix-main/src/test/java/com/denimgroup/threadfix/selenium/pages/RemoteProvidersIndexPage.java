@@ -106,7 +106,9 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveQualys(){
 		driver.findElementById("submit").click();
-		waitForInvisibleElement(driver.findElementById("configure0"));
+        sleep(6000);
+        waitForElement(driver.findElementById("configure0"));
+        sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
