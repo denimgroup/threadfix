@@ -34,13 +34,14 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.toggleAllFilters = function() {
-        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showDetailsControls || $scope.showDateControls || $scope.showDateRange || $scope.showTypeAndMergedControls) {
+        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showSaveFilter || $scope.showDetailsControls || $scope.showDateControls || $scope.showDateRange || $scope.showTypeAndMergedControls) {
             $scope.showSaveAndLoadControls = false;
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
             $scope.showDateControls = false;
             $scope.showDateRange = false;
             $scope.showTypeAndMergedControls = false;
+            $scope.showSaveFilter = false;
         } else {
             $scope.showSaveAndLoadControls = true;
             $scope.showTeamAndApplicationControls = true;
@@ -48,6 +49,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showDateControls = true;
             $scope.showDateRange = true;
             $scope.showTypeAndMergedControls = true;
+            $scope.showSaveFilter = true;
         }
     };
 
@@ -74,8 +76,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     var resetAging = function() {
         $scope.parameters.daysOldModifier = undefined;
         $scope.parameters.daysOld = undefined;
-//        $scope.refresh();
-    }
+    };
 
     $scope.$on('application', function($event, application) {
         $scope.treeApplication = application;
@@ -258,7 +259,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     $scope.loading = false;
                 });
         }
-    }
+    };
 
     $scope.loadFilter = function(filter) {
 
@@ -266,7 +267,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
         $scope.refresh();
         $scope.lastLoadedFilterName = $scope.selectedFilter.name;
-    }
+    };
 
     $scope.saveCurrentFilters = function() {
         console.log("Saving filters");
@@ -305,7 +306,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     $scope.savingFilter = false;
                 });
         }
-    }
+    };
 
     // collapse duplicates: [arachni, arachni, appscan] => [arachni (2), appscan]
     var updateChannelNames = function(vulnerability) {
@@ -330,7 +331,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 }
             }
         }
-    }
+    };
 
     $scope.updateElementTable = function(element, numToShow, page) {
         console.log('Updating element table');
@@ -366,7 +367,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
-    }
+    };
 
     $scope.goTo = function(vuln) {
         $window.location.href = tfEncoder.encode($scope.getUrlBase(vuln));
@@ -401,17 +402,17 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.getDocumentUrl = function(vulnerability, document) {
         return tfEncoder.encode($scope.getUrlBase(vulnerability) + "/documents/" + document.id + "/view");
-    }
+    };
 
     $scope.applyElementChecked = function(element) {
         element.vulns.forEach(function(vuln) {
             vuln.checked = element.checked;
         });
-    }
+    };
 
     $scope.applyVulnerabilityChecked = function(element, vulnerability) {
         if (!vulnerability.checked) {
@@ -427,7 +428,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
             element.checked = checked;
         }
-    }
+    };
 
 
     $scope.exportCSV = function() {
@@ -439,13 +440,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
         $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
             success(function(data, status, headers, config, response) {
-//                var element = angular.element('<a/>');
-//                element.attr({
-//                    href: 'data:attachment/csv;charset=utf-8,' + encodeURI(data),
-//                    target: '_blank',
-//                    download: 'search_export.csv'
-//                })[0].click();
-//
 
                 var octetStreamMime = "application/octet-stream";
 
@@ -510,7 +504,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.errorMessage = "Failed to retrieve vulnerability report. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
-    }
+    };
 
     $scope.$on('scanUploaded', function() {
         $scope.refresh();
