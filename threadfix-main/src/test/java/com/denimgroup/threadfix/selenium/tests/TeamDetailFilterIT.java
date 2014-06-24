@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -102,11 +101,56 @@ public class TeamDetailFilterIT extends BaseIT{
 
     /*_________________ Saved Filters _________________*/
 
-    //TODO when name length is limited GitHub issue: 344
-    /*@Test
-    public void testSavedFilterValidation() {
+    @Test
+    public void testSavedFilterFieldValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String tooLong = getRandomString(26);
+        String goodLength = getRandomString(25);
 
-    }*/
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab("0")
+                .expandSavedFilters()
+                .addInvalidNameSavedFilter(tooLong);
+
+        assertTrue("The name should be too long to save.", teamDetailPage.isSaveFilterDisabled());
+
+        teamDetailPage.addSavedFilter(goodLength);
+
+        assertTrue("Success message not present.", teamDetailPage.isSavedFilterSuccessMessageDisplayed());
+
+        teamDetailPage.clickLoadFilters();
+
+        assertTrue("Saved filter should be in list of saved filters.", teamDetailPage.isSavedFilterPresent(goodLength));
+    }
+
+    //TODO finish up checking for duplicate name change
+    @Test
+    public void testDuplicateNameSavedFilter() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String filterName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickVulnerabilitiesTab("0")
+                .expandSavedFilters()
+                .addSavedFilter(filterName);
+
+        assertTrue("Success message not present.", teamDetailPage.isSavedFilterSuccessMessageDisplayed());
+
+        teamDetailPage.addInvalidNameSavedFilter(filterName);
+
+    }
 
     @Test
     public void testSavedFilters() {

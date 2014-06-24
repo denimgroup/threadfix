@@ -78,6 +78,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage expandTeamRowByName(String teamName) {
         driver.findElementById("teamCaret" + teamName).click();
+        sleep(1500);
         return new TeamIndexPage(driver);
     }
 

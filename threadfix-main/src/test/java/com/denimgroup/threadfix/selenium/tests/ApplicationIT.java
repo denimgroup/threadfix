@@ -70,7 +70,7 @@ public class ApplicationIT extends BaseIT {
         ApplicationDetailPage ap = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, urlText, "Low")
                 .saveApplication()
-                .clickApplicationName(appName);
+                .clickViewAppLink(appName, teamName);
 
         assertTrue("The name was not preserved correctly on Application Detail Page.",
                 ap.getNameText().contains(appName));

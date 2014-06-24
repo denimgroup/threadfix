@@ -30,6 +30,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
+import javax.naming.directory.NoSuchAttributeException;
+import java.util.NoSuchElementException;
+
 public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage(WebDriver webdriver) {
@@ -142,9 +145,17 @@ public class TeamDetailPage extends BasePage {
     }
 
     public TeamDetailPage addSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(newFilter);
         driver.findElementById("saveFilterButton").click();
+        waitForElement(driver.findElementById("saveFilterSuccessMessage"));
         return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage addInvalidNameSavedFilter(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        return this;
     }
 
     public TeamDetailPage loadSavedFilter(String savedFilter) {
@@ -469,5 +480,26 @@ public class TeamDetailPage extends BasePage {
 
     public boolean areAllVulnerabilitiesHidden() {
         return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
+    }
+
+    public boolean isSaveFilterDisabled() {
+        String attributeValue = driver.findElementById("saveFilterButton").getAttribute("disabled");
+        if (attributeValue != null) {
+            return attributeValue.contains("true");
+        }
+        return false;
+    }
+
+    public boolean isSavedFilterSuccessMessageDisplayed() {
+        return driver.findElementById("saveFilterSuccessMessage").isDisplayed();
+    }
+
+    public boolean isSavedFilterPresent(String savedFilter) {
+        try {
+            new Select(driver.findElementById("filterSelect")).selectByVisibleText(savedFilter);
+            return true;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            return false;
+        }
     }
 }
