@@ -15,8 +15,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             options: [
                 { name: "Trending Scans", id: 1 },
                 { name: "Monthly Progress", id: 7 },
-                { name: "12 Month Vulnerability Burndown", id: 9 },
-                { name: "Top 20 Vulnerable Applications", id: 10 }
+                { name: "Vulnerability Trending", id: 9 },
+                { name: "Most Vulnerable Applications", id: 10 }
             ]
         },
         {

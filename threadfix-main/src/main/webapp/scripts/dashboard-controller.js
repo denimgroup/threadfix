@@ -8,6 +8,6 @@ myAppModule.controller('DashboardController', function ($scope, $rootScope) {
         $scope.reportQuery = '';
     });
 
-    $scope.rightReportTitle = "Top 10 Applications";
+    $scope.rightReportTitle = "Most Vulnerable Applications";
 
 });

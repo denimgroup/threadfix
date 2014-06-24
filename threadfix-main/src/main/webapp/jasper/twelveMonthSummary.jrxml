@@ -20,7 +20,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="22" isBold="true"/>
 				</textElement>
-				<text><![CDATA[12 Month Vulnerability Burndown]]></text>
+				<text><![CDATA[Vulnerability Trending]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="222" y="40" width="309" height="20"/>
@@ -90,7 +90,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[No Data Found For Vulnerability Burndown Report]]></text>
+				<text><![CDATA[No Data Found For Vulnerability Trending Report]]></text>
 			</staticText>
 		</band>
 	</noData>
