@@ -202,7 +202,7 @@ public class ApplicationRestController extends RestController {
 			return failure(APPLICATION_LOOKUP_FAILED);
 		}		
 		log.info("Received REST request for Applications in team = " + teamName + ".");		
-		Organization org = organizationService.loadOrganization(teamName);				
+		Organization org = organizationService.loadByName(teamName);
 		if (org == null) {
 			log.warn(APPLICATION_LOOKUP_FAILED);
             return failure(APPLICATION_LOOKUP_FAILED);

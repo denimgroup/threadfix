@@ -105,7 +105,7 @@ public class AddApplicationController {
             return RestResponse.failure("The current license does not allow the creation of any more applications.");
         }
 
-        Organization team = organizationService.loadOrganization(orgId);
+        Organization team = organizationService.loadById(orgId);
 
         if (team == null) {
             log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
@@ -135,7 +135,7 @@ public class AddApplicationController {
         }
         Organization org;
         if (application.getOrganization() == null) {
-            org = organizationService.loadOrganization(orgId);
+            org = organizationService.loadById(orgId);
             if (org != null) {
                 application.setOrganization(org);
             }

@@ -23,68 +23,37 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.OrganizationDao;
+import com.denimgroup.threadfix.data.entities.Organization;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.OrganizationDao;
-import com.denimgroup.threadfix.data.entities.Organization;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Hibernate Organization DAO implementation. Most basic methods are implemented
- * in the AbstractGenericDao
+ * in the AbstractNamedObjectDao
  * 
  * @author jraim
- * @see AbstractGenericDao
+ * @see AbstractNamedObjectDao
  */
 @Repository
-public class HibernateOrganizationDao implements OrganizationDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateOrganizationDao extends AbstractNamedObjectDao<Organization> implements OrganizationDao {
 
 	@Autowired
 	public HibernateOrganizationDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+        super(sessionFactory);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Organization> retrieveAllActive() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from Organization org where org.active = 1 order by org.name").list();
-	}
+    @Override
+    protected Class<Organization> getClassReference() {
+        return Organization.class;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Organization> retrieveAllNoOrder() {
-		return sessionFactory.getCurrentSession().createQuery("from Organization org").list();
-	}
-
-	@Override
-	public Organization retrieveById(int id) {
-		return (Organization) sessionFactory.getCurrentSession().get(Organization.class, id);
-	}
-
-	@Override
-	public Organization retrieveByName(String name) {
-		return (Organization) sessionFactory.getCurrentSession()
-				.createQuery("from Organization org where org.name = :name")
-				.setString("name", name).uniqueResult();
-	}
-
-	@Override
-	public void saveOrUpdate(Organization organization) {
-		if (organization.getId() != null) {
-			sessionFactory.getCurrentSession().merge(organization);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(organization);
-		}
-	}
-	
-	@Override
+    @Override
 	@SuppressWarnings("unchecked")
 	public List<Organization> retrieveAllActiveFilter(Set<Integer> authenticatedTeamIds) {
 		return sessionFactory.getCurrentSession()

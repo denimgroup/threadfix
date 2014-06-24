@@ -49,7 +49,7 @@ public class AddSurveyController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String selectSurvey(@PathVariable("orgId") int orgId, ModelMap model) {
-		Organization organization = organizationService.loadOrganization(orgId);
+		Organization organization = organizationService.loadById(orgId);
 		if (organization != null) {
 			
 			if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, orgId, null)) {
@@ -101,7 +101,7 @@ public class AddSurveyController {
 
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		surveyResult.setUser(userName);
-		surveyResult.setOrganization(organizationService.loadOrganization(orgId));
+		surveyResult.setOrganization(organizationService.loadById(orgId));
 		surveyService.saveOrUpdateResult(surveyResult);
 
 		model.addAttribute("saveConfirm", true);

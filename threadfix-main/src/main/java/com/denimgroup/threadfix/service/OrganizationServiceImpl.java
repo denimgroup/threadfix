@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.OrganizationDao;
 import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Application;
@@ -31,16 +32,16 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 @Service
 @Transactional(readOnly = false) // used to be true
-public class OrganizationServiceImpl implements OrganizationService {
+public class OrganizationServiceImpl extends AbstractNamedObjectService<Organization> implements OrganizationService {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(OrganizationService.class);
 
@@ -55,34 +56,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 	private AccessControlMapService accessControlMapService = null;
 
 	@Override
-	public List<Organization> loadAllActive() {
-		return organizationDao.retrieveAllActive();
-	}
-
-	@Override
-	public List<Organization> loadAllNoOrder() {
-		return organizationDao.retrieveAllNoOrder();
-	}
-
-	@Override
-	public Organization loadOrganization(int organizationId) {
-		return organizationDao.retrieveById(organizationId);
-	}
-
-	@Override
-	public Organization loadOrganization(String name) {
-		return organizationDao.retrieveByName(name);
-	}
-
-	@Override
 	@Transactional(readOnly = false)
-	public void storeOrganization(Organization organization) {
-		organizationDao.saveOrUpdate(organization);
-	}
-
-	@Override
-	@Transactional(readOnly = false)
-	public void deactivateOrganization(Organization organization) {
+	public void markInactive(Organization organization) {
 		log.warn("Deleting organization with ID " + organization.getId());
 		
 		organization.setActive(false);
@@ -115,7 +90,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 		return organization != null && organization.getName() != null 
 				&& !organization.getName().trim().isEmpty() 
 				&& organization.getName().length() < Organization.NAME_LENGTH
-				&& loadOrganization(organization.getName()) == null;
+				&& loadByName(organization.getName()) == null;
 	}
 	
 	@Override
@@ -157,5 +132,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 		
 		return organizationDao.retrieveAllActiveFilter(teamIds);
 	}
-	
+
+    @Override
+    GenericNamedObjectDao<Organization> getDao() {
+        return organizationDao;
+    }
 }

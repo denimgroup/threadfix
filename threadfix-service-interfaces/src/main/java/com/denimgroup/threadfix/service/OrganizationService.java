@@ -23,50 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.Organization;
+
+import java.util.List;
 
 /**
  * @author bbeverly
  * 
  */
-public interface OrganizationService {
+public interface OrganizationService extends GenericNamedObjectService<Organization> {
 
-	/**
-	 * @return
-	 */
-	List<Organization> loadAllActive();
-
-	/**
-	 * @return
-	 */
-	List<Organization> loadAllNoOrder();
-
-	/**
-	 * @param organizationId
-	 * @return
-	 */
-	Organization loadOrganization(int organizationId);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	Organization loadOrganization(String name);
-
-	/**
-	 * @param organization
-	 */
-	void storeOrganization(Organization organization);
-
-	/**
-	 * Prepare the Organization for deletion.
-	 * 
-	 * @param organizationId
-	 */
-	void deactivateOrganization(Organization organization);
-	
 	/**
 	 * This method is meant to be used with REST methods 
 	 * to take the validation out of the Controller layer.
