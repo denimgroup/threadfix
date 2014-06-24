@@ -88,7 +88,7 @@ public class TeamRestController extends RestController {
             return RestResponse.failure(result);
         }
 
-        Organization org = organizationService.loadOrganization(teamId);
+        Organization org = organizationService.loadById(teamId);
 
         if (org == null) {
             log.warn("Team lookup failed for ID " + teamId + ".");
@@ -139,7 +139,7 @@ public class TeamRestController extends RestController {
 			}
 		}
 		
-		Organization organization = organizationService.loadOrganization(teamId);
+		Organization organization = organizationService.loadById(teamId);
 		
 		if (organization == null) {
 			log.warn("Invalid Team ID.");
@@ -185,7 +185,7 @@ public class TeamRestController extends RestController {
 			return RestResponse.failure(result);
 		}
 
-		Organization org = organizationService.loadOrganization(teamName);
+		Organization org = organizationService.loadByName(teamName);
 
 		if (org == null) {
 			log.warn("Team lookup failed for ID " + teamName + ".");
@@ -218,7 +218,7 @@ public class TeamRestController extends RestController {
 			organization.setName(request.getParameter("name"));
 			
 			if (organizationService.isValidOrganization(organization)) {
-				organizationService.storeOrganization(organization);
+				organizationService.saveOrUpdate(organization);
 				log.info("Successfully created new Team.");
 				return writeSuccessObjectWithView(organization, AllViews.RestViewTeam2_1.class);
 			} else {

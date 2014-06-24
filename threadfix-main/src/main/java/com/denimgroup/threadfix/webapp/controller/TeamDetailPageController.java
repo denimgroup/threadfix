@@ -77,7 +77,7 @@ public class TeamDetailPageController {
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView detail(@PathVariable("orgId") int orgId,
                                HttpServletRequest request) {
-        Organization organization = organizationService.loadOrganization(orgId);
+        Organization organization = organizationService.loadById(orgId);
         List<Application> apps = PermissionUtils.filterApps(organization);
         if (organization == null || !organization.isActive()) {
             log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
@@ -121,7 +121,7 @@ public class TeamDetailPageController {
     public @ResponseBody String getInfo(@PathVariable int orgId) throws IOException {
         final RestResponse<? extends Object> restResponse;
 
-        Organization organization = organizationService.loadOrganization(orgId);
+        Organization organization = organizationService.loadById(orgId);
         List<Application> apps = PermissionUtils.filterApps(organization);
 
         if (organization == null){
@@ -153,7 +153,7 @@ public class TeamDetailPageController {
             return "403";
         }
 
-        Organization organization = organizationService.loadOrganization(orgId);
+        Organization organization = organizationService.loadById(orgId);
         if (organization == null || !organization.isActive()) {
             log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
             throw new ResourceNotFoundException();
@@ -161,7 +161,7 @@ public class TeamDetailPageController {
         } else {
 
             String teamName = organization.getName();
-            organizationService.deactivateOrganization(organization);
+            organizationService.markInactive(organization);
             log.info("Organization soft deletion was successful on Organization " + organization.getName() + ".");
             ControllerUtils.addSuccessMessage(request,
                     "Team " + teamName + " has been deleted successfully.");

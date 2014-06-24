@@ -155,7 +155,7 @@ public class SeverityFilterController {
 			} else {
 				severityFilter.setGlobal(false);
 				severityFilter.setApplication(null);
-				severityFilter.setOrganization(organizationService.loadOrganization(orgId));
+				severityFilter.setOrganization(organizationService.loadById(orgId));
 			}
 		}
 	}

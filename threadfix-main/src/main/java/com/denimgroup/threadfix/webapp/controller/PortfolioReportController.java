@@ -69,7 +69,7 @@ public class PortfolioReportController {
 		String teamName = null;
 		
 		if (teamId != 0) {
-			org = organizationService.loadOrganization(teamId);
+			org = organizationService.loadById(teamId);
 			if (org != null && org.getName() != null) {
 				teamName = org.getName();
 			}

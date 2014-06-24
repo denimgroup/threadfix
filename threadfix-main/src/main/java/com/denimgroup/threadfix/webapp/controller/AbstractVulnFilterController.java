@@ -98,7 +98,7 @@ public abstract class AbstractVulnFilterController {
 			if (appId != -1) {
 				filter.setApplication(applicationService.loadApplication(appId));
 			} else if (orgId != -1) {
-				filter.setOrganization(organizationService.loadOrganization(orgId));
+				filter.setOrganization(organizationService.loadById(orgId));
 			} else {
 				filter.setGlobal(true);
 			}
@@ -133,7 +133,7 @@ public abstract class AbstractVulnFilterController {
         String type = getType(orgId, appId);
 
         map.put("application", applicationService.loadApplication(appId));
-        map.put("organization", organizationService.loadOrganization(orgId));
+        map.put("organization", organizationService.loadById(orgId));
 		map.put("vulnerabilityFilter", vulnerabilityFilterService.getNewFilter(orgId, appId));
         map.put("globalSeverityFilter", getSeverityFilter(-1, -1));
         map.put("globalVulnerabilityFilterList", vulnerabilityFilterService.getPrimaryVulnerabilityList(-1, -1));
