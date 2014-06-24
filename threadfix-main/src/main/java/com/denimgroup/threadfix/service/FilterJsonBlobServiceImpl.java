@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
-import com.denimgroup.threadfix.data.dao.GenericObjectDao;
+import com.denimgroup.threadfix.data.dao.GenericNamedObjectDao;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,13 +33,13 @@ import org.springframework.stereotype.Service;
  * Created by mac on 5/13/14.
  */
 @Service
-public class FilterJsonBlobServiceImpl extends AbstractGenericObjectService<FilterJsonBlob> implements FilterJsonBlobService {
+public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<FilterJsonBlob> implements FilterJsonBlobService {
 
     @Autowired
     private FilterJsonBlobDao filterJsonBlobDao;
 
     @Override
-    public GenericObjectDao<FilterJsonBlob> getDao() {
+    public GenericNamedObjectDao<FilterJsonBlob> getDao() {
         return filterJsonBlobDao;
     }
 }
