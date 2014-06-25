@@ -1,7 +1,7 @@
 <%@ include file="/common/taglibs.jsp"%>
 
 <head>
-	<title>Reports</title>
+	<title>Analytics</title>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
@@ -17,7 +17,7 @@
                  firstAppId = '<c:out value="${ firstAppId }"/>';
                  firstTeamId = '<c:out value="${ firstTeamId }"/>'">
 
-        <h2>Reports</h2>
+        <h2>Analytics</h2>
 
         <tabset>
             <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled" ng-click="updateOptions(tab)"></tab>

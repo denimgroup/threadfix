@@ -27,7 +27,7 @@
 				</td>
 				<security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
 					<td class="pointer" ng-click="goTo('/reports')" id="tab-reports" style="width: 110px;">
-						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Reports</a>
+						<a id="reportsHeader" href="<spring:url value="/reports" htmlEscape="true"/>">Analytics</a>
 					</td>
 				</security:authorize>
 				<td id="tab-user" style="width: 130px;">
