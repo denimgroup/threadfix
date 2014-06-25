@@ -265,6 +265,14 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
         $scope.selectedFilter = filter;
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
+
+        if ($scope.parameters.startDate) {
+            $scope.startDate = $scope.parameters.startDate;
+        }
+        if ($scope.parameters.endDate) {
+            $scope.endDate = $scope.parameters.endDate;
+        }
+
         $scope.refresh();
         $scope.lastLoadedFilterName = $scope.selectedFilter.name;
     };
