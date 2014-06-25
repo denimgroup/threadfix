@@ -23,11 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import com.denimgroup.threadfix.data.entities.BaseEntity;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractNamedObjectDao<T> extends AbstractObjectDao<T> implements GenericNamedObjectDao<T> {
+public abstract class AbstractNamedObjectDao<T extends BaseEntity> extends AbstractObjectDao<T> implements GenericNamedObjectDao<T> {
 
     public AbstractNamedObjectDao(SessionFactory sessionFactory) {
         super(sessionFactory);

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public interface GenericObjectService<T> {
 
     List<T> loadAll();
 
+    @Transactional(readOnly = false)
     void saveOrUpdate(T object);
 
     void markInactive(T object);

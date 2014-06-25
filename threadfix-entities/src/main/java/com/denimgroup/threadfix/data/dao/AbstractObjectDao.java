@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import com.denimgroup.threadfix.data.entities.BaseEntity;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
@@ -32,7 +33,7 @@ import org.hibernate.criterion.Restrictions;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractObjectDao<T> implements GenericObjectDao<T> {
+public abstract class AbstractObjectDao<T extends BaseEntity> implements GenericObjectDao<T> {
 
     protected SessionFactory sessionFactory;
 
@@ -76,7 +77,11 @@ public abstract class AbstractObjectDao<T> implements GenericObjectDao<T> {
 
     @Override
     public void saveOrUpdate(T object) {
-        getSession().saveOrUpdate(object);
+        if (object.isNew()) {
+            getSession().saveOrUpdate(object);
+        } else {
+            getSession().merge(object);
+        }
     }
 
     protected Session getSession() {
