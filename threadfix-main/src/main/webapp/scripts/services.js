@@ -204,7 +204,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             }
         }
         if ($scope.startDate) {
-            date = new Date($scope.startDate)
+            date = new Date($scope.startDate);
             if (date) {
                 parameters.startDate = date.getTime();
             }
