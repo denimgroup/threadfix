@@ -144,24 +144,19 @@ public class ApplicationIT extends BaseIT {
 
         DatabaseUtils.createTeam(teamName);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-
-        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
-				.addNewApplication(teamName, appName1, urlText1, "Low")
-				.saveApplication();
-
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
+				.addNewApplication(teamName, appName1, urlText1, "Low")
+				.saveApplication()
 				.clickViewAppLink(appName1, teamName);
 
-        sleep(2000);
-		applicationDetailPage.clickEditDeleteBtn()
+		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(appName2)
 				.setUrlInput(urlText2)
 				.clickUpdateApplicationButton();
 
-        applicationDetailPage.clickOrganizationHeaderLink()
+        applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName2, teamName);
 		

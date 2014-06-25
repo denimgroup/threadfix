@@ -206,7 +206,7 @@ public class TeamIT extends BaseIT {
 		
 		// Test edit with no changes
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-                .clickUpdateButtonValid();
+                .clickUpdateButtonInvalid();
 		assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(orgName));
 		
 		// Test empty input
@@ -222,8 +222,7 @@ public class TeamIT extends BaseIT {
 
         orgName = longInput.substring(0, 60);
 
-        teamDetailPage = teamDetailPage
-                .setNameInput(orgName)
+        teamDetailPage = teamDetailPage.setNameInput(orgName)
                 .clickUpdateButtonValid();
 
 		assertTrue("The organization name was not cropped correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(orgName));

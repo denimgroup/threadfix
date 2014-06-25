@@ -80,6 +80,7 @@ public abstract class BasePage {
 
 	public TeamIndexPage clickOrganizationHeaderLink() {
         driver.findElementById("orgHeader").click();
+        waitForElement(driver.findElementById("expandAllButton"));
         return new TeamIndexPage(driver);
 	}
 	
