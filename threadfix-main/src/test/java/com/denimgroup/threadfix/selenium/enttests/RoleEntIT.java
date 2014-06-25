@@ -192,7 +192,8 @@ public class RoleEntIT extends BaseIT {
 		}
 
 		rolesIndexPage = rolesIndexPage.toggleAllPermissions(true)
-                .clickSaveRole()
+                .clickSaveRole(roleName)
+                .clickManageRolesLink()
                 .clickEditLink(roleName);
 
 		for (String permission : Role.ALL_PERMISSIONS) {
@@ -203,7 +204,8 @@ public class RoleEntIT extends BaseIT {
 		}
 		
 		rolesIndexPage = rolesIndexPage.toggleAllPermissions(false)
-                .clickSaveRole()
+                .clickSaveRole(roleName)
+                .clickManageRolesLink()
                 .clickEditLink(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
@@ -218,7 +220,8 @@ public class RoleEntIT extends BaseIT {
                 .clickCreateRole()
                 .setRoleName(roleName)
                 .toggleAllPermissions(true)
-                .clickSaveRole()
+                .clickSaveRole(roleName)
+                .clickManageRolesLink()
                 .clickEditLink(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
@@ -227,7 +230,8 @@ public class RoleEntIT extends BaseIT {
             }
 		}
 		
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
+		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName)
+                .clickManageRolesLink()
 				.clickDeleteButton(roleName);
 
 		assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));

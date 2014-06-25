@@ -163,7 +163,7 @@ public class ApplicationDetailsFilterIT extends BaseIT{
 
         assertTrue("Success message not present.", applicationDetailPage.isSavedFilterSuccessMessageDisplayed());
 
-        applicationDetailPage.addSavedFilter(filterName);
+        applicationDetailPage.addSavedFilterInvalid(filterName);
 
         assertTrue("Error message not displayed.", applicationDetailPage.isDuplicateNameErrorMessageDisplayed());
     }

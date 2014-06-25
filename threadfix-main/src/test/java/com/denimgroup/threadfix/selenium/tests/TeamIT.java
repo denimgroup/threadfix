@@ -135,7 +135,6 @@ public class TeamIT extends BaseIT {
                 .addNewTeamInvalid();
 		assertTrue("The correct error text was not present",
                 emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
-
 	}
 
 	@Test

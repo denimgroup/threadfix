@@ -62,6 +62,12 @@ public class RolesIndexPage extends BasePage {
         return new RolesIndexPage(driver);
     }
 
+    public RolesIndexPage clickSaveRole(String role) {
+        driver.findElementById("submit").click();
+        waitForElement(driver.findElementById("editModalLink" + role));
+        return new RolesIndexPage(driver);
+    }
+
 	public RolesIndexPage clickSaveRoleInvalid(){
         driver.findElementById("submit").click();
 		sleep(1000);

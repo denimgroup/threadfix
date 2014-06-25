@@ -479,6 +479,15 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("filterNameInput").clear();
         driver.findElementById("filterNameInput").sendKeys(newFilter);
         driver.findElementById("saveFilterButton").click();
+        waitForElement(driver.findElementById("saveFilterSuccessMessage"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage addSavedFilterInvalid(String newFilter) {
+        driver.findElementById("filterNameInput").clear();
+        driver.findElementById("filterNameInput").sendKeys(newFilter);
+        driver.findElementById("saveFilterButton").click();
+        waitForElement(driver.findElementById("saveFilterErrorMessage"));
         return new ApplicationDetailPage(driver);
     }
 
