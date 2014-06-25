@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -89,11 +88,6 @@ public class EditOrganizationController {
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
-
-            // Reset all wafs in applications for now
-            for (Application application: organization.getApplications()) {
-                application.setWaf(null);
-            }
 			
             return  writeSuccessObjectWithView(organization, AllViews.TableRow.class);
 		}
