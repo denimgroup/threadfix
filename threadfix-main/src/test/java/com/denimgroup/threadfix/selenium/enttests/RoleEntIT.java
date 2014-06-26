@@ -215,7 +215,7 @@ public class RoleEntIT extends BaseIT {
             }
 		}
 
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
+		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName)
                 .clickDeleteButton(roleName)
                 .clickCreateRole()
                 .setRoleName(roleName)
