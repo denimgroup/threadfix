@@ -150,7 +150,6 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameText() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("nameText")));
         return driver.findElementById("nameText").getText();
     }
 
