@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -35,17 +36,23 @@ import java.util.*;
 public class DotNetEndpointGenerator implements EndpointGenerator {
 
     private final List<DotNetControllerMappings> dotNetControllerMappings;
-    private final DotNetRouteMappings        dotNetRouteMappings;
+    private final DotNetRouteMappings            dotNetRouteMappings;
     private final List<Endpoint> endpoints = new ArrayList<>();
 
-    public DotNetEndpointGenerator(DotNetRouteMappings routeMappings, DotNetControllerMappings... controllerMappings) {
+    public static final SanitizedLogger LOG = new SanitizedLogger(DotNetEndpointGenerator.class);
+
+    public DotNetEndpointGenerator(DotNetRouteMappings routeMappings,
+                                   DotNetControllerMappings... controllerMappings) {
         this(routeMappings, Arrays.asList(controllerMappings));
     }
 
-    public DotNetEndpointGenerator(DotNetRouteMappings routeMappings, List<DotNetControllerMappings> controllerMappings) {
-        assert routeMappings != null;
-        assert controllerMappings != null;
-        assert controllerMappings.size() != 0;
+    public DotNetEndpointGenerator(DotNetRouteMappings routeMappings,
+                                   List<DotNetControllerMappings> controllerMappings) {
+        assert routeMappings != null : "routeMappings was null. Check route parsing code.";
+        assert controllerMappings != null : "controllerMappings was null. Check controller parsing code.";
+        assert controllerMappings.size() != 0 : "controllerMappings were empty. Check controller parsing code.";
+
+        LOG.debug("Initializing EndpointGenerator with routeMappings: " + routeMappings + " and controllerMappings: " + controllerMappings);
 
         dotNetControllerMappings = controllerMappings;
         dotNetRouteMappings = routeMappings;
@@ -56,17 +63,31 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
     private void assembleEndpoints() {
         DotNetRouteMappings.MapRoute mapRoute = dotNetRouteMappings.routes.get(0);
 
-        for (DotNetControllerMappings mappings : dotNetControllerMappings) {
+        CONTROLLER: for (DotNetControllerMappings mappings : dotNetControllerMappings) {
             for (String action : mappings.getActions()) {
+                if (mappings.getControllerName() == null) {
+                    LOG.debug("Controller Name was null. Skipping to the next.");
+                    continue CONTROLLER;
+                }
+
+                if (action == null) {
+                    LOG.debug("Action was null. Skipping to the next.");
+                    continue;
+                }
+
                 String pattern = mapRoute.url;
+
+                LOG.debug("Substituting patterns from route " + action + " into template " + pattern);
 
                 String result = pattern
                         // substitute in controller name for {controller}
                         .replaceAll("\\{\\w*controller\\w*\\}", mappings.getControllerName())
-                        // substitute in action for {action}
+                                // substitute in action for {action}
                         .replaceAll("\\{\\w*action\\w*\\}", action)
                         // TODO parse out parameters instead of ignoring them.
                         .replaceAll("\\{[^\\}]*\\}", ""); // strip all of the other things
+
+                LOG.debug("Got result " + result);
 
                 endpoints.add(
                         new DotNetEndpoint(result, mappings.getFilePath(), mappings.getLineNumberForAction(action)));

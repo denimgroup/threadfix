@@ -23,7 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mac on 6/25/14.
@@ -31,10 +39,32 @@ import org.junit.Test;
 public class DotNetEndpointDatabaseTests {
 
     @Test
-    public void testAllApps() {
-        for (String app : new String[] {""});
+    public void testDotNetProjects() {
+
+        List<String> errorMessages = new ArrayList<>();
+
+        for (String project : DotNetDetectionTests.projects) {
+
+            System.out.println(project);
+
+            EndpointDatabase database = EndpointDatabaseFactory.getDatabase(new File(TestConstants.DOT_NET_ROOT + "/" + project));
+
+            if (database == null) {
+                errorMessages.add("Database was null for project " + project);
+            } else if (database.getFrameworkType() != FrameworkType.DOT_NET_MVC) {
+                errorMessages.add("Got " + database.getFrameworkType() + " instead of DOT_NET for " + project);
+            } else if (database.generateEndpoints().size() == 0) {
+                errorMessages.add("Database was empty for "  + project);
+            }
+        }
+
+        if (!errorMessages.isEmpty()) {
+            for (String message : errorMessages) {
+                System.out.println(message);
+            }
+
+            assert false : "See errors above.";
+        }
+
     }
-
-
-
 }

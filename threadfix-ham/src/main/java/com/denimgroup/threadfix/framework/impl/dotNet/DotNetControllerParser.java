@@ -25,9 +25,13 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by mac on 6/11/14.
@@ -35,6 +39,12 @@ import java.io.File;
 public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywords {
 
     final DotNetControllerMappings mappings;
+
+    public static final SanitizedLogger LOG = new SanitizedLogger(DotNetControllerParser.class);
+
+    public static final Set<String> DOT_NET_BUILTIN_CONTROLLERS = new HashSet<>(Arrays.asList(
+        "ApiController", "Controller", "HubController", "HubControllerBase", "AsyncController", "BaseController"
+    ));
 
     @Nonnull
     public static DotNetControllerMappings parse(@Nonnull File file) {
@@ -44,6 +54,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     DotNetControllerParser(File file) {
+        LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
         mappings = new DotNetControllerMappings(file.getAbsolutePath());
     }
 
@@ -57,23 +68,30 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     enum State {
-        START, PUBLIC, CLASS, BODY, IN_ACTION_SIGNATURE, IN_ACTION_BODY
+        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, IN_ACTION_SIGNATURE, IN_ACTION_BODY
     }
 
-    State currentState = State.START;
-    int currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0, methodBraceLevel = 0, storedParen = 0;
+    State currentState      = State.START;
+    int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0, methodBraceLevel = 0, storedParen = 0;
     boolean shouldContinue = true;
-    String lastString = null;
-    Integer lastLineNumber = null;
+    String  lastString     = null;
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
 
         switch (type) {
-            case '{': currentCurlyBrace += 1; break;
-            case '}': currentCurlyBrace -= 1; break;
-            case '(': currentParen += 1; break;
-            case ')': currentParen -= 1; break;
+            case '{':
+                currentCurlyBrace += 1;
+                break;
+            case '}':
+                currentCurlyBrace -= 1;
+                break;
+            case '(':
+                currentParen += 1;
+                break;
+            case ')':
+                currentParen -= 1;
+                break;
         }
 
         switch (currentState) {
@@ -88,9 +106,18 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                         State.START;
                 break;
             case CLASS:
-                if (stringValue != null && stringValue.endsWith("Controller") && !stringValue.equals("Controller")) {
-                    mappings.setControllerName(stringValue.substring(0, stringValue.indexOf("Controller")));
-                } else if (type == '{') {
+                if (stringValue != null && stringValue.endsWith("Controller") &&
+                        // Make sure we're not parsing internal ASP.NET MVC controller classes
+                        !DOT_NET_BUILTIN_CONTROLLERS.contains(stringValue)) {
+                    String controllerName = stringValue.substring(0, stringValue.indexOf("Controller"));
+                    LOG.debug("Got Controller name " + controllerName);
+                    mappings.setControllerName(controllerName);
+                }
+
+                currentState = State.TYPE_SIGNATURE;
+                break;
+            case TYPE_SIGNATURE:
+                if (type == '{') {
                     currentState = State.BODY;
                     classBraceLevel = currentCurlyBrace - 1;
                 }
