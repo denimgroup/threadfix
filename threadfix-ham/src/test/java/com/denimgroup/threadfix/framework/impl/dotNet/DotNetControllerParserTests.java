@@ -42,14 +42,38 @@ public class DotNetControllerParserTests {
                 "Controller name was " + mappings.getControllerName() + " but should have been Chat.";
         assert mappings.getActions().size() == 1 :
                 "The size was " + mappings.getActions().size() + " instead of 1.";
-        assert mappings.getActions().contains("Index") :
+        assert mappings.getActionForName("Index") != null :
                 "Mappings didn't contain Index. They had " + mappings.getActions().iterator().next();
-
     }
 
     @Test
-    public void testControllerWithAttributes() {
+    public void testControllerWithPostAttribute() {
+        DotNetControllerMappings mappings =
+                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/AttributesController.cs"));
 
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Account") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Account.";
+        assert mappings.getActionForName("Login") != null :
+                "Mappings didn't contain Login.";
+        assert mappings.getActionForName("Login").getMethod().equals("POST") :
+                "Method should have been POST but was " + mappings.getActionForName("Login").getMethod();
+    }
+
+    @Test
+    public void testAttributesControllerActionSize() {
+        DotNetControllerMappings mappings =
+                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/AttributesController.cs"));
+
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Account") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Account.";
+        assert mappings.getActions().size() == 14 :
+                "The size was " + mappings.getActions().size() + " instead of 14.";
+        assert mappings.getActionForName("Login") != null :
+                "Mappings didn't contain Login.";
     }
 
 

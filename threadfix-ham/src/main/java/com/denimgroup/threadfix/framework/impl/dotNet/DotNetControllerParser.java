@@ -71,13 +71,27 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
         START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, IN_ACTION_SIGNATURE, IN_ACTION_BODY
     }
 
+    enum AttributeState {
+        START, OPEN_BRACKET, STRING
+    }
+
     State currentState      = State.START;
+    AttributeState currentAttributeState = AttributeState.START;
+    Set<String> currentAttributes = new HashSet<>();
+    String lastAttribute;
     int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0, methodBraceLevel = 0, storedParen = 0;
     boolean shouldContinue = true;
     String  lastString     = null;
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
+
+        processMainThread(type, lineNumber, stringValue);
+        processAttributes(type, stringValue);
+
+    }
+
+    private void processMainThread(int type, int lineNumber, String stringValue) {
 
         switch (type) {
             case '{':
@@ -131,7 +145,8 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                     assert lastString != null;
 
                     storedParen = currentParen - 1;
-                    mappings.addAction(lastString, new HashSet<String>(), lineNumber);
+                    mappings.addAction(lastString, currentAttributes, lineNumber);
+                    currentAttributes = new HashSet<>();
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 
@@ -147,6 +162,32 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                     currentState = State.BODY;
                 }
                 break;
+        }
+
+    }
+
+    private void processAttributes(int type, String stringValue) {
+        if (currentState == State.BODY) {
+            switch (currentAttributeState) {
+                case START:
+                    if (type == '[') {
+                        currentAttributeState = AttributeState.OPEN_BRACKET;
+                    }
+                    break;
+                case OPEN_BRACKET:
+                    if (stringValue != null) {
+                        lastAttribute = stringValue;
+                        currentAttributeState = AttributeState.STRING;
+                    }
+                    break;
+                case STRING:
+                    if (type == ']') {
+                        System.out.println("Adding " + lastAttribute);
+                        currentAttributes.add(lastAttribute);
+                    }
+                    currentAttributeState = AttributeState.START;
+                    break;
+            }
         }
     }
 }

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.denimgroup.threadfix.framework.impl.dotNet.Action.action;
@@ -41,7 +42,6 @@ public class DotNetControllerMappings {
     }
 
     private final String filePath;
-
 
     public void setControllerName(@Nonnull String controllerName) {
         assert this.controllerName == null : "These mappings already have a controller name.";
@@ -64,6 +64,11 @@ public class DotNetControllerMappings {
     @Nonnull
     public List<Action> getActions() {
         return new ArrayList<>(actions.values());
+    }
+
+    @Nullable
+    public Action getActionForName(String actionName) {
+        return actions.get(actionName);
     }
 
     public DotNetControllerMappings(String filePath) {

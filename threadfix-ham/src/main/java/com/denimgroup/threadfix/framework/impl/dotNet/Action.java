@@ -38,7 +38,7 @@ class Action {
     Integer     lineNumber;
 
     String getMethod() {
-        return attributes.contains("[HttpPost]") ?
+        return attributes.contains("HttpPost") ?
                 "POST" : "GET";
     }
 
