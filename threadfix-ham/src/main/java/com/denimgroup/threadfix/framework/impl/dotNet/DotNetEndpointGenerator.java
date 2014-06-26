@@ -67,11 +67,13 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
             for (String action : mappings.getActions()) {
                 if (mappings.getControllerName() == null) {
                     LOG.debug("Controller Name was null. Skipping to the next.");
+                    assert false;
                     continue CONTROLLER;
                 }
 
                 if (action == null) {
                     LOG.debug("Action was null. Skipping to the next.");
+                    assert false;
                     continue;
                 }
 

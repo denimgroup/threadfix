@@ -59,7 +59,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     public boolean hasValidControllerMappings() {
-        return !mappings.getActions().isEmpty();
+        return mappings.getControllerName() != null && !mappings.getActions().isEmpty();
     }
 
     @Override
