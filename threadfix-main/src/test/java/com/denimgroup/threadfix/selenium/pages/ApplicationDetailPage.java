@@ -874,7 +874,11 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        return expected.equals(driver.findElementById("totalBadge" + level).getText());
+        return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
+    }
+
+    public boolean isVulnerabilityCountNonZero(String level) {
+        return "0".equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
     public boolean areAllVulnerabilitiesHidden() {

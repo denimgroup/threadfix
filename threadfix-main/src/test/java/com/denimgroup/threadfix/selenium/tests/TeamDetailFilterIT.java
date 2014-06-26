@@ -497,4 +497,5 @@ public class TeamDetailFilterIT extends BaseIT{
     }
 
     /*_________________ Date Range _________________*/
+    //TODO this functionality works but there is a bug (358) in FF that stops us from writing a test for now.
 }

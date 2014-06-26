@@ -205,7 +205,7 @@ public class TeamIT extends BaseIT {
 		
 		// Test edit with no changes
 		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-                .clickUpdateButtonInvalid();
+                .clickUpdateButtonValid();
 		assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(orgName));
 		
 		// Test empty input

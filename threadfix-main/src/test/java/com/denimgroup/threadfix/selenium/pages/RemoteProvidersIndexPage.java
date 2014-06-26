@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.regex.Matcher;
@@ -361,6 +358,15 @@ public class RemoteProvidersIndexPage extends BasePage {
 		handleAlert();
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public RemoteProvidersIndexPage clearPreviousWhiteHat() {
+        if (driver.findElementById("clearConfig1").isDisplayed()) {
+            driver.findElementById("clearConfig1").click();
+            handleAlert();
+            return new RemoteProvidersIndexPage(driver);
+        }
+        return new RemoteProvidersIndexPage(driver);
+    }
 
     public RemoteProvidersIndexPage clearVeraCode() {
         driver.findElementById("clearConfig2").click();

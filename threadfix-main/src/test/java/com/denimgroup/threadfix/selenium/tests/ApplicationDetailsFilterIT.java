@@ -471,6 +471,8 @@ public class ApplicationDetailsFilterIT extends BaseIT{
     }
 
     /* Date Range */
+    //TODO when issue 358 has been closed this test can be added back
+    @Ignore
     @Test
     public void testDateFilter() {
         String teamName = getRandomString(8);

@@ -96,6 +96,7 @@ public class RemoteProvidersIT extends BaseIT {
 	public void invalidSentinel(){
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
+                .clearPreviousWhiteHat()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI("This should't Work!")
                 .clickSubmitWait();
@@ -254,18 +255,22 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 
-        assertTrue("The critical vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "8"));
-        assertTrue("The high vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountCorrect("High", "6"));
-        assertTrue("The medium vulnerability count was not updated.",
-                applicationDetailPage.isVulnerabilityCountCorrect("Medium", "12"));
+        assertFalse("The critical vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountNonZero("Critical"));
+        assertFalse("The high vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountNonZero("High"));
+        assertFalse("The medium vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountNonZero("Medium"));
+        assertFalse("The low vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountNonZero("Low"));
+        assertFalse("The info vulnerability count was not updated.",
+                applicationDetailPage.isVulnerabilityCountNonZero("Info"));
 
         TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
         assertFalse("The vulnerability count was not updated.",
-                teamIndexPage.applicationVulnerabilitiesFiltered(teamName, appName, "Total", "26"));
+                teamIndexPage.getApplicationSpecificVulnerability(teamName, appName, "Total").equals("0"));
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 

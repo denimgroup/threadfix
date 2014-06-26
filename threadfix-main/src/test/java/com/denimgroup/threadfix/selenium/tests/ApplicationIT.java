@@ -401,7 +401,6 @@ public class ApplicationIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName2)
 				.addNewApplication(teamName2, appName, "", "Low")
 				.saveApplication()
-				.clickOrganizationHeaderLink()
 				.expandTeamRowByName(teamName1)
 				.clickViewAppLink(appName,teamName1);
 		
