@@ -47,5 +47,10 @@ public class DotNetControllerParserTests {
 
     }
 
+    @Test
+    public void testControllerWithAttributes() {
+
+    }
+
 
 }

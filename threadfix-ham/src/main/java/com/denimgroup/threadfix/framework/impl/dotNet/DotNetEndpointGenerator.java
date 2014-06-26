@@ -63,17 +63,17 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
     private void assembleEndpoints() {
         DotNetRouteMappings.MapRoute mapRoute = dotNetRouteMappings.routes.get(0);
 
-        CONTROLLER: for (DotNetControllerMappings mappings : dotNetControllerMappings) {
-            for (String action : mappings.getActions()) {
-                if (mappings.getControllerName() == null) {
-                    LOG.debug("Controller Name was null. Skipping to the next.");
-                    assert false;
-                    continue CONTROLLER;
-                }
+        for (DotNetControllerMappings mappings : dotNetControllerMappings) {
+            if (mappings.getControllerName() == null) {
+                LOG.debug("Controller Name was null. Skipping to the next.");
+                assert false;
+                continue;
+            }
 
+            for (Action action : mappings.getActions()) {
                 if (action == null) {
                     LOG.debug("Action was null. Skipping to the next.");
-                    assert false;
+                    assert false : "mappings.getActions() returned null. This shouldn't happen.";
                     continue;
                 }
 
@@ -85,14 +85,13 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
                         // substitute in controller name for {controller}
                         .replaceAll("\\{\\w*controller\\w*\\}", mappings.getControllerName())
                                 // substitute in action for {action}
-                        .replaceAll("\\{\\w*action\\w*\\}", action)
+                        .replaceAll("\\{\\w*action\\w*\\}", action.name)
                         // TODO parse out parameters instead of ignoring them.
                         .replaceAll("\\{[^\\}]*\\}", ""); // strip all of the other things
 
                 LOG.debug("Got result " + result);
 
-                endpoints.add(
-                        new DotNetEndpoint(result, mappings.getFilePath(), mappings.getLineNumberForAction(action)));
+                endpoints.add(new DotNetEndpoint(result, mappings.getFilePath(), action));
             }
         }
     }

@@ -23,25 +23,31 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import javax.annotation.Nonnull;
+import java.util.Set;
+
 /**
- * Created by mac on 6/11/14.
+ * Created by mac on 6/26/14.
  */
-interface DotNetKeywords {
+class Action {
+    @Nonnull
+    String      name;
+    @Nonnull
+    Set<String> attributes;
+    @Nonnull
+    Integer     lineNumber;
 
-    public static final String
-            PUBLIC = "public",
-            CLASS = "class",
-            ROUTE_CONFIG = "RouteConfig",
-            REGISTER_ROUTES = "RegisterRoutes",
-            ROUTE_COLLECTION = "RouteCollection",
-            MAP_ROUTE = "MapRoute",
-            URL = "url",
-            NAME = "name",
-            DEFAULTS = "defaults",
-            NEW = "new",
-            CONTROLLER = "controller",
-            ACTION = "action",
-            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication";
+    String getMethod() {
+        return attributes.contains("[HttpPost]") ?
+                "POST" : "GET";
+    }
 
-
+    static Action action(@Nonnull String name, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber) {
+        Action action = new Action();
+        action.name = name;
+        action.attributes = attributes;
+        action.lineNumber = lineNumber;
+        return action;
+    }
 }
+

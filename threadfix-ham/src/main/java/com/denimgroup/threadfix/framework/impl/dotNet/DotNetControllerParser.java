@@ -59,7 +59,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     public boolean hasValidControllerMappings() {
-        return mappings.getControllerName() != null && !mappings.getActions().isEmpty();
+        return mappings.hasValidMappings();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                     assert lastString != null;
 
                     storedParen = currentParen - 1;
-                    mappings.addAction(lastString, lineNumber);
+                    mappings.addAction(lastString, new HashSet<String>(), lineNumber);
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 

@@ -33,16 +33,16 @@ import java.util.Set;
 /**
  * Created by mac on 6/11/14.
  */
-public class DotNetEndpoint extends AbstractEndpoint {
+class DotNetEndpoint extends AbstractEndpoint {
 
-    final String path;
-    final String filePath;
-    final int lineNumber;
+    @Nonnull final String path;
+    @Nonnull final String filePath;
+    @Nonnull final Action action;
 
-    public DotNetEndpoint(String path, String filePath, int lineNumber) {
+    public DotNetEndpoint(@Nonnull String path, @Nonnull String filePath, @Nonnull Action action) {
         this.path = path;
         this.filePath = filePath;
-        this.lineNumber = lineNumber;
+        this.action = action;
     }
 
     @Nonnull
@@ -54,7 +54,7 @@ public class DotNetEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     public Set<String> getHttpMethods() {
-        return new HashSet<>(Arrays.asList("GET"));
+        return new HashSet<>(Arrays.asList(action.getMethod()));
     }
 
     @Nonnull
@@ -71,7 +71,7 @@ public class DotNetEndpoint extends AbstractEndpoint {
 
     @Override
     public int getStartingLineNumber() {
-        return lineNumber;
+        return action.lineNumber;
     }
 
     @Override
@@ -81,6 +81,6 @@ public class DotNetEndpoint extends AbstractEndpoint {
 
     @Override
     public boolean matchesLineNumber(int lineNumber) {
-        return lineNumber == this.lineNumber;
+        return lineNumber == action.lineNumber;
     }
 }
