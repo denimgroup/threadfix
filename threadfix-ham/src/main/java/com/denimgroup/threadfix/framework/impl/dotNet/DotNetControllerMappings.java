@@ -34,8 +34,8 @@ import static com.denimgroup.threadfix.framework.impl.dotNet.Action.action;
  */
 public class DotNetControllerMappings {
 
-    private String              controllerName = null;
-    private Map<String, Action> actions        = new HashMap<>();
+    private String       controllerName = null;
+    private List<Action> actions        = new ArrayList<>();
 
     public String getFilePath() {
         return filePath;
@@ -58,17 +58,23 @@ public class DotNetControllerMappings {
     }
 
     public void addAction(@Nonnull String action, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber) {
-        actions.put(action, action(action, attributes, lineNumber));
+        actions.add(action(action, attributes, lineNumber));
     }
 
     @Nonnull
     public List<Action> getActions() {
-        return new ArrayList<>(actions.values());
+        return actions;
     }
 
     @Nullable
-    public Action getActionForName(String actionName) {
-        return actions.get(actionName);
+    public Action getActionForNameAndMethod(String actionName, String method) {
+        for (Action action : actions) {
+            if (action.name.equals(actionName) && action.getMethod().equals(method)) {
+                return action;
+            }
+        }
+
+        return null;
     }
 
     public DotNetControllerMappings(String filePath) {

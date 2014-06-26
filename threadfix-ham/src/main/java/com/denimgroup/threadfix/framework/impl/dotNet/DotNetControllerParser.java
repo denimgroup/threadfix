@@ -68,7 +68,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     enum State {
-        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, IN_ACTION_SIGNATURE, IN_ACTION_BODY
+        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, PUBLIC_IN_BODY, ACTION_RESULT, IN_ACTION_SIGNATURE, IN_ACTION_BODY
     }
 
     enum AttributeState {
@@ -108,6 +108,8 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                 break;
         }
 
+        System.out.println(currentState);
+
         switch (currentState) {
             case START:
                 if (PUBLIC.equals(stringValue)) {
@@ -139,7 +141,19 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
             case BODY:
                 if (classBraceLevel == currentCurlyBrace) {
                     shouldContinue = false;
-                } else if (stringValue != null) {
+                } else if (PUBLIC.equals(stringValue)) {
+                    currentState = State.PUBLIC_IN_BODY;
+                }
+                break;
+            case PUBLIC_IN_BODY:
+                if (ACTION_RESULT.equals(stringValue)) {
+                    currentState = State.ACTION_RESULT;
+                } else if (type == '(' || type == ';' || type == '{') {
+                    currentState = State.BODY;
+                }
+                break;
+            case ACTION_RESULT:
+                if (stringValue != null) {
                     lastString = stringValue;
                 } else if (type == '(') {
                     assert lastString != null;

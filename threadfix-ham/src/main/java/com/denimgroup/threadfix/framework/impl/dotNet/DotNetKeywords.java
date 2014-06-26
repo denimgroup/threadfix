@@ -41,7 +41,8 @@ interface DotNetKeywords {
             NEW = "new",
             CONTROLLER = "controller",
             ACTION = "action",
-            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication";
+            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication",
+            ACTION_RESULT = "ActionResult";
 
 
 }
