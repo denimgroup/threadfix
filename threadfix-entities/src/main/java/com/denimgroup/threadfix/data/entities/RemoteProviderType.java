@@ -36,27 +36,27 @@ import java.util.List;
 @Entity
 @Table(name = "RemoteProviderType")
 public class RemoteProviderType extends BaseEntity  {
-	
-	private static final long serialVersionUID = -4542241524388720916L;
-	
-	public static final String SENTINEL = ScannerType.SENTINEL.getFullName();
-	public static final String VERACODE = ScannerType.VERACODE.getFullName();
-	public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
 
-	public static final int NAME_LENGTH = 60;
-	public static final int API_KEY_LENGTH = 1024;
-	
-	// TODO Check actual limits (Veracode right now) and use those
-	public static final int USERNAME_LENGTH = 1024;
-	public static final int PASSWORD_LENGTH = 1024;
-	//No components were found for the configured Defect Tracker project.
-	@NotEmpty(message = "{errors.required}")
-	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
-	private String name;
-	
-	private boolean hasApiKey;
+    private static final long serialVersionUID = -4542241524388720916L;
 
-    private boolean matchSourceNumbers = false;
+    public static final String SENTINEL        = ScannerType.SENTINEL.getFullName();
+    public static final String VERACODE        = ScannerType.VERACODE.getFullName();
+    public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
+
+    public static final int NAME_LENGTH    = 60;
+    public static final int API_KEY_LENGTH = 1024;
+
+    // TODO Check actual limits (Veracode right now) and use those
+    public static final int USERNAME_LENGTH = 1024;
+    public static final int PASSWORD_LENGTH = 1024;
+    //No components were found for the configured Defect Tracker project.
+    @NotEmpty(message = "{errors.required}")
+    @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
+    private String name;
+
+    private boolean hasApiKey;
+
+    private Boolean matchSourceNumbers = false;
 
     // TODO normalize this if it becomes more than a one-off thing (RP Region table or similar)
     private boolean isEuropean = false;
@@ -82,6 +82,7 @@ public class RemoteProviderType extends BaseEntity  {
     private List<RemoteProviderApplication> remoteProviderApplications;
     private List<RemoteProviderApplication> filteredApplications;
     private ChannelType                     channelType;
+    private boolean matchSourceNumbersNullSafe;
 
     @Transient
     @JsonView(AllViews.TableRow.class)
@@ -223,11 +224,12 @@ public class RemoteProviderType extends BaseEntity  {
 	}
 
     @JsonView(AllViews.TableRow.class)
-    public boolean getMatchSourceNumbers() {
+    @Column(nullable = true)
+    public Boolean getMatchSourceNumbers() {
         return matchSourceNumbers;
     }
 
-    public void setMatchSourceNumbers(boolean matchSourceNumbers) {
+    public void setMatchSourceNumbers(Boolean matchSourceNumbers) {
         this.matchSourceNumbers = matchSourceNumbers;
     }
 
@@ -246,6 +248,12 @@ public class RemoteProviderType extends BaseEntity  {
 	public boolean getIsQualys() {
 		return name != null && name.equals(QUALYSGUARD_WAS);
 	}
+
+	@Transient
+    @JsonView(AllViews.TableRow.class)
+	public boolean getIsWhiteHat() {
+		return name != null && name.equals(SENTINEL);
+	}
 	
 	@Transient
 	public boolean getHasConfiguredApplications() {
@@ -262,4 +270,9 @@ public class RemoteProviderType extends BaseEntity  {
 		
 		return hasAppsWithApps;
 	}
+
+    @Transient
+    public boolean getMatchSourceNumbersNullSafe() {
+        return matchSourceNumbers != null && matchSourceNumbers;
+    }
 }

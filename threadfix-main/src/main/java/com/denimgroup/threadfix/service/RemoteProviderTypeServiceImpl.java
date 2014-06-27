@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -285,11 +284,13 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	}
 	
 	@Override
-	public ResponseCode checkConfiguration(String username, String password, String apiKey,
+	public ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
 			int typeId) {
 		
 		RemoteProviderType databaseRemoteProviderType = load(typeId);
-		
+
+        boolean matchSourceNumberBoolean = "true".equals(matchSourceNumber);
+
 		if (databaseRemoteProviderType == null) {
 			return ResponseCode.BAD_ID;
 		}
@@ -308,6 +309,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			log.warn("Provider password has changed, updating applications.");
 			
 			databaseRemoteProviderType.setPassword(password);
+            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
 			remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
 			store(databaseRemoteProviderType);
 			return ResponseCode.SUCCESS;
@@ -323,8 +325,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			databaseRemoteProviderType.setApiKey(apiKey);
 			databaseRemoteProviderType.setUsername(username);
 			databaseRemoteProviderType.setPassword(password);
-		
-			List<RemoteProviderApplication> apps = remoteProviderApplicationService
+            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
+
+            List<RemoteProviderApplication> apps = remoteProviderApplicationService
 													.getApplications(databaseRemoteProviderType);
 			
 			if (apps == null) {
@@ -346,7 +349,14 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				store(encryptCredentials(databaseRemoteProviderType));
 				return ResponseCode.SUCCESS;
 			}
-		} else {
+		} else if (databaseRemoteProviderType.getMatchSourceNumbers() == null ||
+                databaseRemoteProviderType.getMatchSourceNumbers() != matchSourceNumberBoolean) {
+
+            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
+            store(databaseRemoteProviderType);
+            return ResponseCode.SUCCESS;
+
+        } else {
 			log.info("No change was made to the credentials.");
 			return ResponseCode.SUCCESS;
 		}
