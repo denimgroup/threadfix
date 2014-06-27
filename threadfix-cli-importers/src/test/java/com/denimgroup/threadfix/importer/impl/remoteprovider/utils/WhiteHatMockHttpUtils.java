@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
+import org.h2.util.IOUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -48,7 +52,14 @@ public class WhiteHatMockHttpUtils implements RemoteProviderHttpUtils {
     }
 
     private InputStream getStream(String name) {
-        return WhiteHatMockHttpUtils.class.getClassLoader().getResourceAsStream(name);
+        InputStream stream = WhiteHatMockHttpUtils.class.getClassLoader().getResourceAsStream(name);
+
+        try {
+            return new ByteArrayInputStream(IOUtils.readBytesAndClose(stream, -1));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Unable to properly load state.");
+        }
     }
 
     @Override
