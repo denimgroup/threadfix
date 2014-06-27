@@ -103,7 +103,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		}
 
 		DefaultHandler scanParser =
-                remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbers() ?
+                remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbersNullSafe() ?
                         new MatchingParser() :
                         new ThreadFixStyleParser();
 
@@ -404,7 +404,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
             LOG.warn("Tried to parse a URL out of a url in Attack Vector String but failed: " + urlWithHttp);
         }
 
-        System.out.println(returnPath);
         return returnPath;
     }
 

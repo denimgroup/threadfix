@@ -142,17 +142,21 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 provider.errorMessage = "Failed to delete team. HTTP status was " + status;
                 app.importingScans = false;
             });
-    }
+    };
 
     $scope.configure = function(provider) {
         var modalInstance = $modal.open({
             templateUrl: 'configureRemoteProviderModal.html',
             controller: 'RemoteProviderModalController',
+            windowClass: 'remote-provider-config-modal',
             resolve: {
                 url: function() {
                     return tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/configure");
                 },
                 type: function() {
+                    if (!provider.matchSourceNumbers) {
+                        provider.matchSourceNumbers = false;
+                    }
                     return provider;
                 },
                 config: function() {
@@ -180,7 +184,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openAppModal = function(provider, app) {
 
@@ -261,7 +265,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.updateApplications = function(provider) {
         var url = tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/update");

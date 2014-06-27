@@ -38,7 +38,7 @@ public interface RemoteProviderTypeService {
 		SUCCESS, BAD_ID, NO_APPS,
 		ERROR_NO_SCANS_FOUND,
 		ERROR_NO_NEW_SCANS,
-		ERROR_OTHER;
+		ERROR_OTHER
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public interface RemoteProviderTypeService {
 	 * This is to tidy up the controller layer.
 	 * @param remoteProviderType
 	 */
-	ResponseCode checkConfiguration(String username, String password, String apiKey,
+	ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
 			int typeId);
 	
 	/**

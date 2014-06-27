@@ -1182,3 +1182,20 @@ div.mapping-filter-modal.modal {
 div.mapping-filter-modal .modal-body {
     overflow-y: inherit;
 }
+
+div.remote-provider-config-modal .modal-body {
+    overflow-y: inherit;
+}
+
+div.remote-provider-config-modal a {
+    text-decoration: none;
+}
+
+#matchSourceNumbers {
+    margin-bottom:0;
+    margin-top:0;
+}
+
+.popover {
+    z-index: 1060 !important;
+}
