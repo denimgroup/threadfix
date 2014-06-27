@@ -73,6 +73,41 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public TeamDetailPage clickAddApplicationButton() {
+        driver.findElementById("addApplicationModalButton").click();
+        waitForElement(driver.findElementById("applicationNameInput"));
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage setApplicationInfo(String appName, String url, String criticality) {
+        setApplicationName(appName);
+        setApplicationUrl(url);
+        setApplicationCriticality(criticality);
+        return this;
+    }
+
+    public TeamDetailPage setApplicationName(String appName) {
+        driver.findElementById("applicationNameInput").clear();
+        driver.findElementById("applicationNameInput").sendKeys(appName);
+        return this;
+    }
+
+    public TeamDetailPage setApplicationUrl(String url) {
+        driver.findElementById("applicationUrlInput").clear();
+        driver.findElementById("applicationUrlInput").sendKeys(url);
+        return this;
+    }
+
+    public TeamDetailPage setApplicationCriticality(String criticality) {
+        new Select(driver.findElementById("criticalityIdSelect")).selectByVisibleText(criticality);
+        return this;
+    }
+
+    public ApplicationDetailPage clickAppLink(String appName) {
+        driver.findElementByLinkText(appName).click();
+        return new ApplicationDetailPage(driver);
+    }
+
     public TeamDetailPage clickVulnerabilitiesTab() {
         driver.findElementByLinkText("0 Vulnerabilities").click();
         waitForElement(driver.findElementByClassName("filter-controls"));

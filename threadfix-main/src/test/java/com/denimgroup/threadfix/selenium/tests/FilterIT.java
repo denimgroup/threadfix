@@ -40,10 +40,9 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class FilterIT extends BaseIT {
     // TODO if a notification system is implemented then get rid of sleeps...just refresh the page when the work is done
-    // TODO check on bug 184, if fixed...create test
 
     @Test
-    public void testApplicationFilters() {
+    public void applicationFiltersTest() {
         String teamName = getRandomString(8);
         String appName1 = getRandomString(8);
         String appName2 = getRandomString(8);
@@ -90,7 +89,7 @@ public class FilterIT extends BaseIT {
     }
 
     @Test
-    public void testTeamFilters() {
+    public void teamFiltersTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
@@ -136,7 +135,7 @@ public class FilterIT extends BaseIT {
     }
 
     @Test
-    public void testGlobalFilters() {
+    public void globalFiltersTest() {
         String teamName1 = getRandomString(8);
         String teamName2 = getRandomString(8);
         String appName1 = getRandomString(8);
@@ -252,7 +251,7 @@ public class FilterIT extends BaseIT {
     }
 
     @Test
-    public void testEditFilters() {
+    public void editFiltersTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();

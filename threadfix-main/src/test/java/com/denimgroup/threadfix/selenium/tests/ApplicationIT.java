@@ -76,6 +76,37 @@ public class ApplicationIT extends BaseIT {
                 ap.getNameText().contains(appName));
     }
 
+    @Test
+    public void testCreateBasicAppFromTeamDetailPageTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String url = "http://testurl.com";
+        String criticality = "Low";
+
+        DatabaseUtils.createTeam(teamName);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewTeamLink(teamName);
+
+        teamDetailPage.clickAddApplicationButton()
+                .setApplicationInfo(appName, url, criticality)
+                .clickModalSubmit();
+
+        assertTrue("Application was not present on team's detail page.", teamDetailPage.isAppPresent(appName));
+
+        ApplicationDetailPage applicationDetailPage = teamDetailPage.clickAppLink(appName);
+
+        assertTrue("Application name was not present on application's detail page.",
+                applicationDetailPage.getNameText().equals(appName));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("Application was not present on team index page.", teamIndexPage.isAppPresent(teamName, appName));
+    }
+
     //Validation Test
 	@Test 
 	public void testCreateBasicApplicationValidation() {

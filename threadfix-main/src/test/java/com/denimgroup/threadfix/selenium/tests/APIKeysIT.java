@@ -110,7 +110,7 @@ public class APIKeysIT extends BaseIT {
 	}
 
 	@Test
-	public void longApiKeyNoteDisplayTest(){
+	public void longAPIKeyNoteDisplayTest(){
 		String shortNote = getRandomString(8);
 		String longNoteA = getRandomString(2056);
         String longNoteB = getRandomString(254);
