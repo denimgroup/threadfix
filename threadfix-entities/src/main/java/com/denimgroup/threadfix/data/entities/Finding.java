@@ -442,5 +442,13 @@ public class Finding extends AuditableEntity implements FindingLike {
                 getChannelSeverity().getName();
     }
 
-
+    @Override
+    public String toString() {
+        return "Finding{" +
+                "channelVulnerability=" + channelVulnerability.getName() +
+                ", displayId=" + displayId +
+                ", path=" + surfaceLocation.getPath() +
+                ", parameter=" + surfaceLocation.getParameter() +
+                '}';
+    }
 }
