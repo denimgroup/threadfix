@@ -107,6 +107,30 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Application was not present on team index page.", teamIndexPage.isAppPresent(teamName, appName));
     }
 
+    @Test
+    public void deleteApplicationTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
+                .clickDeleteLink();
+
+        assertFalse("Application is still present on team's detail page.", teamDetailPage.isAppPresent(appName));
+
+        TeamIndexPage teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
+    }
+
     //Validation Test
 	@Test 
 	public void testCreateBasicApplicationValidation() {

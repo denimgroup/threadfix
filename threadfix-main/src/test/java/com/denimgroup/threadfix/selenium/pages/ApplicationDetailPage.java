@@ -144,6 +144,12 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public TeamDetailPage clickDeleteLink() {
+        driver.findElementById("deleteLink").click();
+        handleAlert();
+        return new TeamDetailPage(driver);
+    }
+
     public String getWafText() {
         waitForElement(driver.findElementById("wafName"));
         return driver.findElementById("wafName").getText();
