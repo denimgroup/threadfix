@@ -140,7 +140,7 @@ public class ApplicationsIndexController {
 	}
 
     /**
-     * Allows the user to upload a scan to an existing application channel.
+     * Allows the user to upload a scan to an existing application.
      *
      * @return Team with updated stats.
      */

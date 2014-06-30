@@ -145,11 +145,6 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	}
 
 	@Override
-	public boolean processScan(Integer channelId, String fileName) {
-		return processScan(channelId, fileName, null, null);
-	}
-
-	@Override
 	public boolean processScan(Integer channelId, String fileName,
 			Integer statusId, String userName) {
 				
@@ -189,6 +184,9 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 	
 		scanMerger.merge(scan, scan.getApplicationChannel());
+
+        // set numbers correctly
+        updateScanCounts(scan);
 	
 		return scan;
 	}
@@ -256,7 +254,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 			jobStatusService.updateJobStatus(statusId, statusString);
 		}
 	}
-	
+
 	public void updateScanCounts(Scan scan) {
 		Map<String, Object> mapMap = scanDao.getMapSeverityMap(scan);
 		Map<String, Object> findingMap = scanDao.getFindingSeverityMap(scan);

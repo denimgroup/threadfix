@@ -397,7 +397,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
         String urlWithHttp = fullUrl.startsWith("http") ? fullUrl : "http://" + fullUrl;
         try {
             URL url = new URL(urlWithHttp);
-            if (url.getPath() != null) {
+            if (url.getPath() != null && !url.getPath().isEmpty()) {
                 returnPath = url.getPath();
             }
         } catch (MalformedURLException e) {
