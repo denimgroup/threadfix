@@ -6,7 +6,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
 
     $scope.page = 1;
 
-    $scope.heading = "Unmapped Findings"
+    $scope.heading = "Unmapped Findings";
 
     $scope.$on('rootScopeInitialized', function() {
 
@@ -66,9 +66,9 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
     var getTableSortBean = function() {
         var object = {
             page: $scope.page
-        }
+        };
         return object;
-    }
+    };
 
     $scope.createMapping = function(finding) {
         var modalInstance = $modal.open({
@@ -105,7 +105,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.goToPage = function(valid) {
         if (valid) {
@@ -114,7 +114,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
     };
 
     $scope.goTo = function(finding) {
-        $window.location.href = tfEncoder.encode($scope.$parent.currentUrl + "/findings/" + finding.id);
+        $window.location.href = tfEncoder.encode($scope.$parent.currentUrl + "/scans/1/findings/" + finding.id);
     };
 
 });

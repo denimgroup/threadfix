@@ -413,7 +413,6 @@ public class ApplicationsController {
         return writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
     }
 
-
     @RequestMapping(value = "/{appId}/cwe", method = RequestMethod.GET)
     public @ResponseBody Object getGenericVulnerabilities() throws IOException {
         return writeSuccessObjectWithView(
