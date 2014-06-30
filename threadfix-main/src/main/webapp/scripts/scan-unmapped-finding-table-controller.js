@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $window, $http, $rootScope, $modal, $log, tfEncoder) {
 
@@ -114,7 +114,12 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
     };
 
     $scope.goTo = function(finding) {
-        $window.location.href = tfEncoder.encode($scope.$parent.currentUrl + "/scans/1/findings/" + finding.id);
+
+        var url = $scope.$parent.currentUrl.indexOf('scans') == -1 ?
+            $scope.$parent.currentUrl + "/scans/1/findings/" + finding.id :
+            $scope.$parent.currentUrl + "/findings/" + finding.id;
+
+        $window.location.href = tfEncoder.encode(url);
     };
 
 });
