@@ -11,7 +11,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
     $scope.active = function(app) {
         return app.active;
-    }
+    };
 
     // since we need the csrfToken to make the request, we need to wait until it's initialized
     $scope.$on('rootScopeInitialized', function() {
@@ -42,27 +42,23 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             team.expanded = false;
         }
 
-        if (team.expanded) {
-            team.expanded = false;
-        } else {
-            team.expanded = true;
-        }
+        team.expanded = !team.expanded;
 
         loadGraph(team);
-    }
+    };
 
     $scope.expand = function() {
         $scope.teams.forEach(function(team) {
             team.expanded = true;
             loadGraph(team);
         });
-    }
+    };
 
     $scope.contract = function() {
         $scope.teams.forEach(function(team) {
             team.expanded = false;
         });
-    }
+    };
 
     var loadGraph = function(team) {
 
@@ -91,7 +87,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                     team.reportFailed = true;
                 });
         }
-    }
+    };
 
     // Modal functions
 
@@ -131,11 +127,11 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showAppLimitMessage = function(number) {
         alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
-    }
+    };
 
     $scope.openAppModal = function (team) {
 
@@ -180,8 +176,6 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             team.applications.sort(nameCompare);
 
             team.expanded = true;
-//            loadGraph(team);
-            team.report = true;
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
@@ -212,7 +206,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             $log.info('Modal dismissed at: ' + new Date());
         });
 
-    }
+    };
 
     $scope.onFileSelect = function(team, app, $files) {
         var modalInstance = $modal.open({
