@@ -404,6 +404,8 @@ public class ApplicationsController {
             bean.setPage(1);
         }
 
+        bean.setApplicationId(appId);
+
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("numPages", numPages);
         responseMap.put("page", bean.getPage());

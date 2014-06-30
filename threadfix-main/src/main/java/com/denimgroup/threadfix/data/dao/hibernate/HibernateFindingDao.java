@@ -258,10 +258,16 @@ public class HibernateFindingDao implements FindingDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Finding> retrieveUnmappedFindingsByPage(int page) {
+    public List<Finding> retrieveUnmappedFindingsByPage(int page, Integer appId) {
         Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
                 .add(Restrictions.eq("active", true))
                 .add(Restrictions.isNull("vulnerability"));
+
+        if (appId != null) {
+            criteria.createAlias("scan", "scanAlias")
+                    .createAlias("scanAlias.application", "appAlias")
+                    .add(Restrictions.eq("appAlias.id", appId));
+        }
 
         return criteria.createAlias("channelSeverity", "severity")
                 .createAlias("channelVulnerability", "vuln")

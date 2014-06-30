@@ -99,5 +99,5 @@ public interface FindingDao {
 
 	List<String> retrieveManualUrls(Integer appId);
 
-    List<Finding> retrieveUnmappedFindingsByPage(int page);
+    List<Finding> retrieveUnmappedFindingsByPage(int page, Integer appId);
 }
