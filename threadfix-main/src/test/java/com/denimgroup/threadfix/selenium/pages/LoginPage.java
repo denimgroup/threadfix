@@ -31,6 +31,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 public class LoginPage extends BasePage {
 
 	public static String url = "http://localhost:8080/threadfix/";
+    //public static String url = "https://localhost:8443/threadfix/";
     //public static String url = "http://jenkins-slave5:8080/threadfix/";
 
 	public LoginPage(WebDriver webdriver) {

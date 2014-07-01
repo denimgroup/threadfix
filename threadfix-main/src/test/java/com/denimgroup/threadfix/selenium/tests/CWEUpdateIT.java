@@ -35,7 +35,6 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class CWEUpdateIT extends BaseIT {
 
-    //TODO Figure out what is wrong with getting the error messages
     @Test
     public void testCWEUpdate() {
         String vulnerabilityType = "Improper Authorization in Handler for Custom URL Scheme";
