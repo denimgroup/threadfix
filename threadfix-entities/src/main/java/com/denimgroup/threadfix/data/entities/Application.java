@@ -158,7 +158,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-    @JsonView(AllViews.RestViewApplication2_1.class)
+    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class})
 	public String getUniqueId() {
 		return uniqueId;
 	}

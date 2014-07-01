@@ -305,7 +305,7 @@ public class FindingServiceImpl implements FindingService {
 
 	@Override
 	public List<Finding> getUnmappedFindingTable(TableSortBean bean) {
-		return findingDao.retrieveUnmappedFindingsByPage(bean.getPage());
+		return findingDao.retrieveUnmappedFindingsByPage(bean.getPage(), bean.getApplicationId());
 	}
 
 	@Override

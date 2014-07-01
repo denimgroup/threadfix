@@ -8,7 +8,7 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
 
     $scope.ready = function() {
         return !$scope.uploading && !$scope.waiting;
-    }
+    };
 
     $scope.onFileSelect = function($files) {
         $scope.uploading = true;

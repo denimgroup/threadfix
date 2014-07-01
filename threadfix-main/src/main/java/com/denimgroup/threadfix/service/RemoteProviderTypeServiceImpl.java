@@ -43,25 +43,18 @@ import java.util.*;
 public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService {
 	
 	private final SanitizedLogger log = new SanitizedLogger(RemoteProviderTypeServiceImpl.class);
-	
+
+    @Autowired
 	private RemoteProviderTypeDao remoteProviderTypeDao;
+    @Autowired
 	private RemoteProviderApplicationService remoteProviderApplicationService;
+    @Autowired
 	private ScanMergeService scanMergeService;
-	private RemoteProviderFactory remoteProviderFactory;
+    @Autowired
+    private RemoteProviderFactory remoteProviderFactory;
     @Autowired
     private VulnerabilityService vulnerabilityService;
 
-	@Autowired
-	public RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao,
-			RemoteProviderApplicationService remoteProviderApplicationService,
-			ScanMergeService scanMergeService,
-            RemoteProviderFactory remoteProviderFactory) {
-		this.remoteProviderTypeDao = remoteProviderTypeDao;
-		this.scanMergeService = scanMergeService;
-        this.remoteProviderFactory = remoteProviderFactory;
-		this.remoteProviderApplicationService = remoteProviderApplicationService;
-	}
-	
 	@Override
 	@Transactional
 	public ResponseCode importScansForApplications(Integer remoteProviderTypeId) {
@@ -166,7 +159,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 					log.warn("Remote Scan was not newer than the last imported scan " +
 							"for this RemoteProviderApplication.");
 					noOfNoNewScans++;
-					
+
 				} else {
 					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
 					
