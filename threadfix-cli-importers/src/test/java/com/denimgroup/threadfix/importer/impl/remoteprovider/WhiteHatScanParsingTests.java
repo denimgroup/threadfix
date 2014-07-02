@@ -152,14 +152,14 @@ public class WhiteHatScanParsingTests {
     @Test
     public void testDemoSitePEMatchingNumbers() {
         test("Demo Site PE", true,
-                finding(null, "Cross Site Scripting"),
+                finding("/", "Cross Site Scripting"),
                 finding("/blah", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/dataReceptor2.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_js.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_script_2.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_quotes.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/os_commanding/param_osc.php", "Directory Traversal"),
-                finding(null, "Directory Indexing"),
+                finding("/", "Directory Indexing"),
                 finding("/sitegenerator/vulnerabilities/hiddenfld.jsp", "Insufficient Authentication"),
                 finding("/crossdomain.xml", "Insufficient Authorization"),
                 finding("/vulnerable-java-web-applications/crossdomain.xml", "Insufficient Authorization"),
@@ -172,7 +172,7 @@ public class WhiteHatScanParsingTests {
     @Test
     public void testDemoSitePEThreadFixNumbers() {
         test("Demo Site PE", false,
-                finding(null, "Cross Site Scripting"),
+                finding("/", "Cross Site Scripting"),
                 finding("/blah", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/dataReceptor2.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_js.php", "Cross Site Scripting"),
