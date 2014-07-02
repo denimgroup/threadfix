@@ -7,6 +7,7 @@ import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 
 import javax.xml.bind.JAXBException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,9 +88,9 @@ public class HPQCUtils {
             if (!login(username,password))
                 return false;
             String[] pDetails = getProjectNameSplit(domainProject);
-            String getUrl = con.buildUrl("rest/domains/" + pDetails[0]
-                    + "/projects/" + pDetails[1]
-                    + "/customization/users/" + username);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/customization/users/" + URLEncoder.encode(username, "UTF-8"));
 
             Response serverResponse = doGet(serverUrl, getUrl, domainProject);
             if (serverResponse != null) {
@@ -114,8 +115,8 @@ public class HPQCUtils {
                 return null;
 
             String[] pDetails = getProjectNameSplit(domainProject);
-            String getUrl = con.buildUrl("rest/domains/" + pDetails[0]
-                    + "/projects/" + pDetails[1]
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
                     + "/customization/entities/defect/lists");
 
             Response serverResponse = doGet(serverUrl, getUrl, domainProject);
