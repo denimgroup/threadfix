@@ -1,7 +1,9 @@
 package com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.HPQualityCenterDefectTracker;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -32,15 +34,17 @@ public class RestConnector extends SpringBeanAutowiringSupport {
     @Autowired(required = false)
     private ProxyService proxyService;
 
+    private static final SanitizedLogger log = new SanitizedLogger(HPQCUtils.class);
+
     protected Map<String, String> cookies;
     /**
      * This is the URL to the ALM application.
      * For example: http://myhost:8080/qcbin.
      * Make sure that there is no slash at the end.
      */
-    protected String serverUrl;
-    protected String domain;
-    protected String project;
+    protected String              serverUrl;
+    protected String              domain;
+    protected String              project;
 
     public RestConnector init(
             Map<String, String> cookies,
@@ -68,7 +72,8 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         return this;
     }
 
-    private RestConnector() {}
+    private RestConnector() {
+    }
 
     private static RestConnector instance = new RestConnector();
 
@@ -288,21 +293,28 @@ public class RestConnector extends SpringBeanAutowiringSupport {
          */
         catch (Exception e) {
 
+            log.error("Encountered Exception while getting the input stream.", e);
+
             inputStream = con.getErrorStream();
             ret.setFailure(e);
         }
 
-        // This actually takes the data from the previously set stream
-        // (error or input) and stores it in a byte[] inside the response
-        ByteArrayOutputStream container = new ByteArrayOutputStream();
+        if (inputStream != null) {
 
-        byte[] buf = new byte[1024];
-        int read;
-        while ((read = inputStream.read(buf, 0, 1024)) > 0) {
-            container.write(buf, 0, read);
+            // This actually takes the data from the previously set stream
+            // (error or input) and stores it in a byte[] inside the response
+            ByteArrayOutputStream container = new ByteArrayOutputStream();
+
+            byte[] buf = new byte[1024];
+            int read;
+            while ((read = inputStream.read(buf, 0, 1024)) > 0) {
+                container.write(buf, 0, read);
+            }
+
+            ret.setResponseData(container.toByteArray());
+        } else {
+            ret.setResponseData("No stream found.".getBytes());
         }
-
-        ret.setResponseData(container.toByteArray());
 
         return ret;
     }
