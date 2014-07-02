@@ -105,6 +105,7 @@ public class TeamDetailPage extends BasePage {
 
     public ApplicationDetailPage clickAppLink(String appName) {
         driver.findElementByLinkText(appName).click();
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 

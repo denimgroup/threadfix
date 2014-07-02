@@ -77,7 +77,7 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void testCreateBasicAppFromTeamDetailPageTest() {
+    public void testCreateBasicAppFromTeamDetailPage() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String url = "http://testurl.com";
