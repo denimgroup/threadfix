@@ -26,10 +26,10 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Entity;
-import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 
 import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
@@ -142,14 +142,17 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                     if (domain != null) {
                         for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
                             if (project != null) {
+
+                                log.info("Adding domain " + domain.getName() + " and project " + project.getProjectName());
+
                                 builder.append(domain.getName()).append("/").append(project.getProjectName());
                                 builder.append(',');
                             }
                         }
                     }
                 }
-                if (builder.length()>0)
-                    return builder.substring(0,builder.length()-1);
+                if (builder.length() > 0)
+                    return builder.substring(0, builder.length() - 1);
             }
         } catch (JAXBException e) {
             log.warn("Error when trying to parsing xml response from HPQC", e);
@@ -166,14 +169,20 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
     @Override
     public ProjectMetadata getProjectMetadata() {
         Map<String, List<String>> listValues = HPQCUtils.getListValues(getHPQCUrl(),username,password,projectName);
-        return new ProjectMetadata(getValues(listValues, ""), getValues(listValues, "Versions"),
+
+        List<String> versions = getValues(listValues, "Versions");
+        if (!versions.contains("-")) {
+            versions = new ArrayList<>(versions); // to avoid UnsupportedOperationException in next line
+            versions.add("-");
+        }
+
+        return new ProjectMetadata(getValues(listValues, ""), versions,
                 getValues(listValues, "Severity"), getValues(listValues, "Bug Status"), getValues(listValues, "Priority"));
     }
 
     private List<String> getValues(Map<String, List<String>> map, String key) {
-        return (map==null || map.get(key)==null)? Arrays.asList("-"):map.get(key);
+        return (map == null || map.get(key) == null) ? Arrays.asList("-") : map.get(key);
     }
-
 
     @Override
     public String getTrackerError() {

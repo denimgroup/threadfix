@@ -59,7 +59,7 @@ public class HPQCUtils {
                 return "Authentication failed";
 
             String getProjectsUrl = con.buildUrl("rest/domains?include-projects-info=y");
-            Map<String, String> requestHeaders = new HashMap();
+            Map<String, String> requestHeaders = new HashMap<>();
             requestHeaders.put("Accept", "application/xml");
             Response serverResponse = con.httpGet(getProjectsUrl,
                     null, requestHeaders);
@@ -67,7 +67,6 @@ public class HPQCUtils {
                 String responseStr = serverResponse.toString();
                 if (responseStr.contains("<Domains>")) {
                     log.info("Got a list of projects. ");
-//                    logout();
                     return responseStr;
                 }
             } else {
@@ -80,25 +79,25 @@ public class HPQCUtils {
         return null;
     }
 
-    public static boolean checkCredential(String serverUrl, String username, String password, String domain_project) {
-        if (!checkProjectName(serverUrl, domain_project))
+    public static boolean checkCredential(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject))
             return false;
         try {
             log.info("Checking HPQC credentials");
             if (!login(username,password))
                 return false;
-            String[] pDetails = getProjectNameSplit(domain_project);
+            String[] pDetails = getProjectNameSplit(domainProject);
             String getUrl = con.buildUrl("rest/domains/" + pDetails[0]
                     + "/projects/" + pDetails[1]
                     + "/customization/users/" + username);
 
-            Response serverResponse = doGet(serverUrl, getUrl, domain_project);
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
             if (serverResponse != null) {
                 String responseStr = serverResponse.toString();
                 if (responseStr.contains("</User>")) {
                     return true;
                 } else {
-                    log.warn("This credential doesn't have permission with project " + domain_project);
+                    log.warn("This credential doesn't have permission with project " + domainProject);
                 }
             }
         } catch (Exception e) {
@@ -107,21 +106,22 @@ public class HPQCUtils {
         return false;
     }
 
-    public static Map<String,List<String>> getListValues(String serverUrl, String username, String password, String domain_project) {
-        if (!checkProjectName(serverUrl, domain_project))
+    public static Map<String,List<String>> getListValues(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject))
             return null;
         try {
             if (!login(username,password))
                 return null;
 
-            String[] pDetails = getProjectNameSplit(domain_project);
+            String[] pDetails = getProjectNameSplit(domainProject);
             String getUrl = con.buildUrl("rest/domains/" + pDetails[0]
                     + "/projects/" + pDetails[1]
                     + "/customization/entities/defect/lists");
 
-            Response serverResponse = doGet(serverUrl, getUrl, domain_project);
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
             if (serverResponse != null) {
                 String responseStr = serverResponse.toString();
+                log.info(responseStr);
                 if (responseStr.contains("<Lists>")) {
                     return parseListXml(responseStr);
                 } else {
@@ -352,8 +352,7 @@ public class HPQCUtils {
         Lists lists;
         Map<String, List<String>> map = new HashMap<>();
         try {
-            lists =
-                    MarshallingUtils.marshal(Lists.class, responseStr);
+            lists = MarshallingUtils.marshal(Lists.class, responseStr);
             if (lists != null && lists.getLists() != null) {
                 for (Lists.ListInfo listInfo : lists.getLists()) {
                     if (listInfo != null && listInfo.getItems().getItemList() != null) {
