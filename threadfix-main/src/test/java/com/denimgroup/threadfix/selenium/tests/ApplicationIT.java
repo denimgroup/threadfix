@@ -131,7 +131,7 @@ public class ApplicationIT extends BaseIT {
         assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
     }
 
-    //Validation Test
+    /*___________________________ Validation ___________________________*/
 	@Test 
 	public void testCreateBasicApplicationValidation() {
         String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
