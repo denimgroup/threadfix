@@ -70,11 +70,11 @@ public class HPQCUtils {
                     return responseStr;
                 }
             } else {
-                log.warn("Domains not found");
+                log.warn("Domains not found", serverResponse.getFailure());
             }
 
         } catch (Exception e) {
-            log.error("Error when trying to read projects from HP Quality Center");
+            log.error("Error when trying to read projects from HP Quality Center", e);
         }
         return null;
     }
@@ -97,11 +97,11 @@ public class HPQCUtils {
                 if (responseStr.contains("</User>")) {
                     return true;
                 } else {
-                    log.warn("This credential doesn't have permission with project " + domainProject);
+                    log.warn("This credential doesn't have permission with project " + domainProject, serverResponse.getFailure());
                 }
             }
         } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
+            log.warn("Error when trying to login HPQC", e);
         }
         return false;
     }
@@ -125,11 +125,11 @@ public class HPQCUtils {
                 if (responseStr.contains("<Lists>")) {
                     return parseListXml(responseStr);
                 } else {
-                    log.warn("XML response is incorrect");
+                    log.warn("XML response is incorrect", serverResponse.getFailure());
                 }
             }
         } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
+            log.warn("Error when trying to login HPQC", e);
         }
         return null;
     }
@@ -231,9 +231,9 @@ public class HPQCUtils {
                 if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK)
                     return serverResponse;
                 else
-                    log.warn("The response for the get request was not 200");
+                    log.warn("The response for the get request was not 200", serverResponse.getFailure());
             } catch (Exception e) {
-                log.warn("Error when trying to get information from HPQC");
+                log.warn("Error when trying to get information from HPQC", e);
             }
         }
         return  null;
@@ -255,7 +255,7 @@ public class HPQCUtils {
                 } else
                     return response;
             } catch (Exception e) {
-                log.warn("Error when trying to send a post request");
+                log.warn("Error when trying to send a post request", e);
             }
         }
         return null;
@@ -305,13 +305,13 @@ public class HPQCUtils {
                     defect.setStatus(status);
                     return status;
                 } else {
-                    log.warn("XML response is incorrect");
+                    log.warn("XML response is incorrect: does not contain <\\Entity>");
                 }
             } else {
-                log.warn("URL not found");
+                log.warn("URL not found", serverResponse.getFailure());
             }
         } catch (Exception e) {
-            log.warn("Error when trying to get status of Defect Id " + defect.getNativeId() + " from HPQC");
+            log.warn("Error when trying to get status of Defect Id " + defect.getNativeId() + " from HPQC", e);
         }
 
         return null;
@@ -321,7 +321,7 @@ public class HPQCUtils {
         try {
             return MarshallingUtils.marshal(Entity.class, entityXml);
         } catch (JAXBException e) {
-            log.error("Error when trying to parse Entity from string xml");
+            log.error("Error when trying to parse Entity from string xml", e);
         }
         return  null;
     }
@@ -330,7 +330,7 @@ public class HPQCUtils {
         try {
             return MarshallingUtils.marshal(Entities.class, entitiesXml);
         } catch (JAXBException e) {
-            log.error("Error when trying to parse Entity from string xml");
+            log.error("Error when trying to parse Entity from string xml", e);
         }
         return  null;
     }
@@ -367,7 +367,7 @@ public class HPQCUtils {
                 }
             }
         } catch (JAXBException e) {
-            log.warn("Error when trying to parsing xml response from HPQC");
+            log.warn("Error when trying to parsing xml response from HPQC", e);
             e.printStackTrace();
         }
         return map;
