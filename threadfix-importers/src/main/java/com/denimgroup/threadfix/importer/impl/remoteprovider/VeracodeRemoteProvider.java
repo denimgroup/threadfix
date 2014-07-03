@@ -35,7 +35,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.logging.Handler;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class VeracodeRemoteProvider extends RemoteProvider {
 
@@ -96,7 +97,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 			LOG.warn("Retrieved build IDs " + buildIds + " for application " + appName);
 		}
 		
-		List<Scan> scans = new ArrayList<>();
+		List<Scan> scans = list();
 		
 		for (String buildId : buildIds) {
 			if (buildId == null || buildId.trim().equals("")) {
@@ -170,99 +171,99 @@ public class VeracodeRemoteProvider extends RemoteProvider {
 		
 		parse(stream, parser);
 		
-		if (parser.list != null && parser.list.size() > 0) {
-			LOG.info("Number of Veracode applications found: " + parser.list.size());
+		if (parser.remoteProviderApplications != null && parser.remoteProviderApplications.size() > 0) {
+			LOG.info("Number of Veracode applications found: " + parser.remoteProviderApplications.size());
 		} else {
 			LOG.warn("No Veracode applications were found. Check your configuration.");
 		}
 		
-		return parser.list;
+		return parser.remoteProviderApplications;
 	}
 
 	public class VeracodeApplicationBuildsParser extends DefaultHandler {
-		
-		public List<RemoteProviderApplication> list = new ArrayList<>();
 
-	    @Override
-		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
-	    	if (qName.equals("application")) {
-	    		RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-	    		remoteProviderApplication.setNativeId(atts.getValue("app_name"));
-	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
-	    		list.add(remoteProviderApplication);
-	    	}
-	    }
-	}
-	
-	public class VeracodeApplicationIdMapParser extends DefaultHandler {
-		
-		public Map<String, List<String>> map = new HashMap<>();
-		public Map<String, Calendar> dateMap = new HashMap<>();
-		
-		private String currentAppName = null;
-		private String currentBuildId = null;
-		
-	    @Override
-		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
-	    	if (qName.equals("application")) {
-	    		currentAppName = atts.getValue("app_name");
-	    		map.put(currentAppName, new ArrayList<String>());
-	    	} else if (currentAppName != null && qName.equals("build")) {
-	    		currentBuildId = atts.getValue("build_id");
-	    		map.get(currentAppName).add(currentBuildId);
-	    	} else if (currentAppName != null && currentBuildId != null
-	    			&& qName.equals("analysis_unit")) {
-	    		
-	    		String dateString = atts.getValue("published_date");
-	    		if (dateString != null && dateString.length() > 5) {
-					dateString = dateString.substring(0,dateString.length() - 5);
-				}
-	    		
-	    		Calendar calendar = DateUtils.getCalendarFromString(DATE_FORMAT_WITH_T, dateString);
-	    		dateMap.put(currentBuildId, calendar);
-	    	}
-	    }
-	}
-	
-	public class VeracodeSAXParser extends HandlerWithBuilder {
-		
-		private boolean inStaticFlaws = true;
-		
-		private Finding lastFinding = null;
-		private boolean mitigationProposed = false;
+        public List<RemoteProviderApplication> remoteProviderApplications = list();
 
-        private String rawFlaw = null;
+        @Override
+        public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
+            if (qName.equals("application")) {
+                RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
+                remoteProviderApplication.setNativeId(atts.getValue("app_name"));
+                remoteProviderApplication.setRemoteProviderType(remoteProviderType);
+                remoteProviderApplications.add(remoteProviderApplication);
+            }
+        }
+    }
+
+    public class VeracodeApplicationIdMapParser extends DefaultHandler {
+
+        public Map<String, List<String>> map     = new HashMap<>();
+        public Map<String, Calendar>     dateMap = new HashMap<>();
+
+        private String currentAppName = null;
+        private String currentBuildId = null;
+
+        @Override
+        public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
+            if (qName.equals("application")) {
+                currentAppName = atts.getValue("app_name");
+                map.put(currentAppName, new ArrayList<String>());
+            } else if (currentAppName != null && qName.equals("build")) {
+                currentBuildId = atts.getValue("build_id");
+                map.get(currentAppName).add(currentBuildId);
+            } else if (currentAppName != null && currentBuildId != null
+                    && qName.equals("analysis_unit")) {
+
+                String dateString = atts.getValue("published_date");
+                if (dateString != null && dateString.length() > 5) {
+                    dateString = dateString.substring(0, dateString.length() - 5);
+                }
+
+                Calendar calendar = DateUtils.getCalendarFromString(DATE_FORMAT_WITH_T, dateString);
+                dateMap.put(currentBuildId, calendar);
+            }
+        }
+    }
+
+    public class VeracodeSAXParser extends HandlerWithBuilder {
+
+        private boolean inStaticFlaws = true;
+
+        private Finding lastFinding        = null;
+        private boolean mitigationProposed = false;
+
+        private String                  rawFlaw    = null;
         private Map<FindingKey, String> findingMap = new HashMap<>();
 
-	    ////////////////////////////////////////////////////////////////////
-	    // Event handlers.
-	    ////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////
+        // Event handlers.
+        ////////////////////////////////////////////////////////////////////
 
-	    @Override
-		public void startElement (String uri, String name, String qName, Attributes atts) {
-	    	if ("detailedreport".equals(qName)) {
-	    		date = DateUtils.getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("last_update_time"));
-	    		if (date == null) {
-					date = DateUtils.getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("generation_date"));
-				}
-	    	}
-	    	
-	    	if ("dynamicflaws".equals(qName)) {
-	    		inStaticFlaws = false;
-	    	}
-	    	
-	    	// TODO look through more Veracode scans and see if the inputvector component is the parameter.
-	    	if ("flaw".equals(qName)) {
-	    		if ("Fixed".equals(atts.getValue("remediation_status"))) {
-					return;
-				}
-	    		
-	    		String url = null;
-	    		if (atts.getValue("url") != null) {
-					url = atts.getValue("url");
-				} else if (atts.getValue("location") != null) {
-					url = atts.getValue("location");
-				}
+        @Override
+        public void startElement(String uri, String name, String qName, Attributes atts) {
+            if ("detailedreport".equals(qName)) {
+                date = DateUtils.getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("last_update_time"));
+                if (date == null) {
+                    date = DateUtils.getCalendarFromString(DATE_FORMAT_WITHOUT_T, atts.getValue("generation_date"));
+                }
+            }
+
+            if ("dynamicflaws".equals(qName)) {
+                inStaticFlaws = false;
+            }
+
+            // TODO look through more Veracode scans and see if the inputvector component is the parameter.
+            if ("flaw".equals(qName)) {
+                if ("Fixed".equals(atts.getValue("remediation_status"))) {
+                    return;
+                }
+
+                String url = null;
+                if (atts.getValue("url") != null) {
+                    url = atts.getValue("url");
+                } else if (atts.getValue("location") != null) {
+                    url = atts.getValue("location");
+                }
 
                 rawFlaw = makeTag(name, qName, atts) + "</flaw>";
                 findingMap.put(FindingKey.PATH, url);
@@ -272,58 +273,58 @@ public class VeracodeRemoteProvider extends RemoteProvider {
                 findingMap.put(FindingKey.DETAIL, atts.getValue("description"));
                 findingMap.put(FindingKey.RAWFINDING, rawFlaw);
 
-	    		Finding finding = constructFinding(findingMap);
-	    		if (finding != null) {
-	    			finding.setNativeId(atts.getValue("issueid"));
-	    			
-	    			// TODO revise this method of deciding whether the finding is static.
-    				finding.setIsStatic(inStaticFlaws);
-    				if (atts.getValue("sourcefile") != null && atts.getValue("sourcefilepath") != null) {
-    					String sourceFileLocation = atts.getValue("sourcefilepath") + atts.getValue("sourcefile");
-    					finding.setSourceFileLocation(sourceFileLocation);
-    					finding.getSurfaceLocation().setPath(sourceFileLocation);
-    					if (atts.getValue("line") != null) {
-    						DataFlowElement dataFlowElement = new DataFlowElement();
-    						dataFlowElement.setFinding(finding);
-    						try {
-    							dataFlowElement.setLineNumber(Integer.valueOf(atts.getValue("line")));
-    						} catch (NumberFormatException e) {
-    							LOG.error("Non-numeric value '" + atts.getValue("line") + "' found in Veracode results when trying to parse line number.", e);
-    						}
-    						dataFlowElement.setSourceFileName(sourceFileLocation);
-    						finding.setDataFlowElements(new ArrayList<DataFlowElement>());
-    						finding.getDataFlowElements().add(dataFlowElement);
-    					}
-    				}
+                Finding finding = constructFinding(findingMap);
+                if (finding != null) {
+                    finding.setNativeId(atts.getValue("issueid"));
+
+                    // TODO revise this method of deciding whether the finding is static.
+                    finding.setIsStatic(inStaticFlaws);
+                    if (atts.getValue("sourcefile") != null && atts.getValue("sourcefilepath") != null) {
+                        String sourceFileLocation = atts.getValue("sourcefilepath") + atts.getValue("sourcefile");
+                        finding.setSourceFileLocation(sourceFileLocation);
+                        finding.getSurfaceLocation().setPath(sourceFileLocation);
+                        if (atts.getValue("line") != null) {
+                            DataFlowElement dataFlowElement = new DataFlowElement();
+                            dataFlowElement.setFinding(finding);
+                            try {
+                                dataFlowElement.setLineNumber(Integer.valueOf(atts.getValue("line")));
+                            } catch (NumberFormatException e) {
+                                LOG.error("Non-numeric value '" + atts.getValue("line") + "' found in Veracode results when trying to parse line number.", e);
+                            }
+                            dataFlowElement.setSourceFileName(sourceFileLocation);
+                            finding.setDataFlowElements(new ArrayList<DataFlowElement>());
+                            finding.getDataFlowElements().add(dataFlowElement);
+                        }
+                    }
                     rawFlaw = null;
-    				lastFinding = finding;
-    				mitigationProposed = false;
-	        		saxFindingList.add(finding);
-	    		}
-	    	}
-	    	
-	    	if (mitigationProposed && "mitigation".equals(qName) &&
-	    			atts.getValue("action") != null &&
-	    			atts.getValue("action").equals("Mitigation Accepted")) {
-	    		mitigationProposed = false;
-                if (lastFinding != null) {
-	    		    lastFinding.setMarkedFalsePositive(true);
+                    lastFinding = finding;
+                    mitigationProposed = false;
+                    saxFindingList.add(finding);
                 }
-	    		LOG.info("The false positive mitigation was accepted.");
-	    	}
-	    	
-	    	if ("mitigation".equals(qName) && atts.getValue("action") != null
-	    			&& atts.getValue("action").equals("Mitigated as Potential False Positive")) {
-	    		mitigationProposed = true;
-	    		LOG.info("Found a Finding with false positive mitigation proposed.");
-	    	}
-	    }
-	    
-	    @Override
-	    public void endElement (String uri, String localName, String qName) throws SAXException {
+            }
+
+            if (mitigationProposed && "mitigation".equals(qName) &&
+                    atts.getValue("action") != null &&
+                    atts.getValue("action").equals("Mitigation Accepted")) {
+                mitigationProposed = false;
+                if (lastFinding != null) {
+                    lastFinding.setMarkedFalsePositive(true);
+                }
+                LOG.info("The false positive mitigation was accepted.");
+            }
+
+            if ("mitigation".equals(qName) && atts.getValue("action") != null
+                    && atts.getValue("action").equals("Mitigated as Potential False Positive")) {
+                mitigationProposed = true;
+                LOG.info("Found a Finding with false positive mitigation proposed.");
+            }
+        }
+
+        @Override
+        public void endElement(String uri, String localName, String qName) throws SAXException {
             if ("dynamicflaws".equals(qName)) {
                 inStaticFlaws = true;
             }
         }
-	}
+    }
 }

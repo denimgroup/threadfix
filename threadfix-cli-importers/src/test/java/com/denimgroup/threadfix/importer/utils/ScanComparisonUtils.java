@@ -36,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 import static junit.framework.Assert.assertTrue;
 
 @Component
@@ -75,8 +77,8 @@ public class ScanComparisonUtils {
     private void compare(String[][] array, Scan actual) {
         SimpleScan expected = SimpleScan.fromStringArray(array);
 
-        List<SimpleFinding> findingList = new ArrayList<>();
-        Set<String> mappingErrors = new HashSet<>();
+        List<SimpleFinding> findingList = list();
+        Set<String> mappingErrors = set();
 
         for (SimpleFinding simpleFinding : expected) {
             boolean foundOne = false;

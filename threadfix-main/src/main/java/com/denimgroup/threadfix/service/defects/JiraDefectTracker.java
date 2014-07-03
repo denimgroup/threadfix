@@ -32,9 +32,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * This class has been rewritten to use the JIRA REST interface and may not work on older
@@ -180,11 +183,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public boolean hasValidProjectName() {
-		if (projectName == null)
-			return false;
-		
-		return getNamesFromList("project").contains(projectName);
-	}
+        return projectName != null && getNamesFromList("project").contains(projectName);
+    }
 
 	@Override
 	public boolean hasValidUrl() {
@@ -209,21 +209,16 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	// PRE-SUBMISSION METHODS
 	
-	@Override
-	public String getProductNames() {
+	@Nonnull
+    @Override
+	public List<String> getProductNames() {
 		
 		lastError = null;
 	
 		Map<String, String> nameIdMap = getNameFieldMap("project/","key");
 		
 		if (nameIdMap != null && nameIdMap.size() > 0) {
-			StringBuilder builder = new StringBuilder();
-			
-			for (String name : nameIdMap.keySet()) {
-				builder.append(name);
-				builder.append(',');
-			}
-			return builder.substring(0,builder.length()-1);
+			return new ArrayList<>(nameIdMap.keySet());
 		} else {
 			if (!hasValidUrl()) {
 				lastError = "Supplied endpoint was invalid.";
@@ -238,7 +233,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				lastError = "Not sure what the error is.";
 			}
 			
-			return null;
+			return list();
 		}
 	}
 	
@@ -252,12 +247,12 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (getProjectId() == null)
 			setProjectId(getProjectIdByName());
 		List<String> components = getNamesFromList("project/" + projectId + "/components");
-		List<String> blankList = Arrays.asList("-");
-		List<String> statusList = Arrays.asList("Open");
+		List<String> blankList = list("-");
+		List<String> statusList = list("Open");
 		List<String> priorities = getNamesFromList("priority");
 		
 		if (components == null || components.isEmpty()) {
-			components = Arrays.asList("-");
+			components = list("-");
 		}
 		
 		return new ProjectMetadata(components, blankList,
@@ -314,7 +309,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 
     private List<String> getErrorFieldList(String errorResponseMsg) throws JSONException {
-        List<String> errorFieldList = new ArrayList<>();
+        List<String> errorFieldList = list();
         if (errorResponseMsg != null && JsonUtils.getJSONObject(errorResponseMsg) != null) {
             String errorResponse = JsonUtils.getJSONObject(errorResponseMsg).getString("errors");
             if (errorResponse == null || errorResponse.isEmpty())
@@ -461,7 +456,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			
 		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
 		String result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		try {
             String issuesString = JsonUtils.getJSONObject(result).getString("issues");
 

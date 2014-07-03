@@ -46,6 +46,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 @Transactional(readOnly = false)
 public class ApplicationServiceImpl implements ApplicationService {
@@ -91,7 +93,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		if (authenticatedTeamIds == null || authenticatedTeamIds.size() == 0) {
-			return new ArrayList<>();
+			return list();
 		}
 		
 		return applicationDao.retrieveAllActiveFilter(authenticatedTeamIds);
@@ -161,7 +163,9 @@ public class ApplicationServiceImpl implements ApplicationService {
                         wafRuleDao.delete(wafRule);
                     }
                 }
-                vulnerability.setWafRules(new ArrayList<WafRule>());
+                if (vulnerability != null) {
+                    vulnerability.setWafRules(new ArrayList<WafRule>());
+                }
             }
         }
     }

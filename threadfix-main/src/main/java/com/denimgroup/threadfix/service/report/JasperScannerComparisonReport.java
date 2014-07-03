@@ -24,21 +24,15 @@
 
 package com.denimgroup.threadfix.service.report;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRField;
-
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRField;
+
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /*
  * This is a class to replace / extend the SQL here that I couldn't figure out how to turn into HSQL very easily.
@@ -65,7 +59,7 @@ GROUP BY
  * 
  */
 public class JasperScannerComparisonReport implements JRDataSource {
-	private List<Vulnerability> vulnerabilityList = new ArrayList<>();
+	private List<Vulnerability> vulnerabilityList = list();
 	private int index = 0, total = 0;
 	
 	private Map<String, Integer> scannerVulnCountMap = null;

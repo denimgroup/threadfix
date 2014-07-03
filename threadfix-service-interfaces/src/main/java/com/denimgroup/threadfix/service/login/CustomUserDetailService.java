@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.UserService;
-import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,7 +38,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author cleclair
@@ -63,7 +68,7 @@ public class CustomUserDetailService implements UserDetailsService {
 			return null;
 		}
 
-		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+		List<GrantedAuthority> grantedAuthorities = list();
 		
 		Map<Integer, Set<Permission>> orgMap = null;
 		Map<Integer, Set<Permission>> appMap = null;

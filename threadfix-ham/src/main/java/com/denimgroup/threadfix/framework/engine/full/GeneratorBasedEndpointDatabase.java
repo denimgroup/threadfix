@@ -34,6 +34,8 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
 	@Nonnull
@@ -121,7 +123,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	public Set<Endpoint> findAllMatches(@Nonnull EndpointQuery query) {
 		Set<Endpoint> resultingSet = new HashSet<>();
 		
-        List<Set<Endpoint>> resultSets = new ArrayList<>();
+        List<Set<Endpoint>> resultSets = list();
         
         boolean useStatic = query.getStaticPath() != null &&
         		query.getInformationSourceType() == InformationSourceType.STATIC;

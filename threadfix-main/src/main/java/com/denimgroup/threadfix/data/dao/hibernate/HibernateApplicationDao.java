@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
-import static com.denimgroup.threadfix.service.util.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Hibernate Application DAO implementation. Most basic methods are implemented

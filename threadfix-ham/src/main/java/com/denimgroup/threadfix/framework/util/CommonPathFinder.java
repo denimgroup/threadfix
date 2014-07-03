@@ -23,20 +23,20 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.util;
 
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-
-import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class CommonPathFinder {
 	
@@ -80,7 +80,7 @@ public class CommonPathFinder {
 				new FileExtensionFileFilter(fileExtension),
 				TrueFileFilter.INSTANCE);
 		
-		List<String> strings = new ArrayList<>();
+		List<String> strings = list();
 		
 		for (File file : files) {
 			strings.add(file.getAbsolutePath());
@@ -96,7 +96,7 @@ public class CommonPathFinder {
 			return null;
 		}
 
-		List<String> returnStrings = new ArrayList<>();
+		List<String> returnStrings = list();
 
 		for (PartialMapping partialMapping : partialMappings) {
 			if (partialMapping != null && partialMapping.getStaticPath() != null) {
@@ -114,10 +114,10 @@ public class CommonPathFinder {
     private static List<String> getUrlPaths(@Nullable List<PartialMapping> partialMappings,
                                             @Nullable String extension) {
 		if (partialMappings == null || partialMappings.isEmpty()) {
-			return new ArrayList<>();
+			return list();
 		}
 
-		List<String> returnStrings = new ArrayList<>();
+		List<String> returnStrings = list();
 
 		for (PartialMapping partialMapping : partialMappings) {
 			if (partialMapping != null && partialMapping.getDynamicPath() != null &&

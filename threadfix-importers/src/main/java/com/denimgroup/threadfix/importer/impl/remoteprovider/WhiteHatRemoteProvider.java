@@ -42,6 +42,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
@@ -129,7 +131,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	 * @return
 	 */
 	private List<Scan> filterScans(List<Scan> scans) {
-		List<Scan> resultList = new ArrayList<>();
+		List<Scan> resultList = list();
 
 		for (Scan s: scans) {
 			resultList.add(s);
@@ -197,14 +199,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		if (inputStream == null)
 			return null;
 		
-		List<Scan> scanList = new ArrayList<>();
+		List<Scan> scanList = list();
 		
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		Collections.sort(scanDateList);
 		
 		for (Calendar d : scanDateList) {
 			date = d;
-			saxFindingList = new ArrayList<>();
+			saxFindingList = list();
 			for (Finding finding : findingDateStatusMap.keySet()) {
 				List<DateStatus> dateInfo = findingDateStatusMap.get(finding);
 				Collections.sort(dateInfo);
@@ -262,7 +264,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		private boolean grabLabel;
 		
 		public List<RemoteProviderApplication> getApplications() {
-			List<RemoteProviderApplication> apps = new ArrayList<>();
+			List<RemoteProviderApplication> apps = list();
 			for (String label : map.keySet()) {
 				RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
 	    		remoteProviderApplication.setNativeId(label);
@@ -333,7 +335,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    
 	    	if ("vulnerabilities".equals(qName)) {
-	    		scanDateList = new ArrayList<>();
+	    		scanDateList = list();
 	    		findingDateStatusMap = new HashMap<>();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
@@ -441,7 +443,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 
 	    	if ("vulnerabilities".equals(qName)) {
-	    		scanDateList = new ArrayList<>();
+	    		scanDateList = list();
 	    		findingDateStatusMap = new HashMap<>();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {

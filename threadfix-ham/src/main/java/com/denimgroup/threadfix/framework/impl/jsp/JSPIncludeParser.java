@@ -23,19 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 class JSPIncludeParser implements EventBasedTokenizer {
 	
@@ -137,8 +136,8 @@ class JSPIncludeParser implements EventBasedTokenizer {
     @Nonnull
     private File getRelativeFile(String sval) {
         List<String>
-                inputFilePathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(file.getParent()))),
-                svalPathSegments = new ArrayList<>(Arrays.asList(slashPattern.split(sval)));
+                inputFilePathSegments = list(slashPattern.split(file.getParent())),
+                svalPathSegments = list(slashPattern.split(sval));
 
         if (svalPathSegments.size() > 0) {
             for (String string : svalPathSegments) {

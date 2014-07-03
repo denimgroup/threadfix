@@ -62,6 +62,8 @@ import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Provides basic CSRF protection for a web application. The filter assumes
  * that:
@@ -84,10 +86,10 @@ public class CsrfPreventionFilter extends SpringBeanAutowiringSupport implements
     private final SanitizedLogger log = new SanitizedLogger(CsrfPreventionFilter.class);
 
     private final Set<String> entryPoints = new HashSet<>();
-    private final List<String> entryPointStartPatterns = new ArrayList<>();
-    private final List<String> entryPointRegexPatterns = new ArrayList<>();
-    private final List<String> protectedRegexPatterns = new ArrayList<>();
-    
+    private final List<String> entryPointStartPatterns = list();
+    private final List<String> entryPointRegexPatterns = list();
+    private final List<String> protectedRegexPatterns = list();
+
     private int nonceCacheSize = 5;
 
     public static final String CSRF_NONCE_SESSION_ATTR_NAME =

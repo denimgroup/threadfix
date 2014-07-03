@@ -40,6 +40,8 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Parses the Skipfish output file. The zip upload will go look at the relevant request.dat file and try to
  * parse the correct parameter out, but relies on the fact that the Skipfish
@@ -182,7 +184,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 		if (map == null)
 			return null;
 
-		List<Finding> findings = new ArrayList<>();
+		List<Finding> findings = list();
 
 		for (Object mapElement : map) {
 			if (mapElement instanceof HashMap<?, ?>) {
@@ -217,7 +219,7 @@ class SkipfishChannelImporter extends AbstractChannelImporter {
 		if (samples == null || samples.size() == 0)
 			return null;
 
-		List<Finding> returnList = new ArrayList<>();
+		List<Finding> returnList = list();
 
 		for (Object sample : samples) {
 			if (sample == null || !(sample instanceof LinkedHashMap))

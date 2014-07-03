@@ -33,9 +33,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class EndpointMain {
 	
@@ -60,7 +61,7 @@ public class EndpointMain {
 	
 	private static void listEndpoints(File rootFile) {
 
-        List<Endpoint> endpoints = new ArrayList<>();
+        List<Endpoint> endpoints = list();
 
         EndpointDatabase database = EndpointDatabaseFactory.getDatabase(rootFile);
 

@@ -23,16 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.framework;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class ServletMappings {
 
@@ -43,9 +44,9 @@ public class ServletMappings {
 	@Nonnull
     private final List<UrlPatternMapping>
 		allServletMappings,
-		pathMappings = new ArrayList<>(),
-		extensionMappings = new ArrayList<>(),
-		exactMappings = new ArrayList<>();
+		pathMappings = list(),
+		extensionMappings = list(),
+		exactMappings = list();
 		
 	@Nonnull
     private final List<ClassMapping> servlets;
@@ -129,7 +130,7 @@ public class ServletMappings {
 	 */
 	@Nonnull
     public List<String> getURLPatternsForClass(@Nonnull String classWithPackage) {
-		List<String> mappings = new ArrayList<>();
+		List<String> mappings = list();
 
 		String servletName = null;
 		

@@ -28,13 +28,14 @@ import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class SpringDataFlowParser implements ParameterParser {
 	
@@ -175,7 +176,7 @@ public class SpringDataFlowParser implements ParameterParser {
 			
                 BeanField beanField = new BeanField(initialType, modelObject);
 
-                List<BeanField> fieldChain = new ArrayList<>(Arrays.asList(beanField));
+                List<BeanField> fieldChain = list(beanField);
 					
                 for (String elementText : lines) {
                     if (elementText != null) {
@@ -231,7 +232,7 @@ public class SpringDataFlowParser implements ParameterParser {
 		List<String> methodCalls = RegexUtils.getRegexResults(line,
 				Pattern.compile(beanField.getParameterKey() + "(\\.get[^\\(]+\\(\\))+"));
 		
-		List<BeanField> returnField = new ArrayList<>();
+		List<BeanField> returnField = list();
 		
 		if (mappings != null && methodCalls != null && !methodCalls.isEmpty()) {
 			returnField = mappings.getFieldsFromMethodCalls(methodCalls.get(0), beanField);

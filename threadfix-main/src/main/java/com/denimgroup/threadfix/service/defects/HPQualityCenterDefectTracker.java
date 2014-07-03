@@ -32,12 +32,15 @@ import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Entity;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by stran on 3/10/14.
@@ -114,13 +117,14 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     }
 
+    @Nonnull
     @Override
-    public String getProductNames() {
+    public List<String> getProductNames() {
         log.info("Trying to get information from HP QC");
         String xmlResult = HPQCUtils.getAllProjects(getHPQCUrl(), username, password);
-        String result = parseXml(xmlResult);
+        List<String> result = parseXml(xmlResult);
 
-        if (result == null || result.isEmpty()) {
+        if (result.isEmpty()) {
             if (!hasValidUrl()) {
                 lastError = "Supplied endpoint was invalid.";
             } else if (xmlResult.contains("Authentication failed")) {
@@ -133,12 +137,13 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         return result;
     }
 
-    private String parseXml(String xmlResult) {
+    @Nonnull
+    private List<String> parseXml(String xmlResult) {
         Domains domains;
         try {
             domains = MarshallingUtils.marshal(Domains.class, xmlResult);
             if (domains != null ) {
-                StringBuilder builder = new StringBuilder();
+                List<String> returnList = list();
                 for (Domains.Domain domain : domains.getDomains()) {
                     if (domain != null) {
                         for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
@@ -146,20 +151,19 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
                                 log.info("Adding domain " + domain.getName() + " and project " + project.getProjectName());
 
-                                builder.append(domain.getName()).append("/").append(project.getProjectName());
-                                builder.append(',');
+                                returnList.add(domain.getName() + "/" + project.getProjectName());
                             }
                         }
                     }
                 }
-                if (builder.length() > 0)
-                    return builder.substring(0, builder.length() - 1);
+
+                return returnList;
             }
         } catch (JAXBException e) {
             log.warn("Marshalling the response failed due to JAXBException. The data was probably not XML.");
             log.debug("String was " + xmlResult);
         }
-        return null;
+        return list();
     }
 
     @Override

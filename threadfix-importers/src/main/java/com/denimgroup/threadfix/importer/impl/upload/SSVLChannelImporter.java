@@ -23,10 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
@@ -44,10 +44,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 class SSVLChannelImporter extends AbstractChannelImporter {
 
@@ -67,7 +68,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 		private boolean getText = false;
 		private String description = null;
 
-		private List<DataFlowElement> dataFlowElementList = new ArrayList<>();
+		private List<DataFlowElement> dataFlowElementList = list();
 		private DataFlowElement lastDataFlowElement = null;
 		
 		private Map<FindingKey, String> findingMap = new HashMap<>();
@@ -163,7 +164,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
                     if (!dataFlowElementList.isEmpty()) {
                         finding.setIsStatic(true);
                         finding.setDataFlowElements(dataFlowElementList);
-                        dataFlowElementList = new ArrayList<>();
+                        dataFlowElementList = list();
                     }
                     if (description != null) {
                         finding.setLongDescription(description);
