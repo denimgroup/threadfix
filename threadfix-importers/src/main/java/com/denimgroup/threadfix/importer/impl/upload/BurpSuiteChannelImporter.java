@@ -180,11 +180,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if ("request".equals(qName)) {
 	    		getBackupParameter = true;
 	    		getRequestText = true;
-	    		isBase64Encoded = "true".equals(atts.getValue("base64")) ? true : false;
+	    		isBase64Encoded = "true".equals(atts.getValue("base64"));
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("response".equals(qName)) {
 	    		getResponseText = true;
-	    		isBase64Encoded = "true".equals(atts.getValue("base64")) ? true : false;
+	    		isBase64Encoded = "true".equals(atts.getValue("base64"));
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("issueDetail".equals(qName)) {
 	    		getParamValueText = true;

@@ -21,15 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.exception;
+package com.denimgroup.threadfix.service;
 
-/**
- * By implementing RestException we can use HandlerResolverBean to return a RestResponse object
- */
-public class DefectTrackerUnavailableException extends RestException {
+import org.springframework.security.core.AuthenticationException;
 
-    public DefectTrackerUnavailableException(Throwable cause, String responseString) {
-        super(cause, responseString);
+public final class ThreadFixActiveDirectoryAuthenticationException extends AuthenticationException {
+
+    public ThreadFixActiveDirectoryAuthenticationException(String msg) {
+        super(msg);
     }
 
+    private static final long serialVersionUID = 2346164382L;
 }

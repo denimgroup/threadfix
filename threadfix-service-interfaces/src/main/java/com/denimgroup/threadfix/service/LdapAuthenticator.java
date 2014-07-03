@@ -43,6 +43,9 @@ public class LdapAuthenticator implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) {
         try {
             return ldapService != null ? ldapService.authenticate(authentication) : null;
+        } catch (ThreadFixActiveDirectoryAuthenticationException e) {
+            log.debug("Failed LDAP authentication.");
+            return null;
         } catch (Exception e) { // this is to prevent bad input
             log.error("Encountered exception. Your LDAP configuration is probably invalid.", e);
             return null;
@@ -53,6 +56,9 @@ public class LdapAuthenticator implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         try {
             return ldapService != null && ldapService.supports(authentication);
+        } catch (ThreadFixActiveDirectoryAuthenticationException e) {
+            log.debug("Failed LDAP authentication.");
+            return false;
         } catch (Exception e) { // this is to prevent bad input
             log.error("Encountered exception. Your LDAP configuration is probably invalid.", e);
             return false;

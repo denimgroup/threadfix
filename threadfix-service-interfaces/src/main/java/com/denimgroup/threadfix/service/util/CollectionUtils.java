@@ -21,15 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.exception;
+package com.denimgroup.threadfix.service.util;
+
+import java.util.*;
 
 /**
- * By implementing RestException we can use HandlerResolverBean to return a RestResponse object
+ * Created by mac on 7/3/14.
  */
-public class DefectTrackerUnavailableException extends RestException {
+public class CollectionUtils {
 
-    public DefectTrackerUnavailableException(Throwable cause, String responseString) {
-        super(cause, responseString);
+    @SafeVarargs
+    public static <T> List<T> list(T... args) {
+        return new ArrayList<>(Arrays.asList(args));
     }
 
+    @SafeVarargs
+    public static <T> Set<T> set(T... args) {
+        return new HashSet<>(Arrays.asList(args));
+    }
 }

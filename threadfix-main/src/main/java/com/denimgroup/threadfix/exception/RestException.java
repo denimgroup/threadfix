@@ -31,13 +31,13 @@ public abstract class RestException extends RuntimeException {
 
     final String responseString;
 
-    public RestException(String message, Throwable cause, String responseString) {
-        super(message, cause);
+    public RestException(Throwable cause, String responseString) {
+        super(cause);
         this.responseString = responseString;
     }
 
-    public RestException(Throwable cause, String responseString) {
-        super(cause);
+    public RestException(String responseString) {
+        super();
         this.responseString = responseString;
     }
 
