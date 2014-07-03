@@ -39,6 +39,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 @Transactional(readOnly = false) // used to be true
 public class OrganizationServiceImpl extends AbstractNamedObjectService<Organization> implements OrganizationService {
@@ -127,7 +129,7 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
 		}
 		
 		if (teamIds.size() == 0) {
-			return new ArrayList<>();
+			return list();
 		}
 		
 		return organizationDao.retrieveAllActiveFilter(teamIds);

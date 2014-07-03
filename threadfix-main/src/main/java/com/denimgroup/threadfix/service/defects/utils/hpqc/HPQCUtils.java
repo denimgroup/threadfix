@@ -14,10 +14,11 @@ import javax.xml.bind.JAXBException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by stran on 3/13/14.
@@ -198,7 +199,7 @@ public class HPQCUtils {
     }
 
     public static List<Defect> getDefectList(String serverUrl, String username, String password, String domain_project) {
-        List<Defect> defectList = new ArrayList<>();
+        List<Defect> defectList = list();
         String defectUrl = con.buildEntityCollectionUrl("defect");
 
         Response serverResponse;
@@ -347,7 +348,7 @@ public class HPQCUtils {
             if (lists != null && lists.getLists() != null) {
                 for (Lists.ListInfo listInfo : lists.getLists()) {
                     if (listInfo != null && listInfo.getItems().getItemList() != null) {
-                        List<String> values = new ArrayList<>();
+                        List<String> values = list();
                         for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
                             if (item != null) {
                                 values.add(item.getValue());

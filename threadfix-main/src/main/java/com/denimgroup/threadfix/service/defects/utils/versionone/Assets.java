@@ -24,8 +24,9 @@
 package com.denimgroup.threadfix.service.defects.utils.versionone;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by stran on 3/25/14.
@@ -85,7 +86,7 @@ public class Assets {
 
         public List<Relation> getRelations() {
             if (relations == null)
-                relations = new ArrayList<>();
+                relations = list();
             return relations;
         }
 
@@ -95,7 +96,7 @@ public class Assets {
 
         public List<Attribute> getAttributes() {
             if (attributes == null)
-                attributes = new ArrayList<>();
+                attributes = list();
             return attributes;
         }
 
@@ -114,7 +115,7 @@ public class Assets {
 
             public List<Asset> getAssetList() {
                 if (assetList == null)
-                    assetList = new ArrayList<>();
+                    assetList = list();
                 return assetList;
             }
 

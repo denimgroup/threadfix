@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -219,7 +220,7 @@ public class ApplicationsController {
     }
 
     private void addAttrForScheduledScanTab(Model model) {
-        List<String> scannerTypeList = new ArrayList<>();
+        List<String> scannerTypeList = list();
         List<ChannelType> channelTypeList = channelTypeService.getChannelTypeOptions(null);
         for (ChannelType type: channelTypeList) {
             scannerTypeList.add(type.getName());
@@ -363,7 +364,7 @@ public class ApplicationsController {
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		
 		ProjectMetadata data = null;
 		if (dt != null) {

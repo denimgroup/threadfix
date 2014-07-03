@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.util;
+package com.denimgroup.threadfix;
 
 import java.util.*;
 
@@ -32,11 +32,15 @@ public class CollectionUtils {
 
     @SafeVarargs
     public static <T> List<T> list(T... args) {
-        return new ArrayList<>(Arrays.asList(args));
+        if (args.length == 0) {
+            return new ArrayList<T>();
+        } else {
+            return new ArrayList<T>(Arrays.asList(args));
+        }
     }
 
     @SafeVarargs
     public static <T> Set<T> set(T... args) {
-        return new HashSet<>(Arrays.asList(args));
+        return new HashSet<T>(Arrays.asList(args));
     }
 }

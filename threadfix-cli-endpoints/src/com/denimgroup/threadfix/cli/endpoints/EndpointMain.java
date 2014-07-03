@@ -60,7 +60,7 @@ public class EndpointMain {
 	
 	private static void listEndpoints(File rootFile) {
 
-        List<Endpoint> endpoints = new ArrayList<>();
+        List<Endpoint> endpoints = list();
 
         EndpointDatabase database = EndpointDatabaseFactory.getDatabase(rootFile);
 

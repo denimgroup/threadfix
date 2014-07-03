@@ -31,9 +31,10 @@ import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import org.apache.commons.exec.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class DefectUtils {
 
@@ -41,7 +42,7 @@ public class DefectUtils {
 
     public static List<Defect> getDefectList(String... nativeIds) {
 
-        List<Defect> defects = new ArrayList<>();
+        List<Defect> defects = list();
 
         for (String nativeId : nativeIds) {
             Defect defect = new Defect();

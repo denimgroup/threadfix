@@ -41,9 +41,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/applications/{appId}/path")
@@ -82,7 +83,7 @@ public class PathController {
 			throw new ResourceNotFoundException();
 		}
 		
-		List<String> pathList = new ArrayList<>();
+		List<String> pathList = list();
 		for (Vulnerability vuln : application.getVulnerabilities()) {
 			if (vuln != null && vuln.getFindings() != null) {
 				for (Finding finding : vuln.getFindings()) {
@@ -127,7 +128,7 @@ public class PathController {
 	}
 
 	private List<String> removeDuplicates(List<String> pathList) {
-		List<String> distinctPath = new ArrayList<>();
+		List<String> distinctPath = list();
 		for (int i = 0; i < pathList.size(); i++) {
 			int j = 0;
 			for (; j < i; j++) {

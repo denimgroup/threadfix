@@ -29,10 +29,11 @@ import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClient;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClientImpl;
 import org.apache.xmlrpc.XmlRpcException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author dcornell
@@ -44,11 +45,11 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
     BugzillaClient bugzillaClient = BugzillaClientImpl.getInstance();
 
-	private List<String> statuses = new ArrayList<>();
-	private List<String> components = new ArrayList<>();
-	private List<String> severities = new ArrayList<>();
-	private List<String> versions = new ArrayList<>();
-	private List<String> priorities = new ArrayList<>();
+	private List<String> statuses = list();
+	private List<String> components = list();
+	private List<String> severities = list();
+	private List<String> versions = list();
+	private List<String> priorities = list();
 
     private BugzillaClient.ConnectionStatus configureClientAndGetStatus() {
 
@@ -257,7 +258,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	 * @return
 	 */
 	private List<String> getValues(Object rpcResponse) {
-		List<String> responseList = new ArrayList<>();
+		List<String> responseList = list();
 		if (rpcResponse != null && rpcResponse instanceof HashMap) {
 			Map<?, ?> returnedData = (HashMap<?, ?>) rpcResponse;
 			Object componentsObject = returnedData.get("values");
@@ -510,7 +511,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
             return null;
         }
 		
-		List<Defect> returnList = new ArrayList<>();
+		List<Defect> returnList = list();
 		Map<String, String> queryMap = new HashMap<>();
 		queryMap.put("product", projectName);
 
@@ -520,7 +521,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
             queryResult = bugzillaClient.executeMethod("Bug.search", queryMap);
         } catch (XmlRpcException e) {
             log.error("Encountered XmlRpcException while getting defect information");
-            return new ArrayList<>(); // TODO see if this is the right thing
+            return list(); // TODO see if this is the right thing
         }
 
         if (queryResult instanceof HashMap) {

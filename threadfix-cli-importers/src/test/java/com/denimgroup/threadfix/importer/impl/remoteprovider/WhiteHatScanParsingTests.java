@@ -93,8 +93,8 @@ public class WhiteHatScanParsingTests {
         assertFalse("Scans were null.", scans == null);
         assertFalse("Scans were empty.", scans.isEmpty());
 
-        List<Finding> extraFindings = new ArrayList<>();
-        List<String[]> missingFindings = new ArrayList<>();
+        List<Finding> extraFindings = list();
+        List<String[]> missingFindings = list();
         List<Finding> lastScanFindings = scans.get(scans.size() - 1).getFindings();
 
         // find unexpected findings

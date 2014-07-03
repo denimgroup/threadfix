@@ -53,6 +53,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSClient {
 
     @Autowired(required = false)
@@ -182,7 +184,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             return null;
         }
 
-        List<String> returnPriorities = new ArrayList<>();
+        List<String> returnPriorities = list();
 
         FieldDefinitionCollection collection = client
                 .getFieldDefinitions();
@@ -207,7 +209,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         // Run the query and get the results.
         WorkItemCollection workItems = client.query(wiqlQuery);
 
-        List<String> ids = new ArrayList<>();
+        List<String> ids = list();
 
         for (int i = 0; i < workItems.size(); i++) {
             ids.add(String.valueOf(workItems.getWorkItem(i).getID()));
@@ -228,7 +230,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         try {
             ProjectCollection collection = client.getProjects();
 
-            List<String> strings = new ArrayList<>();
+            List<String> strings = list();
 
             for (Project project : collection) {
                 strings.add(project.getName());

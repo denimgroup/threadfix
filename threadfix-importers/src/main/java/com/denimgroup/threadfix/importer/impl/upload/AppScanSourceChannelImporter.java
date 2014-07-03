@@ -39,6 +39,8 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * 
  * @author mcollins
@@ -244,7 +246,7 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	
 	    	String[] strings = trace.split("(,|\\.+,|\\.+)");
 	    	
-	    	List<DataFlowElement> returnList = new ArrayList<>();
+	    	List<DataFlowElement> returnList = list();
 	    	int count = 1;
 	    	for (String string : strings) {
 	    		Map<String, String> singleTaintMap = taintMap.get(string);

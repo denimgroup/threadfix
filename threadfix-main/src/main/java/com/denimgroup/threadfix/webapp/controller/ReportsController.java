@@ -51,9 +51,10 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/reports")
@@ -77,7 +78,7 @@ public class ReportsController {
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActiveFilter();
-		List<Organization> returnList = new ArrayList<>();
+		List<Organization> returnList = list();
 
 		for (Organization org : organizationList) {
 			List<Application> validApps = PermissionUtils.filterApps(org);

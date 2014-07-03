@@ -37,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 public class ManualFindingServiceImpl implements ManualFindingService {
 	private final SanitizedLogger log = new SanitizedLogger("ScanMergeService");
@@ -224,7 +226,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		Scan scan = new Scan();
 		scan.setApplication(application);
 
-		List<Finding> findingList = new ArrayList<>();
+		List<Finding> findingList = list();
 		scan.setFindings(findingList);
 
 		scan.setNumberNewVulnerabilities(0);

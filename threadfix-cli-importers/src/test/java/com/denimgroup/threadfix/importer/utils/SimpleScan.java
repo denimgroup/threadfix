@@ -40,7 +40,7 @@ public class SimpleScan implements Iterable<SimpleFinding> {
     }
 
     public static SimpleScan fromStringArray(String[][] strings) {
-        List<SimpleFinding> findings = new ArrayList<>();
+        List<SimpleFinding> findings = list();
         for (String[] line : strings) {
             findings.add(new SimpleFinding(line));
         }

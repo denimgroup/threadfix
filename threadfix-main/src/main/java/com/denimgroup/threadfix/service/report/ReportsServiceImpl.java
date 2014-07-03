@@ -48,6 +48,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * @author mcollins
  * @author drivera
@@ -322,7 +324,7 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private JasperPrint getXMonthReport(List<Integer> applicationIdList, Map<String, Object> parameters,
 			JasperReport jasperReport, int numMonths) throws JRException {
-		List<List<Scan>> scanList = new ArrayList<>();
+		List<List<Scan>> scanList = list();
 		boolean containsVulns = false;
 		for (Integer id : applicationIdList) {
 			scanList.add(applicationDao.retrieveById(id).getScans());
@@ -375,7 +377,7 @@ public class ReportsServiceImpl implements ReportsService {
 	
 	private List<ChannelType> getChannelTypesInUse(List<Integer> applicationIdList) {
 		List<ChannelType> channels = channelTypeDao.retrieveAll();
-		List<ChannelType> returnChannels = new ArrayList<>();
+		List<ChannelType> returnChannels = list();
 		
 		for (ChannelType channel : channels) {
 			if (channel.getChannels() != null && channel.getChannels().size() != 0) {
@@ -504,7 +506,7 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 	
 	private List<Integer> getApplicationIdList(ReportParameters reportParameters) {
-		List<Integer> applicationIdList = new ArrayList<>();
+		List<Integer> applicationIdList = list();
 		Set<Integer> teamIds = null;
         if (permissionService == null) {
             teamIds = new HashSet<>();
@@ -526,7 +528,7 @@ public class ReportsServiceImpl implements ReportsService {
 				if (PermissionUtils.hasGlobalReadAccess()) {
 					appList = applicationDao.retrieveAllActive();
 				} else if (teamIds == null || teamIds.size() == 0) {
-					appList = new ArrayList<>();
+					appList = list();
 				} else {
 					appList = applicationDao.retrieveAllActiveFilter(teamIds);
 				}
@@ -565,9 +567,9 @@ public class ReportsServiceImpl implements ReportsService {
 	@Override
     public Map<String, Object> scannerComparisonByVulnerability(Model model, ReportParameters reportParameters) {
 		
-		List<List<String>> tableListOfLists = new ArrayList<>();
-		List<String> headerList = new ArrayList<>(); // this facilitates headers
-		List<Application> applicationList = new ArrayList<>();
+		List<List<String>> tableListOfLists = list();
+		List<String> headerList = list(); // this facilitates headers
+		List<Application> applicationList = list();
 		
 		// this map is used to insert the value into the correct space.
 		Map<Integer, Integer> channelIdToTablePositionMap = new HashMap<>();
@@ -703,8 +705,8 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     private List<List<String>> getListofRowParams(List<Integer> applicationIdList) {
-		List<List<String>> rowParamsList = new ArrayList<>();
-		List<Application> applicationList = new ArrayList<>();
+		List<List<String>> rowParamsList = list();
+		List<Application> applicationList = list();
 
 		for (int id : applicationIdList) {
 			Application application = applicationDao.retrieveById(id);
@@ -738,7 +740,7 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 
     private List<List<String>> getVulnListInfo(List<Vulnerability> vulnerabilityList) {
-        List<List<String>> rowParamsList = new ArrayList<>();
+        List<List<String>> rowParamsList = list();
         SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");
         for (Vulnerability vuln : vulnerabilityList) {
             if (vuln == null || (!vuln.isActive() && !vuln.getIsFalsePositive())) {

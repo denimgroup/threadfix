@@ -23,18 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
-import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
-import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import javax.annotation.Nonnull;
-
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class SpringControllerMappings implements EndpointGenerator {
 	
@@ -49,7 +50,7 @@ public class SpringControllerMappings implements EndpointGenerator {
     private final File rootDirectory;
 
     @Nonnull
-    private List<SpringControllerEndpoint> endpointsList = new ArrayList<>();
+    private List<SpringControllerEndpoint> endpointsList = list();
 	
 	@SuppressWarnings("unchecked")
 	public SpringControllerMappings(@Nonnull File rootDirectory) {
@@ -86,7 +87,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 	}
 	
 	private void generateMaps() {
-        List<SpringEntityParser> springEntityParsers = new ArrayList<>();
+        List<SpringEntityParser> springEntityParsers = list();
 
         SpringDataBinderParser globalDataBinderParser = null;
 
@@ -148,7 +149,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 	@Nonnull
     @Override
 	public List<Endpoint> generateEndpoints() {
-		List<Endpoint> returnEndpoints = new ArrayList<>();
+		List<Endpoint> returnEndpoints = list();
 		
 		for (Set<SpringControllerEndpoint> endpointList : urlToControllerMethodsMap.values()) {
 			for (SpringControllerEndpoint endpoint : endpointList) {

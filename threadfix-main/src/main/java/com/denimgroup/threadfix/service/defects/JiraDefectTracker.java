@@ -36,6 +36,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * This class has been rewritten to use the JIRA REST interface and may not work on older
  * JIRA installations. However, it should actually be functional now.
@@ -180,11 +182,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public boolean hasValidProjectName() {
-		if (projectName == null)
-			return false;
-		
-		return getNamesFromList("project").contains(projectName);
-	}
+        return projectName != null && getNamesFromList("project").contains(projectName);
+    }
 
 	@Override
 	public boolean hasValidUrl() {
@@ -314,7 +313,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 
     private List<String> getErrorFieldList(String errorResponseMsg) throws JSONException {
-        List<String> errorFieldList = new ArrayList<>();
+        List<String> errorFieldList = list();
         if (errorResponseMsg != null && JsonUtils.getJSONObject(errorResponseMsg) != null) {
             String errorResponse = JsonUtils.getJSONObject(errorResponseMsg).getString("errors");
             if (errorResponse == null || errorResponse.isEmpty())
@@ -461,7 +460,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			
 		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
 		String result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		try {
             String issuesString = JsonUtils.getJSONObject(result).getString("issues");
 

@@ -35,9 +35,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Component
 public class PermissionUtils extends SpringBeanAutowiringSupport {
@@ -108,7 +109,7 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
     public static List<Application> filterApps(Organization organization) {
 
         if (getInstance().isCommunity()) {
-            List<Application> newApps = new ArrayList<>();
+            List<Application> newApps = list();
 
             if (organization == null || organization.getActiveApplications() == null) {
                 return newApps;
@@ -158,7 +159,7 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
             return organizations;
         }
 
-        List<Organization> returnList = new ArrayList<>();
+        List<Organization> returnList = list();
         for (Organization organization : organizations) {
             if (teamIds.contains(organization.getId())) {
                 returnList.add(organization);

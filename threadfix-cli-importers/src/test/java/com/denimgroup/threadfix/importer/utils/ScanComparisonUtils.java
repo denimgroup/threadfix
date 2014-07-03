@@ -75,7 +75,7 @@ public class ScanComparisonUtils {
     private void compare(String[][] array, Scan actual) {
         SimpleScan expected = SimpleScan.fromStringArray(array);
 
-        List<SimpleFinding> findingList = new ArrayList<>();
+        List<SimpleFinding> findingList = list();
         Set<String> mappingErrors = new HashSet<>();
 
         for (SimpleFinding simpleFinding : expected) {

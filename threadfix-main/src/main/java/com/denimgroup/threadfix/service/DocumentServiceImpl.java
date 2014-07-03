@@ -40,8 +40,9 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false)
@@ -126,7 +127,7 @@ public class DocumentServiceImpl implements DocumentService {
 
 			List<Document> appDocs = application.getDocuments();
 			if (appDocs == null) {
-				appDocs = new ArrayList<>();
+				appDocs = list();
 			}
 			appDocs.add(doc);
 			
@@ -172,7 +173,7 @@ public class DocumentServiceImpl implements DocumentService {
 
 			List<Document> appDocs = vulnerability.getDocuments();
 			if (appDocs == null) 
-				appDocs = new ArrayList<>();
+				appDocs = list();
 			appDocs.add(doc);
 			
 			documentDao.saveOrUpdate(doc);

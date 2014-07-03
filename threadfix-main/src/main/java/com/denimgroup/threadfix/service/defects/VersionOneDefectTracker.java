@@ -35,6 +35,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by stran on 3/25/14.
  */
@@ -100,7 +102,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         List<String> defectNumberList = getAttributes(getUrlWithRest() + "Defect?where=Scope.Name='" + getProjectName() + "'&sel=Number");
 
-        List<Defect> defectList = new ArrayList<>();
+        List<Defect> defectList = list();
         Defect defect;
         for (String number: defectNumberList) {
             defect = new Defect();
@@ -258,7 +260,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             if (result != null) {
                 Assets assets = MarshallingUtils.marshal(Assets.class, result);
                 if (assets != null && assets.getAssets() != null) {
-                    projectList = new ArrayList<>();
+                    projectList = list();
                     for (Assets.Asset asset : assets.getAssets()) {
                         if (asset != null && asset.getAttributes() != null && asset.getAttributes().size() > 0) {
                             if (asset.getAttributes().get(0).getMixed() != null)
@@ -276,7 +278,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     }
 
     private List<Assets.Asset> getAssets(String url) {
-        List<Assets.Asset> assetList = new ArrayList<>();
+        List<Assets.Asset> assetList = list();
 
         try {
             String result = restUtils.getUrlAsString(url, getUsername(), getPassword());
