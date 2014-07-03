@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -30,17 +31,75 @@ import java.util.*;
  */
 public class CollectionUtils {
 
+    /**
+     *
+     * Create a list out of arguments. This is as close to an object literal as you can get in Java and very similar to
+     * the scala List()
+     *
+     * @param args items to put in a list
+     * @param <T> type of items
+     * @return list of items passed as arguments
+     */
     @SafeVarargs
+    @Nonnull
     public static <T> List<T> list(T... args) {
         if (args.length == 0) {
+            // avoid the extra constructor call if we have 0 arguments
             return new ArrayList<T>();
         } else {
             return new ArrayList<T>(Arrays.asList(args));
         }
     }
 
+    /**
+     *
+     *
+     * Create a set out of arguments. This is as close to an object literal as you can get in Java and very similar to
+     * the scala Set()
+     *
+     * @param args items to put in a set
+     * @param <T> type of set
+     * @return set of items passed as arguments
+     */
     @SafeVarargs
+    @Nonnull
     public static <T> Set<T> set(T... args) {
         return new HashSet<T>(Arrays.asList(args));
     }
+
+    /**
+     *
+     * @param separator character to put between arguments
+     * @param args items to string together
+     * @param <T> type of items
+     * @return "" for empty array, otherwise arg1 + separator + arg2 + separator + ...
+     */
+    @Nonnull
+    public static <T> String join(String separator, T... args) {
+        return join(separator, Arrays.asList(args));
+    }
+
+    /**
+     *
+     * @param separator character to put between arguments
+     * @param args items to string together
+     * @param <T> type of items
+     * @return "" for empty list, otherwise arg1 + separator + arg2 + separator + ...
+     */
+    @Nonnull
+    public static <T> String join(String separator, List<T> args) {
+        StringBuilder builder = new StringBuilder();
+
+        for (T project : args) {
+            builder.append(project);
+            builder.append(separator);
+        }
+
+        if (builder.length() > 0) {
+            return builder.substring(0, builder.length() - 1);
+        } else {
+            return "";
+        }
+    }
+
 }

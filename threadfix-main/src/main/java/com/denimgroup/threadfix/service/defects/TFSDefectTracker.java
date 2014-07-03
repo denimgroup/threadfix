@@ -27,12 +27,14 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClientImpl;
-import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class TFSDefectTracker extends AbstractDefectTracker {
 
@@ -120,8 +122,9 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 		}
     }
 
-	@Override
-	public String getProductNames() {
+	@Nonnull
+    @Override
+	public List<String> getProductNames() {
 		log.info("Getting list of product names.");
         boolean validConfiguration = configureClient();
 
@@ -130,14 +133,14 @@ public class TFSDefectTracker extends AbstractDefectTracker {
 
             if (productNames == null || productNames.size() == 0) {
                 log.warn("Collection of projects was null or empty.");
-                return null;
+                return list();
             }
 
-            return StringUtils.join(productNames, ',');
+            return productNames;
         } else {
 			log.warn("Unable to retrieve WorkItemClient, returning an unauthorized message.");
 			setLastError("Invalid username / password combination");
-			return null;
+			return list();
 		}
 	}
 

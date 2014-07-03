@@ -107,7 +107,7 @@ public class JiraTests implements TestConstants {
     public void testGetProjectNames() {
         AbstractDefectTracker jiraTracker = getConfiguredTracker();
 
-        List<String> projects = DefectUtils.getProductsFromString(jiraTracker.getProductNames());
+        List<String> projects = jiraTracker.getProductNames();
 
         assertTrue("Length was supposed to be 3. It was " + projects.size(), projects.size() == 3);
     }

@@ -25,15 +25,23 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
 
+import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -115,38 +123,35 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     }
 
     @Override
-    public String getProductNames() {
+    @Nonnull
+    public List<String> getProductNames() {
         lastError = null;
-        String projectNames = null;
         List<String> projectList = getProjectList();
 
-        if (projectList != null) {
-            StringBuilder builder = new StringBuilder();
-            for (String project: projectList) {
-                builder.append(project);
-                builder.append(',');
-            }
-            if (builder.length()>0)
-                projectNames = builder.substring(0,builder.length()-1);
-        }
-
-        if (projectNames == null) {
+        if (projectList.isEmpty()) {
             if (!hasValidUrl()) {
                 lastError = "Supplied endpoint was invalid.";
             } else if (!hasValidCredentials()) {
                 lastError = "Invalid username / password combination";
-            } else if (projectList != null) {
+            } else if (projectList.isEmpty()) {
                 lastError = "No projects were found. Check your VersionOne instance.";
             } else {
                 lastError = "Not sure what the error is.";
             }
         }
-        return projectNames;
+        return projectList;
     }
 
     @Override
     public String getProjectIdByName() {
-        List<Assets.Asset> assetList = getAssets(getUrlWithRest() + "Scope?where=Scope.Name='" + getProjectName() + "'");
+        List<Assets.Asset> assetList = null;
+        try {
+            assetList = getAssets(getUrlWithRest() +
+                    "Scope?where=Scope.Name='" +
+                    URLEncoder.encode(getProjectName(), "UTF-8") + "'");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e, "UTF-8 wasn't supported.");
+        }
         if (assetList != null && !assetList.isEmpty()) {
             return assetList.get(0).getId();
         }
@@ -157,11 +162,17 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     @Override
     public ProjectMetadata getProjectMetadata() {
 
-        List<String> sprints = getAttributes(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" + getProjectName() + "'&sel=Name");
+        List<String> sprints = null;
+        try {
+            sprints = getAttributes(getUrlWithRest() +
+                    "Timebox?where=Schedule.ScheduledScopes.Name='" + URLEncoder.encode(getProjectName(), "UTF-8") + "'&sel=Name");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e, "UTF-8 wasn't supported.");
+        }
         sprints.add(0,"");
         List<String> blankList = list("-");
         List<String> statusList = getAttributes(getUrlWithRest() + "List?where=AssetType='StoryStatus'&sel=Name");
-        List<String> priorities = getAttributes(getUrlWithRest() + "List?where=AssetType='WorkitemPriority'&sel=Name");;
+        List<String> priorities = getAttributes(getUrlWithRest() + "List?where=AssetType='WorkitemPriority'&sel=Name");
 
         return new ProjectMetadata(sprints, blankList,
                 blankList, statusList, priorities);
@@ -173,20 +184,20 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         lastError = null;
 
         String response = restUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" +
-                getUsername() + "'", getUsername(), getPassword());
+                getUrlEncodedUsername() + "'", getUsername(), getPassword());
 
-            boolean valid = false;
+        boolean valid = false;
 
-            if (response == null) {
-                lastError = "Null response was received from VersionOne server.";
-                log.warn(lastError);
-            } else if (!response.contains(getUsername())) {
-                lastError = "The returned name did not match the username.";
-                log.warn(lastError);
-            } else {
-                valid = true;
-            }
-            return valid;
+        if (response == null) {
+            lastError = "Null response was received from VersionOne server.";
+            log.warn(lastError);
+        } else if (!response.contains(getUsername())) {
+            lastError = "The returned name did not match the username.";
+            log.warn(lastError);
+        } else {
+            valid = true;
+        }
+        return valid;
     }
 
     @Override
@@ -194,10 +205,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         if (getProjectName() == null)
             return false;
         List<String> projectList = getProjectList();
-        if (projectList.contains(getProjectName())) {
-            return true;
-        }
-        return false;
+
+        return projectList.contains(getProjectName());
     }
 
     @Override
@@ -251,16 +260,17 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         return tempUrl;
     }
 
+    @Nonnull
     private List<String> getProjectList() {
-        List<String> projectList = null;
+        List<String> projectList = list();
 
-        String result = restUtils.getUrlAsString(getUrlWithRest() + "Member?where=Username='" + getUsername() + "'&sel=Scopes",
+        String result = restUtils.getUrlAsString(getUrlWithRest() +
+                        "Member?where=Username='" + getUrlEncodedUsername() + "'&sel=Scopes",
                 getUsername(), getPassword());
         try {
             if (result != null) {
                 Assets assets = MarshallingUtils.marshal(Assets.class, result);
                 if (assets != null && assets.getAssets() != null) {
-                    projectList = list();
                     for (Assets.Asset asset : assets.getAssets()) {
                         if (asset != null && asset.getAttributes() != null && asset.getAttributes().size() > 0) {
                             if (asset.getAttributes().get(0).getMixed() != null)
@@ -273,6 +283,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             }
         } catch (JAXBException e) {
             log.warn("Unable to parse xml response");
+            throw new DefectTrackerFormatException(e, "Unable to parse response from server.");
         }
         return projectList;
     }
@@ -381,12 +392,18 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         if (getProjectId() == null) {
             setProjectId(getProjectIdByName());
         }
-        String result = restUtils.getUrlAsString(getUrlWithRest().replace("Data/", "") + "New/Defect?ctx=" + getProjectId(), getUsername(), getPassword());
+        String result = null;
+        try {
+            result = restUtils.getUrlAsString(getUrlWithRest().replace("Data/", "") +
+                    "New/Defect?ctx=" +
+                    URLEncoder.encode(getProjectId(), "UTF-8"), getUsername(), getPassword());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e, "UTF-8 not supported.");
+        }
 
         try {
             if (result != null) {
-                Assets.Asset assetTempate = MarshallingUtils.marshal(Assets.Asset.class, result);
-                return assetTempate;
+                return MarshallingUtils.marshal(Assets.Asset.class, result);
             }
         } catch (JAXBException e) {
             log.warn("Unable to parse Asset xml response");
@@ -437,11 +454,18 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         log.info("Updating status for defect " + defect.getNativeId());
 
-        List<String> result = getAttributes(getUrlWithRest() + "Defect?where=Number='" + defect.getNativeId() + "'&sel=Status.Name");
-        if (!result.isEmpty()) {
-            log.info("Current status for defect " + defect.getNativeId() + " is " + result.get(0));
-            defect.setStatus(result.get(0));
-            return result.get(0);
+        List<String> result = null;
+        try {
+            result = getAttributes(getUrlWithRest() + "Defect?where=Number='" +
+                    URLEncoder.encode(defect.getNativeId(), "UTF-8") + "'&sel=Status.Name");
+            if (!result.isEmpty()) {
+                log.info("Current status for defect " +
+                        URLEncoder.encode(defect.getNativeId(), "UTF-8") + " is " + result.get(0));
+                defect.setStatus(result.get(0));
+                return result.get(0);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         return null;
     }

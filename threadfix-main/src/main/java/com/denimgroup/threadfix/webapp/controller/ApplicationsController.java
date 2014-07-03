@@ -324,27 +324,14 @@ public class ApplicationsController {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return RestResponse.failure("Authentication failed.");
 		}
-		String result = dt.getProductNames();
-		if (result == null || result.equals("Authentication failed")) {
+		List<String> result = dt.getProductNames();
+		if (result.isEmpty() || (result.size() == 1 && result.contains("Authentication failed"))) {
 			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
 
-		return RestResponse.success(productSort(result));
-	}
-	
-	private String[] productSort(String products) {
-		if (products == null) {
-			return null;
-		}
-		String[] splitArray = products.split(",", 0);
-		
-		if (splitArray.length == 0) {
-			return null;
-		}
-		
-		Arrays.sort(splitArray, String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(result);
 
-		return splitArray;
+		return RestResponse.success(result);
 	}
 	
 	@RequestMapping("/{appId}/getDefectsFromDefectTracker")

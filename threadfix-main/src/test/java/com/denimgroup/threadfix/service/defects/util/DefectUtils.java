@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
-import org.apache.commons.exec.util.StringUtils;
 
 import java.util.List;
 
@@ -73,8 +72,8 @@ public class DefectUtils {
                 projectMetadata.getStatuses().get(0));
     }
 
-    public static List<String> getProductsFromString(String projects) {
-        return list(StringUtils.split(projects, ","));
+    public static List<String> getProductsFromString(List<String> projects) {
+        return projects;
     }
 
 }

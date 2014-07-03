@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -208,21 +209,16 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	// PRE-SUBMISSION METHODS
 	
-	@Override
-	public String getProductNames() {
+	@Nonnull
+    @Override
+	public List<String> getProductNames() {
 		
 		lastError = null;
 	
 		Map<String, String> nameIdMap = getNameFieldMap("project/","key");
 		
 		if (nameIdMap != null && nameIdMap.size() > 0) {
-			StringBuilder builder = new StringBuilder();
-			
-			for (String name : nameIdMap.keySet()) {
-				builder.append(name);
-				builder.append(',');
-			}
-			return builder.substring(0,builder.length()-1);
+			return new ArrayList<>(nameIdMap.keySet());
 		} else {
 			if (!hasValidUrl()) {
 				lastError = "Supplied endpoint was invalid.";
@@ -237,7 +233,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 				lastError = "Not sure what the error is.";
 			}
 			
-			return null;
+			return list();
 		}
 	}
 	
