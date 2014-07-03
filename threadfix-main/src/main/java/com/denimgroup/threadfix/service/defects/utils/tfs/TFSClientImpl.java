@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.DefectTrackerUnavailableException;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
@@ -264,27 +265,38 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
 
     @Override
     public ConnectionStatus configure(String url, String username, String password) {
-        Credentials credentials = new UsernamePasswordCredentials(
-                username, password);
-
-        URI uri = null;
-        try {
-            uri = new URI(url);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
-
-        TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
-        addProxy(projects.getHTTPClient());
 
         try {
-            client = projects.getWorkItemClient();
-            lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
-        } catch (UnauthorizedException | TFSUnauthorizedException e) {
-            LOG.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
-                    "Check credentials and endpoint.");
+            Credentials credentials = new UsernamePasswordCredentials(username, password);
+
+            URI uri = null;
+            try {
+                uri = new URI(url);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
+
+            TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
+            addProxy(projects.getHTTPClient());
+
+            try {
+                client = projects.getWorkItemClient();
+                lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
+            } catch (UnauthorizedException | TFSUnauthorizedException e) {
+                LOG.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
+                        "Check credentials and endpoint.");
+            }
+        } catch (TECoreException e) {
+            if (e.getMessage().contains("TF30059")) {
+                throw new DefectTrackerUnavailableException(e,
+                        "TFS is unavailable. Please ensure that the system is running properly.");
+            } else {
+                throw new DefectTrackerUnavailableException(e,
+                        "An exception occurred while attempting to connect to TFS. " +
+                                "Check the error logs for more details.");
+            }
         }
 
         return lastStatus;

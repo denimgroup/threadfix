@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -131,6 +132,10 @@ public class ReportsController {
                                        @PathVariable int reportId,
                                        @PathVariable int formatId,
                                        HttpServletResponse response) throws IOException {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_GENERATE_REPORTS, applicationId, organizationId)) {
+            return "403";
+        }
 
         ReportParameters reportParameters = new ReportParameters();
         reportParameters.setApplicationId(applicationId);
@@ -263,7 +268,6 @@ public class ReportsController {
 
         return null;
     }
-
 
 	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
 	//	for the entire application (each class doesn't need to repeat this code)
