@@ -32,11 +32,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Entity
 @Table(name = "SurfaceLocation")
@@ -47,14 +47,8 @@ public class SurfaceLocation extends BaseEntity {
 	public static final int PATH_LENGTH = 255;
 	public static final int QUERY_LENGTH = 255;
 	
-	public static final Set<String> REQUEST_METHODS;
-
-	static {
-		String[] args = {"POST", "GET", "DELETE", "OPTIONS",
-                "PUT", "HEAD", "TRACE"};
-
-        REQUEST_METHODS = new HashSet<String>(Arrays.asList(args));
-	}
+	public static final Set<String> REQUEST_METHODS = set("POST", "GET", "DELETE", "OPTIONS",
+            "PUT", "HEAD", "TRACE");
 
 	private static final long serialVersionUID = -8999892961251231213L;
 	private final static SanitizedLogger LOGGER = new SanitizedLogger(SurfaceLocation.class);

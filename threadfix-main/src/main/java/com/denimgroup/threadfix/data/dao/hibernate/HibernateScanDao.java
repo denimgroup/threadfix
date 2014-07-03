@@ -37,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.set;
+
 /**
  * Hibernate Scan DAO implementation. Most basic methods are implemented in the
  * AbstractGenericDao
@@ -427,11 +429,11 @@ public class HibernateScanDao implements ScanDao {
 				useTeamIds = teamIds != null;
 
         if (teamIds != null && teamIds.isEmpty()) {
-            teamIds = new HashSet<>(Arrays.asList(0));
+            teamIds = set(0);
         }
 
         if (appIds != null && appIds.isEmpty()) {
-            appIds = new HashSet<>(Arrays.asList(0));
+            appIds = set(0);
         }
 
 		if (!useAppIds && !useTeamIds) {

@@ -251,12 +251,12 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (getProjectId() == null)
 			setProjectId(getProjectIdByName());
 		List<String> components = getNamesFromList("project/" + projectId + "/components");
-		List<String> blankList = Arrays.asList("-");
-		List<String> statusList = Arrays.asList("Open");
+		List<String> blankList = list("-");
+		List<String> statusList = list("Open");
 		List<String> priorities = getNamesFromList("priority");
 		
 		if (components == null || components.isEmpty()) {
-			components = Arrays.asList("-");
+			components = list("-");
 		}
 		
 		return new ProjectMetadata(components, blankList,

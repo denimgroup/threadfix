@@ -24,9 +24,10 @@
 
 package com.denimgroup.threadfix.importer.utils;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mac on 2/6/14.

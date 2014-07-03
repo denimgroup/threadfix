@@ -33,6 +33,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by mac on 5/22/14.
  */
@@ -41,11 +43,11 @@ public class VulnSearchParameterParser {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MMM-yyyy");
 
     private static final Pattern integerPattern = Pattern.compile("[\\,=]([0-9]+)");
-    private static final Pattern stringPattern = Pattern.compile("[\\,=]([^,=]+)");
+    private static final Pattern stringPattern  = Pattern.compile("[\\,=]([^,=]+)");
 
     static String[] parameters = null;
 
-    static final private List<String> validParameters = Arrays.asList("genericVulnerabilityIds", "teamIds",
+    static final private List<String> validParameters = list("genericVulnerabilityIds", "teamIds",
             "applicationIds", "scannerNames", "genericSeverityValues", "numberVulnerabilities", "parameter",
             "path", "startDate", "endDate", "showOpen", "showClosed", "showFalsePositive", "showHidden", "numberMerged");
 

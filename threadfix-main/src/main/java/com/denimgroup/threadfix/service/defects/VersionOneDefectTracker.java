@@ -159,7 +159,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         List<String> sprints = getAttributes(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" + getProjectName() + "'&sel=Name");
         sprints.add(0,"");
-        List<String> blankList = Arrays.asList("-");
+        List<String> blankList = list("-");
         List<String> statusList = getAttributes(getUrlWithRest() + "List?where=AssetType='StoryStatus'&sel=Name");
         List<String> priorities = getAttributes(getUrlWithRest() + "List?where=AssetType='WorkitemPriority'&sel=Name");;
 
@@ -365,9 +365,9 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         if (act != null)
             attribute.setAct(act);
         if (values.length > 1) {
-            attribute.setValues(Arrays.asList(values));
+            attribute.setValues(list(values));
         } else {
-            attribute.setMixed(Arrays.asList(values));
+            attribute.setMixed(list(values));
         }
 
         return attribute;

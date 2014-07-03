@@ -727,7 +727,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 				String openedDate = formatter.format(vuln.getOpenTime().getTime());
 				// Orders of positions: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID
-				rowParamsList.add(Arrays.asList(vuln.getGenericVulnerability().getId().toString(),
+				rowParamsList.add(list(vuln.getGenericVulnerability().getId().toString(),
 						vuln.getGenericVulnerability().getName(),
 						vuln.getSurfaceLocation().getPath(), 
 						vuln.getSurfaceLocation().getParameter(),
@@ -749,7 +749,7 @@ public class ReportsServiceImpl implements ReportsService {
 
             String openedDate = formatter.format(vuln.getOpenTime().getTime());
             // Order of fields: CWE ID, CWE Name, Path, Parameter, Severity, Open Date, Defect ID, Application, Team, Payload, Attack surface path
-            rowParamsList.add(Arrays.asList(
+            rowParamsList.add(list(
                     vuln.getGenericVulnerability().getId().toString(),
                     vuln.getGenericVulnerability().getName(),
                     vuln.getSurfaceLocation().getPath(),

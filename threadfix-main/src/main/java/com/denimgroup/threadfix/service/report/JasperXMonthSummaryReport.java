@@ -24,21 +24,15 @@
 
 package com.denimgroup.threadfix.service.report;
 
-import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
-
+import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Scan;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRField;
 
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.Scan;
+import java.text.DateFormatSymbols;
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * The current strategy for this report is to keep Sets of the vulnerability IDs
@@ -236,7 +230,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 				array[i] = this.addMonths(- i);
 			}
 			
-			return Arrays.asList(array);
+			return list(array);
 		}
 		
 		public String getMonthName() {

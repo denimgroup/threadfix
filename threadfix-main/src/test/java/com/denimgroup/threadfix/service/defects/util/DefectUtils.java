@@ -31,7 +31,6 @@ import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 import org.apache.commons.exec.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -62,7 +61,7 @@ public class DefectUtils {
         vulnerability.setGenericVulnerability(new GenericVulnerability());
         vulnerability.getGenericVulnerability().setName("XSS");
 
-        return Arrays.asList(vulnerability);
+        return list(vulnerability);
     }
 
     public static DefectMetadata getBasicMetadata(ProjectMetadata projectMetadata) {
@@ -75,7 +74,7 @@ public class DefectUtils {
     }
 
     public static List<String> getProductsFromString(String projects) {
-        return Arrays.asList(StringUtils.split(projects, ","));
+        return list(StringUtils.split(projects, ","));
     }
 
 }
