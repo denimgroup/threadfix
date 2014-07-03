@@ -29,8 +29,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +46,6 @@ public class Defect extends AuditableEntity {
     // TODO make this smarter
     public final static Set<String> OPEN_CODES   = set("Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen", "Future", "In Progress", "Accepted");
     public final static Set<String> CLOSED_CODES = set("Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done");
-    );
 
     public enum TrackerType {
         BUGZILLA, JIRA
