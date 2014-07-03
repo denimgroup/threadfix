@@ -38,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.service.util.CollectionUtils.list;
+
 @Service
 @Transactional(readOnly = false)
 public class DefectServiceImpl implements DefectService {
@@ -123,7 +125,7 @@ public class DefectServiceImpl implements DefectService {
 			}
 		}
 
-		List<Vulnerability> vulnsWithoutDefects = new ArrayList<>();
+		List<Vulnerability> vulnsWithoutDefects = list();
 
 		for (Vulnerability vulnerability : allVulns) {
 			if (vulnerability.getDefect() == null) {
@@ -216,17 +218,15 @@ public class DefectServiceImpl implements DefectService {
 		}
 
 		Application application = vuln.getApplication();
-		
-		if (application != null) {
-			applicationService.decryptCredentials(application);
-		}
-		
-		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
+
+        applicationService.decryptCredentials(application);
+
+        AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			return noDefectTrackerError;
 		}
 
-		List<Vulnerability> vulnList = new ArrayList<>();
+		List<Vulnerability> vulnList = list();
 		
 		for (Vulnerability vulnerability : vulns) {
 			if (vulnerability.getDefect() == null) {
@@ -354,7 +354,7 @@ public class DefectServiceImpl implements DefectService {
 		defect.setDefectURL(dt.getBugURL(
 				application.getDefectTracker().getUrl(), id));
 		defect.setApplication(application);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		defectList.add(defect);
         Map<Defect, Boolean> map = dt.getMultipleDefectStatus(defectList);
         if (map.isEmpty())

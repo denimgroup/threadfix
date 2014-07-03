@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
@@ -55,10 +56,11 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         try {
             String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
             return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
-        } catch (Exception e) {
-            log.error("Error when trying to unmarshal defect object to xml string", e);
+        } catch (JAXBException e) {
+            log.error("Error when trying to unmarshal defect object to xml string");
+            throw new DefectTrackerFormatException(e,
+                    "Unable to parse XML from server. More details can be found in the error logs.");
         }
-        return null;
     }
 
     private Entity.Fields createFields(String description, DefectMetadata metadata) {
@@ -134,8 +136,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
     private String parseXml(String xmlResult) {
         Domains domains;
         try {
-            domains =
-                    MarshallingUtils.marshal(Domains.class, xmlResult);
+            domains = MarshallingUtils.marshal(Domains.class, xmlResult);
             if (domains != null ) {
                 StringBuilder builder = new StringBuilder();
                 for (Domains.Domain domain : domains.getDomains()) {
@@ -155,7 +156,8 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                     return builder.substring(0, builder.length() - 1);
             }
         } catch (JAXBException e) {
-            log.warn("Error when trying to parsing xml response from HPQC", e);
+            log.warn("Marshalling the response failed due to JAXBException. The data was probably not XML.");
+            log.debug("String was " + xmlResult);
         }
         return null;
     }

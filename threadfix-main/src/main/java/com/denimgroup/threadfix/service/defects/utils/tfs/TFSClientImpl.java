@@ -291,7 +291,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         } catch (TECoreException e) {
             if (e.getMessage().contains("TF30059")) {
                 throw new DefectTrackerUnavailableException(e,
-                        "TFS is unavailable. Please ensure that the system is running properly.");
+                        "TFS is unavailable (TF30059 error). More details are available in the error logs.");
             } else {
                 throw new DefectTrackerUnavailableException(e,
                         "An exception occurred while attempting to connect to TFS. " +

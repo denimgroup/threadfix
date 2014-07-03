@@ -24,12 +24,14 @@
 package com.denimgroup.threadfix.exception;
 
 /**
- * By implementing RestException we can use HandlerResolverBean to return a RestResponse object
+ * Created by mac on 7/3/14.
  */
-public class DefectTrackerUnavailableException extends RestException {
-
-    public DefectTrackerUnavailableException(Throwable cause, String responseString) {
-        super(cause, responseString);
+public class DefectTrackerCommunicationException extends RestException {
+    public DefectTrackerCommunicationException(String responseString) {
+        super(responseString);
     }
 
+    public DefectTrackerCommunicationException(Throwable cause, String responseString) {
+        super(cause, responseString);
+    }
 }

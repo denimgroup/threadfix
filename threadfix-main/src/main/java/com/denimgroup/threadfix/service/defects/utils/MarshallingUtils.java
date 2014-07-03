@@ -53,7 +53,7 @@ public class MarshallingUtils {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public static <T> String unmarshal(Class<T> c, Object o) throws Exception {
+    public static <T> String unmarshal(Class<T> c, Object o) throws JAXBException {
 
         JAXBContext ctx = JAXBContext.newInstance(c);
         Marshaller marshaller = ctx.createMarshaller();
