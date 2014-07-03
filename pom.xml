@@ -254,7 +254,7 @@
                         <plugin>
                             <groupId>org.owasp</groupId>
                             <artifactId>dependency-check-maven</artifactId>
-                            <version>1.2.3</version>
+                            <version>${dependencycheck.version}</version>
                             <executions>
                                 <execution>
                                     <goals>
@@ -341,6 +341,7 @@
         <xom.version>1.2.6</xom.version>
         <zap.version>2.2.2</zap.version>
         <zaphelp.version>2.2.2</zaphelp.version>
+        <dependencycheck.version>1.2.3</dependencycheck.version>
 
         <!-- Testing dependency versions -->
         <easymock.version>3.0</easymock.version>
