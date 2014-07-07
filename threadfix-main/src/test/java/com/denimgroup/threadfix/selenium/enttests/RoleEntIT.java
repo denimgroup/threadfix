@@ -216,21 +216,6 @@ public class RoleEntIT extends BaseIT {
 		}
 
 		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName)
-                .clickDeleteButton(roleName)
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .clickSaveRole(roleName)
-                .clickManageRolesLink()
-                .clickEditLink(roleName);
-		
-		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
-                assertTrue("Role was not turned on correctly.", rolesIndexPage.getPermissionValue(permission));
-            }
-		}
-		
-		rolesIndexPage = rolesIndexPage.clickSaveRole(roleName)
                 .clickManageRolesLink()
 				.clickDeleteButton(roleName);
 
