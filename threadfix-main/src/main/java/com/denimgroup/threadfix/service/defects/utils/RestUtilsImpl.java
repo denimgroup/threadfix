@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils;
 
+import com.denimgroup.threadfix.exception.RestException;
+import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.exception.RestUrlException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import org.apache.commons.codec.binary.Base64;
@@ -32,8 +35,11 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.annotation.Nonnull;
 import javax.net.ssl.SSLHandshakeException;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,6 +47,9 @@ import java.net.URL;
 /**
  * This class holds code for more easily interacting with HTTP-authenticated REST services.
  * So far this is just JIRA but this code could be useful in other places too.
+ *
+ * WARNING this class throws subclasses of RestException, so our error handler will return REST responses
+ * to the user if the exceptions are not caught.
  * 
  * TODO further genericize and move to threadfix common code
  * @author mcollins
@@ -64,15 +73,15 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
         return impl;
     }
 
-	//The following methods help with REST interfaces.
-	private InputStream getUrl(String urlString, String username, String password) {
+    @Nonnull
+	private InputStream getUrl(String urlString, String username, String password) throws RestException {
 		URL url;
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
+			throw new RestUrlException(e, "Unable to make request due to malformed URL. Check the code.");
 		}
+
 		HttpURLConnection httpConnection;
 		try {
             if (proxyService == null) {
@@ -90,23 +99,19 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 
             return stream;
 		} catch (IOException e) {
-            LOG.info("Encountered IOException", e);
-		    return null;
+            LOG.info("Encountered IOException, unable to continue");
+		    throw new RestIOException(e, "Unable to communicate with the server.");
 		}
 	}
 
-	public String getUrlAsString(String urlString, String username, String password) {
+	public String getUrlAsString(String urlString, String username, String password) throws RestException {
 		InputStream responseStream = getUrl(urlString,username,password);
-
-		if (responseStream == null) {
-			return null;
-		}
 
 		String test = null;
 		try {
 			test = IOUtils.toString(responseStream);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RestIOException(e, "Unable to get response from server.");
 		} finally {
 			closeInputStream(responseStream);
 		}
@@ -124,13 +129,14 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 		}
 	}
 
+    @Nonnull
     private InputStream postUrl(String urlString, String data, String username, String password, String contentType) {
-		URL url = null;
+		URL url;
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e) {
 			LOG.warn("URL used for POST was bad: '" + urlString + "'");
-			return null;
+			throw new RestUrlException(e, "Received a malformed server URL.");
 		}
 
 		HttpURLConnection httpConnection = null;
@@ -168,13 +174,17 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 						LOG.warn("Error stream from HTTP connection was not null. Attempting to get response text.");
                         setPostErrorResponse(IOUtils.toString(errorStream));
 						LOG.warn("Error text in response was '" + getPostErrorResponse() + "'");
+                        throw new RestIOException(e, "Unable to get response from server. Error text was: " +
+                                getPostErrorResponse());
 					}
 				} catch (IOException e2) {
 					LOG.warn("IOException encountered trying to read the reason for the previous IOException: "
                             + e2.getMessage(), e2);
+                    throw new RestIOException(e2, "Unable to read response from server.");
 				}
 			}
-		} finally {
+            throw new RestIOException(e, "Unable to read response from server.");
+        } finally {
 			if (outputWriter != null) {
 				try {
 					outputWriter.close();
@@ -183,22 +193,17 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 				}
 			}
 		}
-		
-		return null;
 	}
 	
-	public String postUrlAsString(String urlString, String data, String username, String password, String contentType) {
+	public String postUrlAsString(String urlString, String data, String username, String password, String contentType)
+            throws RestException {
 		InputStream responseStream = postUrl(urlString, data, username, password, contentType);
-		
-		if (responseStream == null) {
-			return null;
-		}
 		
 		String test = null;
 		try {
             test = IOUtils.toString(responseStream);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RestIOException(e, "Unable to parse response from server.");
 		} finally {
 			closeInputStream(responseStream);
 		}

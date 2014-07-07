@@ -2,7 +2,6 @@ package com.denimgroup.threadfix.service.defects.utils.hpqc;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
-import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
@@ -10,7 +9,6 @@ import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.bind.JAXBException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -308,21 +306,11 @@ public class HPQCUtils {
     }
 
     private static Entity parseEntityXml(String entityXml) {
-        try {
-            return MarshallingUtils.marshal(Entity.class, entityXml);
-        } catch (JAXBException e) {
-            log.error("Error when trying to parse Entity from string xml");
-            throw new DefectTrackerFormatException(e, "Unable to parse server response.");
-        }
+        return MarshallingUtils.marshal(Entity.class, entityXml);
     }
 
     private static Entities parseEntitiesXml(String entitiesXml) {
-        try {
-            return MarshallingUtils.marshal(Entities.class, entitiesXml);
-        } catch (JAXBException e) {
-            log.error("Error when trying to parse Entity from string xml");
-            throw new DefectTrackerFormatException(e, "Unable to parse server response.");
-        }
+        return MarshallingUtils.marshal(Entities.class, entitiesXml);
     }
 
     @Nullable
@@ -341,26 +329,21 @@ public class HPQCUtils {
 
     @Nonnull
     private static Map<String, List<String>> parseListXml(String responseStr) {
-        Lists lists;
         Map<String, List<String>> map = new HashMap<>();
-        try {
-            lists = MarshallingUtils.marshal(Lists.class, responseStr);
-            if (lists != null && lists.getLists() != null) {
-                for (Lists.ListInfo listInfo : lists.getLists()) {
-                    if (listInfo != null && listInfo.getItems().getItemList() != null) {
-                        List<String> values = list();
-                        for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
-                            if (item != null) {
-                                values.add(item.getValue());
-                            }
+        Lists lists = MarshallingUtils.marshal(Lists.class, responseStr);
+
+        if (lists != null && lists.getLists() != null) {
+            for (Lists.ListInfo listInfo : lists.getLists()) {
+                if (listInfo != null && listInfo.getItems().getItemList() != null) {
+                    List<String> values = list();
+                    for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
+                        if (item != null) {
+                            values.add(item.getValue());
                         }
-                        map.put(listInfo.getName(), values);
                     }
+                    map.put(listInfo.getName(), values);
                 }
             }
-        } catch (JAXBException e) {
-            log.warn("Error when trying to parsing xml response from HPQC");
-            throw new DefectTrackerCommunicationException(e, "Unable to parse server response.");
         }
         return map;
     }

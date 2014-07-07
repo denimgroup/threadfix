@@ -24,43 +24,10 @@
 package com.denimgroup.threadfix.exception;
 
 /**
- * This is an abstract class so that we can intercept it using RestExceptionControllerAdvice
- * Created by mac on 7/3/14.
+ * Created by mac on 7/7/14.
  */
-public abstract class RestException extends RuntimeException {
-
-    final String responseString;
-
-    /**
-     *
-     * @param cause wrapped exception
-     * @param responseString gets printed to the user
-     */
-    public RestException(Throwable cause, String responseString) {
-        super(cause);
-        this.responseString = responseString;
+public class RestIOException extends RestException {
+    public RestIOException(Throwable cause, String responseString) {
+        super(cause, responseString);
     }
-
-    /**
-     *
-     * @param responseString gets printed to the user
-     */
-    public RestException(String responseString) {
-        super();
-        this.responseString = responseString;
-    }
-
-    /**
-     * @param responseString gets printed to the user
-     * @param exceptionMessageString gets printed to the error logs page
-     */
-    public RestException(String responseString, String exceptionMessageString) {
-        super();
-        this.responseString = responseString;
-    }
-
-    public String getResponseString() {
-        return responseString;
-    }
-
 }

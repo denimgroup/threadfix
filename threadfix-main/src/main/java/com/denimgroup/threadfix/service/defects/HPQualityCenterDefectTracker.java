@@ -26,14 +26,12 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Entity;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -56,14 +54,8 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         defect.setType("defect");
         defect.setFields(createFields(description, metadata));
 
-        try {
-            String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
-            return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
-        } catch (JAXBException e) {
-            log.error("Error when trying to unmarshal defect object to xml string");
-            throw new DefectTrackerFormatException(e,
-                    "Unable to parse XML from server. More details can be found in the error logs.");
-        }
+        String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
+        return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
     }
 
     private Entity.Fields createFields(String description, DefectMetadata metadata) {
@@ -139,29 +131,23 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     @Nonnull
     private List<String> parseXml(String xmlResult) {
-        Domains domains;
-        try {
-            domains = MarshallingUtils.marshal(Domains.class, xmlResult);
-            if (domains != null ) {
-                List<String> returnList = list();
-                for (Domains.Domain domain : domains.getDomains()) {
-                    if (domain != null) {
-                        for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
-                            if (project != null) {
+        Domains domains = MarshallingUtils.marshal(Domains.class, xmlResult);
+        if (domains != null ) {
+            List<String> returnList = list();
+            for (Domains.Domain domain : domains.getDomains()) {
+                if (domain != null) {
+                    for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
+                        if (project != null) {
 
-                                log.info("Adding domain " + domain.getName() + " and project " + project.getProjectName());
+                            log.info("Adding domain " + domain.getName() + " and project " + project.getProjectName());
 
-                                returnList.add(domain.getName() + "/" + project.getProjectName());
-                            }
+                            returnList.add(domain.getName() + "/" + project.getProjectName());
                         }
                     }
                 }
-
-                return returnList;
             }
-        } catch (JAXBException e) {
-            log.warn("Marshalling the response failed due to JAXBException. The data was probably not XML.");
-            log.debug("String was " + xmlResult);
+
+            return returnList;
         }
         return list();
     }

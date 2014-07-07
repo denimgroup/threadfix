@@ -72,8 +72,8 @@ public class RestExceptionControllerAdvice {
     public ModelAndView resolveException(Exception ex) {
 
         // This should be handled by the other method.
-        assert ex instanceof RestException :
-                "Your ControllerAdvice received a RestException in its generic Exception handler";
+        assert !(ex instanceof RestException) :
+                "ControllerAdvice received a RestException in its generic Exception handler";
 
         ExceptionLog exceptionLog = new ExceptionLog(ex);
 
