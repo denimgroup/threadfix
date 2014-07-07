@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -66,12 +65,12 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
                 .clickViewAppLink(appName, teamName);
 
         filtersCollapsedSize = applicationDetailPage.getFilterDivHeight();
-        applicationDetailPage = applicationDetailPage.toggleAll();
+        applicationDetailPage = applicationDetailPage.toggleAllFilter();
 
         filtersExpandedSize = applicationDetailPage.getFilterDivHeight();
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        applicationDetailPage = applicationDetailPage.toggleAll();
+        applicationDetailPage = applicationDetailPage.toggleAllFilter();
         assertFalse("Filters were not collapsed.",
                 filtersExpandedSize == applicationDetailPage.getFilterDivHeight());
     }

@@ -97,10 +97,10 @@ public abstract class BasePage {
 		return new WafIndexPage(driver);
 	}
 
-	public ReportsIndexPage clickReportsHeaderLink() {
+	public AnalyticsPage clickAnalyticsLink() {
 		driver.findElementById("reportsHeader").click();
 		waitForElement(driver.findElementByTagName("h2"));
-		return new ReportsIndexPage(driver);
+		return new AnalyticsPage(driver);
 	}
 	
 	public void clickConfigTab(){

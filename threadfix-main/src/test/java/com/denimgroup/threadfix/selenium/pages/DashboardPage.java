@@ -63,14 +63,14 @@ public class DashboardPage extends BasePage{
             return false;
         }
     }
-	public ReportsIndexPage click6MonthViewMore(){
+	public AnalyticsPage click6MonthViewMore(){
 		driver.findElementById("leftViewMore").click();
-		return new ReportsIndexPage(driver);
+		return new AnalyticsPage(driver);
 	}
 	
-	public ReportsIndexPage clickTop10ViewMore(){
+	public AnalyticsPage clickTop10ViewMore(){
 		driver.findElementById("rightViewMore").click();
-		return new ReportsIndexPage(driver);
+		return new AnalyticsPage(driver);
 	}
 	
 	public ApplicationDetailPage clickLatestUploadApp(){

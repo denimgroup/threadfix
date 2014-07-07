@@ -455,7 +455,7 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElement(By.className("filter-controls")).getSize().getHeight();
     }
 
-    public ApplicationDetailPage toggleAll() {
+    public ApplicationDetailPage toggleAllFilter() {
         driver.findElementById("toggleAllButton").click();
         sleep(2000);
         return new ApplicationDetailPage(driver);
