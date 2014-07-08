@@ -64,9 +64,7 @@ public class FilterPage extends BasePage {
         setVulnerabilityType(vulnerabilityType)
                 .setSeverity(severity)
                 .clickAddFilter();
-        WebDriverWait wait = new WebDriverWait(driver, 300);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("vulnFiltersSuccessMessage")));
-        //waitForElement(driver.findElementByClassName("alert-success"));
+        sleep(1500);
         return new FilterPage(driver);
     }
 
@@ -159,7 +157,7 @@ public class FilterPage extends BasePage {
 
     /*_____________ Page Methods ______________*/
     public FilterPage waitForChanges() {
-        sleep(240000);
+        sleep(300000);
         //sleep(30000);
         return this;
     }
@@ -168,6 +166,10 @@ public class FilterPage extends BasePage {
 
     public boolean isCreateNewFilterPresent() {
         return driver.findElementById("createNewKeyModalButton").isDisplayed();
+    }
+
+    public boolean isSuccessMessagePresent() {
+        return driver.findElementsById("vulnFiltersSuccessMessage").size() != 0;
     }
 
     public boolean isVulnerabilityTypeFound() {

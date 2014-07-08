@@ -46,6 +46,7 @@ public class CWEUpdateIT extends BaseIT {
                 .addVulnerabilityFilter(vulnerabilityType, severity);
 
         assertTrue("Could not find the vulnerability.", globalFilterPage.isVulnerabilityTypeFound());
+        assertTrue("Success message not present.", globalFilterPage.isSuccessMessagePresent());
 
         try {
             TeamIndexPage teamIndexPage = globalFilterPage.deleteFilter()

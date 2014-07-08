@@ -36,7 +36,7 @@ public class LoginPage extends BasePage {
 
 	public LoginPage(WebDriver webdriver) {
 		super(webdriver);
-		
+
 		String maybeUrl = System.getProperty("url");
 		if (maybeUrl != null) {
 			url = maybeUrl;
