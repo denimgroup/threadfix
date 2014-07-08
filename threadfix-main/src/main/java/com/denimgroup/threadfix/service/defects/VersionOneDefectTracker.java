@@ -405,11 +405,16 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             Assets.Asset assetRelation = new Assets.Asset();
             assetRelation.setHref(targetAsset.getHref());
             assetRelation.setIdref(targetAsset.getId());
+            if (act.equals("add")) {
+                assetRelation.setAct("add");
+            }
 
             LOG.info("Returning relation with href=" + targetAsset.getHref());
 
             Assets.Asset.Relation relation = new Assets.Asset.Relation();
-            relation.setAct(act);
+            if (act.equals("set")) {
+                relation.setAct("set");
+            }
             relation.setName(name);
             relation.getAssetList().add(assetRelation);
             return relation;

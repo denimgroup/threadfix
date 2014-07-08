@@ -59,6 +59,16 @@ public class Assets {
         List<Relation> relations;
         @XmlElement(name="Attribute")
         List<Attribute> attributes;
+        @XmlAttribute(name="act")
+        String act;
+
+        public String getAct() {
+            return act;
+        }
+
+        public void setAct(String act) {
+            this.act = act;
+        }
 
         public String getHref() {
             return href;
