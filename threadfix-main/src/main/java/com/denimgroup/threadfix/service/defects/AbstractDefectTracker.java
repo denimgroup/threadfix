@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
@@ -291,6 +292,10 @@ public abstract class AbstractDefectTracker {
 		this.projectName = projectName;
 	}
 
+	public String getUrlEncodedProjectName() {
+        return urlEncode(projectName);
+    }
+
 	public String getProjectId() {
 		return projectId;
 	}
@@ -306,4 +311,12 @@ public abstract class AbstractDefectTracker {
 	public void setLastError(String lastError) {
 		this.lastError = lastError;
 	}
+
+    public static String urlEncode(String input) {
+        try {
+            return URLEncoder.encode(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e, "UTF-8 not supported.");
+        }
+    }
 }

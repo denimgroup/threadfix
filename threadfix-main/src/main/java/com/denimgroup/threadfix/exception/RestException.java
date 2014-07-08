@@ -31,13 +31,41 @@ public abstract class RestException extends RuntimeException {
 
     final String responseString;
 
+    /**
+     *
+     * @param cause wrapped exception
+     * @param responseString gets printed to the user
+     */
     public RestException(Throwable cause, String responseString) {
         super(cause);
         this.responseString = responseString;
     }
 
+    /**
+     *
+     * @param responseString gets printed to the user
+     */
     public RestException(String responseString) {
         super();
+        this.responseString = responseString;
+    }
+
+    /**
+     * @param responseString gets printed to the user
+     * @param exceptionMessageString gets printed to the error logs page
+     */
+    public RestException(String responseString, String exceptionMessageString) {
+        super(exceptionMessageString);
+        this.responseString = responseString;
+    }
+
+    /**
+     * @param e the wrapped exception
+     * @param responseString gets printed to the user
+     * @param exceptionMessageString gets printed to the error logs page
+     */
+    public RestException(Exception e, String responseString, String exceptionMessageString) {
+        super(exceptionMessageString, e);
         this.responseString = responseString;
     }
 

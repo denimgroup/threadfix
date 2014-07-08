@@ -25,23 +25,21 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
-import com.denimgroup.threadfix.exception.IllegalStateRestException;
+import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
+import com.denimgroup.threadfix.exception.RestUrlException;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
+import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinition;
+import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinitionParser;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.JAXBException;
-import java.io.UnsupportedEncodingException;
+import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -52,32 +50,100 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     private static final String CONTENT_TYPE = "application/xml";
 
+    private static final SanitizedLogger LOG = new SanitizedLogger(VersionOneDefectTracker.class);
+
     RestUtils restUtils = RestUtilsImpl.getInstance(VersionOneDefectTracker.class);
 
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
         Assets.Asset assetTemplate = getAssetTemplate();
-        if (assetTemplate == null) {
-            log.warn("Unable to get New Asset Template from VersionOne");
-            return null;
-        }
+
         assetTemplate.getAttributes().add(createAttribute("Name", "set", metadata.getDescription()));
         assetTemplate.getAttributes().add(createAttribute("Description", "set", makeDescription(vulnerabilities, metadata)));
         assetTemplate.getRelations().add(createTimeBoxRelation(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" +
-                getProjectName() + "'&sel=Name", "Timebox", "set", metadata.getComponent()));
+                getUrlEncodedProjectName() + "'&sel=Name", "Timebox", "set", metadata.getComponent()));
         assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='WorkitemPriority';Name='" +
-                metadata.getPriority() + "'&sel=Name","Priority", "set"));
+                urlEncode(metadata.getPriority()) + "'&sel=Name", "Priority", "set"));
         assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='StoryStatus';Name='" +
-                metadata.getStatus() + "'&sel=Name","Status", "set"));
-        try {
-            String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
-            String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
+                urlEncode(metadata.getStatus()) + "'&sel=Name","Status", "set"));
 
-            return getDefectNumber(result);
-        } catch (Exception e) {
-            log.error("Error when trying to unmarshal defect object to xml string", e);
+        String attributesXML = restUtils.getUrlAsString(getMetaEndpoint(), getUsername(), getPassword());
+        LOG.info(attributesXML);
+        List<AttributeDefinition> attributeDefinitions =
+                AttributeDefinitionParser.parseRequiredAttributes(attributesXML);
+        setDefaults(assetTemplate, attributeDefinitions);
+
+        String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
+        
+        LOG.info(defectXml);
+
+        String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
+
+        if (result == null) {
+            throw new DefectTrackerCommunicationException("ThreadFix was unable to submit a defect to the tracker.");
         }
-        return null;
+
+        return getDefectNumber(result);
+    }
+
+    private void setDefaults(Assets.Asset assetTemplate, List<AttributeDefinition> attributeDefinitions) {
+
+        List<String> relationNames = assetTemplate.getRelationNames(),
+                attributeNames = assetTemplate.getAttributeNames();
+
+        for (AttributeDefinition attributeDefinition : attributeDefinitions) {
+
+            LOG.info("Checking required field " + attributeDefinition.getName());
+
+            if (relationNames.contains(attributeDefinition.getName()) ||
+                    attributeNames.contains(attributeDefinition.getName())) {
+                LOG.info("Already had " + attributeDefinition.getName());
+                continue;
+            }
+
+            switch (attributeDefinition.getRelationType()) {
+                case "Text":
+                case "Password":
+                case "LongText":
+                    addAttribute(attributeDefinition, assetTemplate, "DefaultValue");
+                    break;
+                case "Relation":
+                    addRelation(attributeDefinition, assetTemplate);
+                    break;
+                case "Numeric":
+                    addAttribute(attributeDefinition, assetTemplate, "1");
+                default:
+                    LOG.error("Encountered unexpected type: " + attributeDefinition.getRelationType());
+
+            }
+        }
+    }
+
+    private void addRelation(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate) {
+        assert attributeDefinition.getRelatedItemType() != null : "Related Item type parsing is broken.";
+
+        String action = attributeDefinition.isMultiValue() ? "add" : "set";
+
+        String url = getUrlWithRest() +
+                attributeDefinition.getRelatedItemType()
+                + "?sel=Name";
+
+        if ("Theme".equals(attributeDefinition.getRelatedItemType())) {
+            url = url + "&where=SecurityScope.Name='" +
+                getUrlEncodedProjectName() + "'";
+        }
+
+        LOG.info("Adding " + attributeDefinition + " as relation.");
+        assetTemplate.getRelations().add(createRelation(url, attributeDefinition.getName(), action));
+    }
+
+    private void addAttribute(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate, String value) {
+        LOG.info("Adding " + attributeDefinition.getName() + " as attribute.");
+
+        String action = attributeDefinition.isMultiValue() ? "add" : "set";
+
+        assetTemplate.getAttributes().add(
+                createAttribute(attributeDefinition.getName(), action, value));
     }
 
     @Override
@@ -108,7 +174,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     @Override
     public List<Defect> getDefectList() {
 
-        List<String> defectNumberList = getAttributes(getUrlWithRest() + "Defect?where=Scope.Name='" + getProjectName() + "'&sel=Number");
+        List<String> defectNumberList = getAttributes(getUrlWithRest() +
+                "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "'&sel=Number");
 
         List<Defect> defectList = list();
         Defect defect;
@@ -144,31 +211,21 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     @Override
     public String getProjectIdByName() {
-        List<Assets.Asset> assetList = null;
-        try {
-            assetList = getAssets(getUrlWithRest() +
-                    "Scope?where=Scope.Name='" +
-                    URLEncoder.encode(getProjectName(), "UTF-8") + "'");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateRestException(e, "UTF-8 wasn't supported.");
-        }
+        List<Assets.Asset> assetList = getAssets(getUrlWithRest() +
+                    "Scope?where=Scope.Name='" + getUrlEncodedProjectName() + "'");
         if (assetList != null && !assetList.isEmpty()) {
             return assetList.get(0).getId();
         }
-        log.warn("Couldn't find id for VersionOne project");
+        log.error("Couldn't find id for VersionOne project");
         return null;
     }
 
     @Override
     public ProjectMetadata getProjectMetadata() {
 
-        List<String> sprints = null;
-        try {
-            sprints = getAttributes(getUrlWithRest() +
-                    "Timebox?where=Schedule.ScheduledScopes.Name='" + URLEncoder.encode(getProjectName(), "UTF-8") + "'&sel=Name");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateRestException(e, "UTF-8 wasn't supported.");
-        }
+        List<String> sprints = getAttributes(getUrlWithRest() +
+                    "Timebox?where=Schedule.ScheduledScopes.Name='" + getUrlEncodedProjectName() + "'&sel=Name");
+
         sprints.add(0,"");
         List<String> blankList = list("-");
         List<String> statusList = getAttributes(getUrlWithRest() + "List?where=AssetType='StoryStatus'&sel=Name");
@@ -230,31 +287,39 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         return valid;
     }
 
+    private String getMetaEndpoint() {
+        return getUrlWithExtension("meta.v1/Defect");
+    }
+
     private String getUrlWithRest() {
+        return getUrlWithExtension("rest-1.v1/Data");
+    }
+
+    private String getUrlWithExtension(String extension) {
         if (getUrl() == null || getUrl().trim().equals("")) {
+            assert false : "We shouldn't be in this code path.";
             return null;
         }
 
         try {
             new URL(getUrl());
         } catch (MalformedURLException e) {
-            setLastError("The URL format was bad.");
-            return null;
+            throw new RestUrlException(e, "Invalid URL.");
         }
 
-        if (getUrl().endsWith("rest-1.v1/Data/")) {
+        if (getUrl().endsWith(extension + "/")) {
             return getUrl();
         }
 
-        if (getUrl().endsWith("rest-1.v1/Data")) {
+        if (getUrl().endsWith(extension)) {
             return getUrl().concat("/");
         }
 
         String tempUrl = getUrl().trim();
         if (tempUrl.endsWith("/")) {
-            tempUrl = tempUrl.concat("rest-1.v1/Data/");
+            tempUrl = tempUrl.concat(extension).concat("/");
         } else {
-            tempUrl = tempUrl.concat("/rest-1.v1/Data/");
+            tempUrl = tempUrl.concat("/").concat(extension).concat("/");
         }
 
         return tempUrl;
@@ -267,40 +332,32 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         String result = restUtils.getUrlAsString(getUrlWithRest() +
                         "Member?where=Username='" + getUrlEncodedUsername() + "'&sel=Scopes",
                 getUsername(), getPassword());
-        try {
-            if (result != null) {
-                Assets assets = MarshallingUtils.marshal(Assets.class, result);
-                if (assets != null && assets.getAssets() != null) {
-                    for (Assets.Asset asset : assets.getAssets()) {
-                        if (asset != null && asset.getAttributes() != null && asset.getAttributes().size() > 0) {
-                            if (asset.getAttributes().get(0).getMixed() != null)
-                                projectList.addAll(asset.getAttributes().get(0).getMixed());
-                            if (asset.getAttributes().get(0).getValues() != null)
-                                projectList.addAll(asset.getAttributes().get(0).getValues());
-                        }
+        if (result != null) {
+            Assets assets = MarshallingUtils.marshal(Assets.class, result);
+            if (assets != null && assets.getAssets() != null) {
+                for (Assets.Asset asset : assets.getAssets()) {
+                    if (asset != null && asset.getAttributes() != null && asset.getAttributes().size() > 0) {
+                        if (asset.getAttributes().get(0).getMixed() != null)
+                            projectList.addAll(asset.getAttributes().get(0).getMixed());
+                        if (asset.getAttributes().get(0).getValues() != null)
+                            projectList.addAll(asset.getAttributes().get(0).getValues());
                     }
                 }
             }
-        } catch (JAXBException e) {
-            log.warn("Unable to parse xml response");
-            throw new DefectTrackerFormatException(e, "Unable to parse response from server.");
         }
+
         return projectList;
     }
 
     private List<Assets.Asset> getAssets(String url) {
         List<Assets.Asset> assetList = list();
 
-        try {
-            String result = restUtils.getUrlAsString(url, getUsername(), getPassword());
-            if (result != null) {
-                Assets assets = MarshallingUtils.marshal(Assets.class, result);
-                if (assets != null && assets.getAssets() != null) {
-                    return assets.getAssets();
-                }
+        String result = restUtils.getUrlAsString(url, getUsername(), getPassword());
+        if (result != null) {
+            Assets assets = MarshallingUtils.marshal(Assets.class, result);
+            if (assets != null && assets.getAssets() != null) {
+                assetList = assets.getAssets();
             }
-        } catch (JAXBException e) {
-            log.warn("Unable to parse Assets xml response");
         }
         return assetList;
     }
@@ -334,10 +391,18 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      */
     private Assets.Asset.Relation createRelation(String url, String name, String act) {
         List<Assets.Asset> assetList = getAssets(url);
-        for (Assets.Asset asset : assetList) {
+
+        if (assetList.size() == 0) {
+            LOG.warn("Asset list was empty for " + url + ". Integration will probably fail.");
+        } else {
+
+            Assets.Asset targetAsset = assetList.get(0);
+
             Assets.Asset assetRelation = new Assets.Asset();
-            assetRelation.setHref(asset.getHref());
-            assetRelation.setIdref(asset.getId());
+            assetRelation.setHref(targetAsset.getHref());
+            assetRelation.setIdref(targetAsset.getId());
+
+            LOG.info("Returning relation with href=" + targetAsset.getHref());
 
             Assets.Asset.Relation relation = new Assets.Asset.Relation();
             relation.setAct(act);
@@ -345,6 +410,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             relation.getAssetList().add(assetRelation);
             return relation;
         }
+
         return null;
     }
 
@@ -381,6 +447,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             attribute.setMixed(list(values));
         }
 
+        LOG.info("Returning attribute with values=" + Arrays.toString(values));
+
         return attribute;
     }
 
@@ -388,27 +456,21 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      * Get Asset Template to create new Asset
      * @return
      */
+    @Nonnull
     private Assets.Asset getAssetTemplate() {
         if (getProjectId() == null) {
             setProjectId(getProjectIdByName());
         }
-        String result = null;
-        try {
-            result = restUtils.getUrlAsString(getUrlWithRest().replace("Data/", "") +
-                    "New/Defect?ctx=" +
-                    URLEncoder.encode(getProjectId(), "UTF-8"), getUsername(), getPassword());
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateRestException(e, "UTF-8 not supported.");
+
+        String result = restUtils.getUrlAsString(getUrlWithRest().replace("Data/", "") +
+                "New/Defect?ctx=" + urlEncode(getProjectId()), getUsername(), getPassword());
+
+        if (result == null) {
+            throw new DefectTrackerCommunicationException("Received null response while attempting to get " +
+                    "the asset information from the VersionOne server.");
         }
 
-        try {
-            if (result != null) {
-                return MarshallingUtils.marshal(Assets.Asset.class, result);
-            }
-        } catch (JAXBException e) {
-            log.warn("Unable to parse Asset xml response");
-        }
-        return null;
+        return MarshallingUtils.marshal(Assets.Asset.class, result);
     }
 
     /**
@@ -416,26 +478,27 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      * @param defectXml
      * @return
      */
-    private String getDefectNumber(String defectXml) {
+    private String getDefectNumber(@Nonnull String defectXml) {
 
         String number = null;
 
-        try {
-            Assets.Asset asset = MarshallingUtils.marshal(Assets.Asset.class, defectXml);
-            String id = asset.getId();
-            if (id != null)
-                id = id.replace(":","/");
-            String numberXmlDefect = restUtils.getUrlAsString(getUrlWithRest() +
-                    id + "?sel=Number", getUsername(), getPassword());
-            asset = MarshallingUtils.marshal(Assets.Asset.class, numberXmlDefect);
-            if (asset != null && asset.getAttributes() != null
-                    && !asset.getAttributes().isEmpty()
-                    && asset.getAttributes().get(0).getMixed() != null
-                    && !asset.getAttributes().get(0).getMixed().isEmpty())
-                number = asset.getAttributes().get(0).getMixed().get(0);
+        Assets.Asset asset = MarshallingUtils.marshal(Assets.Asset.class, defectXml);
+        String id = asset.getId();
+        if (id != null)
+            id = id.replace(":","/");
+        String numberXmlDefect = restUtils.getUrlAsString(getUrlWithRest() +
+                id + "?sel=Number", getUsername(), getPassword());
 
-        } catch (JAXBException e) {
-            log.warn("Unable to parse new Defect xml response");
+        if (numberXmlDefect == null) {
+            throw new DefectTrackerCommunicationException("Received null response from server.");
+        }
+
+        asset = MarshallingUtils.marshal(Assets.Asset.class, numberXmlDefect);
+        if (asset != null && asset.getAttributes() != null
+                && !asset.getAttributes().isEmpty()
+                && asset.getAttributes().get(0).getMixed() != null
+                && !asset.getAttributes().get(0).getMixed().isEmpty()) {
+            number = asset.getAttributes().get(0).getMixed().get(0);
         }
 
         return number;
@@ -446,26 +509,22 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      * @param defect
      * @return
      */
-    private String getStatus(Defect defect) {
-        if (defect == null || defect.getNativeId() == null) {
+    @Nullable
+    private String getStatus(@Nonnull Defect defect) {
+        if (defect.getNativeId() == null) {
             log.warn("Bad defect passed to getStatus()");
             return null;
         }
 
         log.info("Updating status for defect " + defect.getNativeId());
 
-        List<String> result = null;
-        try {
-            result = getAttributes(getUrlWithRest() + "Defect?where=Number='" +
-                    URLEncoder.encode(defect.getNativeId(), "UTF-8") + "'&sel=Status.Name");
-            if (!result.isEmpty()) {
-                log.info("Current status for defect " +
-                        URLEncoder.encode(defect.getNativeId(), "UTF-8") + " is " + result.get(0));
-                defect.setStatus(result.get(0));
-                return result.get(0);
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        List<String> result = getAttributes(getUrlWithRest() + "Defect?where=Number='" +
+                urlEncode(defect.getNativeId()) + "'&sel=Status.Name");
+        if (!result.isEmpty()) {
+            log.info("Current status for defect " +
+                    urlEncode(defect.getNativeId()) + " is " + result.get(0));
+            defect.setStatus(result.get(0));
+            return result.get(0);
         }
         return null;
     }
