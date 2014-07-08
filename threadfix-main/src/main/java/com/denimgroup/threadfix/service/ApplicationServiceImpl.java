@@ -341,7 +341,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void validateAfterEdit(Application application, BindingResult result) {
-		if (application.getName() != null && application.getName().trim().equals("")) {
+        
+		if (application.getName() == null || application.getName().trim().equals("")) {
 			if (!result.hasFieldErrors("name")) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 			}
@@ -355,8 +356,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 				return;
 			}
 		}		
-						
-		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(), application.getOrganization().getId()));
+
+		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(),
+                application.getOrganization().getId()));
 
 		if (application.getApplicationCriticality() == null ||
 				application.getApplicationCriticality().getId() == null ||
