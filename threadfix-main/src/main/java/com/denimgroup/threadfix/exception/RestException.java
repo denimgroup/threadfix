@@ -55,7 +55,17 @@ public abstract class RestException extends RuntimeException {
      * @param exceptionMessageString gets printed to the error logs page
      */
     public RestException(String responseString, String exceptionMessageString) {
-        super();
+        super(exceptionMessageString);
+        this.responseString = responseString;
+    }
+
+    /**
+     * @param e the wrapped exception
+     * @param responseString gets printed to the user
+     * @param exceptionMessageString gets printed to the error logs page
+     */
+    public RestException(Exception e, String responseString, String exceptionMessageString) {
+        super(exceptionMessageString, e);
         this.responseString = responseString;
     }
 

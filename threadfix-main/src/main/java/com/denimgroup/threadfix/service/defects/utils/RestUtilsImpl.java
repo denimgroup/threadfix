@@ -105,6 +105,9 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 	}
 
 	public String getUrlAsString(String urlString, String username, String password) throws RestException {
+
+        System.out.println(urlString);
+
 		InputStream responseStream = getUrl(urlString,username,password);
 
 		String test = null;
@@ -174,7 +177,8 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 						LOG.warn("Error stream from HTTP connection was not null. Attempting to get response text.");
                         setPostErrorResponse(IOUtils.toString(errorStream));
 						LOG.warn("Error text in response was '" + getPostErrorResponse() + "'");
-                        throw new RestIOException(e, "Unable to get response from server. Error text was: " +
+                        throw new RestIOException(e, "Received error from server. Check the logs for more details.",
+                                "Unable to get response from server. Error text was: " +
                                 getPostErrorResponse());
 					}
 				} catch (IOException e2) {

@@ -30,4 +30,8 @@ public class RestIOException extends RestException {
     public RestIOException(Throwable cause, String responseString) {
         super(cause, responseString);
     }
+
+    public RestIOException(Exception e, String responseString, String exceptionMessageString) {
+        super(e, responseString, exceptionMessageString);
+    }
 }

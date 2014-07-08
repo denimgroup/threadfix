@@ -27,19 +27,19 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
 import com.denimgroup.threadfix.exception.RestUrlException;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
+import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinition;
+import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinitionParser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -49,6 +49,8 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     private static final String CONTENT_TYPE = "application/xml";
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(VersionOneDefectTracker.class);
 
     RestUtils restUtils = RestUtilsImpl.getInstance(VersionOneDefectTracker.class);
 
@@ -61,11 +63,19 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         assetTemplate.getRelations().add(createTimeBoxRelation(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" +
                 getUrlEncodedProjectName() + "'&sel=Name", "Timebox", "set", metadata.getComponent()));
         assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='WorkitemPriority';Name='" +
-                urlEncode(metadata.getPriority()) + "'&sel=Name","Priority", "set"));
+                urlEncode(metadata.getPriority()) + "'&sel=Name", "Priority", "set"));
         assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='StoryStatus';Name='" +
                 urlEncode(metadata.getStatus()) + "'&sel=Name","Status", "set"));
 
+        String attributesXML = restUtils.getUrlAsString(getMetaEndpoint(), getUsername(), getPassword());
+        LOG.info(attributesXML);
+        List<AttributeDefinition> attributeDefinitions =
+                AttributeDefinitionParser.parseRequiredAttributes(attributesXML);
+        setDefaults(assetTemplate, attributeDefinitions);
+
         String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
+        
+        LOG.info(defectXml);
 
         String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
 
@@ -74,6 +84,66 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         }
 
         return getDefectNumber(result);
+    }
+
+    private void setDefaults(Assets.Asset assetTemplate, List<AttributeDefinition> attributeDefinitions) {
+
+        List<String> relationNames = assetTemplate.getRelationNames(),
+                attributeNames = assetTemplate.getAttributeNames();
+
+        for (AttributeDefinition attributeDefinition : attributeDefinitions) {
+
+            LOG.info("Checking required field " + attributeDefinition.getName());
+
+            if (relationNames.contains(attributeDefinition.getName()) ||
+                    attributeNames.contains(attributeDefinition.getName())) {
+                LOG.info("Already had " + attributeDefinition.getName());
+                continue;
+            }
+
+            switch (attributeDefinition.getRelationType()) {
+                case "Text":
+                case "Password":
+                case "LongText":
+                    addAttribute(attributeDefinition, assetTemplate, "DefaultValue");
+                    break;
+                case "Relation":
+                    addRelation(attributeDefinition, assetTemplate);
+                    break;
+                case "Numeric":
+                    addAttribute(attributeDefinition, assetTemplate, "1");
+                default:
+                    LOG.error("Encountered unexpected type: " + attributeDefinition.getRelationType());
+
+            }
+        }
+    }
+
+    private void addRelation(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate) {
+        assert attributeDefinition.getRelatedItemType() != null : "Related Item type parsing is broken.";
+
+        String action = attributeDefinition.isMultiValue() ? "add" : "set";
+
+        String url = getUrlWithRest() +
+                attributeDefinition.getRelatedItemType()
+                + "?sel=Name";
+
+        if ("Theme".equals(attributeDefinition.getRelatedItemType())) {
+            url = url + "&where=SecurityScope.Name='" +
+                getUrlEncodedProjectName() + "'";
+        }
+
+        LOG.info("Adding " + attributeDefinition + " as relation.");
+        assetTemplate.getRelations().add(createRelation(url, attributeDefinition.getName(), action));
+    }
+
+    private void addAttribute(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate, String value) {
+        LOG.info("Adding " + attributeDefinition.getName() + " as attribute.");
+
+        String action = attributeDefinition.isMultiValue() ? "add" : "set";
+
+        assetTemplate.getAttributes().add(
+                createAttribute(attributeDefinition.getName(), action, value));
     }
 
     @Override
@@ -104,7 +174,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     @Override
     public List<Defect> getDefectList() {
 
-        List<String> defectNumberList = getAttributes(getUrlWithRest() + "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "'&sel=Number");
+        List<String> defectNumberList = getAttributes(getUrlWithRest() +
+                "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "'&sel=Number");
 
         List<Defect> defectList = list();
         Defect defect;
@@ -216,7 +287,15 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         return valid;
     }
 
+    private String getMetaEndpoint() {
+        return getUrlWithExtension("meta.v1/Defect");
+    }
+
     private String getUrlWithRest() {
+        return getUrlWithExtension("rest-1.v1/Data");
+    }
+
+    private String getUrlWithExtension(String extension) {
         if (getUrl() == null || getUrl().trim().equals("")) {
             assert false : "We shouldn't be in this code path.";
             return null;
@@ -228,19 +307,19 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             throw new RestUrlException(e, "Invalid URL.");
         }
 
-        if (getUrl().endsWith("rest-1.v1/Data/")) {
+        if (getUrl().endsWith(extension + "/")) {
             return getUrl();
         }
 
-        if (getUrl().endsWith("rest-1.v1/Data")) {
+        if (getUrl().endsWith(extension)) {
             return getUrl().concat("/");
         }
 
         String tempUrl = getUrl().trim();
         if (tempUrl.endsWith("/")) {
-            tempUrl = tempUrl.concat("rest-1.v1/Data/");
+            tempUrl = tempUrl.concat(extension).concat("/");
         } else {
-            tempUrl = tempUrl.concat("/rest-1.v1/Data/");
+            tempUrl = tempUrl.concat("/").concat(extension).concat("/");
         }
 
         return tempUrl;
@@ -312,10 +391,18 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      */
     private Assets.Asset.Relation createRelation(String url, String name, String act) {
         List<Assets.Asset> assetList = getAssets(url);
-        for (Assets.Asset asset : assetList) {
+
+        if (assetList.size() == 0) {
+            LOG.warn("Asset list was empty for " + url + ". Integration will probably fail.");
+        } else {
+
+            Assets.Asset targetAsset = assetList.get(0);
+
             Assets.Asset assetRelation = new Assets.Asset();
-            assetRelation.setHref(asset.getHref());
-            assetRelation.setIdref(asset.getId());
+            assetRelation.setHref(targetAsset.getHref());
+            assetRelation.setIdref(targetAsset.getId());
+
+            LOG.info("Returning relation with href=" + targetAsset.getHref());
 
             Assets.Asset.Relation relation = new Assets.Asset.Relation();
             relation.setAct(act);
@@ -323,6 +410,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             relation.getAssetList().add(assetRelation);
             return relation;
         }
+
         return null;
     }
 
@@ -358,6 +446,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         } else {
             attribute.setMixed(list(values));
         }
+
+        LOG.info("Returning attribute with values=" + Arrays.toString(values));
 
         return attribute;
     }

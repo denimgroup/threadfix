@@ -90,6 +90,27 @@ public class Assets {
             return relations;
         }
 
+        public List<String> getRelationNames() {
+            List<String> names = list();
+            for (Relation relation : getRelations()) {
+                if (relation != null) {
+                    names.add(relation.getName());
+                }
+            }
+            return names;
+        }
+
+        public List<String> getAttributeNames() {
+            List<String> names = list();
+            for (Attribute attribute : getAttributes()) {
+                if (attribute != null) {
+                    names.add(attribute.getName());
+
+                }
+            }
+            return names;
+        }
+
         public void setRelations(List<Relation> relations) {
             this.relations = relations;
         }
