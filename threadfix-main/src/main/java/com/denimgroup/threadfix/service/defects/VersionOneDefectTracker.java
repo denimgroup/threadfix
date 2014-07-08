@@ -59,7 +59,11 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         Assets.Asset assetTemplate = getAssetTemplate();
 
         assetTemplate.getAttributes().add(createAttribute("Name", "set", metadata.getDescription()));
-        assetTemplate.getAttributes().add(createAttribute("Description", "set", makeDescription(vulnerabilities, metadata)));
+
+        String description = makeDescription(vulnerabilities, metadata);
+        description = description.replaceAll("\n", "<br>");
+
+        assetTemplate.getAttributes().add(createAttribute("Description", "set", description));
         assetTemplate.getRelations().add(createTimeBoxRelation(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" +
                 getUrlEncodedProjectName() + "'&sel=Name", "Timebox", "set", metadata.getComponent()));
         assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='WorkitemPriority';Name='" +
@@ -68,14 +72,14 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
                 urlEncode(metadata.getStatus()) + "'&sel=Name","Status", "set"));
 
         String attributesXML = restUtils.getUrlAsString(getMetaEndpoint(), getUsername(), getPassword());
-        LOG.info(attributesXML);
+        LOG.debug(attributesXML);
         List<AttributeDefinition> attributeDefinitions =
                 AttributeDefinitionParser.parseRequiredAttributes(attributesXML);
         setDefaults(assetTemplate, attributeDefinitions);
 
         String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
         
-        LOG.info(defectXml);
+        LOG.debug(defectXml);
 
         String result = restUtils.postUrlAsString(getUrlWithRest() + "Defect", defectXml, getUsername(), getPassword(), CONTENT_TYPE);
 

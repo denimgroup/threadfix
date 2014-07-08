@@ -106,7 +106,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 
 	public String getUrlAsString(String urlString, String username, String password) throws RestException {
 
-        System.out.println(urlString);
+        LOG.debug("Requesting " + urlString);
 
 		InputStream responseStream = getUrl(urlString,username,password);
 
