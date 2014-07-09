@@ -785,6 +785,11 @@ div.box-shadow {
 	margin-bottom:0;
 }
 
+.long-path-word-wrap {
+    word-wrap: break-word;
+    max-width: 300px;
+}
+
 .vuln-comment-word-wrap {
 	word-wrap: break-word;
 	max-width:700px;
