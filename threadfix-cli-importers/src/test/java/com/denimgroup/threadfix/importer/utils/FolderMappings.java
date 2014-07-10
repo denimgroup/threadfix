@@ -32,6 +32,7 @@ public class FolderMappings {
         addToMap(ScannerType.FINDBUGS, "Static/FindBugs");
         addToMap(ScannerType.FORTIFY, "Static/Fortify");
         addToMap(ScannerType.DEPENDENCY_CHECK, "Static/DependencyCheck");
+        addToMap(ScannerType.PMD, "Static/PMD");
         addToMap(ScannerType.MANUAL, "Manual/SSVL");
     }
 

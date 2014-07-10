@@ -160,6 +160,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ScannerType.DEPENDENCY_CHECK.getFullName(), "analysis");
         addToMap(ScannerType.CHECKMARX.getFullName(), "CxXMLResults");
         addToMap(ScannerType.CENZIC_HAILSTORM.getFullName(), "Assessments", "AssessmentRunData");
+        addToMap(ScannerType.PMD.getFullName(), "pmd");
 	}
 	
 	private static void addToMap(String name, String... tags) {

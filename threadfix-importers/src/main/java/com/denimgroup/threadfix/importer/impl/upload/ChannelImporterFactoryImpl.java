@@ -73,6 +73,7 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
             case WEBINSPECT:         channelImporter = new WebInspectChannelImporter(); break;
             case ZAPROXY:            channelImporter = new ZaproxyChannelImporter(); break;
             case MANUAL:             channelImporter = new SSVLChannelImporter(); break;
+            case PMD:                channelImporter = new PMDChannelImporter(); break;
 
             // these don't get anything
             case QUALYSGUARD_WAS:
