@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/reset-fonts-grids.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/d3.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular-file-upload-shim.min.js"></script>
@@ -24,6 +25,8 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/header-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/init-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/directives.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/d3-directives.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/d3.js"></script>
 
     <!--[if lt IE 7]>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>

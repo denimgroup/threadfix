@@ -21,33 +21,27 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.enums;
+package com.denimgroup.threadfix.framework.impl.dotNet;
 
-import org.codehaus.jackson.map.annotate.JsonView;
+/**
+ * Created by mac on 6/11/14.
+ */
+public interface DotNetKeywords {
 
-public enum FrameworkType {
-	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC"), DOT_NET_MVC(".NET MVC");
-	
-	FrameworkType(String displayName) {
-		this.displayName = displayName;
-	}
-	
-	private String displayName;
-    @JsonView(Object.class)
-	public String getDisplayName() { return displayName; }
-	
-    public static FrameworkType getFrameworkType(String input) {
-		FrameworkType type = DETECT; // default framework type
-		
-		if (input != null) {
-			for (FrameworkType frameworkType : values()) {
-				if (frameworkType.toString().equals(input)) {
-					type = frameworkType;
-					break;
-				}
-			}
-		}
-		
-		return type;
-	}
+    public static final String
+            PUBLIC = "public",
+            CLASS = "class",
+            ROUTE_CONFIG = "RouteConfig",
+            REGISTER_ROUTES = "RegisterRoutes",
+            ROUTE_COLLECTION = "RouteCollection",
+            MAP_ROUTE = "MapRoute",
+            URL = "url",
+            NAME = "name",
+            DEFAULTS = "defaults",
+            NEW = "new",
+            CONTROLLER = "controller",
+            ACTION = "action",
+            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication";
+
+
 }

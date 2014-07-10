@@ -21,33 +21,32 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.enums;
+package com.denimgroup.threadfix.framework.impl.dotNet;
 
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkChecker;
+import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
-public enum FrameworkType {
-	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC"), DOT_NET_MVC(".NET MVC");
-	
-	FrameworkType(String displayName) {
-		this.displayName = displayName;
-	}
-	
-	private String displayName;
-    @JsonView(Object.class)
-	public String getDisplayName() { return displayName; }
-	
-    public static FrameworkType getFrameworkType(String input) {
-		FrameworkType type = DETECT; // default framework type
-		
-		if (input != null) {
-			for (FrameworkType frameworkType : values()) {
-				if (frameworkType.toString().equals(input)) {
-					type = frameworkType;
-					break;
-				}
-			}
-		}
-		
-		return type;
-	}
+import javax.annotation.Nonnull;
+import java.util.Collection;
+
+/**
+ * Created by mac on 6/17/14.
+ */
+public class DotNetFrameworkChecker extends FrameworkChecker {
+
+    @Nonnull
+    @Override
+    public FrameworkType check(@Nonnull ProjectDirectory directory) {
+        Collection files = FileUtils.listFiles(directory.getDirectory(),
+                new FileExtensionFileFilter("cs"), TrueFileFilter.INSTANCE);
+
+        System.out.println("." + files);
+
+        return files.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
+    }
+
 }

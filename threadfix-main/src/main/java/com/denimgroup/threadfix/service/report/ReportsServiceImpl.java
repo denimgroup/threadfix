@@ -212,10 +212,13 @@ public class ReportsServiceImpl implements ReportsService {
 			if (reportFormat == ReportFormat.TRENDING) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.SIX_MONTH_SUMMARY) {
-				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 6);
-				if (jasperPrint == null) {
-					return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
-				}
+//				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 6);
+                ReportCheckResultBean report6Month = getXMonthReport3D(applicationIdList, parameters, jasperReport, 6);
+                if (report6Month.getReportList() == null || report6Month.getReportList().size()==0)
+//				if (jasperPrint == null) {
+                    return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+                return report6Month;
+//				}
 			} else if (reportFormat == ReportFormat.TWELVE_MONTH_SUMMARY) {
 				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 12);
 				if (jasperPrint == null) {
@@ -341,6 +344,28 @@ public class ReportsServiceImpl implements ReportsService {
 				new JasperXMonthSummaryReport(scanList, scanDao, numMonths));
 		}
 	}
+
+    private ReportCheckResultBean getXMonthReport3D(List<Integer> applicationIdList, Map<String, Object> parameters,
+                                        JasperReport jasperReport, int numMonths) {
+        List<List<Scan>> scanList = new ArrayList<>();
+        boolean containsVulns = false;
+        for (Integer id : applicationIdList) {
+            scanList.add(applicationDao.retrieveById(id).getScans());
+        }
+        for(List<Scan> scan : scanList){
+            if (!scan.isEmpty()){
+                containsVulns = true;
+                break;
+            }
+        }
+        if (scanList.isEmpty() || !containsVulns ) {
+            log.info("Unable to fill Report - no scans were found.");
+            return null;
+        } else {
+            JasperXMonthSummaryReport reportExporter = new JasperXMonthSummaryReport(scanList, scanDao, numMonths);
+            return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
+        }
+    }
 
 	private String getString(InputStream inputStream) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));

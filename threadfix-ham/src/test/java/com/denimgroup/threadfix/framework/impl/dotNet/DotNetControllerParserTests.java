@@ -21,35 +21,31 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.framework.impl.dotNet;
 
-package com.denimgroup.threadfix.framework;
-
-import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
+import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
-import java.io.File;
+/**
+ * Created by mac on 6/11/14.
+ */
+public class DotNetControllerParserTests {
 
-import static org.junit.Assert.assertTrue;
+    @Test
+    public void testBasicController() {
+        DotNetControllerMappings mappings =
+                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/ChatController.cs"));
 
-public class FrameworkCalculatorTests {
-	
-	@Test
-	public void bodgeitTest() {
-		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.BODGEIT_SOURCE_LOCATION));
-		assertTrue("Didn't find JSP, found " + type + ".", type == FrameworkType.JSP);
-	}
-	
-	@Test
-	public void wavsepTest() {
-		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.WAVSEP_SOURCE_LOCATION));
-		assertTrue("Didn't find JSP, found " + type + ".", type == FrameworkType.JSP);
-	}
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Chat") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Chat.";
+        assert mappings.getActions().size() == 1 :
+                "The size was " + mappings.getActions().size() + " instead of 1.";
+        assert mappings.getActions().contains("Index") :
+                "Mappings didn't contain Index. They had " + mappings.getActions().iterator().next();
 
-	@Test
-	public void basicDotNetTest() {
-		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.DOT_NET_SAMPLE));
-		assertTrue("Didn't find DOT_NET_MVC, found " + type + ".", type == FrameworkType.DOT_NET_MVC);
-	}
+    }
+
 
 }
