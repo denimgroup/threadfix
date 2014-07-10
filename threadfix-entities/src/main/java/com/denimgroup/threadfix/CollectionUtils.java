@@ -102,4 +102,8 @@ public class CollectionUtils {
         }
     }
 
+    @Nonnull
+    public static <K, V> Map<K, V> newMap() {
+        return new HashMap<K, V>();
+    }
 }

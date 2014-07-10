@@ -33,20 +33,22 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 public class SpringDataFlowParser implements ParameterParser {
 	
 	// So we only compile these patterns once
-	private static final Pattern
+	public static final Pattern
 		ENTITY_TYPE_PATTERN      = Pattern.compile("([a-zA-Z0-9_]+) [^ ]+, ?BindingResult"),
 		ENTITY_OBJECT_PATTERN    = Pattern.compile("([a-zA-Z0-9_]+), ?BindingResult"),
 		PATH_VARIABLE_WITH_PARAM = Pattern.compile("@PathVariable\\(\"([a-zA-Z0-9]+)\"\\)"),
-		PATH_VARIABLE_NO_PARAM   = Pattern.compile("@PathVariable [^ ]+ ([^,\\)]+)"),
+		PATH_VARIABLE_NO_PARAM   = Pattern.compile("@PathVariable\\W+\\w+\\W+([^,\\)]+)"),
 		REQUEST_PARAM_WITH_PARAM = Pattern.compile("@RequestParam\\(\"([a-zA-Z0-9]+)\"\\)"),
-		REQUEST_PARAM_NO_PARAM   = Pattern.compile("@RequestParam [^ ]+ ([^,\\)]+)");
+		REQUEST_PARAM_NO_PARAM   = Pattern.compile("@RequestParam\\W+\\w+\\W+([^,\\)]+)");
 	
 	@Nullable
     private final SpringEntityMappings mappings;
@@ -112,35 +114,70 @@ public class SpringDataFlowParser implements ParameterParser {
 	// TODO move to a system that supports more than one variable
 	@Nullable
     private String attemptPathVariableParsing(@Nullable List<String> lines) {
-		
+
+        List<String> parameters;
+
 		String parameter = null;
 		
 		if (lines != null && !lines.isEmpty()) {
 			String elementText = lines.get(0);
-		
+
 			// try for @PathVariable("ownerId") int ownerId
-			parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_WITH_PARAM);
-			
-			if (parameter == null) {
+            parameters = RegexUtils.getRegexResults(elementText, PATH_VARIABLE_WITH_PARAM);
+
+			if (!parameters.isEmpty()) {
 				// try for @PathVariable String ownerName
-				parameter = RegexUtils.getRegexResult(elementText, PATH_VARIABLE_NO_PARAM);
+                parameters = RegexUtils.getRegexResults(elementText, PATH_VARIABLE_NO_PARAM);
 			}
-			
-			if (parameter == null) {
+
+			if (parameters.isEmpty()) {
 				// try for @RequestParam("ownerName") String ownerName
-				parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_WITH_PARAM);
+                parameters = RegexUtils.getRegexResults(elementText, REQUEST_PARAM_WITH_PARAM);
 			}
-			
-			if (parameter == null) {
+
+			if (parameters.isEmpty()) {
 				// try for @RequestParam String ownerName
-				parameter = RegexUtils.getRegexResult(elementText, REQUEST_PARAM_NO_PARAM);
+                parameters = RegexUtils.getRegexResults(elementText, REQUEST_PARAM_NO_PARAM);
 			}
+
+            if (parameters.size() == 1) {
+                parameter = parameters.get(0);
+            } else if (parameters.size() > 1) {
+                parameter = scoreParameters(parameters, lines);
+            }
 		}
-		
+
 		return parameter;
 	}
 
-	@Nullable
+    private String scoreParameters(List<String> parameters, List<String> lines) {
+
+        Map<String, Integer> map = newMap();
+
+        for (String parameter : parameters) {
+            map.put(parameter, 0);
+        }
+
+        for (String line : lines) {
+            for (String parameter : parameters) {
+                if (line.contains(parameter)) {
+                    map.put(parameter, map.get(parameter) + 1);
+                }
+            }
+        }
+
+        String winningParameter = null;
+
+        for (Map.Entry<String, Integer> stringIntegerEntry : map.entrySet()) {
+            if (winningParameter == null || stringIntegerEntry.getValue() > map.get(winningParameter)) {
+                winningParameter = stringIntegerEntry.getKey();
+            }
+        }
+
+        return winningParameter;
+    }
+
+    @Nullable
     private String attemptModelParsingNoMappings(@Nullable List<String> lines) {
 		
 		String parameter = null;
