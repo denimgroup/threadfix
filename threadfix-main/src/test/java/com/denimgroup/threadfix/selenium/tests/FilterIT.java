@@ -185,12 +185,14 @@ public class FilterIT extends BaseIT {
             clearGlobalFilter();
         } catch (TimeoutException t ) {
             System.err.println(t.getMessage());
+            loginPage.logout();
             clearGlobalFilter();
-            throw new RuntimeException("Test failed cleaning up filter.");
+            throw new RuntimeException("Test failed cleaning up filter.", t);
         } catch (NoSuchElementException e) {
+            loginPage.logout();
             System.err.println(e.getMessage());
             clearGlobalFilter();
-            throw new RuntimeException("Test failed cleaning up filter.");
+            throw e;
         }
     }
 
@@ -265,12 +267,12 @@ public class FilterIT extends BaseIT {
             System.err.println(t.getMessage());
             loginPage.logout();
             clearGlobalFilter();
-            throw new RuntimeException("Test failed cleaning up filter.");
+            throw new RuntimeException("Test failed cleaning up filter.", t);
         } catch (NoSuchElementException e) {
             loginPage.logout();
             System.err.println(e.getMessage());
             clearGlobalFilter();
-            throw new RuntimeException("Test failed cleaning up filter.");
+            throw e;
         }
     }
 
