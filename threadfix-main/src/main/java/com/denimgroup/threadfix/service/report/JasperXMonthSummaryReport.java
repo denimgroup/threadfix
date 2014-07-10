@@ -310,14 +310,15 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			} else {
 				index++;
 			}
-			buildHash();
+			buildHash(index);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private void buildHash() {
+	private Map<String, Object> buildHash(int index) {
+        Map<String, Object> hash = new HashMap<>();
 		resultsHash.clear();
 
 		long numCritical = 0, numHigh = 0, numMedium = 0, numLow = 0, numInfo = 0;
@@ -336,10 +337,29 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		resultsHash.put("mediumVulns", numMedium);
 		resultsHash.put("lowVulns", numLow);
 		resultsHash.put("infoVulns", numInfo);
+        hash.put("4-Critical-criticalVulns", numCritical);
+        hash.put("3-High-highVulns", numHigh);
+        hash.put("2-Medium-mediumVulns", numMedium);
+        hash.put("1-Low-lowVulns", numLow);
+        hash.put("0-Info-infoVulns", numInfo);
 
 		if (dateList.get(index) != null) {
 			resultsHash.put("importTime", dateList.get(index));
+            hash.put("importTime", dateList.get(index));
 		}
+
+        return hash;
 	}
-	
+
+    public List<Map<String, Object>> buildReportList() {
+        List<Map<String, Object>> resultList = null;
+        if (normalizedScans != null && normalizedScans.size() > 0) {
+            resultList = new ArrayList<>();
+            for (int i=0; i< normalizedScans.get(0).size(); i++) {
+                resultList.add(buildHash(i));
+            }
+
+        }
+        return resultList;
+    }
 }
