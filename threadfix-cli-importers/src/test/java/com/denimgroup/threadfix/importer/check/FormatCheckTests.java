@@ -45,14 +45,16 @@ public class FormatCheckTests {
 
                     assertTrue("Got null return bean while testing " + file, returnBean != null);
                     assertTrue("Response status wasn't success for file " + file + ", it was " +
-                            returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
+                            returnBean.getScanCheckResult(),
+                            returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
 
                     if (mostRecent == null || mostRecent.before(returnBean.getTestDate())) {
                         mostRecent = returnBean.getTestDate();
                     }
                 } catch (ScanFileUnavailableException e) {
                     e.printStackTrace();
-                    assertTrue("Response status wasn't success for file " + file + ". Encountered ScanFileUnavailableException.", false);
+                    assertTrue("Response status wasn't success for file " + file +
+                            ". Encountered ScanFileUnavailableException.", false);
                 }
             }
 
@@ -79,8 +81,8 @@ public class FormatCheckTests {
                                     threadFixBridge.testScan(outerEntry.getKey(), new File(file));
 
                             assertTrue("Got null return bean while testing " + file, returnBean != null);
-                            assertTrue("Response status was success for file " + file + ", it was " +
-                                    returnBean.getScanCheckResult(),
+                            assertTrue("Response status was success for scanner " + outerEntry.getKey() +
+                                            " and file " + file + ".",
                                     returnBean.getScanCheckResult() != ScanImportStatus.SUCCESSFUL_SCAN);
 
                         } catch (ScanFileUnavailableException e) {
@@ -142,7 +144,8 @@ public class FormatCheckTests {
 
                 assertTrue("Got null return bean while testing " + file, returnBean != null);
                 assertTrue("Response status wasn't success for file " + file + ", it was " +
-                        returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
+                        returnBean.getScanCheckResult(),
+                        returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
 
                 threadFixBridge.getScan(ScannerType.SKIPFISH, new File(file));
             }
