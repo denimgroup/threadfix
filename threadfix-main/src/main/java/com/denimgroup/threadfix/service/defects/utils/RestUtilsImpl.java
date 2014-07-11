@@ -73,6 +73,20 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
         return impl;
     }
 
+    private int getStatusCode(HttpURLConnection httpConnection) {
+        int statusCode = -1;
+        if (httpConnection != null) {
+            try {
+                statusCode = httpConnection.getResponseCode();
+            } catch (IOException e1) {
+                LOG.error("Encountered IOException while requesting response code from httpconnection object. " +
+                        "Re-throwing initial exception.");
+
+            }
+        }
+        return statusCode;
+    }
+
     @Nonnull
 	private InputStream getUrl(String urlString, String username, String password) throws RestException {
 		URL url;
@@ -82,7 +96,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 			throw new RestUrlException(e, "Unable to make request due to malformed URL. Check the code.");
 		}
 
-		HttpURLConnection httpConnection;
+		HttpURLConnection httpConnection = null;
 		try {
             if (proxyService == null) {
 			    httpConnection = (HttpURLConnection) url.openConnection();
@@ -100,7 +114,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
             return stream;
 		} catch (IOException e) {
             LOG.info("Encountered IOException, unable to continue");
-		    throw new RestIOException(e, "Unable to communicate with the server.");
+		    throw new RestIOException(e, "Unable to communicate with the server.", getStatusCode(httpConnection));
 		}
 	}
 
@@ -179,12 +193,12 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 						LOG.warn("Error text in response was '" + getPostErrorResponse() + "'");
                         throw new RestIOException(e, "Received error from server. Check the logs for more details.",
                                 "Unable to get response from server. Error text was: " +
-                                getPostErrorResponse());
+                                getPostErrorResponse(), getStatusCode(httpConnection));
 					}
 				} catch (IOException e2) {
 					LOG.warn("IOException encountered trying to read the reason for the previous IOException: "
                             + e2.getMessage(), e2);
-                    throw new RestIOException(e2, "Unable to read response from server.");
+                    throw new RestIOException(e2, "Unable to read response from server.", getStatusCode(httpConnection));
 				}
 			}
             throw new RestIOException(e, "Unable to read response from server.");
