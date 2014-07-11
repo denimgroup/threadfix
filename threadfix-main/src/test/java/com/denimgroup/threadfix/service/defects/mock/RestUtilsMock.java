@@ -23,6 +23,8 @@ package com.denimgroup.threadfix.service.defects.mock;
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.service.defects.util.HttpTrafficFileLoader;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
@@ -77,7 +79,7 @@ public class RestUtilsMock implements RestUtils, TestConstants {
     public String postUrlAsString(String urlString, String data, String username, String password, String contentType) {
         if ((JIRA_BASE_URL + "/rest/api/2/issue").equals(urlString) && hasReporter(data) && reporterRestricted) {
             postErrorResponse = "{\"errorMessages\":[],\"errors\":{\"reporter\":\"Field 'reporter' cannot be set. It is not on the appropriate screen, or unknown.\"}}";
-            return null;
+            throw new RestIOException(new Exception(), "Throwing mock 401 error.", 401);
         } else {
             return getResponse(urlString, username, password);
         }
