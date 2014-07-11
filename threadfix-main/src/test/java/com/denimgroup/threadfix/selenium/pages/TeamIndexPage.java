@@ -104,7 +104,7 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-    public TeamIndexPage setApplicationName(String appName, String teamName) {
+    public TeamIndexPage setApplicationName(String appName) {
         sleep(1000);
         driver.findElementById("applicationNameInput").clear();
         driver.findElementById("applicationNameInput").sendKeys(appName);
@@ -148,7 +148,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage addNewApplication(String teamName, String appName,String url, String criticality) {
         clickAddNewApplication(teamName);
-        setApplicationName(appName, teamName);
+        setApplicationName(appName);
         setApplicationUrl(url);
         setApplicationCriticality(criticality);
         return new TeamIndexPage(driver);
@@ -162,8 +162,12 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById(key).getText();
     }
 
-    public String getNameErrorMessage() {
+    public String getNameRequiredMessage() {
         return driver.findElementById("applicationNameInputRequiredError").getText();
+    }
+
+    public String getNameLengthMessage() {
+        return driver.findElementById("applicationNameInputLengthError").getText();
     }
 
     public String getNameTakenErrorMessage() {

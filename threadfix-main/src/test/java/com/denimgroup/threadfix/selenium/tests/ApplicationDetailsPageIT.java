@@ -184,7 +184,6 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("Source File is not present.", ap.isURLStaticSearchPresent());
     }
 
-
     @Test
     public void testApplicationTypeDefect() {
         ApplicationDetailPage ap = buildTeamAppandScan();

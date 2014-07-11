@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -107,30 +106,6 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Application was not present on team index page.", teamIndexPage.isAppPresent(teamName, appName));
     }
 
-    @Test
-    public void deleteApplicationTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
-                .clickDeleteLink();
-
-        assertFalse("Application is still present on team's detail page.", teamDetailPage.isAppPresent(appName));
-
-        TeamIndexPage teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
-
-        assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
-    }
-
     /*___________________________ Validation ___________________________*/
 	@Test 
 	public void testCreateBasicApplicationValidation() {
@@ -138,10 +113,12 @@ public class ApplicationIT extends BaseIT {
 		
 		String emptyError = "Name is required.";
         String notValidURl = "URL is invalid.";
+        String maximumLengthError = "Maximum length is 60.";
 		
 		String emptyString = "";
         String brokenURL = "asdckjn.com";
 		String whiteSpace = "     ";
+        String tooLong = getRandomString(61);
 
         DatabaseUtils.createTeam(teamName);
 
@@ -154,7 +131,13 @@ public class ApplicationIT extends BaseIT {
                 .saveApplicationInvalid();
 		
 		assertTrue("The correct error did not appear for the name field.",
-                teamIndexPage.getNameErrorMessage().contains(emptyError));
+                teamIndexPage.getNameRequiredMessage().contains(emptyError));
+
+        teamIndexPage.setApplicationName(tooLong)
+                .saveApplicationInvalid();
+
+        assertTrue("The correct error did not appear for the name field.",
+                teamIndexPage.getNameLengthMessage().contains(maximumLengthError));
 		
 		teamIndexPage = teamIndexPage.clickCloseAddAppModal()
                 .clickOrganizationHeaderLink()
@@ -163,7 +146,7 @@ public class ApplicationIT extends BaseIT {
                 .saveApplicationInvalid();
 
 		assertTrue("The correct error did not appear for the name field.",
-                teamIndexPage.getNameErrorMessage().contains(emptyError));
+                teamIndexPage.getNameRequiredMessage().contains(emptyError));
 
 		assertTrue("The correct error did not appear for the url field.", 
 				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
@@ -171,9 +154,11 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void testEditApplicationNameDuplication() {
+    public void testCreateBasicApplicationDuplicateValidation() {
         String teamName = "teamName" + getRandomString(3);
         String appName = "appName" + getRandomString(3);
+
+        String duplicateError = "That name is already taken.";
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -184,9 +169,8 @@ public class ApplicationIT extends BaseIT {
                 .addNewApplication(teamName, appName, "http://dummyurl", "Low")
                 .saveApplicationInvalid();
 
-        //Is this even a good?
 		assertTrue("The duplicate message didn't appear correctly.", 
-				teamIndexPage.getNameTakenErrorMessage().contains("That name is already taken."));
+				teamIndexPage.getNameTakenErrorMessage().contains(duplicateError));
 	}
 
 	@Test
@@ -503,6 +487,7 @@ public class ApplicationIT extends BaseIT {
         assertTrue("The application was not switched properly.", !appOnTeam1 && appOnTeam2);
     }
 
+    /*___________________________ Manual Findings ___________________________*/
     @Test
     public void testAddDynamicManualFinding() {
         String teamName = getRandomString(8);
@@ -591,6 +576,8 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Finding parameter did not match the given input.",
                 editedParameter.equals(findingDetailPage.getDetail("parameter")));
     }
+
+    //TODO add validation test for dynamic manual finding modal
 
     @Test
     public void testAddStaticManualFinding() {
@@ -683,6 +670,8 @@ public class ApplicationIT extends BaseIT {
                 editedParameter.equals(findingDetailPage.getDetail("parameter")));
     }
 
+    //TODO add validation test for static manual finding modal
+
     @Test
     public void deleteManualFindingScan() {
         String teamName = "TeamName" + getRandomString(5);
@@ -708,11 +697,13 @@ public class ApplicationIT extends BaseIT {
                 .clickDynamicSubmit();
 
         ap.clickScansTab()
-            .clickDeleteScanButton();
+                .clickDeleteScanButton();
 
         assertTrue("Manual Finding was not deleted correctly.", ap.isScanDeleted());
 
     }
+
+    /*___________________________ Deletion ___________________________*/
 
     @Test
     public void deleteUploadedScan() {
@@ -732,6 +723,30 @@ public class ApplicationIT extends BaseIT {
                 .clickDeleteScanButton();
 
         assertTrue("Scan file was not deleted correctly.", ap.isScanDeleted());
+    }
+
+    @Test
+    public void deleteApplicationTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
+                .clickDeleteLink();
+
+        assertFalse("Application is still present on team's detail page.", teamDetailPage.isAppPresent(appName));
+
+        TeamIndexPage teamIndexPage = teamDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
     }
 
     public void sleep(int num) {

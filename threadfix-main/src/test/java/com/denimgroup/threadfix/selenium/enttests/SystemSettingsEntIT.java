@@ -184,10 +184,4 @@ public class SystemSettingsEntIT extends BaseIT{
 
         //assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertDisplayed());
     }
-
-    // TODO decide if this is best done in automation
-    /*@Test
-    public void testProxySettings() {
-
-    }*/
 }

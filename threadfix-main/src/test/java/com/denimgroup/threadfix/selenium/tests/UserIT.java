@@ -127,39 +127,8 @@ public class UserIT extends BaseIT {
         assertTrue("Name uniqueness error is not correct.", userIndexPage.getNameError().equals("That name is already taken."));
     }
 
-	@Test
-	public void testEditUserPasswordChange() {
-		String userName = getRandomString(8);
-        String password = getRandomString(15);
-        String editedPassword = getRandomString(15);
-
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink();
-
-		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
-
-        UserChangePasswordPage userChangePasswordPage = userIndexPage.clickAddUserLink()
-				.enterName(userName)
-				.enterPassword(password)
-				.enterConfirmPassword(password)
-				.clickAddNewUserBtn()
-				.logout()
-				.login(userName, password)
-                .clickChangePasswordLink()
-                .setCurrentPassword(password)
-                .setNewPassword(editedPassword)
-                .setConfirmPassword(editedPassword)
-                .clickUpdate();
-
-
-		DashboardPage dashboardPage = userChangePasswordPage.logout()
-                .login(userName, editedPassword);
-
-        assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
-	}
-
     @Test
-    public void testEditUserAdministrator() {
+    public void testEditUserName() {
         String userName = getRandomString(8);
         String editedUserName = getRandomString(8);
         String password = getRandomString(15);
@@ -193,7 +162,77 @@ public class UserIT extends BaseIT {
         assertTrue("Edited user was not able to login.", dashboardPage.isLoggedin());
     }
 
-	@Test 
+	@Test
+	public void testEditPassword() {
+		String userName = getRandomString(8);
+        String password = getRandomString(15);
+        String editedPassword = getRandomString(15);
+
+		UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink();
+
+		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
+
+        UserChangePasswordPage userChangePasswordPage = userIndexPage.clickAddUserLink()
+				.enterName(userName)
+				.enterPassword(password)
+				.enterConfirmPassword(password)
+				.clickAddNewUserBtn()
+				.logout()
+				.login(userName, password)
+                .clickChangePasswordLink()
+                .setCurrentPassword(password)
+                .setNewPassword(editedPassword)
+                .setConfirmPassword(editedPassword)
+                .clickUpdate();
+
+
+		DashboardPage dashboardPage = userChangePasswordPage.logout()
+                .login(userName, editedPassword);
+
+        assertTrue("Edited user could not login.", dashboardPage.isLoggedin());
+	}
+
+    @Test
+    public void testEditPasswordValidation() {
+        UserChangePasswordPage changePasswordPage = loginPage.login("user", "password")
+                .clickChangePasswordLink()
+                .setCurrentPassword(" ")
+                .setNewPassword("password1234")
+                .setConfirmPassword("password1234")
+                .clickUpdateInvalid();
+
+        assertTrue("Password is required error was not present.",
+                changePasswordPage.getPasswordRequiredError().equals("Password is required."));
+
+        changePasswordPage = changePasswordPage.setCurrentPassword("password")
+                .setNewPassword("                     ")
+                .setConfirmPassword("password1234")
+                .clickUpdateInvalid();
+
+        assertTrue("Password match error not present",
+                changePasswordPage.getErrorText("passwordMatchError").contains("Passwords do not match."));
+
+        changePasswordPage = changePasswordPage.setCurrentPassword("password")
+                .setConfirmPassword("                  ")
+                .setNewPassword("password1234")
+                .clickUpdateInvalid();
+
+        assertTrue("Password match error not present",
+                changePasswordPage.getErrorText("passwordMatchError").contains("Passwords do not match."));
+
+        changePasswordPage = changePasswordPage.setCurrentPassword("password")
+                .setConfirmPassword("      ")
+                .setNewPassword("password124")
+                .clickUpdateInvalid();
+
+        assertTrue("Field required error missing",
+                changePasswordPage.getErrorText("confirmRequiredError").contains("This field is required."));
+
+        changePasswordPage.logout();
+    }
+
+	@Test
 	public void testEditUserFieldValidation() {
 		String baseUserName = "testEditUser" + getRandomString(3);
 		String userNameDuplicateTest = "duplicate-user" + getRandomString(3);
@@ -262,7 +301,7 @@ public class UserIT extends BaseIT {
     }
 
     @Test
-    public void testEditUserValidationNoMatching(){
+    public void testEditUserValidationPasswordMatching(){
         String userName = "userName"+ getRandomString(5);
 
         UserIndexPage userIndexPage = loginPage.login("user", "password").clickManageUsersLink();
@@ -329,45 +368,6 @@ public class UserIT extends BaseIT {
         assertTrue("Could not navigate to User Index Page.",driver.findElements(By.id("newUserModalLink")).size() != 0);
 		}
 
-	@Test
-	public void testChangePasswordValidation() {
-        UserChangePasswordPage changePasswordPage = loginPage.login("user", "password")
-				.clickChangePasswordLink()
-				.setCurrentPassword(" ")
-				.setNewPassword("password1234")
-				.setConfirmPassword("password1234")
-				.clickUpdateInvalid();
-
-        assertTrue("Password is required error was not present.",
-                changePasswordPage.getPasswordRequiredError().equals("Password is required."));
-
-		changePasswordPage = changePasswordPage.setCurrentPassword("password")
-				.setNewPassword("                     ")
-				.setConfirmPassword("password1234")
-				.clickUpdateInvalid();
-
-		assertTrue("Password match error not present",
-                changePasswordPage.getErrorText("passwordMatchError").contains("Passwords do not match."));
-
-		changePasswordPage = changePasswordPage.setCurrentPassword("password")
-				.setConfirmPassword("                  ")
-				.setNewPassword("password1234")
-				.clickUpdateInvalid();
-
-		assertTrue("Password match error not present",
-				changePasswordPage.getErrorText("passwordMatchError").contains("Passwords do not match."));
-
-		changePasswordPage = changePasswordPage.setCurrentPassword("password")
-				.setConfirmPassword("      ")
-				.setNewPassword("password124")
-				.clickUpdateInvalid();
-
-		assertTrue("Field required error missing",
-				changePasswordPage.getErrorText("confirmRequiredError").contains("This field is required."));
-
-        changePasswordPage.logout();
-	}
-
     @Test
     public void testDeleteUser(){
         String userName = "testDeleteUser" + getRandomString(3);
@@ -385,108 +385,4 @@ public class UserIT extends BaseIT {
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
         assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }
-
-	@Test
-	public void testChangePassword() {
-        String userName = "testChangePassword" + getRandomString(3);
-        String password = "testChangePassword";
-        String editedPassword = getRandomString(13);
-
-		DashboardPage dashboardPage = loginPage.login("user", "password")
-				.clickManageUsersLink()
-				.clickAddUserLink()
-				.enterName(userName)
-				.enterPassword(password)
-				.enterConfirmPassword(password)
-				.clickAddNewUserBtn()
-				.logout()
-				.login(userName, password)
-				.clickChangePasswordLink()
-				.setConfirmPassword(editedPassword)
-				.setNewPassword(editedPassword)
-				.setCurrentPassword(password)
-				.clickUpdate()
-				.logout()
-				.login(userName, editedPassword);
-
-		assertTrue("Unable to login with new Password.", dashboardPage.isLoggedin());
-
-	}
-	
-	@Test
-	public void testPasswordChangeValidation(){
-		String baseUserName = "passwordChangeValidation";
-		DashboardPage dashboardPage = loginPage.login("user", "password")
-				.clickManageUsersLink()
-				.clickAddUserLink()
-				.enterName(baseUserName)
-				.enterPassword("lengthy password 2")
-				.enterConfirmPassword("lengthy password 2")
-				.clickAddNewUserBtn()
-				.logout()
-				.login(baseUserName, "lengthy password 2");
-		
-		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
-		//wrong current password
-		UserChangePasswordPage passwordChangePage = dashboardPage.clickChangePasswordLink()
-                .setCurrentPassword("WRONGPASSWORD!!!!")
-                .setNewPassword("lengthy password 3")
-                .setConfirmPassword("lengthy password 3")
-                .clickUpdateInvalid();
-		
-		assertTrue("Wrong current PW error not displayed",
-				passwordChangePage.getErrorText("currentPasswordMismatchError").equals("That was not the correct password."));
-		
-		//blank new password
-		passwordChangePage = passwordChangePage.setCurrentPassword("lengthy password 2")
-                .setNewPassword(" ")
-                .setConfirmPassword(" ")
-                .clickUpdateInvalid();
-		
-		assertTrue("Blank new PW error not displayed",
-				passwordChangePage.getErrorText("confirmRequiredError").equals("This field is required."));
-
-		//different confirm and new passwords
-		passwordChangePage = passwordChangePage.setCurrentPassword("lengthy password 2")
-                .setNewPassword("lengthy password 3")
-                .setConfirmPassword("lengthy password 34")
-                .clickUpdateInvalid();
-		
-		assertTrue("Blank confirm PW error not displayed",
-				passwordChangePage.getErrorText("passwordMatchError").equals("Passwords do not match."));
-
-		//short password
-		passwordChangePage = passwordChangePage.setCurrentPassword("lengthy password 2")
-                .setNewPassword("password")
-                .setConfirmPassword("password")
-                .clickUpdateInvalid();
-		
-		assertTrue("Short PW error not displayed",
-				passwordChangePage.getErrorText("charactersRequiredError").equals("4 characters needed"));
-
-		//can you still change password
-		passwordChangePage = passwordChangePage.setCurrentPassword("lengthy password 2")
-                .setNewPassword("lengthy password 3")
-                .setConfirmPassword("lengthy password 3")
-                .clickUpdate();
-		
-		assertTrue("Password change did not save",passwordChangePage.isSaveSuccessful());
-
-        //TODO FIGURE OUT HOW TO GET THE ERRORS FROM PAGE
-		loginPage = passwordChangePage.logout().loginInvalid(baseUserName,"password");
-
-		assertTrue("Incorrect password and no error message shown.",loginPage.isLoginErrorPresent());
-		
-		dashboardPage = loginPage.login(baseUserName,"lengthy password 3");
-		
-		assertTrue(baseUserName + "is not logged in",dashboardPage.isLoggedInUser(baseUserName));
-		
-		dashboardPage.logout()
-					.login("user", "password")
-					.clickManageUsersLink()
-					.clickDeleteButton(baseUserName)
-					.logout();
-
-	}
-
 }

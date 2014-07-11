@@ -66,6 +66,4 @@ public class ApplicationEntIT extends BaseIT {
         assertFalse("A user without the correct permissions is in the permissible user list.",
                 applicationDetailPage.isUserPresentPerm(userName));
     }
-
-
 }
