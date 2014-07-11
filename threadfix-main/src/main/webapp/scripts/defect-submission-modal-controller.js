@@ -100,27 +100,25 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.stdFormTemplate = [];
         $scope.config.editableFields.forEach(function(field) {
 
-            var calType = calculateType(field.type);
-            var label = field.required ? field.label + " *" : field.label;
-            var labelClass = field.required ? "errors" : null;
-
             var fieldForm =  {
                 "model" : field.name,
-                "type" : calType,
-                "label" : label,
+                "type" : calculateType(field.type),
+                "label" : field.required ? field.label + " *" : field.label,
                 "required" : field.required,
-                "labelClass" : labelClass
-            };
-            if (calType === "select") {
-                fieldForm.empty = "Select";
-                fieldForm.options = calculateOptions(field);
-                fieldForm.multiple = field.supportsMultivalue;
-
+                "labelClass" : field.required ? "errors" : null,
+                "empty" : "Select",
+                "options" : calculateOptions(field),
+                "multiple" : field.supportsMultivalue
             };
             $scope.stdFormTemplate.push(fieldForm)
         });
     };
 
+    /**
+     * This is to customize type names used in Defect Tracker system to supported type in Dynamic form angular
+     * @param oldType
+     * @returns {string}
+     */
     var calculateType = function (oldType) {
 
         var lowerCaseOldType = oldType.toLowerCase();

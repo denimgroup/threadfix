@@ -162,7 +162,7 @@ public class HPQCUtils {
         Response response = doPost(serverUrl, postUrl, domain_project, defectXml);
 
         String responseStr = response.toString();
-        Entity newDefect = parseEntityXml(responseStr);
+        Entity newDefect = parseXml(responseStr, Entity.class);
         String newDefectId = getFieldValue(newDefect, "id");
         if (newDefectId != null && !newDefectId.isEmpty()) {
             log.info("New defect was created in HPQC with Id " + newDefectId);
@@ -212,7 +212,7 @@ public class HPQCUtils {
             log.debug(responseStr);
 
             if (responseStr.contains("</Entities>")) {
-                Entities entities = parseEntitiesXml(responseStr);
+                Entities entities = parseXml(responseStr, Entities.class);
                 if (entities.getEntities() != null) {
                     for (Entity entity: entities.getEntities()) {
                         Defect defect = new Defect();
@@ -416,7 +416,7 @@ public class HPQCUtils {
         if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
             String responseStr = serverResponse.toString();
             if (responseStr.contains("</Entity>")) {
-                String status = getFieldValue(parseEntityXml(responseStr), "status");
+                String status = getFieldValue(parseXml(responseStr, Entity.class), "status");
                 log.info("Current status for defect " + defect.getNativeId() + " is " + status);
                 defect.setStatus(status);
                 return status;
@@ -428,14 +428,6 @@ public class HPQCUtils {
         }
 
         return null;
-    }
-
-    private static Entity parseEntityXml(String entityXml) {
-        return MarshallingUtils.marshal(Entity.class, entityXml);
-    }
-
-    private static Entities parseEntitiesXml(String entitiesXml) {
-        return MarshallingUtils.marshal(Entities.class, entitiesXml);
     }
 
     @Nullable

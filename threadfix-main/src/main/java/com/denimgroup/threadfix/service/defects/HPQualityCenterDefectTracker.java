@@ -198,9 +198,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setType(hpqcField.getType());
             genericField.setRequired(hpqcField.isRequired());
             genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
-
             genericField.setOptionsMap(getFieldOptions(hpqcField));
-
             dynamicFormFields.add(genericField);
         }
 
@@ -316,7 +314,6 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                                 Entity.Fields.Field nameField = fields.findField("name");
                                 if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
                                         && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
-
                                     optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
                                 }
                             }
