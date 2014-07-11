@@ -84,7 +84,7 @@ public class DefectServiceImpl implements DefectService {
 	@Transactional(readOnly = false)
 	public Map<String, Object> createDefect(List<Vulnerability> allVulns, String summary,
 			String preamble, String component, String version,
-			String severity, String priority, String status) {
+			String severity, String priority, String status, Map<String, Object> fieldsMap) {
 		if (allVulns == null || allVulns.size() == 0 || allVulns.get(0) == null ||
 				allVulns.get(0).getApplication() == null) {
 			log.warn("Null input, exiting.");
@@ -153,7 +153,7 @@ public class DefectServiceImpl implements DefectService {
 		
 		String defectId = dt.createDefect(vulnsWithoutDefects,
 				new DefectMetadata(editedSummary, editedPreamble,
-				component, version, severity, priority, status));
+				component, version, severity, priority, status, fieldsMap));
 
 		if (defectId != null) {
 			
@@ -161,7 +161,13 @@ public class DefectServiceImpl implements DefectService {
 			defect.setNativeId(defectId);
 			defect.setVulnerabilities(vulnsWithoutDefects);
 			defect.setApplication(application);
-			defect.setStatus(status);
+			status = (status == null && fieldsMap != null ? String.valueOf(fieldsMap.get("status")) : status);
+
+            // By default, set status to Open
+            if (status == null)
+                status = "Open";
+
+            defect.setStatus(status);
 			defect.setDefectURL(dt.getBugURL(
 					application.getDefectTracker().getUrl(), defectId));
 			defectDao.saveOrUpdate(defect);

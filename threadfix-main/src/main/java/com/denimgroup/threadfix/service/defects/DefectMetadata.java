@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import java.util.Map;
+
 /**
  * @author bbeverly
  * 
@@ -41,6 +43,7 @@ public class DefectMetadata {
 	private String severity;
 	private String priority;
 	private String status;
+    private Map<String, Object> fieldsMap;
 
 	/**
 	 * @param description
@@ -61,6 +64,22 @@ public class DefectMetadata {
 		this.status = status;
 	}
 
+    public DefectMetadata(String description, String preamble, String component, String version,
+                          String severity, String priority, String status, Map<String, Object> fieldsMap) {
+        if (description == null) {
+            log.warn("Description should never be null");
+        }
+
+        this.description = description;
+        this.preamble = preamble;
+        this.component = component;
+        this.version = version;
+        this.severity = severity;
+        this.priority = priority;
+        this.status = status;
+        this.fieldsMap = fieldsMap;
+    }
+
 	/**
 	 * @return
 	 */
@@ -79,7 +98,11 @@ public class DefectMetadata {
 		}
 	}
 
-	public String getComponent() {
+    public void setPreamble(String preamble) {
+        this.preamble = preamble;
+    }
+
+    public String getComponent() {
 		return component;
 	}
 
@@ -98,4 +121,8 @@ public class DefectMetadata {
 	public String getPriority() {
 		return priority;
 	}
+
+    public Map<String, Object> getFieldsMap() {
+        return fieldsMap;
+    }
 }

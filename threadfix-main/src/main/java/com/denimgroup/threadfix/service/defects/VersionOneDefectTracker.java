@@ -39,6 +39,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -116,11 +117,21 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
                     break;
                 case "Numeric":
                     addAttribute(attributeDefinition, assetTemplate, "1");
+                    break;
+                case "Date":
+                    addAttribute(attributeDefinition, assetTemplate, getCurrentDate());
+                    break;
                 default:
                     LOG.error("Encountered unexpected type: " + attributeDefinition.getRelationType());
 
             }
         }
+    }
+
+    private static final SimpleDateFormat VERSION_ONE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+    private String getCurrentDate() {
+        return VERSION_ONE_DATE_FORMAT.format(new Date());
     }
 
     private void addRelation(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate) {

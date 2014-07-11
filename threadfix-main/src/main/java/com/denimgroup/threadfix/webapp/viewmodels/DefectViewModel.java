@@ -23,7 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.viewmodels;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DefectViewModel {
 
@@ -35,6 +40,8 @@ public class DefectViewModel {
 	private String severity;
 	private String priority;
 	private String status;
+    private Map<String, Object> fieldsMap;
+    private String fieldsMapStr;
 		
 	public String getId() {
 		return id;
@@ -110,4 +117,25 @@ public class DefectViewModel {
 		this.vulnerabilityIds = vulnerabilityIds;
 	}
 
+    public Map<String, Object> getFieldsMap() {
+//        return fieldsMap;
+        try {
+            return new ObjectMapper().readValue(fieldsMapStr, HashMap.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setFieldsMap(Map<String, Object> fieldsMap) {
+        this.fieldsMap = fieldsMap;
+    }
+
+    public String getFieldsMapStr() {
+        return fieldsMapStr;
+    }
+
+    public void setFieldsMapStr(String fieldsMapStr) {
+        this.fieldsMapStr = fieldsMapStr;
+    }
 }
