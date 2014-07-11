@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -48,6 +49,21 @@ public class CollectionUtils {
             return new ArrayList<T>();
         } else {
             return new ArrayList<T>(Arrays.asList(args));
+        }
+    }
+
+    /**
+     * Provides a wrapper to create a list out of a collection
+     * @param wrappedCollection nullable collection
+     * @param <T> type parameter of collection and resulting list
+     * @return list of Ts from wrappedCollection or empty list
+     */
+    @Nonnull
+    public static <T> List<T> listFrom(@Nullable Collection<T> wrappedCollection) {
+        if (wrappedCollection == null || wrappedCollection.isEmpty()) {
+            return new ArrayList<T>();
+        } else {
+            return new ArrayList<T>(wrappedCollection);
         }
     }
 
@@ -102,6 +118,12 @@ public class CollectionUtils {
         }
     }
 
+    /**
+     * This is a convenience method so we can avoid typing angle brackets.
+     * @param <K> key type parameter
+     * @param <V> value type parameter
+     * @return new HashMap<K, V>()
+     */
     @Nonnull
     public static <K, V> Map<K, V> newMap() {
         return new HashMap<K, V>();

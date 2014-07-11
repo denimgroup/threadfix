@@ -27,11 +27,28 @@ package com.denimgroup.threadfix.exception;
  * Created by mac on 7/7/14.
  */
 public class RestIOException extends RestException {
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    int statusCode = -1;
+
     public RestIOException(Throwable cause, String responseString) {
         super(cause, responseString);
     }
 
     public RestIOException(Exception e, String responseString, String exceptionMessageString) {
         super(e, responseString, exceptionMessageString);
+    }
+
+    public RestIOException(Throwable cause, String responseString, int statusCode) {
+        super(cause, responseString);
+        this.statusCode = statusCode;
+    }
+
+    public RestIOException(Exception e, String responseString, String exceptionMessageString, int statusCode) {
+        super(e, responseString, exceptionMessageString);
+        this.statusCode = statusCode;
     }
 }
