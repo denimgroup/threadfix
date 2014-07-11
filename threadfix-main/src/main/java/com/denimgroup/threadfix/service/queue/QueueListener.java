@@ -245,7 +245,7 @@ public class QueueListener implements MessageListener {
 
 		Vulnerability vuln = vulnerabilities.get(0);
 		Map<String, Object> map = defectService.createDefect(vulnerabilities, summary,
-				preamble, component, version, severity, priority, status);
+				preamble, component, version, severity, priority, status, null);
 
         Defect defect = null;
         if (map.get(DefectService.DEFECT) instanceof Defect)
