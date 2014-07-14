@@ -17,7 +17,6 @@ import javax.annotation.Nonnull;
 public class PMDChannelImporter extends AbstractChannelImporter {
     public PMDChannelImporter() {
         super(ScannerType.PMD);
-        doSAXExceptionCheck = false;
     }
 
     @Override
@@ -41,6 +40,6 @@ public class PMDChannelImporter extends AbstractChannelImporter {
     @Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
-        return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN)   ;
+        return new ScanCheckResultBean(ScanImportStatus.EMPTY_SCAN_ERROR)   ;
     }
 }
