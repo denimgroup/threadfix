@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.jira;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -33,6 +35,8 @@ import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetada
  * Created by mac on 7/11/14.
  */
 public class DefectPayload {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(DefectPayload.class);
 
     Map<String, Object> fields = newMap();
 
@@ -49,8 +53,8 @@ public class DefectPayload {
                     objectMap.containsKey("timetracking_originalestimate")) {
                 fields.put("timetracking",
                         new TimeTracking(
-                        objectMap.get("timetracking_originalestimate"),
-                        objectMap.get("timetracking_remainingestimate")));
+                                objectMap.get("timetracking_originalestimate"),
+                                objectMap.get("timetracking_remainingestimate")));
             }
 
             for (Map.Entry<String, Field> entry : issueType.getFields().entrySet()) {
@@ -60,7 +64,7 @@ public class DefectPayload {
                 }
 
                 String key = entry.getKey();
-                System.out.println(key);
+                LOG.debug(key);
                 if (objectMap.containsKey(key)) {
                     String type = entry.getValue().getSchema().getType();
                     if (type.equals("string") || type.equals("date")) {

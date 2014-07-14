@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.jira;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import org.json.JSONArray;
@@ -35,6 +36,8 @@ import java.util.Map;
  * Created by mac on 7/11/14.
  */
 public class UserRetriever {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(UserRetriever.class);
 
     final String username, password, url, project;
     final RestUtils restUtils;
@@ -52,11 +55,11 @@ public class UserRetriever {
         String extension = "user/permission/search?projectKey=" + project
                 + "&permissions=ASSIGNABLE_USER&username";
 
-        System.out.println("Requesting " + url + extension);
+        LOG.debug("Requesting " + url + extension);
 
         String result = restUtils.getUrlAsString(url + extension, username, password);
 
-        System.out.println("Got " + result);
+        LOG.debug("Got " + result);
 
         if (result == null) {
             assert false : "This method should only be called with a valid connection.";
@@ -77,6 +80,8 @@ public class UserRetriever {
                 }
             }
         }
+
+        LOG.debug("Returning map with " + nameFieldMap.size() + " entries.");
 
         return nameFieldMap;
     }

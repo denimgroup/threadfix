@@ -288,7 +288,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                 restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
                             getUsername(), getPassword());
 
-        System.out.println(response);
+        log.debug(response);
 
         UserRetriever retriever = new UserRetriever(getUsername(), getPassword(), getProjectId(), getUrlWithRest(), restUtils);
 
@@ -300,7 +300,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                 restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
                             getUsername(), getPassword());
 
-        System.out.println(response);
+        log.debug(response);
 
         return DynamicFormFieldParser.getJiraProjectMetadata(response);
     }

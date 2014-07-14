@@ -93,6 +93,8 @@ public class DynamicFormFieldParser {
                         field.setEditable(true);
 
                         if (type.equals("timetracking")) {
+                            LOG.debug("Adding timetracking fields (x2)");
+
                             DynamicFormField originalEstimate = new DynamicFormField();
 
                             originalEstimate.setRequired(jsonField.isRequired());
@@ -133,10 +135,9 @@ public class DynamicFormFieldParser {
                                     jsonField.getSchema().getItems());
 
                             field.setType("select");
-                            //field.setOptionsMap(retriever.getOptions(jsonField.getSchema().getItems()));
-
-                            System.out.println(jsonField.getAutoCompleteUrl());
                         }
+
+                        LOG.debug("Adding new field with label " + field.getLabel() + " and type " + field.getType());
 
                         fieldList.add(field);
                     }
