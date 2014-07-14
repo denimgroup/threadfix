@@ -33,7 +33,7 @@ import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;
 import com.denimgroup.threadfix.service.defects.utils.jira.DynamicFormFieldParser;
-import com.denimgroup.threadfix.service.defects.utils.jira.FieldRetriever;
+import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
 import com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
@@ -290,7 +290,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
         System.out.println(response);
 
-        FieldRetriever retriever = new FieldRetriever(getUsername(), getPassword(), getUrlWithRest(), restUtils);
+        UserRetriever retriever = new UserRetriever(getUsername(), getPassword(), getProjectId(), getUrlWithRest(), restUtils);
 
         return DynamicFormFieldParser.getFields(response, retriever);
     }
@@ -301,8 +301,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                             getUsername(), getPassword());
 
         System.out.println(response);
-
-        FieldRetriever retriever = new FieldRetriever(getUsername(), getPassword(), getUrlWithRest(), restUtils);
 
         return DynamicFormFieldParser.getJiraProjectMetadata(response);
     }

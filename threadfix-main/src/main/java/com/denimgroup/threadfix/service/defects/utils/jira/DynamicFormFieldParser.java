@@ -57,7 +57,7 @@ public class DynamicFormFieldParser {
         }
     }
 
-    public static List<DynamicFormField> getFields(String jsonString, FieldRetriever retriever) {
+    public static List<DynamicFormField> getFields(String jsonString, UserRetriever retriever) {
 
         LOG.info("Starting JSON field description deserialization.");
 
@@ -126,7 +126,7 @@ public class DynamicFormFieldParser {
 
                         } else if (type.equals("user")) {
                             field.setType("select");
-                            field.setOptionsMap(retriever.getOptions("user/search?username="));
+                            field.setOptionsMap(retriever.getUserMap());
 
                         } else if (type.equals("array")) {
                             LOG.error("Unable to determine dynamic type for " + entry.getKey() + ":" + type + " of " +

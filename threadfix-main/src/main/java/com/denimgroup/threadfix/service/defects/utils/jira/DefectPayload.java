@@ -72,6 +72,8 @@ public class DefectPayload {
                         } else {
                             fields.put(key, list(new ObjectDescriptor((String) objectMap.get(key))));
                         }
+                    } else if (type.equals("user")) {
+                        fields.put(key, new NamedObjectDescriptor((String) objectMap.get(key)));
                     } else {
                         fields.put(key, new ObjectDescriptor((String) objectMap.get(key)));
                     }
@@ -101,6 +103,22 @@ public class DefectPayload {
 
         public void setId(String id) {
             this.id = id;
+        }
+    }
+
+    public static class NamedObjectDescriptor {
+        String name;
+
+        public NamedObjectDescriptor(String value) {
+            this.name = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 

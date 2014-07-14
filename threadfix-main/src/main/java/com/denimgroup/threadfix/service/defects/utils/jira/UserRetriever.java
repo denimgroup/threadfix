@@ -34,23 +34,27 @@ import java.util.Map;
 /**
  * Created by mac on 7/11/14.
  */
-public class FieldRetriever {
+public class UserRetriever {
 
-    String username, password, url;
-    RestUtils restUtils;
+    final String username, password, url, project;
+    final RestUtils restUtils;
 
-    public FieldRetriever(String username, String password, String url, RestUtils restUtils) {
+    public UserRetriever(String username, String password, String project, String urlWithRest, RestUtils restUtils) {
         this.username = username;
         this.password = password;
-        this.url = url;
+        this.project = project;
+        this.url = urlWithRest;
         this.restUtils = restUtils;
     }
 
-    public Map<String, String> getOptions(String path) {
+    public Map<String, String> getUserMap() {
 
-        System.out.println("Requesting " + url + path);
+        String extension = "user/permission/search?projectKey=" + project
+                + "&permissions=ASSIGNABLE_USER&username";
 
-        String result = restUtils.getUrlAsString(url + path, username, password);
+        System.out.println("Requesting " + url + extension);
+
+        String result = restUtils.getUrlAsString(url + extension, username, password);
 
         System.out.println("Got " + result);
 
@@ -66,8 +70,8 @@ public class FieldRetriever {
         if (returnArray != null) {
             for (int i = 0; i < returnArray.length(); i++) {
                 try {
-                    nameFieldMap.put(returnArray.getJSONObject(i).getString("name"),
-                            returnArray.getJSONObject(i).getString("key"));
+                    String name = returnArray.getJSONObject(i).getString("name");
+                    nameFieldMap.put(name, name);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

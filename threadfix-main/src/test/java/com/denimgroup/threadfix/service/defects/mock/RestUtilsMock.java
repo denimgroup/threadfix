@@ -52,6 +52,8 @@ public class RestUtilsMock implements RestUtils, TestConstants {
         urlToResponseMap.put("/rest/api/2/issue/PDP-60", "jira/issue-status-PDP-60");
         urlToResponseMap.put("/rest/api/2/user?username=threadfix", "jira/user-search");
         urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
+        urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=NCT&permissions=ASSIGNABLE_USER&username", "jira/users");
 
         for (String value : urlToResponseMap.values()) {
             assertTrue("Missing file for " + value, HttpTrafficFileLoader.getResponse(value) != null);

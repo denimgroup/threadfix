@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.service.defects.mock.RestUtilsMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
 import org.junit.Test;
 
 import java.util.List;
@@ -219,8 +220,17 @@ public class JiraTests implements TestConstants {
         assert !editableFields.isEmpty() : "Fields were empty.";
 
         assert editableFields.size() == 16 : "Got " + editableFields.size() + " fields instead of 16.";
+    }
 
+    @Test
+    public void testUserParsing() {
+        UserRetriever retriever = new UserRetriever(JIRA_USERNAME, JIRA_PASSWORD,
+                "NCT", JIRA_BASE_URL + "/rest/api/2/", new RestUtilsMock());
 
+        Map<String, String> userMap = retriever.getUserMap();
+
+        assertTrue("User map was null.", userMap != null);
+        assertTrue("User map should have contained one item, contained " + userMap.size(), userMap.size() == 1);
 
     }
 
