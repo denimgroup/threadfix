@@ -26,10 +26,10 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
-import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
-import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Entity;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -44,42 +44,58 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * Created by stran on 3/10/14.
  */
 public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
+
+    private List<Fields.Field> editableFieldsList;
+    private Map<String, List<String>> defectListMap;
+
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
         if (getProjectId() == null) {
             setProjectId(getProjectIdByName());
         }
+
+        Map<String,Object> fieldsMap = metadata.getFieldsMap();
+        metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
+
         String description = makeDescription(vulnerabilities, metadata);
         Entity defect = new Entity();
         defect.setType("defect");
-        defect.setFields(createFields(description, metadata));
+        defect.setFields(createFields(description, fieldsMap));
 
         String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
         return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
     }
 
-    private Entity.Fields createFields(String description, DefectMetadata metadata) {
+    private Entity.Fields createFields(String description, Map<String,Object> fieldsMap) {
         Entity.Fields fields = new Entity.Fields();
-        fields.getField().add(createField("detected-by", getUsername()));
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        fields.getField().add(createField("creation-time", dateFormat.format(new Date())));
-        fields.getField().add(createField("name", metadata.getDescription()));
-        fields.getField().add(createField("severity", metadata.getSeverity()));
-        if (metadata.getPriority() != null && !metadata.getPriority().isEmpty())
-            fields.getField().add(createField("priority", metadata.getPriority()));
-        if (metadata.getStatus() != null && !metadata.getStatus().isEmpty())
-            fields.getField().add(createField("status", metadata.getStatus()));
+        if (fieldsMap != null) {
+            for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
+                if (!entry.getKey().equals("description")) {
+                    fields.getField().add(createField(entry.getKey(), entry.getValue()));
+                }
+            }
+        }
         if (description != null && !description.isEmpty())
             fields.getField().add(createField("description", description));
 
         return fields;
     }
 
-    private Entity.Fields.Field createField(String name, String value) {
+    private Entity.Fields.Field createField(String name, Object values) {
         Entity.Fields.Field field = new Entity.Fields.Field();
         field.setName(name);
-        field.getValue().add(value);
+
+        if (values instanceof ArrayList) {
+            for (Object value : (ArrayList) values) {
+                field.getValue().add(String.valueOf(value));
+            }
+        } else
+            field.getValue().add(String.valueOf(values));
+
         return field;
+
+
+
     }
 
     @Override
@@ -160,16 +176,33 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     @Override
     public ProjectMetadata getProjectMetadata() {
-        Map<String, List<String>> listValues = HPQCUtils.getListValues(getHPQCUrl(),username,password,projectName);
+        editableFieldsList = HPQCUtils.getEditableFields(getHPQCUrl(),username,password,projectName);
 
-        List<String> versions = getValues(listValues, "Versions");
-        if (!versions.contains("-")) {
-            versions = new ArrayList<>(versions); // to avoid UnsupportedOperationException in next line
-            versions.add("-");
+        defectListMap =  HPQCUtils.getListValues(getHPQCUrl(),username,password,projectName);
+
+        List<DynamicFormField> dynamicFormFields = convertToGenericField();
+        return new ProjectMetadata(dynamicFormFields);
+    }
+
+    private List<DynamicFormField> convertToGenericField() {
+        if (editableFieldsList == null)
+            return null;
+        List<DynamicFormField> dynamicFormFields = list();
+        for (Fields.Field hpqcField : editableFieldsList) {
+            DynamicFormField genericField = new DynamicFormField();
+            genericField.setActive(hpqcField.isActive());
+            genericField.setEditable(hpqcField.isEditable());
+            genericField.setLabel(hpqcField.getLabel());
+            genericField.setListId(hpqcField.getListId());
+            genericField.setName(hpqcField.getName());
+            genericField.setType(hpqcField.getType());
+            genericField.setRequired(hpqcField.isRequired());
+            genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
+            genericField.setOptionsMap(getFieldOptions(hpqcField));
+            dynamicFormFields.add(genericField);
         }
 
-        return new ProjectMetadata(getValues(listValues, ""), versions,
-                getValues(listValues, "Severity"), getValues(listValues, "Bug Status"), getValues(listValues, "Priority"));
+        return dynamicFormFields;
     }
 
     private List<String> getValues(Map<String, List<String>> map, String key) {
@@ -243,6 +276,56 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         }
 
         return tempUrl;
+    }
+
+    private Map<String, String> getFieldOptions(@Nonnull Fields.Field field) {
+
+        Map<String, String> optionMap = new HashMap<>();
+
+        if (field.getType().equals("UsersList")) {
+
+            List<Users.User> users = HPQCUtils.getActiveUsers(getHPQCUrl(),username,password,projectName);
+            if (users != null) {
+                for (Users.User user : users) {
+                    optionMap.put(user.getName(), user.getName());
+                }
+            }
+        } else if (field.getType().equals("LookupList")) {
+
+            List<String> values = defectListMap.get(field.getListId());
+            if (values != null)
+                for (String value: values) {
+                    optionMap.put(value, value);
+                }
+
+        } else if (field.getType().equals("Reference")) {
+            Fields.Field.References references = field.getReferences();
+            if (references != null && references.getRelationReferences() != null && references.getRelationReferences().size() > 0) {
+                Fields.Field.RelationReference reference = references.getRelationReferences().get(0);
+                String targetEntity = reference.getReferencedEntityType();
+                if (targetEntity != null) {
+                    Entities entities = HPQCUtils.getEntities(getHPQCUrl(), username, password, projectName, targetEntity);
+                    if (entities != null) {
+                        List<Entity> entityList = entities.getEntities();
+                        if (entityList != null) {
+                            for (Entity entity : entityList) {
+                                Entity.Fields fields = entity.getFields();
+                                Entity.Fields.Field idField = fields.findField("id");
+                                Entity.Fields.Field nameField = fields.findField("name");
+                                if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
+                                        && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
+                                    optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        return optionMap;
     }
 
 }

@@ -6,8 +6,19 @@
     </div>
     <div ng-form="form" class="modal-body">
         <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
-        <table ng-show="initialized" class="dataTable" style="text-align: left">
-            <tbody>
+
+        <div ng-if="config.typeName === 'HP Quality Center' || config.typeName === 'Jira'">
+            <span ng-if="stdFormTemplate" class="errors">* required field</span>
+            <dynamic-form ng-if="stdFormTemplate" template="stdFormTemplate"
+                          ng-model="fieldsMap">
+            </dynamic-form>
+
+        </div>
+
+        <div ng-if="config.typeName !== 'HP Quality Center' && config.typeName !== 'Jira'">
+
+            <table ng-show="initialized" class="dataTable" style="text-align: left">
+                <tbody>
                 <tr ng-show="config.typeName === 'Version One' || config.typeName === 'Bugzilla' || config.typeName === 'Jira'">
                     <td ng-show="config.typeName === 'Version One'">Sprint</td>
                     <td ng-show="config.typeName === 'Bugzilla' || config.typeName === 'Jira'">Component</td>
@@ -51,8 +62,9 @@
                         <textarea name="preamble" ng-model="object.preamble" style="width:549px; height:100px;"></textarea>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
 
         <%@ include file="littleVulnTable.jspf" %>
     </div>

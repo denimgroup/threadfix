@@ -129,8 +129,7 @@ class SpringEntityMappings {
 	@Nonnull
     public List<BeanField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable BeanField initialField) {
 		List<BeanField> fields = list();
-		
-	
+
 		if (methodCalls != null && initialField != null) {
 			fields.add(initialField);
 			

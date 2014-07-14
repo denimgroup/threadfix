@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.RestUtilsMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
 import org.junit.Test;
 
 import java.util.List;
@@ -143,20 +145,6 @@ public class JiraTests implements TestConstants {
     }
 
     @Test
-    public void testSubmissionParameters() {
-        AbstractDefectTracker jiraTracker = getConfiguredTracker();
-
-        ProjectMetadata metadata = jiraTracker.getProjectMetadata();
-
-        // 1 is the default size ("-")
-        int componentsSize = metadata.getComponents().size();
-        assertEquals("Components size should have been 1. It was " + componentsSize, componentsSize, 1);
-
-        int prioritiesSize = metadata.getPriorities().size();
-        assertEquals("Priorities should have had 5 matches, but it had " + prioritiesSize, prioritiesSize, 5);
-    }
-
-    @Test
     public void testDefectCount() {
         AbstractDefectTracker jiraTracker = getConfiguredTracker();
 
@@ -217,6 +205,43 @@ public class JiraTests implements TestConstants {
                 DefectUtils.getBasicMetadata(jiraTracker.getProjectMetadata()));
 
         assertTrue("Expected NCT-38 for the issue ID, got " + nativeId, "NCT-38".equals(nativeId));
+    }
+
+    @Test
+    public void testMetadataParsing() {
+        AbstractDefectTracker jiraTracker = getConfiguredTracker();
+
+        List<DynamicFormField> editableFields = jiraTracker.getProjectMetadata().getEditableFields();
+
+        assert editableFields != null : "Dynamic fields were null.";
+        assert !editableFields.isEmpty() : "Fields were empty.";
+
+        assert editableFields.size() == 16 : "Got " + editableFields.size() + " fields instead of 17.";
+    }
+
+    @Test
+    public void testMetadataParsingCustomFields() {
+        AbstractDefectTracker jiraTracker = getConfiguredTracker();
+        jiraTracker.setProjectId("TEST");
+
+        List<DynamicFormField> editableFields = jiraTracker.getProjectMetadata().getEditableFields();
+
+        assert editableFields != null : "Dynamic fields were null.";
+        assert !editableFields.isEmpty() : "Fields were empty.";
+
+        assert editableFields.size() == 27 : "Got " + editableFields.size() + " fields instead of 16.";
+    }
+
+    @Test
+    public void testUserParsing() {
+        UserRetriever retriever = new UserRetriever(JIRA_USERNAME, JIRA_PASSWORD,
+                "NCT", JIRA_BASE_URL + "/rest/api/2/", new RestUtilsMock());
+
+        Map<String, String> userMap = retriever.getUserMap();
+
+        assertTrue("User map was null.", userMap != null);
+        assertTrue("User map should have contained one item, contained " + userMap.size(), userMap.size() == 1);
+
     }
 
 }

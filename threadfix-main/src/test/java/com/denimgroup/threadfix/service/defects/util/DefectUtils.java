@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -64,16 +65,19 @@ public class DefectUtils {
     }
 
     public static DefectMetadata getBasicMetadata(ProjectMetadata projectMetadata) {
-        return new DefectMetadata("Dummy Description", "simple preamble",
-                getFirstOrEmptyString(projectMetadata.getComponents()),
-                getFirstOrEmptyString(projectMetadata.getVersions()),
-                getFirstOrEmptyString(projectMetadata.getSeverities()),
-                getFirstOrEmptyString(projectMetadata.getPriorities()),
-                getFirstOrEmptyString(projectMetadata.getStatuses()));
-    }
 
-    public static String getFirstOrEmptyString(List<String> metadataList) {
-        return metadataList.isEmpty() ? "" : metadataList.get(0);
+        if (projectMetadata.getEditableFields() != null && !projectMetadata.getEditableFields().isEmpty()) {
+            // TODO create default field map
+            return new DefectMetadata("test", "test", null, null, null, null, null, new HashMap<String, Object>());
+        } else {
+            return new DefectMetadata("Dummy Description", "simple preamble",
+                    projectMetadata.getComponents().get(0),
+                    projectMetadata.getVersions().get(0),
+                    projectMetadata.getSeverities().get(0),
+                    projectMetadata.getPriorities().get(0),
+                    projectMetadata.getStatuses().get(0));
+        }
+        
     }
 
     public static List<String> getProductsFromString(List<String> projects) {

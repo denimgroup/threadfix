@@ -23,18 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.junit.Test;
-
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
@@ -43,6 +33,15 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParserFactory;
+import org.junit.Test;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class SpringParameterParsingTests {
 	
@@ -52,6 +51,11 @@ public class SpringParameterParsingTests {
 			new File(TestConstants.PETCLINIC_SOURCE_LOCATION), null),
 		noSourceConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.NONE,
 				null, null);
+
+    static {
+        assert new File(TestConstants.PETCLINIC_SOURCE_LOCATION).exists() :
+                "Petclinic source didn't exist: " + TestConstants.PETCLINIC_SOURCE_LOCATION;
+    }
 	
 	// These are immutable so it's ok to use the same one for all the tests
 	@Nonnull
@@ -210,9 +214,54 @@ public class SpringParameterParsingTests {
 		EndpointQuery finding = EndpointQueryBuilder.start()
 				.setCodePoints(chainedModelElements)
 				.generateQuery();
-		
+
+
 		String result = parser.parse(finding);
 		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
+	}
+
+	@Test
+	public void testMatchingSourceAndSink() {
+
+        for (ParameterParser parser : allParsers) {
+            // These are doctored to match real data we've seen
+            List<DefaultCodePoint> chainedRequestParamElements1 = Arrays.asList(
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+                            "public String processFindForm(@RequestParam String lastName, @RequestParam String firstName) {"),
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java", 93,
+                            "Collection<Owner> results = this.clinicService.findOwnerByLastName(lastName);"),
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 72,
+                            "return ownerRepository.findByLastName(lastName);"),
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+                            "\"SELECT id FROM owners WHERE last_name like '\" + lastName + \"%' or first_name like '\" + firstName + \"%'\",")
+            );
+
+            EndpointQuery finding = EndpointQueryBuilder.start()
+                    .setCodePoints(chainedRequestParamElements1)
+                    .generateQuery();
+
+            String result = parser.parse(finding);
+            assertTrue("Parameter was " + result + " instead of lastName", "lastName".equals(result));
+
+            // These are doctored to match real data we've seen
+            List<DefaultCodePoint> chainedRequestParamElements2 = Arrays.asList(
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java",85,
+                            "public String processFindForm(@RequestParam String lastName, @RequestParam String firstName) {"),
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/web/OwnerController.java", 94,
+                            "Collection<Owner> results = this.clinicService.findOwnerByFirstName(firstName);"),
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/service/ClinicServiceImpl.java", 73,
+                            "return ownerRepository.findByFirstName(firstName);"),
+                    new DefaultCodePoint("java/org/springframework/samples/petclinic/repository/jdbc/JdbcOwnerRepositoryImpl.java", 84,
+                            "\"SELECT id FROM owners WHERE last_name like '\" + lastName + \"%' or first_name like '\" + firstName + \"%'\",")
+            );
+
+            finding = EndpointQueryBuilder.start()
+                    .setCodePoints(chainedRequestParamElements2)
+                    .generateQuery();
+
+            result = parser.parse(finding);
+            assertTrue("Parameter was " + result + " instead of firstName", "firstName".equals(result));
+        }
 	}
 
 	@Test

@@ -566,7 +566,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         if (diskZipFile.exists()) {
             if (!diskZipFile.delete()) {
-                System.out.println("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
+                log.error("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
             }
         }
 

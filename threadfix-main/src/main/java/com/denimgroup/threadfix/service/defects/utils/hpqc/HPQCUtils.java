@@ -155,14 +155,14 @@ public class HPQCUtils {
                                  String domain_project,
                                  String defectXml) {
         log.info("Checking HPQC credentials");
-        if (!login(username,password))
+        if (!login(username, password))
             return null;
         String postUrl = con.buildEntityCollectionUrl("defect");
 
         Response response = doPost(serverUrl, postUrl, domain_project, defectXml);
 
         String responseStr = response.toString();
-        Entity newDefect = parseEntityXml(responseStr);
+        Entity newDefect = parseXml(responseStr, Entity.class);
         String newDefectId = getFieldValue(newDefect, "id");
         if (newDefectId != null && !newDefectId.isEmpty()) {
             log.info("New defect was created in HPQC with Id " + newDefectId);
@@ -198,18 +198,21 @@ public class HPQCUtils {
 
     public static List<Defect> getDefectList(String serverUrl, String username, String password, String domain_project) {
         List<Defect> defectList = list();
-        String defectUrl = con.buildEntityCollectionUrl("defect");
+
+        if (!checkProjectName(serverUrl, domain_project))
+            return defectList;
 
         Response serverResponse;
 
         if (login(username,password)) {
+            String defectUrl = con.buildEntityCollectionUrl("defect");
             serverResponse = doGet(serverUrl, defectUrl, domain_project);
             String responseStr = serverResponse.toString();
 
             log.debug(responseStr);
 
             if (responseStr.contains("</Entities>")) {
-                Entities entities = parseEntitiesXml(responseStr);
+                Entities entities = parseXml(responseStr, Entities.class);
                 if (entities.getEntities() != null) {
                     for (Entity entity: entities.getEntities()) {
                         Defect defect = new Defect();
@@ -223,6 +226,128 @@ public class HPQCUtils {
         }
 
         return defectList;
+    }
+
+    @Nullable
+    public static List<Fields.Field> getEditableFields(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject)) {
+            return null;
+        }
+
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/customization/entities/defect/fields");
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("<Fields>")) {
+                return parseFieldXml(responseStr);
+            } else {
+                log.warn("XML didn't have <Fields>, returning null.");
+            }
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
+        }
+    }
+
+    @Nullable
+    public static List<Users.User> getActiveUsers(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject)) {
+            return null;
+        }
+
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/customization/users");
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("<Users>")) {
+                Users users = parseXml(responseStr, Users.class);
+                return filterUser(users);
+            } else {
+                log.warn("XML didn't have <Users>, returning null.");
+            }
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
+        }
+    }
+
+    @Nullable
+    public static Entities getEntities(String serverUrl, String username, String password, String domainProject, @Nonnull String entityName) {
+        if (!checkProjectName(serverUrl, domainProject)) {
+            return null;
+        }
+
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/" + entityName + "s");
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("</Entities>")) {
+                return parseXml(responseStr, Entities.class);
+            } else {
+                log.warn("XML didn't have <Users>, returning null.");
+            }
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
+        }
+    }
+
+    @Nonnull
+    private static List<Users.User> filterUser(Users users) {
+
+        List<Users.User> result = list();
+        if (users != null && users.getUsers() != null) {
+
+            for (Users.User user : users.getUsers()) {
+                if (user != null && user.isUserActive()) {
+                    result.add(user);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Nonnull
@@ -291,7 +416,7 @@ public class HPQCUtils {
         if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
             String responseStr = serverResponse.toString();
             if (responseStr.contains("</Entity>")) {
-                String status = getFieldValue(parseEntityXml(responseStr), "status");
+                String status = getFieldValue(parseXml(responseStr, Entity.class), "status");
                 log.info("Current status for defect " + defect.getNativeId() + " is " + status);
                 defect.setStatus(status);
                 return status;
@@ -303,14 +428,6 @@ public class HPQCUtils {
         }
 
         return null;
-    }
-
-    private static Entity parseEntityXml(String entityXml) {
-        return MarshallingUtils.marshal(Entity.class, entityXml);
-    }
-
-    private static Entities parseEntitiesXml(String entitiesXml) {
-        return MarshallingUtils.marshal(Entities.class, entitiesXml);
     }
 
     @Nullable
@@ -341,11 +458,31 @@ public class HPQCUtils {
                             values.add(item.getValue());
                         }
                     }
-                    map.put(listInfo.getName(), values);
+                    map.put(listInfo.getId(), values);
                 }
             }
         }
         return map;
+    }
+
+    @Nonnull
+    private static List<Fields.Field> parseFieldXml(String responseStr) {
+        List<Fields.Field> result = list();
+        Fields fields = MarshallingUtils.marshal(Fields.class, responseStr);
+        if (fields != null && fields.getFields() != null) {
+
+            for (Fields.Field field : fields.getFields()) {
+                if (field != null && field.isActive() && field.isEditable()) {
+                    result.add(field);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Nullable
+    private static <T> T parseXml(String responseStr, Class<T> c) {
+        return MarshallingUtils.marshal(c, responseStr);
     }
 
     private static String[] getProjectNameSplit(String domainProject) {
@@ -363,7 +500,8 @@ public class HPQCUtils {
 
         String authenticationPoint = isAuthenticated();
 
-        boolean isLogin = authenticationPoint != null && login(authenticationPoint, username, password);
+        boolean isLogin = authenticationPoint.equals(String.valueOf(HttpURLConnection.HTTP_OK)) ||
+                (authenticationPoint != null && login(authenticationPoint, username, password));
 
         if (!isLogin) {
             log.warn("Log-in failed");
@@ -416,7 +554,7 @@ public class HPQCUtils {
         //if already authenticated
         if (responseCode == HttpURLConnection.HTTP_OK) {
 
-            ret = null;
+            ret = String.valueOf(HttpURLConnection.HTTP_OK);
         }
 
         //if not authenticated - get the address where to authenticate
