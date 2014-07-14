@@ -125,7 +125,7 @@ public class SpringDataFlowParser implements ParameterParser {
 			// try for @PathVariable("ownerId") int ownerId
             parameters = RegexUtils.getRegexResults(elementText, PATH_VARIABLE_WITH_PARAM);
 
-			if (!parameters.isEmpty()) {
+			if (parameters.isEmpty()) {
 				// try for @PathVariable String ownerName
                 parameters = RegexUtils.getRegexResults(elementText, PATH_VARIABLE_NO_PARAM);
 			}
