@@ -25,10 +25,12 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.*;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.*;
 
 /**
@@ -64,26 +66,58 @@ public class DefectPayload {
                 }
 
                 String key = entry.getKey();
-                LOG.debug(key);
-                if (objectMap.containsKey(key)) {
-                    String type = entry.getValue().getSchema().getType();
-                    if (type.equals("string") || type.equals("date")) {
-                        fields.put(key, objectMap.get(key));
-                    } else if (type.equals("array")) {
-                        String items = entry.getValue().getSchema().getItems();
-                        if ("string".equals(items) || "date".equals(items)) {
-                            fields.put(key, list(objectMap.get(key)));
-                        } else {
-                            fields.put(key, list(new ObjectDescriptor((String) objectMap.get(key))));
-                        }
-                    } else if (type.equals("user")) {
-                        fields.put(key, new NamedObjectDescriptor((String) objectMap.get(key)));
-                    } else {
-                        fields.put(key, new ObjectDescriptor((String) objectMap.get(key)));
-                    }
-                }
+
+                fields.put(key, getObjectValue(objectMap, key, entry.getValue()));
             }
         }
+    }
+
+    private Object getObjectValue(Map<String, Object> objectMap, String key, Field value) {
+
+        String custom = value.getSchema().getCustom();
+
+        Object returnValue = null;
+
+        LOG.debug(key);
+        if (objectMap.containsKey(key)) {
+            String type = value.getSchema().getType();
+            if (type.equals("string") || type.equals("date")) {
+
+                if (RADIO_BUTTONS.equals(custom) || SELECT.equals(custom)) {
+                    returnValue = new ObjectDescriptor(objectMap.get(key));
+                } else {
+                    returnValue = objectMap.get(key);
+                }
+            } else if ("datetime".equals(type)) {
+                returnValue = objectMap.get(key) + "T12:00:00.000+0000";
+            } else if (type.equals("array")) {
+                String items = value.getSchema().getItems();
+                if (MULTISELECT.equals(custom)) {
+
+                    Object oldValue = objectMap.get(key);
+                    List<Object> newValue = list();
+                    if (oldValue instanceof List<?>) {
+                        for (Object item : (List) oldValue) {
+                            newValue.add(new ObjectDescriptor(item));
+                        }
+                    }
+
+                    returnValue = newValue; // already a list / multivalue type
+                } else if ("string".equals(items) || "date".equals(items)) {
+                    returnValue = list(objectMap.get(key));
+                } else {
+                    returnValue = list(new ObjectDescriptor(objectMap.get(key)));
+                }
+            } else if (type.equals("user")) {
+                returnValue = new NamedObjectDescriptor(objectMap.get(key));
+            } else if (type.equals("number")) {
+                returnValue = objectMap.get(key);
+            } else {
+                returnValue = new ObjectDescriptor(objectMap.get(key));
+            }
+        }
+
+        return returnValue;
     }
 
     public Map<String, Object> getFields() {
@@ -97,8 +131,8 @@ public class DefectPayload {
     public static class ObjectDescriptor {
         String id;
 
-        public ObjectDescriptor(String value) {
-            this.id = value;
+        public ObjectDescriptor(Object value) {
+            this.id = String.valueOf(value);
         }
 
         public String getId() {
@@ -113,8 +147,8 @@ public class DefectPayload {
     public static class NamedObjectDescriptor {
         String name;
 
-        public NamedObjectDescriptor(String value) {
-            this.name = value;
+        public NamedObjectDescriptor(Object value) {
+            this.name = String.valueOf(value);
         }
 
         public String getName() {
@@ -132,7 +166,6 @@ public class DefectPayload {
         public TimeTracking(Object timetracking_originalestimate, Object timetracking_remainingestimate) {
             originalEstimate = timetracking_originalestimate.toString();
             remainingEstimate = timetracking_remainingestimate.toString();
-
         }
 
         public String getRemainingEstimate() {

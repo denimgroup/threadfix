@@ -12,7 +12,6 @@
             <dynamic-form ng-if="stdFormTemplate" template="stdFormTemplate"
                           ng-model="fieldsMap">
             </dynamic-form>
-
         </div>
 
         <div ng-if="config.typeName !== 'HP Quality Center' && config.typeName !== 'Jira'">

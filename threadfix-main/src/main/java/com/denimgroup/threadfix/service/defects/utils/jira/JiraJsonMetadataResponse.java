@@ -32,6 +32,7 @@ import static com.denimgroup.threadfix.CollectionUtils.newMap;
  * Created by mac on 7/11/14.
  */
 public class JiraJsonMetadataResponse {
+
     public List<Project> getProjects() {
         return projects;
     }
@@ -58,7 +59,6 @@ public class JiraJsonMetadataResponse {
             return null;
         }
     }
-
 
     public static class Project {
 
