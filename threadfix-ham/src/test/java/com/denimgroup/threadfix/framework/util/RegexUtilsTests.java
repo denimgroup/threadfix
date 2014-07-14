@@ -56,6 +56,19 @@ public class RegexUtilsTests {
         assert "lastName".equals(result) : result + " wasn't lastName";
     }
 
+    @Test
+    public void testModelParsing() {
+        String targetString =
+                "Collection<Owner> results = this.clinicService.findOwnerByLastName(pet.getOwner().getLastName());";
+
+        List<String> results = getRegexResults(targetString, SpringDataFlowParser.getPatternForString("pet"));
+
+        assert results.size() == 2 : "Got " + results.size() + " results instead of 2: " + results;
+
+        assert results.contains(".getOwner()") : "Didn't have owner: " + results;
+        assert results.contains(".getLastName()") : "Didn't have lastName: " + results;
+    }
+
     private <T> void listCompare(List<T> list1, List<T> list2) {
         assert list1.size() == list2.size() : list1 + " didn't match " + list2;
 

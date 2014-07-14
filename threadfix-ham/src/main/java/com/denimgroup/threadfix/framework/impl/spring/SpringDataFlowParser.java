@@ -266,24 +266,36 @@ public class SpringDataFlowParser implements ParameterParser {
 
     @Nonnull
 	private List<BeanField> getParameterWithEntityData(String line, @Nonnull BeanField beanField) {
-		List<String> methodCalls = RegexUtils.getRegexResults(line,
-				Pattern.compile(beanField.getParameterKey() + "(\\.get[^\\(]+\\(\\))+"));
+		String methodCall = RegexUtils.getRegexResult(line, getPatternForString(beanField.getParameterKey()));
 		
 		List<BeanField> returnField = list();
 		
-		if (mappings != null && methodCalls != null && !methodCalls.isEmpty()) {
-			returnField = mappings.getFieldsFromMethodCalls(methodCalls.get(0), beanField);
+		if (mappings != null && methodCall != null) {
+			returnField = mappings.getFieldsFromMethodCalls(methodCall, beanField);
 		}
 		
 		return returnField;
 	}
+
+    // public for testing
+    // TODO write more rigorous unit tests and shake out corner cases
+    public static Pattern getPatternForString(String entity) {
+        if (entity != null) {
+            String regexGetSection = entity.length() > 1 ?
+                    "(?:" + entity.substring(1) + "|" + entity.substring(1) + "\\(\\))((?:\\.get[^\\.;]+))" :
+                    entity + "((?:\\.get[^\\.;]+))";
+            return Pattern.compile(regexGetSection);
+        } else {
+            return null;
+        }
+    }
 
 	@Nullable
     private String getParameter(String line, @Nonnull String modelObject) {
 		String methodCall = RegexUtils.getRegexResult(line, "(" + modelObject + "\\.[a-zA-Z0-9]+)");
 		
 		String parameterName = null;
-		
+
 		if (methodCall != null) {
 			parameterName = getParameterFromBeanAccessor(modelObject, methodCall);
 		}

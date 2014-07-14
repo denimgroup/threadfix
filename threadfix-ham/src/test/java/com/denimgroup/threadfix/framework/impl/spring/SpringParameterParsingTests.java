@@ -51,6 +51,11 @@ public class SpringParameterParsingTests {
 			new File(TestConstants.PETCLINIC_SOURCE_LOCATION), null),
 		noSourceConfig = new ProjectConfig(FrameworkType.SPRING_MVC, SourceCodeAccessLevel.NONE,
 				null, null);
+
+    static {
+        assert new File(TestConstants.PETCLINIC_SOURCE_LOCATION).exists() :
+                "Petclinic source didn't exist: " + TestConstants.PETCLINIC_SOURCE_LOCATION;
+    }
 	
 	// These are immutable so it's ok to use the same one for all the tests
 	@Nonnull
@@ -209,7 +214,8 @@ public class SpringParameterParsingTests {
 		EndpointQuery finding = EndpointQueryBuilder.start()
 				.setCodePoints(chainedModelElements)
 				.generateQuery();
-		
+
+
 		String result = parser.parse(finding);
 		assertTrue("Parameter was " + result + " instead of owner.lastName", "owner.lastName".equals(result));
 	}
