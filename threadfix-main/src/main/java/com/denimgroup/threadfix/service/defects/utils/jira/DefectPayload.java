@@ -67,57 +67,68 @@ public class DefectPayload {
 
                 String key = entry.getKey();
 
-                fields.put(key, getObjectValue(objectMap, key, entry.getValue()));
+                Object returnedObject = getObjectValue(objectMap, key, entry.getValue());
+
+                if (returnedObject != null) {
+                    fields.put(key, returnedObject);
+                }
             }
         }
     }
 
-    private Object getObjectValue(Map<String, Object> objectMap, String key, Field value) {
+    private Object getObjectValue(Map<String, Object> objectMap, String key, Field field) {
 
-        String custom = value.getSchema().getCustom();
+        String custom = field.getSchema().getCustom();
 
         Object returnValue = null;
 
         LOG.debug(key);
         if (objectMap.containsKey(key)) {
-            String type = value.getSchema().getType();
+
+            Object value = objectMap.get(key);
+
+            String type = field.getSchema().getType();
             if (type.equals("string") || type.equals("date")) {
 
                 if (RADIO_BUTTONS.equals(custom) || SELECT.equals(custom)) {
-                    returnValue = new ObjectDescriptor(objectMap.get(key));
+                    returnValue = new ObjectDescriptor(value);
                 } else {
-                    returnValue = objectMap.get(key);
+                    returnValue = value;
                 }
             } else if ("datetime".equals(type)) {
-                returnValue = objectMap.get(key) + "T12:00:00.000+0000";
+                returnValue = value + "T12:00:00.000+0000";
             } else if (type.equals("array")) {
-                String items = value.getSchema().getItems();
+                String items = field.getSchema().getItems();
                 if (MULTISELECT.equals(custom)) {
-
-                    Object oldValue = objectMap.get(key);
-                    List<Object> newValue = list();
-                    if (oldValue instanceof List<?>) {
-                        for (Object item : (List) oldValue) {
-                            newValue.add(new ObjectDescriptor(item));
-                        }
-                    }
-
-                    returnValue = newValue; // already a list / multivalue type
+                    returnValue = getObjectsFromMultivalueSelect(value);
                 } else if ("string".equals(items) || "date".equals(items)) {
-                    returnValue = list(objectMap.get(key));
+                    returnValue = list(value);
                 } else {
-                    returnValue = list(new ObjectDescriptor(objectMap.get(key)));
+                    returnValue = list(new ObjectDescriptor(value));
                 }
             } else if (type.equals("user")) {
-                returnValue = new NamedObjectDescriptor(objectMap.get(key));
+                returnValue = new NamedObjectDescriptor(value);
             } else if (type.equals("number")) {
-                returnValue = objectMap.get(key);
+                returnValue = value;
             } else {
-                returnValue = new ObjectDescriptor(objectMap.get(key));
+                returnValue = new ObjectDescriptor(value);
             }
         }
 
         return returnValue;
+    }
+
+    // multivalue comes in as [ "string1", "string2" ] but we need [ { id: "string1" }, { id: "string2" } ]
+    private List<Object> getObjectsFromMultivalueSelect(Object oldValue) {
+        List<Object> newValue = list();
+
+        if (oldValue instanceof List<?>) {
+            for (Object item : (List) oldValue) {
+                newValue.add(new ObjectDescriptor(item));
+            }
+        }
+
+        return newValue;
     }
 
     public Map<String, Object> getFields() {
