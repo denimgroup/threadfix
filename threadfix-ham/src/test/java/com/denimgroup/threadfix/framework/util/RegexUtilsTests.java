@@ -63,10 +63,15 @@ public class RegexUtilsTests {
 
         List<String> results = getRegexResults(targetString, SpringDataFlowParser.getPatternForString("pet"));
 
-        assert results.size() == 2 : "Got " + results.size() + " results instead of 2: " + results;
+        assert results.size() == 1 : "Got " + results.size() + " results instead of 1: " + results;
 
         assert results.contains(".getOwner()") : "Didn't have owner: " + results;
-        assert results.contains(".getLastName()") : "Didn't have lastName: " + results;
+
+        results = getRegexResults(targetString, SpringDataFlowParser.getPatternForString("owner"));
+
+        assert results.size() == 1 : "Got " + results.size() + " results instead of 1: " + results;
+
+        assert results.contains(".getLastName())") : "Didn't have .getLastName()): " + results;
     }
 
     private <T> void listCompare(List<T> list1, List<T> list2) {
