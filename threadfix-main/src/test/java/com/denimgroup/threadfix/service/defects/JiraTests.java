@@ -134,20 +134,6 @@ public class JiraTests implements TestConstants {
     }
 
     @Test
-    public void testSubmissionParameters() {
-        AbstractDefectTracker jiraTracker = getConfiguredTracker();
-
-        ProjectMetadata metadata = jiraTracker.getProjectMetadata();
-
-        // 1 is the default size ("-")
-        int componentsSize = metadata.getComponents().size();
-        assertEquals("Components size should have been 1. It was " + componentsSize, componentsSize, 1);
-
-        int prioritiesSize = metadata.getPriorities().size();
-        assertEquals("Priorities should have had 5 matches, but it had " + prioritiesSize, prioritiesSize, 5);
-    }
-
-    @Test
     public void testDefectCount() {
         AbstractDefectTracker jiraTracker = getConfiguredTracker();
 
@@ -219,7 +205,20 @@ public class JiraTests implements TestConstants {
         assert editableFields != null : "Dynamic fields were null.";
         assert !editableFields.isEmpty() : "Fields were empty.";
 
-        assert editableFields.size() == 16 : "Got " + editableFields.size() + " fields instead of 16.";
+        assert editableFields.size() == 16 : "Got " + editableFields.size() + " fields instead of 17.";
+    }
+
+    @Test
+    public void testMetadataParsingCustomFields() {
+        AbstractDefectTracker jiraTracker = getConfiguredTracker();
+        jiraTracker.setProjectId("TEST");
+
+        List<DynamicFormField> editableFields = jiraTracker.getProjectMetadata().getEditableFields();
+
+        assert editableFields != null : "Dynamic fields were null.";
+        assert !editableFields.isEmpty() : "Fields were empty.";
+
+        assert editableFields.size() == 27 : "Got " + editableFields.size() + " fields instead of 16.";
     }
 
     @Test

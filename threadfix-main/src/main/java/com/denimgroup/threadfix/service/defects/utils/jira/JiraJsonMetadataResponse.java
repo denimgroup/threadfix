@@ -280,13 +280,16 @@ public class JiraJsonMetadataResponse {
 
             if (allowedValues != null) {
                 for (AllowedValue value : allowedValues) {
-                    map.put(value.getId(), value.getName());
+                    if (value.getName() != null) {
+                        map.put(value.getId(), value.getName());
+                    } else if (value.getValue() != null) {
+                        map.put(value.getId(), value.getValue());
+                    }
                 }
             }
 
             return map;
         }
-
 
         public Schema getSchema() {
             return schema;
@@ -346,10 +349,18 @@ public class JiraJsonMetadataResponse {
     }
 
     public static class AllowedValue {
-        String self, id, description, iconUrl, name, key, userStartDate, userReleaseDate, startDate, releaseDate;
+        String self, id, description, iconUrl, name, key, userStartDate, userReleaseDate, startDate, releaseDate, value;
         boolean             subtask, released, archived, overdue;
         Map<String, String> avatarUrls;
         Number projectId;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
 
         public String getReleaseDate() {
             return releaseDate;

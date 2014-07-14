@@ -62,7 +62,7 @@ public class UserRetriever {
         LOG.debug("Got " + result);
 
         if (result == null) {
-            assert false : "This method should only be called with a valid connection.";
+            assert false : "Got null result for project " + project + ".";
             return null;
         }
 
