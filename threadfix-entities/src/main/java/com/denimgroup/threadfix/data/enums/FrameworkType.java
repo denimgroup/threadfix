@@ -38,8 +38,10 @@ public enum FrameworkType {
 	
     public static FrameworkType getFrameworkType(String input) {
 		FrameworkType type = DETECT; // default framework type
-		
-		if (input != null) {
+
+        if (input != null && (input.equals("DOT_NET_MVC") || input.equals(".NET_MVC"))) {
+            type = DOT_NET_MVC;
+        } else if (input != null) {
 			for (FrameworkType frameworkType : values()) {
 				if (frameworkType.toString().equals(input)) {
 					type = frameworkType;
