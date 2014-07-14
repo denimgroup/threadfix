@@ -98,6 +98,10 @@ public class DynamicFormField {
         this.editable = editable;
     }
 
+    /**
+     * the key is the value of the option tag and the value is what gets displayed.
+     * @return
+     */
     public Map<String, String> getOptionsMap() {
         return optionsMap;
     }

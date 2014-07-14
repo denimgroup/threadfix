@@ -121,18 +121,20 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
      */
     var calculateType = function (oldType) {
 
-        var lowerCaseOldType = oldType.toLowerCase();
+        if (oldType) {
+            var lowerCaseOldType = oldType.toLowerCase();
 
-        if (lowerCaseOldType === "userslist" || lowerCaseOldType === "lookuplist" || lowerCaseOldType === "reference")
-            return "select";
-        else if (lowerCaseOldType === "string")
-            return "text";
-        else if (lowerCaseOldType === "memo")
-            return "textarea"
-        else if (lowerCaseOldType === "float")
-            return "number";
-        else
-            return lowerCaseOldType;
+            if (lowerCaseOldType === "userslist" || lowerCaseOldType === "lookuplist" || lowerCaseOldType === "reference")
+                return "select";
+            else if (lowerCaseOldType === "string")
+                return "text";
+            else if (lowerCaseOldType === "memo")
+                return "textarea"
+            else if (lowerCaseOldType === "float")
+                return "number";
+            else
+                return lowerCaseOldType;
+        }
 
     };
 

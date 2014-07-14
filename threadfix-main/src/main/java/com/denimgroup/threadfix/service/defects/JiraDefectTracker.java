@@ -25,15 +25,23 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
+import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;
+import com.denimgroup.threadfix.service.defects.utils.jira.DynamicFormFieldParser;
+import com.denimgroup.threadfix.service.defects.utils.jira.FieldRetriever;
+import com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -57,7 +65,8 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
     // The double slash is the Jira newline wiki syntax.
     private static final String NEW_LINE_REGEX = "\\\\n",
-            DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ";
+            DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ",
+            METADATA_EXTENSION = "issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=";
 
     private static final String CONTENT_TYPE = "application/json";
 
@@ -270,20 +279,35 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public ProjectMetadata getProjectMetadata() {
 		if (getProjectId() == null)
 			setProjectId(getProjectIdByName());
-		List<String> components = getNamesFromList("project/" + projectId + "/components");
-		List<String> blankList = list("-");
-		List<String> statusList = list("Open");
-		List<String> priorities = getNamesFromList("priority");
-		
-		if (components == null || components.isEmpty()) {
-			components = list("-");
-		}
-		
-		return new ProjectMetadata(components, blankList,
-				blankList, statusList, priorities);
+
+		return new ProjectMetadata(getDynamicFormFields());
 	}
 
-	@Override
+    List<DynamicFormField> getDynamicFormFields() {
+        String response =
+                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
+                            getUsername(), getPassword());
+
+        System.out.println(response);
+
+        FieldRetriever retriever = new FieldRetriever(getUsername(), getPassword(), getUrlWithRest(), restUtils);
+
+        return DynamicFormFieldParser.getFields(response, retriever);
+    }
+
+    JiraJsonMetadataResponse.Project getJiraMetadata() {
+        String response =
+                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
+                            getUsername(), getPassword());
+
+        System.out.println(response);
+
+        FieldRetriever retriever = new FieldRetriever(getUsername(), getPassword(), getUrlWithRest(), restUtils);
+
+        return DynamicFormFieldParser.getJiraProjectMetadata(response);
+    }
+
+    @Override
 	public String getProjectIdByName() {
 		Map<String,String> projectNameIdMap = getNameFieldMap("project/","key");
 		
@@ -302,13 +326,15 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (getProjectId() == null) {
 			setProjectId(getProjectIdByName());
 		}
-		
-		Map<String,String> priorityHash = getNameFieldMap("priority", "id"),
-				           componentsHash = getNameFieldMap("project/" + projectId + "/components", "id"),
-				           projectsHash = getNameFieldMap("project","id");
-		
+
 		String description = makeDescription(vulnerabilities, metadata);
-        String payload = getPayload(null, projectsHash, metadata, priorityHash, description,componentsHash);
+
+        Map<String, Object> map = metadata.getFieldsMap();
+
+        map.put("description", description);
+
+        String payload = getPayload(map);
+        log.info("Payload: " + payload);
 
         String result, id = null;
         try {
@@ -322,7 +348,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
             String errorResponseMsg = restUtils.getPostErrorResponse();
             List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
             log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
-            payload = getPayload(errorFieldList, projectsHash, metadata, priorityHash, description,componentsHash);
             result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
 
             // if we got a result then it was a success, otherwise let's rethrow the exception
@@ -358,32 +383,15 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         return errorFieldList;
     }
 
-    private String getPayload(List<String> errorFieldList,
-                              Map<String,String> projectsHash,
-                              DefectMetadata metadata,
-                              Map<String,String> priorityHash,
-                              String description,
-                              Map<String,String> componentsHash) {
-        //	TODO - Use a better JSON API to construct the JSON message. JSONObject.quote() is nice
-        //	and all, but...
-        String payload = "{ \"fields\": {" +
-                ((isValidField(errorFieldList, "project"))? " \"project\": { \"id\": " + JSONObject.quote(projectsHash.get(getProjectName())) + " }," : "") +
-                ((isValidField(errorFieldList, "summary"))? " \"summary\": " + JSONObject.quote(metadata.getDescription()) + "," : "") +
-                ((isValidField(errorFieldList, "issuetype"))? " \"issuetype\": { \"id\": \"1\" }," : "") +
-                ((isValidField(errorFieldList, "assignee"))? " \"assignee\": { \"name\":" + JSONObject.quote(username) + " }," : "") +
-                ((isValidField(errorFieldList, "reporter"))? " \"reporter\": { \"name\": " + JSONObject.quote(username) + " }," : "") +
-                ((isValidField(errorFieldList, "priority"))? " \"priority\": { \"id\": " + JSONObject.quote(priorityHash.get(metadata.getPriority())) + " }," : "") +
-                ((isValidField(errorFieldList, "description"))? " \"description\": " + JSONObject.quote(description) : "");
+    private String getPayload(Map<String, Object> objectMap) {
 
-        if (metadata.getComponent() != null && !metadata.getComponent().equals("-")) {
-            payload += ((isValidField(errorFieldList, "components"))? "," + " \"components\": [ { \"id\": " +
-                    JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]" : "");
+        DefectPayload payload = new DefectPayload(objectMap, getJiraMetadata());
+
+        try {
+            return new ObjectMapper().writeValueAsString(payload);
+        } catch (IOException e) {
+            throw new DefectTrackerFormatException(e, "We were unable to serialize object as JSON");
         }
-
-        payload += " } }";
-
-        payload = payload.replaceAll(NEW_LINE_REGEX, DOUBLE_SLASH_NEW_LINE);
-        return payload;
     }
 
     private boolean isValidField(List<String> errorFieldList, String field) {
