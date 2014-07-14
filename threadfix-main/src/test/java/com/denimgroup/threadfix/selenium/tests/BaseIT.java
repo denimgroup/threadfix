@@ -35,9 +35,21 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 
 public abstract class BaseIT {
-	
 	protected WebDriver driver;
     protected LoginPage loginPage;
+
+    private static final String API_KEY = System.getProperty("API_KEY");
+    private static final String REST_URL = System.getProperty("REST_URL");
+
+    static {
+        if (API_KEY == null) {
+            throw new RuntimeException("Please set API_KEY in run configuration.");
+        }
+
+        if (REST_URL == null) {
+            throw new RuntimeException("Please set REST_URL in run configuration.");
+        }
+    }
 
 	public BaseIT() {
 		DesiredCapabilities capability = new DesiredCapabilities();

@@ -281,6 +281,31 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickVulnerabilitiesActionButton() {
+        driver.findElementById("actionItems").click();
+        return  new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickCloseVulnerabilitiesButton() {
+        driver.findElementById("closeVulnsButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickOpenVulnerabilitiesButton() {
+        driver.findElementById("openVulnsButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickMarkFalseVulnerability() {
+        driver.findElementById("markFalsePositivesButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickUnMarkFalsePositive() {
+        driver.findElementById("unmarkFalsePositivesButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickScanAgentTasksTab(int count) {
         if (count == 1) {
             driver.findElementByLinkText(count + " Scan Agent Task").click();
@@ -400,6 +425,16 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandVulnerabilityByType(String type) {
         driver.findElementById("expandVuln" + type).click();
         return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage checkVulnerabilitiesByCategory(String category) {
+        driver.findElementById("checkCategory" + category).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage checkVulnerabilityByType(String type) {
+        driver.findElementById("checkbox" + type).click();
+        return this;
     }
 
     public ApplicationDetailPage expandCommentSection(String level) {

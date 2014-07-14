@@ -13,23 +13,9 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class ApplicationDetailsPageIT extends BaseIT {
 
-    private static final String API_KEY = System.getProperty("API_KEY");
-    private static final String REST_URL = System.getProperty("REST_URL");
     private  DashboardPage dashboardPage;
     private  String teamName = getRandomString(8);
     private  String appName = getRandomString(8);
-
-
-    static {
-
-        if (API_KEY == null) {
-            throw new RuntimeException("Please set API_KEY in run configuration.");
-        }
-
-        if (REST_URL == null) {
-            throw new RuntimeException("Please set REST_URL in run configuration.");
-        }
-    }
 
     /*
     *   This test class is designed to test top layer functionality

@@ -77,7 +77,7 @@ public class DefectUtils {
                     projectMetadata.getPriorities().get(0),
                     projectMetadata.getStatuses().get(0));
         }
-        
+
     }
 
     public static List<String> getProductsFromString(List<String> projects) {

@@ -34,18 +34,6 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
-    private static final String API_KEY = System.getProperty("API_KEY");
-    private static final String REST_URL = System.getProperty("REST_URL");
-
-    static {
-        if (API_KEY == null) {
-            throw new RuntimeException("Please set API_KEY in run configuration.");
-        }
-
-        if (REST_URL == null) {
-            throw new RuntimeException("Please set REST_URL in run configuration.");
-        }
-    }
 
     @Test
     public void expandCollapseTest() {
