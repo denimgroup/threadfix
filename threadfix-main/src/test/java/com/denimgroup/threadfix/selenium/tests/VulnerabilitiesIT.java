@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
+import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -317,5 +318,35 @@ public class VulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 10 vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+    }
+
+    @Test
+    public void addCommentToVulnerability() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+        String comment = "This is a test.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, scanFile);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandResultsByLevel("Critical")
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .setComment(comment)
+                .clickModalSubmit();
+
+        assertTrue("There should be 1 comment associated with this vulnerability.",
+                applicationDetailPage.isCommentCountCorrect("Critical790", "1"));
+
+        assertTrue("The comment was not preserved correctly.",
+                applicationDetailPage.isCommentCorrect("0", comment));
     }
 }

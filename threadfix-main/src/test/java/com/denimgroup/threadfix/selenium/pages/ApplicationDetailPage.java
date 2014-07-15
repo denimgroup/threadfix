@@ -914,6 +914,14 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByLinkText("0 Scans").isDisplayed();
     }
 
+    public boolean isCommentCountCorrect(String level, String expected) {
+        return expected.equals(driver.findElementById("commentsButton" + level).getText().trim());
+    }
+
+    public boolean isCommentCorrect(String commentNumber, String comment) {
+        return driver.findElementById("commentText" + commentNumber).getText().trim().contains(comment);
+    }
+
     public boolean isSeverityLevelShown(String level) {
         return driver.findElementsById("expand" + level).size() != 0;
     }
