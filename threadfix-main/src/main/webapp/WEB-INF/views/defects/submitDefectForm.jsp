@@ -7,7 +7,7 @@
     <div ng-form="form" class="modal-body">
         <div ng-hide="initialized" class="modal-spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
-        <div ng-if="config.typeName === 'HP Quality Center' || config.typeName === 'Jira'">
+        <div class="dynamic-defect-form" ng-if="config.typeName === 'HP Quality Center' || config.typeName === 'Jira'">
             <span ng-if="stdFormTemplate" class="errors">* required field</span>
             <dynamic-form ng-if="stdFormTemplate" template="stdFormTemplate"
                           ng-model="fieldsMap">
