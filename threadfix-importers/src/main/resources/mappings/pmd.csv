@@ -1,0 +1,4 @@
+type.info,,,
+PMD
+type.vulnerabilities,,
+CONFIGURATION: Weaknesses in this category are typically introduced during the configuration of the software.,CONFIG_PARAMETER,16
