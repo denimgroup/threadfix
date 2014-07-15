@@ -58,7 +58,7 @@ public class DynamicFormFieldParser {
 
     public static List<DynamicFormField> getFields(String jsonString, UserRetriever retriever) {
 
-        LOG.info("Starting JSON field description deserialization.");
+        LOG.debug("Starting JSON field description deserialization.");
 
         try {
             JiraJsonMetadataResponse response =
@@ -98,14 +98,17 @@ public class DynamicFormFieldParser {
                             }
                             if (MULTI_CHECKBOX.equals(jsonField.getSchema().getCustom())) {
                                 field.setSupportsMultivalue(true);
+                                field.setRequired(false); // you are forced to select all of the options if this is true
                                 field.setType("checklist");
+                            } else if (CASCADING_SELECT.equals(jsonField.getSchema().getCustom())) {
+                                field.setType("select");
                             } else {
                                 field.setType("select");
                             }
 
                             field.setOptionsMap(jsonField.getOptionsMap());
                         } else if (type.equals("timetracking")) {
-                            LOG.info("Adding timetracking fields (x2)");
+                            LOG.debug("Adding timetracking fields (x2)");
 
                             DynamicFormField originalEstimate = new DynamicFormField();
 
@@ -157,7 +160,7 @@ public class DynamicFormFieldParser {
                             field.setType("select");
                         }
 
-                        LOG.info("Adding new field with label " + field.getLabel() + " and type " + field.getType());
+                        LOG.debug("Adding new field with label " + field.getLabel() + " and type " + field.getType());
 
                         fieldList.add(field);
                     }
@@ -167,7 +170,7 @@ public class DynamicFormFieldParser {
             return fieldList;
 
         } catch (IOException e) {
-            LOG.info("Failed to deserialize JSON.");
+            LOG.error("Failed to deserialize JSON.");
             LOG.debug("Failing JSON: " + jsonString, e);
 
             throw new RestIOException(e, "Unable to parse server response.");

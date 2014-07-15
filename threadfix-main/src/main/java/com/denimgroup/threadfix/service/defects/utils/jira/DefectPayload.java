@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects.utils.jira;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,8 @@ public class DefectPayload {
 
             for (Map.Entry<String, Field> entry : issueType.getFields().entrySet()) {
 
-                if (entry.getKey().startsWith("timetracking")) {
+                if (entry.getKey().startsWith("timetracking") ||
+                        "attachment".equals(entry.getValue().getSchema().getItems())) {
                     continue;
                 }
 
@@ -101,6 +103,10 @@ public class DefectPayload {
                 String items = field.getSchema().getItems();
                 if (MULTISELECT.equals(custom)) {
                     returnValue = getObjectsFromMultivalueSelect(value);
+                } else if (MULTI_CHECKBOX.equals(custom)) {
+                    returnValue = getObjectsFromMultivalueSelect(value);
+                } else if (CASCADING_SELECT.equals(custom)) {
+                    returnValue = new CascadingSelect(value);
                 } else if ("string".equals(items) || "date".equals(items)) {
                     returnValue = list(value);
                 } else {
@@ -124,6 +130,12 @@ public class DefectPayload {
 
         if (oldValue instanceof List<?>) {
             for (Object item : (List) oldValue) {
+                newValue.add(new ObjectDescriptor(item));
+            }
+        }
+
+        if (oldValue instanceof Map<?, ?>) {
+            for (Object item : ((Map) oldValue).keySet()) {
                 newValue.add(new ObjectDescriptor(item));
             }
         }
@@ -193,6 +205,52 @@ public class DefectPayload {
 
         public void setOriginalEstimate(String originalEstimate) {
             this.originalEstimate = originalEstimate;
+        }
+    }
+
+    public static class CascadingSelect {
+        String value;
+        CascadingSelectChild child;
+
+        public CascadingSelect(Object value) {
+            String stringValue = String.valueOf(value);
+            String [] stuff = StringUtils.splitByWholeSeparator(stringValue, CASCADING_SEPARATOR);
+            assert stuff.length == 2 : "Got " + stuff.length + " results instead of 2.";
+
+            this.value = stuff[0];
+            child = new CascadingSelectChild(stuff[1]);
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public CascadingSelectChild getChild() {
+            return child;
+        }
+
+        public void setChild(CascadingSelectChild child) {
+            this.child = child;
+        }
+    }
+
+    public static class CascadingSelectChild {
+        String value;
+
+        public CascadingSelectChild(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
         }
     }
 

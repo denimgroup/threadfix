@@ -34,6 +34,8 @@ public class JiraCustomFieldsConstants {
             MULTISELECT    = "com.atlassian.jira.plugin.system.customfieldtypes:multiselect",
             MULTI_CHECKBOX = "com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes",
             RADIO_BUTTONS  = "com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons",
-            SELECT = "com.atlassian.jira.plugin.system.customfieldtypes:select";
+            SELECT = "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            CASCADING_SELECT = "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect",
+            CASCADING_SEPARATOR = "7kbJHgtURX2UsaC";
 
 }

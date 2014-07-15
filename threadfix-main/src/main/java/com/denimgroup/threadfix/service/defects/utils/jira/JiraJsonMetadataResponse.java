@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.CASCADING_SEPARATOR;
 
 /**
  * Created by mac on 7/11/14.
@@ -280,10 +281,19 @@ public class JiraJsonMetadataResponse {
 
             if (allowedValues != null) {
                 for (AllowedValue value : allowedValues) {
-                    if (value.getName() != null) {
-                        map.put(value.getId(), value.getName());
-                    } else if (value.getValue() != null) {
-                        map.put(value.getId(), value.getValue());
+
+                    if (value.getChildren() == null || value.getChildren().isEmpty()) {
+                        if (value.getName() != null) {
+                            map.put(value.getId(), value.getName());
+                        } else if (value.getValue() != null) {
+                            map.put(value.getId(), value.getValue());
+                        }
+                    } else {
+                        // probably cascading select
+                        for (Child child : value.getChildren()) {
+                            map.put(value.getValue() + CASCADING_SEPARATOR + child.getValue(),
+                                    value.getValue() + " - " + child.getValue());
+                        }
                     }
                 }
             }
@@ -350,9 +360,18 @@ public class JiraJsonMetadataResponse {
 
     public static class AllowedValue {
         String self, id, description, iconUrl, name, key, userStartDate, userReleaseDate, startDate, releaseDate, value;
-        boolean             subtask, released, archived, overdue;
+        boolean subtask, released, archived, overdue;
         Map<String, String> avatarUrls;
-        Number projectId;
+        Number              projectId;
+        List<Child>         children;
+
+        public List<Child> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<Child> children) {
+            this.children = children;
+        }
 
         public String getValue() {
             return value;
@@ -488,6 +507,34 @@ public class JiraJsonMetadataResponse {
 
         public void setSubtask(boolean subtask) {
             this.subtask = subtask;
+        }
+    }
+
+    public static class Child {
+        String self, value, id;
+
+        public String getSelf() {
+            return self;
+        }
+
+        public void setSelf(String self) {
+            this.self = self;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
     }
 }

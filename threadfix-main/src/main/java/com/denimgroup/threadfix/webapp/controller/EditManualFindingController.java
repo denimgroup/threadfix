@@ -266,7 +266,7 @@ public class EditManualFindingController {
 
         List<DataFlowElement> dataFlowElements = dbFinding.getDataFlowElements() == null ? new ArrayList<DataFlowElement>() : dbFinding.getDataFlowElements();
         if (finding.getDataFlowElements() != null && finding.getDataFlowElements().size() > 0) {
-            DataFlowElement element = dataFlowElements.size()==0 ? new DataFlowElement() : dataFlowElements.get(0);
+            DataFlowElement element = dataFlowElements.size() == 0 ? new DataFlowElement() : dataFlowElements.get(0);
             element.setSourceFileName(finding.getDataFlowElements().get(0).getSourceFileName());
             element.setLineNumber(finding.getDataFlowElements().get(0).getLineNumber());
             if (dataFlowElements.size()==0)
