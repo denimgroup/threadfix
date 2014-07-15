@@ -55,7 +55,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should only be 9 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
@@ -81,7 +81,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         applicationDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
@@ -94,7 +94,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickOpenVulnerabilitiesButton()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should be no closed vulnerabilities.",
                 applicationDetailPage.areAllVulnerabilitiesHidden());
@@ -126,7 +126,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should only be 5 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
@@ -152,7 +152,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         applicationDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
@@ -165,7 +165,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickOpenVulnerabilitiesButton()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should not be any closed vulnerabilities.",
                 applicationDetailPage.areAllVulnerabilitiesHidden());
@@ -197,7 +197,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should only be 9 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
@@ -223,7 +223,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         applicationDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
@@ -236,7 +236,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickUnMarkFalsePositive()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should be no vulnerabilities marked false positive.",
                 applicationDetailPage.areAllVulnerabilitiesHidden());
@@ -268,9 +268,54 @@ public class VulnerabilitiesIT extends BaseIT{
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
-                .waitForResultsToLoad();
+                .sleepForResults();
 
         assertTrue("There should only be 5 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+    }
+
+    @Test
+    public void unMarkMultipleVulnerabilitiesFalsePositiveTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, scanFile);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandResultsByLevel("Critical")
+                .expandVulnerabilityByType("Critical79")
+                .checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton()
+                .clickMarkFalseVulnerability()
+                .sleepForResults();
+
+        applicationDetailPage.expandFieldControls()
+                .toggleStatusFilter("Open")
+                .toggleStatusFilter("FalsePositive");
+
+        assertTrue("There should only be 5 critical vulnerability shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .checkVulnerabilitiesByCategory("Critical79")
+                .clickVulnerabilitiesActionButton()
+                .clickUnMarkFalsePositive()
+                .sleepForResults();
+
+        assertTrue("There should be no vulnerabilities marked false positive.",
+                applicationDetailPage.areAllVulnerabilitiesHidden());
+
+        applicationDetailPage.toggleStatusFilter("FalsePositive")
+                .toggleStatusFilter("Open");
+
+        assertTrue("There should only be 10 vulnerabilities shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
     }
 }

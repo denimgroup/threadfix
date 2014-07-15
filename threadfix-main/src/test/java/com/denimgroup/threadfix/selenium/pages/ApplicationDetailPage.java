@@ -689,6 +689,11 @@ public class ApplicationDetailPage extends BasePage {
         }
     }
 
+    public ApplicationDetailPage sleepForResults() {
+        sleep(1500);
+        return new ApplicationDetailPage(driver);
+    }
+
     public String getScannerDate(int row) {
         return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
     }
