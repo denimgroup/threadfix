@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 import junit.framework.Assert;
@@ -321,7 +322,36 @@ public class VulnerabilitiesIT extends BaseIT{
     }
 
     @Test
-    public void addCommentToVulnerability() {
+    public void viewMoreLinkTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+        String comment = "This is a test.";
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, scanFile);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandResultsByLevel("Critical")
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .setComment(comment)
+                .clickModalSubmit();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewMoreVulnerabilityLink("Critical790");
+
+        assertTrue("Vulnerability Detail Page navigation failed after click view more link of vulnerability.",
+                vulnerabilityDetailPage.isToggleMoreInfoLinkPresent());
+    }
+
+    @Test
+    public void addCommentToVulnerabilityTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");

@@ -80,7 +80,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     }
 
     @Test
-    public void  testBreadCrumbNavigation() {
+    public void testBreadCrumbNavigation() {
         ApplicationDetailPage ap = buildTeamAppandScan();
         sleep(1000);
         assertTrue("BreadCrumb Application is not present", ap.isBreadcrumbPresent());

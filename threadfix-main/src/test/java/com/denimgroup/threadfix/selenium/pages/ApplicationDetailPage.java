@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 
+import com.denimgroup.threadfix.data.entities.Application;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -425,6 +426,11 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage expandVulnerabilityByType(String type) {
         driver.findElementById("expandVuln" + type).click();
         return new ApplicationDetailPage(driver);
+    }
+
+    public VulnerabilityDetailPage clickViewMoreVulnerabilityLink(String vulnerability) {
+        driver.findElementById("viewMoreLink" + vulnerability).click();
+        return new VulnerabilityDetailPage(driver);
     }
 
     public ApplicationDetailPage checkVulnerabilitiesByCategory(String category) {
