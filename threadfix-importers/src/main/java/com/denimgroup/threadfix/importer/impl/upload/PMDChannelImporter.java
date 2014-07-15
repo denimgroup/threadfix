@@ -149,12 +149,16 @@ public class PMDChannelImporter extends AbstractChannelImporter {
             }
         }
 
-        private Calendar parseTimestamp(String dateTimeString) throws ParseException {
+        private Calendar parseTimestamp(String dateTimeString) {
             String dateFormat = "yyyy-MM-ddTkk:mm:ss.SSS";
 
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
-            cal.setTime(sdf.parse(dateTimeString));
+            try {
+                cal.setTime(sdf.parse(dateTimeString));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             return cal;
         }
@@ -164,17 +168,12 @@ public class PMDChannelImporter extends AbstractChannelImporter {
         }
 
         public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
-            try {
-                testDate = parseTimestamp(atts.getValue("timestamp"));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
             if("violation".equals(qName)) {
                 hasFindings = true;
                 setTestStatus();
                 throw new SAXException(FILE_CHECK_COMPLETED);
             } else if("pmd".equals(qName)) {
+                testDate = parseTimestamp(atts.getValue("timestamp"));
                 hasDate = testDate != null;
                 correctFormat = true;
             }
