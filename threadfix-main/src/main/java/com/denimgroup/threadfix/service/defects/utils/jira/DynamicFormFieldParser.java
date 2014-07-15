@@ -33,9 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.Field;
-import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.IssueType;
-import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.Project;
+import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.*;
+import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.*;
 
 /**
  * Created by mac on 7/11/14.
@@ -59,7 +58,7 @@ public class DynamicFormFieldParser {
 
     public static List<DynamicFormField> getFields(String jsonString, UserRetriever retriever) {
 
-        LOG.info("Starting JSON field description deserialization.");
+        LOG.debug("Starting JSON field description deserialization.");
 
         try {
             JiraJsonMetadataResponse response =
@@ -92,7 +91,23 @@ public class DynamicFormFieldParser {
                         field.setActive(true);
                         field.setEditable(true);
 
-                        if (type.equals("timetracking")) {
+                        if (jsonField.getAllowedValues() != null && !jsonField.getAllowedValues().isEmpty()) {
+
+                            if (MULTISELECT.equals(jsonField.getSchema().getCustom())) {
+                                field.setSupportsMultivalue(true);
+                            }
+                            if (MULTI_CHECKBOX.equals(jsonField.getSchema().getCustom())) {
+                                field.setSupportsMultivalue(true);
+                                field.setRequired(false); // you are forced to select all of the options if this is true
+                                field.setType("checklist");
+                            } else if (CASCADING_SELECT.equals(jsonField.getSchema().getCustom())) {
+                                field.setType("select");
+                            } else {
+                                field.setType("select");
+                            }
+
+                            field.setOptionsMap(jsonField.getOptionsMap());
+                        } else if (type.equals("timetracking")) {
                             LOG.debug("Adding timetracking fields (x2)");
 
                             DynamicFormField originalEstimate = new DynamicFormField();
@@ -116,12 +131,20 @@ public class DynamicFormFieldParser {
                             fieldList.add(remainingEstimate);
                             continue;
                         } else if (type.equals("string")) {
-                            field.setType("text");
-                        } else if (type.equals("date")) {
+
+                            if ("com.atlassian.jira.plugin.system.customfieldtypes:url".equals(
+                                    jsonField.getSchema().getCustom())) {
+                                field.setType("url");
+                            } else if ("com.atlassian.jira.plugin.system.customfieldtypes:textarea".equals(
+                                    jsonField.getSchema().getCustom())) {
+                                field.setType("textarea");
+                            } else {
+                                field.setType("text");
+                            }
+                        } else if (type.equals("number")) {
+                            field.setType("number");
+                        } else if (type.equals("date") || type.equals("datetime")) {
                             field.setType("date");
-                        } else if (jsonField.getAllowedValues() != null && !jsonField.getAllowedValues().isEmpty()) {
-                            field.setType("select");
-                            field.setOptionsMap(jsonField.getOptionsMap());
                         } else if (type.equals("array") && jsonField.getSchema().getItems().equals("string")) {
                             field.setType("text");
                             field.setSupportsMultivalue(true);
@@ -147,7 +170,7 @@ public class DynamicFormFieldParser {
             return fieldList;
 
         } catch (IOException e) {
-            LOG.info("Failed to deserialize JSON.");
+            LOG.error("Failed to deserialize JSON.");
             LOG.debug("Failing JSON: " + jsonString, e);
 
             throw new RestIOException(e, "Unable to parse server response.");

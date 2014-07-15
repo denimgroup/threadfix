@@ -280,9 +280,16 @@ angular.module('dynform', [])
                   }
                   //  Everything else should be wrapped in a label tag.
                   else {
-                    newElement = newElement.wrap('<label></label>').parent();
-                    newElement.prepend(document.createTextNode(field.label + ' '));
-                    if (angular.isDefined(field.labelClass)) {newElement.attr('class', field.labelClass);};
+
+                    var divElement = angular.element('<div class="defect-form-row"></div>');
+                    var labelElement = angular.element('<label></label>');
+
+                    labelElement.prepend(document.createTextNode(field.label + ' '));
+                    if (angular.isDefined(field.labelClass)) {labelElement.attr('class', field.labelClass);}
+
+                    divElement.append(labelElement);
+                    divElement.append(newElement);
+                    newElement = divElement;
                   }
                 }
                 

@@ -1204,3 +1204,17 @@ div.remote-provider-config-modal a {
 .popover {
     z-index: 1060 !important;
 }
+
+.dynamic-defect-form label {
+    text-align: left;
+    width:200px;
+}
+
+.defect-form-row {
+    text-align:left;
+    padding-top: 5px;
+}
+
+.defect-form-row label {
+    display: inline-table;
+}
