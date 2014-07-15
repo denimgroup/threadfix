@@ -81,11 +81,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
 
         public void startElement (String uri, String name,
                                   String qName, Attributes atts) {
-            //if ("violation".equals(qName)) {
-                String timestring; //do i need this?
-
-            //} else
-            if ("pmd".equals(qName) && "Security Code Guidelines".equals(atts.getValue("ruleset"))) {
+            if ("violation".equals(qName) && "Security Code Guidelines".equals(atts.getValue("ruleset"))) {
                 inSecurityBug = true;
                 currentChannelVulnCode = atts.getValue("rule");
                 currentSeverityCode = atts.getValue("priority");
@@ -136,6 +132,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
         private boolean hasFindings = false;
         private boolean hasDate = false;
         private boolean correctFormat = false;
+        private String dateTimeString;
 
         private void setTestStatus() {
             if (!correctFormat) {
@@ -152,32 +149,34 @@ public class PMDChannelImporter extends AbstractChannelImporter {
             }
         }
 
+        private Calendar parseTimestamp(String dateTimeString) throws ParseException {
+            String dateFormat = "yyyy-MM-ddTkk:mm:ss.SSS";
+
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
+            cal.setTime(sdf.parse(dateTimeString));
+
+            return cal;
+        }
+
         public void endDocument() {
             setTestStatus();
         }
 
         public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
-            String dateFormat = "yyyy-MM-ddTkk:mm:ss.SSS";
-
-            if("pmd".equals(qName)) {
-                String timeString = atts.getValue("timestamp");
-                Calendar cal = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                try {
-                    cal.setTime(sdf.parse(timeString));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                testDate = cal;
-                hasDate = testDate != null;
-                correctFormat = true;
+            try {
+                testDate = parseTimestamp(atts.getValue("timestamp"));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
-            if("violation".equals(qName)) { //&& "Security Code Guidelines".equals(atts.getValue("ruleset"))) {
+            if("violation".equals(qName)) {
                 hasFindings = true;
                 setTestStatus();
                 throw new SAXException(FILE_CHECK_COMPLETED);
+            } else if("pmd".equals(qName)) {
+                hasDate = testDate != null;
+                correctFormat = true;
             }
         }
     }

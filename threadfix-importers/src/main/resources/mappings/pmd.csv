@@ -1,4 +1,11 @@
 type.info,,,
 PMD
 type.vulnerabilities,,
-CONFIGURATION: Weaknesses in this category are typically introduced during the configuration of the software.,CONFIG_PARAMETER,16
+ArrayIsStoredDirectly,ArrayIsStoredDirectly,16
+MethodReturnsInternalArray,MethodReturnsInternalArray,16
+type.severities,,,
+Information,Information,5,5
+Information,Information,4,4
+Medium,Medium,3,3
+High,High,2,2
+Critical,Critical,1,1

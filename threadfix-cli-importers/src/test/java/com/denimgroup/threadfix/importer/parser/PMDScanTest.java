@@ -11,12 +11,13 @@ import static com.denimgroup.threadfix.importer.TestConstants.*;
  */
 public class PMDScanTest extends TransactionalTest{
     public final static String[][] pmdResults = new String [][] {
-            { CONFIGURATION, "Critical", "responseData", "ArrayIsStoredDirectly"},
-            { CONFIGURATION, "Critical", "responseData", "ArrayIsStoredDirectly"},
-            { CONFIGURATION, "Critical", "responseData", "ArrayIsStoredDirectly"},
-            { CONFIGURATION, "Critical", "responseData", "ArrayIsStoredDirectly"},
-            { CONFIGURATION, "Critical", "responseData", "ArrayIsStoredDirectly"},
-            { CONFIGURATION, "Critical", "responseData", "ArrayIsStoredDirectly"},
+            //cwe name, severity, path, parameter
+            { CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
+            { CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
+            { CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
+            { CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
+            { CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
+            { CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
     };
 
     @Test
