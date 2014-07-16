@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
 import com.denimgroup.threadfix.exception.RestUrlException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
@@ -43,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by stran on 3/25/14.
@@ -50,6 +52,10 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     private static final String CONTENT_TYPE = "application/xml";
+
+    private List<String> parentProjects = list();
+    List<AttributeDefinition> attributeDefinitions = list();
+    List<DynamicFormField> dynamicFormFields = list();
 
     private static final SanitizedLogger LOG = new SanitizedLogger(VersionOneDefectTracker.class);
 
@@ -59,25 +65,39 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
         Assets.Asset assetTemplate = getAssetTemplate();
 
-        assetTemplate.getAttributes().add(createAttribute("Name", "set", metadata.getDescription()));
-
+        Map<String,Object> fieldsMap = metadata.getFieldsMap();
+        if (fieldsMap == null) {
+            LOG.warn("No defect information found. Returning without doing anything.");
+            return null;
+        }
+        metadata.setPreamble(String.valueOf(fieldsMap.get("Description")));
         String description = makeDescription(vulnerabilities, metadata);
         description = description.replaceAll("\n", "<br>");
 
         assetTemplate.getAttributes().add(createAttribute("Description", "set", description));
-        assetTemplate.getRelations().add(createTimeBoxRelation(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" +
-                getUrlEncodedProjectName() + "'&sel=Name", "Timebox", "set", metadata.getComponent()));
-        assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='WorkitemPriority';Name='" +
-                urlEncode(metadata.getPriority()) + "'&sel=Name", "Priority", "set"));
-        assetTemplate.getRelations().add(createRelation(getUrlWithRest() + "List?where=AssetType='StoryStatus';Name='" +
-                urlEncode(metadata.getStatus()) + "'&sel=Name","Status", "set"));
+        if (fieldsMap.get("Timebox") != null)
+            assetTemplate.getRelations().add(createTimeBoxRelation(getUrlWithRest() + "Timebox?where=Schedule.ScheduledScopes.Name='" +
+                    getUrlEncodedProjectName() + "'&sel=Name", "Timebox", "set", fieldsMap.get("Timebox").toString()));
 
-        String attributesXML = restUtils.getUrlAsString(getMetaEndpoint(), getUsername(), getPassword());
-        LOG.debug(attributesXML);
-        List<AttributeDefinition> attributeDefinitions =
-                AttributeDefinitionParser.parseRequiredAttributes(attributesXML);
-        setDefaults(assetTemplate, attributeDefinitions);
+        fieldsMap.remove("Description");
+        fieldsMap.remove("Timebox");
 
+        getV1Data();
+
+        if (fieldsMap != null) {
+            for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
+                AttributeDefinition entryDef = findAttributeDefinition(entry.getKey());
+                if (entryDef != null) {
+                    if (entryDef.getRelationType().equals("select")) {
+                        addRelation(entryDef, assetTemplate, entry.getValue());
+                    } else {
+                        addAttribute(entryDef, assetTemplate, entry.getValue());
+                    }
+                } else {
+                    LOG.warn("Was unable to find " + entry.getKey() + " information");
+                }
+            }
+        }
         String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
         
         LOG.debug(defectXml);
@@ -91,50 +111,15 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         return getDefectNumber(result);
     }
 
-    private void setDefaults(Assets.Asset assetTemplate, List<AttributeDefinition> attributeDefinitions) {
-
-        List<String> relationNames = assetTemplate.getRelationNames(),
-                attributeNames = assetTemplate.getAttributeNames();
-
+    private AttributeDefinition findAttributeDefinition(String name) {
         for (AttributeDefinition attributeDefinition : attributeDefinitions) {
-
-            LOG.info("Checking required field " + attributeDefinition.getName());
-
-            if (relationNames.contains(attributeDefinition.getName()) ||
-                    attributeNames.contains(attributeDefinition.getName())) {
-                LOG.info("Already had " + attributeDefinition.getName());
-                continue;
-            }
-
-            switch (attributeDefinition.getRelationType()) {
-                case "Text":
-                case "Password":
-                case "LongText":
-                    addAttribute(attributeDefinition, assetTemplate, "DefaultValue");
-                    break;
-                case "Relation":
-                    addRelation(attributeDefinition, assetTemplate);
-                    break;
-                case "Numeric":
-                    addAttribute(attributeDefinition, assetTemplate, "1");
-                    break;
-                case "Date":
-                    addAttribute(attributeDefinition, assetTemplate, getCurrentDate());
-                    break;
-                default:
-                    LOG.error("Encountered unexpected type: " + attributeDefinition.getRelationType());
-
-            }
+            if (attributeDefinition.getName().equals(name))
+                return attributeDefinition;
         }
+        return null;
     }
 
-    private static final SimpleDateFormat VERSION_ONE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-
-    private String getCurrentDate() {
-        return VERSION_ONE_DATE_FORMAT.format(new Date());
-    }
-
-    private void addRelation(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate) {
+    private void addRelation(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate, Object value) {
         assert attributeDefinition.getRelatedItemType() != null : "Related Item type parsing is broken.";
 
         String action = attributeDefinition.isMultiValue() ? "add" : "set";
@@ -149,16 +134,16 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         }
 
         LOG.info("Adding " + attributeDefinition + " as relation.");
-        assetTemplate.getRelations().add(createRelation(url, attributeDefinition.getName(), action));
+        assetTemplate.getRelations().add(createRelation(attributeDefinition, attributeDefinition.getName(), action, value));
     }
 
-    private void addAttribute(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate, String value) {
+    private void addAttribute(AttributeDefinition attributeDefinition, Assets.Asset assetTemplate, Object values) {
         LOG.info("Adding " + attributeDefinition.getName() + " as attribute.");
 
         String action = attributeDefinition.isMultiValue() ? "add" : "set";
 
         assetTemplate.getAttributes().add(
-                createAttribute(attributeDefinition.getName(), action, value));
+                createAttribute(attributeDefinition.getName(), action, values));
     }
 
     @Override
@@ -190,7 +175,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     public List<Defect> getDefectList() {
 
         List<String> defectNumberList = getAttributes(getUrlWithRest() +
-                "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "'&sel=Number");
+                "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "'&sel=Number", null);
 
         List<Defect> defectList = list();
         Defect defect;
@@ -237,17 +222,90 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
     @Override
     public ProjectMetadata getProjectMetadata() {
+        getV1Data();
+        return new ProjectMetadata(dynamicFormFields);
+    }
 
-        List<String> sprints = getAttributes(getUrlWithRest() +
-                    "Timebox?where=Schedule.ScheduledScopes.Name='" + getUrlEncodedProjectName() + "'&sel=Name");
+    private void getV1Data() {
+        retrieveParentProjects();
 
-        sprints.add(0,"");
-        List<String> blankList = list("-");
-        List<String> statusList = getAttributes(getUrlWithRest() + "List?where=AssetType='StoryStatus'&sel=Name");
-        List<String> priorities = getAttributes(getUrlWithRest() + "List?where=AssetType='WorkitemPriority'&sel=Name");
+        String attributesXML = restUtils.getUrlAsString(getMetaEndpoint(), getUsername(), getPassword());
+        LOG.debug(attributesXML);
+        attributeDefinitions = AttributeDefinitionParser.parseRequiredAttributes(attributesXML);
+        dynamicFormFields = convertToGenericField(attributeDefinitions);
 
-        return new ProjectMetadata(sprints, blankList,
-                blankList, statusList, priorities);
+    }
+
+    private List<DynamicFormField> convertToGenericField(List<AttributeDefinition> attributeDefinitions) {
+        List<DynamicFormField> dynamicFormFields = list();
+        for (AttributeDefinition attr : attributeDefinitions) {
+            DynamicFormField genericField = new DynamicFormField();
+            genericField.setActive(true);
+            genericField.setEditable(!attr.isReadOnly());
+            genericField.setLabel(attr.getName());
+            genericField.setName(attr.getName());
+            genericField.setType(attr.getRelationType());
+            genericField.setRequired(attr.isRequired());
+            genericField.setSupportsMultivalue(attr.isMultiValue());
+            genericField.setOptionsMap(getFieldOptions(attr));
+            dynamicFormFields.add(genericField);
+        }
+
+        return dynamicFormFields;
+    }
+
+    private Map<String, String> getFieldOptions(AttributeDefinition attr) {
+        Map<String, String> optionMap = newMap();
+        List<String> options;
+
+        if (attr.getRelationType() != null && attr.getRelationType().equals("select")) {
+
+            String relatedAsset = attr.getRelatedItemType();
+            if (relatedAsset != null && !relatedAsset.isEmpty()) {
+                if (relatedAsset.equals("Timebox")) {
+                    options = getAttributes(getUrlWithRest() + relatedAsset + "?where=Schedule.ScheduledScopes.Name='" +  urlEncode(getProjectName()) + "'", attr);
+                } else {
+                    options = getAttributes(getUrlWithRest() + relatedAsset + "?" + getWhereQuery("Scope.Name"), attr);
+                }
+                for (String v: options)
+                    optionMap.put(v, v);
+            }
+
+        }
+        return optionMap;
+    }
+
+    private String getWhereQuery(String assetName) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("where=");
+        for (String project : parentProjects) {
+            builder.append(assetName).append("='").append(urlEncode(project)).append("'|");
+        }
+        builder.append(assetName).append("='").append(urlEncode(getProjectName())).append("'");
+        return builder.toString();
+    }
+
+    private void retrieveParentProjects() {
+        List<Assets.Asset> assetList = getAssets(getUrlWithRest() + "Scope?sel=Name,Parent.Name");
+        findParent(assetList, getProjectName());
+    }
+
+    private void findParent(List<Assets.Asset> assetList, String childProject) {
+        if (assetList == null || assetList.size() == 0)
+            return;
+        for (Assets.Asset asset: assetList) {
+            if (asset.isAssetHasAttr("Name", childProject)) {
+                Assets.Asset.Attribute parentAttr = asset.getAttributeByName("Parent.Name");
+                List<String> parents = list();
+                parents.addAll(parentAttr.getValues());
+                parents.addAll(parentAttr.getMixed());
+                if (parents.size() == 0)
+                    return;
+                parentProjects.addAll(parents);
+                for (String p: parents)
+                    findParent(assetList, p);
+            }
+        }
     }
 
     @Override
@@ -263,7 +321,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         if (response == null) {
             lastError = "Null response was received from VersionOne server.";
             log.warn(lastError);
-        } else if (!response.contains(getUsername())) {
+        } else if (!response.toLowerCase().contains(getUsername().toLowerCase())) {
             lastError = "The returned name did not match the username.";
             log.warn(lastError);
         } else {
@@ -382,56 +440,90 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      * @param url
      * @return
      */
-    private List<String> getAttributes(String url) {
+    private List<String> getAttributes(String url, AttributeDefinition attr) {
         List<String> attributes = new ArrayList<>();
         List<Assets.Asset> assetList = getAssets(url);
+        if (attr != null)
+            attr.setAssetList(assetList);
         for (Assets.Asset asset : assetList) {
-            if (asset != null && asset.getAttributes() != null)
-                for (Assets.Asset.Attribute attribute: asset.getAttributes()) {
-                    if (attribute.getValues() != null)
-                        attributes.addAll(attribute.getValues());
-                    if (attribute.getMixed() != null)
-                        attributes.addAll(attribute.getMixed());
+            if (asset != null && asset.getAttributes() != null) {
+                Assets.Asset.Attribute attribute = asset.getAttributeByName("Name");
+                if (attribute != null) {
+                    attributes.addAll(attribute.getValues());
+                    attributes.addAll(attribute.getMixed());
                 }
+            }
         }
         return attributes;
     }
 
     /**
-     * Create a relation in Defect
-     * @param url
+     *
+     * @param attributeDefinition
      * @param name
      * @param act
+     * @param values
      * @return
      */
-    private Assets.Asset.Relation createRelation(String url, String name, String act) {
-        List<Assets.Asset> assetList = getAssets(url);
+    private Assets.Asset.Relation createRelation(@Nonnull AttributeDefinition attributeDefinition, String name, String act, Object values) {
+        List<Assets.Asset> assetList = attributeDefinition.getAssetList();
 
         if (assetList.size() == 0) {
             LOG.warn("Asset list was empty for " + url + ". Integration will probably fail.");
         } else {
 
-            Assets.Asset targetAsset = assetList.get(0);
-
-            Assets.Asset assetRelation = new Assets.Asset();
-            assetRelation.setHref(targetAsset.getHref());
-            assetRelation.setIdref(targetAsset.getId());
-            if (act.equals("add")) {
-                assetRelation.setAct("add");
+            List<Assets.Asset> targetAssets = list();
+            Assets.Asset.Relation relation = new Assets.Asset.Relation();
+            if (values == null)
+                targetAssets.add(assetList.get(0));
+            else {
+                targetAssets = findAssets(assetList, values);
             }
 
-            LOG.info("Returning relation with href=" + targetAsset.getHref());
+            for (Assets.Asset targetAsset: targetAssets) {
+                Assets.Asset assetRelation = new Assets.Asset();
+                assetRelation.setHref(targetAsset.getHref());
+                assetRelation.setIdref(targetAsset.getId());
+                if (act.equals("add")) {
+                    assetRelation.setAct("add");
+                }
 
-            Assets.Asset.Relation relation = new Assets.Asset.Relation();
-            if (act.equals("set")) {
-                relation.setAct("set");
+                LOG.info("Returning relation with href=" + targetAsset.getHref());
+
+
+                if (act.equals("set")) {
+                    relation.setAct("set");
+                }
+
+                relation.getAssetList().add(assetRelation);
             }
             relation.setName(name);
-            relation.getAssetList().add(assetRelation);
             return relation;
         }
 
         return null;
+    }
+
+    private List<Assets.Asset> findAssets(List<Assets.Asset> assetList, Object values) {
+
+        List<Assets.Asset> targetAssets = list();
+
+        if (values instanceof ArrayList) {
+            for (Object value : (ArrayList) values) {
+                for (Assets.Asset asset: assetList) {
+                    if (asset.isAssetHasAttr("Name", String.valueOf(value)))
+                        targetAssets.add(asset);
+
+                }
+            }
+        } else {
+            for (Assets.Asset asset: assetList) {
+                if (asset.isAssetHasAttr("Name", String.valueOf(values)))
+                    targetAssets.add(asset);
+
+            }
+        }
+        return targetAssets;
     }
 
     private Assets.Asset.Relation createTimeBoxRelation(String url, String name, String act, String timeBox) {
@@ -454,7 +546,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         return null;
     }
 
-    private Assets.Asset.Attribute createAttribute(String name, String act, String... values) {
+    private Assets.Asset.Attribute createAttributeFromValues(String name, String act, String... values) {
 
         Assets.Asset.Attribute attribute = new Assets.Asset.Attribute();
         if (name != null)
@@ -470,6 +562,21 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         LOG.info("Returning attribute with values=" + Arrays.toString(values));
 
         return attribute;
+    }
+
+    private Assets.Asset.Attribute createAttribute(String name, String act, Object values) {
+
+        if (values instanceof ArrayList) {
+            List<String> strings = list();
+            for (Object object : (ArrayList) values) {
+                strings.add(object != null ? object.toString() : null);
+            }
+            String[] arr = new String[strings.size()];
+            arr = strings.toArray(arr);
+            return createAttributeFromValues(name, act, arr);
+        } else {
+            return createAttributeFromValues(name, act, String.valueOf(values));
+        }
     }
 
     /**
@@ -539,7 +646,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         log.info("Updating status for defect " + defect.getNativeId());
 
         List<String> result = getAttributes(getUrlWithRest() + "Defect?where=Number='" +
-                urlEncode(defect.getNativeId()) + "'&sel=Status.Name");
+                urlEncode(defect.getNativeId()) + "'&sel=Status.Name", null);
         if (!result.isEmpty()) {
             log.info("Current status for defect " +
                     urlEncode(defect.getNativeId()) + " is " + result.get(0));

@@ -121,6 +121,35 @@ public class Assets {
             return names;
         }
 
+        public Attribute getAttributeByName(String name) {
+            if (name == null)
+                return null;
+            for (Attribute attribute : getAttributes()) {
+                if (attribute != null && name.equalsIgnoreCase(attribute.getName())) {
+                    return attribute;
+                }
+            }
+            return null;
+        }
+
+        public boolean isAssetHasAttr(String name, String value) {
+            if (name == null || value == null)
+                return false;
+            for (Attribute attribute : getAttributes()) {
+                if (attribute != null && name.equalsIgnoreCase(attribute.getName())) {
+                    for (String v: attribute.getValues())
+                        if (value.equalsIgnoreCase(v))
+                            return true;
+                    for (String v: attribute.getMixed())
+                        if (value.equalsIgnoreCase(v))
+                            return true;
+
+                    return false;
+                }
+            }
+            return false;
+        }
+
         public void setRelations(List<Relation> relations) {
             this.relations = relations;
         }
@@ -178,9 +207,9 @@ public class Assets {
             @XmlAttribute(name="act")
             String act;
             @XmlElement(name="Value")
-            List<String> values;
+            List<String> values = list();
             @XmlMixed
-            List<String> mixed;
+            List<String> mixed = list();
 
             public List<String> getValues() {
                 return values;
@@ -213,6 +242,11 @@ public class Assets {
             public void setAct(String act) {
                 this.act = act;
             }
+
+//            public List<String> getValuesAndMixed() {
+//                values.addAll(mixed)
+//                return getValues().addAll();
+//            }
         }
     }
 }

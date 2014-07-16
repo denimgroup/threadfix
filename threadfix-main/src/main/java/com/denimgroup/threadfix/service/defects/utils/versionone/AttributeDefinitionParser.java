@@ -65,9 +65,9 @@ public class AttributeDefinitionParser extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if ("AttributeDefinition".equals(qName)) {
-            String required = attributes.getValue(AttributeDefinition.REQUIRED_KEY);
+            String readonly = attributes.getValue(AttributeDefinition.READONLY_KEY);
 
-            if (required != null && required.equals("True")) {
+            if (readonly != null && readonly.equals("False")) {
                 AttributeDefinition definition = new AttributeDefinition(attributes);
                 attributeList.add(definition);
                 lastDefinition = definition;

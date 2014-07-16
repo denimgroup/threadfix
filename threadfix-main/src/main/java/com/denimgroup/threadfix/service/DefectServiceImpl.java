@@ -161,7 +161,11 @@ public class DefectServiceImpl implements DefectService {
 			defect.setNativeId(defectId);
 			defect.setVulnerabilities(vulnsWithoutDefects);
 			defect.setApplication(application);
-			status = (status == null && fieldsMap != null ? String.valueOf(fieldsMap.get("status")) : status);
+            Object sObj = null;
+            if (fieldsMap != null && status == null) {
+                sObj = fieldsMap.get("status")==null ? fieldsMap.get("Status") : fieldsMap.get("status");
+            }
+			status = (sObj != null ? String.valueOf(sObj) : status);
 
             // By default, set status to Open
             if (status == null)
