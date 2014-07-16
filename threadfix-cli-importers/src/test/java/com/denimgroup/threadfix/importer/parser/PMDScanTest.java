@@ -22,7 +22,8 @@ public class PMDScanTest extends TransactionalTest{
 
     @Test
     public void pmdScanTest() {
-        ScanComparisonUtils.compare(pmdResults, ScanLocationManager.getRoot() +
-                                    "Static/PMD/report.xml");
+        String scanResults = ScanLocationManager.getRoot() + "Static/PMD/report.xml";
+
+        ScanComparisonUtils.compare(pmdResults, scanResults);
     }
 }

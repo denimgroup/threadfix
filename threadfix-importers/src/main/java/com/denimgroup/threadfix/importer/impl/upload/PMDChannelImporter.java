@@ -72,7 +72,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 lineNum = -1;
             }
 
-            return new DataFlowElement(null, lineNum, atts.getValue("file name"), position);
+            return new DataFlowElement(null, lineNum, atts.getValue("name"), position);
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -168,14 +168,17 @@ public class PMDChannelImporter extends AbstractChannelImporter {
         }
 
         public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
-            if("violation".equals(qName)) {
+            if("pmd".equals(qName)) {
+                //if(atts.getValue("timestamp") != null) {
+                    hasDate = true;
+                    correctFormat = true;
+                //}
+                //testDate = parseTimestamp(atts.getValue("timestamp"));
+                //hasDate = testDate != null;
+            } else if("violation".equals(qName)) {
                 hasFindings = true;
                 setTestStatus();
                 throw new SAXException(FILE_CHECK_COMPLETED);
-            } else if("pmd".equals(qName)) {
-                testDate = parseTimestamp(atts.getValue("timestamp"));
-                hasDate = testDate != null;
-                correctFormat = true;
             }
         }
     }
