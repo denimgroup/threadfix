@@ -70,9 +70,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         Entity.Fields fields = new Entity.Fields();
         if (fieldsMap != null) {
             for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
-                if (!entry.getKey().equals("description")) {
-                    fields.getField().add(createField(entry.getKey(), entry.getValue()));
-                }
+                fields.getField().add(createField(entry.getKey(), entry.getValue()));
             }
         }
         if (description != null && !description.isEmpty())

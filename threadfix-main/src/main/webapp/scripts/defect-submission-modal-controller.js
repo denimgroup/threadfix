@@ -6,6 +6,7 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
     $scope.focusInput = true;
 
     $scope.object = object;
+    $scope.isDynamicForm = false;
 
     $scope.config = config;
 
@@ -24,6 +25,10 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             if (data.success) {
                 $scope.config = data.object.projectMetadata;
                 $scope.config.typeName = data.object.defectTrackerName;
+                if ($scope.config.typeName === 'HP Quality Center'
+                    || $scope.config.typeName === 'Jira'
+                    || $scope.config.typeName === 'Version One')
+                    $scope.isDynamicForm = true;
                 $scope.config.defectTrackerName = data.object.defectTrackerName;
 
                 $scope.config.defects = data.object.defectList.map(function(defect) {
