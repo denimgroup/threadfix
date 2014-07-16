@@ -150,7 +150,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
         }
 
         private Calendar parseTimestamp(String dateTimeString) {
-            String dateFormat = "yyyy-MM-ddTkk:mm:ss.SSS";
+            String dateFormat = "yyyy-MM-dd'T'kk:mm:ss.SSS";
 
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
@@ -169,12 +169,9 @@ public class PMDChannelImporter extends AbstractChannelImporter {
 
         public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
             if("pmd".equals(qName)) {
-                //if(atts.getValue("timestamp") != null) {
-                    hasDate = true;
-                    correctFormat = true;
-                //}
-                //testDate = parseTimestamp(atts.getValue("timestamp"));
-                //hasDate = testDate != null;
+                testDate = parseTimestamp(atts.getValue("timestamp"));
+                hasDate = testDate != null;
+                correctFormat = true;
             } else if("violation".equals(qName)) {
                 hasFindings = true;
                 setTestStatus();
