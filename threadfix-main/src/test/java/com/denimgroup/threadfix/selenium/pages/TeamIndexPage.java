@@ -82,6 +82,12 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public TeamIndexPage collapseTeamRowByName(String teamName) {
+        driver.findElementById("teamCaret" + teamName).click();
+        sleep(1500);
+        return new TeamIndexPage(driver);
+    }
+
     public TeamIndexPage expandAllTeams() {
         driver.findElementById("expandAllButton").click();
         return new TeamIndexPage(driver);
@@ -180,6 +186,10 @@ public class TeamIndexPage extends BasePage {
 
     public boolean isAppPresent(String teamName, String appName) {
         return driver.findElementsById("applicationLink" + teamName + "-" + appName).size() != 0;
+    }
+
+    public boolean isAppDisplayed(String teamName, String appName) {
+        return driver.findElementById("applicationLink" + teamName + "-" + appName).isDisplayed();
     }
 
     public boolean isTeamPresent(String teamName) {

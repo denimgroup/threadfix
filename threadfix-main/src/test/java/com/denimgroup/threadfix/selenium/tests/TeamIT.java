@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
 public class TeamIT extends BaseIT {
 
 	@Test
-	public void testCreateTeam(){
+	public void createTeamTest(){
 		String teamName = "testCreateOrganization" + getRandomString(3);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
@@ -53,46 +53,65 @@ public class TeamIT extends BaseIT {
 		assertTrue("The organization was not present in the table.", teamIndexPage.isTeamPresent(teamName));
 	}
 
-    
     @Test
-    public void testExpandAndCollapseAllTeams(){
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName1 = "app" + getRandomString(3);
-        String appName2 = "app" + getRandomString(3);
+    public void createTeamValidation(){
+        String emptyString = "";
+        String whiteSpaceString = "           ";
 
-        DatabaseUtils.createTeam(teamName1);
-        DatabaseUtils.createApplication(teamName1, appName1);
-        DatabaseUtils.createTeam(teamName2);
-        DatabaseUtils.createApplication(teamName2, appName2);
+        String emptyInputError = "Name is required.";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        // Test empty input
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickAddTeamButton()
+                .setTeamName(emptyString)
+                .addNewTeamInvalid();
 
-        teamIndexPage = teamIndexPage.expandAllTeams();
-        assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1,appName1));
-        assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2,appName2));
+        assertTrue("The correct error text was not present",
+                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
 
-        //note the logic change in assert method call
-        teamIndexPage = teamIndexPage.collapseAllTeams();
-        assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1, appName1));
-        assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2, appName2));
+        // Test whitespace input
+        teamIndexPage = teamIndexPage.setTeamName(whiteSpaceString)
+                .addNewTeamInvalid();
+        assertTrue("The correct error text was not present",
+                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
     }
 
-
-	@Test
-	public void longTeamNameEditModalHeader(){
-		String newOrgName = getRandomString(70);
+    @Test
+    public void createTeamNameLengthValidation() {
+        String newOrgName = getRandomString(70);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickAddTeamButton()
                 .setTeamName(newOrgName);
-		
-		assertTrue("Header width was incorrect with long team name",teamIndexPage.getLengthError().contains("Maximum length is 60."));
-	}
+
+        assertTrue("Header width was incorrect with long team name",
+                teamIndexPage.getLengthError().contains("Maximum length is 60."));
+    }
 
     @Test
-    public void testEditTeamNameWithApplication() {
+    public void editTeamTest(){
+        String newTeamName = "testEditTeam" + getRandomString(4);
+        String editedTeamName = "testEditTeam" + getRandomString(4);
+        DatabaseUtils.createTeam(newTeamName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(newTeamName)
+                .clickEditOrganizationLink()
+                .setNameInput(editedTeamName)
+                .clickUpdateButtonValid();
+
+        assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedTeamName));
+
+        teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
+        assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(editedTeamName));
+    }
+
+    @Test
+    public void editTeamWithApplicationTest() {
         String originalTeamName = getRandomString(8);
         String editedTeamName = getRandomString(8);
         String appName = getRandomString(8);
@@ -111,54 +130,47 @@ public class TeamIT extends BaseIT {
         assertTrue("Team name was not edited correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(editedTeamName));
     }
 
-    //TODO Need to update this when the validation is done in the form and not return a failure
-	@Test
-	public void testCreateOrganizationBoundaries(){
-		String emptyString = "";
-		String whiteSpaceString = "           ";
-		
-		String emptyInputError = "Name is required.";
-		
+    @Test
+    public void editTeamValidation(){
+        String orgName = "testEditOrgBound" + getRandomString(3);
+        String orgNameDuplicateTest = "testEditOrgBound2" + getRandomString(3);
 
-		// Test empty input
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .clickAddTeamButton()
-                .setTeamName(emptyString)
-                .addNewTeamInvalid();
-		
-		assertTrue("The correct error text was not present",
-                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
-		
-		// Test whitespace input
-		teamIndexPage = teamIndexPage.setTeamName(whiteSpaceString)
-                .addNewTeamInvalid();
-		assertTrue("The correct error text was not present",
-                emptyInputError.equals(teamIndexPage.getErrorMessage("requiredError")));
-	}
+        String emptyInputError = "Name is required.";
 
-	@Test
-	public void testEditTeam(){
-		String newTeamName = "testEditTeam" + getRandomString(4);
-		String editedTeamName = "testEditTeam" + getRandomString(4);
-        DatabaseUtils.createTeam(newTeamName);
+        String longInput = getRandomString(119);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+        DatabaseUtils.createTeam(orgName);
+        DatabaseUtils.createTeam(orgNameDuplicateTest);
 
-        TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
-                .clickViewTeamLink(newTeamName)
-                .clickEditOrganizationLink()
-                .setNameInput(editedTeamName)
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+                .clickViewTeamLink(orgName);
+
+        // Test edit with no changes
+        teamDetailPage = teamDetailPage.clickEditOrganizationLink()
+                .clickUpdateButtonValid();
+        assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(orgName));
+
+        // Test empty input
+        teamDetailPage = teamDetailPage.clickEditOrganizationLink()
+                .setNameInput("")
+                .clickUpdateButtonInvalid();
+        assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorMessage("requiredError")));
+
+        // Test whitespace input
+        teamDetailPage = teamDetailPage.setNameInput("           ")
+                .clickUpdateButtonInvalid();
+        assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorMessage("requiredError")));
+
+        orgName = longInput.substring(0, 60);
+
+        teamDetailPage = teamDetailPage.setNameInput(orgName)
                 .clickUpdateButtonValid();
 
-		assertTrue("Editing did not change the name.", teamDetailPage.getOrgName().contains(editedTeamName));
-		
-		teamIndexPage = teamDetailPage.clickOrganizationHeaderLink();
-		assertTrue("Organization Page did not save the name correctly.",  teamIndexPage.isTeamPresent(editedTeamName));
-	}
+        assertTrue("The organization name was not cropped correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(orgName));
+    }
 
     @Test
-    public void testViewMore() {
+    public void viewMoreTest() {
         String teamName = "testViewMore" + getRandomString(3);
         DatabaseUtils.createTeam(teamName);
 
@@ -169,9 +181,8 @@ public class TeamIT extends BaseIT {
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 
-
     @Test
-    public void testTeamGraphs() {
+    public void teamGraphsTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String file = ScanContents.getScanFilePath();
@@ -184,47 +195,65 @@ public class TeamIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertTrue("The graph of the expanded team was not shown properly.", teamIndexPage.isGraphDisplayed(teamName));
+        assertTrue("The graph of the expanded team was not shown properly.",
+                teamIndexPage.isGraphDisplayed(teamName));
     }
 
-	//TODO needs revision when error messages are updated
-	@Test
-	public void testEditOrganizationBoundaries(){
-		String orgName = "testEditOrgBound" + getRandomString(3);
-		String orgNameDuplicateTest = "testEditOrgBound2" + getRandomString(3);
-		
-		String emptyInputError = "Name is required.";
-		
-		String longInput = getRandomString(119);
+    @Test
+    public void expandAndCollapseSingleTeamTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
 
-        DatabaseUtils.createTeam(orgName);
-        DatabaseUtils.createTeam(orgNameDuplicateTest);
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
-                .clickViewTeamLink(orgName);
-		
-		// Test edit with no changes
-		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-                .clickUpdateButtonValid();
-		assertTrue("Organization Page did not save the name correctly.",teamDetailPage.getOrgName().contains(orgName));
-		
-		// Test empty input
-		teamDetailPage = teamDetailPage.clickEditOrganizationLink()
-                .setNameInput("")
-                .clickUpdateButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorMessage("requiredError")));
-		
-		// Test whitespace input
-		teamDetailPage = teamDetailPage.setNameInput("           ")
-                .clickUpdateButtonInvalid();
-		assertTrue("The correct error text was not present", emptyInputError.equals(teamDetailPage.getErrorMessage("requiredError")));
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
-        orgName = longInput.substring(0, 60);
+        teamIndexPage.expandTeamRowByName(teamName);
 
-        teamDetailPage = teamDetailPage.setNameInput(orgName)
-                .clickUpdateButtonValid();
+        assertTrue("Team was not expanded properly.", teamIndexPage.isAppDisplayed(teamName, appName));
 
-		assertTrue("The organization name was not cropped correctly.", teamDetailPage.isTeamNameDisplayedCorrectly(orgName));
+        teamIndexPage.collapseTeamRowByName(teamName);
 
-	}
+        assertFalse("Team was not collapsed properly.", teamIndexPage.isAppDisplayed(teamName, appName));
+    }
+
+    @Test
+    public void expandAndCollapseAllTeamsTest(){
+        String teamName1 = getRandomString(8);
+        String teamName2 = getRandomString(8);
+        String appName1 = getRandomString(3);
+        String appName2 = getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createApplication(teamName1, appName1);
+        DatabaseUtils.createTeam(teamName2);
+        DatabaseUtils.createApplication(teamName2, appName2);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
+
+        teamIndexPage = teamIndexPage.expandAllTeams();
+        assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1,appName1));
+        assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2,appName2));
+
+        //note the logic change in assert method call
+        teamIndexPage = teamIndexPage.collapseAllTeams();
+        assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1, appName1));
+        assertFalse("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2, appName2));
+    }
+
+    @Test
+    public void deleteTeamTest() {
+        String teamName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
+
+        assertFalse("Team should have been deleted.", teamIndexPage.isTeamPresent(teamName));
+    }
 }
