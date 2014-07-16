@@ -64,6 +64,19 @@ public class DotNetControllerParserTests {
     }
 
     @Test
+    public void testRestController() {
+        DotNetControllerMappings mappings =
+                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/RestController.cs"));
+
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Students") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Students.";
+        assert mappings.getActionForNameAndMethod("Get", "GET") != null :
+                "Mappings didn't contain Get with GET.";
+    }
+
+    @Test
     public void testAttributesControllerActionSizeAndMethods() {
         DotNetControllerMappings mappings =
                 DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/AttributesController.cs"));

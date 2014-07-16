@@ -33,10 +33,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.*;
+
 /**
  * Created by mac on 6/11/14.
  */
-public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywords {
+public class DotNetControllerParser implements EventBasedTokenizer {
 
     final DotNetControllerMappings mappings;
 
@@ -108,7 +110,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                 break;
         }
 
-        System.out.println(currentState);
+        LOG.debug(currentState.toString());
 
         switch (currentState) {
             case START:
@@ -146,7 +148,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                 }
                 break;
             case PUBLIC_IN_BODY:
-                if (ACTION_RESULT.equals(stringValue)) {
+                if (ACTION_RESULT.equals(stringValue) || HTTP_MESSAGE_RESPONSE.equals(stringValue)) {
                     currentState = State.ACTION_RESULT;
                 } else if (type == '(' || type == ';' || type == '{') {
                     currentState = State.BODY;
@@ -196,7 +198,7 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                     break;
                 case STRING:
                     if (type == ']') {
-                        System.out.println("Adding " + lastAttribute);
+                        LOG.debug("Adding " + lastAttribute);
                         currentAttributes.add(lastAttribute);
                     }
                     currentAttributeState = AttributeState.START;

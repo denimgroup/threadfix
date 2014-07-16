@@ -41,7 +41,7 @@ import java.io.*;
  */
 public class EventBasedTokenizerRunner {
 
-    public static final boolean logEnabled = true;
+    public static final boolean logEnabled = false;
 
 	private static final SanitizedLogger log = new SanitizedLogger("EventBasedTokenizerRunner");
 	
