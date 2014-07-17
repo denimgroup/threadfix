@@ -86,7 +86,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 currentChannelVulnCode = atts.getValue("rule");
                 currentSeverityCode = atts.getValue("priority");
                 currentParameter = atts.getValue("variable");
-                currentPath = atts.getValue("name");
+                currentPath = atts.getValue("package");
             }
 
             if (inSecurityBug) {
