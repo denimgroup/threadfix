@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.service.defects.utils;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by stran on 7/10/14.
@@ -116,7 +116,7 @@ public class DynamicFormField {
     }
 
     public void setOptionsMap(Map<String, String> optionsMap) {
-        this.optionsMap = optionsMap;
+        this.optionsMap = sortByValues(optionsMap);
     }
 
     public boolean isSupportsMultivalue() {
@@ -126,4 +126,34 @@ public class DynamicFormField {
     public void setSupportsMultivalue(boolean supportsMultivalue) {
         this.supportsMultivalue = supportsMultivalue;
     }
+
+
+    /*
+     * Java method to sort Map in Java by value e.g. HashMap or Hashtable
+     * It also sort values even if they are duplicates
+     */
+    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map){
+        if (map == null)
+            return null;
+        List<Map.Entry<K,V>> entries = new LinkedList<Map.Entry<K,V>>(map.entrySet());
+
+        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
+
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        //LinkedHashMap will keep the keys in the order they are inserted
+        //which is currently sorted on natural ordering
+        Map<K,V> sortedMap = new LinkedHashMap<K,V>();
+
+        for(Map.Entry<K,V> entry: entries){
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+
 }
