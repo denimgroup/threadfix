@@ -88,7 +88,7 @@ public class RemoteProvidersController {
 		model.addAttribute("remoteProviderApplication", new RemoteProviderApplication());
 		model.addAttribute("organizationList", organizationService.loadAllActiveFilter());
 
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS);
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_REMOTE_PROVIDERS, Permission.CAN_UPLOAD_SCANS);
 		return "config/remoteproviders/index";
 	}
 
@@ -200,13 +200,14 @@ public class RemoteProvidersController {
 
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<RemoteProviderType> configureFinish(@PathVariable("typeId") int typeId,
+	public @ResponseBody Object configureFinish(@PathVariable("typeId") int typeId,
 			HttpServletRequest request) {
 		
 		ResponseCode test = remoteProviderTypeService.checkConfiguration(
 				request.getParameter("username"),
 				request.getParameter("password"),
-				request.getParameter("apiKey"), typeId);
+				request.getParameter("apiKey"),
+                request.getParameter("matchSourceNumbers"), typeId);
 		
 		if (test.equals(ResponseCode.BAD_ID)) {
 			return RestResponse.failure("Unable to find that Remote Provider Type.");
@@ -218,10 +219,10 @@ public class RemoteProvidersController {
             log.error(error);
 			return RestResponse.failure(error);
 		} else if (test.equals(ResponseCode.SUCCESS)) {
-			return RestResponse.success(remoteProviderTypeService.load(typeId));
+			return ControllerUtils.writeSuccessObjectWithView(remoteProviderTypeService.load(typeId), AllViews.TableRow.class);
 		} else {
             log.warn("Response code was not success but we're still returning success. This shouldn't happen.");
-			return RestResponse.success(remoteProviderTypeService.load(typeId));
+            return RestResponse.failure("Response was " + test);
 		}
 	}
 	

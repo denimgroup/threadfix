@@ -24,8 +24,12 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import javax.annotation.Nonnull;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -94,12 +98,12 @@ public abstract class AbstractDefectTracker {
 	 * Return a list of available product names. The credentials and URL need to be set
 	 * for this method to work.
      *
-     * TODO Avoid strings where other types are more appropriate
      * We should create wrapper object with collection and error message
 	 * 
-	 * @return a comma separated string of available product names
+	 * @return a list of product names, or empty list if no products are found.
 	 */
-	public abstract String getProductNames();
+    @Nonnull
+	public abstract List<String> getProductNames();
 	
 	/**
 	 * Given the name of the project as the projectName field, return its ID. 
@@ -191,16 +195,28 @@ public abstract class AbstractDefectTracker {
 				if (vulnerability.getGenericVulnerability() != null &&
 						vulnerability.getSurfaceLocation() != null) {
 
-					stringBuilder.append("Vulnerability[" + vulnIndex + "]:\n" +
-							vulnerability.getGenericVulnerability().getName() + '\n' +
-							"CWE-ID: " + vulnerability.getGenericVulnerability().getId() + '\n' + 
-							"http://cwe.mitre.org/data/definitions/" + 
-							vulnerability.getGenericVulnerability().getId() + ".html" + '\n');
+                    stringBuilder
+                            .append("Vulnerability[")
+                            .append(vulnIndex)
+                            .append("]:\n")
+                            .append(vulnerability.getGenericVulnerability().getName())
+                            .append('\n')
+                            .append("CWE-ID: ")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append('\n')
+                            .append("http://cwe.mitre.org/data/definitions/")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append(".html")
+                            .append('\n');
 	
 					SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
-					stringBuilder.append("Vulnerability attack surface location:\n" +
-											"URL: " + surfaceLocation.getUrl() + "\n" +
-											"Parameter: " + surfaceLocation.getParameter());
+                    stringBuilder
+                            .append("Vulnerability attack surface location:\n")
+                            .append("URL: ")
+                            .append(surfaceLocation.getUrl())
+                            .append("\n")
+                            .append("Parameter: ")
+                            .append(surfaceLocation.getParameter());
 					
 					addNativeIds(vulnerability, stringBuilder);
 					
@@ -223,7 +239,10 @@ public abstract class AbstractDefectTracker {
 						finding.getScan().getApplicationChannel().getChannelType().getName() != null) {
 					String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
 					if (ChannelType.NATIVE_ID_SCANNERS.contains(channelName)) {
-						builder.append("\n" + channelName + " ID: " + finding.getNativeId());
+                        builder.append("\n")
+                                .append(channelName)
+                                .append(" ID: ")
+                                .append(finding.getNativeId());
 					}
 				}
 			}
@@ -241,6 +260,17 @@ public abstract class AbstractDefectTracker {
 	public String getUsername() {
 		return username;
 	}
+
+    @Nonnull
+    public String getUrlEncodedUsername() {
+        assert username != null;
+
+        try {
+            return URLEncoder.encode(username, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Unable to load UTF-8, can't continue", e);
+        }
+    }
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -262,6 +292,10 @@ public abstract class AbstractDefectTracker {
 		this.projectName = projectName;
 	}
 
+	public String getUrlEncodedProjectName() {
+        return urlEncode(projectName);
+    }
+
 	public String getProjectId() {
 		return projectId;
 	}
@@ -277,4 +311,12 @@ public abstract class AbstractDefectTracker {
 	public void setLastError(String lastError) {
 		this.lastError = lastError;
 	}
+
+    public static String urlEncode(String input) {
+        try {
+            return URLEncoder.encode(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e, "UTF-8 not supported.");
+        }
+    }
 }

@@ -158,7 +158,7 @@ public class Application extends AuditableEntity {
 	}
 	
 	@Column(length = 255)
-    @JsonView(AllViews.RestViewApplication2_1.class)
+    @JsonView({AllViews.RestViewApplication2_1.class, AllViews.FormInfo.class, AllViews.TableRow.class})
 	public String getUniqueId() {
 		return uniqueId;
 	}
@@ -282,7 +282,7 @@ public class Application extends AuditableEntity {
     @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class })
     private Map<String, Object> getWafRest() {
 
-        if (waf== null) {
+        if (waf == null) {
             return null;
         }
 
@@ -726,7 +726,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 

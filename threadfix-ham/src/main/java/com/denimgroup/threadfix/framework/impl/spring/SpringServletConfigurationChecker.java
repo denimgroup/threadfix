@@ -24,16 +24,17 @@
 
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import com.denimgroup.threadfix.framework.engine.framework.ClassMapping;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.engine.framework.ClassMapping;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class SpringServletConfigurationChecker {
 
@@ -82,7 +83,7 @@ public class SpringServletConfigurationChecker {
 
         boolean result = false;
 
-        List<File> configFiles = new ArrayList<>();
+        List<File> configFiles = list();
 
         configFiles.addAll(getFilesFromConfigString(mapping.getContextConfigLocation()));
         configFiles.addAll(getFilesFromConfigString(contextParams.get(CONTEXT_CONFIG_LOCATION)));
@@ -104,7 +105,7 @@ public class SpringServletConfigurationChecker {
 
     private Collection<File> getFilesFromConfigString(String contextConfigLocation) {
 
-        List<File> files = new ArrayList<>();
+        List<File> files = list();
 
         if (contextConfigLocation != null) {
 
@@ -127,7 +128,7 @@ public class SpringServletConfigurationChecker {
     private Collection<File> cleanAndGetFiles(String line) {
         String cleaned = line;
 
-        List<File> returnStrings = new ArrayList<>();
+        List<File> returnStrings = list();
 
         if (cleaned.trim().startsWith(CLASSPATH)) {
             cleaned = cleaned.trim().substring(CLASSPATH.length());

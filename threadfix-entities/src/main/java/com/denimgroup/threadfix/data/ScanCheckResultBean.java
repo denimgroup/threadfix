@@ -24,27 +24,29 @@
 
 package com.denimgroup.threadfix.data;
 
+import javax.annotation.Nonnull;
 import java.util.Calendar;
 
 public class ScanCheckResultBean {
 
-	private ScanImportStatus scanCheckResult;
+	private @Nonnull ScanImportStatus scanCheckResult;
 	private Calendar testDate;
 	
-	public ScanCheckResultBean(ScanImportStatus scanCheckResult, Calendar testDate) {
+	public ScanCheckResultBean(@Nonnull ScanImportStatus scanCheckResult, Calendar testDate) {
 		this.scanCheckResult = scanCheckResult;
 		this.testDate = testDate;
 	}
 	
-	public ScanCheckResultBean(ScanImportStatus scanCheckResult) {
+	public ScanCheckResultBean(@Nonnull ScanImportStatus scanCheckResult) {
 		this.scanCheckResult = scanCheckResult;
 	}
 
 	public Calendar getTestDate() {
 		return testDate;
 	}
-	
-	public ScanImportStatus getScanCheckResult() {
+
+    @Nonnull
+    public ScanImportStatus getScanCheckResult() {
 		return scanCheckResult;
 	}
 }

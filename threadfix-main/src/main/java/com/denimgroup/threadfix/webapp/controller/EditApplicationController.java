@@ -151,7 +151,7 @@ public class EditApplicationController {
 			return writer.writeValueAsString(FormRestResponse.failure("Errors", result));
 
 		} else {
-			application.setOrganization(organizationService.loadOrganization(application.getOrganization().getId()));
+			application.setOrganization(organizationService.loadById(application.getOrganization().getId()));
 			applicationService.storeApplication(application);
             vulnerabilityService.updateOrgsVulnerabilityReport();
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();

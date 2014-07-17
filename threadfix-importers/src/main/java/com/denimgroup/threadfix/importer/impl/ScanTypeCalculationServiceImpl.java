@@ -48,6 +48,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationService {
 	
@@ -204,7 +206,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	}
 	
 	public class TagCollector extends DefaultHandler {
-		public List<String> tags = new ArrayList<>();
+		public List<String> tags = list();
 		private int index = 0;
 		
 	    @Override
@@ -286,11 +288,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			return null;
 		}
 		
-		if (applicationChannel.getScanCounter() == null) {
-			applicationChannel.setScanCounter(1);
-		}
-		
-		String inputFileName = "scan-file-" + applicationChannel.getId() + "-" + applicationChannel.getScanCounter();
+		String inputFileName = applicationChannel.getNextFileHandle();
 
 		applicationChannel.setScanCounter(applicationChannel.getScanCounter() + 1);
 		

@@ -23,19 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Imports the results of a dynamic AppScan scan.
@@ -93,7 +95,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    public AppScanSAXParser () {
 	    	super();
 	    	
-	    	hosts = new ArrayList<>();
+	    	hosts = list();
 	    }
 	    
 	    private void addChannelVulnsAndMappingsToDatabase() {
@@ -137,7 +139,7 @@ class AppScanWebImporter extends AbstractChannelImporter {
 			VulnerabilityMap vulnerabilityMap = new VulnerabilityMap();
 			vulnerabilityMap.setChannelVulnerability(channelVuln);
 			vulnerabilityMap.setGenericVulnerability(genericVuln);
-			List<VulnerabilityMap> vulnerabilityMapList = new ArrayList<>();
+			List<VulnerabilityMap> vulnerabilityMapList = list();
 			vulnerabilityMapList.add(vulnerabilityMap);
 			channelVuln.setVulnerabilityMaps(vulnerabilityMapList);
 			genericVuln.setVulnerabilityMaps(vulnerabilityMapList);
@@ -312,7 +314,8 @@ class AppScanWebImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new AppScanSAXValidator());
 	}

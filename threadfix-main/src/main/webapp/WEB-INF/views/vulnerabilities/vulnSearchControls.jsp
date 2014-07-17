@@ -34,16 +34,20 @@
     <div class="filter-controls">
         <h3>Filters</h3>
 
-
-        <tabset>
-            <tab heading="Filters">
-                <%@ include file="filterSections.jsp" %>
+        <tabset ng-init="showFilterSections = true">
+            <tab heading="Filters" ng-click="$parent.showFilterSections = true; $parent.showSavedFilters = false">
             </tab>
-            <tab heading="Saved Filters">
-                <%@ include file="savedFilters.jsp" %>
+            <tab heading="Load Filters" ng-click="$parent.showFilterSections = false; $parent.showSavedFilters = true">
             </tab>
         </tabset>
 
+        <div ng-show="showFilterSections">
+            <%@ include file="filterSections.jsp" %>
+        </div>
+
+        <div ng-show="showSavedFilters">
+            <%@ include file="savedFilters.jsp" %>
+        </div>
     </div>
 
     <%@ include file="vulnSearchTree.jsp" %>

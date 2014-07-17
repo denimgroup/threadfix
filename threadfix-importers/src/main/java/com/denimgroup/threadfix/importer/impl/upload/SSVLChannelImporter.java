@@ -23,16 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -43,10 +44,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 class SSVLChannelImporter extends AbstractChannelImporter {
 
@@ -66,7 +68,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 		private boolean getText = false;
 		private String description = null;
 
-		private List<DataFlowElement> dataFlowElementList = new ArrayList<>();
+		private List<DataFlowElement> dataFlowElementList = list();
 		private DataFlowElement lastDataFlowElement = null;
 		
 		private Map<FindingKey, String> findingMap = new HashMap<>();
@@ -162,7 +164,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
                     if (!dataFlowElementList.isEmpty()) {
                         finding.setIsStatic(true);
                         finding.setDataFlowElements(dataFlowElementList);
-                        dataFlowElementList = new ArrayList<>();
+                        dataFlowElementList = list();
                     }
                     if (description != null) {
                         finding.setLongDescription(description);
@@ -182,7 +184,8 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 	
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		
 		boolean valid = false;
@@ -192,6 +195,10 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 
             if (schemaFile == null) {
                 throw new IllegalStateException("ssvl.xsd file not available from ClassLoader. Fix that.");
+            }
+
+            if (inputFileName == null) {
+                throw new IllegalStateException("inputFileName was null, unable to load scan file.");
             }
 
 			Source xmlFile = new StreamSource(new File(inputFileName));

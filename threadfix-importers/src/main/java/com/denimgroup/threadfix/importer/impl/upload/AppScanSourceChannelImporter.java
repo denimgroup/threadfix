@@ -35,8 +35,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.Map.Entry;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * 
@@ -243,7 +246,7 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    	
 	    	String[] strings = trace.split("(,|\\.+,|\\.+)");
 	    	
-	    	List<DataFlowElement> returnList = new ArrayList<>();
+	    	List<DataFlowElement> returnList = list();
 	    	int count = 1;
 	    	for (String string : strings) {
 	    		Map<String, String> singleTaintMap = taintMap.get(string);
@@ -267,8 +270,10 @@ class AppScanSourceChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
+        // TODO more validation
 		return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
 		
 		//return testSAXInput(new AppScanSourceSAXValidator());

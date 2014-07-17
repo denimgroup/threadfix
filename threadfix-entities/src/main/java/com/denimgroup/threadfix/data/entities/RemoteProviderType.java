@@ -36,167 +36,170 @@ import java.util.List;
 @Entity
 @Table(name = "RemoteProviderType")
 public class RemoteProviderType extends BaseEntity  {
-	
-	private static final long serialVersionUID = -4542241524388720916L;
-	
-	public static final String SENTINEL = ScannerType.SENTINEL.getFullName();
-	public static final String VERACODE = ScannerType.VERACODE.getFullName();
-	public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
 
-	public static final int NAME_LENGTH = 60;
-	public static final int API_KEY_LENGTH = 1024;
-	
-	// TODO Check actual limits (Veracode right now) and use those
-	public static final int USERNAME_LENGTH = 1024;
-	public static final int PASSWORD_LENGTH = 1024;
-	//No components were found for the configured Defect Tracker project.
-	@NotEmpty(message = "{errors.required}")
-	@Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
-	private String name;
-	
-	private boolean hasApiKey;
-	
-	// TODO normalize this if it becomes more than a one-off thing (RP Region table or similar)
-	private boolean isEuropean = false;
-	
-	private boolean encrypted = false;
-	
-	@Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
-	private String encryptedApiKey;
-	
-	private boolean hasUserNamePassword;
-	
-	@Size(max = USERNAME_LENGTH, message = "{errors.maxlength} " + USERNAME_LENGTH + ".")
-	private String encryptedUsername;
-	@Size(max = PASSWORD_LENGTH, message = "{errors.maxlength} " + PASSWORD_LENGTH + ".")
-	private String encryptedPassword;
-	@Size(max = 60, message = "{errors.maxlength} " + 60 + ".")
-	private String username;
-	@Size(max = 60, message = "{errors.maxlength} " + 60 + ".")
-	private String password;
-	@Size(max = 100, message = "{errors.maxlength} " + 100 + ".")
-	private String apiKey;
-	
-	private List<RemoteProviderApplication> remoteProviderApplications;
-	private List<RemoteProviderApplication> filteredApplications;
-	private ChannelType channelType;
+    private static final long serialVersionUID = -4542241524388720916L;
 
-	@Transient
+    public static final String SENTINEL        = ScannerType.SENTINEL.getFullName();
+    public static final String VERACODE        = ScannerType.VERACODE.getFullName();
+    public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
+
+    public static final int NAME_LENGTH    = 60;
+    public static final int API_KEY_LENGTH = 1024;
+
+    // TODO Check actual limits (Veracode right now) and use those
+    public static final int USERNAME_LENGTH = 1024;
+    public static final int PASSWORD_LENGTH = 1024;
+    //No components were found for the configured Defect Tracker project.
+    @NotEmpty(message = "{errors.required}")
+    @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
+    private String name;
+
+    private boolean hasApiKey;
+
+    private Boolean matchSourceNumbers = false;
+
+    // TODO normalize this if it becomes more than a one-off thing (RP Region table or similar)
+    private boolean isEuropean = false;
+
+    private boolean encrypted = false;
+
+    @Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
+    private String encryptedApiKey;
+
+    private boolean hasUserNamePassword;
+
+    @Size(max = USERNAME_LENGTH, message = "{errors.maxlength} " + USERNAME_LENGTH + ".")
+    private String encryptedUsername;
+    @Size(max = PASSWORD_LENGTH, message = "{errors.maxlength} " + PASSWORD_LENGTH + ".")
+    private String encryptedPassword;
+    @Size(max = 60, message = "{errors.maxlength} " + 60 + ".")
+    private String username;
+    @Size(max = 60, message = "{errors.maxlength} " + 60 + ".")
+    private String password;
+    @Size(max = 100, message = "{errors.maxlength} " + 100 + ".")
+    private String apiKey;
+
+    private List<RemoteProviderApplication> remoteProviderApplications;
+    private List<RemoteProviderApplication> filteredApplications;
+    private ChannelType                     channelType;
+    private boolean matchSourceNumbersNullSafe;
+
+    @Transient
     @JsonView(AllViews.TableRow.class)
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	@Transient
+    @Transient
     @JsonView(AllViews.TableRow.class)
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Transient
+    @Transient
     @JsonView(AllViews.TableRow.class)
-	public String getApiKey() {
-		return apiKey;
-	}
+    public String getApiKey() {
+        return apiKey;
+    }
 
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
-	
-	@Column(nullable = false)
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    @Column(nullable = false)
     @JsonView(AllViews.TableRow.class)
-	public boolean getHasApiKey() {
-		return hasApiKey;
-	}
+    public boolean getHasApiKey() {
+        return hasApiKey;
+    }
 
-	public void setHasApiKey(boolean hasApiKey) {
-		this.hasApiKey = hasApiKey;
-	}
+    public void setHasApiKey(boolean hasApiKey) {
+        this.hasApiKey = hasApiKey;
+    }
 
-	@Column(length = API_KEY_LENGTH)
+    @Column(length = API_KEY_LENGTH)
     @JsonIgnore
     public String getEncryptedApiKey() {
-		return encryptedApiKey;
-	}
+        return encryptedApiKey;
+    }
 
-	public void setEncryptedApiKey(String encryptedApiKey) {
-		this.encryptedApiKey = encryptedApiKey;
-	}
+    public void setEncryptedApiKey(String encryptedApiKey) {
+        this.encryptedApiKey = encryptedApiKey;
+    }
 
-	@Column(nullable = false)
+    @Column(nullable = false)
     @JsonView(AllViews.TableRow.class)
-	public boolean getHasUserNamePassword() {
-		return hasUserNamePassword;
-	}
-	
-	public void setHasUserNamePassword(boolean hasUserNamePassword) {
-		this.hasUserNamePassword = hasUserNamePassword;
-	}
+    public boolean getHasUserNamePassword() {
+        return hasUserNamePassword;
+    }
 
-	@Column(length = USERNAME_LENGTH)
+    public void setHasUserNamePassword(boolean hasUserNamePassword) {
+        this.hasUserNamePassword = hasUserNamePassword;
+    }
+
+    @Column(length = USERNAME_LENGTH)
     @JsonIgnore
-	public String getEncryptedUsername() {
-		return encryptedUsername;
-	}
+    public String getEncryptedUsername() {
+        return encryptedUsername;
+    }
 
-	public void setEncryptedUsername(String encryptedUsername) {
-		this.encryptedUsername = encryptedUsername;
-	}
+    public void setEncryptedUsername(String encryptedUsername) {
+        this.encryptedUsername = encryptedUsername;
+    }
 
-	@Column(length = PASSWORD_LENGTH)
+    @Column(length = PASSWORD_LENGTH)
     @JsonIgnore
-	public String getEncryptedPassword() {
-		return encryptedPassword;
-	}
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
 
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
-	}
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+    }
 
-	@ManyToOne
-	@JoinColumn(name = "channelTypeId")
+    @ManyToOne
+    @JoinColumn(name = "channelTypeId")
     @JsonIgnore
-	public ChannelType getChannelType() {
-		return channelType;
-	}
+    public ChannelType getChannelType() {
+        return channelType;
+    }
 
-	public void setChannelType(ChannelType channelType) {
-		this.channelType = channelType;
-	}
+    public void setChannelType(ChannelType channelType) {
+        this.channelType = channelType;
+    }
 
-	@Column(length = NAME_LENGTH)
+    @Column(length = NAME_LENGTH)
     @JsonView(AllViews.TableRow.class)
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String toString() {
-		return name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@OneToMany(mappedBy = "remoteProviderType")
+    public String toString() {
+        return name;
+    }
+
+    @OneToMany(mappedBy = "remoteProviderType")
     @JsonView(AllViews.TableRow.class)
-	public List<RemoteProviderApplication> getRemoteProviderApplications() {
-		return remoteProviderApplications;
-	}
+    public List<RemoteProviderApplication> getRemoteProviderApplications() {
+        return remoteProviderApplications;
+    }
 
-	/**
-	 * Sort whenever a new collection is set.
-	 * @param remoteProviderApplications
-	 */
-	public void setRemoteProviderApplications(
+    /**
+     * Sort whenever a new collection is set.
+     * @param remoteProviderApplications
+     */
+    public void setRemoteProviderApplications(
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;
 	}
@@ -220,6 +223,16 @@ public class RemoteProviderType extends BaseEntity  {
 		this.isEuropean = isEuropean;
 	}
 
+    @JsonView(AllViews.TableRow.class)
+    @Column(nullable = true)
+    public Boolean getMatchSourceNumbers() {
+        return matchSourceNumbers;
+    }
+
+    public void setMatchSourceNumbers(Boolean matchSourceNumbers) {
+        this.matchSourceNumbers = matchSourceNumbers;
+    }
+
 	@Transient
     @JsonView(AllViews.TableRow.class)
 	public List<RemoteProviderApplication> getFilteredApplications() {
@@ -234,6 +247,12 @@ public class RemoteProviderType extends BaseEntity  {
     @JsonView(AllViews.TableRow.class)
 	public boolean getIsQualys() {
 		return name != null && name.equals(QUALYSGUARD_WAS);
+	}
+
+	@Transient
+    @JsonView(AllViews.TableRow.class)
+	public boolean getIsWhiteHat() {
+		return name != null && name.equals(SENTINEL);
 	}
 	
 	@Transient
@@ -251,4 +270,9 @@ public class RemoteProviderType extends BaseEntity  {
 		
 		return hasAppsWithApps;
 	}
+
+    @Transient
+    public boolean getMatchSourceNumbersNullSafe() {
+        return matchSourceNumbers != null && matchSourceNumbers;
+    }
 }

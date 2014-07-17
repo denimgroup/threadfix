@@ -38,6 +38,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by mac on 1/22/14.
  */
@@ -83,7 +85,7 @@ public class ThreadFixInterface {
     }
 
     public static List<CodePoint> toCodePoints(List<DataFlowElement> elements) {
-        List<CodePoint> results = new ArrayList<>();
+        List<CodePoint> results = list();
 
         if (elements != null) {
             for (DataFlowElement element : elements) {

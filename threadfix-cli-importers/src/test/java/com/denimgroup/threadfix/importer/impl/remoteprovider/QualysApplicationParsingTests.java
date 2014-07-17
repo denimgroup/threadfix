@@ -23,16 +23,56 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.QualysMockHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.VeracodeMockHttpUtils;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mac on 6/3/14.
  */
 public class QualysApplicationParsingTests {
 
-    @Test
-    public void scanTestStub() {
-        // TODO fill this in
+    public static RemoteProvider getQualysImporterWithMock(String username, String password) {
+        QualysRemoteProvider provider = new QualysRemoteProvider();
+
+        provider.utils = new QualysMockHttpUtils();
+
+        RemoteProviderType type = new RemoteProviderType();
+        type.setUsername(username);
+        type.setPassword(password);
+
+        provider.setRemoteProviderType(type);
+
+        return provider;
     }
+
+    @Test
+    public void readAppsAuthenticated() {
+        RemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
+                VeracodeMockHttpUtils.GOOD_PASSWORD);
+
+        List<RemoteProviderApplication> applications = provider.fetchApplications();
+
+        assertTrue("Applications were null.", applications != null);
+        assertFalse("Applications were empty.", applications.isEmpty());
+    }
+
+    @Test
+    public void readAppsUnauthenticated() {
+        RemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.BAD_USERNAME,
+                VeracodeMockHttpUtils.BAD_PASSWORD);
+
+        List<RemoteProviderApplication> applications = provider.fetchApplications();
+
+        assertTrue("Applications weren't null.", applications == null);
+    }
+
 
 }

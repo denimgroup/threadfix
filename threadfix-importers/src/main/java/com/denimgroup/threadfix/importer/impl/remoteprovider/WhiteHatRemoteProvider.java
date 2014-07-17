@@ -42,6 +42,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
@@ -102,7 +104,11 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			return null;
 		}
 
-		WhiteHatVulnerabilitiesParser scanParser = new WhiteHatVulnerabilitiesParser();
+		DefaultHandler scanParser =
+                remoteProviderApplication.getRemoteProviderType().getMatchSourceNumbersNullSafe() ?
+                        new MatchingParser() :
+                        new ThreadFixStyleParser();
+
 		List<Scan> scans = parseSAXInputWhiteHat(scanParser);
 		
 		if (scans == null || scans.size() == 0) {
@@ -125,7 +131,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	 * @return
 	 */
 	private List<Scan> filterScans(List<Scan> scans) {
-		List<Scan> resultList = new ArrayList<>();
+		List<Scan> resultList = list();
 
 		for (Scan s: scans) {
 			resultList.add(s);
@@ -193,22 +199,23 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		if (inputStream == null)
 			return null;
 		
-		List<Scan> scanList = new ArrayList<>();
+		List<Scan> scanList = list();
 		
 		ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 		Collections.sort(scanDateList);
 		
 		for (Calendar d : scanDateList) {
 			date = d;
-			saxFindingList = new ArrayList<>();
+			saxFindingList = list();
 			for (Finding finding : findingDateStatusMap.keySet()) {
 				List<DateStatus> dateInfo = findingDateStatusMap.get(finding);
 				Collections.sort(dateInfo);
 				boolean isAdded = false;
 
 				// Checking if Finding is open at this time
-				for (int i=0;i<dateInfo.size()-1;i++){
-					if (date.compareTo(dateInfo.get(i).getDate())>=0 && date.compareTo(dateInfo.get(i+1).getDate())<0) {
+				for (int i=0; i < dateInfo.size() - 1; i++) {
+					if (date.compareTo(dateInfo.get(i).getDate()) >= 0 &&
+                            date.compareTo(dateInfo.get(i+1).getDate()) < 0) {
 						if (dateInfo.get(i).getStatus().equals("open")) {
 							saxFindingList.add(finding);
 							isAdded = true;
@@ -217,7 +224,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 					}
 				}
 				if (!isAdded) {
-					if (date.compareTo(dateInfo.get(dateInfo.size()-1).getDate())>=0 
+					if (date.compareTo(dateInfo.get(dateInfo.size()-1).getDate()) >= 0
 							&& dateInfo.get(dateInfo.size()-1).getStatus().equals("open"))
 						saxFindingList.add(finding);
 				}
@@ -257,7 +264,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		private boolean grabLabel;
 		
 		public List<RemoteProviderApplication> getApplications() {
-			List<RemoteProviderApplication> apps = new ArrayList<>();
+			List<RemoteProviderApplication> apps = list();
 			for (String label : map.keySet()) {
 				RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
 	    		remoteProviderApplication.setNativeId(label);
@@ -293,7 +300,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    }
 	}
 	
-	public class WhiteHatVulnerabilitiesParser extends HandlerWithBuilder {
+	public class ThreadFixStyleParser extends HandlerWithBuilder {
 		
 		public Finding finding = new Finding();
 		
@@ -320,7 +327,6 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			
 			if (findingDateStatusMap.containsKey(finding)){
 				findingDateStatusMap.get(finding).add(dateStatus);
-				
 			} else {
 				findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
 			}
@@ -329,11 +335,11 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    
 	    	if ("vulnerabilities".equals(qName)) {
-	    		scanDateList = new ArrayList<>();
+	    		scanDateList = list();
 	    		findingDateStatusMap = new HashMap<>();
 	    	}
 	    	else if ("vulnerability".equals(qName)) {
-                vulnTag = makeTag(name, qName, atts);
+                vulnTag = makeTag(name, qName, atts) + "\n";
 	    		map.clear();
 	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
@@ -373,7 +379,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
             }
 
             if (qName.equals("attack_vector")) {
-                currentRawFinding.append("</").append("vulnerability").append(">");
+                currentRawFinding.append("\n</").append("vulnerability").append(">");
                 map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
 	    		addFinding();
 	    		creatingVuln = false;
@@ -384,18 +390,113 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
                 vulnTag = null;
             }
 	    }
-	    
-	    private String getPath(String fullUrl) {
-	    	try {
-				URL url = new URL(fullUrl);
-				return url.getPath();
-			} catch (MalformedURLException e) {
-				LOG.warn("Tried to parse a URL out of a url in Attack Vector String but failed.");
+	}
+
+    private String getPath(String fullUrl) {
+
+        String returnPath = "/";
+
+        String urlWithHttp = fullUrl.startsWith("http") ? fullUrl : "http://" + fullUrl;
+        try {
+            URL url = new URL(urlWithHttp);
+            if (url.getPath() != null && !url.getPath().isEmpty()) {
+                returnPath = url.getPath();
+            }
+        } catch (MalformedURLException e) {
+            LOG.warn("Tried to parse a URL out of a url in Attack Vector String but failed: " + urlWithHttp);
+        }
+
+        return returnPath;
+    }
+
+	public class MatchingParser extends HandlerWithBuilder {
+
+		public Finding finding = new Finding();
+
+		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
+
+		private boolean creatingVuln = false;
+
+		private DateStatus dateStatus = null;
+
+        private String vulnTag = null;
+        private StringBuffer currentRawFinding	  = new StringBuffer();
+
+		private void addFinding() {
+			Finding finding = constructFinding(map);
+
+			if (finding == null) {
+				LOG.warn("Finding was null.");
+			} else {
+				String nativeId = hashFindingInfo(map.get(FindingKey.VULN_CODE), map.get(FindingKey.PATH), map.get(FindingKey.PARAMETER));
+				finding.setNativeId(nativeId);
+				finding.setDisplayId(map.get(FindingKey.NATIVE_ID));
 			}
-	    	return null;
+
+			if (findingDateStatusMap.containsKey(finding)){
+				findingDateStatusMap.get(finding).add(dateStatus);
+			} else {
+				findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
+			}
+		}
+
+		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
+
+	    	if ("vulnerabilities".equals(qName)) {
+	    		scanDateList = list();
+	    		findingDateStatusMap = new HashMap<>();
+	    	}
+	    	else if ("vulnerability".equals(qName)) {
+                vulnTag = makeTag(name, qName, atts) + "\n";
+	    		map.clear();
+	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
+	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
+	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+
+                // was in the attack_vector
+	    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
+	    		map.put(FindingKey.PARAMETER, null);
+	    		creatingVuln = true;
+	    		dateStatus = new DateStatus();
+	    		Calendar testedDate = DateUtils.getCalendarFromString("yyyy-MM-dd", atts.getValue("found"));
+                if (testedDate != null) {
+                    testedDate.set(Calendar.HOUR_OF_DAY, 0);
+                    testedDate.set(Calendar.MINUTE, 0);
+                    testedDate.set(Calendar.SECOND, 0);
+                    testedDate.set(Calendar.MILLISECOND, 0);
+                }
+	    		dateStatus.setDate(testedDate);
+	    		dateStatus.setStatus(atts.getValue("status"));
+	    		if (scanDateList != null && !scanDateList.contains(testedDate)) {
+                    scanDateList.add(testedDate);
+                }
+	    	}
+	    	else if (creatingVuln) {
+                currentRawFinding.append(makeTag(name, qName , atts));
+		    	if (qName.equals("param")) {
+		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
+		    	}
+	    	}
+	    }
+
+	    @Override
+	    public void endElement (String uri, String localName, String qName) throws SAXException {
+            if (creatingVuln) {
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
+            if ("vulnerability".equals(qName)) {
+                vulnTag = null;
+
+                currentRawFinding.append("\n</").append("vulnerability").append(">");
+                map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
+                addFinding();
+                creatingVuln = false;
+                currentRawFinding.setLength(0);
+            }
 	    }
 	}
-	
+
 	public class DateStatus implements Comparable<DateStatus> {
 		
 		private Calendar date;

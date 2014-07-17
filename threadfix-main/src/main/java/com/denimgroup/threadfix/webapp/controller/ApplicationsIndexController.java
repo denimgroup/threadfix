@@ -121,7 +121,7 @@ public class ApplicationsIndexController {
 	@RequestMapping("/{orgId}/getReport")
 	public ModelAndView getReport(@PathVariable("orgId") int orgId,
 			HttpServletRequest request, Model model) {
-		Organization organization = organizationService.loadOrganization(orgId);
+		Organization organization = organizationService.loadById(orgId);
 		if (organization == null || !organization.isActive()) {
 			log.warn(ResourceNotFoundException.getLogMessage("Organization", orgId));
 			throw new ResourceNotFoundException();
@@ -140,7 +140,7 @@ public class ApplicationsIndexController {
 	}
 
     /**
-     * Allows the user to upload a scan to an existing application channel.
+     * Allows the user to upload a scan to an existing application.
      *
      * @return Team with updated stats.
      */
@@ -168,7 +168,7 @@ public class ApplicationsIndexController {
             Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
 
             if (scan != null) {
-                Organization organization = organizationService.loadOrganization(orgId);
+                Organization organization = organizationService.loadById(orgId);
                 return success(organization);
             } else {
                 return failure("Something went wrong while processing the scan.");

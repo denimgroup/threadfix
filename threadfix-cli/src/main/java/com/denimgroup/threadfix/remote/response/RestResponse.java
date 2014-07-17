@@ -24,7 +24,6 @@
 
 package com.denimgroup.threadfix.remote.response;
 
-import com.google.gson.Gson;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 

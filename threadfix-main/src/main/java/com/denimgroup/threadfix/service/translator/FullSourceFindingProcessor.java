@@ -38,66 +38,91 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static com.denimgroup.threadfix.framework.engine.ThreadFixInterface.toEndpointQuery;
+
 class FullSourceFindingProcessor implements FindingProcessor {
 
-    private static final SanitizedLogger log = new SanitizedLogger("FullSourceFindingProcessor");
+    private static final SanitizedLogger LOG = new SanitizedLogger(FullSourceFindingProcessor.class);
 
     @Nullable
-	private final EndpointDatabase database;
+    private final EndpointDatabase database;
 
     @Nullable
-	private final ParameterParser parameterParser;
+    private final ParameterParser parameterParser;
 
     @Nonnull
-	private final FindingProcessor noSourceProcessor;
-	
-	public FullSourceFindingProcessor(ProjectConfig config, Scan scan) {
+    private final FindingProcessor noSourceProcessor;
+
+    private int numberMissed = 0, total = 0, foundParameter;
+    private long startTime = 0L;
+
+    public FullSourceFindingProcessor(ProjectConfig config, Scan scan) {
         PathCleaner cleaner = PathCleanerFactory.getPathCleaner(
-				config.getFrameworkType(), ThreadFixInterface.toPartialMappingList(scan));
-		
-		noSourceProcessor = new NoSourceFindingProcessor(cleaner);
-		
-		database = EndpointDatabaseFactory.getDatabase(config.getRootFile(),
-				config.getFrameworkType(), cleaner);
-		
-		parameterParser = ParameterParserFactory.getParameterParser(config);
+                config.getFrameworkType(), ThreadFixInterface.toPartialMappingList(scan));
 
-		log.info("Initialized with EndpointDatabase = " + database);
-		log.info("Initialized with PathCleaner = " + cleaner);
-		log.info("Initialized with ParameterParser = " + parameterParser);
-	}
+        noSourceProcessor = new NoSourceFindingProcessor(cleaner);
 
-	@Override
-	public void process(@Nonnull Finding finding) {
-		String parameter = null;
+        database = EndpointDatabaseFactory.getDatabase(config.getRootFile(),
+                config.getFrameworkType(), cleaner);
 
+        parameterParser = ParameterParserFactory.getParameterParser(config);
+
+        startTime = System.currentTimeMillis();
+
+        LOG.info("Initialized with EndpointDatabase = " + database);
+        LOG.info("Initialized with PathCleaner = " + cleaner);
+        LOG.info("Initialized with ParameterParser = " + parameterParser);
+    }
+
+    @Override
+    public void process(@Nonnull Finding finding) {
+        String parameter = null;
         Endpoint endpoint = null;
+        total++;
 
         if (parameterParser != null) {
             if (finding.getSurfaceLocation() != null) {
-                parameter = parameterParser.parse(ThreadFixInterface.toEndpointQuery(finding));
+                parameter = parameterParser.parse(toEndpointQuery(finding));
+                foundParameter++;
                 finding.getSurfaceLocation().setParameter(parameter);
             }
         }
 
         if (database != null) {
-            endpoint = database.findBestMatch(ThreadFixInterface.toEndpointQuery(finding));
+            endpoint = database.findBestMatch(toEndpointQuery(finding));
         }
 
-		if (endpoint != null) {
-			finding.setCalculatedFilePath(endpoint.getFilePath());
-			finding.setCalculatedUrlPath(endpoint.getUrlPath());
-			
-			if (parameter != null) {
-				finding.setEntryPointLineNumber(endpoint.getLineNumberForParameter(parameter));
-			} else {
-				finding.setEntryPointLineNumber(endpoint.getStartingLineNumber());
-			}
-			
-		} else {
+        if (endpoint != null) {
+            finding.setCalculatedFilePath(endpoint.getFilePath());
+            finding.setCalculatedUrlPath(endpoint.getUrlPath());
+
+            if (parameter != null) {
+                finding.setEntryPointLineNumber(endpoint.getLineNumberForParameter(parameter));
+            } else {
+                finding.setEntryPointLineNumber(endpoint.getStartingLineNumber());
+            }
+
+        } else {
+
+            numberMissed++;
 
             // let's try without the parameter in order to degrade gracefully
-			noSourceProcessor.process(finding);
-		}
-	}
+            noSourceProcessor.process(finding);
+        }
+    }
+
+    @Override
+    public void printStatistics() {
+        LOG.info("Printing statistics for FullSourceFindingProcessor.");
+
+        LOG.info("Successfully found endpoints for " + (total - numberMissed) +
+                " out of " + total + " findings " +
+                "(" + (100.0 * (total - numberMissed) / total) + "%).");
+        LOG.info("Successfully found parameters for " + foundParameter +
+                " out of " + total + " findings " +
+                "(" + (100.0 * foundParameter / total) + "%)");
+        LOG.info("Processing took " + (System.currentTimeMillis() - startTime) + " ms.");
+
+        noSourceProcessor.printStatistics();
+    }
 }

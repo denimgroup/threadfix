@@ -57,16 +57,6 @@ public interface ScanMergeService {
 	 * @param fileName
 	 * @return
 	 */
-	boolean processScan(Integer channelId, String fileName);
-	
-	/**
-	 * This method does the actual scan processing work. It is usually called from QueueListener or
-	 * one of the RPC methods.
-	 * 
-	 * @param channelId
-	 * @param fileName
-	 * @return
-	 */
 	boolean processScan(Integer channelId, String fileName, Integer statusId,
 			String userName);
 	

@@ -23,23 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Parses the Microsoft CAT.NET output file.
@@ -118,7 +120,7 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 		
 		private Integer currentSequenceNumber = 0;
 						
-		private List<DataFlowElement> dataFlowElements = new ArrayList<>();
+		private List<DataFlowElement> dataFlowElements = list();
 	    
 		/**
 		 * Given a string and an entry point, return the next pertinent parameter.
@@ -201,7 +203,7 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 				editedLineText = editedLineText.substring(lineText.indexOf('='));
 			}
 
-			List<String> retVals = new ArrayList<>();
+			List<String> retVals = list();
 			String regexResult = null;
 
 			while (true) {
@@ -302,7 +304,7 @@ class CatNetChannelImporter extends AbstractChannelImporter {
                     if (dataFlowElements != null)
                         dataFlowElements.add(newElement);
                     else {
-                        dataFlowElements = new ArrayList<>();
+                        dataFlowElements = list();
                         dataFlowElements.add(newElement);
                     }
 	    		} catch (NumberFormatException e) {
@@ -339,7 +341,7 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	    		currentEntryPoint = null;
 	    		currentUrlText = null;
 	    		currentNativeId = null;
-	    		dataFlowElements = new ArrayList<>();
+	    		dataFlowElements = list();
                 currentScannerDetail = null;
                 currentScannerRecommendation = null;
                 currentRawFinding.setLength(0);
@@ -359,7 +361,8 @@ class CatNetChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new CatNetSAXValidator());
 	}

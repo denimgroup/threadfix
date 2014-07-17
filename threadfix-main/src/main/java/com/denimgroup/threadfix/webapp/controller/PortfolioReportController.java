@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 // TODO split into a service? This is all in the controller layer.
 @Controller
 @RequestMapping("/reports/portfolio")
@@ -69,7 +71,7 @@ public class PortfolioReportController {
 		String teamName = null;
 		
 		if (teamId != 0) {
-			org = organizationService.loadOrganization(teamId);
+			org = organizationService.loadById(teamId);
 			if (org != null && org.getName() != null) {
 				teamName = org.getName();
 			}
@@ -85,7 +87,7 @@ public class PortfolioReportController {
 		if (org == null) {
 			teams = organizationService.loadAllActive();
 		} else {
-			teams = new ArrayList<>();
+			teams = list();
 			teams.add(org);
 		}
 		
@@ -103,10 +105,10 @@ public class PortfolioReportController {
 		Integer numberApplications = 0, numberScans = 0, numberApplicationsNeverScanned = 0;
 
 		// Generate the big table
-		List<List<String>> tableContents = new ArrayList<>();
+		List<List<String>> tableContents = list();
 		List<String> blankRow = null;
 		
-		List<Boolean> oldArray = new ArrayList<>();
+		List<Boolean> oldArray = list();
 		
 		// each time through generate a team row for the Team and 
 		for (Organization team : teams) {
@@ -115,7 +117,7 @@ public class PortfolioReportController {
 			}			
 			
 			List<String> teamRow = null;
-			List<List<String>> appRows = new ArrayList<>();
+			List<List<String>> appRows = list();
 			
 			if (team.getActiveApplications() == null || team.getApplications().isEmpty()) {
 				teamRow = Arrays.asList("Team: " + team.getName(), "0", "Never");

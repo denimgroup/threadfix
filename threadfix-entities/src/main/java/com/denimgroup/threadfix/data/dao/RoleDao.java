@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.Role;
 
 /**
@@ -32,28 +30,5 @@ import com.denimgroup.threadfix.data.entities.Role;
  * 
  * @author dshannon
  */
-public interface RoleDao {
-
-	/**
-	 * @return
-	 */
-	List<Role> retrieveAll();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	Role retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	Role retrieveByName(String name);
-
-	/**
-	 * @param role
-	 */
-	void saveOrUpdate(Role role);
-
+public interface RoleDao extends GenericNamedObjectDao<Role> {
 }

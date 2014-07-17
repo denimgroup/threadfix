@@ -26,63 +26,74 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
-import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Domains;
-import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Entity;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 
-import javax.xml.bind.JAXBException;
+import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by stran on 3/10/14.
  */
 public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
+
+    private List<Fields.Field> editableFieldsList;
+    private Map<String, List<String>> defectListMap;
+
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
         if (getProjectId() == null) {
             setProjectId(getProjectIdByName());
         }
+
+        Map<String,Object> fieldsMap = metadata.getFieldsMap();
+        metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
+
         String description = makeDescription(vulnerabilities, metadata);
         Entity defect = new Entity();
         defect.setType("defect");
-        defect.setFields(createFields(description, metadata));
+        defect.setFields(createFields(description, fieldsMap));
 
-        try {
-            String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
-            return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
-        } catch (Exception e) {
-            log.error("Error when trying to unmarshal defect object to xml string", e);
-        }
-        return null;
+        String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
+        return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
     }
 
-    private Entity.Fields createFields(String description, DefectMetadata metadata) {
+    private Entity.Fields createFields(String description, Map<String,Object> fieldsMap) {
         Entity.Fields fields = new Entity.Fields();
-        fields.getField().add(createField("detected-by", getUsername()));
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        fields.getField().add(createField("creation-time", dateFormat.format(new Date())));
-        fields.getField().add(createField("name", metadata.getDescription()));
-        fields.getField().add(createField("severity", metadata.getSeverity()));
-        if (metadata.getPriority() != null && !metadata.getPriority().isEmpty())
-            fields.getField().add(createField("priority", metadata.getPriority()));
-        if (metadata.getStatus() != null && !metadata.getStatus().isEmpty())
-            fields.getField().add(createField("status", metadata.getStatus()));
+        if (fieldsMap != null) {
+            for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
+                fields.getField().add(createField(entry.getKey(), entry.getValue()));
+            }
+        }
         if (description != null && !description.isEmpty())
             fields.getField().add(createField("description", description));
 
         return fields;
     }
 
-    private Entity.Fields.Field createField(String name, String value) {
+    private Entity.Fields.Field createField(String name, Object values) {
         Entity.Fields.Field field = new Entity.Fields.Field();
         field.setName(name);
-        field.getValue().add(value);
+
+        if (values instanceof ArrayList) {
+            for (Object value : (ArrayList) values) {
+                field.getValue().add(String.valueOf(value));
+            }
+        } else
+            field.getValue().add(String.valueOf(values));
+
         return field;
+
+
+
     }
 
     @Override
@@ -112,13 +123,14 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     }
 
+    @Nonnull
     @Override
-    public String getProductNames() {
+    public List<String> getProductNames() {
         log.info("Trying to get information from HP QC");
         String xmlResult = HPQCUtils.getAllProjects(getHPQCUrl(), username, password);
-        String result = parseXml(xmlResult);
+        List<String> result = parseXml(xmlResult);
 
-        if (result == null || result.isEmpty()) {
+        if (result.isEmpty()) {
             if (!hasValidUrl()) {
                 lastError = "Supplied endpoint was invalid.";
             } else if (xmlResult.contains("Authentication failed")) {
@@ -131,30 +143,27 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         return result;
     }
 
-    private String parseXml(String xmlResult) {
-        Domains domains;
-        try {
-            domains =
-                    MarshallingUtils.marshal(Domains.class, xmlResult);
-            if (domains != null ) {
-                StringBuilder builder = new StringBuilder();
-                for (Domains.Domain domain : domains.getDomains()) {
-                    if (domain != null) {
-                        for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
-                            if (project != null) {
-                                builder.append(domain.getName() + "/" + project.getProjectName());
-                                builder.append(',');
-                            }
+    @Nonnull
+    private List<String> parseXml(String xmlResult) {
+        Domains domains = MarshallingUtils.marshal(Domains.class, xmlResult);
+        if (domains != null ) {
+            List<String> returnList = list();
+            for (Domains.Domain domain : domains.getDomains()) {
+                if (domain != null) {
+                    for (Domains.Domain.Projects.Project project : domain.getProjects().getProject()) {
+                        if (project != null) {
+
+                            log.info("Adding domain " + domain.getName() + " and project " + project.getProjectName());
+
+                            returnList.add(domain.getName() + "/" + project.getProjectName());
                         }
                     }
                 }
-                if (builder.length()>0)
-                    return builder.substring(0,builder.length()-1);
             }
-        } catch (JAXBException e) {
-            log.warn("Error when trying to parsing xml response from HPQC", e);
+
+            return returnList;
         }
-        return null;
+        return list();
     }
 
     @Override
@@ -165,15 +174,38 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     @Override
     public ProjectMetadata getProjectMetadata() {
-        Map<String, List<String>> listValues = HPQCUtils.getListValues(getHPQCUrl(),username,password,projectName);
-        return new ProjectMetadata(getValues(listValues, ""), getValues(listValues, "Versions"),
-                getValues(listValues, "Severity"), getValues(listValues, "Bug Status"), getValues(listValues, "Priority"));
+        editableFieldsList = HPQCUtils.getEditableFields(getHPQCUrl(),username,password,projectName);
+
+        defectListMap =  HPQCUtils.getListValues(getHPQCUrl(),username,password,projectName);
+
+        List<DynamicFormField> dynamicFormFields = convertToGenericField();
+        return new ProjectMetadata(dynamicFormFields);
+    }
+
+    private List<DynamicFormField> convertToGenericField() {
+        if (editableFieldsList == null)
+            return null;
+        List<DynamicFormField> dynamicFormFields = list();
+        for (Fields.Field hpqcField : editableFieldsList) {
+            DynamicFormField genericField = new DynamicFormField();
+            genericField.setActive(hpqcField.isActive());
+            genericField.setEditable(hpqcField.isEditable());
+            genericField.setLabel(hpqcField.getLabel());
+            genericField.setListId(hpqcField.getListId());
+            genericField.setName(hpqcField.getName());
+            genericField.setType(hpqcField.getType());
+            genericField.setRequired(hpqcField.isRequired());
+            genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
+            genericField.setOptionsMap(getFieldOptions(hpqcField));
+            dynamicFormFields.add(genericField);
+        }
+
+        return dynamicFormFields;
     }
 
     private List<String> getValues(Map<String, List<String>> map, String key) {
-        return (map==null || map.get(key)==null)? Arrays.asList("-"):map.get(key);
+        return (map == null || map.get(key) == null) ? Arrays.asList("-") : map.get(key);
     }
-
 
     @Override
     public String getTrackerError() {
@@ -242,6 +274,56 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         }
 
         return tempUrl;
+    }
+
+    private Map<String, String> getFieldOptions(@Nonnull Fields.Field field) {
+
+        Map<String, String> optionMap = new HashMap<>();
+
+        if (field.getType().equals("UsersList")) {
+
+            List<Users.User> users = HPQCUtils.getActiveUsers(getHPQCUrl(),username,password,projectName);
+            if (users != null) {
+                for (Users.User user : users) {
+                    optionMap.put(user.getName(), user.getName());
+                }
+            }
+        } else if (field.getType().equals("LookupList")) {
+
+            List<String> values = defectListMap.get(field.getListId());
+            if (values != null)
+                for (String value: values) {
+                    optionMap.put(value, value);
+                }
+
+        } else if (field.getType().equals("Reference")) {
+            Fields.Field.References references = field.getReferences();
+            if (references != null && references.getRelationReferences() != null && references.getRelationReferences().size() > 0) {
+                Fields.Field.RelationReference reference = references.getRelationReferences().get(0);
+                String targetEntity = reference.getReferencedEntityType();
+                if (targetEntity != null) {
+                    Entities entities = HPQCUtils.getEntities(getHPQCUrl(), username, password, projectName, targetEntity);
+                    if (entities != null) {
+                        List<Entity> entityList = entities.getEntities();
+                        if (entityList != null) {
+                            for (Entity entity : entityList) {
+                                Entity.Fields fields = entity.getFields();
+                                Entity.Fields.Field idField = fields.findField("id");
+                                Entity.Fields.Field nameField = fields.findField("name");
+                                if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
+                                        && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
+                                    optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        return optionMap;
     }
 
 }

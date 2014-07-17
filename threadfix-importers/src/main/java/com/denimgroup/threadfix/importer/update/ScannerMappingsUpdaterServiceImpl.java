@@ -41,6 +41,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 @Transactional(readOnly = false) // used to be true
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
@@ -89,7 +91,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
     @Override
     public List<String> getSupportedScanners() {
-        List<String> scanners = new ArrayList<>();
+        List<String> scanners = list();
 
         ScannerType[] importers = ScannerType.values();
 
@@ -106,7 +108,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
     @Override
     public List<String[]> updateGenericVulnerabilities() throws IOException, URISyntaxException {
-        List<String[]> genericResults = new ArrayList<>();
+        List<String[]> genericResults = list();
 
         String filePath = "/mappings/genericVuln.csv";
 
@@ -124,7 +126,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     }
 
     private List<String[]> updateGenericVuln(InputStream is) {
-        List<String[]> genericResults = new ArrayList<>();
+        List<String[]> genericResults = list();
         int updatedNo = 0, addedNewNo = 0;
         String updatedList = "", addedNewList = "";
         try {
@@ -189,7 +191,6 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
     @Override
     public void updateUpdatedDate() {
-//        DefaultConfiguration config = getDefaultConfiguration();
         List<DefaultConfiguration> configurationList = defaultConfigurationDao.retrieveAll();
         DefaultConfiguration config;
         if (configurationList.size() == 0) {
@@ -226,7 +227,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
     private List<String[]> updateAllScanners() {
 
-        List<String[]> scannerResults = new ArrayList<>();
+        List<String[]> scannerResults = list();
 
         for (ScannerType type : ScannerType.values()) {
 
@@ -341,7 +342,6 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         return changed;
     }
 
-//    @Transactional(readOnly = false)
     private boolean isUpdateGenericVuln(int genericIdInt, String genericNewName, ChannelType manualType) {
 
         GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveByDisplayId(genericIdInt);
@@ -368,7 +368,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     private void updateManualVuln(GenericVulnerability genericVulnerability, String oldName, String newName, ChannelType channelType) {
         if (channelType == null) return;
 
-        ChannelVulnerability vulnerability = null;
+        ChannelVulnerability vulnerability;
         if (oldName != null) {
             log.info("Update Manual Vulnerability: " + oldName + " to: " + newName);
             vulnerability = channelVulnerabilityDao.retrieveByName(channelType, oldName);

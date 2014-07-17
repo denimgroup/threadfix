@@ -3,7 +3,7 @@
 <div class="accordion-group">
     <div class="accordion-heading" style="text-align:center">
         <a id="toggleAllButton" class="btn" ng-click="toggleAllFilters()">
-            {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls) ? 'Collapse' : 'Expand' }} All
+            {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls || showSaveFilter) ? 'Collapse' : 'Expand' }} All
         </a>
         <a id="clearFiltersButton" class="btn" ng-click="resetFilters()">Clear</a>
     </div>
@@ -242,6 +242,55 @@
                         <button type="button" class="btn btn-default" ng-click="openEndDate($event)"><i class="icon icon-calendar"></i></button>
                     </span>
                 </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Save Filter -->
+<div class="accordion-group">
+    <div class="accordion-heading" ng-click="showSaveFilter = !showSaveFilter">
+        <span id="showSaveFilter" class="icon" ng-class="{ 'icon-minus': showSaveFilter, 'icon-plus': !showSaveFilter }"></span> Save Current Filter
+    </div>
+    <div class="filter-group-body" ng-show="showSaveFilter">
+        <div class="accordion-inner">
+            <div class="col-md-6">
+                <div id="saveFilterSuccessMessage" ng-show="saveFilterSuccessMessage" class="alert alert-success">
+                    <button id="closeSaveFilterSuccessMessage"
+                            class="close"
+                            ng-click="saveFilterSuccessMessage = undefined"
+                            type="button">&times;</button>
+                    {{ saveFilterSuccessMessage }}
+                </div>
+                <div id="saveFilterErrorMessage" ng-show="saveFilterErrorMessage" class="alert alert-error">
+                    <button id="closeSaveFilterErrorMessage"
+                            class="close"
+                            ng-click="saveFilterErrorMessage = undefined"
+                            type="button">&times;</button>
+                    {{ saveFilterErrorMessage }}
+                </div>
+                <input id="filterNameInput"
+                       ng-maxlength="25"
+                       placeholder="Enter a name for the filter"
+                       ng-model="currentFilterNameInput"
+                       type="text"/>
+
+                <!-- Save button and save button with spinner. -->
+                <a id="saveFilterButton"
+                   class="btn btn-primary"
+                   style="width:168px"
+                   ng-hide="savingFilter"
+                   ng-disabled="!currentFilterNameInput"
+                   ng-click="saveCurrentFilters()">
+                    Save
+                </a>
+                <button id="savingFilterButton"
+                        ng-show="savingFilter"
+                        disabled="disabled"
+                        class="btn btn-primary">
+                    <span class="spinner"></span>
+                    Saving
+                </button>
             </div>
         </div>
     </div>

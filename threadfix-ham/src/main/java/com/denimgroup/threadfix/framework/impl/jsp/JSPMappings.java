@@ -38,6 +38,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 // TODO figure out HTTP methods perhaps from form analysis
 public class JSPMappings implements EndpointGenerator {
 	
@@ -45,7 +47,7 @@ public class JSPMappings implements EndpointGenerator {
 	
 	private final Map<String, Set<String>> includeMap = new HashMap<>();
 	private final Map<String, JSPEndpoint> jspEndpointMap = new HashMap<>();
-	private final List<Endpoint> endpoints = new ArrayList<>();
+	private final List<Endpoint> endpoints = list();
     private final ProjectDirectory projectDirectory;
 	@Nullable
     private final File projectRoot, jspRoot;
@@ -80,6 +82,8 @@ public class JSPMappings implements EndpointGenerator {
             addParametersFromIncludedFiles();
 
 		} else {
+            LOG.error("Root file didn't exist. Exiting.");
+
             projectDirectory = null;
 			projectRoot = null;
 			jspRoot = null;

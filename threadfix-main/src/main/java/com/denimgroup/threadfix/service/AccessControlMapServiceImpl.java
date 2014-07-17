@@ -38,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 public class AccessControlMapServiceImpl implements AccessControlMapService {
 	
@@ -97,12 +99,13 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 					map.getAccessControlApplicationMaps().size() == 0) {
 				return "You must select at least one application.";
 			}
-			List<AccessControlApplicationMap> maps = new ArrayList<>();
+			List<AccessControlApplicationMap> maps = list();
 			for (AccessControlApplicationMap appMap : map.getAccessControlApplicationMaps()) {
 				if (appMap.getApplication() == null || appMap.getApplication().getId() == null) {
 					maps.add(appMap);
 					continue;
 				}
+
 				Application application = applicationDao.retrieveById(appMap.getApplication().getId());
 				if (application == null || application.getOrganization() == null || 
 						!application.getOrganization().getId().equals(org.getId())) {
@@ -245,7 +248,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 	public List<AccessControlTeamMap> loadAllMapsForUser(Integer id) {
 		List<AccessControlTeamMap> maps = accessControlMapDao.retrieveAllMapsForUser(id);
 		
-		List<AccessControlTeamMap> mapsToRemove = new ArrayList<>();
+		List<AccessControlTeamMap> mapsToRemove = list();
 		
 		outer: for (AccessControlTeamMap map : maps) {
 			if (map.getAllApps()) {
@@ -264,7 +267,7 @@ public class AccessControlMapServiceImpl implements AccessControlMapService {
 		
 		return maps;
 	}
-	
+
 	@Override
 	@Transactional(readOnly=false)
 	public void deactivate(AccessControlApplicationMap map) {

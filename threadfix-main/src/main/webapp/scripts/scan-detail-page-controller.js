@@ -7,21 +7,6 @@ myAppModule.controller('ScanDetailPageController', function ($scope, $window, $h
     $scope.appId = $window.location.pathname.match(/([0-9]+)/g)[1];
     $scope.currentUrl = "/organizations/" + $scope.teamId + "/applications/" + $scope.appId + "/scans/" + $scope.scanId;
 
-
-    $scope.$on('rootScopeInitialized', function() {
-
-    });
-
-    $scope.statistic = function() {
-        if ($scope.showStatistic) {
-            $scope.showStatistic = false;
-            $scope.statisticText = 'Show Statistics';
-        } else {
-            $scope.showStatistic = true;
-            $scope.statisticText = 'Hide Statistics';
-        }
-    };
-
     $scope.deleteScan = function(scan) {
 
         if (confirm('Are you sure you want to delete this scan and all of its results? ' +

@@ -24,17 +24,17 @@
 
 package com.denimgroup.threadfix.service.report;
 
-import java.util.ArrayList;
+import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Scan;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRField;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRField;
-
-import com.denimgroup.threadfix.data.dao.ScanDao;
-import com.denimgroup.threadfix.data.entities.Scan;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * This class provides the data source for the Trending Report.
@@ -42,7 +42,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
  *
  */
 public class JasperScanReport implements JRDataSource {
-	private List<Scan> scanList = new ArrayList<>();
+	private List<Scan> scanList = list();
 	private int index = 0;
 	private Map<String, Object> resultsHash = new HashMap<>();
 	private Map<Integer, Integer> oldVulnsByChannelMap = new HashMap<>();

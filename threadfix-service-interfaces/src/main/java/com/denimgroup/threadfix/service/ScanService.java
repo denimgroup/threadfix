@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.entities.Scan;
 
+import javax.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.List;
 
@@ -67,6 +68,7 @@ public interface ScanService {
 	 * @param fileName
 	 * @return
 	 */
+    @Nonnull
 	ScanCheckResultBean checkFile(Integer channelId, String fileName);
 	
 	/**

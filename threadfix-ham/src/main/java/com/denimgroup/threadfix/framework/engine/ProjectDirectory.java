@@ -23,20 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.denimgroup.threadfix.framework.util.FilePathUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
+import java.util.*;
 
-import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 // TODO make more error resistant
 public class ProjectDirectory {
@@ -86,7 +81,7 @@ public class ProjectDirectory {
 
         File[] files = currentDirectory.listFiles();
 		
-    	List<File> directories = new ArrayList<>();
+    	List<File> directories = list();
 
         if (files != null) {
             for (File file : files) {
@@ -145,7 +140,7 @@ public class ProjectDirectory {
 
     @Nonnull
     private List<File> findFilesWithStar(@Nonnull String path) {
-		List<File> returnFile = new ArrayList<>();
+		List<File> returnFile = list();
 		String[] pathSegments = breakUpPath(path);
 		
 		if (pathSegments.length > 0) {
@@ -157,15 +152,15 @@ public class ProjectDirectory {
 
     @Nonnull
     private List<File> findFilesWithStar(@Nonnull String fileName, @Nonnull String... pathSegments) {
-		List<File> returnFile = new ArrayList<>();
+		List<File> returnFile = list();
 		
 		if (fileName.contains("*")) {
 		
-			List<String> possibleEntries = new ArrayList<>();
+			List<String> possibleEntries = list();
 			
 			String[] segments = fileName.split("\\*");
 			if (fileName.endsWith("*")) {
-				List<String> list = new ArrayList<>(Arrays.asList(segments));
+				List<String> list = list(segments);
 				list.add("");
 				segments = list.toArray(new String[list.size()]);
 			}

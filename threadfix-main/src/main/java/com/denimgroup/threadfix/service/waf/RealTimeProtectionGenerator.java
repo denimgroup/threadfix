@@ -42,6 +42,8 @@ import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * 
  * This class facilitates adding support for new WAF types. To use, just subclass this class,
@@ -212,7 +214,7 @@ public abstract class RealTimeProtectionGenerator {
 	 */
 	public List<WafRule> generateRules(Waf waf, WafRuleDirective directive, Application app) {
 		if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0)
-			return new ArrayList<>();
+			return list();
 
         List<Application> applications = new ArrayList<>();
         if (app == null)
@@ -221,7 +223,7 @@ public abstract class RealTimeProtectionGenerator {
 		
 		if (applications == null) {
 			log.warn("No Applications found, no rules could be generated.");
-			return new ArrayList<>();
+			return list();
 		}
 
 		log.info("About to generate rules for the WAF " + StringEscapeUtils.escapeHtml(waf.getName()) + 
@@ -234,7 +236,7 @@ public abstract class RealTimeProtectionGenerator {
 		}
 		log.info("This will involve " + numVulns + " vulnerabilities.");
 
-		List<WafRule> allRules = new ArrayList<>();
+		List<WafRule> allRules = list();
 
 		for (Application application : applications) {
 			if (application == null || !application.isActive())

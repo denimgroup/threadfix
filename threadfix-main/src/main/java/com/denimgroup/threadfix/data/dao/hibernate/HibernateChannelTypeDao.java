@@ -23,23 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.entities.ChannelType;
+import java.util.List;
 
 @Repository
-public class HibernateChannelTypeDao implements ChannelTypeDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateChannelTypeDao extends AbstractObjectDao<ChannelType> implements ChannelTypeDao {
 
 	@Autowired
 	public HibernateChannelTypeDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -49,20 +47,15 @@ public class HibernateChannelTypeDao implements ChannelTypeDao {
 				.createQuery("from ChannelType channelType order by channelType.name").list();
 	}
 
-	@Override
-	public ChannelType retrieveById(int id) {
-		return (ChannelType) sessionFactory.getCurrentSession().get(ChannelType.class, id);
-	}
-
-	@Override
+    @Override
 	public ChannelType retrieveByName(String name) {
 		return (ChannelType) sessionFactory.getCurrentSession()
 				.createQuery("from ChannelType channelType where channelType.name = :name")
 				.setString("name", name).uniqueResult();
 	}
 
-	@Override
-	public void saveOrUpdate(ChannelType channelType) {
-		sessionFactory.getCurrentSession().saveOrUpdate(channelType);
-	}
+    @Override
+    public Class<ChannelType> getClassReference() {
+        return ChannelType.class;
+    }
 }

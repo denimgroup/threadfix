@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -76,26 +75,21 @@ public class EditOrganizationController {
             return RestResponse.failure("Errors: " + result.getAllErrors());
 		} else {
 			
-			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
+			if (organization.getName() == null || organization.getName().trim().isEmpty()) {
                 return RestResponse.failure("Name cannot be blank.");
 			}
 			
-			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
+			Organization databaseOrganization = organizationService.loadByName(organization.getName().trim());
 			if (databaseOrganization != null && !databaseOrganization.getId().equals(organization.getId())) {
                 return RestResponse.failure("That name is already taken.");
 			}
 			
-			organizationService.storeOrganization(organization);
+			organizationService.saveOrUpdate(organization);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug("The Organization " + organization.getName() + " (id=" + organization.getId() + ") has been edited by user " + user);
-
-            // Reset all wafs in applications for now
-            for (Application application: organization.getApplications()) {
-                application.setWaf(null);
-            }
 			
-            return  writeSuccessObjectWithView(organization, AllViews.TableRow.class);
+            return writeSuccessObjectWithView(organization, AllViews.TableRow.class);
 		}
 	}
 

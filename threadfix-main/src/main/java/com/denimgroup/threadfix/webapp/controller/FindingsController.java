@@ -67,25 +67,25 @@ public class FindingsController {
 		if (finding == null){
 			log.warn(ResourceNotFoundException.getLogMessage("Finding", findingId));
 			throw new ResourceNotFoundException();
-		}
-		
-		ModelAndView mav = new ModelAndView("scans/findingDetail");
-		mav.addObject(finding);
-        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
-		return mav;
-	}
+        }
 
-	@RequestMapping(value = "merge", method = RequestMethod.GET)
-	public String merge(@PathVariable("findingId") int findingId,
-			Model model,
-			@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId) {
-		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
-			return "403";
-		}
-		
-		Finding finding = findingService.loadFinding(findingId);
+        ModelAndView mav = new ModelAndView("scans/findingDetail");
+        mav.addObject(finding);
+        PermissionUtils.addPermissions(mav, orgId, appId, Permission.CAN_MODIFY_VULNERABILITIES);
+        return mav;
+    }
+
+    @RequestMapping(value = "merge", method = RequestMethod.GET)
+    public String merge(@PathVariable("findingId") int findingId,
+                        Model model,
+                        @PathVariable("orgId") int orgId,
+                        @PathVariable("appId") int appId) {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MODIFY_VULNERABILITIES, orgId, appId)) {
+            return "403";
+        }
+
+        Finding finding = findingService.loadFinding(findingId);
 
 		if (finding != null && finding.getVulnerability() != null) {
 			Vulnerability vuln = vulnerabilityService.loadVulnerability(finding.getVulnerability()

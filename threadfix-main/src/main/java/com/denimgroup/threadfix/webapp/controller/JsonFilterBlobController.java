@@ -41,8 +41,12 @@ public class JsonFilterBlobController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public @ResponseBody RestResponse<List<FilterJsonBlob>> save(@ModelAttribute FilterJsonBlob filterJsonBlob) {
-        filterJsonBlobService.saveOrUpdate(filterJsonBlob);
-        return RestResponse.success(filterJsonBlobService.loadAllActive());
+        if (filterJsonBlobService.nameExists(filterJsonBlob.getName())) {
+            return RestResponse.failure("A filter with that name already exists.");
+        } else {
+            filterJsonBlobService.saveOrUpdate(filterJsonBlob);
+            return RestResponse.success(filterJsonBlobService.loadAllActive());
+        }
     }
 
     @RequestMapping(value = "delete/{filterId}", method = RequestMethod.POST)

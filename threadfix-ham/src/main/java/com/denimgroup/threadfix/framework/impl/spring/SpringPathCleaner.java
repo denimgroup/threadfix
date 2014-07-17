@@ -87,8 +87,6 @@ public class SpringPathCleaner implements PathCleaner {
                 .replaceAll("/$", "")
                 .replaceAll("\\{[^\\}]+\\}", GENERIC_INT_SEGMENT);
 
-
-
         return escaped;
 	}
 

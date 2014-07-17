@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.DefectTrackerUnavailableException;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
@@ -32,7 +33,7 @@ import com.denimgroup.threadfix.service.defects.TFSDefectTracker;
 import com.microsoft.tfs.core.TFSTeamProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.WorkItem;
 import com.microsoft.tfs.core.clients.workitem.WorkItemClient;
-import com.microsoft.tfs.core.clients.workitem.fields.FieldDefinitionCollection;
+import com.microsoft.tfs.core.clients.workitem.fields.*;
 import com.microsoft.tfs.core.clients.workitem.project.Project;
 import com.microsoft.tfs.core.clients.workitem.project.ProjectCollection;
 import com.microsoft.tfs.core.clients.workitem.query.WorkItemCollection;
@@ -51,6 +52,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSClient {
 
@@ -181,7 +184,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             return null;
         }
 
-        List<String> returnPriorities = new ArrayList<>();
+        List<String> returnPriorities = list();
 
         FieldDefinitionCollection collection = client
                 .getFieldDefinitions();
@@ -206,7 +209,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         // Run the query and get the results.
         WorkItemCollection workItems = client.query(wiqlQuery);
 
-        List<String> ids = new ArrayList<>();
+        List<String> ids = list();
 
         for (int i = 0; i < workItems.size(); i++) {
             ids.add(String.valueOf(workItems.getWorkItem(i).getID()));
@@ -227,7 +230,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         try {
             ProjectCollection collection = client.getProjects();
 
-            List<String> strings = new ArrayList<>();
+            List<String> strings = list();
 
             for (Project project : collection) {
                 strings.add(project.getName());
@@ -264,27 +267,38 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
 
     @Override
     public ConnectionStatus configure(String url, String username, String password) {
-        Credentials credentials = new UsernamePasswordCredentials(
-                username, password);
-
-        URI uri = null;
-        try {
-            uri = new URI(url);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
-
-        TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
-        addProxy(projects.getHTTPClient());
 
         try {
-            client = projects.getWorkItemClient();
-            lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
-        } catch (UnauthorizedException | TFSUnauthorizedException e) {
-            LOG.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
-                    "Check credentials and endpoint.");
+            Credentials credentials = new UsernamePasswordCredentials(username, password);
+
+            URI uri = null;
+            try {
+                uri = new URI(url);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
+
+            TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
+            addProxy(projects.getHTTPClient());
+
+            try {
+                client = projects.getWorkItemClient();
+                lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
+            } catch (UnauthorizedException | TFSUnauthorizedException e) {
+                LOG.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
+                        "Check credentials and endpoint.");
+            }
+        } catch (TECoreException e) {
+            if (e.getMessage().contains("TF30059")) {
+                throw new DefectTrackerUnavailableException(e,
+                        "TFS is unavailable (TF30059 error). More details are available in the error logs.");
+            } else {
+                throw new DefectTrackerUnavailableException(e,
+                        "An exception occurred while attempting to connect to TFS. " +
+                                "Check the error logs for more details.");
+            }
         }
 
         return lastStatus;
@@ -335,11 +349,15 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             item.getFields().getField("Description").setValue(description);
             item.getFields().getField("Priority").setValue(metadata.getPriority());
 
-            item.save();
+            String itemId = null;
 
-            String itemId = String.valueOf(item.getID());
-
-            client.close();
+            if (checkItemValues(item)) {
+                item.save();
+                itemId = String.valueOf(item.getID());
+            } else {
+                LOG.error("Failed to create issue because one or more fields were invalid. " +
+                        "Check the above logs for more details.");
+            }
 
             return itemId;
 
@@ -349,6 +367,70 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         } finally {
             client.close();
         }
+    }
+
+    // This method checks all the item values and tries to patch them when necessary.
+    private boolean checkItemValues(WorkItem item) {
+
+        boolean valid = true;
+
+        // we want to exit early if we find a field that we can't patch
+        OUTER: for (Field field : item.getFields()) {
+            if (field.getStatus() != FieldStatus.VALID) {
+
+                if (field.getStatus() == FieldStatus.INVALID_EMPTY) {
+                    LOG.info("Found INVALID_EMPTY error on field " + field.getName() +
+                            ". Attempting to assign the string \"<None>\" to the field.");
+                    field.setValue("<None>");
+                }
+
+                if (field.getStatus() == FieldStatus.INVALID_NOT_EMPTY) {
+                    LOG.info("Found INVALID_NOT_EMPTY on field " + field.getName() + ". Setting field value to null. ");
+                    field.setValue(null);
+                }
+
+                if (field.getStatus() != FieldStatus.VALID) {
+                    valid = false;
+                    LOG.error("Received error message for field " + field.getName() +
+                            ": " + field.getStatus().getInvalidMessage(field));
+
+                    LOG.info("Attempting to patch fields. " +
+                            "This could result in different values for fields that you have set.");
+
+                    // Read all field definitions to find the correct possible values for the field.
+                    for (FieldDefinition definition : client.getFieldDefinitions()) {
+                        if (definition.getName().equals(field.getName())) {
+                            AllowedValuesCollection allowedValues = definition.getAllowedValues();
+
+                            if (allowedValues.size() > 0) {
+
+                                Object newValue = allowedValues.get(0);
+
+                                LOG.info("List of allowed values for field " + field.getName() +
+                                        " was not empty. Setting field value to the first available (" +
+                                        newValue + ").");
+                                field.setValue(newValue);
+
+                                valid = field.getStatus() == FieldStatus.VALID;
+                                if (field.getStatus() != FieldStatus.VALID) {
+                                    LOG.error("Setting " + field.getName() + " to a known allowed value (" +
+                                            newValue + ") failed. Giving up.");
+                                    break OUTER;
+                                } else {
+                                    LOG.info("Setting " + field.getName() + " to " + newValue + " worked. Moving on.");
+                                }
+                            } else {
+                                LOG.error("Set of possible values was empty. Giving up.");
+                                valid = false;
+                                break OUTER;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return valid;
     }
 
     @Override

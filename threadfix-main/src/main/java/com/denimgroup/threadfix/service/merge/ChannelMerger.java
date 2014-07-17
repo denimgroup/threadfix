@@ -23,64 +23,55 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class ChannelMerger extends SpringBeanAutowiringSupport {
-	
-	private final SanitizedLogger log = new SanitizedLogger(ChannelMerger.class);
-	
-	private VulnerabilityDao vulnerabilityDao;
-	
-	public ChannelMerger(VulnerabilityDao vulnerabilityDao) {
-		this.vulnerabilityDao = vulnerabilityDao;
-	}
-	
-	/**
-	 * This is the first round of scan merge that only considers scans from the same scanner
-	 * as the incoming scan.
-	 * 
-	 * @param scan
-	 * @param applicationChannel
-	 */
-	public void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
-		if (scan == null || applicationChannel == null) {
-			log.warn("Insufficient data to complete Application Channel-wide merging process.");
-			return;
-		}
 
-		if (scan.getFindings() == null) {
-			scan.setFindings(new ArrayList<Finding>());
-		}
+    private static final SanitizedLogger LOG = new SanitizedLogger(ChannelMerger.class);
 
-		List<Finding> oldFindings = new ArrayList<>();
-		List<Finding> newFindings = new ArrayList<>();
-		Map<String, Finding> scanHash = new HashMap<>();
-		Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<>();
-		Map<String, Finding> oldNativeIdFindingHash = new HashMap<>();
-		Set<Integer> alreadySeenVulnIds = new TreeSet<>();
-		Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
+    private VulnerabilityDao vulnerabilityDao;
 
-		log.info("Starting Application Channel-wide merging process with "
-				+ scan.getFindings().size() + " findings.");
-		for (Finding finding : scan.getFindings()) {
-			if (finding != null && finding.getNativeId() != null
-					&& !finding.getNativeId().isEmpty()) {
+    public ChannelMerger(VulnerabilityDao vulnerabilityDao) {
+        this.vulnerabilityDao = vulnerabilityDao;
+    }
+
+    /**
+     * This is the first round of scan merge that only considers scans from the same scanner
+     * as the incoming scan.
+     *
+     * @param scan
+     * @param applicationChannel
+     */
+    public void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
+        if (scan == null || applicationChannel == null) {
+            LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
+            return;
+        }
+
+        if (scan.getFindings() == null) {
+            scan.setFindings(new ArrayList<Finding>());
+        }
+
+        List<Finding> oldFindings = list();
+        List<Finding> newFindings = list();
+        Map<String, Finding> scanHash = new HashMap<>();
+        Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<>();
+        Map<String, Finding> oldNativeIdFindingHash = new HashMap<>();
+        Set<Integer> alreadySeenVulnIds = new TreeSet<>();
+        Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
+
+        LOG.info("Starting Application Channel-wide merging process with "
+                + scan.getFindings().size() + " findings.");
+        for (Finding finding : scan.getFindings()) {
+            if (finding != null && finding.getNativeId() != null
+                    && !finding.getNativeId().isEmpty()) {
 				if (scanHash.containsKey(finding.getNativeId())) {
 					// Increment the merged results counter in the finding
 					// object in the hash
@@ -93,11 +84,10 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 			}
 		}
 
-		log.info("After filtering out duplicate native IDs, there are "
-				+ scanHash.keySet().size() + " findings.");
+		LOG.info("After filtering out duplicate native IDs, there are "
+                + scanHash.keySet().size() + " findings.");
 
-		if (applicationChannel != null
-				&& applicationChannel.getScanList() != null) {
+		if (applicationChannel.getScanList() != null) {
 			for (Scan oldScan : applicationChannel.getScanList()) {
 				if (oldScan != null && oldScan.getId() != null
 						&& oldScan.getFindings() != null
@@ -125,8 +115,8 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 				// the existing finding / vuln
 				if (newFinding.isMarkedFalsePositive()
 						&& !oldFinding.isMarkedFalsePositive()) {
-					log.info("A previously imported finding has been marked a false positive "
-							+ "in the scan results. Marking the finding and Vulnerability.");
+					LOG.info("A previously imported finding has been marked a false positive "
+                            + "in the scan results. Marking the finding and Vulnerability.");
 					oldFinding.setMarkedFalsePositive(true);
 					if (oldFinding.getVulnerability() != null) {
 						oldFinding.getVulnerability().setIsFalsePositive(true);
@@ -195,13 +185,13 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
 			}
 		}
 
-		log.info("Merged " + old + " Findings to old findings by native ID.");
-		log.info("Closed " + closed + " old vulnerabilities.");
-		log.info(numberRepeatResults
-				+ " results were repeats from earlier scans and were not included in this scan.");
-		log.info(resurfaced + " vulnerabilities resurfaced in this scan.");
-		log.info("Scan completed channel merge with " + numberNew
-				+ " new Findings.");
+		LOG.info("Merged " + old + " Findings to old findings by native ID.");
+		LOG.info("Closed " + closed + " old vulnerabilities.");
+		LOG.info(numberRepeatResults
+                + " results were repeats from earlier scans and were not included in this scan.");
+		LOG.info(resurfaced + " vulnerabilities resurfaced in this scan.");
+		LOG.info("Scan completed channel merge with " + numberNew
+                + " new Findings.");
 
 		scan.setNumberNewVulnerabilities(numberNew);
 		scan.setNumberOldVulnerabilities(old);

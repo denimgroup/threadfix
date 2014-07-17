@@ -18,7 +18,7 @@
 				<th>Vulnerability Type</th>
 				<th>Path</th>
 				<th style="min-width:90px;">Parameter</th>
-				<th>Number Merged Results</th>
+				<th># Merged Results</th>
 				<th style="width:80px"></th>
 			</tr>
 		</thead>
@@ -38,7 +38,7 @@
                         }">
             <td id="mappedSeverity{{ index }}">{{ finding.channelSeverity.name }}</td>
             <td>{{ finding.channelVulnerability.name }}</td>
-            <td ng-hide="finding.dependency" id="mappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
+            <td ng-hide="finding.dependency" class="long-path-word-wrap" id="mappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
             <td ng-hide="finding.dependency" id="mappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>
             <td ng-show="finding.dependency" colspan="2" class="pointer">
                 {{ finding.dependency.cve }}

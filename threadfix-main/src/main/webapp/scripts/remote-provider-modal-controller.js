@@ -11,6 +11,10 @@ myAppModule.controller('RemoteProviderModalController', function ($scope, $modal
 
     $scope.loading = false;
 
+    $scope.setMatchSourceNumbers = function(shouldMatchSourceNumbers) {
+        $scope.object.matchSourceNumbers = shouldMatchSourceNumbers;
+    };
+
     $scope.ok = function (valid) {
 
         if (valid) {

@@ -62,7 +62,7 @@ public class AddOrganizationController {
 	
 	@RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
             produces="application/json")
-	public @ResponseBody RestResponse<Organization> newSubmit2(@Valid @ModelAttribute Organization organization,
+	public @ResponseBody RestResponse<Organization> newSubmit(@Valid @ModelAttribute Organization organization,
                                                                BindingResult result, SessionStatus status,
                                                                Model model) {
         if (!PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_TEAMS)) {
@@ -74,18 +74,17 @@ public class AddOrganizationController {
 			return RestResponse.failure("Failed to add the team.");
 		} else {
 			
-			if (organization.getName() != null && organization.getName().trim().isEmpty()) {
+			if (organization.getName() == null || organization.getName().trim().isEmpty()) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 				return RestResponse.failure("Failed to add the team.");
 			}
 			
-			Organization databaseOrganization = organizationService.loadOrganization(organization.getName().trim());
-			if (databaseOrganization != null) {
+			if (organizationService.nameExists(organization.getName().trim())) {
 				result.rejectValue("name", "errors.nameTaken");
 				return RestResponse.failure("That name was already taken.");
 			}
 			
-			organizationService.storeOrganization(organization);
+			organizationService.saveOrUpdate(organization);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(user + " has created a new Organization with the name " + organization.getName() + 

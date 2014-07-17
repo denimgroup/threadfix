@@ -26,5 +26,7 @@ public class AllViews {
 
     public static interface RestViewScan2_1 extends RestView2_1 {}
 
+    // this is just for one property really
+    public static interface VulnSearchApplications {}
 
 }

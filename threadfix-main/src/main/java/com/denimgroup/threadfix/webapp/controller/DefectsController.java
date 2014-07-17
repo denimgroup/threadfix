@@ -87,7 +87,8 @@ public class DefectsController {
 				defectViewModel.getVersion(), 
 				defectViewModel.getSeverity(), 
 				defectViewModel.getPriority(), 
-				defectViewModel.getStatus());
+				defectViewModel.getStatus(),
+                defectViewModel.getFieldsMap());
         Defect newDefect = null;
         if (map.get(DefectService.DEFECT) instanceof Defect)
             newDefect = (Defect)map.get(DefectService.DEFECT);

@@ -36,6 +36,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,12 +65,15 @@ public abstract class RemoteProvider extends AbstractChannelImporter {
 	@Override
 	public Scan parseInput() {
 		LOG.warn("parseInput() called in a Remote Provider. This should never happen.");
+        assert false;
 		return null;
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		LOG.warn("checkFile() called in a Remote Provider. This should never happen.");
+        assert false;
 		return null;
 	}
 	

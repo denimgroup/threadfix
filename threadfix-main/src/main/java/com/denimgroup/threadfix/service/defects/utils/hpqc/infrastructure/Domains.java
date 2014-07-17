@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * Created by stran on 3/14/14.
  */
@@ -82,7 +84,7 @@ public class Domains {
 
             public List<Project> getProject() {
                 if (project == null) {
-                    project = new ArrayList<>();
+                    project = list();
                 }
                 return this.project;
             }

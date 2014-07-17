@@ -25,16 +25,17 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +45,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -88,6 +90,11 @@ public class AddDefectTrackerController {
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody RestResponse<DefectTracker> processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
 			BindingResult result, Model model) {
+
+        if (!PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_DEFECT_TRACKERS)) {
+            return RestResponse.failure("You do not have permission to do that.");
+        }
+
 		if (defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		}

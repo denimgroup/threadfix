@@ -32,7 +32,6 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
-import javax.annotation.Nullable;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false)
@@ -91,7 +93,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		if (authenticatedTeamIds == null || authenticatedTeamIds.size() == 0) {
-			return new ArrayList<>();
+			return list();
 		}
 		
 		return applicationDao.retrieveAllActiveFilter(authenticatedTeamIds);
@@ -161,7 +163,9 @@ public class ApplicationServiceImpl implements ApplicationService {
                         wafRuleDao.delete(wafRule);
                     }
                 }
-                vulnerability.setWafRules(new ArrayList<WafRule>());
+                if (vulnerability != null) {
+                    vulnerability.setWafRules(new ArrayList<WafRule>());
+                }
             }
         }
     }
@@ -337,7 +341,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	
 	@Override
 	public void validateAfterEdit(Application application, BindingResult result) {
-		if (application.getName() != null && application.getName().trim().equals("")) {
+
+		if (application.getName() == null || application.getName().trim().equals("")) {
 			if (!result.hasFieldErrors("name")) {
 				result.rejectValue("name", null, null, "This field cannot be blank");
 			}
@@ -351,8 +356,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 				return;
 			}
 		}		
-						
-		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(), application.getOrganization().getId()));
+
+		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(),
+                application.getOrganization().getId()));
 
 		if (application.getApplicationCriticality() == null ||
 				application.getApplicationCriticality().getId() == null ||
@@ -447,8 +453,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 			}
 		}
 	}
-	
-	@Override
+
+    @Override
+    public long getUnmappedFindingCount(Integer appId) {
+        return applicationDao.getUnmappedFindingCount(appId);
+    }
+
+    @Override
 	public void updateProjectRoot(Application application) {
 		if (application != null && application.getProjectRoot() != null
 				&& !application.getProjectRoot().trim().equals("")) {
@@ -478,7 +489,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 						application.getApplicationCriticality().getId()) == null) {
 			result.rejectValue("applicationCriticality.id", "errors.invalid",
 					new String [] { "Criticality" }, null);
-		}
+		} else {
+            application.getApplicationCriticality().setName(applicationCriticalityDao.retrieveById(
+                    application.getApplicationCriticality().getId()).getName());
+        }
 		
 		boolean canManageWafs = false, canManageDefectTrackers = false;
 

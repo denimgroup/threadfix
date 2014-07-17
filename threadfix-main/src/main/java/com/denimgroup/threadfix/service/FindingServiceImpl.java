@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.webapp.controller.rest.AddFindingRestController;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
-import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,11 +38,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -304,6 +306,11 @@ public class FindingServiceImpl implements FindingService {
 	}
 
 	@Override
+	public List<Finding> getUnmappedFindingTable(TableSortBean bean) {
+		return findingDao.retrieveUnmappedFindingsByPage(bean.getPage(), bean.getApplicationId());
+	}
+
+	@Override
 	public List<String> getRecentStaticVulnTypes(@PathVariable("appId") int appId){
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		Integer userId = null;
@@ -314,7 +321,7 @@ public class FindingServiceImpl implements FindingService {
 			return null;
 		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> cvList = new ArrayList<>();
+		List<String> cvList = list();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getChannelVulnerability() == null || 
 					finding.getChannelVulnerability().getCode() == null)
@@ -335,7 +342,7 @@ public class FindingServiceImpl implements FindingService {
 			return null;
 		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> cvList = new ArrayList<>();
+		List<String> cvList = list();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getChannelVulnerability() == null || 
 					finding.getChannelVulnerability().getCode() == null)
@@ -353,10 +360,10 @@ public class FindingServiceImpl implements FindingService {
 		if (user != null)
 			userId = user.getId();
 		if (userName == null || userId == null)
-			return new ArrayList<>();
+			return list();
 		List<Finding> findings = loadLatestStaticByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> pathList = new ArrayList<>();
+		List<String> pathList = list();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getSurfaceLocation() == null || 
 					finding.getSurfaceLocation().getPath() == null)
@@ -374,10 +381,10 @@ public class FindingServiceImpl implements FindingService {
 		if (user != null)
 			userId = user.getId();
 		if (userName == null || userId == null)
-			return new ArrayList<>();
+			return list();
 		List<Finding> findings = loadLatestDynamicByAppAndUser(appId, userId);
 		if(findings == null) return null;
-		List<String> pathList = new ArrayList<>();
+		List<String> pathList = list();
 		for(Finding finding : findings) {
 			if (finding == null || finding.getSurfaceLocation() == null || 
 					finding.getSurfaceLocation().getPath() == null)
@@ -389,8 +396,8 @@ public class FindingServiceImpl implements FindingService {
 	
 	private List<String> removeDuplicates(List<String> stringList) {
 		if (stringList == null)
-			return new ArrayList<>();
-		List<String> distinctStringList = new ArrayList<>();
+			return list();
+		List<String> distinctStringList = list();
 		for (int i = 0; i < stringList.size(); i++) {
 			int j = 0;
 			for (; j < i; j++) {

@@ -23,19 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 // TODO maybe move into saveOrUpdate and call it a day
 // Not sure yet though because ensureCorrectRelationships might not be what we want in all cases
@@ -45,75 +44,75 @@ public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
 	private VulnerabilityDao vulnerabilityDao;
 	
 	private ScanCleanerUtils(){}
-	
-	private final SanitizedLogger log = new SanitizedLogger("ScanCleanerUtils");
-	
-	private static final Set<String> VULNS_WITH_PARAMETERS_SET = 
-			Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GenericVulnerability.VULNS_WITH_PARAMS)));
-	
-	public static void clean(Scan scan) {
-		ScanCleanerUtils utils = new ScanCleanerUtils();
-		utils.ensureCorrectRelationships(scan);
-		utils.ensureSafeFieldLengths(scan);
-	}
-	
-	/**
-	 * This method ensures that Findings have the correct relationship to the
-	 * other objects before being committed to the database.
-	 * 
-	 * It also makes sure that none of the findings have string lengths that are incompatible with their 
-	 * database counterparts.
-	 * 
-	 * @param scan
-	 */
-	public void ensureCorrectRelationships(Scan scan) {
-		if (scan == null) {
-			log.error("The scan processing was unable to complete because the supplied scan was null.");
-			return;
-		}
 
-		if (scan.getImportTime() == null)
-			scan.setImportTime(Calendar.getInstance());
+    private final SanitizedLogger log = new SanitizedLogger("ScanCleanerUtils");
 
-		if (scan.getFindings() == null) {
-			log.warn("There were no findings to process.");
-			return;
-		}
+    private static final Set<String> VULNS_WITH_PARAMETERS_SET =
+            Collections.unmodifiableSet(set(GenericVulnerability.VULNS_WITH_PARAMS));
 
-		int numWithoutPath = 0, numWithoutParam = 0;
+    public static void clean(Scan scan) {
+        ScanCleanerUtils utils = new ScanCleanerUtils();
+        utils.ensureCorrectRelationships(scan);
+        utils.ensureSafeFieldLengths(scan);
+    }
 
-		// we need to set up appropriate relationships between the scan's many
-		// objects.
-		SurfaceLocation surfaceLocation = null;
-		for (Finding finding : scan.getFindings()) {
-			if (finding == null) {
-				continue;
-			}
+    /**
+     * This method ensures that Findings have the correct relationship to the
+     * other objects before being committed to the database.
+     *
+     * It also makes sure that none of the findings have string lengths that are incompatible with their
+     * database counterparts.
+     *
+     * @param scan
+     */
+    public void ensureCorrectRelationships(Scan scan) {
+        if (scan == null) {
+            log.error("The scan processing was unable to complete because the supplied scan was null.");
+            return;
+        }
 
-			finding.setScan(scan);
+        if (scan.getImportTime() == null)
+            scan.setImportTime(Calendar.getInstance());
 
-			surfaceLocation = finding.getSurfaceLocation();
+        if (scan.getFindings() == null) {
+            log.warn("There were no findings to process.");
+            return;
+        }
 
-			if (surfaceLocation != null) {
-				surfaceLocation.setFinding(finding);
-				if (surfaceLocation.getParameter() == null
-						&& finding.getChannelVulnerability() != null
-						&& finding.getChannelVulnerability()
-								.getGenericVulnerability() != null
-						&& VULNS_WITH_PARAMETERS_SET.contains(finding
-								.getChannelVulnerability()
-								.getGenericVulnerability().getName())) {
-					numWithoutParam++;
-				}
-				if (surfaceLocation.getPath() == null
-						|| surfaceLocation.getPath().trim().equals("")) {
-					numWithoutPath++;
-				}
-			}
+        int numWithoutPath = 0, numWithoutParam = 0;
 
-			if (finding.getDataFlowElements() != null) {
-				for (DataFlowElement dataFlowElement : finding
-						.getDataFlowElements()) {
+        // we need to set up appropriate relationships between the scan's many
+        // objects.
+        SurfaceLocation surfaceLocation = null;
+        for (Finding finding : scan.getFindings()) {
+            if (finding == null) {
+                continue;
+            }
+
+            finding.setScan(scan);
+
+            surfaceLocation = finding.getSurfaceLocation();
+
+            if (surfaceLocation != null) {
+                surfaceLocation.setFinding(finding);
+                if (surfaceLocation.getParameter() == null
+                        && finding.getChannelVulnerability() != null
+                        && finding.getChannelVulnerability()
+                        .getGenericVulnerability() != null
+                        && VULNS_WITH_PARAMETERS_SET.contains(finding
+                        .getChannelVulnerability()
+                        .getGenericVulnerability().getName())) {
+                    numWithoutParam++;
+                }
+                if (surfaceLocation.getPath() == null
+                        || surfaceLocation.getPath().trim().equals("")) {
+                    numWithoutPath++;
+                }
+            }
+
+            if (finding.getDataFlowElements() != null) {
+                for (DataFlowElement dataFlowElement : finding
+                        .getDataFlowElements()) {
 					if (dataFlowElement != null) {
 						dataFlowElement.setFinding(finding);
 					}

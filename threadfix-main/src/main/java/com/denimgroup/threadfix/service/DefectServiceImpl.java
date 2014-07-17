@@ -38,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Service
 @Transactional(readOnly = false)
 public class DefectServiceImpl implements DefectService {
@@ -82,7 +84,7 @@ public class DefectServiceImpl implements DefectService {
 	@Transactional(readOnly = false)
 	public Map<String, Object> createDefect(List<Vulnerability> allVulns, String summary,
 			String preamble, String component, String version,
-			String severity, String priority, String status) {
+			String severity, String priority, String status, Map<String, Object> fieldsMap) {
 		if (allVulns == null || allVulns.size() == 0 || allVulns.get(0) == null ||
 				allVulns.get(0).getApplication() == null) {
 			log.warn("Null input, exiting.");
@@ -123,7 +125,7 @@ public class DefectServiceImpl implements DefectService {
 			}
 		}
 
-		List<Vulnerability> vulnsWithoutDefects = new ArrayList<>();
+		List<Vulnerability> vulnsWithoutDefects = list();
 
 		for (Vulnerability vulnerability : allVulns) {
 			if (vulnerability.getDefect() == null) {
@@ -151,7 +153,7 @@ public class DefectServiceImpl implements DefectService {
 		
 		String defectId = dt.createDefect(vulnsWithoutDefects,
 				new DefectMetadata(editedSummary, editedPreamble,
-				component, version, severity, priority, status));
+				component, version, severity, priority, status, fieldsMap));
 
 		if (defectId != null) {
 			
@@ -159,7 +161,17 @@ public class DefectServiceImpl implements DefectService {
 			defect.setNativeId(defectId);
 			defect.setVulnerabilities(vulnsWithoutDefects);
 			defect.setApplication(application);
-			defect.setStatus(status);
+            Object sObj = null;
+            if (fieldsMap != null && status == null) {
+                sObj = fieldsMap.get("status")==null ? fieldsMap.get("Status") : fieldsMap.get("status");
+            }
+			status = (sObj != null ? String.valueOf(sObj) : status);
+
+            // By default, set status to Open
+            if (status == null)
+                status = "Open";
+
+            defect.setStatus(status);
 			defect.setDefectURL(dt.getBugURL(
 					application.getDefectTracker().getUrl(), defectId));
 			defectDao.saveOrUpdate(defect);
@@ -216,17 +228,15 @@ public class DefectServiceImpl implements DefectService {
 		}
 
 		Application application = vuln.getApplication();
-		
-		if (application != null) {
-			applicationService.decryptCredentials(application);
-		}
-		
-		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
+
+        applicationService.decryptCredentials(application);
+
+        AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			return noDefectTrackerError;
 		}
 
-		List<Vulnerability> vulnList = new ArrayList<>();
+		List<Vulnerability> vulnList = list();
 		
 		for (Vulnerability vulnerability : vulns) {
 			if (vulnerability.getDefect() == null) {
@@ -354,7 +364,7 @@ public class DefectServiceImpl implements DefectService {
 		defect.setDefectURL(dt.getBugURL(
 				application.getDefectTracker().getUrl(), id));
 		defect.setApplication(application);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		defectList.add(defect);
         Map<Defect, Boolean> map = dt.getMultipleDefectStatus(defectList);
         if (map.isEmpty())

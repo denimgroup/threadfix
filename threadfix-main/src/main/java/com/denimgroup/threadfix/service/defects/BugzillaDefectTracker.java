@@ -29,10 +29,12 @@ import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClient;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClientImpl;
 import org.apache.xmlrpc.XmlRpcException;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author dcornell
@@ -44,11 +46,11 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 
     BugzillaClient bugzillaClient = BugzillaClientImpl.getInstance();
 
-	private List<String> statuses = new ArrayList<>();
-	private List<String> components = new ArrayList<>();
-	private List<String> severities = new ArrayList<>();
-	private List<String> versions = new ArrayList<>();
-	private List<String> priorities = new ArrayList<>();
+	private List<String> statuses = list();
+	private List<String> components = list();
+	private List<String> severities = list();
+	private List<String> versions = list();
+	private List<String> priorities = list();
 
     private BugzillaClient.ConnectionStatus configureClientAndGetStatus() {
 
@@ -257,17 +259,17 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	 * @return
 	 */
 	private List<String> getValues(Object rpcResponse) {
-		List<String> responseList = new ArrayList<>();
+		List<String> responseList = list();
 		if (rpcResponse != null && rpcResponse instanceof HashMap) {
 			Map<?, ?> returnedData = (HashMap<?, ?>) rpcResponse;
 			Object componentsObject = returnedData.get("values");
 			if (componentsObject != null && componentsObject instanceof Object[]) {
 				Object[] componentsArray = (Object[]) componentsObject;
-				for (int i = 0; i < componentsArray.length; i++) {
-					if (componentsArray[i] != null) {
-						responseList.add(componentsArray[i].toString());
-					}
-				}
+                for (Object component : componentsArray) {
+                    if (component != null) {
+                        responseList.add(component.toString());
+                    }
+                }
 			}
 		}
 		return responseList;
@@ -301,16 +303,16 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getProducts() {
-		String productList = "";
+    @Nonnull
+	private List<String> getProducts() {
+        List<String> returnList = list();
 
 		try {
 			Map<String,Object[]> productsMap = (HashMap<String, Object[]>) bugzillaClient.executeMethod(
                     "Product.get_accessible_products");
 			Object[] ids = productsMap.get("ids");
 
-			StringBuffer buffer = new StringBuffer();
-			
+
 			Map<String,Object[]> params = new HashMap<>();
 			params.put("ids", ids);
 
@@ -321,30 +323,28 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			for (Object item : products) {
 				Map<String,Object> product = (HashMap<String, Object>) item;
 				String productName = (String) product.get("name");
-				buffer.append(productName).append(',');
+                returnList.add(productName);
 			}
 
-			productList = buffer.toString();
-			productList = productList.substring(0, productList.length() - 1);
 		} catch (XmlRpcException e) {
             log.error(e.getMessage());
             setLastError(e.getMessage());
-            return e.getMessage();
+            return list(e.getMessage());
 //			e.printStackTrace();
 		} catch (IllegalArgumentException e2) {
 			if (e2.getMessage().contains("Host name may not be null")) {
-				return BAD_CONFIGURATION;
+				return list(BAD_CONFIGURATION);
 			} else {
 				e2.printStackTrace();
-				return BAD_CONFIGURATION;
+				return list(BAD_CONFIGURATION);
 			}
 		}
-		if("".equals(productList)){
+		if (returnList.isEmpty()){
 			setLastError("There were problems communicating with the Bugzilla server.");
-			return "Authentication failed";
+			return list("Authentication failed");
 		}
 
-		return productList;
+		return returnList;
 	}
 
 	public String getProjectIdByName() {
@@ -384,15 +384,15 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 			Object[] products = productMap.get("products");
 			if (products == null)
 				return null;
-			for (int i = 0; i < products.length; i++) {
-				Map<String,Object> product = (HashMap<String, Object>) products[i];
-				String productName = (String) product.get("name");
-				if (projectName.equals(productName)) {
-					Integer temp = (Integer) product.get("id");
-					projectId = Integer.toString(temp);
-					return projectId;
-				}
-			}
+            for (Object product1 : products) {
+                Map<String, Object> product = (HashMap<String, Object>) product1;
+                String productName = (String) product.get("name");
+                if (projectName.equals(productName)) {
+                    Integer temp = (Integer) product.get("id");
+                    projectId = Integer.toString(temp);
+                    return projectId;
+                }
+            }
 		} catch (XmlRpcException xre) {
 			xre.printStackTrace();
 		} catch (IllegalArgumentException e2) {
@@ -437,14 +437,15 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 		return null;
 	}
 
-	@Override
-	public String getProductNames() {
+	@Nonnull
+    @Override
+	public List<String> getProductNames() {
         BugzillaClient.ConnectionStatus status = configureClientAndGetStatus();
 
 		if (status == BugzillaClient.ConnectionStatus.INVALID) {
 			if (getLastError() == null || getLastError().isEmpty())
                 setLastError(status.toString());
-			return null;
+			return list();
 		} else {
             setLastError(null);
 			return getProducts();
@@ -510,7 +511,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
             return null;
         }
 		
-		List<Defect> returnList = new ArrayList<>();
+		List<Defect> returnList = list();
 		Map<String, String> queryMap = new HashMap<>();
 		queryMap.put("product", projectName);
 
@@ -520,7 +521,7 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
             queryResult = bugzillaClient.executeMethod("Bug.search", queryMap);
         } catch (XmlRpcException e) {
             log.error("Encountered XmlRpcException while getting defect information");
-            return new ArrayList<>(); // TODO see if this is the right thing
+            return list(); // TODO see if this is the right thing
         }
 
         if (queryResult instanceof HashMap) {

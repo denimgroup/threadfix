@@ -36,9 +36,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Parses the SCA Fortify fpr output file.
@@ -182,9 +185,9 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 		Map<String, List<DataFlowElementMap>> nativeIdDataFlowElementsMap = new HashMap<>();
 		Map<String, StaticPathInformation> staticPathInformationMap = new HashMap<>();
 		
-		List<Map<String,String>> rawFindingList = new ArrayList<>();
+		List<Map<String,String>> rawFindingList = list();
 		
-		List<DataFlowElementMap> dataFlowElementMaps = new ArrayList<>();
+		List<DataFlowElementMap> dataFlowElementMaps = list();
 		DataFlowElementMap currentMap = null;
 		StaticPathInformation currentStaticPathInformation = null;
 		
@@ -249,7 +252,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 			currentConfidence = null;
 			currentClassID = null;
 			currentStaticPathInformation = null;
-			dataFlowElementMaps = new ArrayList<>();
+			dataFlowElementMaps = list();
 			currentMap = null;
 	    }
 	    
@@ -324,7 +327,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 	    	String lastNode = null;
 	    	
 	    	
-	    	List<DataFlowElement> dataFlowElements = new ArrayList<>();
+	    	List<DataFlowElement> dataFlowElements = list();
 	    	
 	    	for (DataFlowElementMap dataFlowElementMap : dataFlowElementMaps) {
 	    		
@@ -742,7 +745,8 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 		}
 	}
 	    
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
         try {
             InputStream auditXmlStream = null;

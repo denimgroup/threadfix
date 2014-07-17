@@ -44,6 +44,8 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.data.entities.WafRule;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * This class uses a different system for generating rules because 
  * BIG-IP accepts a large policy XML that is a combination of rules instead of
@@ -198,7 +200,7 @@ public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 		 String directive = null;
 		 
 		 StringBuilder csrfStrings =  new StringBuilder();
-		 List<String> csrfStringList = new ArrayList<>();
+		 List<String> csrfStringList = list();
 		 
 		 StringBuilder ruleTextBuilder = new StringBuilder();
 		 

@@ -25,45 +25,46 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ScannerMappingsExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/scanplugin")
 public class ScanPluginController {
 
-	private ScannerMappingsUpdaterService scannerMappingsUpdaterService = null;
-	
+    @Autowired
+	private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
+    @Autowired
+    private ScannerMappingsExportService scannerMappingsExportService;
+
 	private final SanitizedLogger log = new SanitizedLogger(ScanPluginController.class);
 
-	@Autowired
-	public ScanPluginController(ScannerMappingsUpdaterService scannerMappingsUpdaterService) {
-		this.scannerMappingsUpdaterService = scannerMappingsUpdaterService;
-	}
-	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model) {
 		
 		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
         model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
-		
+		model.addAttribute("exportText", scannerMappingsExportService.getUserAddedMappingsInCSV());
+        model.addAttribute("canUpdate", scannerMappingsExportService.canUpdate());
+
 		return "scanplugin/channelVulnUpdate";
 	}
 
 	@RequestMapping(value = "/updateChannelVuln", method = RequestMethod.GET)
 	public String doUpdate(Model model) {
 		log.info("Start updating Channel Vulnerabilities");
-		List<String[]> channelVulnUpdateResults = new ArrayList<>();
-        List<String[]> genericVulnUpdateResults = new ArrayList<>();
+		List<String[]> channelVulnUpdateResults = list();
+        List<String[]> genericVulnUpdateResults = list();
 		
 		try {
             genericVulnUpdateResults = scannerMappingsUpdaterService.updateGenericVulnerabilities();
@@ -89,6 +90,6 @@ public class ScanPluginController {
 		log.info("Ended updating Vulnerabilities");
 		return "scanplugin/channelVulnUpdate";
 	}
-	
+
 }
 

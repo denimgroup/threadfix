@@ -23,8 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.FindingDao;
+import com.denimgroup.threadfix.data.entities.DeletedFinding;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -34,16 +35,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.entities.DeletedFinding;
-import com.denimgroup.threadfix.data.entities.Finding;
+import java.util.List;
 
 /**
  * Hibernate Finding DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
- * @author dwolf
- * @see AbstractGenericDao
  */
 @Repository
 public class HibernateFindingDao implements FindingDao {
@@ -255,4 +252,28 @@ public class HibernateFindingDao implements FindingDao {
 								+ "order by path")
 				.setInteger("scanId", scanId).list();
 	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Finding> retrieveUnmappedFindingsByPage(int page, Integer appId) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Finding.class)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.isNull("vulnerability"));
+
+        if (appId != null) {
+            criteria.createAlias("scan", "scanAlias")
+                    .createAlias("scanAlias.application", "appAlias")
+                    .add(Restrictions.eq("appAlias.id", appId));
+        }
+
+        return criteria.createAlias("channelSeverity", "severity")
+                .createAlias("channelVulnerability", "vuln")
+                .createAlias("surfaceLocation", "surface")
+                .setFirstResult((page - 1) * ControllerUtils.NUMBER_ITEM_PER_PAGE)
+                .setMaxResults(ControllerUtils.NUMBER_ITEM_PER_PAGE)
+                .addOrder(Order.desc("severity.numericValue"))
+                .addOrder(Order.asc("vuln.name"))
+                .addOrder(Order.asc("surface.path"))
+                .list();
+    }
 }

@@ -23,19 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -45,6 +32,19 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.annotation.Nonnull;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -58,6 +58,8 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	private static final String MANUAL_INSERTION_POINT = "manual insertion point";
 	private static final HashMap<String, String> SEVERITY_MAP = new HashMap<>();
 	private static Pattern pattern = Pattern.compile("The payload <b>(.*)</b> was submitted");
+
+    // We don't know why this happens but sometimes these strings show up in the burp XML.
 	static {
 		SEVERITY_MAP.put("deformation", "Information");
 		SEVERITY_MAP.put("eddium", "Medium");
@@ -178,11 +180,11 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	} else if ("request".equals(qName)) {
 	    		getBackupParameter = true;
 	    		getRequestText = true;
-	    		isBase64Encoded = "true".equals(atts.getValue("base64")) ? true : false;
+	    		isBase64Encoded = "true".equals(atts.getValue("base64"));
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("response".equals(qName)) {
 	    		getResponseText = true;
-	    		isBase64Encoded = "true".equals(atts.getValue("base64")) ? true : false;
+	    		isBase64Encoded = "true".equals(atts.getValue("base64"));
 	    		getBuilderText(); //resets the stringbuffer
 	    	} else if ("issueDetail".equals(qName)) {
 	    		getParamValueText = true;
@@ -274,7 +276,7 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    	}
 	    	//if we're inside an <issue/>
 	    	if (getRawFinding){
-	    		currentRawFinding.append("</" + qName + ">\n");
+                currentRawFinding.append("</").append(qName).append(">\n");
 	    	}
 	    	
 	    	if ("issue".equals(qName)) {
@@ -343,7 +345,8 @@ class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new BurpSuiteSAXValidator());
 	}

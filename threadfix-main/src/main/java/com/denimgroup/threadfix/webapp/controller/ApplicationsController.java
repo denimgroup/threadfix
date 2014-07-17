@@ -56,18 +56,24 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
 @Controller
 @RequestMapping("/organizations/{orgId}/applications")
 @SessionAttributes({"defectTracker", "application", "waf", "defectViewModel", "scanParametersBean"})
 public class ApplicationsController {
-	
-	public ApplicationsController(){}
-	
+
+    public ApplicationsController(){}
+
 	private final SanitizedLogger log = new SanitizedLogger(ApplicationsController.class);
+
     private static final String ERROR_MSG = "error_msg";
 
     @Autowired
 	private FindingService findingService;
+    @Autowired
+    private GenericVulnerabilityService genericVulnerabilityService;
     @Autowired
 	private ApplicationCriticalityService applicationCriticalityService;
     @Autowired
@@ -85,7 +91,7 @@ public class ApplicationsController {
     @Autowired
     private ChannelTypeService channelTypeService;
     @Autowired
-    private GenericVulnerabilityService genericVulnerabilityService;
+    private ScanService scanService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -214,7 +220,7 @@ public class ApplicationsController {
     }
 
     private void addAttrForScheduledScanTab(Model model) {
-        List<String> scannerTypeList = new ArrayList<>();
+        List<String> scannerTypeList = list();
         List<ChannelType> channelTypeList = channelTypeService.getChannelTypeOptions(null);
         for (ChannelType type: channelTypeList) {
             scannerTypeList.add(type.getName());
@@ -318,32 +324,18 @@ public class ApplicationsController {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return RestResponse.failure("Authentication failed.");
 		}
-		String result = dt.getProductNames();
-		if (result == null || result.equals("Authentication failed")) {
+		List<String> result = dt.getProductNames();
+		if (result.isEmpty() || (result.size() == 1 && result.contains("Authentication failed"))) {
 			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
 
-		return RestResponse.success(productSort(result));
-	}
-	
-	private String[] productSort(String products) {
-		if (products == null) {
-			return null;
-		}
-		String[] splitArray = products.split(",", 0);
-		
-		if (splitArray.length == 0) {
-			return null;
-		}
-		
-		Arrays.sort(splitArray, String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(result);
 
-		return splitArray;
+		return RestResponse.success(result);
 	}
 	
 	@RequestMapping("/{appId}/getDefectsFromDefectTracker")
-	public String getDefectsFromDefectTracker(@PathVariable("orgId") int orgId,
-			@PathVariable("appId") int appId, SessionStatus status, Model model) {
+	public String getDefectsFromDefectTracker(@PathVariable("appId") int appId, Model model) {
 		
 		log.info("Start getting defect list.");
 		Application application = applicationService.loadApplication(appId);
@@ -359,7 +351,7 @@ public class ApplicationsController {
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		
 		ProjectMetadata data = null;
 		if (dt != null) {
@@ -376,4 +368,45 @@ public class ApplicationsController {
 		return "ajaxSuccessHarness";
 	}
 
+    @RequestMapping(value = "/{appId}/unmappedTable", method = RequestMethod.POST)
+    public @ResponseBody String unmappedScanTable(@ModelAttribute TableSortBean bean,
+                                                  @PathVariable("appId") Integer appId,
+                                                  @PathVariable("orgId") Integer orgId) throws IOException {
+
+        if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS,orgId,appId)) {
+            return "403";
+        }
+
+        long numFindings = applicationService.getUnmappedFindingCount(appId);
+        long numPages = numFindings / 100;
+
+        if (numFindings % 100 == 0) {
+            numPages -= 1;
+        }
+
+        if (bean.getPage() >= numPages) {
+            bean.setPage((int) (numPages + 1));
+        }
+
+        if (bean.getPage() < 1) {
+            bean.setPage(1);
+        }
+
+        bean.setApplicationId(appId);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("numPages", numPages);
+        responseMap.put("page", bean.getPage());
+        responseMap.put("numFindings", numFindings);
+        responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));
+
+        return writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
+    }
+
+    @RequestMapping(value = "/{appId}/cwe", method = RequestMethod.GET)
+    public @ResponseBody Object getGenericVulnerabilities() throws IOException {
+        return writeSuccessObjectWithView(
+                genericVulnerabilityService.loadAll(),
+                AllViews.TableRow.class);
+    }
 }

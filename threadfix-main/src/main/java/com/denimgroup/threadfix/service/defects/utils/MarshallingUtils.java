@@ -1,5 +1,8 @@
 package com.denimgroup.threadfix.service.defects.utils;
 
+import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
+
+import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -23,20 +26,21 @@ public class MarshallingUtils {
      *            the instance xml description
      * @return a deserialization of the xml into an object of type T
      *           of class Class<T>
-     * @throws javax.xml.bind.JAXBException
      */
     @SuppressWarnings("unchecked")
-    public static <T> T marshal(Class<T> c, String xml) throws JAXBException {
+    public static <T> T marshal(Class<T> c, @Nonnull String xml) {
         T res;
 
         if (c == xml.getClass()) {
             res = (T) xml;
-        }
-
-        else {
-            JAXBContext ctx = JAXBContext.newInstance(c);
-            Unmarshaller marshaller = ctx.createUnmarshaller();
-            res = (T) marshaller.unmarshal(new StringReader(xml));
+        } else {
+            try {
+                JAXBContext ctx = JAXBContext.newInstance(c);
+                Unmarshaller marshaller = ctx.createUnmarshaller();
+                res = (T) marshaller.unmarshal(new StringReader(xml));
+            } catch (JAXBException e) {
+                throw new DefectTrackerFormatException(e, "Unable to parse XML response from server.");
+            }
         }
 
         return res;
@@ -50,19 +54,20 @@ public class MarshallingUtils {
      * @param o
      *            the instance containing the data to serialize
      * @return a string representation of the data.
-     * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public static <T> String unmarshal(Class<T> c, Object o) throws Exception {
+    public static <T> String unmarshal(Class<T> c, Object o) {
 
-        JAXBContext ctx = JAXBContext.newInstance(c);
-        Marshaller marshaller = ctx.createMarshaller();
-        StringWriter entityXml = new StringWriter();
-        marshaller.marshal(o, entityXml);
+        try {
+            JAXBContext ctx = JAXBContext.newInstance(c);
+            Marshaller marshaller = ctx.createMarshaller();
+            StringWriter entityXml = new StringWriter();
+            marshaller.marshal(o, entityXml);
 
-        String entityString = entityXml.toString();
-
-        return entityString;
+            return entityXml.toString();
+        } catch (JAXBException e) {
+            throw new DefectTrackerFormatException(e, "Unable to parse XML response from server.");
+        }
     }
 
 }

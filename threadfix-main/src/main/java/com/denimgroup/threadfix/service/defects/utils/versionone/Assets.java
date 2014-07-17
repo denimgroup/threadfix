@@ -24,8 +24,9 @@
 package com.denimgroup.threadfix.service.defects.utils.versionone;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by stran on 3/25/14.
@@ -58,6 +59,16 @@ public class Assets {
         List<Relation> relations;
         @XmlElement(name="Attribute")
         List<Attribute> attributes;
+        @XmlAttribute(name="act")
+        String act;
+
+        public String getAct() {
+            return act;
+        }
+
+        public void setAct(String act) {
+            this.act = act;
+        }
 
         public String getHref() {
             return href;
@@ -85,8 +96,58 @@ public class Assets {
 
         public List<Relation> getRelations() {
             if (relations == null)
-                relations = new ArrayList<>();
+                relations = list();
             return relations;
+        }
+
+        public List<String> getRelationNames() {
+            List<String> names = list();
+            for (Relation relation : getRelations()) {
+                if (relation != null) {
+                    names.add(relation.getName());
+                }
+            }
+            return names;
+        }
+
+        public List<String> getAttributeNames() {
+            List<String> names = list();
+            for (Attribute attribute : getAttributes()) {
+                if (attribute != null) {
+                    names.add(attribute.getName());
+
+                }
+            }
+            return names;
+        }
+
+        public Attribute getAttributeByName(String name) {
+            if (name == null)
+                return null;
+            for (Attribute attribute : getAttributes()) {
+                if (attribute != null && name.equalsIgnoreCase(attribute.getName())) {
+                    return attribute;
+                }
+            }
+            return null;
+        }
+
+        public boolean isAssetHasAttr(String name, String value) {
+            if (name == null || value == null)
+                return false;
+            for (Attribute attribute : getAttributes()) {
+                if (attribute != null && name.equalsIgnoreCase(attribute.getName())) {
+                    for (String v: attribute.getValues())
+                        if (value.equalsIgnoreCase(v))
+                            return true;
+                    for (String v: attribute.getMixed())
+                        if (value.equalsIgnoreCase(v))
+                            return true;
+
+                    return false;
+                }
+            }
+            return false;
         }
 
         public void setRelations(List<Relation> relations) {
@@ -95,7 +156,7 @@ public class Assets {
 
         public List<Attribute> getAttributes() {
             if (attributes == null)
-                attributes = new ArrayList<>();
+                attributes = list();
             return attributes;
         }
 
@@ -114,7 +175,7 @@ public class Assets {
 
             public List<Asset> getAssetList() {
                 if (assetList == null)
-                    assetList = new ArrayList<>();
+                    assetList = list();
                 return assetList;
             }
 
@@ -146,9 +207,9 @@ public class Assets {
             @XmlAttribute(name="act")
             String act;
             @XmlElement(name="Value")
-            List<String> values;
+            List<String> values = list();
             @XmlMixed
-            List<String> mixed;
+            List<String> mixed = list();
 
             public List<String> getValues() {
                 return values;
@@ -181,6 +242,11 @@ public class Assets {
             public void setAct(String act) {
                 this.act = act;
             }
+
+//            public List<String> getValuesAndMixed() {
+//                values.addAll(mixed)
+//                return getValues().addAll();
+//            }
         }
     }
 }

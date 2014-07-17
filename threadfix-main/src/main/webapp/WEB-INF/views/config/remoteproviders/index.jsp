@@ -27,11 +27,8 @@
             <thead>
             <tr>
                 <th class="medium first">Name</th>
-                <th class="medium">User name</th>
-                <c:if test="${ not canManageRemoteProviders }">
-                    <th class="medium last">API Key</th>
-                </c:if>
                 <c:if test="${ canManageRemoteProviders }">
+                    <th class="medium">User name</th>
                     <th class="medium">API Key</th>
                     <th class="medium last">Configure</th>
                 </c:if>
@@ -45,13 +42,13 @@
                     <td id="name{{ $index }}">
                         {{ provider.name }}
                     </td>
-                    <td id="username{{ $index }}">
-                        {{ provider.username }}
-                    </td>
-                    <td id="apiKey{{ $index }}">
-                        {{ provider.apiKey }}
-                    </td>
                     <c:if test="${ canManageRemoteProviders }">
+                        <td id="username{{ $index }}">
+                            {{ provider.username }}
+                        </td>
+                        <td id="apiKey{{ $index }}">
+                            {{ provider.apiKey }}
+                        </td>
                         <td>
                             <a id="configure{{ $index }}" class="btn" ng-click="configure(provider)">Configure</a>
                         </td>
@@ -68,29 +65,33 @@
         <h2 ng-show="provider.remoteProviderApplications" style="padding-top:15px">
             {{ provider.name }} Applications
 
-            <a ng-hide="provider.updatingApps"
-               class="btn header-button"
-               id="updateApps{{ provider.id }}"
-               style="font-size:60%;padding-left:10px;padding-right:8px;"
-               ng-click="updateApplications(provider)">
-                Update Applications
-            </a>
-            <a ng-show="provider.updatingApps" class="disabled btn header-button">
-                <span class="spinner dark"></span>
-                Updating Applications
-            </a>
+            <c:if test="${ canManageRemoteProviders }">
+                <a ng-hide="provider.updatingApps"
+                   class="btn header-button"
+                   id="updateApps{{ provider.id }}"
+                   style="font-size:60%;padding-left:10px;padding-right:8px;"
+                   ng-click="updateApplications(provider)">
+                    Update Applications
+                </a>
+                <a ng-show="provider.updatingApps" class="disabled btn header-button">
+                    <span class="spinner dark"></span>
+                    Updating Applications
+                </a>
+            </c:if>
 
-            <a ng-show="provider.showImportAll && !provider.importingScans"
-               class="btn header-button"
-               id="updateApps{{ provider.id }}"
-               style="font-size:60%;padding-left:10px;padding-right:8px;"
-               ng-click="importAllScans(provider)">
-                Import All Scans
-            </a>
-            <a ng-show="provider.importingScans" class="disabled btn header-button">
-                <span class="spinner dark"></span>
-                Importing Scans
-            </a>
+            <c:if test="${ canUploadScans }">
+                <a ng-show="provider.showImportAll && !provider.importingScans"
+                   class="btn header-button"
+                   id="updateApps{{ provider.id }}"
+                   style="font-size:60%;padding-left:10px;padding-right:8px;"
+                   ng-click="importAllScans(provider)">
+                    Import All Scans
+                </a>
+                <a ng-show="provider.importingScans" class="disabled btn header-button">
+                    <span class="spinner dark"></span>
+                    Importing Scans
+                </a>
+            </c:if>
 
             <c:if test="${ canManageRemoteProviders }">
                 <button ng-hide="provider.clearingConfiguration"
@@ -126,15 +127,15 @@
 
         <table ng-show="provider.remoteProviderApplications" class="table table-striped" style="table-layout:fixed;">
             <thead>
-                <tr>
-                    <th class="medium first">Name / ID</th>
-                    <th class="medium">Team</th>
-                    <th class="medium">Application</th>
-                    <c:if test="${ canManageRemoteProviders }">
-                        <th class="medium">Edit</th>
-                    </c:if>
-                    <th class="medium last">Import Scan</th>
-                </tr>
+            <tr>
+                <th class="medium first">Name / ID</th>
+                <th class="medium">Team</th>
+                <th class="medium">Application</th>
+                <c:if test="${ canManageRemoteProviders }">
+                    <th class="medium">Edit</th>
+                </c:if>
+                <th class="medium last">Import Scan</th>
+            </tr>
             </thead>
             <tbody>
 

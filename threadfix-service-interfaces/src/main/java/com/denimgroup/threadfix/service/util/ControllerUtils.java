@@ -25,11 +25,11 @@
 package com.denimgroup.threadfix.service.util;
 
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import org.apache.poi.ss.formula.functions.T;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -51,35 +51,31 @@ public final class ControllerUtils {
 		// Nobody can instantiate this class
 	}
 	
-	public static Object getItem(HttpServletRequest request, String key) {
+	public static Object getItem(@Nonnull HttpServletRequest request, @Nonnull String key) {
 		return getAttribute(request, key);
 	}
 
-	public static Object getErrorMessage(HttpServletRequest request) {
+	public static Object getErrorMessage(@Nonnull HttpServletRequest request) {
 		return getAttribute(request, ERROR_MESSAGE);
 	}
 	
-	public static Object getSuccessMessage(HttpServletRequest request) {
+	public static Object getSuccessMessage(@Nonnull HttpServletRequest request) {
 		return getAttribute(request, SUCCESS_MESSAGE);
 	}
 	
-	public static void addItem(HttpServletRequest request, String key, Object item) {
+	public static void addItem(@Nonnull HttpServletRequest request, @Nonnull String key, @Nonnull Object item) {
 		addMessage(request, key, item);
 	}
 	
-	public static void addSuccessMessage(HttpServletRequest request, String successMessage) {
+	public static void addSuccessMessage(@Nonnull HttpServletRequest request, @Nonnull String successMessage) {
 		addMessage(request, SUCCESS_MESSAGE, successMessage);
 	}
 	
-	public static void addErrorMessage(HttpServletRequest request, String successMessage) {
+	public static void addErrorMessage(@Nonnull HttpServletRequest request, @Nonnull String successMessage) {
 		addMessage(request, ERROR_MESSAGE, successMessage);
 	}
 	
-	private static Object getAttribute(HttpServletRequest request, String attribute) {
-		if (request == null || attribute == null) {
-			return null;
-		}
-		
+	private static Object getAttribute(@Nonnull HttpServletRequest request, @Nonnull String attribute) {
 		Object returnValue = null;
 		if (request.getSession() != null) {
 			returnValue = request.getSession().getAttribute(attribute);
@@ -91,35 +87,27 @@ public final class ControllerUtils {
 		return returnValue;
 	}
 	
-	private static void addMessage(HttpServletRequest request, String key, Object message) {
-		if (request == null || message == null) {
-			return;
-		}
-		
+	private static void addMessage(@Nonnull HttpServletRequest request, @Nonnull String key, @Nonnull  Object message) {
 		if (request.getSession() != null) {
 			request.getSession().setAttribute(key, message);
 		}
 	}
 
-    public static void setActiveTab(HttpServletRequest request, String activeTab) {
-        addMessage(request, ACTIVE_TAB, activeTab);
-    }
-
-    public static String getActiveTab(HttpServletRequest request) {
+    public static String getActiveTab(@Nonnull HttpServletRequest request) {
         Object activeTab = getAttribute(request, ACTIVE_TAB);
         if (activeTab != null)
             return activeTab.toString();
         else return null;
     }
 
-    public static <T> ObjectWriter getObjectWriter(Class<T> targetClass) {
+    public static <T> ObjectWriter getObjectWriter(@Nonnull Class<T> targetClass) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
 
         return mapper.writerWithView(targetClass);
     }
 
-    public static String writeSuccessObjectWithView(Object object, Class view) {
+    public static String writeSuccessObjectWithView(@Nonnull Object object, @Nonnull Class view) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationConfig.Feature.DEFAULT_VIEW_INCLUSION, false);
 

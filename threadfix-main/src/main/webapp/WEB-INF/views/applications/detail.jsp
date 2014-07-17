@@ -2,6 +2,7 @@
 
 <head>
 	<title><c:out value="${ application.name }"/></title>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/dyn-form.css"/>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/add-defect-tracker-modal-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-detail-page-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-page-modal-controller.js"></script>
@@ -16,6 +17,7 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-agent-tasks-tab-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bulk-operations-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-unmapped-finding-table-controller.js"></script>
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
@@ -48,6 +50,7 @@
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTabTree.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
+            <%@ include file="/WEB-INF/views/applications/tabs/unmappedFindingsTab.jsp" %>
             <c:if test="${isEnterprise}">
                 <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
                     <!-- TODO refactor this nesting -->
@@ -80,4 +83,5 @@
     <%@ include file="/WEB-INF/views/applications/forms/addScheduledScanForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/addScanQueueForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>
+    <%@ include file="../scans/createMappingModal.jsp" %>
 </body>

@@ -72,10 +72,13 @@ public final class ScanUtils {
 		try {
 			readSAXInput(handler, stream);
 		} catch (IOException e) {
-            STATIC_LOGGER.error("Encountered IOException while trying to read the SAX input.", e);
+            STATIC_LOGGER.error("Encountered IOException while trying to read the SAX input.");
+            throw new IllegalStateException("Encountered IOException while trying to read data. Can't continue.", e);
 		} catch (SAXException e) {
-			if (!e.getMessage().equals(completionCode))
-                STATIC_LOGGER.error("Encountered SAXException while trying to read the SAX input.", e);
+			if (!e.getMessage().equals(completionCode)) {
+                STATIC_LOGGER.error("Encountered SAXException while trying to read the SAX input.");
+                throw new IllegalStateException("Encountered SAXException while trying to read data. Can't continue.", e);
+            }
 		} finally {
 			closeInputStream(stream);
 		}

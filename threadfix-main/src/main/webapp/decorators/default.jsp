@@ -17,6 +17,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ui-bootstrap-tpls-0.10.0.min.js"></script>
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular-file-upload.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dynamic-forms.js"></script>
 
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/filters.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/threadfix-module.js"></script>

@@ -40,6 +40,8 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 
+import javax.annotation.Nonnull;
+
 /**
  * 
  * @author mcollins
@@ -289,7 +291,8 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    }
 	}
 
-	@Override
+	@Nonnull
+    @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new ArachniSAXValidator());
 	}

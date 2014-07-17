@@ -23,44 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import com.denimgroup.threadfix.data.entities.Organization;
+
 import java.util.List;
 import java.util.Set;
-
-import com.denimgroup.threadfix.data.entities.Organization;
 
 /**
  * Basic DAO class for the Organization entity.
  * 
  * @author jraim
  */
-public interface OrganizationDao {
-
-	/**
-	 * @return all active Organizations
-	 */
-	List<Organization> retrieveAllActive();
-
-	/**
-	 * @return
-	 */
-	List<Organization> retrieveAllNoOrder();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	Organization retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	Organization retrieveByName(String name);
-
-	/**
-	 * @param organization
-	 */
-	void saveOrUpdate(Organization organization);
+public interface OrganizationDao extends GenericNamedObjectDao<Organization> {
 
 	/**
 	 * 

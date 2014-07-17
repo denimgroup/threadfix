@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://qualysapi.qualys.com/qps/xsd/3.0/was/wasscan.xsd">
+  <responseCode>SUCCESS</responseCode>
+  <count>2</count>
+  <hasMoreRecords>false</hasMoreRecords>
+  <data>
+    <WasScan>
+      <id>5622189</id>
+      <name><![CDATA[Web Application Vulnerability Scan - 2014-06-23]]></name>
+      <reference>was/1403545552202.5376663</reference>
+      <type>VULNERABILITY</type>
+      <mode>ONDEMAND</mode>
+      <multi>false</multi>
+      <target>
+        <webApp>
+          <id>44790329</id>
+          <name><![CDATA[http://testphp.vulnweb.com/]]></name>
+          <url><![CDATA[http://testphp.vulnweb.com/]]></url>
+        </webApp>
+        <scannerAppliance>
+          <type>EXTERNAL</type>
+        </scannerAppliance>
+      </target>
+      <profile>
+        <id>52237</id>
+        <name><![CDATA[Initial WAS Options]]></name>
+      </profile>
+      <launchedDate>2014-06-23T17:45:52Z</launchedDate>
+      <launchedBy>
+        <id>370601</id>
+        <username>denmg_dc</username>
+        <firstName><![CDATA[Dan]]></firstName>
+        <lastName><![CDATA[Cornell]]></lastName>
+      </launchedBy>
+      <status>FINISHED</status>
+    </WasScan>
+    <WasScan>
+      <id>5622196</id>
+      <name><![CDATA[Web Application Vulnerability Scan - http://testasp.vulnweb.com/ - 2014-06-23]]></name>
+      <reference>was/1403548733769.5377050</reference>
+      <type>VULNERABILITY</type>
+      <mode>ONDEMAND</mode>
+      <multi>false</multi>
+      <target>
+        <webApp>
+          <id>43465229</id>
+          <name><![CDATA[http://testasp.vulnweb.com/]]></name>
+          <url><![CDATA[http://testasp.vulnweb.com/]]></url>
+        </webApp>
+        <scannerAppliance>
+          <type>EXTERNAL</type>
+        </scannerAppliance>
+      </target>
+      <profile>
+        <id>52237</id>
+        <name><![CDATA[Initial WAS Options]]></name>
+      </profile>
+      <launchedDate>2014-06-23T18:38:53Z</launchedDate>
+      <launchedBy>
+        <id>370601</id>
+        <username>denmg_dc</username>
+        <firstName><![CDATA[Dan]]></firstName>
+        <lastName><![CDATA[Cornell]]></lastName>
+      </launchedBy>
+      <status>FINISHED</status>
+    </WasScan>
+  </data>
+</ServiceResponse>

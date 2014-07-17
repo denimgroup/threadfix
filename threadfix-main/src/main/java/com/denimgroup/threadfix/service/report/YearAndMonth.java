@@ -25,9 +25,10 @@
 package com.denimgroup.threadfix.service.report;
 
 import java.text.DateFormatSymbols;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class YearAndMonth implements Comparable<YearAndMonth> {
 	
@@ -66,7 +67,7 @@ public class YearAndMonth implements Comparable<YearAndMonth> {
 			array[i] = this.addMonths(- i);
 		}
 		
-		return Arrays.asList(array);
+		return list(array);
 	}
 	
 	public String getMonthName() {
@@ -78,14 +79,13 @@ public class YearAndMonth implements Comparable<YearAndMonth> {
 		
 		int retVal;
 		
-		YearAndMonth other = ((YearAndMonth) o);
-		if (other.year > this.year) {
+		if (o.year > this.year) {
 			retVal = -1;
-		} else if (this.year > other.year) {
+		} else if (this.year > o.year) {
 			retVal = 1;
-		} else if (other.month > this.month)  {
+		} else if (o.month > this.month)  {
 			retVal = -1;
-		} else if (this.month > other.month) {
+		} else if (this.month > o.month) {
 			retVal = 1;
 		} else {
 			retVal = 0;

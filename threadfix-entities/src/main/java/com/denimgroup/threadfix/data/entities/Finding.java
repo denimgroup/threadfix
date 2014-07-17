@@ -428,11 +428,27 @@ public class Finding extends AuditableEntity implements FindingLike {
     }
 
     @Transient
+    @JsonView(AllViews.TableRow.class)
+    private String getGenericVulnerabilityName() {
+        return getChannelVulnerability() == null ? null :
+                getChannelVulnerability().getGenericVulnerability() == null ? null :
+                getChannelVulnerability().getGenericVulnerability().getName();
+    }
+
+    @Transient
     @JsonView(AllViews.RestView2_1.class)
     private String getSeverity() {
         return getChannelSeverity() == null ? null :
                 getChannelSeverity().getName();
     }
 
-
+    @Override
+    public String toString() {
+        return "Finding{" +
+                "channelVulnerability=" + channelVulnerability.getName() +
+                ", displayId=" + displayId +
+                ", path=" + surfaceLocation.getPath() +
+                ", parameter=" + surfaceLocation.getParameter() +
+                '}';
+    }
 }

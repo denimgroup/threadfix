@@ -785,6 +785,11 @@ div.box-shadow {
 	margin-bottom:0;
 }
 
+.long-path-word-wrap {
+    word-wrap: break-word;
+    max-width: 300px;
+}
+
 .vuln-comment-word-wrap {
 	word-wrap: break-word;
 	max-width:700px;
@@ -1170,4 +1175,46 @@ body.dragover.drag-enabled .uploadable {
 .saved-filters-tab a {
     width: 194px;
     margin-bottom: 5px;
+}
+
+div.mapping-filter-modal.modal {
+    margin-left:-340px;
+    width: 700px;
+    max-width:700px;
+    text-align:left;
+}
+
+div.mapping-filter-modal .modal-body {
+    overflow-y: inherit;
+}
+
+div.remote-provider-config-modal .modal-body {
+    overflow-y: inherit;
+}
+
+div.remote-provider-config-modal a {
+    text-decoration: none;
+}
+
+#matchSourceNumbers {
+    margin-bottom:0;
+    margin-top:0;
+}
+
+.popover {
+    z-index: 1060 !important;
+}
+
+.dynamic-defect-form label {
+    text-align: left;
+    width:200px;
+}
+
+.defect-form-row {
+    text-align:left;
+    padding-top: 5px;
+}
+
+.defect-form-row label {
+    display: inline-table;
 }

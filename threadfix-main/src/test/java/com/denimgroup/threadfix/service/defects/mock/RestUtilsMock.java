@@ -23,6 +23,8 @@ package com.denimgroup.threadfix.service.defects.mock;
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.service.defects.util.HttpTrafficFileLoader;
 import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
@@ -51,6 +53,11 @@ public class RestUtilsMock implements RestUtils, TestConstants {
         urlToResponseMap.put("/rest/api/2/issue/NCT-38", "jira/issue-status-NCT-38");
         urlToResponseMap.put("/rest/api/2/issue/PDP-60", "jira/issue-status-PDP-60");
         urlToResponseMap.put("/rest/api/2/user?username=threadfix", "jira/user-search");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=TEST", "jira/custom-fields");
+        urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=NCT&permissions=ASSIGNABLE_USER&username", "jira/users");
+        urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=TEST&permissions=ASSIGNABLE_USER&username", "jira/users");
 
         for (String value : urlToResponseMap.values()) {
             assertTrue("Missing file for " + value, HttpTrafficFileLoader.getResponse(value) != null);
@@ -77,7 +84,7 @@ public class RestUtilsMock implements RestUtils, TestConstants {
     public String postUrlAsString(String urlString, String data, String username, String password, String contentType) {
         if ((JIRA_BASE_URL + "/rest/api/2/issue").equals(urlString) && hasReporter(data) && reporterRestricted) {
             postErrorResponse = "{\"errorMessages\":[],\"errors\":{\"reporter\":\"Field 'reporter' cannot be set. It is not on the appropriate screen, or unknown.\"}}";
-            return null;
+            throw new RestIOException(new Exception(), "Throwing mock 401 error.", 401);
         } else {
             return getResponse(urlString, username, password);
         }

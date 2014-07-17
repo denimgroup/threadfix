@@ -23,26 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
+import org.junit.Test;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static org.junit.Assert.assertTrue;
 
 public class JspEndpointDatabaseTests {
 
@@ -50,7 +49,7 @@ public class JspEndpointDatabaseTests {
     private EndpointDatabase getBodgeItDatabase() {
 		File file = new File(TestConstants.BODGEIT_SOURCE_LOCATION);
 		
-		List<PartialMapping> partialMappings = new ArrayList<>();
+		List<PartialMapping> partialMappings = list();
 		
 		for (String page : pages) {
 			partialMappings.add(new DefaultPartialMapping(null, dynamicRoot + page));

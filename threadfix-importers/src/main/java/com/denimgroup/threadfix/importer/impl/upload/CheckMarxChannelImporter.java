@@ -24,24 +24,29 @@
 
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
-import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.annotation.Nonnull;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  *
@@ -102,7 +107,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
         int currentSequence = 1;
         boolean inFinding = false;
 
-        List<DataFlowElement> currentDataFlowElements = new ArrayList<>();
+        List<DataFlowElement> currentDataFlowElements = list();
 
         void addFinding() {
 
@@ -131,7 +136,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             currentSequence = 1;
             currentFileName = null;
             findingLineNumber = null;
-            currentDataFlowElements = new ArrayList<>();
+            currentDataFlowElements = list();
             inFinding = false;
             currentRawFinding.setLength(0);
         }
@@ -220,6 +225,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
         }
     }
 
+    @Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
         return testSAXInput(new CheckMarxScanValidator());

@@ -26,25 +26,31 @@ package com.denimgroup.threadfix.framework.engine.parameter;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
 import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ParameterParserFactory {
-	
-	@Nullable
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(ParameterParserFactory.class);
+
+    @Nullable
     public static ParameterParser getParameterParser(@Nonnull ProjectConfig projectConfig) {
-		ParameterParser parser = null;
-		
-		switch (projectConfig.getFrameworkType()) {
-			case SPRING_MVC:
-				parser = new SpringDataFlowParser(projectConfig);
-				break;
-			case JSP:
-				parser = new JSPDataFlowParser(projectConfig);
-				break;
-			default:
-		}
-		
-		return parser;
-	}
+        ParameterParser parser = null;
+
+        switch (projectConfig.getFrameworkType()) {
+            case SPRING_MVC:
+                parser = new SpringDataFlowParser(projectConfig);
+                break;
+            case JSP:
+                parser = new JSPDataFlowParser(projectConfig);
+                break;
+            default:
+        }
+
+        LOG.info("Returning " + parser);
+
+        return parser;
+    }
 }

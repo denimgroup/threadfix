@@ -19,6 +19,7 @@
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
 	<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
     <%@ include file="/WEB-INF/views/config/users/form.jsp" %>
+    <%@ include file="/WEB-INF/views/config/users/editForm.jsp" %>
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 

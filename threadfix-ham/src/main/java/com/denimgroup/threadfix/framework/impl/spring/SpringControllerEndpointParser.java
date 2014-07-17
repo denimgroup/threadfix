@@ -25,14 +25,15 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 // TODO recognize String variables
 // TODO support * values:
@@ -55,10 +56,10 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     private BeanField currentModelObject = null;
     @Nonnull
     private List<String>
-            classMethods  = new ArrayList<>(),
-            methodMethods = new ArrayList<>(),
-            currentParameters = new ArrayList<>(),
-            currentPathParameters = new ArrayList<>();
+            classMethods  = list(),
+            methodMethods = list(),
+            currentParameters = list(),
+            currentPathParameters = list();
 
     private static final String
             VALUE = "value",
@@ -351,6 +352,8 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             methodMethods.addAll(classMethods);
         }
 
+        assert currentMapping != null : "Current mapping should not be null at this point. Check the state machine.";
+
         SpringControllerEndpoint endpoint = new SpringControllerEndpoint(rootFilePath, currentMapping,
                 methodMethods,
                 currentParameters,
@@ -366,11 +369,11 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
         endpoints.add(endpoint);
 
         currentMapping = null;
-        methodMethods = new ArrayList<>();
+        methodMethods = list();
         startLineNumber = -1;
         curlyBraceCount = 0;
-        currentParameters = new ArrayList<>();
-        currentPathParameters = new ArrayList<>();
+        currentParameters = list();
+        currentPathParameters = list();
         currentModelObject = null;
     }
 
