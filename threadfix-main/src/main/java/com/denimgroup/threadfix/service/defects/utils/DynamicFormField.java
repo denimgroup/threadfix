@@ -33,7 +33,8 @@ public class DynamicFormField {
     String name;
     String label;
 
-    String listId;
+    int maxLength;
+    int minLength;
     boolean required;
     String type;
     boolean active;
@@ -58,12 +59,20 @@ public class DynamicFormField {
         this.label = label;
     }
 
-    public String getListId() {
-        return listId;
+    public int getMaxLength() {
+        return maxLength;
     }
 
-    public void setListId(String listId) {
-        this.listId = listId;
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public int getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(int minLength) {
+        this.minLength = minLength;
     }
 
     public boolean isRequired() {

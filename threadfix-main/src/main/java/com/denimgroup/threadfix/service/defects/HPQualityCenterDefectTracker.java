@@ -188,7 +188,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setActive(hpqcField.isActive());
             genericField.setEditable(hpqcField.isEditable());
             genericField.setLabel(hpqcField.getLabel());
-            genericField.setListId(hpqcField.getListId());
+            genericField.setMaxLength(hpqcField.getSize());
             genericField.setName(hpqcField.getName());
             genericField.setType(hpqcField.getType());
             genericField.setRequired(hpqcField.isRequired());
