@@ -104,10 +104,11 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
     var createSubmitForm = function() {
         $scope.stdFormTemplate = [];
         $scope.config.editableFields.forEach(function(field) {
+            var type = calculateType(field.type);
 
             var fieldForm =  {
                 "model" : field.name,
-                "type" : calculateType(field.type),
+                "type" : type,
                 "label" : field.required ? field.label + " *" : field.label,
                 "required" : field.required,
                 "labelClass" : field.required ? "errors" : null,
@@ -116,6 +117,8 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
             };
             if (!field.supportsMultivalue)
                 fieldForm.empty = "Select";
+            if (type === "text")
+                fieldForm.maxLength = field.maxLength;
             $scope.stdFormTemplate.push(fieldForm)
         });
     };
