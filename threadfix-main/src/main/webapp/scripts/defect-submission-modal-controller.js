@@ -111,10 +111,11 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "label" : field.required ? field.label + " *" : field.label,
                 "required" : field.required,
                 "labelClass" : field.required ? "errors" : null,
-                "empty" : "Select",
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue
             };
+            if (!field.supportsMultivalue)
+                fieldForm.empty = "Select";
             $scope.stdFormTemplate.push(fieldForm)
         });
     };

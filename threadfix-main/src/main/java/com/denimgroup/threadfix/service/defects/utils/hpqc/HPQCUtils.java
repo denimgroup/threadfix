@@ -2,6 +2,7 @@ package com.denimgroup.threadfix.service.defects.utils.hpqc;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
+import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
@@ -9,6 +10,10 @@ import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -447,7 +452,7 @@ public class HPQCUtils {
     @Nonnull
     private static Map<String, List<String>> parseListXml(String responseStr) {
         Map<String, List<String>> map = new HashMap<>();
-        Lists lists = MarshallingUtils.marshal(Lists.class, responseStr);
+        Lists lists = marshalWithExceptionClass(Lists.class, responseStr);
 
         if (lists != null && lists.getLists() != null) {
             for (Lists.ListInfo listInfo : lists.getLists()) {
@@ -468,7 +473,7 @@ public class HPQCUtils {
     @Nonnull
     private static List<Fields.Field> parseFieldXml(String responseStr) {
         List<Fields.Field> result = list();
-        Fields fields = MarshallingUtils.marshal(Fields.class, responseStr);
+        Fields fields = marshalWithExceptionClass(Fields.class, responseStr);
         if (fields != null && fields.getFields() != null) {
 
             for (Fields.Field field : fields.getFields()) {
@@ -482,7 +487,7 @@ public class HPQCUtils {
 
     @Nullable
     private static <T> T parseXml(String responseStr, Class<T> c) {
-        return MarshallingUtils.marshal(c, responseStr);
+        return marshalWithExceptionClass(c, responseStr);
     }
 
     private static String[] getProjectNameSplit(String domainProject) {
@@ -580,5 +585,21 @@ public class HPQCUtils {
         return ret;
     }
 
+    public static <T> T marshalWithExceptionClass(Class<T> c, @Nonnull String xml) {
+        QCRestException res;
+        try {
+            return MarshallingUtils.marshal(c, xml);
+        } catch (DefectTrackerFormatException ex) {
+            try {
+                JAXBContext ctx = JAXBContext.newInstance(QCRestException.class);
+                Unmarshaller marshaller = ctx.createUnmarshaller();
+                res = (QCRestException) marshaller.unmarshal(new StringReader(xml));
+                String errorMsg = res.getId() + ": " + res.getTitle();
+                throw new DefectTrackerFormatException(ex, errorMsg);
+            } catch (JAXBException e) {
+                throw new DefectTrackerFormatException(e, "Unable to parse XML response from server.");
+            }
+        }
+    }
 
 }
