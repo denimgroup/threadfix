@@ -91,9 +91,6 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             field.getValue().add(String.valueOf(values));
 
         return field;
-
-
-
     }
 
     @Override
@@ -145,7 +142,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     @Nonnull
     private List<String> parseXml(String xmlResult) {
-        Domains domains = MarshallingUtils.marshal(Domains.class, xmlResult);
+        Domains domains = HPQCUtils.marshalWithExceptionClass(Domains.class, xmlResult);
         if (domains != null ) {
             List<String> returnList = list();
             for (Domains.Domain domain : domains.getDomains()) {
@@ -201,10 +198,6 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         }
 
         return dynamicFormFields;
-    }
-
-    private List<String> getValues(Map<String, List<String>> map, String key) {
-        return (map == null || map.get(key) == null) ? Arrays.asList("-") : map.get(key);
     }
 
     @Override
