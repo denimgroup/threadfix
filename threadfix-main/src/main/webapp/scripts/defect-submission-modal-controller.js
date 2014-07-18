@@ -56,9 +56,9 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         });
 
 
-    $scope.ok = function (valid) {
+    $scope.ok = function (form) {
 
-        if (valid) {
+        if (form.$valid) {
             timeoutService.timeout();
             $scope.loading = true;
 

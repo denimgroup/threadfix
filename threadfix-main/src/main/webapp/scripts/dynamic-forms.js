@@ -114,7 +114,7 @@ angular.module('dynform', [])
                 //  Fields based on input type=text
                 if (angular.isDefined(supported[field.type].textBased) && supported[field.type].textBased) {
                   if (angular.isDefined(field.minLength)) {newElement.attr('ng-minlength', field.minLength);}
-                  if (angular.isDefined(field.maxLength)) {newElement.attr('ng-maxlength', field.maxLength);}
+                  if (angular.isDefined(field.maxLength) && field.maxLength !== 0) {newElement.attr('ng-maxlength', field.maxLength);}
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', field.validate);}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
                 }

@@ -214,11 +214,11 @@ public class DefectPayload {
 
         public CascadingSelect(Object value) {
             String stringValue = String.valueOf(value);
-            String [] stuff = StringUtils.splitByWholeSeparator(stringValue, CASCADING_SEPARATOR);
-            assert stuff.length == 2 : "Got " + stuff.length + " results instead of 2.";
+            String [] splitSelectValues = StringUtils.splitByWholeSeparator(stringValue, CASCADING_SEPARATOR);
+            assert splitSelectValues.length == 2 : "Got " + splitSelectValues.length + " results instead of 2.";
 
-            this.value = stuff[0];
-            child = new CascadingSelectChild(stuff[1]);
+            this.value = splitSelectValues[0];
+            child = new CascadingSelectChild(splitSelectValues[1]);
         }
 
         public String getValue() {
