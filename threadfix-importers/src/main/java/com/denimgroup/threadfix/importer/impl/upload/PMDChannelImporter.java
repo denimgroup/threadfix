@@ -81,12 +81,18 @@ public class PMDChannelImporter extends AbstractChannelImporter {
 
         public void startElement (String uri, String name,
                                   String qName, Attributes atts) {
+            //add if for file to save file name?
             if ("violation".equals(qName) && "Security Code Guidelines".equals(atts.getValue("ruleset"))) {
                 inSecurityBug = true;
                 currentChannelVulnCode = atts.getValue("rule");
                 currentSeverityCode = atts.getValue("priority");
                 currentParameter = atts.getValue("variable");
                 currentPath = atts.getValue("package");
+
+                getDataFlowElements = true;
+                dataFlowElements = new LinkedList<>();
+                dataFlowElements.add(getDataFlowElement(atts,0));
+                dataFlowPosition = 1;
             }
 
             if (inSecurityBug) {
