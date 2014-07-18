@@ -289,6 +289,18 @@ angular.module('dynform', [])
 
                     divElement.append(labelElement);
                     divElement.append(newElement);
+
+                    if (angular.isDefined(field.errorsMap)) {
+                        Object.keys(field.errorsMap).forEach(function(key) {
+                            // this is dirty but should allow us lots of flexibility in error handling
+                            var objectPath = 'form.$error.' + key + '[0].' + field.model;
+                            var text = '<span class="errors" ng-show="' + objectPath + '.$dirty && ' + objectPath + '.$error.' + key + '">' + field.errorsMap[key] + '</span>';
+                            divElement.append(angular.element(text));
+
+                        });
+                    }
+
+
                     newElement = divElement;
                   }
                 }
