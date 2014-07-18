@@ -81,9 +81,11 @@ public class DotNetControllerParser implements EventBasedTokenizer {
     AttributeState currentAttributeState = AttributeState.START;
     Set<String> currentAttributes = new HashSet<>();
     String lastAttribute;
-    int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0, methodBraceLevel = 0, storedParen = 0;
+    int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0,
+            methodBraceLevel = 0, storedParen = 0, methodLineNumber = 0;
     boolean shouldContinue = true;
-    String  lastString     = null;
+    String  lastString     = null, methodName = null;
+    Set<String> currentParameters = new HashSet<>();
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
@@ -109,8 +111,6 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 currentParen -= 1;
                 break;
         }
-
-        LOG.debug(currentState.toString());
 
         switch (currentState) {
             case START:
@@ -160,14 +160,20 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 } else if (type == '(') {
                     assert lastString != null;
 
+                    methodName = lastString;
+                    methodLineNumber = lineNumber;
                     storedParen = currentParen - 1;
-                    mappings.addAction(lastString, currentAttributes, lineNumber);
-                    currentAttributes = new HashSet<>();
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 
                 break;
             case IN_ACTION_SIGNATURE: // TODO add parameter parsing
+                if (stringValue != null) {
+                    lastString = stringValue;
+                } else if (type == ',' || type == ')') {
+                    currentParameters.add(lastString);
+                }
+
                 if (currentParen == storedParen) {
                     currentState = State.IN_ACTION_BODY;
                     methodBraceLevel = currentCurlyBrace;
@@ -175,6 +181,10 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 break;
             case IN_ACTION_BODY:
                 if (currentCurlyBrace == methodBraceLevel) {
+                    mappings.addAction(methodName, currentAttributes, methodLineNumber, currentParameters);
+                    currentAttributes = new HashSet<>();
+                    currentParameters = new HashSet<>();
+                    methodName = null;
                     currentState = State.BODY;
                 }
                 break;

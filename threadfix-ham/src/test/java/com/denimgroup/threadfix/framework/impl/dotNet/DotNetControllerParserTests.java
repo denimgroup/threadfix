@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,10 +36,15 @@ import java.util.List;
  */
 public class DotNetControllerParserTests {
 
+    @Nonnull
+    private DotNetControllerMappings getControllerMappings(String fileName) {
+        return DotNetControllerParser.parse(ResourceManager.getDotNetFile(fileName));
+    }
+
     @Test
     public void testBasicController() {
-        DotNetControllerMappings mappings =
-                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/ChatController.cs"));
+        DotNetControllerMappings mappings = getControllerMappings("ChatController.cs");
+
 
         assert mappings.getControllerName() != null :
                 "Controller name was null.";
@@ -52,8 +58,7 @@ public class DotNetControllerParserTests {
 
     @Test
     public void testControllerWithPostAttribute() {
-        DotNetControllerMappings mappings =
-                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/AttributesController.cs"));
+        DotNetControllerMappings mappings = getControllerMappings("AttributesController.cs");
 
         assert mappings.getControllerName() != null :
                 "Controller name was null.";
@@ -65,8 +70,7 @@ public class DotNetControllerParserTests {
 
     @Test
     public void testRestController() {
-        DotNetControllerMappings mappings =
-                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/RestController.cs"));
+        DotNetControllerMappings mappings = getControllerMappings("RestController.cs");
 
         assert mappings.getControllerName() != null :
                 "Controller name was null.";
@@ -78,8 +82,7 @@ public class DotNetControllerParserTests {
 
     @Test
     public void testAttributesControllerActionSizeAndMethods() {
-        DotNetControllerMappings mappings =
-                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/AttributesController.cs"));
+        DotNetControllerMappings mappings = getControllerMappings("AttributesController.cs");
 
         List<String> expectedActions = Arrays.asList(
                 "Login",
@@ -145,6 +148,18 @@ public class DotNetControllerParserTests {
 
         assert mappings.getActions().size() == 14 :
                 "The size was " + mappings.getActions().size() + " instead of 14.";
+
+    }
+
+    @Test
+    public void testParameterParsing() {
+        DotNetControllerMappings mappings = getControllerMappings("InstructorController.cs");
+
+        Action targetAction = mappings.getActionForNameAndMethod("Edit", "GET");
+
+        assert targetAction != null : "Edit action was null. Can't continue.";
+
+        assert targetAction.parameters.contains("id") : "Parameters didn't contain id.";
 
     }
 

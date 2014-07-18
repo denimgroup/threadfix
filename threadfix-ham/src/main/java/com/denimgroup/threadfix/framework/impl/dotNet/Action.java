@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import javax.annotation.Nonnull;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -36,18 +37,28 @@ class Action {
     Set<String> attributes;
     @Nonnull
     Integer     lineNumber;
+    @Nonnull
+    Set<String> parameters = new HashSet<>();
 
     String getMethod() {
         return attributes.contains("HttpPost") ?
                 "POST" : "GET";
     }
 
-    static Action action(@Nonnull String name, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber) {
+    static Action action(@Nonnull String name, @Nonnull Set<String> attributes,
+                         @Nonnull Integer lineNumber, @Nonnull Set<String> parameters) {
         Action action = new Action();
         action.name = name;
         action.attributes = attributes;
         action.lineNumber = lineNumber;
+        action.parameters = parameters;
         return action;
     }
+
+    @Override
+    public String toString() {
+        return name + ": " + getMethod() + parameters;
+    }
+
 }
 

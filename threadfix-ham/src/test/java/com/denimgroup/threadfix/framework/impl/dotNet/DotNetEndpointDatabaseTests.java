@@ -65,6 +65,5 @@ public class DotNetEndpointDatabaseTests {
 
             assert false : "See errors above.";
         }
-
     }
 }

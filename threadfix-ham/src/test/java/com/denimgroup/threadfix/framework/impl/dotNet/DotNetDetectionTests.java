@@ -33,7 +33,8 @@ import org.junit.Test;
  */
 public class DotNetDetectionTests {
 
-    static String[] projects = { //"%5bCCS LABS%5d ASP.NET Get Page Version and Platform Version",
+    static String[] projects = {
+            //"%5bCCS LABS%5d ASP.NET Get Page Version and Platform Version",
             //"ASP.NET AJAX web chat application",
             //"ASP.NET CMS Administration Template User Administration",
             "ASP.NET MVC 5 Demo Authentication App with Facebook and Google",

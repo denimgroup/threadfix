@@ -57,8 +57,9 @@ public class DotNetControllerMappings {
         return controllerName != null && !actions.isEmpty();
     }
 
-    public void addAction(@Nonnull String action, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber) {
-        actions.add(action(action, attributes, lineNumber));
+    public void addAction(@Nonnull String action, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber,
+                          @Nonnull Set<String> parameters) {
+        actions.add(action(action, attributes, lineNumber, parameters));
     }
 
     @Nonnull
@@ -68,8 +69,10 @@ public class DotNetControllerMappings {
 
     @Nullable
     public Action getActionForNameAndMethod(String actionName, String method) {
+        String allCapsMethod = method.toUpperCase();
+
         for (Action action : actions) {
-            if (action.name.equals(actionName) && action.getMethod().equals(method)) {
+            if (action.name.equals(actionName) && action.getMethod().equals(allCapsMethod)) {
                 return action;
             }
         }
