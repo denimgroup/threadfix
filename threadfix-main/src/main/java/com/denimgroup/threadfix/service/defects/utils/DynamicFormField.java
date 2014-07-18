@@ -135,7 +135,7 @@ public class DynamicFormField {
     public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map){
         if (map == null)
             return null;
-        List<Map.Entry<K,V>> entries = new LinkedList<Map.Entry<K,V>>(map.entrySet());
+        List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
 
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
 
@@ -147,7 +147,7 @@ public class DynamicFormField {
 
         //LinkedHashMap will keep the keys in the order they are inserted
         //which is currently sorted on natural ordering
-        Map<K,V> sortedMap = new LinkedHashMap<K,V>();
+        Map<K,V> sortedMap = new LinkedHashMap<>();
 
         for(Map.Entry<K,V> entry: entries){
             sortedMap.put(entry.getKey(), entry.getValue());
