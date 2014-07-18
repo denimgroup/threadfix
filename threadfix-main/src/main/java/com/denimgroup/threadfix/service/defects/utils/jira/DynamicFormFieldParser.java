@@ -41,7 +41,15 @@ import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetada
  */
 public class DynamicFormFieldParser {
 
-    private DynamicFormFieldParser() {}
+    private static final String
+            TIMETRACKING_REGEX = "/^([0-9]+[ymwdh] ?)+$/",
+            PLACEHOLDER_TEXT = "Ex. 7w 2d 6h",
+            TIMETRACKING_ERROR = "Invalid format. " + PLACEHOLDER_TEXT;
+
+    private DynamicFormFieldParser() {
+    }
+
+//    private static final String TIME_TRACKING
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DynamicFormFieldParser.class);
 
@@ -86,6 +94,10 @@ public class DynamicFormFieldParser {
                         DynamicFormField field = new DynamicFormField();
 
                         field.setRequired(jsonField.isRequired());
+                        if (jsonField.isRequired()) {
+                            field.setError("required", "This field cannot be empty.");
+                        }
+
                         field.setName(entry.getKey());
                         field.setLabel(jsonField.getName());
                         field.setActive(true);
@@ -117,7 +129,11 @@ public class DynamicFormFieldParser {
                             originalEstimate.setLabel("Original Estimate");
                             originalEstimate.setActive(true);
                             originalEstimate.setEditable(true);
+                            originalEstimate.setValidate(TIMETRACKING_REGEX);
                             originalEstimate.setType("text");
+                            originalEstimate.setPlaceholder(PLACEHOLDER_TEXT);
+                            originalEstimate.setError("pattern", TIMETRACKING_ERROR);
+                            originalEstimate.setError("required", "This field cannot be empty.");
                             fieldList.add(originalEstimate);
 
                             DynamicFormField remainingEstimate = new DynamicFormField();
@@ -126,8 +142,12 @@ public class DynamicFormFieldParser {
                             remainingEstimate.setName("timetracking_remainingestimate");
                             remainingEstimate.setLabel("Remaining Estimate");
                             remainingEstimate.setActive(true);
+                            remainingEstimate.setValidate(TIMETRACKING_REGEX);
+                            remainingEstimate.setPlaceholder(PLACEHOLDER_TEXT);
                             remainingEstimate.setEditable(true);
                             remainingEstimate.setType("text");
+                            remainingEstimate.setError("required", "This field cannot be empty.");
+                            remainingEstimate.setError("pattern", TIMETRACKING_ERROR);
                             fieldList.add(remainingEstimate);
                             continue;
                         } else if (type.equals("string")) {

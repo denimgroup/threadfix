@@ -26,12 +26,16 @@ package com.denimgroup.threadfix.service.defects.utils;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
+
 /**
  * Created by stran on 7/10/14.
  */
 public class DynamicFormField {
     String name;
     String label;
+    String placeholder;
+    String validate;
 
     int maxLength;
     int minLength;
@@ -42,6 +46,39 @@ public class DynamicFormField {
     boolean supportsMultivalue;
 
     Map<String, String> optionsMap;
+    Map<String, String> errorsMap;
+
+    public String getValidate() {
+        return validate;
+    }
+
+    public void setValidate(String validate) {
+        this.validate = validate;
+    }
+
+    public Map<String, String> getErrorsMap() {
+        return errorsMap;
+    }
+
+    public void setErrorsMap(Map<String, String> errorsMap) {
+        this.errorsMap = errorsMap;
+    }
+
+    public void setError(String key, String value) {
+        if (errorsMap == null) {
+            errorsMap = newMap();
+        }
+
+        errorsMap.put(key, value);
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
 
     public String getName() {
         return name;

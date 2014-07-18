@@ -116,6 +116,19 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue
             };
+
+            if (field.placeholder) {
+                fieldForm.placeholder = field.placeholder;
+            }
+
+            if (field.validate) {
+                fieldForm.validate = field.validate;
+            }
+
+            if (field.errorsMap) {
+                fieldForm.errorsMap = field.errorsMap;
+            }
+
             if (type === "text")
                 fieldForm.maxLength = field.maxLength;
             $scope.stdFormTemplate.push(fieldForm)
