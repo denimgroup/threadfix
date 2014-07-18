@@ -111,12 +111,11 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "type" : type,
                 "label" : field.required ? field.label + " *" : field.label,
                 "required" : field.required,
+                "empty" : "Select",
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue
             };
-            if (!field.supportsMultivalue)
-                fieldForm.empty = "Select";
             if (type === "text")
                 fieldForm.maxLength = field.maxLength;
             $scope.stdFormTemplate.push(fieldForm)
