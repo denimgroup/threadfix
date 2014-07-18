@@ -259,10 +259,10 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setLabel(hpqcField.getLabel());
             genericField.setMaxLength(hpqcField.getSize());
             genericField.setName(hpqcField.getName());
-            genericField.setType(hpqcField.getType());
             genericField.setRequired(hpqcField.isRequired());
             genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
             genericField.setOptionsMap(getFieldOptions(hpqcField));
+            genericField.setType(hpqcField.getType());
             dynamicFormFields.add(genericField);
         }
 
@@ -358,28 +358,34 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                     optionMap.put(value, value);
                 }
 
-        } else if (field.getType().equals("Reference")) {
+        } else if (field.getType().equals("Reference") || "subject".equals(field.getName())) {
             Fields.Field.References references = field.getReferences();
+
+            String targetEntity = null;
             if (references != null && references.getRelationReferences() != null && references.getRelationReferences().size() > 0) {
                 Fields.Field.RelationReference reference = references.getRelationReferences().get(0);
-                String targetEntity = reference.getReferencedEntityType();
-                if (targetEntity != null) {
-                    Entities entities = HPQCUtils.getEntities(getHPQCUrl(), username, password, projectName, targetEntity);
-                    if (entities != null) {
-                        List<Entity> entityList = entities.getEntities();
-                        if (entityList != null) {
-                            for (Entity entity : entityList) {
-                                Entity.Fields fields = entity.getFields();
-                                Entity.Fields.Field idField = fields.findField("id");
-                                Entity.Fields.Field nameField = fields.findField("name");
-                                if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
-                                        && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
-                                    optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
-                                }
+                targetEntity = reference.getReferencedEntityType();
+            } else if ("subject".equals(field.getName())) {
+                //This fixing is temporary for Subject field
+                targetEntity = "test-folder";
+                field.setType("LookupList");
+
+            }
+            if (targetEntity != null) {
+                Entities entities = HPQCUtils.getEntities(getHPQCUrl(), username, password, projectName, targetEntity);
+                if (entities != null) {
+                    List<Entity> entityList = entities.getEntities();
+                    if (entityList != null) {
+                        for (Entity entity : entityList) {
+                            Entity.Fields fields = entity.getFields();
+                            Entity.Fields.Field idField = fields.findField("id");
+                            Entity.Fields.Field nameField = fields.findField("name");
+                            if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
+                                    && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
+                                optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
                             }
                         }
                     }
-
                 }
 
             }
