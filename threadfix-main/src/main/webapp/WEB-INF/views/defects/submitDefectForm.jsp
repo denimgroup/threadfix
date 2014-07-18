@@ -83,6 +83,6 @@
                 class="btn btn-primary"
                 ng-mouseenter="form.summary.$dirty = true"
                 ng-hide="loading"
-                ng-click="ok(form.$valid)">Submit Defect</button>
+                ng-click="ok(form)">Submit Defect</button>
     </div>
 </script>
