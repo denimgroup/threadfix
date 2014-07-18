@@ -228,7 +228,7 @@ public abstract class AbstractDefectTracker {
 		return stringBuilder.toString();
 	}
 	
-	private void addNativeIds(Vulnerability vulnerability, StringBuilder builder) {
+	protected void addNativeIds(Vulnerability vulnerability, StringBuilder builder) {
 		List<Finding> findings = vulnerability.getFindings();
 		if (findings != null && !findings.isEmpty()) {
 			for (Finding finding : findings) {

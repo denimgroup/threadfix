@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
@@ -64,6 +65,74 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
         String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
         return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
+    }
+
+    @Override
+    protected String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<html>\n" +
+                " <body>\n");
+
+        String preamble = metadata.getPreamble();
+
+        if (preamble != null && !"".equals(preamble)) {
+            stringBuilder.append("General information\n");
+            stringBuilder.append(preamble);
+            stringBuilder.append('\n');
+        }
+
+        int vulnIndex = 0;
+
+        if (vulnerabilities != null) {
+            for (Vulnerability vulnerability : vulnerabilities) {
+                if (vulnerability.getGenericVulnerability() != null &&
+                        vulnerability.getSurfaceLocation() != null) {
+
+                    stringBuilder
+                            .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                            .append("Vulnerability[")
+                            .append(vulnIndex)
+                            .append("]:\n")
+                            .append("</span></font></div>")
+                            .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                            .append(vulnerability.getGenericVulnerability().getName())
+                            .append('\n')
+                            .append("</span></font></div>")
+                            .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                            .append("CWE-ID: ")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append('\n')
+                            .append("</span></font></div>")
+                            .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                            .append("http://cwe.mitre.org/data/definitions/")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append(".html")
+                            .append('\n')
+                            .append("</span></font></div>");
+
+                    SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
+                    stringBuilder
+                            .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                            .append("Vulnerability attack surface location:\n")
+                            .append("URL: ")
+                            .append(surfaceLocation.getUrl())
+                            .append("\n")
+                            .append("</span></font></div>")
+                            .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                            .append("Parameter: ")
+                            .append(surfaceLocation.getParameter())
+                            .append("</span></font></div>");
+
+                    addNativeIds(vulnerability, stringBuilder);
+
+                    stringBuilder.append("\n\n");
+                    vulnIndex++;
+                }
+            }
+        }
+        stringBuilder.append("</body>\n" +
+                " </html>");
+        return stringBuilder.toString();
     }
 
     private Entity.Fields createFields(String description, Map<String,Object> fieldsMap) {
