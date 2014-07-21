@@ -263,6 +263,10 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
             genericField.setOptionsMap(getFieldOptions(hpqcField));
             genericField.setType(hpqcField.getType());
+
+            genericField.setError("required", "This field cannot be empty.");
+            genericField.setError("maxlength", "Input up to " + hpqcField.getSize() +" characters only.");
+
             dynamicFormFields.add(genericField);
         }
 
