@@ -17,6 +17,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -460,7 +461,7 @@ public class HPQCUtils {
                     List<String> values = list();
                     for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
                         if (item != null) {
-                            values.add(item.getValue());
+                            values.addAll(getItemValues(item));
                         }
                     }
                     map.put(listInfo.getId(), values);
@@ -468,6 +469,20 @@ public class HPQCUtils {
             }
         }
         return map;
+    }
+
+    @Nonnull
+    private static List<String> getItemValues(Lists.ListInfo.Item item) {
+        List<String> values = list();
+        if (item != null) {
+            values.add(item.getValue());
+            if (item.getSubItemList() != null)  {
+                for (Lists.ListInfo.Item subItem: item.getSubItemList()) {
+                    values.addAll(getItemValues(subItem));
+                }
+            }
+        }
+        return values;
     }
 
     @Nonnull
