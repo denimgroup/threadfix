@@ -110,7 +110,6 @@ public class DynamicFormFieldParser {
                             }
                             if (MULTI_CHECKBOX.equals(jsonField.getSchema().getCustom())) {
                                 field.setSupportsMultivalue(true);
-                                field.setRequired(false); // you are forced to select all of the options if this is true
                                 field.setType("checklist");
                             } else if (CASCADING_SELECT.equals(jsonField.getSchema().getCustom())) {
                                 field.setType("select");

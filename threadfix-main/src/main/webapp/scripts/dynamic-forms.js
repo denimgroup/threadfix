@@ -96,8 +96,6 @@ angular.module('dynform', [])
                   newElement.attr('type', supported[field.type].type);
                 }
 
-
-
                 //  Editable fields (those that can feed models)
                 if (angular.isDefined(supported[field.type].editable) && supported[field.type].editable) {
                   newElement.attr('name', field.model);
@@ -144,14 +142,22 @@ angular.module('dynform', [])
                       if (angular.isDefined(option['class'])) {newChild.attr('ng-class', option['class']);}
                       if (angular.isDefined(field.disabled)) {newChild.attr('ng-disabled', field.disabled);}
                       if (angular.isDefined(field.readonly)) {newChild.attr('ng-readonly', field.readonly);}
-                      if (angular.isDefined(field.required)) {newChild.attr('ng-required', field.required);}
+                      if (angular.isDefined(field.required)) {
+                          if (field.required) {
+                            // again this is gross and coupled to defect submission. We can decouple it if there's a reason to later.
+                            newChild.attr('ng-required', "!requiredErrorMap.hasOwnProperty('" + field.model + "') || requiredErrorMap['" + field.model + "']");
+                            newChild.attr('ng-change', "checkAndReset('" + field.model + "','" + childId + "')");
+                          } else {
+                            newChild.attr('ng-required', false);
+                          }
+                      }
                       if (angular.isDefined(field.callback)) {newChild.attr('ng-change', field.callback);}
                       if (angular.isDefined(option.isOn)) {newChild.attr('ng-true-value', option.isOn);}
                       if (angular.isDefined(option.isOff)) {newChild.attr('ng-false-value', option.isOff);}
                       if (angular.isDefined(option.slaveTo)) {newChild.attr('ng-checked', option.slaveTo);}
                       if (angular.isDefined(option.val)) {
                         model[field.model][childId] = angular.copy(option.val);
-                        newChlid.attr('value', field.val);
+                          newChild.attr('value', field.val);
                       }
                       
                       if (angular.isDefined(option.label)) {
