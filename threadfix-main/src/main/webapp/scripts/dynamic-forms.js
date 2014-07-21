@@ -192,7 +192,10 @@ angular.module('dynform', [])
                   }
                 }
                 else if (field.type === 'select') {
-                  if (angular.isDefined(field.multiple) && field.multiple !== false) {newElement.attr('multiple', 'multiple');}
+                  if (angular.isDefined(field.multiple) && field.multiple !== false) {
+                      newElement.attr('multiple', 'multiple');
+                      newElement.attr('ng-change', "emptyMultiChoice('" + field.model + "')");
+                  }
                   if (angular.isDefined(field.empty) && field.empty !== false) {newElement.append(angular.element($document[0].createElement('option')).attr('value', '').html(field.empty));}
                   
                   if (angular.isDefined(field.autoOptions)) {
