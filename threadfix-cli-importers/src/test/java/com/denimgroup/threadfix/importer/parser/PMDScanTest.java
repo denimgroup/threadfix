@@ -12,12 +12,12 @@ import static com.denimgroup.threadfix.importer.TestConstants.*;
 public class PMDScanTest extends TransactionalTest{
     //cwe name, severity, path, parameter
     public final static String[][] pmdResults = new String [][] {
-            {CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
-            {CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
-            {CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
-            {CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
-            {CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
-            {CONFIGURATION, "Medium", "ArrayIsStoredDirectly", "responseData"},
+            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
+            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
+            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
+            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
+            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
+            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
     };
 
     @Test

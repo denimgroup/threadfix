@@ -90,7 +90,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 currentPath = atts.getValue("externalInfoUrl");
 
                 getDataFlowElements = true;
-                //dataFlowElements = new LinkedList<>();
+                dataFlowElements = new LinkedList<>();
                 dataFlowElements.add(getDataFlowElement(atts,0));
                 dataFlowPosition = 1;
             }
