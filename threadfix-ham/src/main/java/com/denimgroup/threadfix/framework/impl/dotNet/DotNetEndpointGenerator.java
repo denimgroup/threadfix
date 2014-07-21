@@ -30,6 +30,8 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetPathCleaner.cleanStringFromCode;
+
 /**
  * Created by mac on 6/11/14.
  */
@@ -85,9 +87,14 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
                         // substitute in controller name for {controller}
                         .replaceAll("\\{\\w*controller\\w*\\}", mappings.getControllerName())
                                 // substitute in action for {action}
-                        .replaceAll("\\{\\w*action\\w*\\}", action.name)
-                        // TODO parse out parameters instead of ignoring them.
-                        .replaceAll("\\{[^\\}]*\\}", ""); // strip all of the other things
+                        .replaceAll("\\{\\w*action\\w*\\}", action.name);
+
+                result = cleanStringFromCode(result);
+
+
+                if (!result.startsWith("/")) {
+                    result = "/" + result;
+                }
 
                 LOG.debug("Got result " + result);
 

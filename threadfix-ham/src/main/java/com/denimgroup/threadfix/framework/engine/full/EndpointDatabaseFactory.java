@@ -113,5 +113,11 @@ public class EndpointDatabaseFactory {
 		    return new GeneratorBasedEndpointDatabase(generator, cleaner, frameworkType);
         }
 	}
+
+	@Nullable
+    public static EndpointDatabase getDatabase(@Nonnull EndpointGenerator generator,
+                                               @Nonnull FrameworkType frameworkType, PathCleaner cleaner) {
+        return new GeneratorBasedEndpointDatabase(generator, cleaner, frameworkType);
+	}
 	
 }
