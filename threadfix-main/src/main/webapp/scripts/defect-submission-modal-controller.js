@@ -101,6 +101,14 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.showRemoveLink = $scope.vulns.length > 1;
     };
 
+    $scope.emptyMultiChoice = function(path) {
+        var field = $scope.fieldsMap[path];
+
+        if (field.length === 1 && field[0] === "") {
+            delete $scope.fieldsMap[path];
+        }
+    };
+
     $scope.checkAndReset = function(pathSegment1, pathSegment2) {
         if (!$scope.fieldsMap[pathSegment1][pathSegment2]) {
             delete $scope.fieldsMap[pathSegment1][pathSegment2];
