@@ -82,12 +82,20 @@ public class PMDChannelImporter extends AbstractChannelImporter {
         public void startElement (String uri, String name,
                                   String qName, Attributes atts) {
             //add if for file to save file name?
+            if ("file".equals(qName)) {
+                currentPath = atts.getValue("name");
+            }
+
             if ("violation".equals(qName) && "Security Code Guidelines".equals(atts.getValue("ruleset"))) {
                 inSecurityBug = true;
                 currentChannelVulnCode = atts.getValue("rule");
                 currentSeverityCode = atts.getValue("priority");
-                currentParameter = atts.getValue("variable");
-                currentPath = atts.getValue("externalInfoUrl");
+
+                if(atts.getValue("variable") != null) {
+                    currentParameter = atts.getValue("variable");
+                } else {
+                    currentParameter = atts.getValue("method");
+                }
 
                 getDataFlowElements = true;
                 dataFlowElements = new LinkedList<>();
@@ -178,6 +186,8 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 testDate = parseTimestamp(atts.getValue("timestamp"));
                 hasDate = testDate != null;
                 correctFormat = true;
+            } else if ("file".equals(qName)) {
+                //currentPath = atts.getValue("file");
             } else if("violation".equals(qName)) {
                 hasFindings = true;
                 setTestStatus();

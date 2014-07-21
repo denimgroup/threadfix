@@ -12,12 +12,11 @@ import static com.denimgroup.threadfix.importer.TestConstants.*;
 public class PMDScanTest extends TransactionalTest{
     //cwe name, severity, path, parameter
     public final static String[][] pmdResults = new String [][] {
-            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
-            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
-            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
-            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
-            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
-            {CONFIGURATION, "Medium", "/pmd-5.1.1/rules/java/sunsecure.html", "responseData"},
+            {CONFIGURATION, "Medium", "C:\\threadfixWorkspace\\threadfix\\threadfix-main\\src\\main\\java\\com\\denimgroup\\threadfix\\service\\defects\\utils\\hpqc\\infrastructure\\Response.java", "responseData"},
+            {CONFIGURATION, "Medium", "C:\\threadfixWorkspace\\threadfix\\threadfix-main\\src\\main\\java\\com\\denimgroup\\threadfix\\service\\defects\\utils\\hpqc\\infrastructure\\Response.java", "responseData"},
+            {CONFIGURATION, "Medium", "C:\\threadfixWorkspace\\threadfix\\threadfix-main\\src\\main\\java\\com\\denimgroup\\threadfix\\service\\defects\\utils\\hpqc\\infrastructure\\Response.java", "responseData"},
+            {CONFIGURATION, "Medium", "C:\\threadfixWorkspace\\threadfix\\threadfix-main\\src\\main\\java\\com\\denimgroup\\threadfix\\webapp\\controller\\ReportCheckResultBean.java", "reportBytes"},
+            {CONFIGURATION, "Medium", "C:\\threadfixWorkspace\\threadfix\\threadfix-main\\src\\main\\java\\com\\denimgroup\\threadfix\\webapp\\controller\\ReportCheckResultBean.java", "reportBytes"},
     };
 
     @Test
