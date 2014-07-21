@@ -59,7 +59,8 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
         editableFieldsList = HPQCUtils.getEditableFields(getHPQCUrl(), username, password, projectName);
 
         Map<String,Object> fieldsMap = metadata.getFieldsMap();
-        metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
+        if (fieldsMap.get("description") != null)
+            metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
 
         String description = makeDescription(vulnerabilities, metadata);
         fieldsMap.put("description", description);
