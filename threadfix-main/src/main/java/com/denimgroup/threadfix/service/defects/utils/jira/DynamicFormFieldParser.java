@@ -42,9 +42,10 @@ import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetada
 public class DynamicFormFieldParser {
 
     private static final String
-            TIMETRACKING_REGEX = "/^([0-9]+[ymwdh] ?)+$/",
+            TIMETRACKING_REGEX = "^([0-9]+[ymwdh] ?)+$",
             PLACEHOLDER_TEXT = "Ex. 7w 2d 6h",
-            TIMETRACKING_ERROR = "Invalid format. " + PLACEHOLDER_TEXT;
+            TIMETRACKING_ERROR = "Invalid format. " + PLACEHOLDER_TEXT,
+            FLOAT_REGEX = "^[0-9]+(?:\\.[0-9]+)?$";
 
     private DynamicFormFieldParser() {
     }
@@ -151,17 +152,22 @@ public class DynamicFormFieldParser {
                             continue;
                         } else if (type.equals("string")) {
 
-                            if ("com.atlassian.jira.plugin.system.customfieldtypes:url".equals(
-                                    jsonField.getSchema().getCustom())) {
+                            if (URL_TYPE.equals(jsonField.getSchema().getCustom())) {
                                 field.setType("url");
-                            } else if ("com.atlassian.jira.plugin.system.customfieldtypes:textarea".equals(
-                                    jsonField.getSchema().getCustom())) {
+                            } else if (TEXTAREA_TYPE.equals(jsonField.getSchema().getCustom())) {
                                 field.setType("textarea");
                             } else {
                                 field.setType("text");
                             }
                         } else if (type.equals("number")) {
-                            field.setType("number");
+                            if (FLOAT_TYPE.equals(jsonField.getSchema().getCustom())) {
+                                field.setValidate(FLOAT_REGEX);
+                                field.setType("text");
+                                field.setError("pattern", "Must be float format (ex. 3.14)");
+                            } else {
+                                field.setType("number");
+                            }
+
                         } else if (type.equals("date") || type.equals("datetime")) {
                             field.setType("date");
                         } else if (type.equals("array") && jsonField.getSchema().getItems().equals("string")) {

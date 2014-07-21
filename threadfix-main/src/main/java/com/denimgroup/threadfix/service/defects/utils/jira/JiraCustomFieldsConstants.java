@@ -36,6 +36,9 @@ public class JiraCustomFieldsConstants {
             RADIO_BUTTONS  = "com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons",
             SELECT = "com.atlassian.jira.plugin.system.customfieldtypes:select",
             CASCADING_SELECT = "com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect",
+            FLOAT_TYPE = "com.atlassian.jira.plugin.system.customfieldtypes:float",
+            TEXTAREA_TYPE = "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+            URL_TYPE = "com.atlassian.jira.plugin.system.customfieldtypes:url",
             CASCADING_SEPARATOR = "7kbJHgtURX2UsaC";
 
 }
