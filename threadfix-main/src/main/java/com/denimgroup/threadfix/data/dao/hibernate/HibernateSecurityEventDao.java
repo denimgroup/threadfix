@@ -23,63 +23,48 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.SecurityEventDao;
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate SecurityEvent DAO implementation. Most basic methods are
  * implemented in the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractNamedObjectDao
  */
 @Repository
-public class HibernateSecurityEventDao implements SecurityEventDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateSecurityEventDao
+        extends AbstractNamedObjectDao<SecurityEvent>
+        implements SecurityEventDao {
 
 	@Autowired
 	public HibernateSecurityEventDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<SecurityEvent> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from SecurityEvent securityEvent order by securityEvent.name").list();
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.asc("name");
+    }
 
-	@Override
-	public SecurityEvent retrieveById(int id) {
-		return (SecurityEvent) sessionFactory.getCurrentSession().get(SecurityEvent.class, id);
-	}
-
-	@Override
-	public SecurityEvent retrieveByName(String name) {
-		return (SecurityEvent) sessionFactory.getCurrentSession()
-				.createQuery("from SecurityEvent securityEvent where securityEvent.name = :name")
-				.setString("name", name).uniqueResult();
-	}
-
-	@Override
+    @Override
 	public SecurityEvent retrieveByNativeIdAndWafId(String nativeId, String wafId) {
 		return (SecurityEvent) sessionFactory.getCurrentSession()
 			.createQuery("from SecurityEvent securityEvent where securityEvent.nativeId = :nativeId " +
 					"and securityEvent.wafRule.waf = :wafId")
 			.setString("nativeId", nativeId).setString("wafId", wafId).uniqueResult();
 	}
-	
-	@Override
-	public void saveOrUpdate(SecurityEvent securityEvent) {
-		sessionFactory.getCurrentSession().saveOrUpdate(securityEvent);
-	}
-	
+
+    @Override
+    protected Class<SecurityEvent> getClassReference() {
+        return SecurityEvent.class;
+    }
+
 
 }

@@ -33,18 +33,7 @@ import com.denimgroup.threadfix.data.entities.WafType;
  * 
  * @author mcollins
  */
-public interface WafRuleDirectiveDao {
-
-	/**
-	 * @return
-	 */
-	List<WafRuleDirective> retrieveAll();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	WafRuleDirective retrieveById(int id);
+public interface WafRuleDirectiveDao extends GenericObjectDao<WafRuleDirective> {
 
 	/**
 	 * @param name

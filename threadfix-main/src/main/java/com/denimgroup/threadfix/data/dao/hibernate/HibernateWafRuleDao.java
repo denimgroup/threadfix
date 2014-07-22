@@ -23,46 +23,39 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.entities.*;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.entities.DeletedWafRule;
-import com.denimgroup.threadfix.data.entities.SecurityEvent;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import java.util.List;
 
 /**
  * Hibernate WafRule DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractObjectDao
  */
 @Repository
-public class HibernateWafRuleDao implements WafRuleDao {
+public class HibernateWafRuleDao
+        extends AbstractObjectDao<WafRule>
+        implements WafRuleDao {
 
-	private SessionFactory sessionFactory;
+    @Autowired
+    public HibernateWafRuleDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Autowired
-	public HibernateWafRuleDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.asc("id");
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<WafRule> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from WafRule wafRule order by wafRule.id").list();
-	}
-	
-	@Override
+    @Override
 	public void delete(WafRule rule) {
 		List<SecurityEvent> events = rule.getSecurityEvents();
 		for (SecurityEvent event : events) {
@@ -72,11 +65,6 @@ public class HibernateWafRuleDao implements WafRuleDao {
 		
 		sessionFactory.getCurrentSession().save(new DeletedWafRule(rule));
 		sessionFactory.getCurrentSession().delete(rule);
-	}
-
-	@Override
-	public WafRule retrieveById(int id) {
-		return (WafRule) sessionFactory.getCurrentSession().get(WafRule.class, id);
 	}
 
 	@Override
@@ -116,11 +104,10 @@ public class HibernateWafRuleDao implements WafRuleDao {
 			.setString("nativeId", nativeId).setString("wafId", wafId).uniqueResult();
 	}
 
-	@Override
-	@Transactional(readOnly = false)
-	public void saveOrUpdate(WafRule wafRule) {
-		sessionFactory.getCurrentSession().saveOrUpdate(wafRule);
-	}
+    @Override
+    protected Class<WafRule> getClassReference() {
+        return WafRule.class;
+    }
 
 
 }

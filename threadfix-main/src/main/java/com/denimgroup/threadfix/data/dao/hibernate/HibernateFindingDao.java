@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
 import com.denimgroup.threadfix.data.entities.DeletedFinding;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -43,20 +44,13 @@ import java.util.List;
  * 
  */
 @Repository
-public class HibernateFindingDao implements FindingDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateFindingDao
+        extends AbstractObjectDao<Finding>
+        implements FindingDao {
 
 	@Autowired
 	public HibernateFindingDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Finding> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from Finding finding order by finding.id").list();
+		super(sessionFactory);
 	}
 
 	@Override
@@ -92,12 +86,6 @@ public class HibernateFindingDao implements FindingDao {
 								+ ":hint order by path")
 				.setString("hint", "%" + hint + "%")
 				.setInteger("scanId", scanId).list();
-	}
-
-	@Override
-	public Finding retrieveById(int id) {
-		return (Finding) sessionFactory.getCurrentSession().get(Finding.class,
-				id);
 	}
 
 	@Override
@@ -158,16 +146,12 @@ public class HibernateFindingDao implements FindingDao {
 				.setMaxResults(10).list();
 	}
 
-	@Override
-	public void saveOrUpdate(Finding finding) {
-		if (finding != null && finding.getId() != null) {
-			sessionFactory.getCurrentSession().merge(finding);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(finding);
-		}
-	}
+    @Override
+    protected Class<Finding> getClassReference() {
+        return Finding.class;
+    }
 
-	@Override
+    @Override
 	public void delete(Finding finding) {
 		sessionFactory.getCurrentSession().save(new DeletedFinding(finding));
 		sessionFactory.getCurrentSession().delete(finding);

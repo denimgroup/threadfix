@@ -24,43 +24,41 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Hibernate WafType DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractObjectDao
  */
 @Repository
-public class HibernateWafRuleDirectiveDao implements WafRuleDirectiveDao {
+public class HibernateWafRuleDirectiveDao
+        extends AbstractObjectDao<WafRuleDirective>
+        implements WafRuleDirectiveDao {
 
-	private SessionFactory sessionFactory;
+    @Autowired
+    public HibernateWafRuleDirectiveDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Autowired
-	public HibernateWafRuleDirectiveDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.asc("wafRuleDirective");
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<WafRuleDirective> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from WafRuleDirective wafRuleDirective order by wafRuleDirective").list();
-	}
-
-	@Override
-	public WafRuleDirective retrieveById(int id) {
-		return (WafRuleDirective) sessionFactory.getCurrentSession().get(WafRuleDirective.class, id);
-	}
+    @Override
+    protected Class<WafRuleDirective> getClassReference() {
+        return WafRuleDirective.class;
+    }
 
 	@Override
 	public WafRuleDirective retrieveByWafTypeIdAndDirective(WafType wafType, String directive) {

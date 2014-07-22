@@ -23,63 +23,38 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.entities.Waf;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate Waf DAO implementation. Most basic methods are implemented in the
  * AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractNamedObjectDao
  */
 @Repository
-public class HibernateWafDao implements WafDao {
+public class HibernateWafDao
+        extends AbstractNamedObjectDao<Waf>
+        implements WafDao {
 
-	private SessionFactory sessionFactory;
+    @Override
+    protected Order getOrder() {
+        return Order.asc("name");
+    }
 
-	@Autowired
-	public HibernateWafDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Autowired
+    public HibernateWafDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Waf> retrieveAll() {
-		return getActiveWafCriteria().addOrder(Order.asc("name")).list();
-	}
-
-	@Override
-	public Waf retrieveById(int id) {
-		return (Waf) getActiveWafCriteria().add(Restrictions.eq("id", id)).uniqueResult();
-	}
-
-	@Override
-	public Waf retrieveByName(String name) {
-		return (Waf) getActiveWafCriteria().add(Restrictions.eq("name", name)).uniqueResult();
-	}
-	
-	private Criteria getActiveWafCriteria() {
-		return sessionFactory.getCurrentSession()
-				   			 .createCriteria(Waf.class)
-				   			 .add(Restrictions.eq("active", true));
-	}
-
-	@Override
-	public void saveOrUpdate(Waf waf) {
-		if (waf.getId() != null) {
-			sessionFactory.getCurrentSession().merge(waf);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(waf);
-		}
-	}
+    @Override
+    protected Class<Waf> getClassReference() {
+        return Waf.class;
+    }
 }

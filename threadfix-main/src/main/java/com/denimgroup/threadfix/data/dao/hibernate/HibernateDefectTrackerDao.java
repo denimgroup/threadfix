@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -43,13 +44,13 @@ import com.denimgroup.threadfix.data.entities.DefectTracker;
  * @see AbstractGenericDao
  */
 @Repository
-public class HibernateDefectTrackerDao implements DefectTrackerDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateDefectTrackerDao
+        extends AbstractNamedObjectDao<DefectTracker>
+        implements DefectTrackerDao {
 
 	@Autowired
 	public HibernateDefectTrackerDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
 	@Override
@@ -61,30 +62,14 @@ public class HibernateDefectTrackerDao implements DefectTrackerDao {
 									.list();
 	}
 
-	@Override
-	public DefectTracker retrieveById(int id) {
-		return (DefectTracker) getActiveDTCriteria().add(Restrictions.eq("id", id))
-													.uniqueResult();
-	}
-
-	@Override
-	public DefectTracker retrieveByName(String name) {
-		return (DefectTracker) getActiveDTCriteria().add(Restrictions.eq("name", name))
-													.uniqueResult();
-	}
-	
 	private Criteria getActiveDTCriteria() {
 		return sessionFactory.getCurrentSession()
 				   			 .createCriteria(DefectTracker.class)
 				   			 .add(Restrictions.eq("active", true));
 	}
 
-	@Override
-	public void saveOrUpdate(DefectTracker defectTracker) {
-		if (defectTracker != null && defectTracker.getId() != null) {
-			sessionFactory.getCurrentSession().merge(defectTracker);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(defectTracker);
-		}
-	}
+    @Override
+    protected Class<DefectTracker> getClassReference() {
+        return DefectTracker.class;
+    }
 }

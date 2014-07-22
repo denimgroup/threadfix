@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.Waf;
 
 /**
@@ -32,27 +30,4 @@ import com.denimgroup.threadfix.data.entities.Waf;
  * 
  * @author mcollins
  */
-public interface WafDao {
-
-	/**
-	 * @return
-	 */
-	List<Waf> retrieveAll();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	Waf retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	Waf retrieveByName(String name);
-
-	/**
-	 * @param waf
-	 */
-	void saveOrUpdate(Waf waf);
-}
+public interface WafDao extends GenericNamedObjectDao<Waf> {}

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,29 +38,20 @@ import com.denimgroup.threadfix.data.entities.Document;
  * @author stran
  */
 @Repository
-public class HibernateDocumentDao implements DocumentDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateDocumentDao
+        extends AbstractObjectDao<Document>
+        implements DocumentDao {
 
 	@Autowired
 	public HibernateDocumentDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	public void saveOrUpdate(Document document) {
-		if (document != null && document.getId() != null) {
-			sessionFactory.getCurrentSession().merge(document);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(document);
-		}
-	}
+    @Override
+    protected Class<Document> getClassReference() {
+        return Document.class;
+    }
 
-	@Override
-	public Document retrieveById(Integer docId) {
-		return (Document) sessionFactory.getCurrentSession().get(Document.class, docId);
-	}
-	
 	/**
 	 * TODO - Clean up the way we're using this because this should currently only be used for
 	 * ScanAgent configuration storage, and that is kind of a misuse of the Document object.

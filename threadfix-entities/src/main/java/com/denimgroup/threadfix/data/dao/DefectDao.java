@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.Defect;
 
 /**
@@ -32,7 +30,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
  * 
  * @author mcollins
  */
-public interface DefectDao {
+public interface DefectDao extends GenericObjectDao<Defect> {
 
 	/**
 	 * 
@@ -47,26 +45,10 @@ public interface DefectDao {
 	void deleteByDefectTrackerId(Integer defectTrackerId);
 
 	/**
-	 * @return
-	 */
-	List<Defect> retrieveAll();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	Defect retrieveById(int id);
-	
-	/**
 	 * @param nativeId
 	 * @return
 	 */
 	Defect retrieveByNativeId(String nativeId);
-	
-	/**
-	 * @param defect
-	 */
-	void saveOrUpdate(Defect defect);
 	
 	/**
 	 * @param defect

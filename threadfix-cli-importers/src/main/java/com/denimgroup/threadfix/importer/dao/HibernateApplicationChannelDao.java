@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.dao;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import org.hibernate.Criteria;
@@ -31,7 +32,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
@@ -39,68 +39,61 @@ import java.util.List;
 /**
  * Hibernate Channel DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
- * 
+ *
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see com.denimgroup.threadfix.data.dao.AbstractObjectDao
  */
 @Repository
-public class HibernateApplicationChannelDao implements ApplicationChannelDao {
+public class HibernateApplicationChannelDao
+        extends AbstractObjectDao<ApplicationChannel>
+        implements ApplicationChannelDao {
 
-	private SessionFactory sessionFactory;
+    @Autowired
+    public HibernateApplicationChannelDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Autowired
-	public HibernateApplicationChannelDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ApplicationChannel> retrieveAll() {
+        return getActiveChannelCriteria()
+                .createAlias("channelType", "ct")
+                .createAlias("application", "app")
+                .createAlias("application.organization", "org")
+                .addOrder(Order.asc("org.name"))
+                .addOrder(Order.asc("app.name"))
+                .addOrder(Order.asc("ct.name")).list();
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ApplicationChannel> retrieveAll() {
-		return getActiveChannelCriteria()
-				.createAlias("channelType", "ct")
-				.createAlias("application", "app")
-				.createAlias("application.organization", "org")
-				.addOrder(Order.asc("org.name"))
-				.addOrder(Order.asc("app.name"))
-				.addOrder(Order.asc("ct.name")).list();
-	}
+    @Override
+    protected Class<ApplicationChannel> getClassReference() {
+        return ApplicationChannel.class;
+    }
 
-	@Override
-	public ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId) {
-		return (ApplicationChannel) getActiveChannelCriteria()
-				.createAlias("channelType", "ct")
-				.createAlias("application", "app")
-				.add(Restrictions.eq("ct.id", channelId))
-				.add(Restrictions.eq("app.id", appId))
-				.uniqueResult();
-	}
+    @Override
+    public ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId) {
+        return (ApplicationChannel) getActiveChannelCriteria()
+                .createAlias("channelType", "ct")
+                .createAlias("application", "app")
+                .add(Restrictions.eq("ct.id", channelId))
+                .add(Restrictions.eq("app.id", appId))
+                .uniqueResult();
+    }
 
-	@Override
-	@Transactional
-	public ApplicationChannel retrieveById(int id) {
-		return (ApplicationChannel) getActiveChannelCriteria()
-				.add(Restrictions.eq("id",id))
-				.uniqueResult();
-	}
-	
-	private Criteria getActiveChannelCriteria() {
-		return sessionFactory.getCurrentSession()
-				   			 .createCriteria(ApplicationChannel.class)
-				   			 .add(Restrictions.eq("active", true));
-	}
 
-	@Override
-	public void saveOrUpdate(ApplicationChannel applicationChannel) {
-		sessionFactory.getCurrentSession().saveOrUpdate(applicationChannel);
-	}
+    private Criteria getActiveChannelCriteria() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(ApplicationChannel.class)
+                .add(Restrictions.eq("active", true));
+    }
 
-	@Override
-	public Calendar getMostRecentQueueScanTime(Integer channelId) {
-		return (Calendar) sessionFactory
-				.getCurrentSession()
-				.createQuery("select scanDate from JobStatus status " +
-							 "where applicationChannel = :channelId and hasStartedProcessing is false " +
-							 "order by scanDate desc")
-				.setInteger("channelId", channelId).setMaxResults(1).uniqueResult();
-	}
+    @Override
+    public Calendar getMostRecentQueueScanTime(Integer channelId) {
+        return (Calendar) sessionFactory
+                .getCurrentSession()
+                .createQuery("select scanDate from JobStatus status " +
+                        "where applicationChannel = :channelId and hasStartedProcessing is false " +
+                        "order by scanDate desc")
+                .setInteger("channelId", channelId).setMaxResults(1).uniqueResult();
+    }
 }

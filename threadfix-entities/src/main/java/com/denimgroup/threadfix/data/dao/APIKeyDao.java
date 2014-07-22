@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.APIKey;
 
 /**
@@ -32,29 +30,13 @@ import com.denimgroup.threadfix.data.entities.APIKey;
  * 
  * @author mcollins
  */
-public interface APIKeyDao {
+public interface APIKeyDao extends GenericObjectDao<APIKey> {
 
-	/**
-	 * @return
-	 */
-	List<APIKey> retrieveAll();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	APIKey retrieveById(int id);
-	
 	/**
 	 * 
 	 * @param key
 	 * @return
 	 */
 	APIKey retrieveByKey(String key);
-	
-	/**
-	 * @param survey
-	 */
-	void saveOrUpdate(APIKey apiKey);
 
 }

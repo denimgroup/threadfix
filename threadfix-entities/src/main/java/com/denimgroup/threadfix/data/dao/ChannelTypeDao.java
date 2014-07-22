@@ -29,15 +29,4 @@ import com.denimgroup.threadfix.data.entities.ChannelType;
  * @author bbeverly
  * 
  */
-public interface ChannelTypeDao extends GenericObjectDao<ChannelType> {
-
-
-	/**
-	 * Retrieves a channel by its name.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	ChannelType retrieveByName(String name);
-
-}
+public interface ChannelTypeDao extends GenericNamedObjectDao<ChannelType> {}

@@ -26,31 +26,10 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
 
-import java.util.List;
-
 /**
  * 
  * @author mcollins
  *
  */
-public interface ApplicationCriticalityDao {
-
-	/**
-	 * @return
-	 */
-	List<ApplicationCriticality> retrieveAll();
-
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	ApplicationCriticality retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	ApplicationCriticality retrieveByName(String name);
-	
+public interface ApplicationCriticalityDao extends GenericNamedObjectDao<ApplicationCriticality> {
 }

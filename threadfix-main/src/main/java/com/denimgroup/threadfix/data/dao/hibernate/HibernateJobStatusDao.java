@@ -23,41 +23,39 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.JobStatusDao;
+import com.denimgroup.threadfix.data.entities.JobStatus;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.JobStatusDao;
-import com.denimgroup.threadfix.data.entities.JobStatus;
+import java.util.List;
 
 /**
  * Hibernate JobStatus DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractObjectDao
  */
 @Repository
-public class HibernateJobStatusDao implements JobStatusDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateJobStatusDao
+        extends AbstractObjectDao<JobStatus>
+        implements JobStatusDao {
 
 	@Autowired
 	public HibernateJobStatusDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<JobStatus> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from JobStatus jobStatus order by jobStatus.modifiedDate desc")
-				.list();
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.desc("modifiedDate");
+    }
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
 	@Override
 	public List<JobStatus> retrieveAllOpen() {
 		return sessionFactory
@@ -68,17 +66,13 @@ public class HibernateJobStatusDao implements JobStatusDao {
 				.list();
 	}
 
-	@Override
-	public JobStatus retrieveById(int id) {
-		return (JobStatus) sessionFactory.getCurrentSession().get(JobStatus.class, id);
-	}
 
-	@Override
-	public void saveOrUpdate(JobStatus jobStatus) {
-		sessionFactory.getCurrentSession().saveOrUpdate(jobStatus);
-	}
-	
-	@Override
+    @Override
+    protected Class<JobStatus> getClassReference() {
+        return JobStatus.class;
+    }
+
+    @Override
 	public void evict(JobStatus status) {
 		 sessionFactory.getCurrentSession().evict(status);
 	}

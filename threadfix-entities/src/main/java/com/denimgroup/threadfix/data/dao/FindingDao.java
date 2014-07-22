@@ -32,12 +32,7 @@ import java.util.List;
  * 
  * @author dwolf
  */
-public interface FindingDao {
-
-	/**
-	 * @return
-	 */
-	List<Finding> retrieveAll();
+public interface FindingDao extends GenericObjectDao<Finding> {
 
 	/**
 	 * Find a list of possible sourceFileLocations
@@ -46,12 +41,6 @@ public interface FindingDao {
 	 * @return
 	 */
 	List<String> retrieveByHint(String hint, Integer appId);
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	Finding retrieveById(int id);
 	
 	/**
 	 * A list of the most recent Dynamic Findings matching the application and User
@@ -71,11 +60,6 @@ public interface FindingDao {
 	 */
 	List<Finding> retrieveLatestStaticByAppAndUser(int appId, int userId);
 
-	/**
-	 * @param finding
-	 */
-	void saveOrUpdate(Finding finding);
-	
 	/**
 	 * @param finding
 	 */

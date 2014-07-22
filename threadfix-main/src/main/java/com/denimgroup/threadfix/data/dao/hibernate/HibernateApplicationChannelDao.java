@@ -23,35 +23,34 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.Calendar;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Hibernate Channel DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractObjectDao
  */
 @Repository
-public class HibernateApplicationChannelDao implements ApplicationChannelDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateApplicationChannelDao
+        extends AbstractObjectDao<ApplicationChannel>
+        implements ApplicationChannelDao {
 
 	@Autowired
 	public HibernateApplicationChannelDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
 	@Override
@@ -66,7 +65,12 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 				.addOrder(Order.asc("ct.name")).list();
 	}
 
-	@Override
+    @Override
+    protected Class<ApplicationChannel> getClassReference() {
+        return ApplicationChannel.class;
+    }
+
+    @Override
 	public ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId) {
 		return (ApplicationChannel) getActiveChannelCriteria()
 				.createAlias("channelType", "ct")
@@ -76,23 +80,11 @@ public class HibernateApplicationChannelDao implements ApplicationChannelDao {
 				.uniqueResult();
 	}
 
-	@Override
-	@Transactional
-	public ApplicationChannel retrieveById(int id) {
-		return (ApplicationChannel) getActiveChannelCriteria()
-				.add(Restrictions.eq("id",id))
-				.uniqueResult();
-	}
 	
 	private Criteria getActiveChannelCriteria() {
 		return sessionFactory.getCurrentSession()
 				   			 .createCriteria(ApplicationChannel.class)
 				   			 .add(Restrictions.eq("active", true));
-	}
-
-	@Override
-	public void saveOrUpdate(ApplicationChannel applicationChannel) {
-		sessionFactory.getCurrentSession().saveOrUpdate(applicationChannel);
 	}
 
 	@Override

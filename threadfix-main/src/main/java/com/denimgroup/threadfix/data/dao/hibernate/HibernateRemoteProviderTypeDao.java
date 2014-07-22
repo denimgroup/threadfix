@@ -24,50 +24,32 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public class HibernateRemoteProviderTypeDao implements RemoteProviderTypeDao {
+public class HibernateRemoteProviderTypeDao
+        extends AbstractNamedObjectDao<RemoteProviderType>
+        implements RemoteProviderTypeDao {
 	
-	private SessionFactory sessionFactory;
-
 	@Autowired
 	public HibernateRemoteProviderTypeDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<RemoteProviderType> retrieveAll() {
-		return sessionFactory.getCurrentSession().createQuery("from RemoteProviderType " +
-				"remoteProviderType order by remoteProviderType.name").list();
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.asc("name");
+    }
 
-	@Override
-	public RemoteProviderType retrieveById(int id) {
-		return (RemoteProviderType) sessionFactory.getCurrentSession().get(RemoteProviderType.class, id);
-	}
-
-	@Override
-	public RemoteProviderType retrieveByName(String name) {
-		return (RemoteProviderType) sessionFactory.getCurrentSession()
-			.createQuery("from RemoteProviderType type where type.name = :name")
-			.setString("name", name).uniqueResult();
-	}
-
-	@Override
-	public void saveOrUpdate(RemoteProviderType remoteProviderType) {
-		if (remoteProviderType.getId() != null) {
-			sessionFactory.getCurrentSession().merge(remoteProviderType);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(remoteProviderType);
-		}
-	}
+    @Override
+    protected Class<RemoteProviderType> getClassReference() {
+        return RemoteProviderType.class;
+    }
 
 }
