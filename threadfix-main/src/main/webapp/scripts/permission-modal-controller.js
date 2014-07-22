@@ -90,13 +90,13 @@ myAppModule.controller('PermissionModalController', function ($scope, $rootScope
             app.role = { id: 0 };
         });
 
-    }
+    };
 
     $scope.focusInput = true;
 
     $scope.switchTo = function(name) {
         $rootScope.$broadcast('modalSwitch', name);
-    }
+    };
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
