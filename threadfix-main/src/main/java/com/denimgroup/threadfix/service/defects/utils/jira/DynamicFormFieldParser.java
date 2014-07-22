@@ -45,7 +45,7 @@ public class DynamicFormFieldParser {
             TIMETRACKING_REGEX = "^([0-9]+[ymwdh] ?)+$",
             PLACEHOLDER_TEXT = "Ex. 7w 2d 6h",
             TIMETRACKING_ERROR = "Invalid format. " + PLACEHOLDER_TEXT,
-            FLOAT_REGEX = "^[0-9]+(?:\\.[0-9]+)?$";
+            FLOAT_REGEX = "^-?[0-9]+(?:\\.[0-9]+)?$";
 
     private DynamicFormFieldParser() {
     }
