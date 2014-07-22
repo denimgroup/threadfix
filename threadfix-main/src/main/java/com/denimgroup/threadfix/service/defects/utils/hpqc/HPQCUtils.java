@@ -17,7 +17,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -367,10 +366,12 @@ public class HPQCUtils {
                 return serverResponse;
             } else {
                 log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
+                throw new DefectTrackerCommunicationException(
+                        "Got " + serverResponse.getStatusCode() + " response from server.");
             }
+        } else {
+            throw new DefectTrackerCommunicationException("Invalid project selected.");
         }
-
-        throw new DefectTrackerCommunicationException("Unable to get response from server.");
     }
 
     @Nonnull
@@ -380,10 +381,17 @@ public class HPQCUtils {
             requestHeaders.put("Content-Type", "application/xml");
             requestHeaders.put("Accept", "application/xml");
 
-            return con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
+            Response serverResponse = con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
+            if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
+                return serverResponse;
+            } else {
+                log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
+                throw new DefectTrackerCommunicationException(
+                        "Got " + serverResponse.getStatusCode() + " response from server.");
+            }
+        } else {
+            throw new DefectTrackerCommunicationException("Invalid project selected.");
         }
-
-        throw new DefectTrackerCommunicationException("Unable to get response from server.");
     }
 
     private static boolean checkProjectName(String serverUrl, String domain_project) {
