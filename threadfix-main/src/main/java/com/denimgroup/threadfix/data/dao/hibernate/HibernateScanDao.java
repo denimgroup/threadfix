@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
 import org.hibernate.Criteria;
@@ -32,10 +33,12 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
@@ -46,7 +49,9 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
  * @author mcollins
  */
 @Repository
-public class HibernateScanDao implements ScanDao {
+public class HibernateScanDao
+        extends AbstractObjectDao<Scan>
+        implements ScanDao {
 	
 	private String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.hidden = false and vulnerability.genericSeverity.intValue = ";
 	private String idStart = "scan.id as id, ";
@@ -54,11 +59,9 @@ public class HibernateScanDao implements ScanDao {
 	private String mapVulnIds = " and vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.scan = scan))";
 	private String fromClause = "from Scan scan where scan.id = :scanId";
 
-	private SessionFactory sessionFactory;
-
 	@Autowired
 	public HibernateScanDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -91,14 +94,12 @@ public class HibernateScanDao implements ScanDao {
 				).setInteger("scanId", scan.getId()).uniqueResult();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Scan> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from Scan scan order by scan.importTime desc").list();
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.desc("importTime");
+    }
 
-	@Override
+    @Override
 	@SuppressWarnings("unchecked")
 	public List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList) {
 		return sessionFactory.getCurrentSession()
@@ -106,19 +107,13 @@ public class HibernateScanDao implements ScanDao {
 			.setParameterList("idList", applicationIdList)
 			.list();
 	}
-	
-	@Override
-	public Scan retrieveById(int id) {
-		return (Scan) sessionFactory.getCurrentSession().get(Scan.class, id);
-	}
 
-	@Override
-	@Transactional
-	public void saveOrUpdate(Scan scan) {
-		sessionFactory.getCurrentSession().saveOrUpdate(scan);
-	}
-	
-	@Override
+    @Override
+    protected Class<Scan> getClassReference() {
+        return Scan.class;
+    }
+
+    @Override
 	public void delete(Scan scan) {
 		sessionFactory.getCurrentSession().save(new DeletedScan(scan));
 		sessionFactory.getCurrentSession().delete(scan);

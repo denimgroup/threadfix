@@ -34,10 +34,11 @@ import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 
 /**
  * Basic DAO class for the Scan entity.
+ * TODO break this down, there's a lot going on in this class
  * 
  * @author mcollins
  */
-public interface ScanDao {
+public interface ScanDao extends GenericObjectDao<Scan> {
 	
 	/**
 	 * This method returns a map of severities -> counts for vulnerabilities for
@@ -58,27 +59,11 @@ public interface ScanDao {
 	Map<String,Object> getFindingSeverityMap(Scan scan);
 
 	/**
-	 * @return
-	 */
-	List<Scan> retrieveAll();
-
-	/**
 	 * 
-	 * @param applicationId
+	 * @param applicationIdList
 	 * @return
 	 */
 	List<Scan> retrieveByApplicationIdList(List<Integer> applicationIdList);
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	Scan retrieveById(int id);
-
-	/**
-	 * @param scan
-	 */
-	void saveOrUpdate(Scan scan);
 
 	/**
 	 * 

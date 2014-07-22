@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ScheduledScanDao;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
 import org.hibernate.SessionFactory;
@@ -39,27 +40,18 @@ import java.util.List;
  * @author stran
  */
 @Repository
-public class HibernateScheduledScanDao implements ScheduledScanDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateScheduledScanDao
+        extends AbstractObjectDao<ScheduledScan>
+        implements ScheduledScanDao {
 
 	@Autowired
 	public HibernateScheduledScanDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-
     @Override
-    public void saveOrUpdate(ScheduledScan scheduledScan) {
-        sessionFactory.getCurrentSession().saveOrUpdate(scheduledScan);
-    }
-
-    @Override
-    public ScheduledScan retrieveById(Integer scheduledScanId) {
-        ScheduledScan retVal = (ScheduledScan)sessionFactory.getCurrentSession()
-                .createCriteria(ScheduledScan.class)
-                .add(Restrictions.eq("id", scheduledScanId)).uniqueResult();
-        return(retVal);
+    protected Class<ScheduledScan> getClassReference() {
+        return ScheduledScan.class;
     }
 
     @Override
@@ -68,11 +60,12 @@ public class HibernateScheduledScanDao implements ScheduledScanDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ScheduledScan> retrieveAll() {
-        return (sessionFactory.getCurrentSession().createCriteria(ScheduledScan.class)
+        return (List<ScheduledScan>) sessionFactory.getCurrentSession().createCriteria(ScheduledScan.class)
                 .add(Restrictions.eq("active", true))
                 .createAlias("application", "application")
                 .add(Restrictions.eq("application.active", true))
-                .list());
+                .list();
     }
 }

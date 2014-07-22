@@ -23,10 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.Calendar;
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+
+import java.util.Calendar;
 
 /**
  * Basic DAO class for the Channel entity.
@@ -34,12 +33,7 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
  * @author mcollins
  */
 
-public interface ApplicationChannelDao {
-
-	/**
-	 * @return
-	 */
-	List<ApplicationChannel> retrieveAll();
+public interface ApplicationChannelDao extends GenericObjectDao<ApplicationChannel> {
 
 	/**
 	 * @param appId
@@ -47,22 +41,11 @@ public interface ApplicationChannelDao {
 	 * @return
 	 */
 	ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId);
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	ApplicationChannel retrieveById(int id);
-
-	/**
-	 * @param applicationChannel
-	 */
-	void saveOrUpdate(ApplicationChannel applicationChannel);
 	
 	/**
-	 * 
-	 * @param id
-	 * @return
+	 *
+	 * @param channelId ID of the ApplicationChannel object
+	 * @return the time the last scan was uploaded to this channel
 	 */
 	Calendar getMostRecentQueueScanTime(Integer channelId);
 

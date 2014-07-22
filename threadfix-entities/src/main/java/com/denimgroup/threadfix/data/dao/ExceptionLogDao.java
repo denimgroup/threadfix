@@ -23,24 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
+
+import java.util.List;
 
 /**
  * 
  * @author mcollins
  */
-public interface ExceptionLogDao {
-	/**
-	 * @param finding
-	 */
-	void saveOrUpdate(ExceptionLog exceptionLog);
-	
-	/**
-	 * Load all the exception logs - used in the admin view error log page.
-	 */
-	List<ExceptionLog> retrieveAll();
+public interface ExceptionLogDao extends GenericObjectDao<ExceptionLog> {
 
     List<ExceptionLog> retrievePage(int page);
 

@@ -23,37 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.JobStatus;
+
+import java.util.List;
 
 /**
  * Basic DAO class for the JobStatus entity.
  * 
  * @author mcollins
  */
-public interface JobStatusDao {
-
-	/**
-	 * @return
-	 */
-	List<JobStatus> retrieveAll();
+public interface JobStatusDao extends GenericObjectDao<JobStatus> {
 
 	/**
 	 * @return
 	 */
 	List<JobStatus> retrieveAllOpen();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	JobStatus retrieveById(int id);
-
-	/**
-	 * @param jobStatus
-	 */
-	void saveOrUpdate(JobStatus jobStatus);
 	
 	/**
 	 * 

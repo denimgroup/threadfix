@@ -23,31 +23,31 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.DefectDao;
+import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.DeletedDefect;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.denimgroup.threadfix.data.dao.DefectDao;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.DeletedDefect;
+import java.util.List;
 
 /**
  * Hibernate Defect DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractObjectDao
  */
 @Repository
-public class HibernateDefectDao implements DefectDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateDefectDao
+        extends AbstractObjectDao<Defect>
+        implements DefectDao {
 
 	@Autowired
 	public HibernateDefectDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
 	// TODO keep track of the vulns that were associated with each Defect
@@ -97,30 +97,18 @@ public class HibernateDefectDao implements DefectDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<Defect> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from Defect defect order by defect.id").list();
-	}
-
-	@Override
-	public Defect retrieveById(int id) {
-		return (Defect) sessionFactory.getCurrentSession().get(Defect.class, id);
-	}
-
-	@Override
 	public Defect retrieveByNativeId(String nativeId) {
 		return (Defect) sessionFactory.getCurrentSession()
 				.createQuery("from Defect defect where defect.nativeId = :nativeId")
 				.setString("nativeId", nativeId).uniqueResult();
 	}
 
-	@Override
-	public void saveOrUpdate(Defect defect) {
-		sessionFactory.getCurrentSession().saveOrUpdate(defect);
-	}
-	
-	@Override
+    @Override
+    protected Class<Defect> getClassReference() {
+        return Defect.class;
+    }
+
+    @Override
 	public void delete(Defect defect) {
 		sessionFactory.getCurrentSession().save(new DeletedDefect(defect));
 		sessionFactory.getCurrentSession().delete(defect);

@@ -26,16 +26,4 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 
-import java.util.List;
-
-public interface RemoteProviderTypeDao {
-
-	public List<RemoteProviderType> retrieveAll();
-	
-	public RemoteProviderType retrieveById(int id);
-	
-	public RemoteProviderType retrieveByName(String name);
-	
-	public void saveOrUpdate(RemoteProviderType remoteProviderType);
-	
-}
+public interface RemoteProviderTypeDao extends GenericNamedObjectDao<RemoteProviderType> {}

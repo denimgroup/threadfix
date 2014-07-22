@@ -23,44 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.User;
+
+import java.util.List;
 
 /**
  * Basic DAO class for the User entity.
  * 
  * @author dshannon
  */
-public interface UserDao {
-
-	/**
-	 * @return
-	 */
-	List<User> retrieveAllActive();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	User retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	User retrieveByName(String name);
+public interface UserDao extends GenericNamedObjectDao<User> {
 	
 	/**
 	 * @param name
 	 * @return
 	 */
 	User retrieveLdapUser(String name);
-
-	/**
-	 * @param user
-	 */
-	void saveOrUpdate(User user);
 
 	/**
 	 * Checks to see whether it's ok to delete the role with the given id based on whether

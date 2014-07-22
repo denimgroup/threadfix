@@ -24,48 +24,39 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.WafTypeDao;
 import com.denimgroup.threadfix.data.entities.WafType;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Hibernate WafType DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
  * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @see AbstractNamedObjectDao
  */
 @Repository
-public class HibernateWafTypeDao implements WafTypeDao {
+public class HibernateWafTypeDao
+        extends AbstractNamedObjectDao<WafType>
+        implements WafTypeDao {
 
-	private SessionFactory sessionFactory;
+    @Autowired
+    public HibernateWafTypeDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Autowired
-	public HibernateWafTypeDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    @Override
+    protected Class<WafType> getClassReference() {
+        return WafType.class;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<WafType> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from WafType wafType order by wafType.name").list();
-	}
-
-	@Override
-	public WafType retrieveById(int id) {
-		return (WafType) sessionFactory.getCurrentSession().get(WafType.class, id);
-	}
-
-	@Override
-	public WafType retrieveByName(String name) {
-		return (WafType) sessionFactory.getCurrentSession()
-				.createQuery("from WafType wafType where wafType.name = :name")
-				.setString("name", name).uniqueResult();
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.asc("name");
+    }
 
 }

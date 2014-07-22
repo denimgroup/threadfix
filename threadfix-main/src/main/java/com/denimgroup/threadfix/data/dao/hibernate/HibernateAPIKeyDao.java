@@ -23,11 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -38,42 +35,27 @@ import com.denimgroup.threadfix.data.entities.APIKey;
 /**
  * 
  * @author mcollins
- * @see AbstractGenericDao
+ * @see AbstractObjectDao
  */
 @Repository
-public class HibernateAPIKeyDao implements APIKeyDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateAPIKeyDao extends AbstractObjectDao<APIKey> implements APIKeyDao {
 
 	@Autowired
 	public HibernateAPIKeyDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<APIKey> retrieveAll() {
-		return getActiveAPIKeyCriteria().addOrder(Order.asc("id")).list();
-	}
-
-	@Override
-	public APIKey retrieveById(int id) {
-		return (APIKey) getActiveAPIKeyCriteria().add(Restrictions.eq("id", id)).uniqueResult();
+		super(sessionFactory);
 	}
 
 	@Override
 	public APIKey retrieveByKey(String key) {
-		return (APIKey) getActiveAPIKeyCriteria().add(Restrictions.eq("apiKey", key)).uniqueResult();
+        return (APIKey) sessionFactory.getCurrentSession()
+                .createCriteria(APIKey.class)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("apiKey", key))
+                .uniqueResult();
 	}
-	
-	private Criteria getActiveAPIKeyCriteria() {
-		return sessionFactory.getCurrentSession()
-							 .createCriteria(APIKey.class)
-							 .add(Restrictions.eq("active",true));
-	}
-	
-	@Override
-	public void saveOrUpdate(APIKey apiKey) {
-		sessionFactory.getCurrentSession().saveOrUpdate(apiKey);
-	}
+
+    @Override
+    protected Class<APIKey> getClassReference() {
+        return APIKey.class;
+    }
 }

@@ -29,7 +29,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface RemoteProviderApplicationDao {
+public interface RemoteProviderApplicationDao extends GenericObjectDao<RemoteProviderApplication> {
 	
 	/**
 	 * 
@@ -44,19 +44,6 @@ public interface RemoteProviderApplicationDao {
 	 */
     @Nonnull
 	List<RemoteProviderApplication> retrieveAllWithTypeId(int id);
-
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	RemoteProviderApplication retrieveById(int id);
-
-	/**
-	 * 
-	 * @param remoteProviderApplication
-	 */
-	void saveOrUpdate(RemoteProviderApplication remoteProviderApplication);
 
 	/**
 	 * 

@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import java.util.List;
 
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -44,34 +45,21 @@ import com.denimgroup.threadfix.data.entities.User;
  * @see AbstractGenericDao
  */
 @Repository
-public class HibernateUserDao implements UserDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateUserDao
+        extends AbstractNamedObjectDao<User>
+        implements UserDao {
 
 	@Autowired
 	public HibernateUserDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<User> retrieveAllActive() {
-		return getActiveUserCriteria().addOrder(Order.asc("name")).list();
-	}
+    @Override
+    protected Order getOrder() {
+        return Order.asc("name");
+    }
 
-	@Override
-	public User retrieveById(int id) {
-		return (User) getActiveUserCriteria().add(Restrictions.eq("id", id)).uniqueResult();
-	}
-
-	@Override
-	public User retrieveByName(String name) {
-		return (User) getActiveUserCriteria()
-				.add(Restrictions.eq("name", name))
-				.uniqueResult();
-	}
-	
-	@Override
+    @Override
 	public User retrieveLdapUser(String name) {
 		return (User) getActiveUserCriteria()
 				.add(Restrictions.eq("name", name))
@@ -79,16 +67,12 @@ public class HibernateUserDao implements UserDao {
 				.uniqueResult();
 	}
 
-	@Override
-	public void saveOrUpdate(User user) {
-		if (user.getId() != null) {
-			sessionFactory.getCurrentSession().merge(user);
-		} else {
-			sessionFactory.getCurrentSession().saveOrUpdate(user);
-		}
-	}
+    @Override
+    protected Class<User> getClassReference() {
+        return User.class;
+    }
 
-	private Criteria getActiveUserCriteria() {
+    private Criteria getActiveUserCriteria() {
 		return sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("active", true));
 	}
 	

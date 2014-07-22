@@ -25,21 +25,13 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
 
-import java.util.List;
-
 /**
  * Basic DAO class for the Scheduled Scan entity.
  * 
  * @author stran
  */
-public interface ScheduledScanDao {
+public interface ScheduledScanDao extends GenericObjectDao<ScheduledScan>{
 
-	void saveOrUpdate(ScheduledScan scheduledScan);
-
-    ScheduledScan retrieveById(Integer scheduledScanId);
-	
 	void delete(ScheduledScan scheduledScan);
-
-    List<ScheduledScan> retrieveAll();
 
 }

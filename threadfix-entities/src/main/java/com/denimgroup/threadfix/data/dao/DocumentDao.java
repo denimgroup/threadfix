@@ -30,16 +30,10 @@ import com.denimgroup.threadfix.data.entities.Document;
  * 
  * @author stran
  */
-public interface DocumentDao {
+public interface DocumentDao extends GenericObjectDao<Document> {
 
-	void saveOrUpdate(Document document);
-
-	Document retrieveById(Integer docId);
-	
 	Document retrieveByAppIdAndFilename(Integer appId, String filename, String extension);
 
 	void delete(Document document);
-	
-
 
 }

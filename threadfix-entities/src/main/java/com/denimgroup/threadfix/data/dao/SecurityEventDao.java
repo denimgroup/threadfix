@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 
 /**
@@ -32,24 +30,7 @@ import com.denimgroup.threadfix.data.entities.SecurityEvent;
  * 
  * @author dwolf
  */
-public interface SecurityEventDao {
-
-	/**
-	 * @return
-	 */
-	List<SecurityEvent> retrieveAll();
-
-	/**
-	 * @param id
-	 * @return
-	 */
-	SecurityEvent retrieveById(int id);
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	SecurityEvent retrieveByName(String name);
+public interface SecurityEventDao extends GenericNamedObjectDao<SecurityEvent> {
 
 	/**
 	 * 
@@ -59,8 +40,4 @@ public interface SecurityEventDao {
 	 */
 	SecurityEvent retrieveByNativeIdAndWafId(String nativeId, String wafId);
 
-	/**
-	 * @param securityEvent
-	 */
-	void saveOrUpdate(SecurityEvent securityEvent);
 }

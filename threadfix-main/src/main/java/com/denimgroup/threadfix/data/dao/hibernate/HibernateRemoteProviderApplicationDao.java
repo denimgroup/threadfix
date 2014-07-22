@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderApplicationDao;
 import com.denimgroup.threadfix.data.entities.DeletedRemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
@@ -31,20 +32,20 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 @Repository
-public class HibernateRemoteProviderApplicationDao implements RemoteProviderApplicationDao {
+public class HibernateRemoteProviderApplicationDao
+        extends AbstractObjectDao<RemoteProviderApplication>
+        implements RemoteProviderApplicationDao {
 	
-	private SessionFactory sessionFactory;
-
 	@Autowired
 	public HibernateRemoteProviderApplicationDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 	
 	@Override
@@ -61,18 +62,14 @@ public class HibernateRemoteProviderApplicationDao implements RemoteProviderAppl
 				.addOrder(Order.asc("nativeId"))
 				.list();
 	}
-	
-	@Override
-	public RemoteProviderApplication retrieveById(int id) {
-		return (RemoteProviderApplication) getActiveRPACriteria().add(Restrictions.eq("id",id)).uniqueResult();
-	}
 
-	@Override
-	public void saveOrUpdate(RemoteProviderApplication remoteProviderApplication) {
-		sessionFactory.getCurrentSession().saveOrUpdate(remoteProviderApplication);
-	}
-	
-	@SuppressWarnings("unchecked")
+
+    @Override
+    protected Class<RemoteProviderApplication> getClassReference() {
+        return RemoteProviderApplication.class;
+    }
+
+    @SuppressWarnings("unchecked")
 	@Override
 	public List<RemoteProviderApplication> retrieveAllWithMappings() {
 		return (List<RemoteProviderApplication>) getActiveRPACriteria()

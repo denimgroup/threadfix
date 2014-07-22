@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ExceptionLogDao;
 import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,27 +39,24 @@ import java.util.List;
  * @author mcollins
  */
 @Repository
-public class HibernateExceptionLogDao implements ExceptionLogDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateExceptionLogDao
+        extends AbstractObjectDao<ExceptionLog>
+        implements ExceptionLogDao {
 
 	@Autowired
 	public HibernateExceptionLogDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	public void saveOrUpdate(ExceptionLog exceptionLog) {
-		sessionFactory.getCurrentSession().saveOrUpdate(exceptionLog);
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ExceptionLog> retrieveAll() {
-		return sessionFactory.getCurrentSession()
-				.createQuery("from ExceptionLog log order by log.time desc")
-				.list();
-	}
+    @Override
+    protected Class<ExceptionLog> getClassReference() {
+        return ExceptionLog.class;
+    }
+
+    @Override
+    protected Order getOrder() {
+        return Order.asc("time");
+    }
 
     @Override
     @SuppressWarnings("unchecked")
