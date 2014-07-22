@@ -23,35 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.dao;
 
-import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public class HibernateChannelTypeDao extends AbstractObjectDao<ChannelType> implements ChannelTypeDao {
+public class HibernateChannelTypeDao extends AbstractNamedObjectDao<ChannelType> implements ChannelTypeDao {
 
     @Autowired
     public HibernateChannelTypeDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<ChannelType> retrieveAll() {
-        return sessionFactory.getCurrentSession()
-                .createQuery("from ChannelType channelType order by channelType.name").list();
-    }
-
-    @Override
-    public ChannelType retrieveByName(String name) {
-        return (ChannelType) sessionFactory.getCurrentSession()
-                .createQuery("from ChannelType channelType where channelType.name = :name")
-                .setString("name", name).uniqueResult();
+    protected Order getOrder() {
+        return Order.asc("name");
     }
 
     @Override

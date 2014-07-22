@@ -23,8 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -36,48 +35,22 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
  * Hibernate Defect DAO implementation. Most basic methods are implemented in
  * the AbstractGenericDao
  * 
- * @author mcollins, dwolf
- * @see AbstractGenericDao
+ * @author mcollins
+ * @see AbstractNamedObjectDao
  */
 @Repository
-public class HibernateDefectTrackerTypeDao implements DefectTrackerTypeDao {
-
-	private SessionFactory sessionFactory;
+public class HibernateDefectTrackerTypeDao
+        extends AbstractNamedObjectDao<DefectTrackerType>
+        implements DefectTrackerTypeDao {
 
 	@Autowired
 	public HibernateDefectTrackerTypeDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		super(sessionFactory);
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DefectTrackerType> retrieveAll() {
-		return sessionFactory
-				.getCurrentSession()
-				.createQuery(
-						"from DefectTrackerType defectTrackerType order by defectTrackerType.id")
-				.list();
-	}
-
-	@Override
-	public DefectTrackerType retrieveById(int id) {
-		return (DefectTrackerType) sessionFactory.getCurrentSession().get(DefectTrackerType.class,
-				id);
-	}
-
-	@Override
-	public DefectTrackerType retrieveByName(String name) {
-		return (DefectTrackerType) sessionFactory
-				.getCurrentSession()
-				.createQuery(
-						"from DefectTrackerType defectTrackerType "
-								+ "where defectTrackerType.name = :name").setString("name", name)
-				.uniqueResult();
-	}
-
-	@Override
-	public void saveOrUpdate(DefectTrackerType defectTrackerType) {
-		sessionFactory.getCurrentSession().saveOrUpdate(defectTrackerType);
-	}
+    @Override
+    protected Class<DefectTrackerType> getClassReference() {
+        return DefectTrackerType.class;
+    }
 
 }
