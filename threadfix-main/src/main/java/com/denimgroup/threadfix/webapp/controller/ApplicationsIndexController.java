@@ -62,7 +62,6 @@ import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccess
  */
 @Controller
 @SessionAttributes(value = {"organization", "application"})
-@RequestMapping("/organizations")
 public class ApplicationsIndexController {
 	
 	@ModelAttribute
@@ -87,7 +86,7 @@ public class ApplicationsIndexController {
     @Autowired(required = false)
     private LicenseService licenseService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/teams", method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
         model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("application", new Application());
@@ -105,7 +104,7 @@ public class ApplicationsIndexController {
 		return "organizations/index";
 	}
 
-	@RequestMapping(value="/jsonList", method = RequestMethod.GET)
+	@RequestMapping(value="/organizations/jsonList", method = RequestMethod.GET)
 	public @ResponseBody Object jsonList() {
         List<Organization> organizations = organizationService.loadAllActiveFilter();
 
@@ -118,7 +117,7 @@ public class ApplicationsIndexController {
         }
 	}
 	
-	@RequestMapping("/{orgId}/getReport")
+	@RequestMapping("/organizations/{orgId}/getReport")
 	public ModelAndView getReport(@PathVariable("orgId") int orgId,
 			HttpServletRequest request, Model model) {
 		Organization organization = organizationService.loadById(orgId);
@@ -144,7 +143,7 @@ public class ApplicationsIndexController {
      *
      * @return Team with updated stats.
      */
-    @RequestMapping(headers="Accept=application/json", value="/{orgId}/applications/{appId}/upload/remote", method=RequestMethod.POST)
+    @RequestMapping(headers="Accept=application/json", value="/organizations/{orgId}/applications/{appId}/upload/remote", method=RequestMethod.POST)
     public @ResponseBody RestResponse<Organization> uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
                                                        HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 

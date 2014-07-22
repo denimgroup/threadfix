@@ -20,7 +20,7 @@
 					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
 				</td>
 				<td class="pointer" ng-click="goTo('/organizations')"  id="tab-apps" style="width: 120px;">
-					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Applications</a>
+					<a id="orgHeader" href="<spring:url value="/teams" htmlEscape="true"/>">Teams</a>
 				</td>
 				<td class="pointer" ng-click="goTo('/scans')" id="tab-scans" style="width: 90px;">
 					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>

@@ -10,7 +10,7 @@
 <body id="apps">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-	<h2>Applications</h2>
+	<h2>Teams</h2>
 
     <div ng-controller="ApplicationsIndexController">
 
