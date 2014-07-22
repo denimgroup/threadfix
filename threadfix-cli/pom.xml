@@ -135,6 +135,12 @@
             <version>${dependencycheck.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons.codec.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <properties>
         <gson.version>2.2.4</gson.version>
