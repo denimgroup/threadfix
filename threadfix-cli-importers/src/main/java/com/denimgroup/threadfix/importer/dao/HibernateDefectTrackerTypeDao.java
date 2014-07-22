@@ -24,28 +24,33 @@
 package com.denimgroup.threadfix.importer.dao;
 
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
-import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
-import com.denimgroup.threadfix.data.entities.ChannelType;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
+import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+
+/**
+ * Hibernate Defect DAO implementation. Most basic methods are implemented in
+ * the AbstractGenericDao
+ *
+ * @author mcollins
+ * @see AbstractNamedObjectDao
+ */
 @Repository
-public class HibernateChannelTypeDao extends AbstractNamedObjectDao<ChannelType> implements ChannelTypeDao {
+public class HibernateDefectTrackerTypeDao
+        extends AbstractNamedObjectDao<DefectTrackerType>
+        implements DefectTrackerTypeDao {
 
     @Autowired
-    public HibernateChannelTypeDao(SessionFactory sessionFactory) {
+    public HibernateDefectTrackerTypeDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
     @Override
-    protected Order getOrder() {
-        return Order.asc("name");
+    protected Class<DefectTrackerType> getClassReference() {
+        return DefectTrackerType.class;
     }
 
-    @Override
-    public Class<ChannelType> getClassReference() {
-        return ChannelType.class;
-    }
 }
