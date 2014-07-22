@@ -26,7 +26,7 @@
 <c:choose>
 <c:when test="${ organization['new'] }">
 	<input id="submitButton" type="submit" value="Add Team" />
-	<spring:url value="/organizations" var="orgUrl" />
+	<spring:url value="/teams" var="orgUrl" />
 	<span style="padding-left: 10px"><a href="${ fn:escapeXml(orgUrl) }">Home</a></span>
 </c:when>
 <c:otherwise>
