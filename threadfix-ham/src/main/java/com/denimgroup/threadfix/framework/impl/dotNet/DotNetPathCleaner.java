@@ -23,64 +23,51 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
-import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
- * Created by mac on 6/11/14.
+ * Created by mac on 7/21/14.
  */
-class DotNetEndpoint extends AbstractEndpoint {
+public class DotNetPathCleaner implements PathCleaner {
 
-    @Nonnull final String path;
-    @Nonnull final String filePath;
-    @Nonnull final Action action;
-
-    public DotNetEndpoint(@Nonnull String path, @Nonnull String filePath, @Nonnull Action action) {
-        this.path = path;
-        this.filePath = filePath;
-        this.action = action;
+    public static String cleanStringFromCode(String input) {
+        return input.replaceAll("\\{[^\\}]*\\}", "{variable}");
     }
 
-    @Nonnull
-    @Override
-    public Set<String> getParameters() {
-        return action.parameters;
+    public static String cleanStringFromScan(String input) {
+        return input.replaceAll("\\/[0-9]+$","/{variable}").replaceAll("\\/[0-9]+\\/", "/{variable}/");
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public Set<String> getHttpMethods() {
-        return new HashSet<>(Arrays.asList(action.getMethod()));
-    }
-
-    @Nonnull
-    @Override
-    public String getUrlPath() {
-        return path;
-    }
-
-    @Nonnull
-    @Override
-    public String getFilePath() {
+    public String cleanStaticPath(@Nonnull String filePath) {
         return filePath;
     }
 
+    @Nullable
     @Override
-    public int getStartingLineNumber() {
-        return action.lineNumber;
+    public String cleanDynamicPath(@Nonnull String urlPath) {
+        return cleanStringFromScan(urlPath);
     }
 
+    @Nullable
     @Override
-    public int getLineNumberForParameter(String parameter) {
-        return -1;
+    public String getDynamicPathFromStaticPath(@Nonnull String filePath) {
+        return filePath;
     }
 
+    @Nullable
     @Override
-    public boolean matchesLineNumber(int lineNumber) {
-        return lineNumber == action.lineNumber;
+    public String getDynamicRoot() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String getStaticRoot() {
+        return null;
     }
 }

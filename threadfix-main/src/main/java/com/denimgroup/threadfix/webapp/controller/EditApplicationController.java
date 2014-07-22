@@ -42,7 +42,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -104,8 +103,7 @@ public class EditApplicationController {
 	public @ResponseBody String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
-			BindingResult result, SessionStatus status, Model model,
-			HttpServletRequest request) throws IOException {
+			BindingResult result, Model model) throws IOException {
 
         ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
 
@@ -166,7 +164,7 @@ public class EditApplicationController {
 	public @ResponseBody RestResponse<Waf> processSubmitAjaxWaf(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
-			BindingResult result, SessionStatus status, Model model) {
+			BindingResult result, Model model) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return RestResponse.failure("You don't have permission to set the WAF for this application.");

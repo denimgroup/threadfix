@@ -25,16 +25,28 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.*;
 
 /**
  * Created by mac on 6/11/14.
  */
-public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywords {
+public class DotNetControllerParser implements EventBasedTokenizer {
 
     final DotNetControllerMappings mappings;
+
+    public static final SanitizedLogger LOG = new SanitizedLogger(DotNetControllerParser.class);
+
+    public static final Set<String> DOT_NET_BUILTIN_CONTROLLERS = new HashSet<>(Arrays.asList(
+        "ApiController", "Controller", "HubController", "HubControllerBase", "AsyncController", "BaseController"
+    ));
 
     @Nonnull
     public static DotNetControllerMappings parse(@Nonnull File file) {
@@ -44,11 +56,12 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     DotNetControllerParser(File file) {
+        LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
         mappings = new DotNetControllerMappings(file.getAbsolutePath());
     }
 
     public boolean hasValidControllerMappings() {
-        return !mappings.getActions().isEmpty();
+        return mappings.hasValidMappings();
     }
 
     @Override
@@ -57,23 +70,46 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
     }
 
     enum State {
-        START, PUBLIC, CLASS, BODY, IN_ACTION_SIGNATURE, IN_ACTION_BODY
+        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, PUBLIC_IN_BODY, ACTION_RESULT, IN_ACTION_SIGNATURE, IN_ACTION_BODY
     }
 
-    State currentState = State.START;
-    int currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0, methodBraceLevel = 0, storedParen = 0;
+    enum AttributeState {
+        START, OPEN_BRACKET, STRING
+    }
+
+    State currentState      = State.START;
+    AttributeState currentAttributeState = AttributeState.START;
+    Set<String> currentAttributes = new HashSet<>();
+    String lastAttribute;
+    int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0,
+            methodBraceLevel = 0, storedParen = 0, methodLineNumber = 0;
     boolean shouldContinue = true;
-    String lastString = null;
-    Integer lastLineNumber = null;
+    String  lastString     = null, methodName = null;
+    Set<String> currentParameters = new HashSet<>();
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
 
+        processMainThread(type, lineNumber, stringValue);
+        processAttributes(type, stringValue);
+
+    }
+
+    private void processMainThread(int type, int lineNumber, String stringValue) {
+
         switch (type) {
-            case '{': currentCurlyBrace += 1; break;
-            case '}': currentCurlyBrace -= 1; break;
-            case '(': currentParen += 1; break;
-            case ')': currentParen -= 1; break;
+            case '{':
+                currentCurlyBrace += 1;
+                break;
+            case '}':
+                currentCurlyBrace -= 1;
+                break;
+            case '(':
+                currentParen += 1;
+                break;
+            case ')':
+                currentParen -= 1;
+                break;
         }
 
         switch (currentState) {
@@ -88,9 +124,18 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                         State.START;
                 break;
             case CLASS:
-                if (stringValue != null && stringValue.endsWith("Controller") && !stringValue.equals("Controller")) {
-                    mappings.setControllerName(stringValue.substring(0, stringValue.indexOf("Controller")));
-                } else if (type == '{') {
+                if (stringValue != null && stringValue.endsWith("Controller") &&
+                        // Make sure we're not parsing internal ASP.NET MVC controller classes
+                        !DOT_NET_BUILTIN_CONTROLLERS.contains(stringValue)) {
+                    String controllerName = stringValue.substring(0, stringValue.indexOf("Controller"));
+                    LOG.debug("Got Controller name " + controllerName);
+                    mappings.setControllerName(controllerName);
+                }
+
+                currentState = State.TYPE_SIGNATURE;
+                break;
+            case TYPE_SIGNATURE:
+                if (type == '{') {
                     currentState = State.BODY;
                     classBraceLevel = currentCurlyBrace - 1;
                 }
@@ -98,18 +143,37 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
             case BODY:
                 if (classBraceLevel == currentCurlyBrace) {
                     shouldContinue = false;
-                } else if (stringValue != null) {
+                } else if (PUBLIC.equals(stringValue)) {
+                    currentState = State.PUBLIC_IN_BODY;
+                }
+                break;
+            case PUBLIC_IN_BODY:
+                if (ACTION_RESULT.equals(stringValue) || HTTP_MESSAGE_RESPONSE.equals(stringValue)) {
+                    currentState = State.ACTION_RESULT;
+                } else if (type == '(' || type == ';' || type == '{') {
+                    currentState = State.BODY;
+                }
+                break;
+            case ACTION_RESULT:
+                if (stringValue != null) {
                     lastString = stringValue;
                 } else if (type == '(') {
                     assert lastString != null;
 
+                    methodName = lastString;
+                    methodLineNumber = lineNumber;
                     storedParen = currentParen - 1;
-                    mappings.addAction(lastString, lineNumber);
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 
                 break;
             case IN_ACTION_SIGNATURE: // TODO add parameter parsing
+                if (stringValue != null) {
+                    lastString = stringValue;
+                } else if (type == ',' || type == ')') {
+                    currentParameters.add(lastString);
+                }
+
                 if (currentParen == storedParen) {
                     currentState = State.IN_ACTION_BODY;
                     methodBraceLevel = currentCurlyBrace;
@@ -117,9 +181,39 @@ public class DotNetControllerParser implements EventBasedTokenizer, DotNetKeywor
                 break;
             case IN_ACTION_BODY:
                 if (currentCurlyBrace == methodBraceLevel) {
+                    mappings.addAction(methodName, currentAttributes, methodLineNumber, currentParameters);
+                    currentAttributes = new HashSet<>();
+                    currentParameters = new HashSet<>();
+                    methodName = null;
                     currentState = State.BODY;
                 }
                 break;
+        }
+
+    }
+
+    private void processAttributes(int type, String stringValue) {
+        if (currentState == State.BODY) {
+            switch (currentAttributeState) {
+                case START:
+                    if (type == '[') {
+                        currentAttributeState = AttributeState.OPEN_BRACKET;
+                    }
+                    break;
+                case OPEN_BRACKET:
+                    if (stringValue != null) {
+                        lastAttribute = stringValue;
+                        currentAttributeState = AttributeState.STRING;
+                    }
+                    break;
+                case STRING:
+                    if (type == ']') {
+                        LOG.debug("Adding " + lastAttribute);
+                        currentAttributes.add(lastAttribute);
+                    }
+                    currentAttributeState = AttributeState.START;
+                    break;
+            }
         }
     }
 }

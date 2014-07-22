@@ -23,64 +23,42 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
-import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
-
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by mac on 6/11/14.
+ * Created by mac on 6/26/14.
  */
-class DotNetEndpoint extends AbstractEndpoint {
-
-    @Nonnull final String path;
-    @Nonnull final String filePath;
-    @Nonnull final Action action;
-
-    public DotNetEndpoint(@Nonnull String path, @Nonnull String filePath, @Nonnull Action action) {
-        this.path = path;
-        this.filePath = filePath;
-        this.action = action;
-    }
-
+class Action {
     @Nonnull
-    @Override
-    public Set<String> getParameters() {
-        return action.parameters;
-    }
-
+    String      name;
     @Nonnull
-    @Override
-    public Set<String> getHttpMethods() {
-        return new HashSet<>(Arrays.asList(action.getMethod()));
-    }
-
+    Set<String> attributes;
     @Nonnull
-    @Override
-    public String getUrlPath() {
-        return path;
-    }
-
+    Integer     lineNumber;
     @Nonnull
-    @Override
-    public String getFilePath() {
-        return filePath;
+    Set<String> parameters = new HashSet<>();
+
+    String getMethod() {
+        return attributes.contains("HttpPost") ?
+                "POST" : "GET";
+    }
+
+    static Action action(@Nonnull String name, @Nonnull Set<String> attributes,
+                         @Nonnull Integer lineNumber, @Nonnull Set<String> parameters) {
+        Action action = new Action();
+        action.name = name;
+        action.attributes = attributes;
+        action.lineNumber = lineNumber;
+        action.parameters = parameters;
+        return action;
     }
 
     @Override
-    public int getStartingLineNumber() {
-        return action.lineNumber;
+    public String toString() {
+        return name + ": " + getMethod() + parameters;
     }
 
-    @Override
-    public int getLineNumberForParameter(String parameter) {
-        return -1;
-    }
-
-    @Override
-    public boolean matchesLineNumber(int lineNumber) {
-        return lineNumber == action.lineNumber;
-    }
 }
+

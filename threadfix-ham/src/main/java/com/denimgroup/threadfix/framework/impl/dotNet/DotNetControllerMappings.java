@@ -24,18 +24,18 @@
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nullable;
+import java.util.*;
+
+import static com.denimgroup.threadfix.framework.impl.dotNet.Action.action;
 
 /**
  * Created by mac on 6/11/14.
  */
 public class DotNetControllerMappings {
 
-    private String               controllerName = null;
-    private Map<String, Integer> actions        = new HashMap<>();
+    private String       controllerName = null;
+    private List<Action> actions        = new ArrayList<>();
 
     public String getFilePath() {
         return filePath;
@@ -43,27 +43,41 @@ public class DotNetControllerMappings {
 
     private final String filePath;
 
-
-    public void setControllerName(String controllerName) {
-        assert this.controllerName == null;
+    public void setControllerName(@Nonnull String controllerName) {
+        assert this.controllerName == null : "These mappings already have a controller name.";
         this.controllerName = controllerName;
     }
 
     public String getControllerName() {
+        assert controllerName != null : "You have attempted to access the controller name without setting it.";
         return controllerName;
     }
 
-    public void addAction(String action, Integer lineNumber) {
-        actions.put(action, lineNumber);
+    public boolean hasValidMappings() {
+        return controllerName != null && !actions.isEmpty();
+    }
+
+    public void addAction(@Nonnull String action, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber,
+                          @Nonnull Set<String> parameters) {
+        actions.add(action(action, attributes, lineNumber, parameters));
     }
 
     @Nonnull
-    public List<String> getActions() {
-        return new ArrayList<>(actions.keySet());
+    public List<Action> getActions() {
+        return actions;
     }
 
-    public Integer getLineNumberForAction(String action) {
-        return actions.get(action);
+    @Nullable
+    public Action getActionForNameAndMethod(String actionName, String method) {
+        String allCapsMethod = method.toUpperCase();
+
+        for (Action action : actions) {
+            if (action.name.equals(actionName) && action.getMethod().equals(allCapsMethod)) {
+                return action;
+            }
+        }
+
+        return null;
     }
 
     public DotNetControllerMappings(String filePath) {
