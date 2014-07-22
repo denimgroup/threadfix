@@ -31,11 +31,15 @@ import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,31 +51,24 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 @Transactional(readOnly = false) // used to be true
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
 
+    @Autowired
     private ChannelVulnerabilityDao channelVulnerabilityDao;
+    @Autowired
     private GenericVulnerabilityDao genericVulnerabilityDao;
+    @Autowired
     private ChannelTypeDao channelTypeDao;
+    @Autowired
     private DefaultConfigurationDao defaultConfigurationDao;
+    @Autowired
     private ChannelSeverityDao channelSeverityDao;
+    @Autowired
     private GenericSeverityDao genericSeverityDao;
+    @Autowired
+    private DefectTrackerTypeDao defectTrackerTypeDao;
 
     private static final String
             CSV_SPLIT_CHARACTER = ",",
             DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
-
-    @Autowired
-    public ScannerMappingsUpdaterServiceImpl(ChannelVulnerabilityDao channelVulnerabilityDao,
-                                           ChannelTypeDao channelTypeDao,
-                                           GenericVulnerabilityDao genericVulnerabilityDao,
-                                           DefaultConfigurationDao defaultConfigurationDao,
-                                           ChannelSeverityDao channelSeverityDao,
-                                           GenericSeverityDao genericSeverityDao) {
-        this.genericVulnerabilityDao = genericVulnerabilityDao;
-        this.defaultConfigurationDao = defaultConfigurationDao;
-        this.channelTypeDao = channelTypeDao;
-        this.channelSeverityDao = channelSeverityDao;
-        this.genericSeverityDao = genericSeverityDao;
-        this.channelVulnerabilityDao = channelVulnerabilityDao;
-    }
 
     private final SanitizedLogger log = new SanitizedLogger(ScannerMappingsUpdaterServiceImpl.class);
 
@@ -212,6 +209,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         try {
             updateGenericVulnerabilities();
             updateChannelVulnerabilities();
+            updateDefectTrackers();
             updateUpdatedDate();
 
         } catch (URISyntaxException e) {
@@ -553,5 +551,68 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
         log.warn("There was an error parsing the date, check the format and regex.");
         return null;
+    }
+
+    @Override
+    public List<String> updateDefectTrackers() {
+
+        List<String> defectTrackers = list();
+
+        String filePath = "/mappings/defect-trackers.csv";
+
+        try (InputStream genericStream = ResourceUtils.getResourceAsStream(filePath)) {
+
+            if (genericStream != null) {
+                log.info("Updating file " + filePath);
+                defectTrackers = createDefectTrackers(genericStream);
+            }
+
+        } catch (IOException e) {
+            log.error("Encountered IOException while trying to read the generic Vulnerability file", e);
+        }
+
+
+        return defectTrackers;
+    }
+
+    private List<String> createDefectTrackers(InputStream genericStream) throws IOException {
+
+        List<String> names = list();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(genericStream));
+
+        String line = reader.readLine();
+
+        while (line != null) {
+
+            String[] splitLine = StringUtils.split(line, ',');
+
+            if (splitLine.length == 2) {
+                DefectTrackerType type = defectTrackerTypeDao.retrieveByName(splitLine[0]);
+
+                if (type == null) {
+                    // let's create one
+                    type = new DefectTrackerType();
+
+                    type.setName(splitLine[0]);
+                    type.setFullClassName(splitLine[1]);
+
+                    defectTrackerTypeDao.saveOrUpdate(type);
+                    names.add(splitLine[0]);
+
+                    log.info("Created a Defect Tracker with name " + splitLine[0]);
+
+                } else {
+                    log.info("Already had an entry for " + splitLine[0]);
+                }
+
+            } else {
+                log.error("Line had " + splitLine.length + " sections instead of 2: " + line);
+            }
+
+            line = reader.readLine();
+        }
+
+        return names;
     }
 }
