@@ -56,19 +56,19 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     @Autowired
     private GenericVulnerabilityDao genericVulnerabilityDao;
     @Autowired
-    private ChannelTypeDao channelTypeDao;
+    private ChannelTypeDao          channelTypeDao;
     @Autowired
     private DefaultConfigurationDao defaultConfigurationDao;
     @Autowired
-    private ChannelSeverityDao channelSeverityDao;
+    private ChannelSeverityDao      channelSeverityDao;
     @Autowired
-    private GenericSeverityDao genericSeverityDao;
+    private GenericSeverityDao      genericSeverityDao;
     @Autowired
-    private DefectTrackerTypeDao defectTrackerTypeDao;
+    private DefectTrackerTypeDao    defectTrackerTypeDao;
 
     private static final String
             CSV_SPLIT_CHARACTER = ",",
-            DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
+            DATE_PATTERN        = "MM/dd/yyyy hh:mm:ss";
 
     private final SanitizedLogger log = new SanitizedLogger(ScannerMappingsUpdaterServiceImpl.class);
 

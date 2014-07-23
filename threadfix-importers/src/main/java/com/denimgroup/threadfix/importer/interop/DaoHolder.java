@@ -31,18 +31,18 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
  * This class allows us to use autowired beans.
  */
 public class DaoHolder extends SpringBeanAutowiringSupport {
-	@Autowired
-	public ChannelVulnerabilityDao channelVulnerabilityDao;
-	@Autowired
-	public ChannelSeverityDao channelSeverityDao;
-	@Autowired
-	public ChannelTypeDao channelTypeDao;
-	@Autowired
-	public GenericVulnerabilityDao genericVulnerabilityDao;
-	@Autowired
-	public ApplicationDao applicationDao;
-	@Autowired
-	public ApplicationChannelDao applicationChannelDao;
     @Autowired
-    public GenericSeverityDao genericSeverityDao;
+    public ChannelVulnerabilityDao channelVulnerabilityDao;
+    @Autowired
+    public ChannelSeverityDao      channelSeverityDao;
+    @Autowired
+    public ChannelTypeDao          channelTypeDao;
+    @Autowired
+    public GenericVulnerabilityDao genericVulnerabilityDao;
+    @Autowired
+    public ApplicationDao          applicationDao;
+    @Autowired
+    public ApplicationChannelDao   applicationChannelDao;
+    @Autowired
+    public GenericSeverityDao      genericSeverityDao;
 }

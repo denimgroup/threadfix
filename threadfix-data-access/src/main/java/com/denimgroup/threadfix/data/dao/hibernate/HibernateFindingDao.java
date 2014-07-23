@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.FindingDao;
 import com.denimgroup.threadfix.data.entities.DeletedFinding;
 import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -199,7 +198,7 @@ public class HibernateFindingDao
 		return criteria.createAlias("channelSeverity", "severity")
 				.createAlias("channelVulnerability", "vuln")
 				.createAlias("surfaceLocation", "surface")
-				.setFirstResult((page - 1) * ControllerUtils.NUMBER_ITEM_PER_PAGE).setMaxResults(ControllerUtils.NUMBER_ITEM_PER_PAGE)
+				.setFirstResult((page - 1) * Finding.NUMBER_ITEM_PER_PAGE).setMaxResults(Finding.NUMBER_ITEM_PER_PAGE)
 				.addOrder(Order.desc("severity.numericValue"))
 				.addOrder(Order.asc("vuln.name"))
 				.addOrder(Order.asc("surface.path"));
@@ -253,8 +252,8 @@ public class HibernateFindingDao
         return criteria.createAlias("channelSeverity", "severity")
                 .createAlias("channelVulnerability", "vuln")
                 .createAlias("surfaceLocation", "surface")
-                .setFirstResult((page - 1) * ControllerUtils.NUMBER_ITEM_PER_PAGE)
-                .setMaxResults(ControllerUtils.NUMBER_ITEM_PER_PAGE)
+                .setFirstResult((page - 1) * Finding.NUMBER_ITEM_PER_PAGE)
+                .setMaxResults(Finding.NUMBER_ITEM_PER_PAGE)
                 .addOrder(Order.desc("severity.numericValue"))
                 .addOrder(Order.asc("vuln.name"))
                 .addOrder(Order.asc("surface.path"))
