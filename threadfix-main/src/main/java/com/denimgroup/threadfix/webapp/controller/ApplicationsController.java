@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -219,7 +220,7 @@ public class ApplicationsController {
     }
 
     private void addAttrForScheduledScanTab(Model model) {
-        List<String> scannerTypeList = new ArrayList<>();
+        List<String> scannerTypeList = list();
         List<ChannelType> channelTypeList = channelTypeService.getChannelTypeOptions(null);
         for (ChannelType type: channelTypeList) {
             scannerTypeList.add(type.getName());
@@ -323,27 +324,14 @@ public class ApplicationsController {
 			log.warn("Incorrect Defect Tracker credentials submitted.");
 			return RestResponse.failure("Authentication failed.");
 		}
-		String result = dt.getProductNames();
-		if (result == null || result.equals("Authentication failed")) {
+		List<String> result = dt.getProductNames();
+		if (result.isEmpty() || (result.size() == 1 && result.contains("Authentication failed"))) {
 			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
 
-		return RestResponse.success(productSort(result));
-	}
-	
-	private String[] productSort(String products) {
-		if (products == null) {
-			return null;
-		}
-		String[] splitArray = products.split(",", 0);
-		
-		if (splitArray.length == 0) {
-			return null;
-		}
-		
-		Arrays.sort(splitArray, String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(result);
 
-		return splitArray;
+		return RestResponse.success(result);
 	}
 	
 	@RequestMapping("/{appId}/getDefectsFromDefectTracker")
@@ -363,7 +351,7 @@ public class ApplicationsController {
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		
 		ProjectMetadata data = null;
 		if (dt != null) {

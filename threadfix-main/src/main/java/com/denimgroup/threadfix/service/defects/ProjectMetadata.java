@@ -23,7 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+
 import java.util.List;
+
+import static com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Fields.Field;
 
 public class ProjectMetadata {
 
@@ -32,6 +36,7 @@ public class ProjectMetadata {
 	private List<String> severities;
 	private List<String> statuses;
 	private List<String> priorities;
+    private List<DynamicFormField> editableFields;
 
 	public ProjectMetadata(List<String> components, List<String> versions, 
 			List<String> severities, List<String> statuses, List<String> priorities) {
@@ -41,6 +46,11 @@ public class ProjectMetadata {
 		this.statuses = statuses;
 		this.priorities = priorities;
 	}
+
+    public ProjectMetadata(List<DynamicFormField> editableFields) {
+        this.editableFields = editableFields;
+    }
+
 
 	public List<String> getComponents() {
 		return components;
@@ -82,4 +92,11 @@ public class ProjectMetadata {
 		this.priorities = priorities;
 	}
 
+    public List<DynamicFormField> getEditableFields() {
+        return editableFields;
+    }
+
+    public void setEditableFields(List<DynamicFormField> editableFields) {
+        this.editableFields = editableFields;
+    }
 }

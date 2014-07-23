@@ -36,10 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -93,8 +93,8 @@ public class WhiteHatScanParsingTests {
         assertFalse("Scans were null.", scans == null);
         assertFalse("Scans were empty.", scans.isEmpty());
 
-        List<Finding> extraFindings = new ArrayList<>();
-        List<String[]> missingFindings = new ArrayList<>();
+        List<Finding> extraFindings = list();
+        List<String[]> missingFindings = list();
         List<Finding> lastScanFindings = scans.get(scans.size() - 1).getFindings();
 
         // find unexpected findings
@@ -152,14 +152,14 @@ public class WhiteHatScanParsingTests {
     @Test
     public void testDemoSitePEMatchingNumbers() {
         test("Demo Site PE", true,
-                finding(null, "Cross Site Scripting"),
+                finding("/", "Cross Site Scripting"),
                 finding("/blah", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/dataReceptor2.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_js.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_script_2.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_quotes.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/os_commanding/param_osc.php", "Directory Traversal"),
-                finding(null, "Directory Indexing"),
+                finding("/", "Directory Indexing"),
                 finding("/sitegenerator/vulnerabilities/hiddenfld.jsp", "Insufficient Authentication"),
                 finding("/crossdomain.xml", "Insufficient Authorization"),
                 finding("/vulnerable-java-web-applications/crossdomain.xml", "Insufficient Authorization"),
@@ -172,7 +172,7 @@ public class WhiteHatScanParsingTests {
     @Test
     public void testDemoSitePEThreadFixNumbers() {
         test("Demo Site PE", false,
-                finding(null, "Cross Site Scripting"),
+                finding("/", "Cross Site Scripting"),
                 finding("/blah", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/dataReceptor2.php", "Cross Site Scripting"),
                 finding("/php-ids/w3af/audit/xss/simple_xss_no_js.php", "Cross Site Scripting"),

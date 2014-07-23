@@ -26,15 +26,25 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by mac on 6/11/14.
  */
 public class DotNetControllerParserTests {
 
+    @Nonnull
+    private DotNetControllerMappings getControllerMappings(String fileName) {
+        return DotNetControllerParser.parse(ResourceManager.getDotNetFile(fileName));
+    }
+
     @Test
     public void testBasicController() {
-        DotNetControllerMappings mappings =
-                DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/ChatController.cs"));
+        DotNetControllerMappings mappings = getControllerMappings("ChatController.cs");
+
 
         assert mappings.getControllerName() != null :
                 "Controller name was null.";
@@ -42,8 +52,114 @@ public class DotNetControllerParserTests {
                 "Controller name was " + mappings.getControllerName() + " but should have been Chat.";
         assert mappings.getActions().size() == 1 :
                 "The size was " + mappings.getActions().size() + " instead of 1.";
-        assert mappings.getActions().contains("Index") :
+        assert mappings.getActionForNameAndMethod("Index", "GET") != null :
                 "Mappings didn't contain Index. They had " + mappings.getActions().iterator().next();
+    }
+
+    @Test
+    public void testControllerWithPostAttribute() {
+        DotNetControllerMappings mappings = getControllerMappings("AttributesController.cs");
+
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Account") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Account.";
+        assert mappings.getActionForNameAndMethod("Login", "POST") != null :
+                "Mappings didn't contain Login with POST.";
+    }
+
+    @Test
+    public void testRestController() {
+        DotNetControllerMappings mappings = getControllerMappings("RestController.cs");
+
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Students") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Students.";
+        assert mappings.getActionForNameAndMethod("Get", "GET") != null :
+                "Mappings didn't contain Get with GET.";
+    }
+
+    @Test
+    public void testAttributesControllerActionSizeAndMethods() {
+        DotNetControllerMappings mappings = getControllerMappings("AttributesController.cs");
+
+        List<String> expectedActions = Arrays.asList(
+                "Login",
+                "Login",
+                "LogOff",
+                "Register",
+                "Register",
+                "Disassociate",
+                "Manage",
+                "Manage",
+                "ExternalLogin",
+                "ExternalLoginCallback",
+                "ExternalLoginConfirmation",
+                "ExternalLoginFailure",
+                "ExternalLoginsList",
+                "RemoveExternalLogins"
+        ), expectedMethods = Arrays.asList(
+                "GET",
+                "POST",
+                "POST",
+                "GET",
+                "POST",
+                "POST",
+                "GET",
+                "POST",
+                "POST",
+                "GET",
+                "POST",
+                "GET",
+                "GET",
+                "GET"
+        ), missing = new ArrayList<>(), extra = new ArrayList<>();
+
+        assert expectedActions.size() == expectedMethods.size() :
+                "Expected actions and methods didn't match up.";
+        assert mappings.getControllerName() != null :
+                "Controller name was null.";
+        assert mappings.getControllerName().equals("Account") :
+                "Controller name was " + mappings.getControllerName() + " but should have been Account.";
+
+
+        for (int i = 0; i < expectedActions.size(); i++) {
+            if (mappings.getActionForNameAndMethod(expectedActions.get(i), expectedMethods.get(i)) == null) {
+                missing.add(expectedActions.get(i) + " " + expectedMethods.get(i));
+            }
+        }
+
+        for (Action action : mappings.getActions()) {
+            if (!expectedActions.contains(action.name)) {
+                extra.add(action.name + " " + action.getMethod());
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            System.out.println("Controller is missing methods : " + missing);
+        }
+
+        if (!extra.isEmpty()) {
+            System.out.println("Controller has extra methods : " + extra);
+        }
+
+        assert missing.isEmpty() && extra.isEmpty() : "Wrong number of methods. See above logs.";
+
+        assert mappings.getActions().size() == 14 :
+                "The size was " + mappings.getActions().size() + " instead of 14.";
+
+    }
+
+    @Test
+    public void testParameterParsing() {
+        DotNetControllerMappings mappings = getControllerMappings("InstructorController.cs");
+
+        Action targetAction = mappings.getActionForNameAndMethod("Edit", "GET");
+
+        assert targetAction != null : "Edit action was null. Can't continue.";
+
+        assert targetAction.parameters.contains("id") : "Parameters didn't contain id.";
 
     }
 

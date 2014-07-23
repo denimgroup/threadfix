@@ -39,6 +39,8 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
 
     public static final SanitizedLogger LOG = new SanitizedLogger(DotNetRoutesParser.class);
 
+    public static final boolean logParsing = false;
+
     public boolean hasValidMappings() {
         return !mappings.routes.isEmpty();
     }
@@ -56,8 +58,8 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
     }
 
     private void log(Object string) {
-        if (string != null) {
-            System.out.println(string.toString());
+        if (logParsing && string != null) {
+            LOG.debug(string.toString());
         }
     }
 
@@ -209,7 +211,7 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
 
         if (type == ',') {
             commaCount ++;
-            System.out.println("Comma count is " + commaCount);
+            log("Comma count is " + commaCount);
         }
 
         switch (currentMapRouteState) {

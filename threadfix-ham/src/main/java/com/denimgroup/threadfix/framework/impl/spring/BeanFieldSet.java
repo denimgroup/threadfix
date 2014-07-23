@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 class BeanFieldSet implements Iterable<BeanField> {
 
 	@Nonnull
@@ -71,7 +73,7 @@ class BeanFieldSet implements Iterable<BeanField> {
 	
 	@Nonnull
     public Collection<String> getPossibleParameters() {
-		List<String> strings = new ArrayList<>();
+		List<String> strings = list();
 		for (BeanField field : fieldSet) {
 			strings.add(field.getParameterKey());
 		}

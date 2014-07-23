@@ -282,7 +282,7 @@ public class Application extends AuditableEntity {
     @JsonView({ AllViews.FormInfo.class, AllViews.RestViewApplication2_1.class })
     private Map<String, Object> getWafRest() {
 
-        if (waf== null) {
+        if (waf == null) {
             return null;
         }
 

@@ -32,10 +32,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by mac on 6/16/14.

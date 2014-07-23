@@ -1,20 +1,19 @@
 package com.denimgroup.threadfix.service.defects.utils;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
+import javax.annotation.Nullable;
 
 // Having the interface allows us to mock for testing.
 public interface RestUtils {
 
     public boolean hasXSeraphLoginReason(String urlString, String username, String password);
 
+    @Nullable
     public String getUrlAsString(String urlString, String username, String password);
 
+    @Nullable
     public String postUrlAsString(String urlString, String data, String username, String password, String contentType);
 
+    @Nullable
     public String getPostErrorResponse();
 
     /**

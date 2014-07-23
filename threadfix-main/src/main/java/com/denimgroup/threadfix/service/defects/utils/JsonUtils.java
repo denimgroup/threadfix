@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by mac on 4/4/14.
  */
@@ -16,8 +18,9 @@ public class JsonUtils {
      * Convenience method to wrap the exception catching.
      * TODO validate to save generating an exception on invalid input
      * @param responseContents
-     * @return
+     * @return JSON array object or null
      */
+    @Nullable
     public static JSONArray getJSONArray(String responseContents) {
         try {
             return new JSONArray(responseContents);
@@ -27,12 +30,28 @@ public class JsonUtils {
         }
     }
 
+    @Nullable
+    public static String getStringProperty(String jsonString, String propertyName) {
+        JSONObject object = getJSONObject(jsonString);
+
+        if (object != null) {
+            try {
+                return object.getString(propertyName);
+            } catch (JSONException e) {
+                LOG.warn("JSON Parsing failed.", e);
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Convenience method to wrap the exception catching.
      * TODO validate to save generating an exception on invalid input
      * @param responseContents
-     * @return
+     * @return JSON object or null
      */
+    @Nullable
     public static JSONObject getJSONObject(String responseContents) {
         try {
             return new JSONObject(responseContents);

@@ -34,7 +34,7 @@
                         }">
             <td id="unmappedSeverity{{ index }}">{{ finding.channelSeverity.name }}</td>
             <td>{{ finding.channelVulnerability.name }}</td>
-            <td ng-hide="finding.dependency" id="unmappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
+            <td ng-hide="finding.dependency" class="long-path-word-wrap" id="unmappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
             <td ng-hide="finding.dependency" id="unmappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>
             <td ng-show="finding.dependency" colspan="2" class="pointer">
                 {{ finding.dependency.cve }}

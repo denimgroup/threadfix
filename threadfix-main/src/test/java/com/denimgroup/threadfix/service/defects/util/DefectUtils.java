@@ -29,11 +29,11 @@ import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
-import org.apache.commons.exec.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class DefectUtils {
 
@@ -41,7 +41,7 @@ public class DefectUtils {
 
     public static List<Defect> getDefectList(String... nativeIds) {
 
-        List<Defect> defects = new ArrayList<>();
+        List<Defect> defects = list();
 
         for (String nativeId : nativeIds) {
             Defect defect = new Defect();
@@ -61,20 +61,26 @@ public class DefectUtils {
         vulnerability.setGenericVulnerability(new GenericVulnerability());
         vulnerability.getGenericVulnerability().setName("XSS");
 
-        return Arrays.asList(vulnerability);
+        return list(vulnerability);
     }
 
     public static DefectMetadata getBasicMetadata(ProjectMetadata projectMetadata) {
-        return new DefectMetadata("Dummy Description", "simple preamble",
-                projectMetadata.getComponents().get(0),
-                projectMetadata.getVersions().get(0),
-                projectMetadata.getSeverities().get(0),
-                projectMetadata.getPriorities().get(0),
-                projectMetadata.getStatuses().get(0));
+
+        if (projectMetadata.getEditableFields() != null && !projectMetadata.getEditableFields().isEmpty()) {
+            // TODO create default field map
+            return new DefectMetadata("test", "test", null, null, null, null, null, new HashMap<String, Object>());
+        } else {
+            return new DefectMetadata("Dummy Description", "simple preamble",
+                    projectMetadata.getComponents().get(0),
+                    projectMetadata.getVersions().get(0),
+                    projectMetadata.getSeverities().get(0),
+                    projectMetadata.getPriorities().get(0),
+                    projectMetadata.getStatuses().get(0));
+        }
     }
 
-    public static List<String> getProductsFromString(String projects) {
-        return Arrays.asList(StringUtils.split(projects, ","));
+    public static List<String> getProductsFromString(List<String> projects) {
+        return projects;
     }
 
 }

@@ -23,24 +23,24 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waflog;
 
+import com.denimgroup.threadfix.data.dao.SecurityEventDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.entities.SecurityEvent;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.denimgroup.threadfix.data.dao.SecurityEventDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.entities.SecurityEvent;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author mcollins
@@ -88,7 +88,7 @@ public abstract class WafLogParser {
 		if (bufferedReader == null)
 			return null;
 
-		List<SecurityEvent> events = new ArrayList<>();
+		List<SecurityEvent> events = list();
 
 		String line = null;
 
@@ -108,7 +108,7 @@ public abstract class WafLogParser {
 
 		return events;
 	}
-	
+
 	public static Calendar parseDate(String time) {
 		Date date = null;
 		//

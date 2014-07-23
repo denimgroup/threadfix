@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.webapp.viewmodels;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 public class Node {
 
 	private String data;
@@ -33,7 +35,7 @@ public class Node {
 
 	public Node(String data) {
 		this.data = data;
-		childNode = new ArrayList<>();
+		childNode = list();
 	}
 
 	public String getData() {

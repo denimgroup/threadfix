@@ -23,19 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework;
 
-import java.util.*;
-
 import com.denimgroup.threadfix.framework.engine.partial.DefaultPartialMapping;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static junit.framework.Assert.assertTrue;
 
 public class TestUtils {
 
 	@Nonnull
     public static List<PartialMapping> getMappings(@Nonnull String[][] strings) {
-		List<PartialMapping> mappings = new ArrayList<>();
+		List<PartialMapping> mappings = list();
 		
 		for (String[] stringArray : strings) {
 			mappings.add(new DefaultPartialMapping(stringArray[0], stringArray[1]));

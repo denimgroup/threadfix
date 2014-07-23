@@ -41,10 +41,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/rest/code")
@@ -149,7 +150,7 @@ public class PluginRestController extends RestController {
     }
 	
 	private Application.Info[] getApplicationInfo(List<Application> applications) {
-		List<Application.Info> infoList = new ArrayList<>();
+		List<Application.Info> infoList = list();
 
 		for (Application application: applications) {
 			if (application != null && application.getOrganization() != null && application.getId() != null) {

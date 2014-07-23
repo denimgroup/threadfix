@@ -23,21 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.framework;
 
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 class WebXMLParser {
 
@@ -72,9 +73,9 @@ class WebXMLParser {
 	private static class ServletParser extends DefaultHandler {
 		
 		@Nonnull
-        List<ClassMapping> servlets = new ArrayList<>();
+        List<ClassMapping> servlets = list();
 		@Nonnull
-        List<UrlPatternMapping> mappings = new ArrayList<>();
+        List<UrlPatternMapping> mappings = list();
         @Nonnull
         Map<String, String> contextParams = new HashMap<>();
 		

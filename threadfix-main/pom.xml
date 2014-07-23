@@ -125,6 +125,11 @@
             <version>${tfs-library.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.ldap</groupId>
             <artifactId>spring-ldap-core-tiger</artifactId>
             <version>${spring-ldap.version}</version>
@@ -493,7 +498,7 @@
         <dependency>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>1.2.1</version>
+            <version>${dependencycheck.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

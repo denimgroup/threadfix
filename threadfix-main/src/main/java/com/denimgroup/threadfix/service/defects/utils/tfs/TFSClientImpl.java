@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.defects.utils.tfs;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.exception.DefectTrackerUnavailableException;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
@@ -51,6 +52,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSClient {
 
@@ -181,7 +184,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
             return null;
         }
 
-        List<String> returnPriorities = new ArrayList<>();
+        List<String> returnPriorities = list();
 
         FieldDefinitionCollection collection = client
                 .getFieldDefinitions();
@@ -206,7 +209,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         // Run the query and get the results.
         WorkItemCollection workItems = client.query(wiqlQuery);
 
-        List<String> ids = new ArrayList<>();
+        List<String> ids = list();
 
         for (int i = 0; i < workItems.size(); i++) {
             ids.add(String.valueOf(workItems.getWorkItem(i).getID()));
@@ -227,7 +230,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         try {
             ProjectCollection collection = client.getProjects();
 
-            List<String> strings = new ArrayList<>();
+            List<String> strings = list();
 
             for (Project project : collection) {
                 strings.add(project.getName());
@@ -264,27 +267,38 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
 
     @Override
     public ConnectionStatus configure(String url, String username, String password) {
-        Credentials credentials = new UsernamePasswordCredentials(
-                username, password);
-
-        URI uri = null;
-        try {
-            uri = new URI(url);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
-
-        TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
-        addProxy(projects.getHTTPClient());
 
         try {
-            client = projects.getWorkItemClient();
-            lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
-        } catch (UnauthorizedException | TFSUnauthorizedException e) {
-            LOG.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
-                    "Check credentials and endpoint.");
+            Credentials credentials = new UsernamePasswordCredentials(username, password);
+
+            URI uri = null;
+            try {
+                uri = new URI(url);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            ConnectionAdvisor advisor = new DefaultConnectionAdvisor(Locale.getDefault(), TimeZone.getDefault());
+
+            TFSTeamProjectCollection projects = new TFSTeamProjectCollection(uri, credentials, advisor);
+            addProxy(projects.getHTTPClient());
+
+            try {
+                client = projects.getWorkItemClient();
+                lastStatus = client == null ? ConnectionStatus.INVALID : ConnectionStatus.VALID;
+            } catch (UnauthorizedException | TFSUnauthorizedException e) {
+                LOG.warn("TFSUnauthorizedException encountered, unable to connect to TFS. " +
+                        "Check credentials and endpoint.");
+            }
+        } catch (TECoreException e) {
+            if (e.getMessage().contains("TF30059")) {
+                throw new DefectTrackerUnavailableException(e,
+                        "TFS is unavailable (TF30059 error). More details are available in the error logs.");
+            } else {
+                throw new DefectTrackerUnavailableException(e,
+                        "An exception occurred while attempting to connect to TFS. " +
+                                "Check the error logs for more details.");
+            }
         }
 
         return lastStatus;

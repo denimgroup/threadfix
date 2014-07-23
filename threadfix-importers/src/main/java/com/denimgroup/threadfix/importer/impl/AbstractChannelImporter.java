@@ -53,6 +53,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  *
  * WARNING: Do not reference this class outside of this plugin. It is subject to change
@@ -564,7 +566,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         if (diskZipFile.exists()) {
             if (!diskZipFile.delete()) {
-                System.out.println("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
+                log.error("Unable to proceed; can't write to " + diskZipFile.getAbsolutePath());
             }
         }
 
@@ -634,7 +636,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             throw new IllegalStateException("InputStream was null. Can't parse SAX input. This is probably a coding error.");
         }
 
-        saxFindingList = new ArrayList<>();
+        saxFindingList = list();
 
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 

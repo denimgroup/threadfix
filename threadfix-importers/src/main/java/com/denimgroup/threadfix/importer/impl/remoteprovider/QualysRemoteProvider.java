@@ -36,6 +36,8 @@ import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * TODO use POST data to pre-filter web requests
  * @author mcollins
@@ -158,7 +160,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			return null;
 		}
 		
-		List<Scan> scanList = new ArrayList<>();
+		List<Scan> scanList = list();
 		
 		for (String scanId : scanIds) {
             HttpResponse response = utils.getUrl(
@@ -245,7 +247,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		QualysScansForAppParser parser = new QualysScansForAppParser();
 		parse(stream, parser);
 		
-		List<String> scanIds = new ArrayList<>();
+		List<String> scanIds = list();
 
 		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
@@ -290,7 +292,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	private class QualysAppsParser extends HandlerWithBuilder {
 
         @Nonnull
-		public List<RemoteProviderApplication> list = new ArrayList<>();
+		public List<RemoteProviderApplication> list = list();
 		
 		private boolean getName = false;
 
@@ -322,7 +324,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 	private class QualysScansForAppParser extends HandlerWithBuilder {
 		
-		public List<Map<String,String>> list = new ArrayList<>();
+		public List<Map<String,String>> list = list();
 		
 		private boolean inWebApp = false;
 		private boolean getName = false;

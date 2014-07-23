@@ -25,16 +25,31 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
+import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
+import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;
+import com.denimgroup.threadfix.service.defects.utils.jira.DynamicFormFieldParser;
+import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
+import com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
 
 /**
  * This class has been rewritten to use the JIRA REST interface and may not work on older
@@ -45,87 +60,92 @@ import java.util.*;
  * @author mcollins
  */
 public class JiraDefectTracker extends AbstractDefectTracker {
-	
+
     RestUtils restUtils = RestUtilsImpl.getInstance(JiraDefectTracker.class);
-    
-	// The double slash is the Jira newline wiki syntax.
-	private static final String newLineRegex = "\\\\n", 
-			doubleSlashNewLine = " \\\\\\\\\\\\\\\\ ";
+
+    // The double slash is the Jira newline wiki syntax.
+    private static final String NEW_LINE_REGEX = "\\\\n",
+            DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ",
+            METADATA_EXTENSION = "issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=";
 
     private static final String CONTENT_TYPE = "application/json";
-				
-	// HELPER METHODS
-	
-	// I want to parse this into a java.net.URL object and then work with it, but I'm 
-	// not sure how that would work out with a non-atlassian hosted install.
-	private String getUrlWithRest() {
-		if (getUrl() == null || getUrl().trim().equals("")) {
+
+    // HELPER METHODS
+
+    // I want to parse this into a java.net.URL object and then work with it, but I'm
+    // not sure how that would work out with a non-atlassian hosted install.
+    private String getUrlWithRest() {
+        if (getUrl() == null || getUrl().trim().equals("")) {
             assert false;
-			return null;
-		}
-		
-		try {
-			new URL(getUrl());
-		} catch (MalformedURLException e) {
-			setLastError("The URL format was bad.");
-			return null;
-		}
+            return null;
+        }
 
-		if (getUrl().endsWith("rest/api/2/")) {
-			return getUrl();
-		}
-		
-		String tempUrl = getUrl().trim();
-		if (tempUrl.endsWith("/")) {
-			tempUrl = tempUrl.concat("rest/api/2/");
-		} else {
-			tempUrl = tempUrl.concat("/rest/api/2/");
-		}
+        try {
+            new URL(getUrl());
+        } catch (MalformedURLException e) {
+            setLastError("The URL format was bad.");
+            return null;
+        }
 
-		return tempUrl;
-	}
+        if (getUrl().endsWith("rest/api/2/")) {
+            return getUrl();
+        }
 
-	private List<String> getNamesFromList(String path) {
-		String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
+        String tempUrl = getUrl().trim();
+        if (tempUrl.endsWith("/")) {
+            tempUrl = tempUrl.concat("rest/api/2/");
+        } else {
+            tempUrl = tempUrl.concat("/rest/api/2/");
+        }
 
-		List<String> names = new ArrayList<>();
-		
-		if (result != null) {
-			JSONArray returnArray = JsonUtils.getJSONArray(result);
-		
-			for (int i = 0; i < returnArray.length(); i++) {
-				try {
-					names.add(returnArray.getJSONObject(i).getString("name"));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-			return names;
-		}
+        return tempUrl;
+    }
+
+    private List<String> getNamesFromList(String path) {
+        String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
+
+        List<String> names = list();
+
+        if (result != null) {
+            JSONArray returnArray = JsonUtils.getJSONArray(result);
+
+            if (returnArray != null) {
+                for (int i = 0; i < returnArray.length(); i++) {
+                    try {
+                        names.add(returnArray.getJSONObject(i).getString("name"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return names;
+        }
         assert false : "This method should only be called with a valid connection.";
-		return null;
-	}
-	
-	private Map<String,String> getNameFieldMap(String path, String field) {
-		String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
-		
-		if (result == null) {
+        return null;
+    }
+
+    private Map<String, String> getNameFieldMap(String path, String field) {
+        String result = restUtils.getUrlAsString(getUrlWithRest() + path, username, password);
+
+        if (result == null) {
             assert false : "This method should only be called with a valid connection.";
-			return null;
-		}
-		
-		JSONArray returnArray = JsonUtils.getJSONArray(result);
-		
-		Map<String,String> nameFieldMap = new HashMap<>();
-		
-		for (int i = 0; i < returnArray.length(); i++) {
-			try {
-				nameFieldMap.put(returnArray.getJSONObject(i).getString("name"), 
-								returnArray.getJSONObject(i).getString(field));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+            return null;
+        }
+
+        JSONArray returnArray = JsonUtils.getJSONArray(result);
+
+        Map<String, String> nameFieldMap = new HashMap<>();
+
+        if (returnArray != null) {
+            for (int i = 0; i < returnArray.length(); i++) {
+                try {
+                    nameFieldMap.put(returnArray.getJSONObject(i).getString("name"),
+                            returnArray.getJSONObject(i).getString(field));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 		
 		return nameFieldMap;
 	}
@@ -138,53 +158,54 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		lastError = null;
 
         String urlString = getUrlWithRest() + "user?username=" + getUsername();
-		
-		String response = restUtils.getUrlAsString(urlString, getUsername(), getPassword());
-		
-		try {
-            boolean valid = false;
-            String reason = null;
-
-            if (response == null) {
-                reason = "Null response was received from Jira server.";
-            } else if (JsonUtils.getJSONObject(response) == null) {
-                reason = "The REST response was not a valid JSON object.";
-
-                // TODO this is dodgy--perhaps this is causing the error in GitHub issue 136?
-            } else if (!JsonUtils.getJSONObject(response).getString("name").equals(getUsername())) {
-                String name = JsonUtils.getJSONObject(response).getString("name");
-                reason = "The returned name (" + name + ") did not match the username.";
-            } else {
-                valid = true;
-                log.info("Name is " + (JsonUtils.getJSONObject(response).getString("name")));
+        String response;
+        try {
+            response = restUtils.getUrlAsString(urlString, getUsername(), getPassword());
+        } catch (RestIOException e) {
+            if (e.getStatusCode() == 401) {
+                lastError = "Jira Credentials are invalid.";
+                return false;
             }
+            throw e;
+        }
 
-			if (valid) {
-				log.info("JIRA Credentials are valid.");
-			} else {
-				log.info("JIRA Credentials are invalid. Reason: " + reason);
-                lastError = reason;
-			}
-			
-			if (restUtils.hasXSeraphLoginReason(urlString, getUsername(), getPassword())) {
-				lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
-			}
-						
-			return valid;
-		} catch (JSONException e) {
-            lastError = "JIRA credentials check did not return JSON, something is wrong.";
-			log.warn(lastError, e);
-			return false;
-		}
+        boolean valid = false;
+        String reason = null;
+
+        if (response == null) {
+            reason = "Null response was received from Jira server.";
+        } else if (JsonUtils.getJSONObject(response) == null) {
+            reason = "The REST response was not a valid JSON object.";
+
+            // TODO this is dodgy--perhaps this is causing the error in GitHub issue 136?
+        } else {
+            String name = JsonUtils.getStringProperty(response, "name");
+            if (name != null && name.equals(getUsername())) {
+                valid = true;
+                log.info("Name is " + name);
+            } else {
+                reason = "The returned name (" + name + ") did not match the username.";
+            }
+        }
+
+        if (valid) {
+            log.info("JIRA Credentials are valid.");
+        } else {
+            log.info("JIRA Credentials are invalid. Reason: " + reason);
+            lastError = reason;
+        }
+
+        if (restUtils.hasXSeraphLoginReason(urlString, getUsername(), getPassword())) {
+            lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
+        }
+
+        return valid;
 	}
 
 	@Override
 	public boolean hasValidProjectName() {
-		if (projectName == null)
-			return false;
-		
-		return getNamesFromList("project").contains(projectName);
-	}
+        return projectName != null && getNamesFromList("project").contains(projectName);
+    }
 
 	@Override
 	public boolean hasValidUrl() {
@@ -209,36 +230,43 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	// PRE-SUBMISSION METHODS
 	
-	@Override
-	public String getProductNames() {
+	@Nonnull
+    @Override
+	public List<String> getProductNames() {
 		
 		lastError = null;
-	
-		Map<String, String> nameIdMap = getNameFieldMap("project/","key");
-		
+
+        Map<String, String> nameIdMap;
+        try {
+            nameIdMap = getNameFieldMap("project/", "key");
+        } catch (RestIOException e) {
+            if (e.getStatusCode() == 401) {
+                throw new RestIOException(e, "Invalid JIRA credentials, server returned 401 Unauthorized.");
+            } else {
+                throw e;
+            }
+        }
+
+        if (!hasValidCredentials()) {
+            lastError = "Invalid username / password combination";
+            return list();
+        }
+
 		if (nameIdMap != null && nameIdMap.size() > 0) {
-			StringBuilder builder = new StringBuilder();
-			
-			for (String name : nameIdMap.keySet()) {
-				builder.append(name);
-				builder.append(',');
-			}
-			return builder.substring(0,builder.length()-1);
+			return listFrom(nameIdMap.keySet());
 		} else {
 			if (!hasValidUrl()) {
 				lastError = "Supplied endpoint was invalid.";
 			} else if (restUtils.hasXSeraphLoginReason(getUrlWithRest() + "user?username=" + getUsername(),
                     getUsername(), getPassword())) {
 				lastError = "JIRA CAPTCHA protection has been tripped. Please log in at " + url + " to continue.";
-			} else if (!hasValidCredentials()) {
-				lastError = "Invalid username / password combination";
 			} else if (nameIdMap != null) {
 				lastError = "No projects were found. Check your JIRA instance.";
 			} else {
 				lastError = "Not sure what the error is.";
 			}
-			
-			return null;
+
+			return list();
 		}
 	}
 	
@@ -251,20 +279,33 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	public ProjectMetadata getProjectMetadata() {
 		if (getProjectId() == null)
 			setProjectId(getProjectIdByName());
-		List<String> components = getNamesFromList("project/" + projectId + "/components");
-		List<String> blankList = Arrays.asList("-");
-		List<String> statusList = Arrays.asList("Open");
-		List<String> priorities = getNamesFromList("priority");
-		
-		if (components == null || components.isEmpty()) {
-			components = Arrays.asList("-");
-		}
-		
-		return new ProjectMetadata(components, blankList,
-				blankList, statusList, priorities);
+
+		return new ProjectMetadata(getDynamicFormFields());
 	}
 
-	@Override
+    List<DynamicFormField> getDynamicFormFields() {
+        String response =
+                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
+                            getUsername(), getPassword());
+
+        log.debug(response);
+
+        UserRetriever retriever = new UserRetriever(getUsername(), getPassword(), getProjectId(), getUrlWithRest(), restUtils);
+
+        return DynamicFormFieldParser.getFields(response, retriever);
+    }
+
+    JiraJsonMetadataResponse.Project getJiraMetadata() {
+        String response =
+                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
+                            getUsername(), getPassword());
+
+        log.debug(response);
+
+        return DynamicFormFieldParser.getJiraProjectMetadata(response);
+    }
+
+    @Override
 	public String getProjectIdByName() {
 		Map<String,String> projectNameIdMap = getNameFieldMap("project/","key");
 		
@@ -283,40 +324,47 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		if (getProjectId() == null) {
 			setProjectId(getProjectIdByName());
 		}
-		
-		Map<String,String> priorityHash = getNameFieldMap("priority", "id"),
-				           componentsHash = getNameFieldMap("project/" + projectId + "/components", "id"),
-				           projectsHash = getNameFieldMap("project","id");
-		
+
 		String description = makeDescription(vulnerabilities, metadata);
-        String payload = getPayload(null, projectsHash, metadata, priorityHash, description,componentsHash);
-				
-		String result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
-		String id = null;
-		try {
-            if (result != null && JsonUtils.getJSONObject(result) != null) {
-                id = JsonUtils.getJSONObject(result).getString("key");
-            } else {
-                // Trying to send request to Jira one more time, remove all error fields if any
-                String errorResponseMsg = restUtils.getPostErrorResponse();
-                List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
-                log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
-                payload = getPayload(errorFieldList, projectsHash, metadata, priorityHash, description,componentsHash);
-                result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
-                if (result != null && JsonUtils.getJSONObject(result) != null) {
-                    id = JsonUtils.getJSONObject(result).getString("key");
-                }
+
+        Map<String, Object> map = metadata.getFieldsMap();
+
+        map.put("description", description);
+
+        String payload = getPayload(map);
+        log.info("Payload: " + payload);
+
+        String result, id = null;
+        try {
+            result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
+        } catch (RestIOException e) {
+            // This exception will be thrown if Jira has fields that aren't allowed.
+            log.info("Received RestIOException with message " + e.getMessage() +
+                    ". Attempting to correct errors and resubmit.");
+
+            // Trying to send request to Jira one more time, remove all error fields if any
+            String errorResponseMsg = restUtils.getPostErrorResponse();
+            List<String> errorFieldList = getErrorFieldList(errorResponseMsg);
+            log.info("Trying to send request one more time to Jira without fields: " + errorFieldList.toString());
+            result = restUtils.postUrlAsString(getUrlWithRest() + "issue", payload, getUsername(), getPassword(), CONTENT_TYPE);
+
+            // if we got a result then it was a success, otherwise let's rethrow the exception
+            if (result == null) {
+                throw e;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-		}
+        }
+
+        if (result != null) {
+            id = JsonUtils.getStringProperty(result, "key");
+        }
+
 		return id;
 	}
 
-    private List<String> getErrorFieldList(String errorResponseMsg) throws JSONException {
-        List<String> errorFieldList = new ArrayList<>();
+    private List<String> getErrorFieldList(String errorResponseMsg) {
+        List<String> errorFieldList = list();
         if (errorResponseMsg != null && JsonUtils.getJSONObject(errorResponseMsg) != null) {
-            String errorResponse = JsonUtils.getJSONObject(errorResponseMsg).getString("errors");
+            String errorResponse = JsonUtils.getStringProperty(errorResponseMsg, "errors");
             if (errorResponse == null || errorResponse.isEmpty())
                 return errorFieldList;
             String[] errorList = errorResponse.split("\\\",\\\"");
@@ -324,40 +372,24 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                 if (error == null || error.isEmpty())
                     continue;
                 String field = error.split("\\\":\\\"")[0];
-                field = field.replace("{","");
-                field = field.replace("\\","");
-                field = field.replace("\"","");
+                field = field.replace("{", "");
+                field = field.replace("\\", "");
+                field = field.replace("\"", "");
                 errorFieldList.add(field);
             }
         }
         return errorFieldList;
     }
-    private String getPayload(List<String> errorFieldList,
-                              Map<String,String> projectsHash,
-                              DefectMetadata metadata,
-                              Map<String,String> priorityHash,
-                              String description,
-                              Map<String,String> componentsHash) {
-        //	TODO - Use a better JSON API to construct the JSON message. JSONObject.quote() is nice
-        //	and all, but...
-        String payload = "{ \"fields\": {" +
-                ((isValidField(errorFieldList, "project"))? " \"project\": { \"id\": " + JSONObject.quote(projectsHash.get(getProjectName())) + " }," : "") +
-                ((isValidField(errorFieldList, "summary"))? " \"summary\": " + JSONObject.quote(metadata.getDescription()) + "," : "") +
-                ((isValidField(errorFieldList, "issuetype"))? " \"issuetype\": { \"id\": \"1\" }," : "") +
-                ((isValidField(errorFieldList, "assignee"))? " \"assignee\": { \"name\":" + JSONObject.quote(username) + " }," : "") +
-                ((isValidField(errorFieldList, "reporter"))? " \"reporter\": { \"name\": " + JSONObject.quote(username) + " }," : "") +
-                ((isValidField(errorFieldList, "priority"))? " \"priority\": { \"id\": " + JSONObject.quote(priorityHash.get(metadata.getPriority())) + " }," : "") +
-                ((isValidField(errorFieldList, "description"))? " \"description\": " + JSONObject.quote(description) : "");
 
-        if (metadata.getComponent() != null && !metadata.getComponent().equals("-")) {
-            payload += ((isValidField(errorFieldList, "components"))? "," + " \"components\": [ { \"id\": " +
-                    JSONObject.quote(componentsHash.get(metadata.getComponent())) + " } ]" : "");
+    private String getPayload(Map<String, Object> objectMap) {
+
+        DefectPayload payload = new DefectPayload(objectMap, getJiraMetadata());
+
+        try {
+            return new ObjectMapper().writeValueAsString(payload);
+        } catch (IOException e) {
+            throw new DefectTrackerFormatException(e, "We were unable to serialize object as JSON");
         }
-
-        payload += " } }";
-
-        payload = payload.replaceAll(newLineRegex, doubleSlashNewLine);
-        return payload;
     }
 
     private boolean isValidField(List<String> errorFieldList, String field) {
@@ -458,19 +490,21 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
 	@Override
 	public List<Defect> getDefectList() {		
-			
-		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";			
+
+		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";
 		String result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
-		List<Defect> defectList = new ArrayList<>();
+		List<Defect> defectList = list();
 		try {
-            String issuesString = JsonUtils.getJSONObject(result).getString("issues");
+            String issuesString = JsonUtils.getStringProperty(result, "issues");
 
             JSONArray returnArray = JsonUtils.getJSONArray(issuesString);
 
-            for (int i = 0; i < returnArray.length(); i++) {
-                Defect defect = new Defect();
-                defect.setNativeId(returnArray.getJSONObject(i).getString("key"));
-                defectList.add(defect);
+            if (returnArray != null) {
+                for (int i = 0; i < returnArray.length(); i++) {
+                    Defect defect = new Defect();
+                    defect.setNativeId(returnArray.getJSONObject(i).getString("key"));
+                    defectList.add(defect);
+                }
             }
         } catch (JSONException e) {
             log.warn("JSON parsing failed when trying to get defect list.");

@@ -24,11 +24,14 @@
 
 package com.denimgroup.threadfix.framework.util;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class RegexUtils {
 	
@@ -68,10 +71,10 @@ public class RegexUtils {
 	 * @param pattern
 	 * @return
 	 */
-	@Nullable
+	@Nonnull
     public static List<String> getRegexResults(@Nullable String targetString, @Nullable Pattern pattern) {
 		if (targetString == null || targetString.isEmpty() || pattern == null) {
-			return null;
+			return list();
 		}
 		
 		Matcher matcher = pattern.matcher(targetString);
@@ -79,7 +82,7 @@ public class RegexUtils {
 		List<String> resultsList = new ArrayList<>(matcher.groupCount());
 		
 		while (matcher.find()) {
-			resultsList.add(matcher.group());
+			resultsList.add(matcher.group(1));
 		}
 		
 		return resultsList;
