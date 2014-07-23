@@ -30,17 +30,17 @@ public class DotNetRoutesParserTests {
 
     @Test
     public void testBasicRouteConfig() {
-        testFile("code.dotNet.mvc/routeConfig.cs", "Chat", "Index");
+        testFile("RouteConfig.cs", "Chat", "Index");
     }
 
     @Test
     public void testGlobalAsaxFile() {
-        testFile("code.dotNet.mvc/Global.asax.cs", "Ajax", "JQueryHelper");
+        testFile("Global.asax.cs", "Ajax", "JQueryHelper");
     }
 
     public void testFile(String fileExtension, String controller, String action) {
         DotNetRouteMappings mappings =
-                DotNetRoutesParser.parse(ResourceManager.getFile(fileExtension));
+                DotNetRoutesParser.parse(ResourceManager.getDotNetFile(fileExtension));
 
         assert mappings.routes.size() == 1 : mappings.routes.size() + " routes were found, but 1 was expected.";
 

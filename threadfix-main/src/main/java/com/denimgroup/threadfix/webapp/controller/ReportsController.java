@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -50,9 +51,10 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Controller
 @RequestMapping("/reports")
@@ -76,7 +78,7 @@ public class ReportsController {
 	@ModelAttribute("organizationList")
 	public List<Organization> getOrganizations() {
 		List<Organization> organizationList = organizationService.loadAllActiveFilter();
-		List<Organization> returnList = new ArrayList<>();
+		List<Organization> returnList = list();
 
 		for (Organization org : organizationList) {
 			List<Application> validApps = PermissionUtils.filterApps(org);
@@ -131,6 +133,10 @@ public class ReportsController {
                                        @PathVariable int reportId,
                                        @PathVariable int formatId,
                                        HttpServletResponse response) throws IOException {
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_GENERATE_REPORTS, applicationId, organizationId)) {
+            return "403";
+        }
 
         ReportParameters reportParameters = new ReportParameters();
         reportParameters.setApplicationId(applicationId);
@@ -263,7 +269,6 @@ public class ReportsController {
 
         return null;
     }
-
 
 	//	TODO - Move the creation of SecureRandoms into some sort of shared facility
 	//	for the entire application (each class doesn't need to repeat this code)

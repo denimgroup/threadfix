@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Controller
 @RequestMapping("/wafs")
 @SessionAttributes({"newWaf","waf"})
@@ -114,7 +116,7 @@ public class WafsController {
 			if (globalAccess) {
 				mav.addObject("apps", waf.getApplications());
 			} else {
-				List<Application> apps = new ArrayList<>();
+				List<Application> apps = list();
 				
 				Set<Integer> authenticatedAppIds = PermissionUtils.getAuthenticatedAppIds();
 				Set<Integer> authenticatedTeamIds = PermissionUtils.getAuthenticatedTeamIds();

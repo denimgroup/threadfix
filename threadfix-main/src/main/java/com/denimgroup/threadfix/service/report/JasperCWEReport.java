@@ -24,22 +24,17 @@
 
 package com.denimgroup.threadfix.service.report;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRField;
 
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class JasperCWEReport implements JRDataSource {
-	private List<Vulnerability> vulnerabilityList = new ArrayList<>();
+	private List<Vulnerability> vulnerabilityList = list();
 	private int index = 0;
 	private Map<String, Object> resultsHash = new HashMap<>();
 	

@@ -29,87 +29,87 @@ import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Entity
 @Table(name = "Defect")
 public class Defect extends AuditableEntity {
 
-	private static final long serialVersionUID = -3912326857875561633L;
-	
-	public static final int STATUS_LENGTH = 255;
-	public static final int URL_LENGTH = 255;
-	
-	// TODO make this smarter
-	public final static Set<String> OPEN_CODES   = new HashSet<String>(Arrays.asList("Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen", "Future", "In Progress", "Accepted"));
-	public final static Set<String> CLOSED_CODES = new HashSet<String>(Arrays.asList("Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done"));
+    private static final long serialVersionUID = -3912326857875561633L;
 
-	public enum TrackerType {
-		BUGZILLA, JIRA
-	}
+    public static final int STATUS_LENGTH = 255;
+    public static final int URL_LENGTH    = 255;
 
-	private String nativeId;
+    // TODO make this smarter
+    public final static Set<String> OPEN_CODES   = set("Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen", "Future", "In Progress", "Accepted");
+    public final static Set<String> CLOSED_CODES = set("Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done");
 
-	private Application application;
-	private List<Vulnerability> vulnerabilities;
-	
-	@Size(max = STATUS_LENGTH, message = "{errors.maxlength} " + STATUS_LENGTH + ".")
-	private String status;
-	
-	@Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
-	private String defectURL;
+    public enum TrackerType {
+        BUGZILLA, JIRA
+    }
 
-	/**
-	 * Stores the ID used by the defect tracking system.
-	 * 
-	 * @return
-	 */
-	@Column(length = 50, nullable = false)
+    private String nativeId;
+
+    private Application         application;
+    private List<Vulnerability> vulnerabilities;
+
+    @Size(max = STATUS_LENGTH, message = "{errors.maxlength} " + STATUS_LENGTH + ".")
+    private String status;
+
+    @Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
+    private String defectURL;
+
+    /**
+     * Stores the ID used by the defect tracking system.
+     *
+     * @return
+     */
+    @Column(length = 50, nullable = false)
     @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
-	public String getNativeId() {
-		return nativeId;
-	}
+    public String getNativeId() {
+        return nativeId;
+    }
 
-	public void setNativeId(String nativeId) {
-		this.nativeId = nativeId;
-	}
-	
-	@Column(length = 255, nullable = false)
+    public void setNativeId(String nativeId) {
+        this.nativeId = nativeId;
+    }
+
+    @Column(length = 255, nullable = false)
     @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		if (status != null) {
-			if (status.length() > STATUS_LENGTH) {
-				this.status = status.substring(0,STATUS_LENGTH-2);
-			} else {
-				this.status = status;
-			}
-		}
-	}
-	
-	@Column(length = 255)
+    public void setStatus(String status) {
+        if (status != null) {
+            if (status.length() > STATUS_LENGTH) {
+                this.status = status.substring(0, STATUS_LENGTH - 2);
+            } else {
+                this.status = status;
+            }
+        }
+    }
+
+    @Column(length = 255)
     @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
     public String getDefectURL() {
-		return defectURL;
-	}
+        return defectURL;
+    }
 
-	public void setDefectURL(String defectURL) {
-		if (defectURL != null && defectURL.length() > STATUS_LENGTH) {
-			this.defectURL = defectURL.substring(0, STATUS_LENGTH-2);
-		} else {
-			this.defectURL = defectURL;
-		}
-	}
+    public void setDefectURL(String defectURL) {
+        if (defectURL != null && defectURL.length() > STATUS_LENGTH) {
+            this.defectURL = defectURL.substring(0, STATUS_LENGTH - 2);
+        } else {
+            this.defectURL = defectURL;
+        }
+    }
 
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "applicationId")
+    @JsonIgnore
 	public Application getApplication() {
 		return application;
 	}

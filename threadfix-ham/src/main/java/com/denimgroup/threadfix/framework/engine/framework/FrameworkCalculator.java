@@ -35,8 +35,9 @@ import org.apache.log4j.PatternLayout;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 // TODO make this more generic
 public class FrameworkCalculator {
@@ -54,7 +55,7 @@ public class FrameworkCalculator {
 	
 	private static final SanitizedLogger log = new SanitizedLogger("FrameworkCalculator");
 
-    private Collection<FrameworkChecker> frameworkCheckers = new ArrayList<>();
+    private Collection<FrameworkChecker> frameworkCheckers = list();
 
     private static FrameworkCalculator INSTANCE = new FrameworkCalculator();
 

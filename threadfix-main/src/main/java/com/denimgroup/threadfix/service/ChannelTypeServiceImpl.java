@@ -23,21 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -75,7 +75,7 @@ public class ChannelTypeServiceImpl implements ChannelTypeService {
 	
 	@Override
 	public List<ChannelType> getChannelTypeOptions(Application application) {
-		List<ChannelType> channelTypeList = channelTypeDao.retrieveAll(), editedList = new ArrayList<>();
+		List<ChannelType> channelTypeList = channelTypeDao.retrieveAll(), editedList = list();
 		if (channelTypeList == null)
 			return null;
 		

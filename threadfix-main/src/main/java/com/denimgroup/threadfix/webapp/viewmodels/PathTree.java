@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.webapp.viewmodels;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 public class PathTree {
 	
 	private Node root;
@@ -35,7 +37,7 @@ public class PathTree {
 	public PathTree(Node root) {
 		this.root = root;
 		depth = 0;
-		printout = new ArrayList<>();
+		printout = list();
 	}
 
 	public Node getRoot() {
@@ -73,7 +75,7 @@ public class PathTree {
 		editedPath = editedPath.trim();
 		editedPath = editedPath.replaceAll("^[\\\\|/]", "");
 		editedPath = editedPath.replaceAll("[\\\\|/]$", "");
-		List<String> pathList = new ArrayList<>();
+		List<String> pathList = list();
 		String[] pathArray = editedPath.split("[\\\\|/]");
 		Node node = root;
 		for (int i = 0; i < pathArray.length; i++) {

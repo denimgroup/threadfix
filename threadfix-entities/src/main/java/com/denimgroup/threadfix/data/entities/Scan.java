@@ -31,6 +31,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Entity
 @Table(name = "Scan")
 public class Scan extends BaseEntity implements Iterable<Finding> {
@@ -51,27 +53,27 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 	
 	private Long numberInfoVulnerabilities = 0L, numberLowVulnerabilities = 0L,
 			numberMediumVulnerabilities = 0L, numberHighVulnerabilities = 0L,
-			numberCriticalVulnerabilities = 0L;
-	
-	private User user;
-	
-	private List<ScanRepeatFindingMap> scanRepeatFindingMaps;
-	private List<ScanReopenVulnerabilityMap> scanReopenVulnerabilityMaps;
-	private List<ScanCloseVulnerabilityMap> scanCloseVulnerabilityMaps;
-	
-	// TODO probably rename this - it's for the graphs
-	private Integer numberOldVulnerabilitiesInitiallyFromThisChannel;
+            numberCriticalVulnerabilities = 0L;
 
-	private List<Finding> findings;
-	
-	private Integer numWithoutChannelVulns = null;
-	private Integer numWithoutGenericMappings = null;
-	
-	private Integer totalNumberSkippedResults = null;
-	private Integer totalNumberFindingsMergedInScan = null;
-	
-	// These are for determining what type of scanner was used
-	private static final List<String> DYNAMIC_TYPES = Arrays.asList(
+    private User user;
+
+    private List<ScanRepeatFindingMap>       scanRepeatFindingMaps;
+    private List<ScanReopenVulnerabilityMap> scanReopenVulnerabilityMaps;
+    private List<ScanCloseVulnerabilityMap>  scanCloseVulnerabilityMaps;
+
+    // TODO probably rename this - it's for the graphs
+    private Integer numberOldVulnerabilitiesInitiallyFromThisChannel;
+
+    private List<Finding> findings;
+
+    private Integer numWithoutChannelVulns    = null;
+    private Integer numWithoutGenericMappings = null;
+
+    private Integer totalNumberSkippedResults       = null;
+    private Integer totalNumberFindingsMergedInScan = null;
+
+    // These are for determining what type of scanner was used
+    private static final List<String> DYNAMIC_TYPES = list(
             ScannerType.ACUNETIX_WVS.getFullName(),
             ScannerType.APPSCAN_ENTERPRISE.getFullName(),
             ScannerType.ARACHNI.getFullName(),
@@ -86,8 +88,8 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
             ScannerType.QUALYSGUARD_WAS.getFullName(),
             ScannerType.APPSCAN_DYNAMIC.getFullName(),
             ScannerType.CENZIC_HAILSTORM.getFullName());
-	
-	private static final List<String> STATIC_TYPES = Arrays.asList(
+
+    private static final List<String> STATIC_TYPES = list(
             ScannerType.APPSCAN_SOURCE.getFullName(),
             ScannerType.FINDBUGS.getFullName(),
             ScannerType.FORTIFY.getFullName(),
@@ -95,97 +97,97 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
             ScannerType.CAT_NET.getFullName(),
             ScannerType.BRAKEMAN.getFullName(),
             ScannerType.CHECKMARX.getFullName());
-	private static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
-	private static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
-	
-	@Size(max = 255, message = "{errors.maxlength} 255.")
-	private String filePathRoot;
-	@Size(max = 255, message = "{errors.maxlength} 255.")
-	private String urlPathRoot;
-	
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "applicationChannelId")
-	@JsonIgnore
-	public ApplicationChannel getApplicationChannel() {
-		return applicationChannel;
-	}
+    private static final List<String> MIXED_TYPES  = Arrays.asList(ScannerType.SENTINEL.getFullName());
+    private static final String       DYNAMIC      = "Dynamic", STATIC = "Static", MIXED = "Mixed";
 
-	public void setApplicationChannel(ApplicationChannel applicationChannel) {
-		this.applicationChannel = applicationChannel;
-	}
+    @Size(max = 255, message = "{errors.maxlength} 255.")
+    private String filePathRoot;
+    @Size(max = 255, message = "{errors.maxlength} 255.")
+    private String urlPathRoot;
 
-	@Temporal(TemporalType.TIMESTAMP)
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class })
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "applicationChannelId")
+    @JsonIgnore
+    public ApplicationChannel getApplicationChannel() {
+        return applicationChannel;
+    }
+
+    public void setApplicationChannel(ApplicationChannel applicationChannel) {
+        this.applicationChannel = applicationChannel;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonView({AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.RestView2_1.class})
     public Calendar getImportTime() {
-		return importTime;
-	}
+        return importTime;
+    }
 
-	public void setImportTime(Calendar importTime) {
-		this.importTime = importTime;
-	}
+    public void setImportTime(Calendar importTime) {
+        this.importTime = importTime;
+    }
 
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return application;
-	}
+    @ManyToOne
+    @JoinColumn(name = "applicationId")
+    @JsonIgnore
+    public Application getApplication() {
+        return application;
+    }
 
-	public void setApplication(Application application) {
-		this.application = application;
-	}
+    public void setApplication(Application application) {
+        this.application = application;
+    }
 
-	@ManyToOne
-	@JoinColumn(nullable = true, name = "userId")
-	@JsonIgnore
-	public User getUser() {
-		return user;
-	}
+    @ManyToOne
+    @JoinColumn(nullable = true, name = "userId")
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
     @JsonView(AllViews.RestViewScan2_1.class)
-	public List<Finding> getFindings() {
-		return findings;
-	}
+    public List<Finding> getFindings() {
+        return findings;
+    }
 
-	public void setFindings(List<Finding> findings) {
-		this.findings = findings;
-	}
-	
-	@Column(length = 256)
-	public String getFilePathRoot() {
-		return filePathRoot;
-	}
+    public void setFindings(List<Finding> findings) {
+        this.findings = findings;
+    }
 
-	public void setFilePathRoot(String filePathRoot) {
-		this.filePathRoot = filePathRoot;
-	}
+    @Column(length = 256)
+    public String getFilePathRoot() {
+        return filePathRoot;
+    }
 
-	@Column(length = 256)
-	public String getUrlPathRoot() {
-		return urlPathRoot;
-	}
+    public void setFilePathRoot(String filePathRoot) {
+        this.filePathRoot = filePathRoot;
+    }
 
-	public void setUrlPathRoot(String urlPathRoot) {
-		this.urlPathRoot = urlPathRoot;
-	}
-	
-	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+    @Column(length = 256)
+    public String getUrlPathRoot() {
+        return urlPathRoot;
+    }
+
+    public void setUrlPathRoot(String urlPathRoot) {
+        this.urlPathRoot = urlPathRoot;
+    }
+
+    @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
     @JsonIgnore
-	public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
-		return scanRepeatFindingMaps;
-	}
+    public List<ScanRepeatFindingMap> getScanRepeatFindingMaps() {
+        return scanRepeatFindingMaps;
+    }
 
-	public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
-		this.scanRepeatFindingMaps = scanRepeatFindingMaps;
-	}
+    public void setScanRepeatFindingMaps(List<ScanRepeatFindingMap> scanRepeatFindingMaps) {
+        this.scanRepeatFindingMaps = scanRepeatFindingMaps;
+    }
 
     @JsonIgnore
-	@OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "scan", cascade = CascadeType.ALL)
 	public List<ScanReopenVulnerabilityMap> getScanReopenVulnerabilityMaps() {
 		return scanReopenVulnerabilityMaps;
 	}

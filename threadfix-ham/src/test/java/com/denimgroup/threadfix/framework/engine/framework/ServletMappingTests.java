@@ -24,24 +24,20 @@
 
 package com.denimgroup.threadfix.framework.engine.framework;
 
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
+import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
-import com.denimgroup.threadfix.framework.engine.framework.ClassMapping;
-import com.denimgroup.threadfix.framework.engine.framework.ServletMappings;
-import com.denimgroup.threadfix.framework.engine.framework.UrlPatternMapping;
-import com.denimgroup.threadfix.framework.engine.framework.WebXMLParser;
-import com.denimgroup.threadfix.framework.impl.spring.SpringServletConfigurationChecker;
-import javax.annotation.Nonnull;
-import org.junit.Test;
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static org.junit.Assert.assertTrue;
 
 public class ServletMappingTests {
     
@@ -191,7 +187,7 @@ public class ServletMappingTests {
 
     @Nonnull
     private List<Entry<String,String>> makeMappingsList(@Nonnull String... strings) {
-    	List<Entry<String,String>> mappings = new ArrayList<>();
+    	List<Entry<String,String>> mappings = list();
 
     	for (int i = 0; i < strings.length - 1; i += 2) {
     		mappings.add(entry(strings[i], strings[i + 1]));
@@ -202,7 +198,7 @@ public class ServletMappingTests {
 
     @Nonnull
     private List<ClassMapping> makeClassMappings(@Nonnull String... strings) {
-    	List<ClassMapping> mappings = new ArrayList<>();
+    	List<ClassMapping> mappings = list();
     	
     	for (int i = 0; i < strings.length - 1; i += 2) {
     		mappings.add(new ClassMapping(strings[i], strings[i + 1], null, null));
@@ -213,7 +209,7 @@ public class ServletMappingTests {
     
     @Nonnull
     private List<UrlPatternMapping> makeUrlPatternMappings(@Nonnull String... strings) {
-    	List<UrlPatternMapping> mappings = new ArrayList<>();
+    	List<UrlPatternMapping> mappings = list();
     	
     	for (int i = 0; i < strings.length - 1; i += 2) {
     		mappings.add(new UrlPatternMapping(strings[i], strings[i + 1]));

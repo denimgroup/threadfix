@@ -1,18 +1,22 @@
 package com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure;
 
+import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import com.denimgroup.threadfix.service.defects.HPQualityCenterDefectTracker;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -32,15 +36,17 @@ public class RestConnector extends SpringBeanAutowiringSupport {
     @Autowired(required = false)
     private ProxyService proxyService;
 
+    private static final SanitizedLogger log = new SanitizedLogger(HPQCUtils.class);
+
     protected Map<String, String> cookies;
     /**
      * This is the URL to the ALM application.
      * For example: http://myhost:8080/qcbin.
      * Make sure that there is no slash at the end.
      */
-    protected String serverUrl;
-    protected String domain;
-    protected String project;
+    protected String              serverUrl;
+    protected String              domain;
+    protected String              project;
 
     public RestConnector init(
             Map<String, String> cookies,
@@ -68,7 +74,8 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         return this;
     }
 
-    private RestConnector() {}
+    private RestConnector() {
+    }
 
     private static RestConnector instance = new RestConnector();
 
@@ -103,48 +110,24 @@ public class RestConnector extends SpringBeanAutowiringSupport {
      *            on the server to use
      * @return a url on the server for the path parameter
      */
+    @Nonnull
     public String buildUrl(String path) {
 
         return String.format("%1$s/%2$s", serverUrl, path);
     }
 
-    /**
-     * @return the cookies
-     */
-    public Map<String, String> getCookies() {
-        return cookies;
-    }
-
-    /**
-     * @param cookies
-     *            the cookies to set
-     */
-    public void setCookies(Map<String, String> cookies) {
-        this.cookies = cookies;
-    }
-
-    public Response httpPut(String url, byte[] data, Map<String,
-            String> headers) throws Exception {
-
-        return doHttp("PUT", url, null, data, headers, cookies);
-    }
-
+    @Nonnull
     public Response httpPost(String url, byte[] data, Map<String,
-            String> headers) throws Exception {
+            String> headers) {
 
-        return doHttp("POST", url, null, data, headers, cookies);
+        return doHttp("POST", url, null, data, headers);
     }
 
-    public Response httpDelete(String url, Map<String, String> headers)
-            throws Exception {
-
-        return doHttp("DELETE", url, null, null, headers, cookies);
-    }
-
+    @Nonnull
     public Response httpGet(String url, String queryString, Map<String,
-            String> headers)throws Exception {
+            String> headers) {
 
-        return doHttp("GET", url, queryString, null, headers, cookies);
+        return doHttp("GET", url, queryString, null, headers);
     }
 
     /**
@@ -157,44 +140,46 @@ public class RestConnector extends SpringBeanAutowiringSupport {
      *            to write, if a writable operation
      * @param headers
      *            to use in the request
-     * @param cookies
-     *            to use in the request and update from the response
      * @return http response
-     * @throws Exception
      */
+    @Nonnull
     private Response doHttp(
             String type,
             String url,
             String queryString,
             byte[] data,
-            Map<String, String> headers,
-            Map<String, String> cookies) throws Exception {
+            Map<String, String> headers) {
 
-        if ((queryString != null) && !queryString.isEmpty()) {
+        try {
 
-            url += "?" + queryString;
+            if ((queryString != null) && !queryString.isEmpty()) {
+                url += "?" + queryString;
+            }
+
+            HttpURLConnection con;
+
+            if (proxyService != null) {
+                con = proxyService.getConnectionWithProxyConfig(new URL(url), HPQualityCenterDefectTracker.class);
+            } else {
+                con = (HttpURLConnection) new URL(url).openConnection();
+            }
+
+            assert con != null;
+
+            con.setRequestMethod(type);
+            String cookieString = getCookieString();
+
+            prepareHttpRequest(con, headers, data, cookieString);
+            con.connect();
+            Response ret = retrieveHtmlResponse(con);
+
+            updateCookies(ret);
+
+            return ret;
+
+        } catch (IOException e) {
+            throw new DefectTrackerCommunicationException(e, "Unable to communicate with the HPQC server.");
         }
-
-        HttpURLConnection con;
-
-        if (proxyService != null) {
-            con = proxyService.getConnectionWithProxyConfig(new URL(url), HPQualityCenterDefectTracker.class);
-        } else {
-            con = (HttpURLConnection) new URL(url).openConnection();
-        }
-
-        assert con != null;
-
-        con.setRequestMethod(type);
-        String cookieString = getCookieString();
-
-        prepareHttpRequest(con, headers, data, cookieString);
-        con.connect();
-        Response ret = retrieveHtmlResponse(con);
-
-        updateCookies(ret);
-
-        return ret;
     }
 
     /**
@@ -230,10 +215,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
             //if you actually have any content to send. see below.
             contentType = headers.remove("Content-Type");
 
-            Iterator<Entry<String, String>>
-                    headersIterator = headers.entrySet().iterator();
-            while (headersIterator.hasNext()) {
-                Entry<String, String> header = headersIterator.next();
+            for (Entry<String, String> header : headers.entrySet()) {
                 con.setRequestProperty(header.getKey(), header.getValue());
             }
         }
@@ -265,10 +247,14 @@ public class RestConnector extends SpringBeanAutowiringSupport {
      *            and that should contain a response for us to retrieve
      * @return a response from the server to the previously submitted
      *            http request
-     * @throws Exception
+     * @throws IOException
      */
-    private Response retrieveHtmlResponse(HttpURLConnection con)
-            throws Exception {
+    @Nonnull
+    private Response retrieveHtmlResponse(HttpURLConnection con) throws IOException {
+
+        if (con == null) {
+            throw new IllegalStateRestException("Invalid connection, unable to continue.");
+        }
 
         Response ret = new Response();
 
@@ -279,17 +265,16 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         //select the source of the input bytes, first try 'regular' input
         try {
             inputStream = con.getInputStream();
-        }
-
-        /*
-         If the connection to the server somehow failed, for example 404 or 500,
-         con.getInputStream() will throw an exception, which we'll keep.
-         We'll also store the body of the exception page, in the response data.
-         */
-        catch (Exception e) {
+        } catch (IOException e) {
+            log.error("Received IOException trying to get the InputStream from the connection object." +
+                    " Attempting to get the error text.");
 
             inputStream = con.getErrorStream();
-            ret.setFailure(e);
+        }
+
+        if (inputStream == null) {
+            throw new DefectTrackerCommunicationException(
+                    "Server response was null, received response code " + con.getResponseCode());
         }
 
         // This actually takes the data from the previously set stream
@@ -326,6 +311,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         }
     }
 
+    @Nonnull
     public String getCookieString() {
 
         StringBuilder sb = new StringBuilder();
@@ -339,8 +325,6 @@ public class RestConnector extends SpringBeanAutowiringSupport {
             }
         }
 
-        String ret = sb.toString();
-
-        return ret;
+        return sb.toString();
     }
 }

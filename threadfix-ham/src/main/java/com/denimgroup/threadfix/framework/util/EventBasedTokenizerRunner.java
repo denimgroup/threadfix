@@ -41,6 +41,8 @@ import java.io.*;
  */
 public class EventBasedTokenizerRunner {
 
+    public static final boolean logEnabled = false;
+
 	private static final SanitizedLogger log = new SanitizedLogger("EventBasedTokenizerRunner");
 	
 	/**
@@ -74,6 +76,9 @@ public class EventBasedTokenizerRunner {
                 // stop only if all of the tokenizers return false from shouldContinue();
                 boolean keepGoing = true;
 				while (tokenizer.nextToken() != StreamTokenizer.TT_EOF && keepGoing) {
+
+                    log(tokenizer);
+
                     keepGoing = false;
                     for (EventBasedTokenizer eventBasedTokenizer : eventBasedTokenizers) {
                         if (eventBasedTokenizer.shouldContinue()) {
@@ -93,4 +98,13 @@ public class EventBasedTokenizerRunner {
 			}
 		}
 	}
+
+    private static void log(StreamTokenizer tokenizer) {
+        if (logEnabled) {
+            log.debug("Tokenizer.ttype == " + tokenizer.ttype);
+            log.debug("Tokenizer.lineno() == " + tokenizer.lineno());
+            log.debug("Tokenizer.sval == " + tokenizer.sval);
+        }
+    }
+
 }

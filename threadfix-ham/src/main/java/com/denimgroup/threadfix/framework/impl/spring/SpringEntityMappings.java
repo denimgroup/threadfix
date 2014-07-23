@@ -32,6 +32,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 class SpringEntityMappings {
 
     // This should be done by the end of the constructor
@@ -45,7 +47,7 @@ class SpringEntityMappings {
 	@SuppressWarnings("unchecked")
 	public SpringEntityMappings(@Nonnull File rootDirectory) {
 
-        entityParsers = new ArrayList<>();
+        entityParsers = list();
 
 		if (rootDirectory.exists() && rootDirectory.isDirectory()) {
 
@@ -126,9 +128,8 @@ class SpringEntityMappings {
 	
 	@Nonnull
     public List<BeanField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable BeanField initialField) {
-		List<BeanField> fields = new ArrayList<>();
-		
-	
+		List<BeanField> fields = list();
+
 		if (methodCalls != null && initialField != null) {
 			fields.add(initialField);
 			

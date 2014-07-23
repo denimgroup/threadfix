@@ -12,18 +12,15 @@ public class Response {
 
     private Map<String, ? extends Iterable<String>> responseHeaders = null;
     private byte[] responseData = null;
-    private Exception failure = null;
     private int statusCode = 0;
 
     public Response(
             Map<String, Iterable<String>> responseHeaders,
             byte[] responseData,
-            Exception failure,
             int statusCode) {
         super();
         this.responseHeaders = responseHeaders;
         this.responseData = responseData;
-        this.failure = failure;
         this.statusCode = statusCode;
     }
 
@@ -45,35 +42,11 @@ public class Response {
     }
 
     /**
-     * @return the responseData
-     */
-    public byte[] getResponseData() {
-        return responseData;
-    }
-
-    /**
      * @param responseData
      *            the responseData to set
      */
     public void setResponseData(byte[] responseData) {
         this.responseData = responseData;
-    }
-
-    /**
-     * @return the failure if the access to the requested URL failed,
-     * such as a 404 or 500.
-     *  If no such failure occured this method returns null.
-     */
-    public Exception getFailure() {
-        return failure;
-    }
-
-    /**
-     * @param failure
-     *            the failure to set
-     */
-    public void setFailure(Exception failure) {
-        this.failure = failure;
     }
 
     /**

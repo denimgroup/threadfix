@@ -785,6 +785,11 @@ div.box-shadow {
 	margin-bottom:0;
 }
 
+.long-path-word-wrap {
+    word-wrap: break-word;
+    max-width: 300px;
+}
+
 .vuln-comment-word-wrap {
 	word-wrap: break-word;
 	max-width:700px;
@@ -1198,4 +1203,18 @@ div.remote-provider-config-modal a {
 
 .popover {
     z-index: 1060 !important;
+}
+
+.dynamic-defect-form label {
+    text-align: left;
+    width:200px;
+}
+
+.defect-form-row {
+    text-align:left;
+    padding-top: 5px;
+}
+
+.defect-form-row label {
+    display: inline-table;
 }

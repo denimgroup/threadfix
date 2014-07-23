@@ -49,7 +49,7 @@ public class Lists {
         @XmlElement(name="Name")
         String name;
         @XmlElement(name="Id")
-        int id;
+        String id;
         @XmlElement(name="Items")
         Items items;
 
@@ -61,11 +61,11 @@ public class Lists {
             this.name = name;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 

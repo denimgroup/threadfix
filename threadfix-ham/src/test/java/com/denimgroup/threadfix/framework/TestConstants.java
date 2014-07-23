@@ -54,7 +54,7 @@ public class TestConstants {
 		WAVSEP_WEB_XML = WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/WEB-INF/web.xml",
 		BODGEIT_WEB_XML = BODGEIT_JSP_ROOT + "/WEB-INF/web.xml",
         DOT_NET_ROOT = testRoot + "/ASP.NET MVC",
-        DOT_NET_SAMPLE = DOT_NET_ROOT + "/Add new DropDownList option",
+        DOT_NET_SAMPLE = DOT_NET_ROOT + "/ASP.NET MVC Application Using Entity Framework Code First",
 		FAKE_FILE = "",
 		SPRING_CONTROLLERS_PREFIX = "/src/main/java/org/springframework/samples/petclinic/web/",
 		SPRING_CRASH_CONTROLLER = SPRING_CONTROLLERS_PREFIX + "CrashController.java",

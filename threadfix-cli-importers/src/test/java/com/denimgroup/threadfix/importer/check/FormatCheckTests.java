@@ -85,7 +85,7 @@ public class FormatCheckTests {
                                             " and file " + file + ".",
                                     returnBean.getScanCheckResult() != ScanImportStatus.SUCCESSFUL_SCAN);
 
-                        } catch (ScanFileUnavailableException e) {
+                        } catch (ScanFileUnavailableException | IllegalStateException e) {
                             // This happens sometimes if zip files can't be read properly
                             e.printStackTrace();
                         }

@@ -23,14 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.partial;
 
+import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 
@@ -108,7 +110,7 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 	@Override
     @Nonnull
 	public List<PartialMapping> findAllMatches(@Nullable PartialMapping query) {
-		List<PartialMapping> maybeMappings = new ArrayList<>();
+		List<PartialMapping> maybeMappings = list();
 		if (query != null) {
 			maybeMappings = getMappingsIfPresent(dynamicMap, cleanDynamicPath(query.getDynamicPath()));
 			
@@ -140,7 +142,7 @@ class DefaultPartialMappingDatabase implements PartialMappingDatabase {
 
     @Nonnull
 	private List<PartialMapping> getMappingsIfPresent(@Nonnull Map<String, List<PartialMapping>> map, @Nullable String key) {
-		List<PartialMapping> mappings = new ArrayList<>();
+		List<PartialMapping> mappings = list();
 		
 		if (key != null && map.get(key) != null){
 			mappings = map.get(key);

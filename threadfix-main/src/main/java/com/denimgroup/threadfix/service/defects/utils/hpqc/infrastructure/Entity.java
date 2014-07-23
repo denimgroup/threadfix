@@ -205,6 +205,14 @@ public class Entity {
             return this.field;
         }
 
+        public Field findField(String fieldName) {
+            for (Field field1: getField()) {
+                if (field1.getName().equals(fieldName))
+                    return field1;
+            }
+            return null;
+        }
+
         /**
          * Java class for anonymous complex type.
          *

@@ -23,23 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
+import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.dao.WafDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
-import com.denimgroup.threadfix.data.dao.WafTypeDao;
-import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
-import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
+import java.util.Calendar;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -165,7 +161,7 @@ public class WafServiceImpl implements WafService {
         if (newWafRuleList == null || newWafRuleList.size()==0)
             return oldList;
         int updatedAppId = newWafRuleList.get(0).getVulnerability().getApplication().getId();
-        List<WafRule> removeList = new ArrayList<>();
+        List<WafRule> removeList = list();
         for (WafRule rule : oldList) {
             if (rule.getVulnerability().getApplication().getId() == updatedAppId)
                 removeList.add(rule);
@@ -270,7 +266,7 @@ public class WafServiceImpl implements WafService {
         List<WafRule> allRules = loadCurrentRules(waf);
         if (waf==null || application == null)
             return allRules;
-        List<WafRule> returnList = new ArrayList<>();
+        List<WafRule> returnList = list();
         for (WafRule rule: allRules) {
             if (rule.getVulnerability().getApplication().getId()==application.getId())
                 returnList.add(rule);

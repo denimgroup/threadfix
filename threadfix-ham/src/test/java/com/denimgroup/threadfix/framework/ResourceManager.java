@@ -43,5 +43,9 @@ public class ResourceManager {
     public static File getSpringFile(String name) {
 		return getFile("code/spring/" + name);
 	}
-	
+
+    @Nonnull
+    public static File getDotNetFile(String name) {
+        return getFile("code.dotNet.mvc/" + name);
+    }
 }

@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 /**
  * Created by mac on 6/11/14.
  */
-public interface DotNetKeywords {
+interface DotNetKeywords {
 
     public static final String
             PUBLIC = "public",
@@ -41,7 +41,9 @@ public interface DotNetKeywords {
             NEW = "new",
             CONTROLLER = "controller",
             ACTION = "action",
-            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication";
+            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication",
+            ACTION_RESULT = "ActionResult",
+            HTTP_MESSAGE_RESPONSE = "HttpResponseMessage";
 
 
 }

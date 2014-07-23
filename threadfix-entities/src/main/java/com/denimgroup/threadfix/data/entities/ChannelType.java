@@ -31,9 +31,10 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 @Entity
 @Table(name = "ChannelType")
@@ -43,13 +44,13 @@ public class ChannelType extends BaseEntity {
 	
 	// This set is used to hold the channel types that should include their native IDs in the vuln description.
 	// Any useful native IDs should be included here, but not ones that we generate ourselves.
-	public final static Set<String> NATIVE_ID_SCANNERS = new HashSet<String>(Arrays.asList(
+	public final static Set<String> NATIVE_ID_SCANNERS = set(
 			ScannerType.CAT_NET.getFullName(),
 			ScannerType.FORTIFY.getFullName(), 
 			ScannerType.SENTINEL.getFullName(),
-			ScannerType.VERACODE.getFullName()));
+			ScannerType.VERACODE.getFullName());
 	
-	public static final Set<String> DYNAMIC_TYPES = new HashSet<String>(Arrays.asList(new String[]{
+	public static final Set<String> DYNAMIC_TYPES = set(
 			ScannerType.ACUNETIX_WVS.getFullName(),
 			ScannerType.APPSCAN_ENTERPRISE.getFullName(), 
 			ScannerType.ARACHNI.getFullName(), 
@@ -62,17 +63,17 @@ public class ChannelType extends BaseEntity {
 			ScannerType.WEBINSPECT.getFullName(), 
 			ScannerType.ZAPROXY.getFullName(), 
 			ScannerType.QUALYSGUARD_WAS.getFullName(), 
-			ScannerType.APPSCAN_DYNAMIC.getFullName() }));
+			ScannerType.APPSCAN_DYNAMIC.getFullName());
 	
-	public static final Set<String> STATIC_TYPES = new HashSet<String>(Arrays.asList(new String[]{
+	public static final Set<String> STATIC_TYPES = set(
 			ScannerType.APPSCAN_SOURCE.getFullName(),
 			ScannerType.FINDBUGS.getFullName(), 
 			ScannerType.FORTIFY.getFullName(), 
 			ScannerType.VERACODE.getFullName(), 
 			ScannerType.CAT_NET.getFullName(),
 			ScannerType.BRAKEMAN.getFullName(),
-            ScannerType.PMD.getFullName() }));
-	
+            ScannerType.PMD.getFullName());
+
 	public static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
 	public static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
 

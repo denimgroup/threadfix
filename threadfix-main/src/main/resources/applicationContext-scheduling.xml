@@ -5,13 +5,13 @@
 	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	   					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	   					   http://www.springframework.org/schema/context 
-						   http://www.springframework.org/schema/context/spring-context-3.0.xsd
-						   http://activemq.apache.org/schema/core 
+	   					   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	   					   http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context-3.2.xsd
+						   http://activemq.apache.org/schema/core
 						   http://activemq.apache.org/schema/core/activemq-core-5.2.0.xsd
 						   http://www.springframework.org/schema/jms 
-						   http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">
+						   http://www.springframework.org/schema/jms/spring-jms-3.2.xsd">
 
 	<!-- creates an activemq connection factory using the amq namespace -->
 	<amq:connectionFactory id="amqConnectionFactory"
@@ -59,12 +59,12 @@
 
 	<!-- cron based trigger for synchronization with Defect Trackers -->
 	<!-- run every morning at 2 AM -->
-	<bean id="defectTrackerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+	<bean id="defectTrackerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"
 		p:jobDetail-ref="defectTrackerJob" p:cronExpression="2 0 0 * * ?" />
 
 	<!-- cron based trigger for Import Scans -->
 	<!-- run every morning at 6 AM -->
-	<bean id="importScansCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+	<bean id="importScansCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"
 		p:jobDetail-ref="importScansJob" p:cronExpression="6 0 0 * * ?" />
 		
 	<!--

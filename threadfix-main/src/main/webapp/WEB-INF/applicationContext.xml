@@ -17,9 +17,6 @@
 
 	<bean id="CsrfPreventionFilter" class="com.denimgroup.threadfix.webapp.filter.CsrfPreventionFilter"/>	
 	
-	<bean id="handlerExceptionResolver"
-		  class="com.denimgroup.threadfix.webapp.controller.HandlerExceptionResolverBean"/>
-		
 	<!--
 		Activates various annotations to be detected in bean classes:
 		Spring's @Required and @Autowired, as well as JSR 250's @Resource.

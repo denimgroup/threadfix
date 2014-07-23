@@ -1,16 +1,22 @@
 package com.denimgroup.threadfix.service.defects.utils.hpqc;
 
 import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
+import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
 
-import javax.xml.bind.JAXBException;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by stran on 3/13/14.
@@ -26,24 +32,19 @@ public class HPQCUtils {
             log.info("URL was invalid.");
             return false;
         }
-        try {
-            con = RestConnector.getInstance().init(
-                    new HashMap<String, String>(),
-                    serverUrl,
-                    "",
-                    "");
+        con = RestConnector.getInstance().init(
+                new HashMap<String, String>(),
+                serverUrl,
+                "",
+                "");
 
-            String authenticationPoint = isAuthenticated();
-            if (authenticationPoint == null) {
-                log.warn("HP Quality Center was invalid, 401 response was expected but 200 returned.");
-                return false;
-            } else {
-                log.info("HP Quality Center URL was valid, returned 401 response as expected because we do not yet have credentials.");
-                return true;
-            }
-        } catch (Exception e) {
-            log.warn("HP Quality Center was invalid or some other problem occurred, 401 response was expected but not returned.", e);
+        String authenticationPoint = isAuthenticated();
+        if (authenticationPoint == null) {
+            log.warn("HP Quality Center was invalid, 401 response was expected but 200 returned.");
             return false;
+        } else {
+            log.info("HP Quality Center URL was valid, returned 401 response as expected because we do not yet have credentials.");
+            return true;
         }
     }
     public static String getAllProjects(String serverUrl, String username, String password) {
@@ -52,116 +53,126 @@ public class HPQCUtils {
                 serverUrl,
                 "",
                 "");
-        try {
-            log.info("Logging in to HP Quality Center");
+        log.info("Logging in to HP Quality Center");
 
-            if (!login(username,password))
-                return "Authentication failed";
-
-            String getProjectsUrl = con.buildUrl("rest/domains?include-projects-info=y");
-            Map<String, String> requestHeaders = new HashMap();
-            requestHeaders.put("Accept", "application/xml");
-            Response serverResponse = con.httpGet(getProjectsUrl,
-                    null, requestHeaders);
-            if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
-                String responseStr = serverResponse.toString();
-                if (responseStr.contains("<Domains>")) {
-                    log.info("Got a list of projects. ");
-//                    logout();
-                    return responseStr;
-                }
-            } else {
-                log.warn("Domains not found");
-            }
-
-        } catch (Exception e) {
-            log.error("Error when trying to read projects from HP Quality Center");
+        if (!login(username,password)) {
+            return "Authentication failed";
         }
-        return null;
+
+        String getProjectsUrl = con.buildUrl("rest/domains?include-projects-info=y");
+        Map<String, String> requestHeaders = new HashMap<>();
+        requestHeaders.put("Accept", "application/xml");
+        Response serverResponse = con.httpGet(getProjectsUrl,
+                null, requestHeaders);
+        if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
+            String responseStr = serverResponse.toString();
+            if (responseStr.contains("<Domains>")) {
+                log.info("Got a list of projects. ");
+                return responseStr;
+            }
+        } else {
+            log.warn("Got " + serverResponse.getStatusCode() + " response instead of 200.");
+        }
+
+        throw new DefectTrackerCommunicationException("Unable to retrieve projects.");
     }
 
-    public static boolean checkCredential(String serverUrl, String username, String password, String domain_project) {
-        if (!checkProjectName(serverUrl, domain_project))
+    public static boolean checkCredential(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject)) {
             return false;
+        }
+
         try {
             log.info("Checking HPQC credentials");
-            if (!login(username,password))
+            if (!login(username,password)) {
                 return false;
-            String[] pDetails = getProjectNameSplit(domain_project);
-            String getUrl = con.buildUrl("rest/domains/" + pDetails[0]
-                    + "/projects/" + pDetails[1]
-                    + "/customization/users/" + username);
-
-            Response serverResponse = doGet(serverUrl, getUrl, domain_project);
-            if (serverResponse != null) {
-                String responseStr = serverResponse.toString();
-                if (responseStr.contains("</User>")) {
-                    return true;
-                } else {
-                    log.warn("This credential doesn't have permission with project " + domain_project);
-                }
             }
-        } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/customization/users/" + URLEncoder.encode(username, "UTF-8"));
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("</User>")) {
+                return true;
+            } else {
+                log.warn("Received response code " + serverResponse.getStatusCode() +
+                        " and the response string didn't contain </User>. " +
+                        "The user is probably not authenticated for " + domainProject);
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e, "UTF-8 not supported.");
         }
+
         return false;
     }
 
-    public static Map<String,List<String>> getListValues(String serverUrl, String username, String password, String domain_project) {
-        if (!checkProjectName(serverUrl, domain_project))
+    @Nullable
+    public static Map<String,List<String>> getListValues(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject)) {
             return null;
-        try {
-            if (!login(username,password))
-                return null;
+        }
 
-            String[] pDetails = getProjectNameSplit(domain_project);
-            String getUrl = con.buildUrl("rest/domains/" + pDetails[0]
-                    + "/projects/" + pDetails[1]
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
                     + "/customization/entities/defect/lists");
 
-            Response serverResponse = doGet(serverUrl, getUrl, domain_project);
-            if (serverResponse != null) {
-                String responseStr = serverResponse.toString();
-                if (responseStr.contains("<Lists>")) {
-                    return parseListXml(responseStr);
-                } else {
-                    log.warn("XML response is incorrect");
-                }
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("<Lists>")) {
+                return parseListXml(responseStr);
+            } else {
+                log.warn("XML didn't have <Lists>, returning null.");
             }
-        } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
         }
-        return null;
     }
 
+    @Nonnull
     public static String postDefect(String serverUrl,
                                  String username,
                                  String password,
                                  String domain_project,
                                  String defectXml) {
-        try {
-            log.info("Checking HPQC credentials");
-            if (!login(username,password))
-                return null;
-            String postUrl = con.buildEntityCollectionUrl("defect");
+        log.info("Checking HPQC credentials");
+        if (!login(username, password))
+            return null;
+        String postUrl = con.buildEntityCollectionUrl("defect");
 
-            Response response = doPost(serverUrl, postUrl, domain_project, defectXml);
+        Response response = doPost(serverUrl, postUrl, domain_project, defectXml);
 
-            if (response != null) {
-            String responseStr = response.toString();
-            Entity newDefect = parseEntityXml(responseStr);
-            String newDefectId = getFieldValue(newDefect, "id");
-            if (newDefectId != null && !newDefectId.isEmpty()) {
-                log.info("New defect was created in HPQC with Id " + newDefectId);
-                return newDefectId;
-            }
-            }
-        } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
+        String responseStr = response.toString();
+        Entity newDefect = parseXml(responseStr, Entity.class);
+        String newDefectId = getFieldValue(newDefect, "id");
+        if (newDefectId != null && !newDefectId.isEmpty()) {
+            log.info("New defect was created in HPQC with Id " + newDefectId);
+            return newDefectId;
+        } else {
+            throw new DefectTrackerCommunicationException("Unable to post defect to HPQC.");
         }
-        return null;
     }
 
+    @Nonnull
     public static Map<Defect,Boolean> getStatuses(List<Defect> defectList,
                                                   String serverUrl, String username,
                                                   String password, String domain_project) {
@@ -170,95 +181,203 @@ public class HPQCUtils {
         if (!checkProjectName(serverUrl, domain_project))
             return returnMap;
 
-        try {
-            if (login(username,password)) {
-                for (Defect defect : defectList) {
-                    if (defect != null) {
-                        String result = getStatus(defect);
-                        defect.setStatus(result);
-                        boolean isOpen = result != null &&
-                                (!result.equals("Closed") || !result.equals("Fixed") || !result.equals("Rejected"));
-                        returnMap.put(defect, isOpen);
-                    }
+        if (login(username,password)) {
+            for (Defect defect : defectList) {
+                if (defect != null) {
+                    String result = getStatus(defect);
+                    defect.setStatus(result);
+                    boolean isOpen = result != null &&
+                            (!result.equals("Closed") || !result.equals("Fixed") || !result.equals("Rejected"));
+                    returnMap.put(defect, isOpen);
                 }
-//                logout();
             }
-        } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
         }
+
         return returnMap;
     }
 
     public static List<Defect> getDefectList(String serverUrl, String username, String password, String domain_project) {
-        List<Defect> defectList = new ArrayList<>();
-        String defectUrl = con.buildEntityCollectionUrl("defect");
+        List<Defect> defectList = list();
+
+        if (!checkProjectName(serverUrl, domain_project))
+            return defectList;
 
         Response serverResponse;
-        try {
-            if (login(username,password)) {
-                serverResponse = doGet(serverUrl, defectUrl, domain_project);
-                if (serverResponse != null) {
-                    String responseStr = serverResponse.toString();
-                    if (responseStr.contains("</Entities>")) {
-                        Entities entities = parseEntitiesXml(responseStr);
-                        if (entities.getEntities() != null) {
-                            for (Entity entity: entities.getEntities()) {
-                                Defect defect = new Defect();
-                                defect.setNativeId(getFieldValue(entity, "id"));
-                                defectList.add(defect);
-                            }
-                        }
-                    } else {
-                        log.warn("XML response is incorrect");
+
+        if (login(username,password)) {
+            String defectUrl = con.buildEntityCollectionUrl("defect");
+            serverResponse = doGet(serverUrl, defectUrl, domain_project);
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("</Entities>")) {
+                Entities entities = parseXml(responseStr, Entities.class);
+                if (entities.getEntities() != null) {
+                    for (Entity entity: entities.getEntities()) {
+                        Defect defect = new Defect();
+                        defect.setNativeId(getFieldValue(entity, "id"));
+                        defectList.add(defect);
                     }
                 }
+            } else {
+                log.warn("XML response is incorrect");
             }
-        } catch (Exception e) {
-            log.warn("Error when trying to login HPQC");
         }
 
         return defectList;
     }
 
+    @Nullable
+    public static List<Fields.Field> getEditableFields(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject)) {
+            return null;
+        }
+
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/customization/entities/defect/fields");
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("<Fields>")) {
+                return parseFieldXml(responseStr);
+            } else {
+                log.warn("XML didn't have <Fields>, returning null.");
+            }
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
+        }
+    }
+
+    @Nullable
+    public static List<Users.User> getActiveUsers(String serverUrl, String username, String password, String domainProject) {
+        if (!checkProjectName(serverUrl, domainProject)) {
+            return null;
+        }
+
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/customization/users");
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("<Users>")) {
+                Users users = parseXml(responseStr, Users.class);
+                return filterUser(users);
+            } else {
+                log.warn("XML didn't have <Users>, returning null.");
+            }
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
+        }
+    }
+
+    @Nullable
+    public static Entities getEntities(String serverUrl, String username, String password, String domainProject, @Nonnull String entityName) {
+        if (!checkProjectName(serverUrl, domainProject)) {
+            return null;
+        }
+
+        try {
+            if (!login(username,password)) {
+                return null;
+            }
+
+            String[] pDetails = getProjectNameSplit(domainProject);
+            String getUrl = con.buildUrl("rest/domains/" + URLEncoder.encode(pDetails[0], "UTF-8")
+                    + "/projects/" + URLEncoder.encode(pDetails[1], "UTF-8")
+                    + "/" + entityName + "s");
+
+            Response serverResponse = doGet(serverUrl, getUrl, domainProject);
+
+            String responseStr = serverResponse.toString();
+
+            log.debug(responseStr);
+
+            if (responseStr.contains("</Entities>")) {
+                return parseXml(responseStr, Entities.class);
+            } else {
+                log.warn("XML didn't have <Users>, returning null.");
+            }
+
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateRestException(e,
+                    "Got UnsupportedEncodingException for UTF-8, this should never happen.");
+        }
+    }
+
+    @Nonnull
+    private static List<Users.User> filterUser(Users users) {
+
+        List<Users.User> result = list();
+        if (users != null && users.getUsers() != null) {
+
+            for (Users.User user : users.getUsers()) {
+                if (user != null && user.isUserActive()) {
+                    result.add(user);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Nonnull
     private static Response doGet(String serverUrl, String getUrl, String domain_project) {
         if (checkProjectNameAndReset(serverUrl, domain_project)) {
             Map<String, String> requestHeaders = new HashMap<>();
             requestHeaders.put("Accept", "application/xml");
-            try {
-                Response serverResponse = con.httpGet(getUrl,
-                        null, requestHeaders);
-//                logout();
-                if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK)
-                    return serverResponse;
-                else
-                    log.warn("The response for the get request was not 200");
-            } catch (Exception e) {
-                log.warn("Error when trying to get information from HPQC");
+
+            Response serverResponse = con.httpGet(getUrl, null, requestHeaders);
+            if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
+                return serverResponse;
+            } else {
+                log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
             }
         }
-        return  null;
+
+        throw new DefectTrackerCommunicationException("Unable to get response from server.");
     }
 
-    private static Response doPost(String serverUrl, String postUrl, String domain_project, String dataXml) {
-        if (checkProjectNameAndReset(serverUrl, domain_project)) {
+    @Nonnull
+    private static Response doPost(String serverUrl, String postUrl, String domainProject, String dataXml) {
+        if (checkProjectNameAndReset(serverUrl, domainProject)) {
             Map<String, String> requestHeaders = new HashMap<>();
             requestHeaders.put("Content-Type", "application/xml");
             requestHeaders.put("Accept", "application/xml");
 
-            Response response;
-            try {
-                response = con.httpPost(postUrl,
-                        dataXml.getBytes(), requestHeaders);
-                Exception failure = response.getFailure();
-                if (failure != null) {
-                    log.warn("Error when trying to send a post request", failure);
-                } else
-                    return response;
-            } catch (Exception e) {
-                log.warn("Error when trying to send a post request");
-            }
+            return con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
         }
-        return null;
+
+        throw new DefectTrackerCommunicationException("Unable to get response from server.");
     }
 
     private static boolean checkProjectName(String serverUrl, String domain_project) {
@@ -293,48 +412,25 @@ public class HPQCUtils {
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("Accept", "application/xml");
-        Response serverResponse = null;
-        try {
-            serverResponse = con.httpGet(defectUrl,
-                    null, requestHeaders);
-            if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
-                String responseStr = serverResponse.toString();
-                if (responseStr.contains("</Entity>")) {
-                    String status = getFieldValue(parseEntityXml(responseStr), "status");
-                    log.info("Current status for defect " + defect.getNativeId() + " is " + status);
-                    defect.setStatus(status);
-                    return status;
-                } else {
-                    log.warn("XML response is incorrect");
-                }
+        Response serverResponse = con.httpGet(defectUrl, null, requestHeaders);
+        if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
+            String responseStr = serverResponse.toString();
+            if (responseStr.contains("</Entity>")) {
+                String status = getFieldValue(parseXml(responseStr, Entity.class), "status");
+                log.info("Current status for defect " + defect.getNativeId() + " is " + status);
+                defect.setStatus(status);
+                return status;
             } else {
-                log.warn("URL not found");
+                log.warn("XML response is incorrect: does not contain <\\Entity>");
             }
-        } catch (Exception e) {
-            log.warn("Error when trying to get status of Defect Id " + defect.getNativeId() + " from HPQC");
+        } else {
+            log.warn("Response code was " + serverResponse.getStatusCode() + ", not 200.");
         }
 
         return null;
     }
 
-    private static Entity parseEntityXml(String entityXml) {
-        try {
-            return MarshallingUtils.marshal(Entity.class, entityXml);
-        } catch (JAXBException e) {
-            log.error("Error when trying to parse Entity from string xml");
-        }
-        return  null;
-    }
-
-    private static Entities parseEntitiesXml(String entitiesXml) {
-        try {
-            return MarshallingUtils.marshal(Entities.class, entitiesXml);
-        } catch (JAXBException e) {
-            log.error("Error when trying to parse Entity from string xml");
-        }
-        return  null;
-    }
-
+    @Nullable
     private static String getFieldValue(Entity entity, String fieldName) {
         if (entity != null && entity.getFields().getField() != null) {
             for (Entity.Fields.Field field : entity.getFields().getField()) {
@@ -348,54 +444,70 @@ public class HPQCUtils {
         return null;
     }
 
+    @Nonnull
     private static Map<String, List<String>> parseListXml(String responseStr) {
-        Lists lists;
         Map<String, List<String>> map = new HashMap<>();
-        try {
-            lists =
-                    MarshallingUtils.marshal(Lists.class, responseStr);
-            if (lists != null && lists.getLists() != null) {
-                for (Lists.ListInfo listInfo : lists.getLists()) {
-                    if (listInfo != null && listInfo.getItems().getItemList() != null) {
-                        List<String> values = new ArrayList<>();
-                        for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
-                            if (item != null) {
-                                values.add(item.getValue());
-                            }
+        Lists lists = MarshallingUtils.marshal(Lists.class, responseStr);
+
+        if (lists != null && lists.getLists() != null) {
+            for (Lists.ListInfo listInfo : lists.getLists()) {
+                if (listInfo != null && listInfo.getItems().getItemList() != null) {
+                    List<String> values = list();
+                    for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
+                        if (item != null) {
+                            values.add(item.getValue());
                         }
-                        map.put(listInfo.getName(), values);
                     }
+                    map.put(listInfo.getId(), values);
                 }
             }
-        } catch (JAXBException e) {
-            log.warn("Error when trying to parsing xml response from HPQC");
-            e.printStackTrace();
         }
         return map;
     }
 
-    private static String[] getProjectNameSplit(String domain_project) {
-        return domain_project.split("/");
+    @Nonnull
+    private static List<Fields.Field> parseFieldXml(String responseStr) {
+        List<Fields.Field> result = list();
+        Fields fields = MarshallingUtils.marshal(Fields.class, responseStr);
+        if (fields != null && fields.getFields() != null) {
+
+            for (Fields.Field field : fields.getFields()) {
+                if (field != null && field.isActive() && field.isEditable()) {
+                    result.add(field);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Nullable
+    private static <T> T parseXml(String responseStr, Class<T> c) {
+        return MarshallingUtils.marshal(c, responseStr);
+    }
+
+    private static String[] getProjectNameSplit(String domainProject) {
+        return domainProject.split("/");
     }
 
     /**
      * @param username
      * @param password
      * @return true if authenticated at the end of this method.
-     * @throws Exception
      *
      * convenience method used by other examples to do their login
      */
-    private static boolean login(String username, String password) throws Exception {
+    private static boolean login(String username, String password) {
 
         String authenticationPoint = isAuthenticated();
-        if (authenticationPoint != null) {
-            boolean isLogin = login(authenticationPoint, username, password);
-            if (!isLogin)
-                log.warn("Log-in failed");
-            return isLogin;
+
+        boolean isLogin = authenticationPoint.equals(String.valueOf(HttpURLConnection.HTTP_OK)) ||
+                (authenticationPoint != null && login(authenticationPoint, username, password));
+
+        if (!isLogin) {
+            log.warn("Log-in failed");
         }
-        return true;
+
+        return isLogin;
     }
 
     /**
@@ -404,15 +516,13 @@ public class HPQCUtils {
      * @param username
      * @param password
      * @return true on operation success, false otherwise
-     * @throws Exception
      *
      * Logging in to our system is standard http login (basic authentication),
      * where one must store the returned cookies for further use.
      */
-    private static boolean login(String loginUrl, String username, String password)
-            throws Exception {
+    private static boolean login(String loginUrl, String username, String password) {
 
-        //create a string that lookes like:
+        // Create a string that looks like:
         // "Basic ((username:password)<as bytes>)<64encoded>"
         byte[] credBytes = (username + ":" + password).getBytes();
         String credEncodedString = "Basic " + Base64Encoder.encode(credBytes);
@@ -422,34 +532,18 @@ public class HPQCUtils {
 
         Response response = con.httpGet(loginUrl, null, map);
 
-        boolean ret = response.getStatusCode() == HttpURLConnection.HTTP_OK;
+        if (response.getStatusCode() != 200) {
+            log.error("Received response code of " + response.getStatusCode() + " instead of 200.");
+        }
 
-        return ret;
-    }
-
-    /**
-     * @return true if logout successful
-     * @throws Exception
-     *             close session on server and clean session cookies on client
-     */
-    private static boolean logout() throws Exception {
-
-        //note the get operation logs us out by setting authentication cookies to:
-        // LWSSO_COOKIE_KEY="" via server response header Set-Cookie
-        Response response =
-                con.httpGet(con.buildUrl("authentication-point/logout"),
-                        null, null);
-
-        return (response.getStatusCode() == HttpURLConnection.HTTP_OK);
-
+        return response.getStatusCode() == HttpURLConnection.HTTP_OK;
     }
 
     /**
      * @return null if authenticated.<br>
      *         a url to authenticate against if not authenticated.
-     * @throws Exception
      */
-    private static String isAuthenticated() throws Exception {
+    private static String isAuthenticated() {
 
         String isAuthenticateUrl = con.buildUrl("rest/is-authenticated");
         String ret;
@@ -460,7 +554,7 @@ public class HPQCUtils {
         //if already authenticated
         if (responseCode == HttpURLConnection.HTTP_OK) {
 
-            ret = null;
+            ret = String.valueOf(HttpURLConnection.HTTP_OK);
         }
 
         //if not authenticated - get the address where to authenticate
@@ -479,8 +573,8 @@ public class HPQCUtils {
 
         //Not ok, not unauthorized. An error, such as 404, or 500
         else {
-
-            throw response.getFailure();
+            throw new DefectTrackerCommunicationException(
+                    "Unable to communicate with the HPQC server. Response code was " + responseCode);
         }
 
         return ret;

@@ -30,6 +30,8 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.util.*;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 public class ChannelMerger extends SpringBeanAutowiringSupport {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(ChannelMerger.class);
@@ -57,8 +59,8 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
             scan.setFindings(new ArrayList<Finding>());
         }
 
-        List<Finding> oldFindings = new ArrayList<>();
-        List<Finding> newFindings = new ArrayList<>();
+        List<Finding> oldFindings = list();
+        List<Finding> newFindings = list();
         Map<String, Finding> scanHash = new HashMap<>();
         Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<>();
         Map<String, Finding> oldNativeIdFindingHash = new HashMap<>();
