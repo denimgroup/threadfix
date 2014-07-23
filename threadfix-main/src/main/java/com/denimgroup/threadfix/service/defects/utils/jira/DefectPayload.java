@@ -103,6 +103,8 @@ public class DefectPayload {
                 String items = field.getSchema().getItems();
                 if (MULTISELECT.equals(custom)) {
                     returnValue = getObjectsFromMultivalueSelect(value);
+                } else if ("labels".equals(field.getSchema().getSystem())) {
+                    returnValue = list(StringUtils.split(String.valueOf(value), ' '));
                 } else if (MULTI_CHECKBOX.equals(custom)) {
                     returnValue = getObjectsFromMultivalueSelect(value);
                 } else if (CASCADING_SELECT.equals(custom)) {
@@ -115,13 +117,22 @@ public class DefectPayload {
             } else if (type.equals("user")) {
                 returnValue = new NamedObjectDescriptor(value);
             } else if (type.equals("number")) {
-                returnValue = value;
+                returnValue = getFloatOr0(value);
             } else {
                 returnValue = new ObjectDescriptor(value);
             }
         }
 
         return returnValue;
+    }
+
+    public Float getFloatOr0(Object input) {
+        try {
+            return Float.valueOf(String.valueOf(input));
+        } catch (NumberFormatException e) {
+            LOG.error("Got input " + input + " which could not be parsed as a float.");
+            return 0.0F;
+        }
     }
 
     // multivalue comes in as [ "string1", "string2" ] but we need [ { id: "string1" }, { id: "string2" } ]
@@ -214,11 +225,11 @@ public class DefectPayload {
 
         public CascadingSelect(Object value) {
             String stringValue = String.valueOf(value);
-            String [] stuff = StringUtils.splitByWholeSeparator(stringValue, CASCADING_SEPARATOR);
-            assert stuff.length == 2 : "Got " + stuff.length + " results instead of 2.";
+            String [] splitSelectValues = StringUtils.splitByWholeSeparator(stringValue, CASCADING_SEPARATOR);
+            assert splitSelectValues.length == 2 : "Got " + splitSelectValues.length + " results instead of 2.";
 
-            this.value = stuff[0];
-            child = new CascadingSelectChild(stuff[1]);
+            this.value = splitSelectValues[0];
+            child = new CascadingSelectChild(splitSelectValues[1]);
         }
 
         public String getValue() {

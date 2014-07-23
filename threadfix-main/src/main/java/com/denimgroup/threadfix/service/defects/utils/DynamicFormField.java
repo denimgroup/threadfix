@@ -24,7 +24,9 @@
 
 package com.denimgroup.threadfix.service.defects.utils;
 
-import java.util.Map;
+import java.util.*;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by stran on 7/10/14.
@@ -32,8 +34,11 @@ import java.util.Map;
 public class DynamicFormField {
     String name;
     String label;
+    String placeholder;
+    String validate;
 
-    String listId;
+    int maxLength;
+    int minLength;
     boolean required;
     String type;
     boolean active;
@@ -41,6 +46,39 @@ public class DynamicFormField {
     boolean supportsMultivalue;
 
     Map<String, String> optionsMap;
+    Map<String, String> errorsMap;
+
+    public String getValidate() {
+        return validate;
+    }
+
+    public void setValidate(String validate) {
+        this.validate = validate;
+    }
+
+    public Map<String, String> getErrorsMap() {
+        return errorsMap;
+    }
+
+    public void setErrorsMap(Map<String, String> errorsMap) {
+        this.errorsMap = errorsMap;
+    }
+
+    public void setError(String key, String value) {
+        if (errorsMap == null) {
+            errorsMap = newMap();
+        }
+
+        errorsMap.put(key, value);
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
 
     public String getName() {
         return name;
@@ -58,12 +96,20 @@ public class DynamicFormField {
         this.label = label;
     }
 
-    public String getListId() {
-        return listId;
+    public int getMaxLength() {
+        return maxLength;
     }
 
-    public void setListId(String listId) {
-        this.listId = listId;
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public int getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(int minLength) {
+        this.minLength = minLength;
     }
 
     public boolean isRequired() {
@@ -107,7 +153,7 @@ public class DynamicFormField {
     }
 
     public void setOptionsMap(Map<String, String> optionsMap) {
-        this.optionsMap = optionsMap;
+        this.optionsMap = sortByValues(optionsMap);
     }
 
     public boolean isSupportsMultivalue() {
@@ -117,4 +163,34 @@ public class DynamicFormField {
     public void setSupportsMultivalue(boolean supportsMultivalue) {
         this.supportsMultivalue = supportsMultivalue;
     }
+
+
+    /*
+     * Java method to sort Map in Java by value e.g. HashMap or Hashtable
+     * It also sort values even if they are duplicates
+     */
+    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map){
+        if (map == null)
+            return null;
+        List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
+
+        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
+
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        //LinkedHashMap will keep the keys in the order they are inserted
+        //which is currently sorted on natural ordering
+        Map<K,V> sortedMap = new LinkedHashMap<>();
+
+        for(Map.Entry<K,V> entry: entries){
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+
 }

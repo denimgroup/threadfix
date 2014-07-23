@@ -54,6 +54,8 @@ public class Fields {
         @XmlAttribute(name = "Label")
         String label;
 
+        @XmlElement(name="Size")
+        int size;
         @XmlElement(name="List-Id")
         String listId;
         @XmlElement(name="Required")
@@ -92,6 +94,14 @@ public class Fields {
 
         public void setLabel(String label) {
             this.label = label;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
         }
 
         public String getListId() {

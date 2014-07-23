@@ -41,7 +41,16 @@ import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetada
  */
 public class DynamicFormFieldParser {
 
-    private DynamicFormFieldParser() {}
+    private static final String
+            TIMETRACKING_REGEX = "^([0-9]+[ymwdh] ?)+$",
+            PLACEHOLDER_TEXT = "Ex. 7w 2d 6h",
+            TIMETRACKING_ERROR = "Invalid format. " + PLACEHOLDER_TEXT,
+            FLOAT_REGEX = "^-?[0-9]+(?:\\.[0-9]+)?$";
+
+    private DynamicFormFieldParser() {
+    }
+
+//    private static final String TIME_TRACKING
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DynamicFormFieldParser.class);
 
@@ -86,6 +95,10 @@ public class DynamicFormFieldParser {
                         DynamicFormField field = new DynamicFormField();
 
                         field.setRequired(jsonField.isRequired());
+                        if (jsonField.isRequired()) {
+                            field.setError("required", "This field cannot be empty.");
+                        }
+
                         field.setName(entry.getKey());
                         field.setLabel(jsonField.getName());
                         field.setActive(true);
@@ -98,7 +111,6 @@ public class DynamicFormFieldParser {
                             }
                             if (MULTI_CHECKBOX.equals(jsonField.getSchema().getCustom())) {
                                 field.setSupportsMultivalue(true);
-                                field.setRequired(false); // you are forced to select all of the options if this is true
                                 field.setType("checklist");
                             } else if (CASCADING_SELECT.equals(jsonField.getSchema().getCustom())) {
                                 field.setType("select");
@@ -117,7 +129,11 @@ public class DynamicFormFieldParser {
                             originalEstimate.setLabel("Original Estimate");
                             originalEstimate.setActive(true);
                             originalEstimate.setEditable(true);
+                            originalEstimate.setValidate(TIMETRACKING_REGEX);
                             originalEstimate.setType("text");
+                            originalEstimate.setPlaceholder(PLACEHOLDER_TEXT);
+                            originalEstimate.setError("pattern", TIMETRACKING_ERROR);
+                            originalEstimate.setError("required", "This field cannot be empty.");
                             fieldList.add(originalEstimate);
 
                             DynamicFormField remainingEstimate = new DynamicFormField();
@@ -126,23 +142,32 @@ public class DynamicFormFieldParser {
                             remainingEstimate.setName("timetracking_remainingestimate");
                             remainingEstimate.setLabel("Remaining Estimate");
                             remainingEstimate.setActive(true);
+                            remainingEstimate.setValidate(TIMETRACKING_REGEX);
+                            remainingEstimate.setPlaceholder(PLACEHOLDER_TEXT);
                             remainingEstimate.setEditable(true);
                             remainingEstimate.setType("text");
+                            remainingEstimate.setError("required", "This field cannot be empty.");
+                            remainingEstimate.setError("pattern", TIMETRACKING_ERROR);
                             fieldList.add(remainingEstimate);
                             continue;
                         } else if (type.equals("string")) {
 
-                            if ("com.atlassian.jira.plugin.system.customfieldtypes:url".equals(
-                                    jsonField.getSchema().getCustom())) {
+                            if (URL_TYPE.equals(jsonField.getSchema().getCustom())) {
                                 field.setType("url");
-                            } else if ("com.atlassian.jira.plugin.system.customfieldtypes:textarea".equals(
-                                    jsonField.getSchema().getCustom())) {
+                            } else if (TEXTAREA_TYPE.equals(jsonField.getSchema().getCustom())) {
                                 field.setType("textarea");
                             } else {
                                 field.setType("text");
                             }
                         } else if (type.equals("number")) {
-                            field.setType("number");
+                            if (FLOAT_TYPE.equals(jsonField.getSchema().getCustom())) {
+                                field.setValidate(FLOAT_REGEX);
+                                field.setType("text");
+                                field.setError("pattern", "Must be float format (ex. 3.14)");
+                            } else {
+                                field.setType("number");
+                            }
+
                         } else if (type.equals("date") || type.equals("datetime")) {
                             field.setType("date");
                         } else if (type.equals("array") && jsonField.getSchema().getItems().equals("string")) {
