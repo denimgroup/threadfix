@@ -11,7 +11,7 @@
 
 	<h2>Dashboard</h2>
 	
-	<spring:url value="/organizations" var="teamsUrl"/>
+	<spring:url value="/teams" var="teamsUrl"/>
 	
 	<c:if test="${ empty teams }">
 		<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_TEAMS">

@@ -69,6 +69,7 @@ public class ScanPluginController {
 		try {
             genericVulnUpdateResults = scannerMappingsUpdaterService.updateGenericVulnerabilities();
             channelVulnUpdateResults = scannerMappingsUpdaterService.updateChannelVulnerabilities();
+            scannerMappingsUpdaterService.updateDefectTrackers();
             scannerMappingsUpdaterService.updateUpdatedDate();
 
 		} catch (URISyntaxException e) {
