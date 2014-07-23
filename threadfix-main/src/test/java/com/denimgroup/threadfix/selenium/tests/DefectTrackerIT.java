@@ -91,7 +91,7 @@ public class DefectTrackerIT extends BaseIT {
     }
 
     @Test
-	public void testCreateDefectTracker() {
+	public void createDefectTrackerTest() {
 		String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
 		String defectTrackerType = "Bugzilla";
 
@@ -108,7 +108,7 @@ public class DefectTrackerIT extends BaseIT {
 	}
 
     @Test
-    public void testDeleteDefectTracker() {
+    public void deleteDefectTrackerTest() {
         String newDefectTrackerName = "testDeleteDefectTracker"+ getRandomString(3);
         String defectTrackerType = "Bugzilla";
 
@@ -129,7 +129,7 @@ public class DefectTrackerIT extends BaseIT {
     }
 
 	@Test
-	public void testCreateDefectTrackerFieldValidation() {
+	public void createDefectTrackerFieldValidation() {
 		String emptyString = "";
 		String whiteSpaceString = "           ";
 		String urlFormatString = "asdfwe";
@@ -162,7 +162,7 @@ public class DefectTrackerIT extends BaseIT {
 	}
 
 	@Test
-	public void testEditDefectTracker() {
+	public void editDefectTrackerTest() {
 		String originalDefectTrackerName = "testEditDefectTracker"+ getRandomString(3);
 		String editedDefectTrackerName = "testEditDefectTracker-edit"+ getRandomString(3);
 		String originalDefectTrackerType = "Jira";
@@ -193,7 +193,7 @@ public class DefectTrackerIT extends BaseIT {
 	}
 
     @Test
-	public void testEditDefectTrackerFieldValidation() {
+	public void editDefectTrackerFieldValidation() {
         String emptyString = "";
         String whiteSpaceString = "           ";
 
@@ -295,42 +295,14 @@ public class DefectTrackerIT extends BaseIT {
         assertTrue("The defectTracker was not present in the table.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(replacementName));
     }
 
-	@Test
-	public void testAttachToAppBugzillaTracker() {
-		String defectTrackerName = "attachAppBugzilla" + getRandomString(3);
-		String defectTrackerType = "Bugzilla";
-		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);
-		String appName = "bugzillaAttachTestApp" + getRandomString(3);
+    @Test
+    public void switchDefectTrackersTest() {
+        String defectTracker1 = "testSwitchDefectTracker1" + getRandomString(3);
+        String defectTracker2 = "testSwitchDefectTracker2" + getRandomString(3);
+        String defectTrackerType = "Bugzilla";
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
-                .clickDefectTrackersLink();
-
-		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
-                .enterName(defectTrackerName)
-                .enterType(defectTrackerType)
-                .enterURL(BUGZILLA_URL)
-                .clickSaveDefectTracker();
-
-        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-				.clickViewAppLink(appName, teamName)
-				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
-		
-		assertTrue("Defect tracker wasn't attached correctly",
-				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
-	}
-
-	@Test
-	public void testSwitchDefectTrackers() {
-		String defectTracker1 = "testSwitchDefectTracker1" + getRandomString(3);
-		String defectTracker2 = "testSwitchDefectTracker2" + getRandomString(3);
-		String defectTrackerType = "Bugzilla";
-
-		String teamName = "bugzillaAAttachTestTeam" + getRandomString(3);
-		String appName = "bugzillaAttachTestApp" + getRandomString(3);
+        String teamName = "bugzillaAAttachTestTeam" + getRandomString(3);
+        String appName = "bugzillaAttachTestApp" + getRandomString(3);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -355,17 +327,78 @@ public class DefectTrackerIT extends BaseIT {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .addDefectTracker(defectTracker1, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
-		
-		assertTrue("Defect tracker wasn't attached correctly",
+
+        assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
         //assertTrue("Defect Tracker wasn't attached correctly",applicationDetailPage.getDefectTrackerName().contains(defectTracker1));
-		
-		applicationDetailPage = applicationDetailPage.clickModalCancel();
+
+        applicationDetailPage = applicationDetailPage.clickModalCancel();
         sleep(500);
         applicationDetailPage.addDefectTracker(defectTracker2, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
 
+        assertTrue("Defect tracker wasn't attached correctly",
+                applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+        //assertTrue("Defect Tracker wasn't attached correctly",applicationDetailPage.getDefectTrackerName().contains(defectTracker2));
+    }
+
+	@Test
+	public void attachBugzillaTrackerTest() {
+		String defectTrackerName = "attachAppBugzilla" + getRandomString(3);
+		String defectTrackerType = "Bugzilla";
+		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);
+		String appName = "bugzillaAttachTestApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
+
+		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(defectTrackerName)
+                .enterType(defectTrackerType)
+                .enterURL(BUGZILLA_URL)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+				.clickViewAppLink(appName, teamName)
+				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
-        //assertTrue("Defect Tracker wasn't attached correctly",applicationDetailPage.getDefectTrackerName().contains(defectTracker2));
 	}
+
+    @Test
+    public void removeAttachedBugzillaTrackerTest() {
+        String defectTrackerName = getRandomString(8);
+        String defectTrackerType = "Bugzilla";
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
+
+        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .enterName(defectTrackerName)
+                .enterType(defectTrackerType)
+                .enterURL(BUGZILLA_URL)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+
+        defectTrackerIndexPage = applicationDetailPage.clickDefectTrackersLink()
+                .clickEditLink(defectTrackerName)
+                .clickDeleteButton()
+                .clickDefectTrackersLink();
+
+        assertFalse("The defectTracker was still present after attempted deletion.",
+                defectTrackerIndexPage.isElementPresent("defectTackerName" + defectTrackerName));
+    }
 }

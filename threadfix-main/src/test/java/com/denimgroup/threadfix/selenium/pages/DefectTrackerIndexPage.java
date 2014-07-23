@@ -39,9 +39,9 @@ public class DefectTrackerIndexPage extends BasePage {
 		super(webdriver);
 	}
 
-	public DefectTrackerIndexPage clickEditLink(String roleName) {
-		waitForElement(driver.findElementById("editDefectTrackerButton" + roleName));
-        driver.findElementById("editDefectTrackerButton" + roleName).click();
+	public DefectTrackerIndexPage clickEditLink(String defectTrackerName) {
+		waitForElement(driver.findElementById("editDefectTrackerButton" + defectTrackerName));
+        driver.findElementById("editDefectTrackerButton" + defectTrackerName).click();
         waitForElement(driver.findElementById("myModalLabel"));
 		return new DefectTrackerIndexPage(driver);
 	}
