@@ -50,8 +50,8 @@ public class DotNetEndpointGeneratorTests {
             "Parameters weren't empty.";
         assert endpoint.getFilePath().endsWith("ChatController.cs") :
             "File path was " + endpoint.getFilePath() + " but should have ended with ChatController.cs";
-        assert endpoint.getUrlPath().equals("Chat/Index/{variable}") :
-            "Actual path was " + endpoint.getUrlPath() + " when it should have been \"Chat/Index/{variable}\"";
+        assert endpoint.getUrlPath().equals("/Chat/Index/{variable}") :
+            "Actual path was " + endpoint.getUrlPath() + " when it should have been \"/Chat/Index/{variable}\"";
         assert endpoint.getStartingLineNumber() == 13 :
             "Starting line number was " + endpoint.getStartingLineNumber() + " but should have been 13.";
 
