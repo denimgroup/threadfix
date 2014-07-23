@@ -61,8 +61,8 @@ public class HibernateJobStatusDao
 		return sessionFactory
 				.getCurrentSession()
 				.createQuery(
-						"from JobStatus jobStatus where jobStatus.open = :open "
-								+ "order by jobStatus.modifiedDate desc").setBoolean("open", true)
+                        "from JobStatus jobStatus where jobStatus.open = :open "
+                                + "order by jobStatus.modifiedDate desc").setBoolean("open", true)
 				.list();
 	}
 

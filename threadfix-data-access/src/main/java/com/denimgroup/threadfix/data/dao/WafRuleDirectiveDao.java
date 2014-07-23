@@ -21,36 +21,21 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.dao;
+package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
-import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
-import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.data.entities.WafType;
 
 /**
- * Hibernate Defect DAO implementation. Most basic methods are implemented in
- * the AbstractGenericDao
- *
+ * Basic DAO class for the WafType entity.
+ * 
  * @author mcollins
- * @see AbstractNamedObjectDao
  */
-@Repository
-public class HibernateDefectTrackerTypeDao
-        extends AbstractNamedObjectDao<DefectTrackerType>
-        implements DefectTrackerTypeDao {
+public interface WafRuleDirectiveDao extends GenericObjectDao<WafRuleDirective> {
 
-    @Autowired
-    public HibernateDefectTrackerTypeDao(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
-
-    @Override
-    protected Class<DefectTrackerType> getClassReference() {
-        return DefectTrackerType.class;
-    }
-
+	/**
+	 * @param name
+	 * @return
+	 */
+	WafRuleDirective retrieveByWafTypeIdAndDirective(WafType wafType, String directive);
 }
