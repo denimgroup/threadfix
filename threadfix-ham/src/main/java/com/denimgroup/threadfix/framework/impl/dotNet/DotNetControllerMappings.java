@@ -84,4 +84,13 @@ public class DotNetControllerMappings {
         this.filePath = filePath;
     }
 
+
+    @Override
+    public String toString() {
+        return "DotNetControllerMappings{" +
+                "controllerName='" + controllerName + '\'' +
+                ", actions=" + actions +
+                ", filePath='" + filePath + '\'' +
+                '}';
+    }
 }
