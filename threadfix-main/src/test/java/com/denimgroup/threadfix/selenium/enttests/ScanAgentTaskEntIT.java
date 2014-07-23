@@ -51,7 +51,7 @@ public class ScanAgentTaskEntIT extends BaseIT {
     }
 
     @Test
-    public void testAddSingleScan() {
+    public void addScanAgentTaskTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String scanner = "OWASP Zed Attack Proxy";
@@ -83,7 +83,7 @@ public class ScanAgentTaskEntIT extends BaseIT {
     }
 
     @Test
-    public void testDeleteScan() {
+    public void deleteScanAgentTaskTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
         String scanner = "OWASP Zed Attack Proxy";
@@ -110,6 +110,7 @@ public class ScanAgentTaskEntIT extends BaseIT {
         assertFalse("Scan task was not deleted.", applicationDetailPage.isScanAgentTaskPresent(date));
     }
 
+    //TODO evaluate
     @Test
     public void testDeleteScanFromScanAgentTaskPage() {
         String teamName = getRandomString(8);

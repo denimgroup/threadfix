@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import com.denimgroup.threadfix.selenium.utils.LoginFailedException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -119,11 +120,10 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-        WebElement passwordField = driver.findElementById("password");
 
         driver.findElementById("login").click();
         if (!isElementPresent("tab-dashboard")) {
-            passwordField.sendKeys(Keys.ENTER);
+            throw new LoginFailedException("Login failed.");
         }
 
 		waitForElement(driver.findElementById("main-content"));

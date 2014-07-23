@@ -285,6 +285,19 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	/*-------------- action functions ---------------*/
+    public RemoteProvidersIndexPage mapQualysToTeamAndApp(int appRow, String teamName, String appName) {
+        clickEditMappingQualysButton(appRow);
+        selectTeamMapping(teamName);
+        selectAppMapping(appName);
+        clickUpdateMappings();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage clickEditMappingQualysButton(int row) {
+        driver.findElementById("provider3updateMapping" + row).click();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
 	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String teamName, String appName){
 		clickEditWhiteHatButton(appRow);
         selectTeamMapping(teamName);
@@ -292,7 +305,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 		clickUpdateMappings();
 		return new RemoteProvidersIndexPage(driver);
 	}
-	
+
 	public RemoteProvidersIndexPage clickEditWhiteHatButton(int row){
 		driver.findElementById("provider1updateMapping" + row).click();
 		return new RemoteProvidersIndexPage(driver);
@@ -338,7 +351,6 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clickUpdateMappings(){
-        //driver.findElementById("submitRemoteProviderFormButton").click();
         driver.findElementById("submit").click();
         return new RemoteProvidersIndexPage(driver);
     }
@@ -384,7 +396,18 @@ public class RemoteProvidersIndexPage extends BasePage {
         waitForElement(driver.findElementByClassName("alert-success"));
 		return driver.findElementByClassName("alert-success").getText().trim();
 	}
-	
+
+    /*________________ Boolean Methods ________________*/
+    //Note: Qualys = 3, Veracode = 2, Whitehat = 1
+    public boolean isMappingCorrect(int provider, int appRow, String teamName, String appName) {
+        if(!driver.findElementById("provider"+ provider + "tfteamname" + appRow).getText().contains(teamName) ||
+                !driver.findElementById("provider" + provider + "tfappname" + appRow).getText().contains(appName)) {
+            return false;
+        }
+        return true;
+    }
+
+
 //old methods
 /*	
 	public int getNumEdit() {

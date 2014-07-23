@@ -370,7 +370,7 @@ public class DefectTrackerIT extends BaseIT {
 	}
 
     @Test
-    public void removeAttachedBugzillaTrackerTest() {
+    public void deleteAttachedBugzillaTrackerTest() {
         String defectTrackerName = getRandomString(8);
         String defectTrackerType = "Bugzilla";
         String teamName = getRandomString(8);

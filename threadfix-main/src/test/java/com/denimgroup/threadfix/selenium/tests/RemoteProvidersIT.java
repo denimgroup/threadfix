@@ -75,8 +75,41 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Remote Provider Page not found",pageHeader.contains("Remote Providers"));
 	}
 
+    @Test
+    public void configureQualysTest() {
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .saveQualys();
+
+        assertTrue("Qualys was not configured properly",
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider QualysGuard WAS"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
+
+        assertTrue("Qualys configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+    }
+
+    @Test
+    public void invalidQualysTest(){
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickRemoteProvidersLink()
+                .clickConfigureQualys()
+                .setQualysUsername("No Such User")
+                .setQualysPassword("Password Bad")
+                .clickModalSubmitInvalid();
+        sleep(15000);
+        String error = remoteProvidersIndexPage.getErrorMessage();
+        System.out.println(error);
+        assertTrue("Expected failure", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+    }
+
 	@Test
-	public void configureSentinel() {
+	public void configureWhiteHatTest() {
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
@@ -93,7 +126,7 @@ public class RemoteProvidersIT extends BaseIT {
 	}
 
 	@Test
-	public void invalidSentinel(){
+	public void invalidWhiteHatTest(){
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clearPreviousWhiteHat()
@@ -108,7 +141,7 @@ public class RemoteProvidersIT extends BaseIT {
 	}
 
 	@Test
-	public void configureVeracode() {
+	public void configureVeracodeTest() {
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
@@ -126,7 +159,7 @@ public class RemoteProvidersIT extends BaseIT {
 	}
 	
 	@Test
-	public void invalidVeracode(){
+	public void invalidVeracodeTest(){
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickRemoteProvidersLink()
@@ -141,8 +174,14 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
-	@Test
-	public void configureQualys() {
+    @Test
+    public void editQualysMapping() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
@@ -150,29 +189,64 @@ public class RemoteProvidersIT extends BaseIT {
                 .setQualysPassword(QUALYS_PASS)
                 .saveQualys();
 
-        assertTrue("Qualys was not configured properly",
-                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider QualysGuard WAS"));
+        remoteProvidersIndexPage.mapQualysToTeamAndApp(0, teamName, appName);
 
-        remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
+        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(3, 0, teamName, appName));
+
+        remoteProvidersIndexPage.clearQualys();
 
         assertTrue("Qualys configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
-	}
-	
-	@Test
-	public void invalidQualys(){
-		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
+    }
+
+    @Test
+    public void editVeracodeMapping() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
-                .clickConfigureQualys()
-                .setQualysUsername("No Such User")
-                .setQualysPassword("Password Bad")
-                .clickModalSubmitInvalid();
-        sleep(15000);
-        String error = remoteProvidersIndexPage.getErrorMessage();
-		System.out.println(error);
-		assertTrue("Expected failure", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
-	}
+                .clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera();
+
+        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
+
+        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(2, 0, teamName, appName));
+
+        remoteProvidersIndexPage.clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+    }
+
+    @Test
+    public void editWhiteHatMapping() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
+
+        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(0, teamName, appName);
+
+        assertTrue("Team was not mapped properly.", remoteProvidersIndexPage.isMappingCorrect(1, 0, teamName, appName));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+    }
 
     //TODO Update when new ids are added
     @Test
@@ -230,11 +304,10 @@ public class RemoteProvidersIT extends BaseIT {
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
-
     }
 
     @Test
-    public void testVulnCountAfterImport() {
+    public void testVulnerabilityCountAfterImport() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 

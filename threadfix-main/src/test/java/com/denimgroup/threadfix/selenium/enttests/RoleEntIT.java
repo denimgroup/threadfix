@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class RoleEntIT extends BaseIT {
 
 	@Test
-	public void testCreateRole() {
+	public void createRoleTest() {
         String roleName = getRandomString(8);
 
 		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
@@ -54,7 +54,7 @@ public class RoleEntIT extends BaseIT {
 	}
 
     @Test
-    public void testDeleteRole() {
+    public void deleteRoleTest() {
         String roleName = getRandomString(8);
 
         RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
@@ -72,7 +72,7 @@ public class RoleEntIT extends BaseIT {
     }
 
 	@Test
-	public void testEditRole() {
+	public void editRoleTest() {
 		String originalRoleName = getRandomString(8);
 		String editedRoleName = getRandomString(8);
 
@@ -99,7 +99,7 @@ public class RoleEntIT extends BaseIT {
 	}
 
     @Test
-    public void testCreateRoleValidation() {
+    public void createRoleValidation() {
         String whiteSpaceName = "     ";
 
         // Test whitespace
@@ -114,7 +114,31 @@ public class RoleEntIT extends BaseIT {
     }
 
     @Test
-	public void testCreateRoleDuplicateValidation() {
+    public void editRoleValidation() {
+        String roleName = getRandomString(8);
+        String whiteSpaceName = "     ";
+        String emptyStringName = "";
+
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .clickSaveRole();
+
+        rolesIndexPage = rolesIndexPage.clickEditLink(roleName)
+                .setRoleName(whiteSpaceName);
+
+        assertTrue("White space name error name not shown.",
+                rolesIndexPage.getNameError().contains("Name is required."));
+
+        rolesIndexPage.setRoleName(emptyStringName);
+
+        assertTrue("Empty string name error name not shown.",
+                rolesIndexPage.getNameError().contains("Name is required."));
+    }
+
+    @Test
+	public void createRoleDuplicateValidation() {
 		String roleName1 = "testNameDuplication";
         String roleName2 = "testNameDuplication";
 
@@ -134,7 +158,7 @@ public class RoleEntIT extends BaseIT {
 	}
 
 	@Test
-	public void addApplicationOnlyRole(){
+	public void addApplicationOnlyRoleTest(){
 		String roleName = "appOnly" + getRandomString(10);
 		String userName = getRandomString(10);
 		String password = getRandomString(15);
@@ -171,12 +195,12 @@ public class RoleEntIT extends BaseIT {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-		assertTrue("new role user was not able to add an application",
+		assertTrue("New role user was not able to add an application",
                 applicationDetailPage.getNameText().contains(appName));
 	}
 
 	@Test
-	public void testSetPermissions() {
+	public void setPermissionsTest() {
 		String roleName = getRandomString(10);
 		
 		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
@@ -224,7 +248,7 @@ public class RoleEntIT extends BaseIT {
 	}
 
 	@Test
-	public void testDeleteRoleWithUserAttached(){
+	public void deleteRoleWithUserAttachedTest(){
 		String roleName = getRandomString(10);
         String tempUser = getRandomString(8);
 
@@ -257,7 +281,7 @@ public class RoleEntIT extends BaseIT {
 	}
 
     @Test
-    public void testProtectedPermissionsRemoval() {
+    public void protectedPermissionsRemovalTest() {
         RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink()
                 .clickEditLink("Administrator");
