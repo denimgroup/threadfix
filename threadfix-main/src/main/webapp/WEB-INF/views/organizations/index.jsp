@@ -37,6 +37,7 @@
         </div>
 
         <%@ include file="/WEB-INF/views/organizations/indexTable.jsp" %>
+        <d3-donut ng-show="teams" data="teams" ></d3-donut>
     </div>
 
 </body>

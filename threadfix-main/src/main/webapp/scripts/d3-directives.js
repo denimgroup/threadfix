@@ -1,4 +1,4 @@
-var d3ThreadfixModule = angular.module('d3threadfix', ['d3']);
+var d3ThreadfixModule = angular.module('d3threadfix', ['d3', 'd3donut']);
 
 // Months Summary report
 d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
@@ -141,12 +141,6 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                     width = 422 - margin.left - margin.right,
                     height = 250 - margin.top - margin.bottom;
 
-//                var x = d3.scale.ordinal()
-//                    .rangeRoundBands([0, width], .1);
-//
-//                var y = d3.scale.linear()
-//                    .rangeRound([height, 0]);
-
                 var x = d3.scale.linear()
                     .rangeRound([0, width]);
 
@@ -163,7 +157,6 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                 var yAxis = d3.svg.axis()
                     .scale(y)
                     .orient("left");
-//                    .tickFormat(d3.format(".2s"));
 
                 var svg =  d3.select(ele[0]).append("svg")
                     .attr("width", width + margin.left + margin.right)
@@ -223,7 +216,6 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                     svg.append("g")
                         .attr("class", "y axis")
                         .attr("transform", "translate(0," + height + ")")
-//                        .attr("transform", "rotate(-90)")
                         .call(xAxis);
 
                     svg.append("g")
@@ -231,7 +223,6 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .call(yAxis)
                         .append("text")
                         .attr("transform", "rotate(-90)")
-//                        .attr("transform", "translate(0," + width + ")")
                         .attr("y", 6)
                         .attr("dy", ".71em")
                         .style("text-anchor", "end");
@@ -253,6 +244,68 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                     ;
+                };
+                ;
+            }
+        }
+    }]);
+
+// Donut
+d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
+    function($window, $timeout, d3, d3donut) {
+        return {
+            restrict: 'EA',
+            scope: {
+                data: '='
+            }
+            ,
+            link: function(scope, ele, attrs) {
+
+                $window.onresize = function() {
+                    scope.$apply();
+                };
+
+                scope.$watch(function() {
+                    return angular.element($window)[0].innerWidth;
+                }, function() {
+                    scope.render(scope.data);
+                });
+
+                scope.$watch('data', function(newVals) {
+                    scope.render(newVals);
+                }, true);
+
+                scope.render = function (reportData) {
+                    var data = angular.copy(reportData);
+
+                    var salesData=[
+                        {label:"Basic", color:"#3366CC"},
+                        {label:"Plus", color:"#DC3912"},
+                        {label:"Lite", color:"#FF9900"},
+                        {label:"Elite", color:"#109618"},
+                        {label:"Delux", color:"#990099"}
+                    ];
+
+                    var svg = d3.select(ele[0]).append("svg")
+//                        d3.select("body").append("svg")
+                            .attr("width",700).attr("height",300);
+
+                    svg.append("g").attr("id","salesDonut");
+                    svg.append("g").attr("id","quotesDonut");
+
+                    d3donut.draw("salesDonut", randomData(), 150, 150, 130, 100, 30, 0.4);
+                    d3donut.draw("quotesDonut", randomData(), 450, 150, 130, 100, 30, 0.5);
+
+                    function changeData(){
+                        d3donut.transition("salesDonut", randomData(), 130, 100, 30, 0.4);
+                        d3donut.transition("quotesDonut", randomData(), 130, 100, 30, 0);
+                    }
+
+                    function randomData(){
+                        return salesData.map(function(d){
+                            return {label:d.label, value:1000*Math.random(), color:d.color};});
+                    }
+
                 };
                 ;
             }
