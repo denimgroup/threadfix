@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class ScheduledScanEntIT extends BaseIT{
 
-    //TODO refactor when id's are added
+    @Ignore
     @Test
     public void scheduleDailyScanTest() {
         String teamName = getRandomString(8);
@@ -48,7 +49,7 @@ public class ScheduledScanEntIT extends BaseIT{
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab();
+                .clickScheduleScanTab(0);
 
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
@@ -59,6 +60,7 @@ public class ScheduledScanEntIT extends BaseIT{
         assertTrue("Scan was not scheduled properly.", applicationDetailPage.isScheduledScanCountCorrect("1"));
     }
 
+    @Ignore
     @Test
     public void scheduleWeeklyScanTest() {
         String teamName = getRandomString(8);
@@ -71,7 +73,7 @@ public class ScheduledScanEntIT extends BaseIT{
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab();
+                .clickScheduleScanTab(0);
 
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")

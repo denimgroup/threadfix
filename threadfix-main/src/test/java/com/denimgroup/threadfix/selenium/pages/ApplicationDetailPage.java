@@ -171,15 +171,19 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickScheduleScanTab() {
+    public ApplicationDetailPage clickScheduleScanTab(int scheduledScans) {
         sleep(1000);
-        driver.findElementById("scheduledScanTab").click();
-        waitForElement(driver.findElementById("addScanQueueLink"));
+        if (scheduledScans == 1) {
+            driver.findElementByLinkText(scheduledScans + " Scheduled Scan").click();
+        } else {
+            driver.findElementByLinkText(scheduledScans + " Scheduled Scans").click();
+        }
+        waitForElement(driver.findElementByLinkText("Schedule New Scan"));
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage clickScheduleNewScanButton() {
-        driver.findElementById("addScanQueueLink").click();
+        driver.findElementByLinkText("Schedule New Scan").click();
         return new ApplicationDetailPage(driver);
     }
 
