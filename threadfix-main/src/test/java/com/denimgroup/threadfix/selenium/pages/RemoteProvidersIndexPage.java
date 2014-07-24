@@ -352,6 +352,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickUpdateMappings(){
         driver.findElementById("submit").click();
+        sleep(1000);
         return new RemoteProvidersIndexPage(driver);
     }
 

@@ -171,6 +171,40 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickScheduleScanTab() {
+        sleep(1000);
+        driver.findElementById("scheduledScanTab").click();
+        waitForElement(driver.findElementById("addScanQueueLink"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickScheduleNewScanButton() {
+        driver.findElementById("addScanQueueLink").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setScheduledScanFrequency(String frequency) {
+        new Select(driver.findElementById("frequency")).selectByVisibleText(frequency);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanTime(String hour, String minute, String period){
+        new Select(driver.findElementById("hour")).selectByVisibleText(hour);
+        new Select(driver.findElementById("minute")).selectByVisibleText(minute);
+        new Select(driver.findElementById("selectedPeriod")).selectByVisibleText(period);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanDay(String day) {
+        new Select(driver.findElementById("selectedDay")).selectByVisibleText(day);
+        return this;
+    }
+
+    public ApplicationDetailPage setScheduledScanScanner(String scanner) {
+        new Select(driver.findElementById("scanner2")).selectByVisibleText(scanner);
+        return this;
+    }
+
     public ApplicationDetailPage clickAddWaf() {
         driver.findElementById("addWafButton").click();
         waitForElement(driver.findElementById("wafSelect"));
@@ -967,5 +1001,15 @@ public class ApplicationDetailPage extends BasePage {
         } catch (org.openqa.selenium.NoSuchElementException e) {
             return false;
         }
+    }
+
+    public boolean isScheduledScanCountCorrect(String expected) {
+        String actual = driver.findElementById("scheduledScanTab").getText().trim();
+        if (expected.equals("1")) {
+            actual = actual.replace("Scheduled Scan", "");
+        } else {
+            actual = actual.replace("Scheduled Scans", "");
+        }
+        return actual.trim().equals(expected);
     }
 }
