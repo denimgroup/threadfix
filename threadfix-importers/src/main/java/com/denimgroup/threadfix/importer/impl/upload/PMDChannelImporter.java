@@ -120,11 +120,11 @@ public class PMDChannelImporter extends AbstractChannelImporter {
 
                 if (finding != null) {
                     finding.setDataFlowElements(dataFlowElements);
+                    finding.setSourceFileLocation(currentPath);
                     add(finding);
                 }
 
                 inSecurityBug = false;
-                currentPath = null;
                 currentParameter = null;
                 currentChannelVulnCode = null;
                 currentSeverityCode = null;
