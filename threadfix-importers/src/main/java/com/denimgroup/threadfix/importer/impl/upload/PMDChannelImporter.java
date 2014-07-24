@@ -52,12 +52,14 @@ public class PMDChannelImporter extends AbstractChannelImporter {
             if (finding != null) {
                 finding.setNativeId(getNativeId(finding));
                 finding.setIsStatic(true);
+                finding.setSourceFileLocation(currentPath);
                 saxFindingList.add(finding);
             }
         }
 
         public DataFlowElement getDataFlowElement (Attributes atts, int position) {
             String start = atts.getValue("beginline");
+            String path = currentPath;
             Integer lineNum = null;
 
             if (start != null) {
@@ -72,7 +74,7 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 lineNum = -1;
             }
 
-            return new DataFlowElement(null, lineNum, atts.getValue("name"), position);
+            return new DataFlowElement(path, lineNum, atts.getValue("name"), position);
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -81,7 +83,6 @@ public class PMDChannelImporter extends AbstractChannelImporter {
 
         public void startElement (String uri, String name,
                                   String qName, Attributes atts) {
-            //add if for file to save file name?
             if ("file".equals(qName)) {
                 currentPath = atts.getValue("name");
             }
@@ -146,7 +147,6 @@ public class PMDChannelImporter extends AbstractChannelImporter {
         private boolean hasFindings = false;
         private boolean hasDate = false;
         private boolean correctFormat = false;
-        private String dateTimeString;
 
         private void setTestStatus() {
             if (!correctFormat) {
@@ -186,8 +186,6 @@ public class PMDChannelImporter extends AbstractChannelImporter {
                 testDate = parseTimestamp(atts.getValue("timestamp"));
                 hasDate = testDate != null;
                 correctFormat = true;
-            } else if ("file".equals(qName)) {
-                //currentPath = atts.getValue("file");
             } else if("violation".equals(qName)) {
                 hasFindings = true;
                 setTestStatus();
