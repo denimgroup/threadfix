@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -52,99 +53,100 @@ public class Role extends AuditableEntity {
 			canSubmitDefects, canUploadScans, canViewErrorLogs,
             canViewJobStatuses, enterprise;
 
-	public static final String[] PROTECTED_PERMISSIONS = new String[]{
-        "canManageRoles", "canManageUsers"
-	};
-	
-	public static final String[] ALL_PERMISSIONS = new String[] {
-		"canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
-		"canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
-		"canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-		"canGenerateReports", "canManageApplications", "enterprise"
-	};
-	
-	@NotEmpty(message = "{errors.required}")
-	@Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
-	private String displayName;
+    public static final String[] PROTECTED_PERMISSIONS = new String[]{
+            "canManageRoles", "canManageUsers"
+    };
 
-	@Column(length = DISPLAY_NAME_LENGTH, nullable = false)
-	public String getDisplayName() {
-		return displayName;
-	}
+    public static final String[] ALL_PERMISSIONS = new String[]{
+            "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
+            "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
+            "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
+            "canGenerateReports", "canManageApplications", "enterprise"
+    };
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    @NotEmpty(message = "{errors.required}")
+    @Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
+    private String displayName;
 
-	@Column
-	public Boolean getCanGenerateReports() {
-		return canGenerateReports != null && canGenerateReports;
-	}
+    @JsonView(Object.class)
+    @Column(length = DISPLAY_NAME_LENGTH, nullable = false)
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	public void setCanGenerateReports(Boolean canGenerateReports) {
-		this.canGenerateReports = canGenerateReports;
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	@Column
-	public Boolean getCanGenerateWafRules() {
-		return canGenerateWafRules != null && canGenerateWafRules;
-	}
+    @Column
+    public Boolean getCanGenerateReports() {
+        return canGenerateReports != null && canGenerateReports;
+    }
 
-	public void setCanGenerateWafRules(Boolean canGenerateWafRules) {
-		this.canGenerateWafRules = canGenerateWafRules;
-	}
+    public void setCanGenerateReports(Boolean canGenerateReports) {
+        this.canGenerateReports = canGenerateReports;
+    }
 
-	@Column
-	public Boolean getCanManageApiKeys() {
-		return canManageApiKeys != null && canManageApiKeys;
-	}
+    @Column
+    public Boolean getCanGenerateWafRules() {
+        return canGenerateWafRules != null && canGenerateWafRules;
+    }
 
-	public void setCanManageApiKeys(Boolean canManageApiKeys) {
-		this.canManageApiKeys = canManageApiKeys;
-	}
+    public void setCanGenerateWafRules(Boolean canGenerateWafRules) {
+        this.canGenerateWafRules = canGenerateWafRules;
+    }
 
-	@Column
-	public Boolean getCanManageApplications() {
-		return canManageApplications != null && canManageApplications;
-	}
+    @Column
+    public Boolean getCanManageApiKeys() {
+        return canManageApiKeys != null && canManageApiKeys;
+    }
 
-	public void setCanManageApplications(Boolean canManageApplications) {
-		this.canManageApplications = canManageApplications;
-	}
+    public void setCanManageApiKeys(Boolean canManageApiKeys) {
+        this.canManageApiKeys = canManageApiKeys;
+    }
 
-	@Column
-	public Boolean getCanManageDefectTrackers() {
-		return canManageDefectTrackers != null && canManageDefectTrackers;
-	}
+    @Column
+    public Boolean getCanManageApplications() {
+        return canManageApplications != null && canManageApplications;
+    }
 
-	public void setCanManageDefectTrackers(Boolean canManageDefectTrackers) {
-		this.canManageDefectTrackers = canManageDefectTrackers;
-	}
+    public void setCanManageApplications(Boolean canManageApplications) {
+        this.canManageApplications = canManageApplications;
+    }
 
-	@Column
-	public Boolean getCanManageRemoteProviders() {
-		return canManageRemoteProviders != null && canManageRemoteProviders;
-	}
+    @Column
+    public Boolean getCanManageDefectTrackers() {
+        return canManageDefectTrackers != null && canManageDefectTrackers;
+    }
 
-	public void setCanManageRemoteProviders(Boolean canManageRemoteProviders) {
-		this.canManageRemoteProviders = canManageRemoteProviders;
-	}
+    public void setCanManageDefectTrackers(Boolean canManageDefectTrackers) {
+        this.canManageDefectTrackers = canManageDefectTrackers;
+    }
 
-	@Column
-	public Boolean getCanManageRoles() {
-		return canManageRoles != null && canManageRoles;
-	}
+    @Column
+    public Boolean getCanManageRemoteProviders() {
+        return canManageRemoteProviders != null && canManageRemoteProviders;
+    }
 
-	public void setCanManageRoles(Boolean canManageRoles) {
-		this.canManageRoles = canManageRoles;
-	}
+    public void setCanManageRemoteProviders(Boolean canManageRemoteProviders) {
+        this.canManageRemoteProviders = canManageRemoteProviders;
+    }
 
-	@Column
-	public Boolean getCanManageTeams() {
-		return canManageTeams != null && canManageTeams;
-	}
+    @Column
+    public Boolean getCanManageRoles() {
+        return canManageRoles != null && canManageRoles;
+    }
 
-	public void setCanManageTeams(Boolean canManageTeams) {
+    public void setCanManageRoles(Boolean canManageRoles) {
+        this.canManageRoles = canManageRoles;
+    }
+
+    @Column
+    public Boolean getCanManageTeams() {
+        return canManageTeams != null && canManageTeams;
+    }
+
+    public void setCanManageTeams(Boolean canManageTeams) {
 		this.canManageTeams = canManageTeams;
 	}
 
