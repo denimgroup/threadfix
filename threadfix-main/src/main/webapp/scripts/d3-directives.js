@@ -256,10 +256,14 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
         return {
             restrict: 'EA',
             scope: {
-                data: '='
+                data: '=',
+                label: "@"
             }
             ,
             link: function(scope, ele, attrs) {
+
+                var color = d3.scale.ordinal()
+                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
 
                 $window.onresize = function() {
                     scope.$apply();
@@ -278,32 +282,30 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
                 scope.render = function (reportData) {
                     var data = angular.copy(reportData);
 
-                    var salesData=[
-                        {label:"Basic", color:"#3366CC"},
-                        {label:"Plus", color:"#DC3912"},
-                        {label:"Lite", color:"#FF9900"},
-                        {label:"Elite", color:"#109618"},
-                        {label:"Delux", color:"#990099"}
-                    ];
+                    if (!data)
+                        return;
+
+                    var keys = d3.keys(data[0]).filter(function(key) { return key; });
+                    keys.sort(function(a, b) { return a.localeCompare(b); });
+
+                    color.domain(keys);
+
+                    var pieDim ={w:260, h: 200};
 
                     var svg = d3.select(ele[0]).append("svg")
-//                        d3.select("body").append("svg")
-                            .attr("width",700).attr("height",300);
+                            .attr("width",pieDim.w).attr("height",pieDim.h)
+                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")")
+                        ;
 
-                    svg.append("g").attr("id","salesDonut");
-                    svg.append("g").attr("id","quotesDonut");
+                    svg.append("g").attr("id",scope.label);
 
-                    d3donut.draw("salesDonut", randomData(), 150, 150, 130, 100, 30, 0.4);
-                    d3donut.draw("quotesDonut", randomData(), 450, 150, 130, 100, 30, 0.5);
+                    d3donut.draw(scope.label, getData(), 135, 90, 80, 50, 30, 0.4);
 
-                    function changeData(){
-                        d3donut.transition("salesDonut", randomData(), 130, 100, 30, 0.4);
-                        d3donut.transition("quotesDonut", randomData(), 130, 100, 30, 0);
-                    }
-
-                    function randomData(){
-                        return salesData.map(function(d){
-                            return {label:d.label, value:1000*Math.random(), color:d.color};});
+                    function getData(){
+                        var d = data[0];
+                           return color.domain().map(function(vulnType) {
+                                var temp = {label:vulnType, value:d[vulnType], color:color(vulnType)};
+                                return {label:vulnType, value:d[vulnType], color:color(vulnType)};});
                     }
 
                 };

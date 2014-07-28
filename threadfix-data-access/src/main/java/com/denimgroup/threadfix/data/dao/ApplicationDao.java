@@ -79,4 +79,6 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
 
     List<Application> getTopAppsFromList(List<Integer> applicationIdList);
 
+    List<Object[]> getPointInTime(List<Integer> applicationIdList);
+
 }

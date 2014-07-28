@@ -50,6 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
@@ -118,7 +119,7 @@ public class ApplicationsIndexController {
 	}
 	
 	@RequestMapping("/organizations/{orgId}/getReport")
-	public ModelAndView getReport(@PathVariable("orgId") int orgId,
+	public @ResponseBody RestResponse<List<Map<String, Object>>> getReport(@PathVariable("orgId") int orgId,
 			HttpServletRequest request, Model model) {
 		Organization organization = organizationService.loadById(orgId);
 		if (organization == null || !organization.isActive()) {
@@ -131,10 +132,10 @@ public class ApplicationsIndexController {
 			parameters.setFormatId(1);
 			parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
 			ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
-			if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
-				model.addAttribute("jasperReport", resultBean.getReport());
-			}
-			return new ModelAndView("reports/report");
+//			if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
+//				model.addAttribute("jasperReport", resultBean.getReport());
+//			}
+			return RestResponse.success(resultBean.getReportList());
 		}
 	}
 

@@ -200,4 +200,22 @@ public class HibernateApplicationDao implements ApplicationDao {
             apps = list();
         return apps;
     }
+
+    @Override
+    public List<Object[]> getPointInTime(List<Integer> applicationIdList) {
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery(
+                        "select sum(application.infoVulnCount) as infoCount, " +
+                                "sum(application.lowVulnCount) as lowCount, " +
+                                "sum(application.mediumVulnCount) as mediumCount, " +
+                                "sum(application.highVulnCount) as highCount, " +
+                                "sum(application.criticalVulnCount) as criticalCount, " +
+                                "sum(application.totalVulnCount) as totalCount " +
+                                "from Application as application " +
+                                "where application.id in (:appIds) " +
+                                "and application.active = true")
+                .setParameterList("appIds", applicationIdList)
+                .list();
+    }
 }
