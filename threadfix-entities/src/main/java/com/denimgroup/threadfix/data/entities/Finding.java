@@ -162,6 +162,13 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.nativeId = nativeId;
 	}
 
+    // TODO add more information to the native ID
+    @Transient
+    @JsonIgnore
+    public String getNonMergingKey() {
+        return getDependency() == null ? getNativeId() : getDependency().getKey();
+    }
+
 	@Column(length = NATIVE_ID_LENGTH)
     @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
 	public String getDisplayId() {

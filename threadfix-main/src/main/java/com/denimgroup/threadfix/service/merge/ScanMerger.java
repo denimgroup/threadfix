@@ -27,7 +27,12 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 public interface ScanMerger {
-	
+
+    /**
+     * This method handles HAM, merging with scans from the same channel, and merging with scans from other channels
+     * @param scan the recently completed Scan object from the ChannelImporter
+     * @param channel the ApplicationChannel which has context information for the scan
+     */
 	void merge(Scan scan, ApplicationChannel channel);
 	
 }
