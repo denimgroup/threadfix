@@ -26,182 +26,257 @@ package com.denimgroup.threadfix.service.merge;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 public class ChannelMerger extends SpringBeanAutowiringSupport {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(ChannelMerger.class);
 
+    @Autowired
     private VulnerabilityDao vulnerabilityDao;
+    private Scan scan;
+    private ApplicationChannel applicationChannel;
 
-    public ChannelMerger(VulnerabilityDao vulnerabilityDao) {
-        this.vulnerabilityDao = vulnerabilityDao;
+    List<Finding> newFindings = list();
+    Map<String, Vulnerability> oldNativeIdVulnHash = newMap();
+    Map<String, Finding> oldNativeIdFindingHash = newMap();
+    Set<Integer> alreadySeenVulnIds = new TreeSet<>();
+    Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0,
+            numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
+    Map<String, Finding> scanHash;
+    boolean shouldSkipMerging = false;
+
+    public ChannelMerger(Scan scan, ApplicationChannel applicationChannel) {
+        this.scan = scan;
+        this.applicationChannel = applicationChannel;
     }
 
     /**
      * This is the first round of scan merge that only considers scans from the same scanner
      * as the incoming scan.
      *
-     * @param scan
-     * @param applicationChannel
+     * @param scan recent scan to merge
+     * @param applicationChannel context information about the scan
      */
-    public void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
+    public static void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
         if (scan == null || applicationChannel == null) {
             LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
             return;
         }
 
+        new ChannelMerger(scan, applicationChannel).performMerge();
+    }
+
+    private void performMerge() {
+        assert vulnerabilityDao != null : "vulnerabilityDao was null. Spring autowiring failed, fix the code.";
+
         if (scan.getFindings() == null) {
             scan.setFindings(new ArrayList<Finding>());
         }
 
-        List<Finding> oldFindings = list();
-        List<Finding> newFindings = list();
-        Map<String, Finding> scanHash = new HashMap<>();
-        Map<String, Vulnerability> oldNativeIdVulnHash = new HashMap<>();
-        Map<String, Finding> oldNativeIdFindingHash = new HashMap<>();
-        Set<Integer> alreadySeenVulnIds = new TreeSet<>();
-        Integer closed = 0, resurfaced = 0, total = 0, numberNew = 0, old = 0, numberRepeatResults = 0, numberRepeatFindings = 0, oldVulnerabilitiesInitiallyFromThisChannel = 0;
+        shouldSkipMerging = applicationChannel.getApplication().getSkipApplicationMerge();
 
         LOG.info("Starting Application Channel-wide merging process with "
                 + scan.getFindings().size() + " findings.");
+
+        scanHash = createNativeIdFindingMap(scan);
+
+        LOG.info("After filtering out duplicate native IDs, there are "
+                + scanHash.keySet().size() + " findings.");
+
+        // initializes data structures for the second part
+        constructOldFindingMaps();
+
+        mergeFindings();
+
+        closeMissingVulnerabilities();
+
+        LOG.info("Merged " + old + " Findings to old findings by native ID.");
+        LOG.info("Closed " + closed + " old vulnerabilities.");
+        LOG.info(numberRepeatResults
+                + " results were repeats from earlier scans and were not included in this scan.");
+        LOG.info(resurfaced + " vulnerabilities resurfaced in this scan.");
+        LOG.info("Scan completed channel merge with " + numberNew
+                + " new Findings.");
+
+        scan.setNumberNewVulnerabilities(numberNew);
+        scan.setNumberOldVulnerabilities(old);
+        scan.setNumberTotalVulnerabilities(total);
+        scan.setNumberClosedVulnerabilities(closed);
+        scan.setNumberResurfacedVulnerabilities(resurfaced);
+        scan.setNumberRepeatResults(numberRepeatResults);
+        scan.setNumberRepeatFindings(numberRepeatFindings);
+        scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(oldVulnerabilitiesInitiallyFromThisChannel);
+
+        if (!shouldSkipMerging) {
+            scan.setFindings(newFindings);
+        }
+    }
+
+    private void closeMissingVulnerabilities() {
+        // for every old native ID
+        for (String nativeId : oldNativeIdVulnHash.keySet()) {
+
+            // if the old ID is not present in the new scan and the vulnerabilty is open, close it
+            if (!scanHash.containsKey(nativeId)
+                    && oldNativeIdVulnHash.get(nativeId) != null
+                    && oldNativeIdVulnHash.get(nativeId).isActive()) {
+                if (scan.getImportTime() != null) {
+                    oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
+                            scan.getImportTime());
+                } else {
+                    oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
+                            Calendar.getInstance());
+                }
+                vulnerabilityDao.saveOrUpdate(oldNativeIdVulnHash.get(nativeId));
+                closed += 1;
+            }
+        }
+    }
+
+    // for each native ID in the new scan
+    private void mergeFindings() {
+        for (String nativeId : scanHash.keySet()) {
+
+            // if it's an old finding
+            if (oldNativeIdVulnHash.containsKey(nativeId)) {
+                createRepeatFindingMap(nativeId);
+            }
+
+            // if it's an old finding and we haven't seen the vulnerability before,
+            // update the old vulnerability count
+            if (oldNativeIdVulnHash.containsKey(nativeId)
+                    && oldNativeIdVulnHash.get(nativeId) != null
+                    && !alreadySeenVulnIds.contains(oldNativeIdVulnHash.get(
+                    nativeId).getId())) {
+
+                processOldVulnerability(nativeId);
+
+            } else {
+
+                // Otherwise add to the new count and list of new findings
+                if (!oldNativeIdVulnHash.containsKey(nativeId)) {
+                    numberNew += 1;
+                    total += 1;
+                    newFindings.add(scanHash.get(nativeId));
+                }
+            }
+        }
+    }
+
+    private void processOldVulnerability(String nativeId) {
+        Vulnerability vulnerability = oldNativeIdVulnHash.get(nativeId);
+        alreadySeenVulnIds.add(vulnerability.getId());
+
+        if (applicationChannel.getId() != null
+                && vulnerability.getOriginalFinding() != null
+                && vulnerability.getOriginalFinding().getScan() != null
+                && vulnerability.getOriginalFinding().getScan()
+                .getApplicationChannel() != null
+                && applicationChannel.getId().equals(
+                vulnerability.getOriginalFinding().getScan()
+                        .getApplicationChannel().getId())) {
+            oldVulnerabilitiesInitiallyFromThisChannel += 1;
+        }
+
+        old += 1;
+        total += 1;
+
+        if (!vulnerability.isActive()) {
+            resurfaced += 1;
+            vulnerability.reopenVulnerability(scan,
+                    scan.getImportTime());
+            vulnerabilityDao.saveOrUpdate(vulnerability);
+        }
+    }
+
+    private void createRepeatFindingMap(String nativeId) {
+        Finding oldFinding = oldNativeIdFindingHash.get(nativeId),
+                newFinding = scanHash.get(nativeId);
+
+        // If the finding has been newly marked a false positive, update
+        // the existing finding / vuln
+        if (newFinding.isMarkedFalsePositive()
+                && !oldFinding.isMarkedFalsePositive()) {
+            LOG.info("A previously imported finding has been marked a false positive "
+                    + "in the scan results. Marking the finding and Vulnerability.");
+            oldFinding.setMarkedFalsePositive(true);
+            if (oldFinding.getVulnerability() != null) {
+                oldFinding.getVulnerability().setIsFalsePositive(true);
+                vulnerabilityDao.saveOrUpdate(oldFinding
+                        .getVulnerability());
+            }
+        }
+
+        numberRepeatFindings += 1;
+        numberRepeatResults += newFinding.getNumberMergedResults();
+        // add it to the old finding maps so that we can know that it
+        // was here later
+        // the constructor maps everything correctly
+        new ScanRepeatFindingMap(oldFinding, scan);
+    }
+
+    private void constructOldFindingMaps() {
+
+        // Construct a hash of native ID -> Finding and native ID -> Vulnerability
+        for (Finding finding : getOldFindingList(applicationChannel)) {
+            if (finding != null && finding.getNativeId() != null
+                    && !finding.getNativeId().isEmpty()) {
+
+                String key = shouldSkipMerging ? finding.getNonMergingKey() : finding.getNativeId();
+
+                oldNativeIdVulnHash.put(key, finding.getVulnerability());
+                oldNativeIdFindingHash.put(key, finding);
+            }
+        }
+    }
+
+    private List<Finding> getOldFindingList(ApplicationChannel applicationChannel) {
+        List<Finding> oldFindings = list();
+
+        // Construct a list of all of the channel's Finding objects
+        if (applicationChannel.getScanList() != null) {
+            for (Scan oldScan : applicationChannel.getScanList()) {
+                if (oldScan != null && oldScan.getId() != null
+                        && oldScan.getFindings() != null
+                        && oldScan.getFindings().size() != 0) {
+                    oldFindings.addAll(oldScan.getFindings());
+                }
+            }
+        }
+
+        return oldFindings;
+    }
+
+    private Map<String, Finding> createNativeIdFindingMap(Scan scan) {
+
+        Map<String, Finding> scanHash = newMap();
+
+        // Construct a hash of native ID -> finding
         for (Finding finding : scan.getFindings()) {
             if (finding != null && finding.getNativeId() != null
                     && !finding.getNativeId().isEmpty()) {
-				if (scanHash.containsKey(finding.getNativeId())) {
-					// Increment the merged results counter in the finding
-					// object in the hash
-					scanHash.get(finding.getNativeId()).setNumberMergedResults(
-							scanHash.get(finding.getNativeId())
-									.getNumberMergedResults() + 1);
-				} else {
-					scanHash.put(finding.getNativeId(), finding);
-				}
-			}
-		}
 
-		LOG.info("After filtering out duplicate native IDs, there are "
-                + scanHash.keySet().size() + " findings.");
+                String key = shouldSkipMerging ? finding.getNonMergingKey() : finding.getNativeId();
 
-		if (applicationChannel.getScanList() != null) {
-			for (Scan oldScan : applicationChannel.getScanList()) {
-				if (oldScan != null && oldScan.getId() != null
-						&& oldScan.getFindings() != null
-						&& oldScan.getFindings().size() != 0) {
-					oldFindings.addAll(oldScan.getFindings());
-				}
-			}
-		}
+                if (scanHash.containsKey(key)) {
+                    // Increment the merged results counter in the finding
+                    // object in the hash
+                    Finding targetFinding = scanHash.get(key);
+                    targetFinding.setNumberMergedResults(
+                            targetFinding.getNumberMergedResults() + 1);
+                } else {
+                    scanHash.put(key, finding);
+                }
+            }
+        }
 
-		for (Finding finding : oldFindings) {
-			if (finding != null && finding.getNativeId() != null
-					&& !finding.getNativeId().isEmpty()) {
-				oldNativeIdVulnHash.put(finding.getNativeId(),
-						finding.getVulnerability());
-				oldNativeIdFindingHash.put(finding.getNativeId(), finding);
-			}
-		}
-
-		for (String nativeId : scanHash.keySet()) {
-			if (oldNativeIdVulnHash.containsKey(nativeId)) {
-				Finding oldFinding = oldNativeIdFindingHash.get(nativeId), newFinding = scanHash
-						.get(nativeId);
-
-				// If the finding has been newly marked a false positive, update
-				// the existing finding / vuln
-				if (newFinding.isMarkedFalsePositive()
-						&& !oldFinding.isMarkedFalsePositive()) {
-					LOG.info("A previously imported finding has been marked a false positive "
-                            + "in the scan results. Marking the finding and Vulnerability.");
-					oldFinding.setMarkedFalsePositive(true);
-					if (oldFinding.getVulnerability() != null) {
-						oldFinding.getVulnerability().setIsFalsePositive(true);
-						vulnerabilityDao.saveOrUpdate(oldFinding
-								.getVulnerability());
-					}
-				}
-
-				numberRepeatFindings += 1;
-				numberRepeatResults += newFinding.getNumberMergedResults();
-				// add it to the old finding maps so that we can know that it
-				// was here later
-				// the constructor maps everything correctly
-				new ScanRepeatFindingMap(oldFinding, scan);
-			}
-
-			if (oldNativeIdVulnHash.containsKey(nativeId)
-					&& oldNativeIdVulnHash.get(nativeId) != null
-					&& !alreadySeenVulnIds.contains(oldNativeIdVulnHash.get(
-							nativeId).getId())) {
-				Vulnerability vulnerability = oldNativeIdVulnHash.get(nativeId);
-				alreadySeenVulnIds.add(vulnerability.getId());
-
-				if (applicationChannel.getId() != null
-						&& vulnerability.getOriginalFinding() != null
-						&& vulnerability.getOriginalFinding().getScan() != null
-						&& vulnerability.getOriginalFinding().getScan()
-								.getApplicationChannel() != null
-						&& applicationChannel.getId().equals(
-								vulnerability.getOriginalFinding().getScan()
-										.getApplicationChannel().getId())) {
-					oldVulnerabilitiesInitiallyFromThisChannel += 1;
-				}
-
-				old += 1;
-				total += 1;
-
-				if (!vulnerability.isActive()) {
-					resurfaced += 1;
-					vulnerability.reopenVulnerability(scan,
-							scan.getImportTime());
-					vulnerabilityDao.saveOrUpdate(vulnerability);
-				}
-			} else {
-				if (!oldNativeIdVulnHash.containsKey(nativeId)) {
-					numberNew += 1;
-					total += 1;
-					newFindings.add(scanHash.get(nativeId));
-				}
-			}
-		}
-
-		for (String nativeId : oldNativeIdVulnHash.keySet()) {
-			if (!scanHash.containsKey(nativeId)
-					&& oldNativeIdVulnHash.get(nativeId) != null
-					&& oldNativeIdVulnHash.get(nativeId).isActive()) {
-				if (scan.getImportTime() != null) {
-					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
-							scan.getImportTime());
-				} else {
-					oldNativeIdVulnHash.get(nativeId).closeVulnerability(scan,
-							Calendar.getInstance());
-				}
-				vulnerabilityDao.saveOrUpdate(oldNativeIdVulnHash.get(nativeId));
-				closed += 1;
-			}
-		}
-
-		LOG.info("Merged " + old + " Findings to old findings by native ID.");
-		LOG.info("Closed " + closed + " old vulnerabilities.");
-		LOG.info(numberRepeatResults
-                + " results were repeats from earlier scans and were not included in this scan.");
-		LOG.info(resurfaced + " vulnerabilities resurfaced in this scan.");
-		LOG.info("Scan completed channel merge with " + numberNew
-                + " new Findings.");
-
-		scan.setNumberNewVulnerabilities(numberNew);
-		scan.setNumberOldVulnerabilities(old);
-		scan.setNumberTotalVulnerabilities(total);
-		scan.setNumberClosedVulnerabilities(closed);
-		scan.setNumberResurfacedVulnerabilities(resurfaced);
-		scan.setNumberRepeatResults(numberRepeatResults);
-		scan.setNumberRepeatFindings(numberRepeatFindings);
-		scan.setNumberOldVulnerabilitiesInitiallyFromThisChannel(oldVulnerabilitiesInitiallyFromThisChannel);
-
-		scan.setFindings(newFindings);
-	}
+        return scanHash;
+    }
 }

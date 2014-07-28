@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import org.codehaus.jackson.map.annotate.JsonView;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	
 	@ManyToOne
     @JoinColumn(name = "userId", nullable = false)
+    @JsonView(Object.class)
 	public User getUser() {
 		return user;
 	}
@@ -50,6 +53,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	}
 	
 	@OneToMany(mappedBy = "accessControlTeamMap", cascade = CascadeType.ALL)
+    @JsonView(Object.class)
 	public List<AccessControlApplicationMap> getAccessControlApplicationMaps() {
 		return accessControlApplicationMaps;
 	}
@@ -59,6 +63,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	}
 	
 	@ManyToOne
+    @JsonView(Object.class)
 	@JoinColumn(name = "organizationId", nullable=false)
 	public Organization getOrganization() {
 		return organization;
@@ -69,6 +74,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	}
 	
 	@ManyToOne
+    @JsonView(Object.class)
     @JoinColumn(name = "roleId", nullable = true)
 	public Role getRole() {
 		return role;
@@ -79,6 +85,7 @@ public class AccessControlTeamMap extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(Object.class)
 	public Boolean getAllApps() {
 		return allApps;
 	}
