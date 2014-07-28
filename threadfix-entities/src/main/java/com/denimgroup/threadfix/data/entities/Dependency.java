@@ -45,6 +45,9 @@ public class Dependency extends AuditableEntity {
     @Size(max = 1024)
     private String componentName = null;
 
+    @Size(max = 1024)
+    private String componentFilePath = null;
+
     @Size(max = 1024000)
     private String description = null;
 
@@ -57,6 +60,16 @@ public class Dependency extends AuditableEntity {
 
     public void setComponentName(String componentName) {
         this.componentName = componentName;
+    }
+
+    @Nullable
+    @Column(nullable = true)
+    public String getComponentFilePath() {
+        return componentFilePath;
+    }
+
+    public void setComponentFilePath(String componentFilePath) {
+        this.componentFilePath = componentFilePath;
     }
 
     @Nullable

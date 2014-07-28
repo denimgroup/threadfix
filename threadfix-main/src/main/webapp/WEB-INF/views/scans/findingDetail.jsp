@@ -105,11 +105,7 @@
 					<td class="bold" valign=top>Attack Response</td>
 					<td class="inputValue" style="word-wrap: break-word;"><PRE id="attackResponse"><c:out value="${ finding.attackResponse }"/></PRE></td>
 				</tr>
-				<tr>
-					<td class="bold" valign=top>Raw Finding</td>
-					<td class="inputValue" style="word-wrap: break-word;"><PRE id="rawFinding"><c:out value="${ finding.rawFinding }"/></PRE></td>
-				</tr>
-			</c:if>		
+			</c:if>
 			<c:if test="${ not empty finding.dependency }">			
 				<tr>
 					<td class="bold">CVE ID</td>
@@ -117,8 +113,20 @@
 						<c:out value="${ finding.dependency.cve } "/>
 						(<a target="_blank" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ finding.dependency.cve }">View</a>)
 					</td>	
-				</tr>	
-			</c:if>		
+				</tr>
+                <tr>
+                    <td class="bold" valign=top>File Name</td>
+                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyFileName"><c:out value="${ finding.dependency.componentName }"/></PRE></td>
+                </tr>
+                <tr>
+                    <td class="bold" valign=top>File Path</td>
+                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyFilePath"><c:out value="${ finding.dependency.componentFilePath }"/></PRE></td>
+                </tr>
+			</c:if>
+            <tr>
+                <td class="bold" valign=top>Raw Finding</td>
+                <td class="inputValue" style="word-wrap: break-word;"><PRE id="rawFinding"><c:out value="${ finding.rawFinding }"/></PRE></td>
+            </tr>
 		</tbody>
 	</table>
 	
