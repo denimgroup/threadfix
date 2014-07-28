@@ -122,6 +122,10 @@
                     <td class="bold" valign=top>File Path</td>
                     <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyFilePath"><c:out value="${ finding.dependency.componentFilePath }"/></PRE></td>
                 </tr>
+                <tr>
+                    <td class="bold" valign=top>Description</td>
+                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="dependencyDesc"><c:out value="${ finding.dependency.description }"/></PRE></td>
+                </tr>
 			</c:if>
             <tr>
                 <td class="bold" valign=top>Raw Finding</td>
