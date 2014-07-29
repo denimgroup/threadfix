@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public interface GenericObjectDao<T> {
 
     List<T> retrieveAll();
 
+    @Transactional
     void saveOrUpdate(T object);
 
 }

@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ScanMerger {
 
@@ -33,6 +34,7 @@ public interface ScanMerger {
      * @param scan the recently completed Scan object from the ChannelImporter
      * @param channel the ApplicationChannel which has context information for the scan
      */
+    @Transactional
 	void merge(Scan scan, ApplicationChannel channel);
 	
 }

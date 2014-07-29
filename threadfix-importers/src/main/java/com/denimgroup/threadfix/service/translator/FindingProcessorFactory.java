@@ -31,14 +31,18 @@ import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.repository.GitService;
-import org.eclipse.jgit.lib.Repository;
+import com.denimgroup.threadfix.service.GitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
-class FindingProcessorFactory {
+class FindingProcessorFactory extends SpringBeanAutowiringSupport {
+
+    @Autowired(required = false)
+    private GitService gitService;
 
     private static final SanitizedLogger LOG = new SanitizedLogger(FindingProcessorFactory.class);
 
@@ -112,14 +116,25 @@ class FindingProcessorFactory {
 	
 	@Nullable
 	private static File getRootFile(Application application) {
-		
+
+        FindingProcessorFactory factory = new FindingProcessorFactory();
+
+        if (factory.gitService == null) {
+            LOG.info("GitService was null. " +
+                     "Either we're not in a Spring context or no implementation was in the container.");
+        } else {
+            LOG.info("Successfully found GitService.");
+        }
+
 		File applicationDirectory = new File(baseDirectory + application.getId());
 
-		if (application.getRepositoryUrl() != null && !application.getRepositoryUrl().trim().isEmpty()) {
-			Repository repo = GitService.cloneGitTreeToDirectory(application, applicationDirectory);
+		if (factory.gitService != null &&
+                application.getRepositoryUrl() != null &&
+                !application.getRepositoryUrl().trim().isEmpty()) {
+			File file = factory.gitService.cloneGitTreeToDirectory(application, applicationDirectory);
 
-			if (repo != null && repo.getWorkTree() != null && repo.getWorkTree().exists()) {
-				return repo.getWorkTree();
+			if (file != null && file.exists()) {
+				return file;
 			} else {
 				return applicationDirectory;
 			}

@@ -42,25 +42,14 @@ public class UserServiceImpl implements UserService {
 
 	protected final SanitizedLogger log = new SanitizedLogger(UserService.class);
 
+    @Autowired
 	private UserDao userDao = null;
+    @Autowired
 	private RoleDao roleDao = null;
+    @Autowired
 	private AccessControlMapDao accessControlMapDao = null;
-    private DefaultConfigService defaultConfigService = null;
-    private RoleService roleService = null;
 
 	private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
-
-	@Autowired
-	public UserServiceImpl(AccessControlMapDao accessControlMapDao,
-                           DefaultConfigService defaultConfigurationService,
-                           RoleService roleService,
-			UserDao userDao, RoleDao roleDao) {
-		this.userDao = userDao;
-		this.roleDao = roleDao;
-		this.accessControlMapDao = accessControlMapDao;
-        this.defaultConfigService = defaultConfigurationService;
-        this.roleService = roleService;
-	}
 
 	/**
 	 * Transactional(readOnly = false) here means that false will be put in to 

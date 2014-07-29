@@ -23,16 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanRepeatFindingMap;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.JobStatusService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.JobStatusService;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class is used to remove all the logging code from the merging code.
@@ -154,7 +154,6 @@ public class ScanStatisticsUpdater {
 
 			// Update records for the vuln origin
 			if (previousFinding != null
-					&& previousFinding.getScan() != null
 					&& previousFinding.getScan() != null
 					&& previousFinding.getScan()
 							.getApplicationChannel() != null
