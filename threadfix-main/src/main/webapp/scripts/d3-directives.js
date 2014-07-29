@@ -30,7 +30,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
 
                 var tip = getTip(d3, 'd3-tip', [-10, 0])
                     .html(function(d) {
-                        return "<strong>" + d.vulnTypeDisplay + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
+                        return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
 
@@ -46,7 +46,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
 
                     barGraphData(d3, data, color);
 
-                    x.domain(data.map(function(d) { return d.importTime; }));
+                    x.domain(data.map(function(d) { return d.title; }));
                     y.domain([0, d3.max(data, function(d) { return d.total; })]);
 
                     svg.append("g")
@@ -63,11 +63,11 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
                         .attr("dy", ".71em")
                         .style("text-anchor", "end");
 
-                    var col = svg.selectAll(".importTime")
+                    var col = svg.selectAll(".title")
                         .data(data)
                         .enter().append("g")
                         .attr("class", "g")
-                        .attr("transform", function(d) { return "translate(" + x(d.importTime) + ",0)"; });
+                        .attr("transform", function(d) { return "translate(" + x(d.title) + ",0)"; });
 
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
@@ -76,7 +76,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
                         .attr("width", x.rangeBand())
                         .attr("y", function(d) { return y(d.y1); })
                         .attr("height", function(d) { return y(d.y0) - y(d.y1); })
-                        .style("fill", function(d) { return color(d.vulnType); })
+                        .style("fill", function(d) { return color(d.fillColor); })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                     ;
@@ -117,7 +117,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
 
                 var tip = getTip(d3, 'd3-tip', [-10, 0])
                     .html(function(d) {
-                        return "<strong>" + d.vulnTypeDisplay + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
+                        return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
 
@@ -133,7 +133,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
 
                     barGraphData(d3, data, color);
 
-                    y.domain(data.map(function(d) { return d.importTime; }));
+                    y.domain(data.map(function(d) { return d.title; }));
                     x.domain([0, d3.max(data, function(d) { return d.total; })]);
 
                     svg.append("g")
@@ -150,11 +150,11 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .attr("dy", ".71em")
                         .style("text-anchor", "end");
 
-                    var col = svg.selectAll(".importTime")
+                    var col = svg.selectAll(".title")
                         .data(data)
                         .enter().append("g")
                         .attr("class", "g")
-                        .attr("transform", function(d) { return "translate(0," + y(d.importTime) + ")"; });
+                        .attr("transform", function(d) { return "translate(0," + y(d.title) + ")"; });
 
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
@@ -163,7 +163,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .attr("height", y.rangeBand())
                         .attr("x", function(d) { return x(d.y0); })
                         .attr("width", function(d) { return x(d.y1) - x(d.y0); })
-                        .style("fill", function(d) { return color(d.vulnType); })
+                        .style("fill", function(d) { return color(d.fillColor); })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                     ;
@@ -197,10 +197,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
                     if (!data)
                         return;
 
-                    var keys = d3.keys(data[0]).filter(function(key) { return key; });
-                    keys.sort(function(a, b) { return a.localeCompare(b); });
-
-                    color.domain(keys);
+                    color.domain(vulnTypeList);
 
                     var pieDim ={w:260, h: 200};
 
@@ -265,19 +262,31 @@ function getTip(d3, clazz, offset) {
 }
 
 function barGraphData(d3, data, color) {
-    var keys = d3.keys(data[0]).filter(function(key) { return key !== "importTime"; });
-    keys.sort(function(a, b) { return a.localeCompare(b); });
+    var keys = d3.keys(data[0]).filter(function(key) { return key; });
+//    keys.sort(function(a, b) { return a.localeCompare(b); });
+//
+//    color.domain(keys);
 
-    color.domain(keys);
+    var topVulnsReport = false;
+
+    if (keys.indexOf("count") > -1) {
+//        color = getScaleOrdinalRange(d3, topVulnColor);;
+        color.domain(topVulnMapKeyword);
+        topVulnsReport = true;
+    }
+    else
+        color.domain(vulnTypeList);
 
     data.forEach(function(d) {
         var y0 = 0;
-        d.vulns = color.domain().map(function(vulnType) {
+        d.vulns = color.domain().map(function(key) {
+            var _key = (topVulnsReport) ? "High" : key;
+            var tip = (topVulnsReport) ? d.title + " " + d.name : key;
             return {
-                vulnType: vulnType,
-                vulnTypeDisplay: vulnType.split("-").length>2 ? vulnType.split("-")[1] : vulnType,
+                fillColor: _key,
+                tip : tip,
                 y0: y0,
-                y1: y0 += +d[vulnType]
+                y1: y0 += +d[key]
             };
         });
         d.total = d.vulns[d.vulns.length - 1].y1;
@@ -285,3 +294,6 @@ function barGraphData(d3, data, color) {
 }
 
 var vulnTypeColorList = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"];
+var vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
+var topVulnColor = ["#6b486b"];
+var topVulnMapKeyword = ["count"];

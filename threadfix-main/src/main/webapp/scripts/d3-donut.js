@@ -1,7 +1,6 @@
 angular.module('d3donut', ['d3'])
     .factory('d3donut',['d3', function(d3){
 
-//!function(){
         var Donut3D={};
 
         function pieTop(d, rx, ry, ir ){
@@ -48,11 +47,6 @@ angular.module('d3donut', ['d3'])
         function getPercent(d){
             return (d.endAngle-d.startAngle > 0.2 ?
                 Math.round(1000*(d.endAngle-d.startAngle)/(Math.PI*2))/10+'%' : '');
-        }
-
-        function getLabel(d){
-            var label =  d.data.label.split("-").length>1 ?  d.data.label.split("-")[1] :  d.data.label
-            return d.value + ': ' + label;
         }
 
         Donut3D.transition = function(id, data, rx, ry, h, ir){
@@ -151,7 +145,7 @@ angular.module('d3donut', ['d3'])
                 .attr("y", 9)
                 .attr("dy", ".35em")
                 .style("text-anchor", "end")
-                .text(function(d) { return getLabel(d); });
+                .text(function(d) { return d.value + ': ' + d.data.label; });
 
 //            /* ------- TEXT LABELS -------*/
 //

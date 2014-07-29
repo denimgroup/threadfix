@@ -26,8 +26,6 @@ package com.denimgroup.threadfix.service.report;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.Scan;
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRField;
 
 import java.text.DateFormatSymbols;
 import java.util.*;
@@ -55,9 +53,8 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class XMonthSummaryReport {
 	private List<List<Scan>> normalizedScans = new ArrayList<>();
 	private List<String> dateList = new ArrayList<>();
-	private int index = 0, numMonths = 0;
-	private Map<String, Object> resultsHash = new HashMap<>();
-	
+	private int numMonths = 0;
+
 	private ScanDao scanDao = null;
 	
 	private static final String[] months = new DateFormatSymbols().getMonths();
@@ -77,8 +74,6 @@ public class XMonthSummaryReport {
 				normalizedScans.add(buildNormalizedScans(scanList));
 			}
 		}
-		
-		index = -1;
 	}
 
 	/////////////////////////////////////////////////////////////
@@ -288,14 +283,14 @@ public class XMonthSummaryReport {
 			numInfo     += scan.getNumberInfoVulnerabilities();
 		}
 		
-        hash.put("4-Critical-criticalVulns", numCritical);
-        hash.put("3-High-highVulns", numHigh);
-        hash.put("2-Medium-mediumVulns", numMedium);
-        hash.put("1-Low-lowVulns", numLow);
-        hash.put("0-Info-infoVulns", numInfo);
+        hash.put("Critical", numCritical);
+        hash.put("High", numHigh);
+        hash.put("Medium", numMedium);
+        hash.put("Low", numLow);
+        hash.put("Info", numInfo);
 
 		if (dateList.get(index) != null) {
-            hash.put("importTime", dateList.get(index));
+            hash.put("title", dateList.get(index));
 		}
 
         return hash;

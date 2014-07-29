@@ -70,6 +70,8 @@ public class ReportsServiceImpl implements ReportsService {
     @Autowired
     private VulnerabilityDao  vulnerabilityDao  = null;
     @Autowired
+    private GenericVulnerabilityDao  genericVulnerabilityDao  = null;
+    @Autowired
     private OrganizationDao   organizationDao   = null;
     @Autowired
     private ApplicationDao    applicationDao    = null;
@@ -322,10 +324,14 @@ public class ReportsServiceImpl implements ReportsService {
         List<Map<String, Object>> resultList = list();
         for (Object[] objects: vulns) {
             if (objects != null && objects.length == 2) {
-                String cweId = "CWE-" + String.valueOf(objects[0]);
+
+                if (!(objects[0] instanceof Integer)) continue;
+                GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById((Integer) objects[0]);
+                String cweId = "CWE-" + genericVulnerability.getDisplayId();
                 Map<String, Object> hash = newMap();
-                hash.put("Count", objects[1]);
-                hash.put("importTime", cweId);
+                hash.put("count", objects[1]);
+                hash.put("title", cweId);
+                hash.put("name", genericVulnerability.getName());
                 resultList.add(hash);
             }
         }
@@ -420,13 +426,13 @@ public class ReportsServiceImpl implements ReportsService {
         List<Map<String, Object>> resultList = list();
             for (Application app: apps) {
                 Map<String, Object> hash = newMap();
-                hash.put("4-Critical-criticalVulns", app.getCriticalVulnCount());
-                hash.put("3-High-highVulns", app.getHighVulnCount());
-                hash.put("2-Medium-mediumVulns", app.getMediumVulnCount());
-                hash.put("1-Low-lowVulns", app.getLowVulnCount());
-                hash.put("0-Info-infoVulns", app.getInfoVulnCount());
+                hash.put("Critical", app.getCriticalVulnCount());
+                hash.put("High", app.getHighVulnCount());
+                hash.put("Medium", app.getMediumVulnCount());
+                hash.put("Low", app.getLowVulnCount());
+                hash.put("Info", app.getInfoVulnCount());
 
-                hash.put("importTime", app.getName());
+                hash.put("title", app.getName());
                 resultList.add(hash);
 
 
@@ -448,11 +454,11 @@ public class ReportsServiceImpl implements ReportsService {
             Map<String, Object> hash = newMap();
 
             if (infoArr != null && infoArr.length >= 5) {
-                hash.put("4-Critical", infoArr[4]);
-                hash.put("3-High", infoArr[3]);
-                hash.put("2-Medium", infoArr[2]);
-                hash.put("1-Low", infoArr[1]);
-                hash.put("0-Info", infoArr[0]);
+                hash.put("Critical", infoArr[4]);
+                hash.put("High", infoArr[3]);
+                hash.put("Medium", infoArr[2]);
+                hash.put("Low", infoArr[1]);
+                hash.put("Info", infoArr[0]);
             }
             resultList.add(hash);
         }
