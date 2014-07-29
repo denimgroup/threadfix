@@ -10,52 +10,29 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
             }
             ,
             link: function(scope, ele, attrs) {
-                var renderTimeout;
                 var margin = {top: 20, right: 20, bottom: 30, left: 40},
                     width = 422 - margin.left - margin.right,
                     height = 250 - margin.top - margin.bottom;
 
-                var x = d3.scale.ordinal()
-                    .rangeRoundBands([0, width], .1);
+                var x = getScaleOrdinalRangeBand(d3, [0, width], .1);
 
-                var y = d3.scale.linear()
-                    .rangeRound([height, 0]);
+                var y = getScaleLinearRange(d3, [height, 0]);
 
-                var color = d3.scale.ordinal()
-                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
+                var color = getScaleOrdinalRange(d3, vulnTypeColorList);
 
-                var xAxis = d3.svg.axis()
-                    .scale(x)
-                    .orient("bottom");
+                var xAxis = getAxis(d3, x, "bottom");
 
-                var yAxis = d3.svg.axis()
-                    .scale(y)
-                    .orient("left")
-                    .tickFormat(d3.format(".2s"));
+                var yAxis = getAxisFormat(d3, y, "left", d3.format(".2s"));
 
-                var svg =  d3.select(ele[0]).append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
+                var svg = getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom)
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                var tip = d3.tip()
-                    .attr('class', 'd3-tip')
-                    .offset([-10, 0])
+                var tip = getTip(d3, 'd3-tip', [-10, 0])
                     .html(function(d) {
                         return "<strong>" + d.vulnTypeDisplay + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
-
-                $window.onresize = function() {
-                    scope.$apply();
-                };
-
-                scope.$watch(function() {
-                    return angular.element($window)[0].innerWidth;
-                }, function() {
-                    scope.render(scope.data);
-                });
 
                 scope.$watch('data', function(newVals) {
                     scope.render(newVals);
@@ -67,23 +44,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
 
                     if (!data || data.length < 1) return;
 
-                    var keys = d3.keys(data[0]).filter(function(key) { return key !== "importTime"; });
-                    keys.sort(function(a, b) { return a.localeCompare(b); });
-
-                    color.domain(keys);
-
-                    data.forEach(function(d) {
-                        var y0 = 0;
-                        d.vulns = color.domain().map(function(vulnType) {
-                            return {
-                                vulnType: vulnType,
-                                vulnTypeDisplay: vulnType.split("-").length>2 ? vulnType.split("-")[1] : vulnType,
-                                y0: y0,
-                                y1: y0 += +d[vulnType]
-                            };
-                        });
-                        d.total = d.vulns[d.vulns.length - 1].y1;
-                    });
+                    barGraphData(d3, data, color);
 
                     x.domain(data.map(function(d) { return d.importTime; }));
                     y.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -136,51 +97,29 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
             }
             ,
             link: function(scope, ele, attrs) {
-                var renderTimeout;
                 var margin = {top: 20, right: 20, bottom: 30, left: 40},
                     width = 422 - margin.left - margin.right,
                     height = 250 - margin.top - margin.bottom;
 
-                var x = d3.scale.linear()
-                    .rangeRound([0, width]);
+                var x = getScaleLinearRange(d3, [0, width]);
 
-                var y = d3.scale.ordinal()
-                    .rangeRoundBands([0, height], .1);
+                var y = getScaleOrdinalRangeBand(d3, [0, height], .1);
 
-                var color = d3.scale.ordinal()
-                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
+                var color = getScaleOrdinalRange(d3, vulnTypeColorList);
 
-                var xAxis = d3.svg.axis()
-                    .scale(x)
-                    .orient("bottom");
+                var xAxis = getAxis(d3, x, "bottom");
 
-                var yAxis = d3.svg.axis()
-                    .scale(y)
-                    .orient("left");
+                var yAxis = getAxis(d3, y, "left");
 
-                var svg =  d3.select(ele[0]).append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
+                var svg = getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom)
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                var tip = d3.tip()
-                    .attr('class', 'd3-tip')
-                    .offset([-10, 0])
+                var tip = getTip(d3, 'd3-tip', [-10, 0])
                     .html(function(d) {
                         return "<strong>" + d.vulnTypeDisplay + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
                 svg.call(tip);
-
-                $window.onresize = function() {
-                    scope.$apply();
-                };
-
-                scope.$watch(function() {
-                    return angular.element($window)[0].innerWidth;
-                }, function() {
-                    scope.render(scope.data);
-                });
 
                 scope.$watch('data', function(newVals) {
                     scope.render(newVals);
@@ -192,23 +131,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
 
                     if (!data || data.length < 1) return;
 
-                    var keys = d3.keys(data[0]).filter(function(key) { return key !== "importTime"; });
-                    keys.sort(function(a, b) { return a.localeCompare(b); });
-
-                    color.domain(keys);
-
-                    data.forEach(function(d) {
-                        var y0 = 0;
-                        d.vulns = color.domain().map(function(vulnType) {
-                            return {
-                                vulnType: vulnType,
-                                vulnTypeDisplay: vulnType.split("-").length>2 ? vulnType.split("-")[1] : vulnType,
-                                y0: y0,
-                                y1: y0 += +d[vulnType]
-                            };
-                        });
-                        d.total = d.vulns[d.vulns.length - 1].y1;
-                    });
+                    barGraphData(d3, data, color);
 
                     y.domain(data.map(function(d) { return d.importTime; }));
                     x.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -262,18 +185,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
             ,
             link: function(scope, ele, attrs) {
 
-                var color = d3.scale.ordinal()
-                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
-
-                $window.onresize = function() {
-                    scope.$apply();
-                };
-
-                scope.$watch(function() {
-                    return angular.element($window)[0].innerWidth;
-                }, function() {
-                    scope.render(scope.data);
-                });
+                var color = getScaleOrdinalRange(d3, vulnTypeColorList);
 
                 scope.$watch('data', function(newVals) {
                     scope.render(newVals);
@@ -292,20 +204,17 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
 
                     var pieDim ={w:260, h: 200};
 
-                    var svg = d3.select(ele[0]).append("svg")
-                            .attr("width",pieDim.w).attr("height",pieDim.h)
-                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")")
-                        ;
+                    var svg = getSvg(d3, ele[0], pieDim.w, pieDim.h)
+                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
 
                     svg.append("g").attr("id",scope.label);
 
-                    d3donut.draw(scope.label, getData(), 135, 90, 80, 50, 30, 0.4);
+                    d3donut.draw(scope.label, getData(), 80, 90, 80, 50, 30, 0.4);
 
                     function getData(){
                         var d = data[0];
-                           return color.domain().map(function(vulnType) {
-                                var temp = {label:vulnType, value:d[vulnType], color:color(vulnType)};
-                                return {label:vulnType, value:d[vulnType], color:color(vulnType)};});
+                        return color.domain().map(function(vulnType) {
+                            return {label:vulnType, value:d[vulnType], color:color(vulnType)};});
                     }
 
                 };
@@ -313,3 +222,66 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
             }
         }
     }]);
+
+
+/*** UTILITY FUNCTIONS ***/
+
+function getScaleOrdinalRange(d3, range) {
+    return d3.scale.ordinal()
+        .range(range);
+}
+
+function getScaleOrdinalRangeBand(d3, range, scale) {
+    return d3.scale.ordinal()
+        .rangeRoundBands(range, scale);
+}
+
+function getScaleLinearRange(d3, range) {
+    return d3.scale.linear()
+        .rangeRound(range);
+}
+
+function getAxis(d3, scale, orient) {
+    return  d3.svg.axis()
+        .scale(scale)
+        .orient(orient);
+};
+
+function getAxisFormat(d3, scale, orient, format) {
+    return  getAxis(d3, scale, orient)
+        .tickFormat(format);
+};
+
+function getSvg(d3, elementId, w, h) {
+    return d3.select(elementId).append("svg")
+        .attr("width", w)
+        .attr("height", h);
+}
+
+function getTip(d3, clazz, offset) {
+    return d3.tip()
+        .attr('class', clazz)
+        .offset(offset);
+}
+
+function barGraphData(d3, data, color) {
+    var keys = d3.keys(data[0]).filter(function(key) { return key !== "importTime"; });
+    keys.sort(function(a, b) { return a.localeCompare(b); });
+
+    color.domain(keys);
+
+    data.forEach(function(d) {
+        var y0 = 0;
+        d.vulns = color.domain().map(function(vulnType) {
+            return {
+                vulnType: vulnType,
+                vulnTypeDisplay: vulnType.split("-").length>2 ? vulnType.split("-")[1] : vulnType,
+                y0: y0,
+                y1: y0 += +d[vulnType]
+            };
+        });
+        d.total = d.vulns[d.vulns.length - 1].y1;
+    });
+}
+
+var vulnTypeColorList = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"];

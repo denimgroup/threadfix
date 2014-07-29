@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
-import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -96,7 +95,7 @@ public class DashboardController {
 	@RequestMapping(value="/leftReport", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<List<Map<String, Object>>> leftReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
-        ReportCheckResultBean report = reportD3(model, request, ReportFormat.SIX_MONTH_SUMMARY);
+        ReportCheckResultBean report = report(request, ReportFormat.SIX_MONTH_SUMMARY);
         return RestResponse.success(report.getReportList());
 	}
 	
@@ -104,34 +103,13 @@ public class DashboardController {
 	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
 		if (request.getParameter("appId") != null) {
-			return RestResponse.success(reportD3(model, request, ReportFormat.TOP_TEN_VULNS).getReportList());
+			return RestResponse.success(report(request, ReportFormat.TOP_TEN_VULNS).getReportList());
 		} else {
-			return RestResponse.success(reportD3(model, request, ReportFormat.TOP_TEN_APPS).getReportList());
+			return RestResponse.success(report(request, ReportFormat.TOP_TEN_APPS).getReportList());
 		}
-	}
-	
-	public String report(Model model, HttpServletRequest request, ReportFormat reportFormat) {
-		
-		int orgId = -1, appId = -1;
-		if (request.getParameter("orgId") != null) {
-			orgId = safeParseInt(request.getParameter("orgId"));
-		}
-		if (request.getParameter("appId") != null) {
-			appId = safeParseInt(request.getParameter("appId"));
-		}
-		ReportParameters parameters = new ReportParameters();
-		parameters.setApplicationId(appId);
-		parameters.setOrganizationId(orgId);
-		parameters.setFormatId(1);
-		parameters.setReportFormat(reportFormat);
-		ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
-		if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
-			model.addAttribute("jasperReport", resultBean.getReport());
-		}
-		return "reports/report";
 	}
 
-    public ReportCheckResultBean reportD3(Model model, HttpServletRequest request, ReportFormat reportFormat) {
+    public ReportCheckResultBean report(HttpServletRequest request, ReportFormat reportFormat) {
 
         int orgId = -1, appId = -1;
         if (request.getParameter("orgId") != null) {
@@ -145,7 +123,7 @@ public class DashboardController {
         parameters.setOrganizationId(orgId);
         parameters.setFormatId(1);
         parameters.setReportFormat(reportFormat);
-        ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
+        ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
         return resultBean;
     }
 	

@@ -131,10 +131,7 @@ public class ApplicationsIndexController {
 			parameters.setOrganizationId(orgId);
 			parameters.setFormatId(1);
 			parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
-			ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
-//			if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
-//				model.addAttribute("jasperReport", resultBean.getReport());
-//			}
+			ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
 			return RestResponse.success(resultBean.getReportList());
 		}
 	}

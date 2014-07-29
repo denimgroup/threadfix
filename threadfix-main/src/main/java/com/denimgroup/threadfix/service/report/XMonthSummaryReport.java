@@ -52,7 +52,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  *
  */
-public class JasperXMonthSummaryReport implements JRDataSource {
+public class XMonthSummaryReport {
 	private List<List<Scan>> normalizedScans = new ArrayList<>();
 	private List<String> dateList = new ArrayList<>();
 	private int index = 0, numMonths = 0;
@@ -62,7 +62,7 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 	
 	private static final String[] months = new DateFormatSymbols().getMonths();
 	
-	public JasperXMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths) {
+	public XMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths) {
 		this.scanDao = scanDao;
 		
 		if (numMonths > 0 && numMonths <= 12) {
@@ -274,46 +274,8 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		}
 	}
 	
-	////////////////////////////////////////////////////////////
-	//   These methods implement the JRDataSource interface   //
-	////////////////////////////////////////////////////////////
-	
-	@Override
-	public Object getFieldValue(JRField field) {
-		if (field == null) {
-			return null;
-		}
-		String name = field.getName();
-		if (name == null) {
-			return null;
-		}
-
-		if (resultsHash.containsKey(name)) {
-			return resultsHash.get(name);
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public boolean next() {
-		if (normalizedScans != null && normalizedScans.size() > 0 &&
-				index < normalizedScans.get(0).size() - 1) {
-			if (index == -1) {
-				index = 0;
-			} else {
-				index++;
-			}
-			buildHash(index);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private Map<String, Object> buildHash(int index) {
         Map<String, Object> hash = new HashMap<>();
-		resultsHash.clear();
 
 		long numCritical = 0, numHigh = 0, numMedium = 0, numLow = 0, numInfo = 0;
 		for (List<Scan> scanList: normalizedScans) {
@@ -326,11 +288,6 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			numInfo     += scan.getNumberInfoVulnerabilities();
 		}
 		
-		resultsHash.put("criticalVulns", numCritical);
-		resultsHash.put("highVulns", numHigh);
-		resultsHash.put("mediumVulns", numMedium);
-		resultsHash.put("lowVulns", numLow);
-		resultsHash.put("infoVulns", numInfo);
         hash.put("4-Critical-criticalVulns", numCritical);
         hash.put("3-High-highVulns", numHigh);
         hash.put("2-Medium-mediumVulns", numMedium);
@@ -338,7 +295,6 @@ public class JasperXMonthSummaryReport implements JRDataSource {
         hash.put("0-Info-infoVulns", numInfo);
 
 		if (dateList.get(index) != null) {
-			resultsHash.put("importTime", dateList.get(index));
             hash.put("importTime", dateList.get(index));
 		}
 

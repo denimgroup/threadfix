@@ -52,8 +52,7 @@ angular.module('d3donut', ['d3'])
 
         function getLabel(d){
             var label =  d.data.label.split("-").length>1 ?  d.data.label.split("-")[1] :  d.data.label
-            return (d.value !== 0 ?
-                label + ': ' + d.value : '');
+            return d.value + ': ' + label;
         }
 
         Donut3D.transition = function(id, data, rx, ry, h, ir){
@@ -108,10 +107,10 @@ angular.module('d3donut', ['d3'])
 
             var slices = svg.append("g")
                 .attr("class", "slices")
-            var labels =svg.append("g")
-                .attr("class", "labels")
-            var lines = svg.append("g")
-                .attr("class", "lines");
+//            var labels =svg.append("g")
+//                .attr("class", "labels")
+//            var lines = svg.append("g")
+//                .attr("class", "lines");
 
             slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
                 .style("fill", function(d) { return d3.hsl(d.data.color).darker(0.7); })
@@ -134,93 +133,111 @@ angular.module('d3donut', ['d3'])
                 .attr("y",function(d){ return 0.6*ry*Math.sin(0.5*(d.startAngle+d.endAngle));})
                 .text(getPercent).each(function(d){this._current=d;});
 
+            /* ------- LEGEND -------*/
+            var legend = svg.selectAll(".legend")
+                .data(_data)
+                .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
+            legend.append("rect")
+                .attr("x", 170 - 18)
+                .attr("width", 18)
+                .attr("height", 18)
+                .style("fill", function(d) { return d.data.color; });
 
-            /* ------- TEXT LABELS -------*/
-
-            var radius = 75;
-
-            var arc = d3.svg.arc()
-                .outerRadius(radius * 0.8)
-                .innerRadius(radius * 0.4);
-
-            var outerArc = d3.svg.arc()
-                .innerRadius(radius * 0.9)
-                .outerRadius(radius * 0.9);
-
-            var text = labels.selectAll("text")
-                .data(_data, key);
-
-            text.enter()
-                .append("text")
+            legend.append("text")
+                .attr("x", 170 - 24)
+                .attr("y", 9)
                 .attr("dy", ".35em")
-                .text(function(d) {
-                    return getLabel(d);
-                });
+                .style("text-anchor", "end")
+                .text(function(d) { return getLabel(d); });
 
-            function midAngle(d){
-                return d.startAngle + (d.endAngle - d.startAngle)/2;
-            }
-
-            function modifyAngles(d) {
-                d.startAngle = d.startAngle + Math.PI/2;
-                d.endAngle = d.endAngle + Math.PI/2;
-                return d;
-            }
-
-            text.transition().duration(1000)
-                .attrTween("transform", function(d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        d2 = modifyAngles(d2);
-                        var pos = outerArc.centroid(d2);
-                        pos[0] = radius * (midAngle(d2) < Math.PI || midAngle(d2) > 2*Math.PI ? 1 : -1);
-                        return "translate("+ pos +")";
-                    };
-                })
-                .styleTween("text-anchor", function(d){
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        d2 = modifyAngles(d2);
-                        return midAngle(d2) < Math.PI || midAngle(d2) > 2*Math.PI ? "start":"end";
-                    };
-                });
-
-            text.exit()
-                .remove();
-
-            /* ------- SLICE TO TEXT POLYLINES -------*/
-
-            var polyline = lines.selectAll("polyline")
-                .data(_data, key);
-
-            polyline.enter()
-                .append("polyline");
-
-            polyline.transition().duration(1000)
-                .attrTween("points", function(d){
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
-                    this._current = interpolate(0);
-                    if (d.value === 0)
-                        return null;
-                    return function(t) {
-                        var d2 = interpolate(t);
-                        d2 = modifyAngles(d2);
-                        var pos = outerArc.centroid(d2);
-                        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI || midAngle(d2) > 2*Math.PI ? 1 : -1);
-                        return [arc.centroid(d2), outerArc.centroid(d2), pos];
-                    };
-                });
-
-            polyline.exit()
-                .remove();
+//            /* ------- TEXT LABELS -------*/
+//
+//            var radius = 75;
+//
+//            var arc = d3.svg.arc()
+//                .outerRadius(radius * 0.8)
+//                .innerRadius(radius * 0.4);
+//
+//            var outerArc = d3.svg.arc()
+//                .innerRadius(radius * 0.9)
+//                .outerRadius(radius * 0.9);
+//
+//            var text = labels.selectAll("text")
+//                .data(_data, key);
+//
+//            text.enter()
+//                .append("text")
+//                .attr("dy", ".35em")
+//                .text(function(d) {
+//                    return getLabel(d);
+//                });
+//
+//            function midAngle(d){
+//                return d.startAngle + (d.endAngle - d.startAngle)/2;
+//            }
+//
+//            function modifyAngles(d) {
+//                d.startAngle = d.startAngle + Math.PI/2;
+//                d.endAngle = d.endAngle + Math.PI/2;
+//                return d;
+//            }
+//
+//            text.transition().duration(1000)
+//                .attrTween("transform", function(d) {
+//                    this._current = this._current || d;
+//                    var interpolate = d3.interpolate(this._current, d);
+//                    this._current = interpolate(0);
+//                    return function(t) {
+//                        var d2 = interpolate(t);
+//                        d2 = modifyAngles(d2);
+//                        var pos = outerArc.centroid(d2);
+//                        pos[0] = radius * (midAngle(d2) < Math.PI || midAngle(d2) > 2*Math.PI ? 1 : -1);
+//                        return "translate("+ pos +")";
+//                    };
+//                })
+//                .styleTween("text-anchor", function(d){
+//                    this._current = this._current || d;
+//                    var interpolate = d3.interpolate(this._current, d);
+//                    this._current = interpolate(0);
+//                    return function(t) {
+//                        var d2 = interpolate(t);
+//                        d2 = modifyAngles(d2);
+//                        return midAngle(d2) < Math.PI || midAngle(d2) > 2*Math.PI ? "start":"end";
+//                    };
+//                });
+//
+//            text.exit()
+//                .remove();
+//
+//            /* ------- SLICE TO TEXT POLYLINES -------*/
+//
+//            var polyline = lines.selectAll("polyline")
+//                .data(_data, key);
+//
+//            polyline.enter()
+//                .append("polyline");
+//
+//            polyline.transition().duration(1000)
+//                .attrTween("points", function(d){
+//                    this._current = this._current || d;
+//                    var interpolate = d3.interpolate(this._current, d);
+//                    this._current = interpolate(0);
+//                    if (d.value === 0)
+//                        return null;
+//                    return function(t) {
+//                        var d2 = interpolate(t);
+//                        d2 = modifyAngles(d2);
+//                        var pos = outerArc.centroid(d2);
+//                        pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI || midAngle(d2) > 2*Math.PI ? 1 : -1);
+//                        return [arc.centroid(d2), outerArc.centroid(d2), pos];
+//                    };
+//                });
+//
+//            polyline.exit()
+//                .remove();
         }
 
         return Donut3D;
