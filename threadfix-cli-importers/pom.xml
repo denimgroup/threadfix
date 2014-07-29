@@ -295,6 +295,11 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-service-interfaces</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-data-access</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -326,6 +331,11 @@
             <artifactId>dependency-check-maven</artifactId>
             <version>${dependencycheck.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${springsecurity.version}</version>
         </dependency>
     </dependencies>
 

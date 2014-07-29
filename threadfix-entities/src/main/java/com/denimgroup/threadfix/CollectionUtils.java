@@ -52,6 +52,10 @@ public class CollectionUtils {
         }
     }
 
+    public static <T> List<T> listOf(Class<T> targetClass) {
+        return new ArrayList<T>();
+    }
+
     /**
      * Provides a wrapper to create a list out of a collection
      * @param wrappedCollection nullable collection

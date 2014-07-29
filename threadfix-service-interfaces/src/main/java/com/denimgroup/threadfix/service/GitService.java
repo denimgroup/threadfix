@@ -21,16 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.login;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.denimgroup.threadfix.data.entities.Application;
+
+import java.io.File;
 
 /**
  * Created by mac on 7/29/14.
  */
-public interface CustomUserDetailService {
+public interface GitService {
 
-    public UserDetails loadUser(User user);
+    // Cursory testing indicates that this works.
+    File cloneGitTreeToDirectory(Application application, File fileLocation);
 
+    // TODO move to some sort of repository manager instead of tying to the Git implementation.
+    File getWorkTree(Application application);
 }

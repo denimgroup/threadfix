@@ -21,20 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import com.denimgroup.threadfix.data.dao.JobStatusDao;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.JobStatus;
+import com.denimgroup.threadfix.service.JobStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.denimgroup.threadfix.data.dao.JobStatusDao;
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.JobStatus;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class JobStatusServiceImpl implements JobStatusService {

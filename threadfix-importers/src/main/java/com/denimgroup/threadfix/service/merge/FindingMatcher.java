@@ -23,14 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
+import com.denimgroup.threadfix.data.entities.*;
+
 import java.util.Collections;
 import java.util.List;
-
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 /**
  * Encapsulates all Finding matching functionality complete with configuration options.

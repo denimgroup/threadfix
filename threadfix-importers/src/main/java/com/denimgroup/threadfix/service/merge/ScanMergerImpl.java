@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -40,9 +41,14 @@ public class ScanMergerImpl implements ScanMerger {
     private ApplicationMerger applicationMerger;
     @Autowired
     private ScanDao           scanDao;
+    @Autowired
+    private VulnerabilityDao  vulnerabilityDao;
 
     @Override
     public void merge(Scan scan, ApplicationChannel applicationChannel) {
+
+        assert applicationMerger != null : "applicationMerger was null, fix your Spring configuration.";
+        assert scanDao != null : "scanDao was null, fix your Spring configuration.";
 
         if (scan.getFindings() != null && applicationChannel != null
                 && applicationChannel.getChannelType() != null
@@ -59,8 +65,9 @@ public class ScanMergerImpl implements ScanMerger {
             return;
         }
 
+        // TODO probably make all of these autowired
         PathGuesser.generateGuesses(applicationChannel.getApplication(), scan);
-        ChannelMerger.channelMerge(scan, applicationChannel);
+        ChannelMerger.channelMerge(vulnerabilityDao, scan, applicationChannel);
         applicationMerger.applicationMerge(scan, applicationChannel.getApplication(), null);
 
         scan.setApplicationChannel(applicationChannel);
@@ -79,6 +86,5 @@ public class ScanMergerImpl implements ScanMerger {
 		}
 	
 		ScanCleanerUtils.clean(scan);
-		scanDao.saveOrUpdate(scan);
 	}
 }

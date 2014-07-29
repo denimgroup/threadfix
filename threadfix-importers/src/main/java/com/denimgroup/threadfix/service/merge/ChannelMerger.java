@@ -27,14 +27,12 @@ import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
-public class ChannelMerger extends SpringBeanAutowiringSupport {
+public class ChannelMerger {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(ChannelMerger.class);
 
@@ -52,32 +50,34 @@ public class ChannelMerger extends SpringBeanAutowiringSupport {
     Map<String, Finding> scanHash;
     boolean shouldSkipMerging = false;
 
-    public ChannelMerger(Scan scan, ApplicationChannel applicationChannel) {
-        this.scan = scan;
-        this.applicationChannel = applicationChannel;
-    }
-
     /**
      * This is the first round of scan merge that only considers scans from the same scanner
      * as the incoming scan.
      *
+     * @param vulnerabilityDao TODO this is a shim to get around autowiring problems so we can unit test this.
      * @param scan recent scan to merge
      * @param applicationChannel context information about the scan
      */
-    public static void channelMerge(Scan scan, ApplicationChannel applicationChannel) {
+    public static void channelMerge(VulnerabilityDao vulnerabilityDao, Scan scan, ApplicationChannel applicationChannel) {
         if (scan == null || applicationChannel == null) {
             LOG.warn("Insufficient data to complete Application Channel-wide merging process.");
             return;
         }
 
-        new ChannelMerger(scan, applicationChannel).performMerge();
+        ChannelMerger merger = new ChannelMerger();
+
+        merger.scan = scan;
+        merger.applicationChannel = applicationChannel;
+        merger.vulnerabilityDao = vulnerabilityDao;
+
+        merger.performMerge();
     }
 
     private void performMerge() {
         assert vulnerabilityDao != null : "vulnerabilityDao was null. Spring autowiring failed, fix the code.";
 
         if (scan.getFindings() == null) {
-            scan.setFindings(new ArrayList<Finding>());
+            scan.setFindings(listOf(Finding.class));
         }
 
         shouldSkipMerging = applicationChannel.getApplication().getSkipApplicationMerge();
