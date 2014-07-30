@@ -293,7 +293,7 @@ function barGraphData(d3, data, color) {
     });
 }
 
-var vulnTypeColorList = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"];
+var vulnTypeColorList = ["#0000FF", "#008000", "#FFFF00", "#FF8C00", "#FF0000"];
 var vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
 var topVulnColor = ["#6b486b"];
 var topVulnMapKeyword = ["count"];

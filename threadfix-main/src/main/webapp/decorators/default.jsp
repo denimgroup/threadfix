@@ -26,9 +26,9 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/header-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/init-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/directives.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/d3-directives.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/d3.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/d3-donut.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3-directives.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3-donut.js"></script>
 
     <!--[if lt IE 7]>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>
