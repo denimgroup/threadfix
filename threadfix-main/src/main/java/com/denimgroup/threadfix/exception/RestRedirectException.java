@@ -28,19 +28,14 @@ package com.denimgroup.threadfix.exception;
  */
 public class RestRedirectException extends RestException {
 
-    public RestRedirectException(Throwable cause, String responseString) {
-        super(cause, responseString);
+    private String targetUrl;
+
+    public String getTargetUrl() {
+        return targetUrl;
     }
 
-    public RestRedirectException(String responseString) {
+    public RestRedirectException(String responseString, String targetUrl) {
         super(responseString);
-    }
-
-    public RestRedirectException(String responseString, String exceptionMessageString) {
-        super(responseString, exceptionMessageString);
-    }
-
-    public RestRedirectException(Exception e, String responseString, String exceptionMessageString) {
-        super(e, responseString, exceptionMessageString);
+        this.targetUrl = targetUrl;
     }
 }
