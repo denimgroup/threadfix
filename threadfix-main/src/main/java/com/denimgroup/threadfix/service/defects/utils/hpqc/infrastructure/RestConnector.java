@@ -261,7 +261,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         if (responseCode == 302) {
             String redirectTarget = con.getHeaderField("Location");
             log.error("Got redirected to " + redirectTarget);
-            throw new RestRedirectException("Redirected to " + redirectTarget);
+            throw new RestRedirectException("Redirected to " + redirectTarget, redirectTarget);
         }
 
         Response ret = new Response();
