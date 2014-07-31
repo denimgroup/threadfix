@@ -10,6 +10,8 @@
             			   http://www.springframework.org/schema/tx
            				   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
     <!--
         Instructs Spring to perform declarative transaction management on
         annotated classes
@@ -26,7 +28,6 @@
         <property name="properties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
             </props>
         </property>
