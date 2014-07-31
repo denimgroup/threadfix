@@ -45,8 +45,7 @@ angular.module('d3donut', ['d3'])
         }
 
         function getPercent(d){
-            return (d.endAngle-d.startAngle > 0.2 ?
-                Math.round(1000*(d.endAngle-d.startAngle)/(Math.PI*2))/10+'%' : '');
+            return Math.round(1000*(d.endAngle-d.startAngle)/(Math.PI*2))/10+'%';
         }
 
         Donut3D.transition = function(id, data, rx, ry, h, ir){
@@ -99,6 +98,15 @@ angular.module('d3donut', ['d3'])
             var key = function(d){ return d.data.label; };
             var svg = d3.select("#"+id).append("g").attr("transform", "translate(" + x + "," + y + ")");
 
+            /* ------- TIP -------*/
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    return "<strong>" + d.data.label + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
+                });
+            svg.call(tip);
+
             var slices = svg.append("g")
                 .attr("class", "slices")
 //            var labels =svg.append("g")
@@ -109,44 +117,50 @@ angular.module('d3donut', ['d3'])
             slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
                 .style("fill", function(d) { return d3.hsl(d.data.color).darker(0.7); })
                 .attr("d",function(d){ return pieInner(d, rx+0.5,ry+0.5, h, ir);})
-                .each(function(d){this._current=d;});
+                .each(function(d){this._current=d;})
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
 
             slices.selectAll(".topSlice").data(_data).enter().append("path").attr("class", "topSlice")
                 .style("fill", function(d) { return d.data.color; })
                 .style("stroke", function(d) { return d.data.color; })
                 .attr("d",function(d){ return pieTop(d, rx, ry, ir);})
-                .each(function(d){this._current=d;});
+                .each(function(d){this._current=d;})
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
 
             slices.selectAll(".outerSlice").data(_data).enter().append("path").attr("class", "outerSlice")
                 .style("fill", function(d) { return d3.hsl(d.data.color).darker(0.7); })
                 .attr("d",function(d){ return pieOuter(d, rx-.5,ry-.5, h);})
-                .each(function(d){this._current=d;});
+                .each(function(d){this._current=d;})
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
 
-            slices.selectAll(".percent").data(_data).enter().append("text").attr("class", "percent")
-                .attr("x",function(d){ return 0.6*rx*Math.cos(0.5*(d.startAngle+d.endAngle));})
-                .attr("y",function(d){ return 0.6*ry*Math.sin(0.5*(d.startAngle+d.endAngle));})
-                .text(getPercent).each(function(d){this._current=d;});
-
-            /* ------- LEGEND -------*/
-            var legend = svg.selectAll(".legend")
-                .data(_data)
-                .enter().append("g")
-                .attr("class", "legend")
-                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-            legend.append("rect")
-                .attr("x", 170 - 18)
-                .attr("width", 18)
-                .attr("height", 18)
-                .style("fill", function(d) { return d.data.color; });
-
-            legend.append("text")
-                .attr("x", 170 - 24)
-                .attr("y", 9)
-                .attr("dy", ".35em")
-                .style("text-anchor", "end")
-                .text(function(d) { return d.value + ': ' + d.data.label; });
-
+//            slices.selectAll(".percent").data(_data).enter().append("text").attr("class", "percent")
+//                .attr("x",function(d){ return 0.7*rx*Math.cos(0.5*(d.startAngle+d.endAngle));})
+//                .attr("y",function(d){ return 0.7*ry*Math.sin(0.5*(d.startAngle+d.endAngle));})
+//                .text(getPercent).each(function(d){this._current=d;});
+//
+//            /* ------- LEGEND -------*/
+//            var legend = svg.selectAll(".legend")
+//                .data(_data)
+//                .enter().append("g")
+//                .attr("class", "legend")
+//                .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+//
+//            legend.append("rect")
+//                .attr("x", 170 - 18)
+//                .attr("width", 18)
+//                .attr("height", 18)
+//                .style("fill", function(d) { return d.data.color; });
+//
+//            legend.append("text")
+//                .attr("x", 170 - 24)
+//                .attr("y", 9)
+//                .attr("dy", ".35em")
+//                .style("text-anchor", "end")
+//                .text(function(d) { return d.value + ': ' + d.data.label; });
+//
 //            /* ------- TEXT LABELS -------*/
 //
 //            var radius = 75;

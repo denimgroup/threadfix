@@ -69,17 +69,26 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
                         .attr("class", "g")
                         .attr("transform", function(d) { return "translate(" + x(d.title) + ",0)"; });
 
+                    var drawTime = -1;
+                    var numberOfCol = data.length;
+                    var duration = 500/numberOfCol;
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
                         .enter().append("rect")
                         .attr("class", "bar")
-                        .attr("width", x.rangeBand())
+                        .attr("width", 0)
                         .attr("y", function(d) { return y(d.y1); })
                         .attr("height", function(d) { return y(d.y0) - y(d.y1); })
                         .style("fill", function(d) { return color(d.fillColor); })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
-                    ;
+                        .transition()
+                        .attr("width", x.rangeBand())
+                        .duration(duration)
+                        .delay(function(d) {
+                            if (d.y0 === 0)
+                                drawTime++;
+                            return duration*drawTime; }) ;
                 };
                 ;
             }
@@ -156,16 +165,27 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .attr("class", "g")
                         .attr("transform", function(d) { return "translate(0," + y(d.title) + ")"; });
 
+                    var drawTime = -1;
+                    var numberOfRow = data.length;
+                    var duration = 500/numberOfRow;
+
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
                         .enter().append("rect")
                         .attr("class", "bar")
-                        .attr("height", y.rangeBand())
+                        .attr("height", 0)
                         .attr("x", function(d) { return x(d.y0); })
                         .attr("width", function(d) { return x(d.y1) - x(d.y0); })
                         .style("fill", function(d) { return color(d.fillColor); })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
+                        .transition()
+                        .attr("height", y.rangeBand())
+                        .duration(duration)
+                        .delay(function(d) {
+                            if (d.y0 === 0)
+                                drawTime++;
+                            return duration*drawTime; })
                     ;
                 };
                 ;
@@ -206,7 +226,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
 
                     svg.append("g").attr("id",scope.label);
 
-                    d3donut.draw(scope.label, getData(), 80, 90, 80, 50, 30, 0.4);
+                    d3donut.draw(scope.label, getData(), 135, 90, 85, 55, 30, 0.4);
 
                     function getData(){
                         var d = data[0];
@@ -293,7 +313,7 @@ function barGraphData(d3, data, color) {
     });
 }
 
-var vulnTypeColorList = ["#0000FF", "#008000", "#FFFF00", "#FF8C00", "#FF0000"];
+var vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
 var vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
 var topVulnColor = ["#6b486b"];
 var topVulnMapKeyword = ["count"];

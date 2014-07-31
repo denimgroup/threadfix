@@ -60,3 +60,27 @@ polyline{
     stroke-width: 2px;
     fill: none;
 }
+svg text.percent{
+    fill:white;
+    text-anchor:middle;
+    font-size:10px;
+}
+
+.background path {
+    fill: none;
+    stroke: #ccc;
+    stroke-opacity: .4;
+    shape-rendering: crispEdges;
+}
+
+.foreground path {
+    fill: none;
+    stroke: steelblue;
+    stroke-opacity: .7;
+}
+
+.brush .extent {
+    fill-opacity: .3;
+    stroke: #fff;
+    shape-rendering: crispEdges;
+}

@@ -177,23 +177,7 @@ public class ReportsServiceImpl implements ReportsService {
 		File file = new File(path + "jasper/" + reportFormat.getFileName());
 		InputStream inputStream;
 		
-		if (parameters != null) {
-			List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
-			if (teamNames != null && teamNames.size() == 1) {
-				parameters.put("orgName", teamNames.get(0));
-			} else if (teamNames != null) {
-				parameters.put("orgName", "All");
-			}
-			
-			if (applicationIdList.size() == 1) {
-				Application app = applicationDao.retrieveById(applicationIdList.get(0));
-				if (app != null) {
-					parameters.put("appName", app.getName());
-				}
-			} else {
-				parameters.put("appName", "All");
-			}
-		}
+        updateParameters(applicationIdList, parameters);
 
 		try {
 			inputStream = new FileInputStream(file);
@@ -317,6 +301,27 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		return new ReportCheckResultBean(ReportCheckResult.VALID, report, null);
 	}
+
+    private void updateParameters(List<Integer> applicationIdList, Map<String, Object> parameters) {
+
+        if (parameters != null) {
+            List<String> teamNames = applicationDao.getTeamNames(applicationIdList);
+            if (teamNames != null && teamNames.size() == 1) {
+                parameters.put("orgName", teamNames.get(0));
+            } else if (teamNames != null) {
+                parameters.put("orgName", "All");
+            }
+
+            if (applicationIdList.size() == 1) {
+                Application app = applicationDao.retrieveById(applicationIdList.get(0));
+                if (app != null) {
+                    parameters.put("appName", app.getName());
+                }
+            } else {
+                parameters.put("appName", "All");
+            }
+        }
+    }
 
     private ReportCheckResultBean getTopVulnsReportD3(List<Integer> applicationIdList, List<Integer> vulnIds) {
 

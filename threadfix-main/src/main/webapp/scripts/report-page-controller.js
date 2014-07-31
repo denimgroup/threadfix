@@ -156,9 +156,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.application = {id: -1, name: "All"};
                     $scope.applications = undefined;
 
-                    //teamId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
-                    //appId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
-
                     if ($scope.firstTeamId) {
                         $scope.teamId = parseInt($scope.firstTeamId);
                         $scope.teams.forEach(function(team) {
@@ -174,11 +171,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                             }
 
                             $scope.applicationId = parseInt($scope.firstAppId);
-//                            $scope.applications.forEach(function(app) {
-//                                if (app.id === $scope.applicationId) {
-//                                    $scope.applicationId = app.id;
-//                                }
-//                            });
 
                             if (!$scope.application) {
                                 $scope.application = $scope.applications[0];
