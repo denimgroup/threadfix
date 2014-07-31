@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,22 +38,21 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
 
 // TODO maybe move into saveOrUpdate and call it a day
 // Not sure yet though because ensureCorrectRelationships might not be what we want in all cases
-public class ScanCleanerUtils extends SpringBeanAutowiringSupport {
+@Component
+public class ScanCleanerUtils {
 	
 	@Autowired
 	private VulnerabilityDao vulnerabilityDao;
 	
-	private ScanCleanerUtils(){}
-
     private final SanitizedLogger log = new SanitizedLogger("ScanCleanerUtils");
 
     private static final Set<String> VULNS_WITH_PARAMETERS_SET =
             Collections.unmodifiableSet(set(GenericVulnerability.VULNS_WITH_PARAMS));
 
-    public static void clean(Scan scan) {
-        ScanCleanerUtils utils = new ScanCleanerUtils();
-        utils.ensureCorrectRelationships(scan);
-        utils.ensureSafeFieldLengths(scan);
+    public void clean(Scan scan) {
+        assert vulnerabilityDao != null : "vulnerabilityDao was null. Fix your Spring configuration.";
+        ensureCorrectRelationships(scan);
+        ensureSafeFieldLengths(scan);
     }
 
     /**

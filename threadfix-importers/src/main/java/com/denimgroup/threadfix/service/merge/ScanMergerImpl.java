@@ -43,6 +43,8 @@ public class ScanMergerImpl implements ScanMerger {
     private ScanDao           scanDao;
     @Autowired
     private VulnerabilityDao  vulnerabilityDao;
+    @Autowired
+    private ScanCleanerUtils  scanCleanerUtils;
 
     @Override
     public void merge(Scan scan, ApplicationChannel applicationChannel) {
@@ -84,7 +86,7 @@ public class ScanMergerImpl implements ScanMerger {
             LOG.info(applicationChannel.getChannelType().getName()
                     + " scan completed.");
 		}
-	
-		ScanCleanerUtils.clean(scan);
+
+        scanCleanerUtils.clean(scan);
 	}
 }

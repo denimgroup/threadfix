@@ -303,9 +303,9 @@
         <diffutils.version>1.2.1</diffutils.version>
         <esapi.version>2.1.0-SNAPSHOT</esapi.version>
         <ezmorph.version>1.0.6</ezmorph.version>
-        <hibernate.version>4.3.6.Final</hibernate.version>
-        <hibernate-annotations.version>3.5.6-Final</hibernate-annotations.version>
-        <hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
+        <hibernate.version>3.5.4-Final</hibernate.version>
+        <hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
+        <hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
         <itext.version>2.1.7</itext.version>
         <jasperreports.version>4.5.0</jasperreports.version>
         <java-getopt.version>1.0.13</java-getopt.version>

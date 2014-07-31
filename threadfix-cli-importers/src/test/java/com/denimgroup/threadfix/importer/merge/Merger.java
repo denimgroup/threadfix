@@ -36,6 +36,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listOf;
 import static com.denimgroup.threadfix.importer.config.SpringConfiguration.getSpringBean;
 
 /**
@@ -63,7 +64,6 @@ public class Merger extends SpringBeanAutowiringSupport {
      * @param filePaths one file path for each scan
      * @return an application with a list of scans from the given files
      */
-    @Transactional
     public Application getApplicationInternal(Application application, ScannerType scannerName, String[] filePaths) {
         assert scanMerger != null : "No Merger found, fix your Spring context.";
         assert scanParser != null : "No Parser found, fix your Spring context.";
@@ -79,6 +79,7 @@ public class Merger extends SpringBeanAutowiringSupport {
         channel.setApplication(application);
         channel.setScanList(scans);
         application.setScans(scans);
+        application.setVulnerabilities(listOf(Vulnerability.class));
         application.setChannelList(list(channel));
         application.setName("application merge.");
 
@@ -93,7 +94,7 @@ public class Merger extends SpringBeanAutowiringSupport {
         return application;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Scan> getScanListInternal(Application application, ScannerType scannerName, String[] filePaths) {
         Application resultingApplication = getApplicationInternal(application, scannerName, filePaths);
 
