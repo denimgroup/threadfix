@@ -3,9 +3,12 @@ package com.denimgroup.threadfix.selenium.utils;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Organization;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.webapp.controller.AddUserController;
 
 import java.io.File;
 

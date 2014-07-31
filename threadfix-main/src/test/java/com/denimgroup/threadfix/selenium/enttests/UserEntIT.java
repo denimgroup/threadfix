@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -156,6 +157,31 @@ public class UserEntIT extends BaseIT {
                 .clickEditLink(userName);
 		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
 	}
+
+    //TODO finish this up
+    @Ignore
+    @Test
+    public void editPermissions() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink();
+    }
 
     //If this test fails it can cascade and cause several other tests to fail
     // TODO this test will not run correctly because of bugs involved with user creation
