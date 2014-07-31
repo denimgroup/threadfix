@@ -289,6 +289,8 @@ public class RestConnector extends SpringBeanAutowiringSupport {
 
         ret.setResponseData(container.toByteArray());
 
+        log.debug("Got " + ret);
+
         return ret;
     }
 

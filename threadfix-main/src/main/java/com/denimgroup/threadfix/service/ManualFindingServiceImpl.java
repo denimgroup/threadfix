@@ -63,6 +63,8 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 	private VulnerabilityDao vulnerabilityDao;
     @Autowired
     private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private ScanCleanerUtils scanCleanerUtils;
 	
 	/**
 	 * Handle the Manual Finding edit submission. 
@@ -171,7 +173,7 @@ public class ManualFindingServiceImpl implements ManualFindingService {
 		scan.getFindings().add(finding);
 		scan.setNumberTotalVulnerabilities(scan.getNumberTotalVulnerabilities() + 1);
 		finding.setScan(scan);
-		ScanCleanerUtils.clean(scan);
+        scanCleanerUtils.clean(scan);
 		scanDao.saveOrUpdate(scan);
 		log.debug("Manual Finding submission was successful.");
 		log.debug(userName + " has added a new finding to the Application " + 
