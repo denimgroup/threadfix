@@ -10,6 +10,9 @@
             			   http://www.springframework.org/schema/tx
            				   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
+    <!-- Uncomment for Oracle -->
+    <!--<bean id="namingStrategy" class="com.denimgroup.threadfix.data.dao.namingstrategy.OracleNamingStrategy"/>-->
+
 	<!--
 		Instructs Spring to perform declarative transaction management on
 		annotated classes
