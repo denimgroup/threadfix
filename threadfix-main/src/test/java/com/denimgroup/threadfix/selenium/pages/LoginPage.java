@@ -122,6 +122,8 @@ public class LoginPage extends BasePage {
 	private DashboardPage clickLogin() {
 
         driver.findElementById("login").click();
+        sleep(1000);
+
         if (!isElementPresent("tab-dashboard")) {
             throw new LoginFailedException("Login failed.");
         }

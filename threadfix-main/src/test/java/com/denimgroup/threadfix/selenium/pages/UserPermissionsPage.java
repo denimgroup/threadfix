@@ -37,26 +37,32 @@ public class UserPermissionsPage extends BasePage {
 	
 	public UserPermissionsPage clickAddPermissionsLink(){
 		driver.findElementById("addPermissionButton").click();
-		waitForElement(driver.findElementById("newAccessControlMapForm"));
+		waitForElement(driver.findElementById("myModalLabel"));
 		sleep(3000);
 		return new UserPermissionsPage(driver);
 	}
 	
-	public UserPermissionsPage setTeamNewPerm(String team){
-		new Select(driver.findElementsById("myModal").get(0).findElement(By.id("orgSelect"))).selectByVisibleText(team);
-		return new UserPermissionsPage(driver);
+	public UserPermissionsPage setTeam(String team){
+		new Select(driver.findElement(By.id("orgSelect"))).selectByVisibleText(team);
+		return this;
 	}
-	
-	public UserPermissionsPage setRoleNewPerm(String role){
-		new Select(driver.findElementsById("myModal").get(0).findElement(By.id("roleSelectTeam"))).selectByVisibleText(role);
-		return new UserPermissionsPage(driver);
-	}
-	
-	public UserPermissionsPage clickAllAppsNewPerm(){
-		driver.findElementsById("myModal").get(0).findElement(By.id("allAppsCheckbox")).click();
-		return new UserPermissionsPage(driver);
-	}
-	
+
+    //Note, the default is that all apps is selected
+    public UserPermissionsPage toggleAllApps() {
+        driver.findElementById("allAppsCheckbox").click();
+        return this;
+    }
+
+    public UserPermissionsPage setTeamRole(String role) {
+        new Select(driver.findElementById("roleSelectTeam")).selectByVisibleText(role);
+        return this;
+    }
+
+    //TODO, fix when new ids hit
+    public UserPermissionsPage setApplicationRole(String appName, String role) {
+        return this;
+    }
+
 	public int numOfAppsNewPerm(){
 		return driver.findElementsById("myModal").get(0).findElement(By.id("appSelect"))
 															.findElements(By.tagName("tr")).size();
@@ -99,4 +105,8 @@ public class UserPermissionsPage extends BasePage {
 		return new UserPermissionsPage(driver);
 	}
 
+
+    public boolean isErrorPresent(String errorMessage) {
+        return driver.findElementByClassName("errors").getText().contains(errorMessage);
+    }
 }

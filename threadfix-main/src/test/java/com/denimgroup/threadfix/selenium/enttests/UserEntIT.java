@@ -158,7 +158,7 @@ public class UserEntIT extends BaseIT {
 		assertTrue("Global Access was not Added", userIndexPage.isGlobalAccessSelected());
 	}
 
-    //TODO finish this up
+    //TODO finish this up when new ids hit
     @Ignore
     @Test
     public void editPermissions() {
@@ -170,6 +170,7 @@ public class UserEntIT extends BaseIT {
 
         String userName = getRandomString(8);
         String password = getRandomString(15);
+        String role = "Administrator";
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -180,7 +181,50 @@ public class UserEntIT extends BaseIT {
                 .clickAddNewUserBtn();
 
         UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
-                .clickAddPermissionsLink();
+                .clickAddPermissionsLink()
+                .setTeam(teamName)
+                .setTeamRole(role)
+                .clickModalSubmit();
+    }
+
+    @Test
+    public void duplicatePermissionsValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+        String role = "Administrator";
+
+        String duplicateErrorMessage = "Failure. Message was : That team / role combo already exists for this user.";
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .setTeam(teamName)
+                .setTeamRole(role)
+                .clickModalSubmit();
+
+        //TODO verify that the user permissions were created.
+
+        userPermissionsPage.clickAddPermissionsLink()
+                .setTeam(teamName)
+                .setTeamRole(role)
+                .clickModalSubmitInvalid();
+
+        assertTrue("Duplicate team/role combinations should not be allowed.",
+                userPermissionsPage.isErrorPresent(duplicateErrorMessage));
+
     }
 
     //If this test fails it can cascade and cause several other tests to fail
