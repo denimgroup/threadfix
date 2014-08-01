@@ -180,7 +180,11 @@ public class RestConnector extends SpringBeanAutowiringSupport {
 
         } catch (IOException e) {
             throw new DefectTrackerCommunicationException(e, "Unable to communicate with the HPQC server.");
+        } catch (RestRedirectException e) {
+            log.info("Redirecting to " + e.getTargetUrl());
+            return doHttp(type, e.getTargetUrl(), queryString, data, headers);
         }
+
     }
 
     /**

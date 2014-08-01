@@ -383,7 +383,10 @@ public class HPQCUtils {
             requestHeaders.put("Accept", "application/xml");
 
             Response serverResponse = con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
-            if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
+            int statusCode = serverResponse.getStatusCode();
+            if (statusCode == HttpURLConnection.HTTP_OK ||
+                    statusCode == HttpURLConnection.HTTP_CREATED ||
+                    statusCode == HttpURLConnection.HTTP_ACCEPTED) {
                 return serverResponse;
             } else {
                 log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
