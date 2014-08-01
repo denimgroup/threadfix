@@ -12,20 +12,20 @@
     </thead>
     <tbody ng-repeat="map in maps" style="border-top: 0">
         <tr ng-show="map.allApps && map.active" class="bodyRow">
-            <td id="teamName{{ map.organization.name }}">{{ map.organization.name }}</td>
-            <td id="applicationName{{ map.organization.name }}">
+            <td id="teamName{{ map.organization.name }}all{{ map.role.displayName }}">{{ map.organization.name }}</td>
+            <td id="applicationName{{ map.organization.name }}all{{ map.role.displayName }}">
                 All
             </td>
-            <td id="roleName{{ map.organization.name }}">
+            <td id="roleName{{ map.organization.name }}all{{ map.role.displayName }}">
                 {{ map.role.displayName }}
             </td>
             <td style="text-align:center">
-                <a id="editAppMap{{ map.organization.name }}" class="btn" ng-click="edit(map)">
+                <a id="editAppMap{{ map.organization.name }}all{{ map.role.displayName }}" class="btn" ng-click="edit(map)">
                     Edit
                 </a>
             </td>
             <td style="text-align:center">
-                <a class="btn" id="deleteAppMap{{ map.organization.name }}" ng-click="deleteTeam(map)">
+                <a class="btn" id="deleteAppMap{{ map.organization.name }}all{{ map.role.displayName }}" ng-click="deleteTeam(map)">
                     Delete
                 </a>
             </td>
