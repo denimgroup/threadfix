@@ -58,53 +58,16 @@ public class UserPermissionsPage extends BasePage {
         return this;
     }
 
-    //TODO, fix when new ids hit
     public UserPermissionsPage setApplicationRole(String appName, String role) {
+        new Select(driver.findElementById("roleSelectApp" + appName)).selectByVisibleText(role);
         return this;
     }
 
-	public int numOfAppsNewPerm(){
-		return driver.findElementsById("myModal").get(0).findElement(By.id("appSelect"))
-															.findElements(By.tagName("tr")).size();
-	}
-	public UserPermissionsPage selectAppNewPerm(String appName){
-		int cnt = numOfAppsNewPerm();
-		for (int i = 1; i<=cnt; i++){
-			if(driver.findElementsById("myModal").get(0).findElement(By.id("appSelect"))
-						.findElement(By.id("applicationName"+i)).getText().contains(appName)){
-				
-				driver.findElementsById("myModal").get(0).findElement(By.id("appSelect"))
-												.findElement(By.id("applicationIds"+i)).click();
-				
-				break;
-			}
-		}
-		
-		return new UserPermissionsPage(driver);
-		
-	}
-	
-	public UserPermissionsPage selectAppRoleNewPerm(String appName,String role){
-		int cnt = numOfAppsNewPerm();
-		for (int i = 1; i<=cnt; i++){
-			if(driver.findElementsById("myModal").get(0).findElement(By.id("appSelect"))
-						.findElement(By.id("applicationName"+i)).getText().contains(appName)){
-				
-				new Select(driver.findElementsById("myModal").get(0).findElement(By.id("appSelect"))
-												.findElement(By.id("roleSelect"+i))).selectByVisibleText(role);
-				
-				break;
-			}
-		}
-		return new UserPermissionsPage(driver);
-	}
-	
-	public UserPermissionsPage clickAddMappingNewPerm(){
-		driver.findElementsById("myModal").get(0).findElement(By.id("submitModalAdd")).click();
-		sleep(3000);
-		return new UserPermissionsPage(driver);
-	}
+    /*_____________________ Boolean Methods ______________________*/
 
+    public boolean isPermissionPresent(String teamName, String appName, String role) {
+        return true;
+    }
 
     public boolean isErrorPresent(String errorMessage) {
         return driver.findElementByClassName("errors").getText().contains(errorMessage);
