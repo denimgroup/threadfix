@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 
 // this is a shim for optional dependencies
@@ -58,7 +58,7 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
 
     $scope.switchTo = function(name) {
         $rootScope.$broadcast('modalSwitch', name);
-    }
+    };
 
     $scope.cancel = function () {
         timeoutService.cancel();
