@@ -36,6 +36,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
@@ -116,6 +119,12 @@ public class Application extends AuditableEntity {
 	
 	@Size(max = 1024, message = "{errors.maxlength} 1024.")
 	private String encryptedUserName;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String obscuredPassword;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String obscuredUserName;
 	
 	private List<Defect> defectList;
 
@@ -233,6 +242,26 @@ public class Application extends AuditableEntity {
 	public void setEncryptedUserName(String encryptedUserName) {
 		this.encryptedUserName = encryptedUserName;
 	}
+
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public String getObscuredPassword() {
+        if(repositoryEncryptedPassword == null || repositoryEncryptedPassword.trim().length() == 0) {
+            return "";
+        } else {
+            return "12345678";
+        }
+    }
+
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public String getObscuredUserName() {
+        try {
+            return ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
+        }   catch (EncryptionException e) {
+            return "";
+        }
+    }
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "defectTrackerId")
@@ -593,7 +622,7 @@ public class Application extends AuditableEntity {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
     public String getRepositoryBranch() {
         return repositoryBranch;
     }
@@ -612,7 +641,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
     public String getRepositoryUserName() {
         return repositoryUserName;
     }
@@ -622,7 +651,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
     public String getRepositoryPassword() {
         return repositoryPassword;
     }

@@ -115,7 +115,11 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 object: function () {
                     var appCopy = angular.copy($scope.config.application);
                     var app = $scope.config.application;
-                    app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete")
+                    app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete");
+
+                    // this is a shim for displaying the unencrypted username and a dummy password
+                    appCopy.repositoryUserName = app.obscuredUserName;
+                    appCopy.repositoryPassword = app.obscuredPassword;
                     return appCopy;
                 },
                 config: function() {
