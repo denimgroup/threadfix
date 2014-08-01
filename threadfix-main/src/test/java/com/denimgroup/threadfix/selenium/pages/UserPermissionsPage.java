@@ -65,7 +65,33 @@ public class UserPermissionsPage extends BasePage {
 
     /*_____________________ Boolean Methods ______________________*/
 
+    public boolean isUserNamePresent(String userName) {
+        return driver.findElementByTagName("h2").getText().contains(userName);
+    }
+
+    public boolean isPermissionsModalPresent() {
+        return driver.findElementById("myModalLabel").isDisplayed();
+    }
+
     public boolean isPermissionPresent(String teamName, String appName, String role) {
+        if (!driver.findElementById("teamName" + teamName + appName + role).getText().contains(teamName)) {
+            return false;
+        }
+
+        if (appName.equals("all")) {
+            if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains("All")) {
+                return false;
+            }
+        } else {
+            if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains(appName)) {
+                return false;
+            }
+        }
+
+        if (!driver.findElementById("roleName" + teamName + appName + role).getText().contains(role)) {
+            return false;
+        }
+
         return true;
     }
 

@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -38,7 +37,29 @@ import static org.junit.Assert.assertTrue;
 public class UserPermissionsEntIT extends BaseIT{
 
     @Test
-    public void addPermissions() {
+    public void navigationTest() {
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName);
+
+        assertTrue("Unable to navigate to users permissions page.", userPermissionsPage.isUserNamePresent(userName));
+
+        userPermissionsPage.clickAddPermissionsLink();
+
+        assertTrue("Add permissions modal is not present.", userPermissionsPage.isPermissionsModalPresent());
+    }
+
+    @Test
+    public void addPermissionsTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -64,7 +85,45 @@ public class UserPermissionsEntIT extends BaseIT{
                 .clickModalSubmit();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName, appName, role));
+                userPermissionsPage.isPermissionPresent(teamName, "all", role));
+    }
+
+    @Test
+    public void addPermissionsValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+
+        String noTeamRoleError = "Failure. Message was : You must pick a Role.";
+        String noApplicationRoleSelectedError = "Failure. Message was : You must select at least one application.";
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .setTeam(teamName)
+                .clickModalSubmitInvalid();
+
+        assertTrue("Error message indicating a role must be selected is not present.",
+                userPermissionsPage.isErrorPresent(noTeamRoleError));
+
+        userPermissionsPage.toggleAllApps()
+                .clickModalSubmitInvalid();
+
+        assertTrue("Error message indicating an application must be selected is present.",
+                userPermissionsPage.isErrorPresent(noApplicationRoleSelectedError));
+
     }
 
     @Test
@@ -95,7 +154,8 @@ public class UserPermissionsEntIT extends BaseIT{
                 .setTeamRole(role)
                 .clickModalSubmit();
 
-        //TODO verify that the user permissions were created.
+        assertTrue("Permissions were not added properly.",
+                userPermissionsPage.isPermissionPresent(teamName, "all", role));
 
         userPermissionsPage.clickAddPermissionsLink()
                 .setTeam(teamName)
@@ -104,5 +164,36 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertTrue("Duplicate team/role combinations should not be allowed.",
                 userPermissionsPage.isErrorPresent(duplicateErrorMessage));
+    }
+
+    //TODO finish up
+    @Test
+    public void deletePermissions() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+        String role = "Administrator";
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .setTeam(teamName)
+                .setTeamRole(role)
+                .clickModalSubmit();
+
+        assertTrue("Permissions were not added properly.",
+                userPermissionsPage.isPermissionPresent(teamName, "all", role));
     }
 }
