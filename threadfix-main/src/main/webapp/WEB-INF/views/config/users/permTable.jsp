@@ -12,41 +12,41 @@
     </thead>
     <tbody ng-repeat="map in maps" style="border-top: 0">
         <tr ng-show="map.allApps && map.active" class="bodyRow">
-            <td id="teamName{{ $index }}">{{ map.organization.name }}</td>
-            <td id="applicationName{{ $index }}">
+            <td id="teamName{{ map.organization.name }}">{{ map.organization.name }}</td>
+            <td id="applicationName{{ map.organization.name }}">
                 All
             </td>
-            <td id="roleName{{ $index }}">
+            <td id="roleName{{ map.organization.name }}">
                 {{ map.role.displayName }}
             </td>
             <td style="text-align:center">
-                <a id="editAppMap{{ $index }}" class="btn" ng-click="edit(map)">
+                <a id="editAppMap{{ map.organization.name }}" class="btn" ng-click="edit(map)">
                     Edit
                 </a>
             </td>
             <td style="text-align:center">
-                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="deleteTeam(map)">
+                <a class="btn" id="deleteAppMap{{ map.organization.name }}" ng-click="deleteTeam(map)">
                     Delete
                 </a>
             </td>
         </tr>
         <tr ng-repeat="appMap in map.accessControlApplicationMaps" ng-show="!map.allApps && appMap.active" class="bodyRow">
-            <td id="teamName{{ $index }}">
+            <td id="teamName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
                 {{ map.organization.name }}
             </td>
-            <td id="applicationName{{ $index }}">
+            <td id="applicationName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
                 {{ appMap.application.name }}
             </td>
-            <td id="roleName{{ $index }}">
+            <td id="roleName{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}">
                 {{ appMap.role.displayName }}
             </td>
             <td style="text-align:center">
-                <a id="editAppMap{{ $index }}" class="btn" ng-click="edit(map)">
+                <a id="editAppMap{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}" class="btn" ng-click="edit(map)">
                     Edit
                 </a>
             </td>
             <td style="text-align:center">
-                <a class="btn" id="deleteAppMap{{ $index }}" ng-click="deleteApp(appMap)">
+                <a class="btn" id="deleteAppMap{{ map.organization.name }}{{ appMap.application.name }}{{ appMap.role.displayName }}" ng-click="deleteApp(appMap)">
                     Delete
                 </a>
             </td>
