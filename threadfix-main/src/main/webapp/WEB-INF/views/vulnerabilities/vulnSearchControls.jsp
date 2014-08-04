@@ -51,6 +51,5 @@
     </div>
 
     <%@ include file="vulnSearchTree.jsp" %>
-    <%--<%@ include file="vulnerabilityTable.jsp" %>--%>
 
 </div>

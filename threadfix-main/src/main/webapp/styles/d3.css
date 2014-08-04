@@ -84,3 +84,7 @@ svg text.percent{
     stroke: #fff;
     shape-rendering: crispEdges;
 }
+
+.arc path {
+    stroke: #fff;
+}

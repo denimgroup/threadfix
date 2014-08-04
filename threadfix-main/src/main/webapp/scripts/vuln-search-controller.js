@@ -152,7 +152,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.loading = true;
         vulnSearchParameterService.updateParameters($scope, $scope.parameters);
 
-//        refreshVulnTable($scope.parameters);
         refreshVulnTree($scope.parameters);
         $scope.lastLoadedFilterName = undefined;
     }

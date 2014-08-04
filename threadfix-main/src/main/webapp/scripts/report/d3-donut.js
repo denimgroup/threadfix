@@ -1,7 +1,7 @@
-angular.module('d3donut', ['d3'])
+angular.module('threadfix')
     .factory('d3donut',['d3', function(d3){
 
-        var Donut3D={};
+        var Donut={};
 
         function pieTop(d, rx, ry, ir ){
             if(d.endAngle - d.startAngle == 0 ) return "M 0 0";
@@ -48,7 +48,7 @@ angular.module('d3donut', ['d3'])
             return Math.round(1000*(d.endAngle-d.startAngle)/(Math.PI*2))/10+'%';
         }
 
-        Donut3D.transition = function(id, data, rx, ry, h, ir){
+        Donut.transition = function(id, data, rx, ry, h, ir){
             function arcTweenInner(a) {
                 var i = d3.interpolate(this._current, a);
                 this._current = i(0);
@@ -90,7 +90,7 @@ angular.module('d3donut', ['d3'])
                 .attrTween("x",textTweenX).attrTween("y",textTweenY).text(getPercent);
         }
 
-        Donut3D.draw=function(id, data, x /*center x*/, y/*center y*/,
+        Donut.draw3D=function(id, data, x /*center x*/, y/*center y*/,
                               rx/*radius x*/, ry/*radius y*/, h/*height*/, ir/*inner radius*/){
 
             var _data = d3.layout.pie().sort(null).value(function(d) {return d.value;})(data);
@@ -248,5 +248,62 @@ angular.module('d3donut', ['d3'])
 //                .remove();
         }
 
-        return Donut3D;
+        Donut.draw2D=function(id, data, height/*height*/, width/*width*/){
+
+            var radius = Math.min(width, height) / 2;
+
+            var arc = d3.svg.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(0);
+
+            var _data = d3.layout.pie().sort(null).value(function(d) {return d.value;})(data);
+
+            var svg = d3.select("#"+id)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            /* ------- TIP -------*/
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    return "<strong>" + d.data.label + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
+                });
+            svg.call(tip);
+
+            var durationEachAngle = 500/(2*Math.PI);
+
+            var slices = svg.append("g")
+                .attr("class", "slices")
+
+            slices.selectAll(".arc")
+                .data(_data).enter()
+                .append("g")
+                .attr("class", "arc")
+                .append("path")
+                .style("fill", function(d) { return d.data.color; })
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide)
+                .on('click', tip.hide)
+                .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
+                .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })
+                .attrTween('d', function(d) {
+                    var i = d3.interpolate(d.startAngle, d.endAngle);
+                    return function(t) {
+                        d.endAngle = i(t);
+                        return arc(d);
+                    }
+                })
+//                .attrTween("d", function(d) {
+//                    var i = d3.interpolate(this._current, d);
+//                    this._current = i(0);
+//                    return function(t) { return pieTop(i(t), radius, radius, 0);  }})
+//                .each(function(d){this._current=d;})
+            ;
+        }
+
+        return Donut;
     }]);

@@ -1,8 +1,8 @@
-var d3ThreadfixModule = angular.module('d3threadfix', ['d3', 'd3donut']);
+var d3ThreadfixModule = angular.module('threadfix');
 
 // Months Summary report
-d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
-    function($window, $timeout, d3) {
+d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixModalService',
+    function($window, $timeout, d3, threadFixModalService) {
         return {
             restrict: 'EA',
             scope: {
@@ -70,8 +70,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
                         .attr("transform", function(d) { return "translate(" + x(d.title) + ",0)"; });
 
                     var drawTime = -1;
-                    var numberOfCol = data.length;
-                    var duration = 500/numberOfCol;
+                    var colDuration = drawingDuration/data.length;
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
                         .enter().append("rect")
@@ -82,13 +81,17 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3',
                         .style("fill", function(d) { return color(d.fillColor); })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
+                        .on('click', function(d) {
+                            tip.hide();
+                            threadFixModalService.showVulnsModal(createFilterCriteria(d));
+                        })
                         .transition()
                         .attr("width", x.rangeBand())
-                        .duration(duration)
+                        .duration(colDuration)
                         .delay(function(d) {
                             if (d.y0 === 0)
                                 drawTime++;
-                            return duration*drawTime; }) ;
+                            return colDuration*drawTime; }) ;
                 };
                 ;
             }
@@ -166,8 +169,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .attr("transform", function(d) { return "translate(0," + y(d.title) + ")"; });
 
                     var drawTime = -1;
-                    var numberOfRow = data.length;
-                    var duration = 500/numberOfRow;
+                    var rowDuration = drawingDuration/data.length;
 
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
@@ -181,11 +183,11 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
                         .on('mouseout', tip.hide)
                         .transition()
                         .attr("height", y.rangeBand())
-                        .duration(duration)
+                        .duration(rowDuration)
                         .delay(function(d) {
                             if (d.y0 === 0)
                                 drawTime++;
-                            return duration*drawTime; })
+                            return rowDuration*drawTime; })
                     ;
                 };
                 ;
@@ -226,7 +228,8 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
 
                     svg.append("g").attr("id",scope.label);
 
-                    d3donut.draw(scope.label, getData(), 135, 90, 85, 55, 30, 0.4);
+//                    d3donut.draw3D(scope.label, getData(), 135, 90, 85, 55, 30, 0.4);
+                    d3donut.draw2D(scope.label, getData(), 200, 260);
 
                     function getData(){
                         var d = data[0];
@@ -313,7 +316,25 @@ function barGraphData(d3, data, color) {
     });
 }
 
+function createFilterCriteria(d) {
+    var criteria = {};
+    criteria.endDate = new Date();
+    criteria.parameters = {};
+    criteria.parameters.severities = {};
+    criteria.parameters.teams = [];
+    criteria.teams = [];
+    criteria.parameters.applications = [];
+    criteria.searchApplications = [];
+    criteria.parameters.channelTypes = [];
+    criteria.parameters.scanners = [];
+    criteria.scanners = [];
+    criteria.parameters.genericVulnerabilities = [];
+    criteria.parameters.severities.high = true;
+    return criteria;
+
+}
 var vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
 var vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
 var topVulnColor = ["#6b486b"];
 var topVulnMapKeyword = ["count"];
+var drawingDuration = 500;

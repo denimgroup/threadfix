@@ -61,7 +61,7 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
     return threadfixAPIService;
 });
 
-threadfixModule.factory('threadFixModalService', function($http) {
+threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncoder, $log, vulnSearchParameterService) {
 
     var threadFixModalService = {};
 
@@ -92,6 +92,52 @@ threadfixModule.factory('threadFixModalService', function($http) {
             elementList = [];
         }
         elementList.push(element);
+    };
+
+    threadFixModalService.showVulnsModal = function(scope) {
+
+        vulnSearchParameterService.updateParameters(scope, scope.parameters);
+
+        $http.post(tfEncoder.encode("/reports/tree"), scope.parameters).
+            success(function(data, status, headers, config) {
+//                if (data.success) {
+//
+//
+//                    $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
+//                } else if (data.message) {
+//                    $scope.errorMessage = "Failure. Message was : " + data.message;
+//                }
+
+                var modalInstance = $modal.open({
+                    templateUrl: 'newApplicationModal.html',
+                    controller: 'ModalControllerWithConfig',
+                    resolve: {
+                        url: function() {
+                            return tfEncoder.encode("/organizations/" + 1 + "/modalAddApp");
+                        },
+                        object: function () {
+                            return data.object;
+                        },
+                        config: function() {
+                            return {};
+                        },
+                        buttonText: function() {
+                            return "Add Application";
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (newApplication) {
+
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+
+            }).
+            error(function(data, status, headers, config) {
+                console.log("Got " + status + " back.");
+            });
+
     };
 
     return threadFixModalService;
