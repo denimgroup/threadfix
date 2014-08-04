@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -9,6 +10,7 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.springframework.transaction.annotation.Transactional;
 import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -61,7 +63,7 @@ public class ClangChannelImporter extends AbstractChannelImporter {
                 try {
                     lineNum = Integer.valueOf(start);
                 } catch (NumberFormatException e) {
-                    log.error("Clang had a non-integer value in its line number field")
+                    log.error("Clang had a non-integer value in its line number field");
                 }
             }
 
@@ -83,7 +85,7 @@ public class ClangChannelImporter extends AbstractChannelImporter {
             }
         }
 
-        public void endElement(string uri, String name, String qName) {
+        public void endElement(String uri, String name, String qName) {
             if(inSecurityBug) {
                 findingMap.put(FindingKey.PATH, currentPath);
                 findingMap.put(FindingKey.PARAMETER, currentParameter);

@@ -6,6 +6,6 @@ package com.denimgroup.threadfix.importer.parser;
 public class ClangScanTest {
     //cwe name, severity, path, parameter
     public final static String[][] clangResults = new String [][] {
-            TODO stuff here
+            //TODO stuff here
     }
 }
