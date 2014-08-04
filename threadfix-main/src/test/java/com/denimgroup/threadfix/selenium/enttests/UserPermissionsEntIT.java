@@ -24,10 +24,13 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
 import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.apache.bcel.generic.DUP;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -128,7 +131,7 @@ public class UserPermissionsEntIT extends BaseIT{
     }
 
     @Test
-    public void addPermissionsValidation() {
+    public void addPermissionsFieldValidation() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -166,7 +169,7 @@ public class UserPermissionsEntIT extends BaseIT{
     }
 
     @Test
-    public void duplicatePermissionsValidation() {
+    public void duplicatePermissionsFieldValidation() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -203,6 +206,65 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertTrue("Duplicate team/role combinations should not be allowed.",
                 userPermissionsPage.isErrorPresent(duplicateErrorMessage));
+    }
+
+    @Test
+    public void permissionUsageValidation() {
+        String teamName1 = getRandomString(8);
+        String teamName2 = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createTeam(teamName2);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+        String role1 = "Administrator";
+        String role2 = "User";
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .setTeam(teamName1)
+                .setTeamRole(role1)
+                .clickModalSubmit();
+
+        assertTrue("Permissions were not added properly.",
+                userPermissionsPage.isPermissionPresent(teamName1, "all", role1));
+
+        userPermissionsPage.clickAddPermissionsLink()
+                .setTeam(teamName2)
+                .setTeamRole(role2)
+                .clickModalSubmit();
+
+        assertTrue("Permissions were not added properly.",
+                userPermissionsPage.isPermissionPresent(teamName2, "all", role2));
+
+        TeamIndexPage teamIndexPage = userPermissionsPage.logout()
+                .login(userName, password)
+                .clickOrganizationHeaderLink();
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
+
+        assertTrue("User is unable to add an application to the team.", teamDetailPage.isAddAppBtnPresent());
+
+        teamDetailPage.clickAddApplicationButton()
+                .setApplicationInfo(appName,"http://test.com", "Medium")
+                .clickModalSubmit();
+
+        assertTrue("Application was not present on the team's detail page.", teamDetailPage.isAppPresent(appName));
+
+        teamDetailPage = teamDetailPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName2);
+
+        assertFalse("User is able to add an application to the team", teamDetailPage.isAddAppBtnPresent());
     }
 
     @Test

@@ -123,13 +123,10 @@ public class LoginPage extends BasePage {
         if (!isElementPresent("tab-dashboard")) {
             driver.findElementById("login").sendKeys(Keys.ENTER);
 
-            try {
-                waitForElement(driver.findElementById("tab-dashboard"));
-            } catch (TimeoutException e) {
-                throw new LoginFailedException("Login failed", e);
-            } catch (NoSuchElementException e) {
-                throw new LoginFailedException("Login failed", e);
+            if (!isElementPresent("logo")) {
+                throw new LoginFailedException("Login Failed");
             }
+
         }
 
 		waitForElement(driver.findElementById("main-content"));

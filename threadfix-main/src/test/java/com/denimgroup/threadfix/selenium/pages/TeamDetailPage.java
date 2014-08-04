@@ -474,7 +474,12 @@ public class TeamDetailPage extends BasePage {
     }
 
     public boolean isAddAppBtnPresent(){
-        return driver.findElementById("addApplicationModalButton").isDisplayed();
+        try {
+            return driver.findElementById("addApplicationModalButton").isDisplayed();
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
     }
 
     public boolean isAddAppBtnClickable(){
