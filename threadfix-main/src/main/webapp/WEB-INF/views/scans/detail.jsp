@@ -23,7 +23,7 @@
 	</spring:url>
 
 	<ul class="breadcrumb">
-	    <li><a href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
+	    <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
 	    <li class="active"><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan</li>

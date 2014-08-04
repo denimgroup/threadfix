@@ -1218,3 +1218,7 @@ div.remote-provider-config-modal a {
 .defect-form-row label {
     display: inline-table;
 }
+
+.defect-form-row span.errors {
+    padding-left: 5px;
+}

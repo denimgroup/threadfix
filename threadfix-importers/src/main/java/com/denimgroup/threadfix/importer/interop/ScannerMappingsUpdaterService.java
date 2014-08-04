@@ -84,4 +84,6 @@ public interface ScannerMappingsUpdaterService {
 
     void updateMappings();
 
+    List<String> updateDefectTrackers();
+
 }

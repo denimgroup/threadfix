@@ -56,9 +56,9 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         });
 
 
-    $scope.ok = function (valid) {
+    $scope.ok = function (form) {
 
-        if (valid) {
+        if (form.$valid) {
             timeoutService.timeout();
             $scope.loading = true;
 
@@ -101,20 +101,52 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
         $scope.showRemoveLink = $scope.vulns.length > 1;
     };
 
+    $scope.emptyMultiChoice = function(path) {
+        var field = $scope.fieldsMap[path];
+
+        if (field.length === 1 && field[0] === "") {
+            delete $scope.fieldsMap[path];
+        }
+    };
+
+    $scope.checkAndReset = function(pathSegment1, pathSegment2) {
+        if (!$scope.fieldsMap[pathSegment1][pathSegment2]) {
+            delete $scope.fieldsMap[pathSegment1][pathSegment2];
+        }
+
+        $scope.requiredErrorMap[pathSegment1] = Object.keys($scope.fieldsMap[pathSegment1]).length === 0;
+    };
+
     var createSubmitForm = function() {
         $scope.stdFormTemplate = [];
         $scope.config.editableFields.forEach(function(field) {
+            var type = calculateType(field.type);
 
             var fieldForm =  {
                 "model" : field.name,
-                "type" : calculateType(field.type),
+                "type" : type,
                 "label" : field.required ? field.label + " *" : field.label,
                 "required" : field.required,
-                "labelClass" : field.required ? "errors" : null,
                 "empty" : "Select",
+                "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue
             };
+
+            if (field.placeholder) {
+                fieldForm.placeholder = field.placeholder;
+            }
+
+            if (field.validate) {
+                fieldForm.validate = field.validate;
+            }
+
+            if (field.errorsMap) {
+                fieldForm.errorsMap = field.errorsMap;
+            }
+
+            if (type === "text")
+                fieldForm.maxLength = field.maxLength;
             $scope.stdFormTemplate.push(fieldForm)
         });
     };
@@ -156,5 +188,5 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
     };
 
     $scope.fieldsMap = {};
-
+    $scope.requiredErrorMap = {}
 });

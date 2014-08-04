@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
@@ -39,14 +40,15 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by stran on 3/10/14.
  */
 public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
-    private List<Fields.Field> editableFieldsList;
-    private Map<String, List<String>> defectListMap;
+    private List<Fields.Field> editableFieldsList = list();
+    private Map<String, List<String>> defectListMap = newMap();
 
     @Override
     public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
@@ -54,32 +56,99 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             setProjectId(getProjectIdByName());
         }
 
+        editableFieldsList = HPQCUtils.getEditableFields(getHPQCUrl(), username, password, projectName);
+
         Map<String,Object> fieldsMap = metadata.getFieldsMap();
-        metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
+        if (fieldsMap.get("description") != null)
+            metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
 
         String description = makeDescription(vulnerabilities, metadata);
+        fieldsMap.put("description", description);
+
         Entity defect = new Entity();
         defect.setType("defect");
-        defect.setFields(createFields(description, fieldsMap));
+        defect.setFields(createFields(fieldsMap));
 
         String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
         return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
     }
 
-    private Entity.Fields createFields(String description, Map<String,Object> fieldsMap) {
+    @Override
+    protected String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String preamble = metadata.getPreamble();
+
+        if (preamble != null && !"".equals(preamble)) {
+            stringBuilder.append("General information\n");
+            stringBuilder.append(preamble);
+            stringBuilder.append('\n');
+        }
+
+        int vulnIndex = 0;
+
+        if (vulnerabilities != null) {
+            for (Vulnerability vulnerability : vulnerabilities) {
+                if (vulnerability.getGenericVulnerability() != null &&
+                        vulnerability.getSurfaceLocation() != null) {
+
+                    stringBuilder
+                            .append("Vulnerability[")
+                            .append(vulnIndex)
+                            .append("]:\n")
+                            .append(vulnerability.getGenericVulnerability().getName())
+                            .append('\n')
+                            .append("CWE-ID: ")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append('\n')
+                            .append("http://cwe.mitre.org/data/definitions/")
+                            .append(vulnerability.getGenericVulnerability().getId())
+                            .append(".html")
+                            .append('\n');
+
+                    SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
+                    stringBuilder
+                            .append("Vulnerability attack surface location:\n")
+                            .append("URL: ")
+                            .append(surfaceLocation.getUrl())
+                            .append("\n")
+                            .append("Parameter: ")
+                            .append(surfaceLocation.getParameter());
+
+                    addNativeIds(vulnerability, stringBuilder);
+
+                    stringBuilder.append("\n\n");
+                    vulnIndex++;
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private Entity.Fields createFields(Map<String,Object> fieldsMap) {
         Entity.Fields fields = new Entity.Fields();
         if (fieldsMap != null) {
             for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
-                fields.getField().add(createField(entry.getKey(), entry.getValue()));
+                fields.getField().add(createField(entry.getKey(), entry.getValue(), isMemoType(entry.getKey())));
             }
         }
-        if (description != null && !description.isEmpty())
-            fields.getField().add(createField("description", description));
 
         return fields;
     }
 
-    private Entity.Fields.Field createField(String name, Object values) {
+    private boolean isMemoType(String fieldName) {
+        for (Fields.Field field: editableFieldsList) {
+            if (field.getName().equals(fieldName)) {
+                if ("Memo".equals(field.getType()))
+                    return true;
+                else
+                    return false;
+            }
+        }
+        return false;
+    }
+
+    private Entity.Fields.Field createField(String name, Object values, boolean isMemoType) {
         Entity.Fields.Field field = new Entity.Fields.Field();
         field.setName(name);
 
@@ -87,13 +156,32 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             for (Object value : (ArrayList) values) {
                 field.getValue().add(String.valueOf(value));
             }
-        } else
-            field.getValue().add(String.valueOf(values));
+        } else {
+            String valueStr = isMemoType ? createMemoValue(String.valueOf(values)) : String.valueOf(values);
+            field.getValue().add(valueStr);
+        }
 
         return field;
+    }
 
+    private String createMemoValue(String plainText) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<html>\n" +
+                " <body>\n");
 
+        if (plainText != null) {
+            String[] lines = plainText.split("\n");
+            for (String line: lines) {
+                stringBuilder
+                        .append("<div align=\"left\"><font face=\"Arial\"><span style=\"font-size:8pt\">")
+                        .append(line)
+                        .append("</span></font></div>");
+            }
+        }
 
+        stringBuilder.append("</body>\n" +
+                " </html>");
+        return stringBuilder.toString();
     }
 
     @Override
@@ -145,7 +233,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
     @Nonnull
     private List<String> parseXml(String xmlResult) {
-        Domains domains = MarshallingUtils.marshal(Domains.class, xmlResult);
+        Domains domains = HPQCUtils.marshalWithExceptionClass(Domains.class, xmlResult);
         if (domains != null ) {
             List<String> returnList = list();
             for (Domains.Domain domain : domains.getDomains()) {
@@ -191,20 +279,20 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
             genericField.setActive(hpqcField.isActive());
             genericField.setEditable(hpqcField.isEditable());
             genericField.setLabel(hpqcField.getLabel());
-            genericField.setListId(hpqcField.getListId());
+            genericField.setMaxLength(hpqcField.getSize());
             genericField.setName(hpqcField.getName());
-            genericField.setType(hpqcField.getType());
             genericField.setRequired(hpqcField.isRequired());
             genericField.setSupportsMultivalue(hpqcField.isSupportsMultivalue());
             genericField.setOptionsMap(getFieldOptions(hpqcField));
+            genericField.setType(hpqcField.getType());
+
+            genericField.setError("required", "This field cannot be empty.");
+            genericField.setError("maxlength", "Input up to " + hpqcField.getSize() +" characters only.");
+
             dynamicFormFields.add(genericField);
         }
 
         return dynamicFormFields;
-    }
-
-    private List<String> getValues(Map<String, List<String>> map, String key) {
-        return (map == null || map.get(key) == null) ? Arrays.asList("-") : map.get(key);
     }
 
     @Override
@@ -296,28 +384,34 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                     optionMap.put(value, value);
                 }
 
-        } else if (field.getType().equals("Reference")) {
+        } else if (field.getType().equals("Reference") || "subject".equals(field.getName())) {
             Fields.Field.References references = field.getReferences();
+
+            String targetEntity = null;
             if (references != null && references.getRelationReferences() != null && references.getRelationReferences().size() > 0) {
                 Fields.Field.RelationReference reference = references.getRelationReferences().get(0);
-                String targetEntity = reference.getReferencedEntityType();
-                if (targetEntity != null) {
-                    Entities entities = HPQCUtils.getEntities(getHPQCUrl(), username, password, projectName, targetEntity);
-                    if (entities != null) {
-                        List<Entity> entityList = entities.getEntities();
-                        if (entityList != null) {
-                            for (Entity entity : entityList) {
-                                Entity.Fields fields = entity.getFields();
-                                Entity.Fields.Field idField = fields.findField("id");
-                                Entity.Fields.Field nameField = fields.findField("name");
-                                if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
-                                        && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
-                                    optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
-                                }
+                targetEntity = reference.getReferencedEntityType();
+            } else if ("subject".equals(field.getName())) {
+                //This fixing is temporary for Subject field
+                targetEntity = "test-folder";
+                field.setType("LookupList");
+
+            }
+            if (targetEntity != null) {
+                Entities entities = HPQCUtils.getEntities(getHPQCUrl(), username, password, projectName, targetEntity);
+                if (entities != null) {
+                    List<Entity> entityList = entities.getEntities();
+                    if (entityList != null) {
+                        for (Entity entity : entityList) {
+                            Entity.Fields fields = entity.getFields();
+                            Entity.Fields.Field idField = fields.findField("id");
+                            Entity.Fields.Field nameField = fields.findField("name");
+                            if (idField != null && idField.getValue() != null && idField.getValue().size() > 0
+                                    && nameField != null && nameField.getValue() != null && nameField.getValue().size() > 0) {
+                                optionMap.put(idField.getValue().get(0), idField.getValue().get(0) + " " + nameField.getValue().get(0));
                             }
                         }
                     }
-
                 }
 
             }

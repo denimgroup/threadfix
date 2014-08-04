@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * @author mcollins
@@ -57,22 +58,22 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  */
 @Service
 public class ReportsServiceImpl implements ReportsService {
-	
-	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
+
+    private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
     @Autowired
-    private SessionFactory sessionFactory = null;
-	@Autowired
-    private ChannelTypeDao channelTypeDao = null;
-	@Autowired
-    private ScanDao scanDao = null;
-	@Autowired
-    private VulnerabilityDao vulnerabilityDao = null;
-	@Autowired
-    private OrganizationDao organizationDao = null;
-	@Autowired
-    private ApplicationDao applicationDao = null;
-	@Autowired(required=false)
+    private SessionFactory    sessionFactory    = null;
+    @Autowired
+    private ChannelTypeDao    channelTypeDao    = null;
+    @Autowired
+    private ScanDao           scanDao           = null;
+    @Autowired
+    private VulnerabilityDao  vulnerabilityDao  = null;
+    @Autowired
+    private OrganizationDao   organizationDao   = null;
+    @Autowired
+    private ApplicationDao    applicationDao    = null;
+    @Autowired(required = false)
     @Nullable
     private PermissionService permissionService = null;
 
@@ -95,7 +96,15 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		
 		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
+
 			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
+
+            ReportCheckResultBean appsReport = getTopAppsReportD3(applicationIdList);
+
+            if (appsReport.getReportList() == null || appsReport.getReportList().size()==0)
+                return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+            return appsReport;
+
 		} else if (parameters.getReportFormat() == ReportFormat.TOP_TWENTY_APPS) {
 			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
 		}
@@ -105,36 +114,36 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		log.info("About to generate report for " + applicationIdList.size() + " applications.");
 
-		Map<String, Object> params = new HashMap<>();
-		params.put("appId", applicationIdList);
-		String path = request.getSession().getServletContext().getRealPath("/");
-		
-		String format = null;
-		if(parameters.getFormatId() == 2) {
-			format = "CSV";
-		} else if(parameters.getFormatId() == 3) {
-			format = "PDF";
-		} else {
-			format = "HTML";
-		}
-		
-		ReportFormat reportFormat = parameters.getReportFormat();
-		try {
-			return getReport(path, reportFormat, format, params, applicationIdList, request);
-		} catch (IOException e) {
-			log.error("IOException encountered while trying to generate report.", e);
-			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
-		} finally {
+        Map<String, Object> params = new HashMap<>();
+        params.put("appId", applicationIdList);
+        String path = request.getSession().getServletContext().getRealPath("/");
+
+        String format = null;
+        if (parameters.getFormatId() == 2) {
+            format = "CSV";
+        } else if (parameters.getFormatId() == 3) {
+            format = "PDF";
+        } else {
+            format = "HTML";
+        }
+
+        ReportFormat reportFormat = parameters.getReportFormat();
+        try {
+            return getReport(path, reportFormat, format, params, applicationIdList, request);
+        } catch (IOException e) {
+            log.error("IOException encountered while trying to generate report.", e);
+            return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
+        } finally {
             log.info("Finished generating report.");
         }
-	}
+    }
 
-	@SuppressWarnings("resource")
-	private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList,
-			HttpServletRequest request) throws IOException {
+    @SuppressWarnings("resource")
+    private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
+                                            Map<String, Object> parameters, List<Integer> applicationIdList,
+                                            HttpServletRequest request) throws IOException {
 
-		if (reportFormat == null || reportFormat.getFileName() == null ||
+        if (reportFormat == null || reportFormat.getFileName() == null ||
 				reportFormat.getFileName().trim().equals("")) {
 			return null;
 		}
@@ -160,7 +169,16 @@ public class ReportsServiceImpl implements ReportsService {
 			}
 			
 			if (reportFormat == ReportFormat.TOP_TEN_VULNS) {
-				parameters.put("vulnIds", vulnerabilityDao.getTopTenVulnTypes(applicationIdList));
+//				parameters.put("vulnIds", vulnerabilityDao.getTopTenVulnTypes(applicationIdList));
+
+                // D3
+                List<Integer> vulnIds = vulnerabilityDao.getTopTenVulnTypes(applicationIdList);
+                ReportCheckResultBean vulnsReport = getTopVulnsReportD3(applicationIdList, vulnIds);
+
+                if (vulnsReport.getReportList() == null || vulnsReport.getReportList().size()==0)
+                    return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+                return vulnsReport;
+
 			}
 		}
 
@@ -214,13 +232,10 @@ public class ReportsServiceImpl implements ReportsService {
 			if (reportFormat == ReportFormat.TRENDING) {
 				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList,scanDao));
 			} else if (reportFormat == ReportFormat.SIX_MONTH_SUMMARY) {
-//				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 6);
                 ReportCheckResultBean report6Month = getXMonthReport3D(applicationIdList, parameters, jasperReport, 6);
                 if (report6Month.getReportList() == null || report6Month.getReportList().size()==0)
-//				if (jasperPrint == null) {
                     return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
                 return report6Month;
-//				}
 			} else if (reportFormat == ReportFormat.TWELVE_MONTH_SUMMARY) {
 				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 12);
 				if (jasperPrint == null) {
@@ -294,8 +309,31 @@ public class ReportsServiceImpl implements ReportsService {
 		
 		return new ReportCheckResultBean(ReportCheckResult.VALID, report, null);
 	}
-	
-	/**
+
+    private ReportCheckResultBean getTopVulnsReportD3(List<Integer> applicationIdList, List<Integer> vulnIds) {
+
+        List<Object[]> vulns = vulnerabilityDao.getTopVulnsInfo(applicationIdList, vulnIds);
+        List<Map<String, Object>> resultList = list();
+        for (Object[] objects: vulns) {
+            if (objects != null && objects.length == 2) {
+                String cweId = "CWE-" + String.valueOf(objects[0]);
+                Map<String, Object> hash = newMap();
+                hash.put("Count", objects[1]);
+                hash.put("importTime", cweId);
+                resultList.add(hash);
+            }
+        }
+
+        if (resultList.size() == 0 ) {
+            log.info("Unable to fill Report - no vulns were found.");
+            return null;
+        } else {
+            return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, resultList);
+        }
+
+    }
+
+    /**
 	 * This method determines how the image map is stored. Down the road we may want
 	 * to look at ways to use this to cache images for quick retrieval later.
 	 * 
@@ -366,6 +404,33 @@ public class ReportsServiceImpl implements ReportsService {
         } else {
             JasperXMonthSummaryReport reportExporter = new JasperXMonthSummaryReport(scanList, scanDao, numMonths);
             return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
+        }
+    }
+
+
+    private ReportCheckResultBean getTopAppsReportD3(List<Integer> applicationIdList) {
+
+        List<Application> apps = applicationDao.getTopAppsFromList(applicationIdList);
+        List<Map<String, Object>> resultList = list();
+            for (Application app: apps) {
+                Map<String, Object> hash = newMap();
+                hash.put("4-Critical-criticalVulns", app.getCriticalVulnCount());
+                hash.put("3-High-highVulns", app.getHighVulnCount());
+                hash.put("2-Medium-mediumVulns", app.getMediumVulnCount());
+                hash.put("1-Low-lowVulns", app.getLowVulnCount());
+                hash.put("0-Info-infoVulns", app.getInfoVulnCount());
+
+                hash.put("importTime", app.getName());
+                resultList.add(hash);
+
+
+            }
+
+        if (resultList.size() == 0 ) {
+            log.info("Unable to fill Report - no apps were found.");
+            return null;
+        } else {
+            return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, resultList);
         }
     }
 

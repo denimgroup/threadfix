@@ -49,7 +49,11 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public static final int NATIVE_ID_LENGTH = 50;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
 
-	private Vulnerability vulnerability;
+    // TODO figure out the appropriate place for this
+    public static final int NUMBER_ITEM_PER_PAGE = 100;
+
+
+    private Vulnerability vulnerability;
 
 	private Scan scan;
 

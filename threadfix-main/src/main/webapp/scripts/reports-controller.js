@@ -45,16 +45,26 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
 
         threadfixAPIService.loadReport("/dashboard/rightReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
-                // TODO figure out Jasper better, it's a terrible way to access the report images.
-                var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
-                if (matches !== null && matches[1] !== null) {
-                    $scope.rightReport = matches[1];
-                } else if (data.indexOf("No data found") !== -1) {
+
+                $scope.topAppsData = data.object;
+
+                if (!$scope.topAppsData) {
                     $scope.empty = true;
-                } else {
-                    $scope.rightReportFailed = true;
                 }
+
                 $scope.loadingRight = false;
+
+
+//                // TODO figure out Jasper better, it's a terrible way to access the report images.
+//                var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
+//                if (matches !== null && matches[1] !== null) {
+//                    $scope.rightReport = matches[1];
+//                } else if (data.indexOf("No data found") !== -1) {
+//                    $scope.empty = true;
+//                } else {
+//                    $scope.rightReportFailed = true;
+//                }
+//                $scope.loadingRight = false;
             }).
             error(function(data, status, headers, config) {
 

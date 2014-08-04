@@ -81,7 +81,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                 $scope.team = editedTeam;
                 $scope.successMessage = "Successfully edited team " + editedTeam.name;
             } else {
-                $window.location.href = tfEncoder.encode("/organizations");
+                $window.location.href = tfEncoder.encode("/teams");
             }
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
