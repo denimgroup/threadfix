@@ -329,6 +329,10 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
         Map<String, Object> map = metadata.getFieldsMap();
 
+        if (map.get("description") != null) {
+            description = map.get("description") + "\n" + description;
+        }
+
         map.put("description", description);
 
         String payload = getPayload(map);

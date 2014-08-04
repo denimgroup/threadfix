@@ -61,7 +61,7 @@
                 <div class="alert alert-danger" style="margin-top:10px">
                     <button class="close" data-dismiss="alert" type="button">&times;</button>
                     <strong>No Vulnerabilities found.</strong> Upload a scan and try again.
-                    <spring:url value="/organizations" var="teamsPageUrl"/>
+                    <spring:url value="/teams" var="teamsPageUrl"/>
                     <a href="${ teamsPageUrl }">Get Started</a>
                 </div>
             </c:if>

@@ -39,7 +39,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -74,14 +73,21 @@ public class DocumentController {
                     + Document.MAX_LENGTH_NAME + " length."));
         }
 
-		Document document = documentService.saveFileToApp(appId, file);
+        try {
+            Document document = documentService.saveFileToApp(appId, file);
 
-		if (document == null) {
-			log.warn("Saving the file have failed. Returning to file upload page.");
-            return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
-		}else {
-			return writer.writeValueAsString(RestResponse.success(document));
-		}
+            if (document == null) {
+                log.warn("Saving the file have failed. Returning to file upload page.");
+                return writer.writeValueAsString(RestResponse.failure("You don't have permission to upload a document."));
+            } else {
+                return writer.writeValueAsString(RestResponse.success(document));
+            }
+
+        } catch (OutOfMemoryError e) {
+            // This can happen if a large document is uploaded. It's ok to catch because we are just logging and rethrowing.
+            log.error("Encountered memory error, can't continue. Please increase your -Xmx JVM option and restart the server.", e);
+            throw e;
+        }
 	}
 
 	@RequestMapping(value = "/vulnerabilities/{vulnId}/documents/upload", method = RequestMethod.POST)
@@ -100,14 +106,20 @@ public class DocumentController {
                     + Document.MAX_LENGTH_NAME + " length."));
         }
 
-        Document document = documentService.saveFileToVuln(vulnId, file);
-		if (document == null) {
-			log.warn("Saving the document have failed. Returning to file upload page.");
-            return writer.writeValueAsString(RestResponse.failure("Unable to save the file to the vulnerability."));
-		}else {
-            return writer.writeValueAsString(RestResponse.success(document));
+        try {
+            Document document = documentService.saveFileToVuln(vulnId, file);
+            if (document == null) {
+                log.warn("Saving the document have failed. Returning to file upload page.");
+                return writer.writeValueAsString(RestResponse.failure("Unable to save the file to the vulnerability."));
+            } else {
+                return writer.writeValueAsString(RestResponse.success(document));
+            }
 
-		}
+        } catch (OutOfMemoryError e) {
+            // This can happen if a large document is uploaded. It's ok to catch because we are just logging and rethrowing.
+            log.error("Encountered memory error, can't continue. Please increase your -Xmx JVM option and restart the server.", e);
+            throw e;
+        }
 	}
 
 	@RequestMapping(value = "/documents/{docId}/view", method = RequestMethod.GET)

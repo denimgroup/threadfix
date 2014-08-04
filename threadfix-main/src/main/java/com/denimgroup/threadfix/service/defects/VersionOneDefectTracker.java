@@ -248,6 +248,9 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             genericField.setRequired(attr.isRequired());
             genericField.setSupportsMultivalue(attr.isMultiValue());
             genericField.setOptionsMap(getFieldOptions(attr));
+
+            genericField.setError("required", "This field cannot be empty.");
+
             dynamicFormFields.add(genericField);
         }
 

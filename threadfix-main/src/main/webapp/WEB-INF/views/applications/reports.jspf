@@ -6,9 +6,7 @@
                     <a id="leftViewMore" ng-href="{{ urlRoot }}/reports/9{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="leftTileReport">
-                    <%--<div ng-show="leftReport" tf-bind-html-unsafe="leftReport" class="tableReportDiv report-image"></div>--%>
-                    <d3-bars ng-show="XMonthSummaryData" data="XMonthSummaryData" ></d3-bars>
-                        <%--<d3-bars data="data" label="greeting"></d3-bars>--%>
+                    <d3-vbars ng-show="XMonthSummaryData" data="XMonthSummaryData" ></d3-vbars>
                     <div ng-hide="empty || XMonthSummaryData || leftReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
@@ -30,8 +28,8 @@
                     <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="rightTileReport">
-                    <div ng-show="rightReport" tf-bind-html-unsafe="rightReport" class="tableReportDiv report-image"></div>
-                    <div ng-hide="empty || rightReport || rightReportFailed" class="team-report-wrapper report-image">
+                    <d3-hbars ng-show="topAppsData" data="topAppsData" ></d3-hbars>
+                    <div ng-hide="empty || topAppsData || rightReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
                     <div ng-show="rightReportFailed" class="team-report-wrapper report-image">

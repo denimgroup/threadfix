@@ -40,85 +40,85 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 @Service
 @Transactional(readOnly = false) // used to be true
 public class WafServiceImpl implements WafService {
-	
-	private final SanitizedLogger log = new SanitizedLogger("WafService");
 
-	private WafDao wafDao = null;
-	private WafTypeDao wafTypeDao = null;
-	private WafRuleDao wafRuleDao = null;
-	private WafRuleDirectiveDao wafRuleDirectiveDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
+    private final SanitizedLogger log = new SanitizedLogger("WafService");
 
-	@Autowired
-	public WafServiceImpl(WafDao wafDao, WafTypeDao wafTypeDao, WafRuleDao wafRuleDao,
-			VulnerabilityDao vulnerabilityDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
-		this.wafDao = wafDao;
-		this.wafTypeDao = wafTypeDao;
-		this.wafRuleDao = wafRuleDao;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
-	}
+    private WafDao              wafDao              = null;
+    private WafTypeDao          wafTypeDao          = null;
+    private WafRuleDao          wafRuleDao          = null;
+    private WafRuleDirectiveDao wafRuleDirectiveDao = null;
+    private VulnerabilityDao    vulnerabilityDao    = null;
 
-	@Override
-	public List<Waf> loadAll() {
-		return wafDao.retrieveAll();
-	}
+    @Autowired
+    public WafServiceImpl(WafDao wafDao, WafTypeDao wafTypeDao, WafRuleDao wafRuleDao,
+                          VulnerabilityDao vulnerabilityDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
+        this.wafDao = wafDao;
+        this.wafTypeDao = wafTypeDao;
+        this.wafRuleDao = wafRuleDao;
+        this.vulnerabilityDao = vulnerabilityDao;
+        this.wafRuleDirectiveDao = wafRuleDirectiveDao;
+    }
 
-	@Override
-	public Waf loadWaf(int wafId) {
-		return wafDao.retrieveById(wafId);
-	}
+    @Override
+    public List<Waf> loadAll() {
+        return wafDao.retrieveAll();
+    }
 
-	@Override
-	public Waf loadWaf(String name) {
-		return wafDao.retrieveByName(name);
-	}
+    @Override
+    public Waf loadWaf(int wafId) {
+        return wafDao.retrieveById(wafId);
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void storeWaf(Waf waf) {
-		if (waf.getCurrentId() == null && waf.getWafType() != null)
-			waf.setCurrentId(waf.getWafType().getInitialId());
-		wafDao.saveOrUpdate(waf);
-	}
+    @Override
+    public Waf loadWaf(String name) {
+        return wafDao.retrieveByName(name);
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void deleteById(int wafId) {
-		Waf waf = loadWaf(wafId);
-		
-		if (waf != null) {
-			log.info("Deleting WAF with ID " + wafId);
-			
-			if (waf.getWafRules() != null) {
-				for (WafRule rule : waf.getWafRules()) {
-					wafRuleDao.delete(rule);
-				}
-			}
-			
-			waf.setActive(false);
-			wafDao.saveOrUpdate(waf);
-		}
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public void storeWaf(Waf waf) {
+        if (waf.getCurrentId() == null && waf.getWafType() != null)
+            waf.setCurrentId(waf.getWafType().getInitialId());
+        wafDao.saveOrUpdate(waf);
+    }
 
-	@Override
-	public List<WafType> loadAllWafTypes() {
-		return wafTypeDao.retrieveAll();
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteById(int wafId) {
+        Waf waf = loadWaf(wafId);
 
-	@Override
-	public WafType loadWafType(int wafId) {
-		return wafTypeDao.retrieveById(wafId);
-	}
+        if (waf != null) {
+            log.info("Deleting WAF with ID " + wafId);
 
-	@Override
-	public WafType loadWafType(String name) {
-		return wafTypeDao.retrieveByName(name);
-	}
+            if (waf.getWafRules() != null) {
+                for (WafRule rule : waf.getWafRules()) {
+                    wafRuleDao.delete(rule);
+                }
+            }
 
-	@Override
-	@Transactional(readOnly = false)
-	public List<WafRule> generateWafRules(Waf waf, WafRuleDirective directive, Application application) {
+            waf.setActive(false);
+            wafDao.saveOrUpdate(waf);
+        }
+    }
+
+    @Override
+    public List<WafType> loadAllWafTypes() {
+        return wafTypeDao.retrieveAll();
+    }
+
+    @Override
+    public WafType loadWafType(int wafId) {
+        return wafTypeDao.retrieveById(wafId);
+    }
+
+    @Override
+    public WafType loadWafType(String name) {
+        return wafTypeDao.retrieveByName(name);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<WafRule> generateWafRules(Waf waf, WafRuleDirective directive, Application application) {
         List<WafRule> newWafRuleList = null;
         if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0
 				|| waf.getWafType() == null) {

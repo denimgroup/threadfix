@@ -1,80 +1,101 @@
 cd ../../..
-#mvn clean install -DskipTests
 
-VERSION=2.0M2
+if [[ $1 ]]
+then
+    echo "Got license file: $1"
+    cp $1 threadfix-main/src/main/resources/threadfix.license
+    mvn clean install -P enterprise -DskipTests
+    rm threadfix-main/src/main/resources/threadfix.license
+
+else
+    mvn clean install -DskipTests
+fi
+
+VERSION=2.1
 ARTIFACTS_FOLDER=$(pwd)/artifacts
 
 rm -r $ARTIFACTS_FOLDER
 mkdir $ARTIFACTS_FOLDER
 
+# Build cli
+FOLDER_NAME=Build/ThreadFix-CLI-$VERSION
+rm -r $FOLDER_NAME
+mkdir $FOLDER_NAME
+cp threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/tfcli.jar
+cp threadfix-cli/README $FOLDER_NAME
+cd  $FOLDER_NAME
+zip  -q ThreadFix-CLI-$VERSION.zip -r ./*
+cp ThreadFix-CLI-$VERSION.zip $ARTIFACTS_FOLDER
+cd ../../
+
 # Build endpoint cli
-FOLDER_NAME=Build/ThreadFix-EndpointCLI-Beta-$VERSION
+FOLDER_NAME=Build/ThreadFix-EndpointCLI-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-cli-endpoints/target/threadfix-endpoint-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/endpoints.jar
 cp threadfix-cli-endpoints/README $FOLDER_NAME
 cd  $FOLDER_NAME
-zip  -q ThreadFix-EndpointCLI-Beta-$VERSION.zip -r ./*
-cp ThreadFix-EndpointCLI-Beta-$VERSION.zip $ARTIFACTS_FOLDER
+zip  -q ThreadFix-EndpointCLI-$VERSION.zip -r ./*
+cp ThreadFix-EndpointCLI-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
 # Build scan agent
-FOLDER_NAME=Build/ThreadFix-ScanAgent-Beta-$VERSION
-rm -r $FOLDER_NAME
-mkdir $FOLDER_NAME
-cp threadfix-scanagent/target/threadfix-scanagent-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/scanagent.jar
-cp threadfix-scanagent/README $FOLDER_NAME
-cp threadfix-scanagent/scanagent.properties $FOLDER_NAME
-cp threadfix-scanagent/zapStarter.jar $FOLDER_NAME
-cp threadfix-scanagent/burp-agent.jar $FOLDER_NAME
-cd  $FOLDER_NAME
-zip  -q ThreadFix-ScanAgent-Beta-$VERSION.zip -r ./*
-cp ThreadFix-ScanAgent-Beta-$VERSION.zip $ARTIFACTS_FOLDER
-cd ../../
+#FOLDER_NAME=Build/ThreadFix-ScanAgent-$VERSION
+#rm -r $FOLDER_NAME
+#mkdir $FOLDER_NAME
+#cp threadfix-scanagent/target/threadfix-scanagent-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/scanagent.jar
+#cp threadfix-scanagent/README $FOLDER_NAME
+#cp threadfix-scanagent/scanagent.properties $FOLDER_NAME
+#cp threadfix-scanagent/zapStarter.jar $FOLDER_NAME
+#cp threadfix-scanagent/burp-agent.jar $FOLDER_NAME
+#cd  $FOLDER_NAME
+#zip  -q ThreadFix-ScanAgent-$VERSION.zip -r ./*
+#cp ThreadFix-ScanAgent-$VERSION.zip $ARTIFACTS_FOLDER
+#cd ../../
 
 # Build ZAP plugin
-FOLDER_NAME=Build/ThreadFix-ZapPlugin-Beta-$VERSION
+FOLDER_NAME=Build/ThreadFix-ZapPlugin-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
-cp threadfix-scanner-plugin/zaproxy/target/Zap-Plugin-2.0M2-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.zap
+cp threadfix-scanner-plugin/zaproxy/target/Zap-Plugin-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.zap
 cp threadfix-scanner-plugin/zaproxy/README $FOLDER_NAME
 cd  $FOLDER_NAME
-zip  -q ThreadFix-ZapPlugin-Beta-$VERSION.zip -r ./*
-cp ThreadFix-ZapPlugin-Beta-$VERSION.zip $ARTIFACTS_FOLDER
+zip  -q ThreadFix-ZapPlugin-$VERSION.zip -r ./*
+cp ThreadFix-ZapPlugin-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
 # Build Burp plugin
-FOLDER_NAME=Build/ThreadFix-BurpPlugin-Beta-$VERSION
+FOLDER_NAME=Build/ThreadFix-BurpPlugin-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-scanner-plugin/burp/target/threadfix-release-2-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.jar
 cp threadfix-scanner-plugin/burp/README $FOLDER_NAME
 cd  $FOLDER_NAME
-zip  -q ThreadFix-BurpPlugin-Beta-$VERSION.zip -r ./*
-cp ThreadFix-BurpPlugin-Beta-$VERSION.zip $ARTIFACTS_FOLDER
+zip  -q ThreadFix-BurpPlugin-$VERSION.zip -r ./*
+cp ThreadFix-BurpPlugin-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
 # Build IntelliJ--export intellij.zip to Build folder using "Prepare module for deployment"
-FOLDER_NAME=Build/ThreadFix-IntelliJPlugin-Beta-$VERSION
+FOLDER_NAME=Build/ThreadFix-IntelliJPlugin-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp Build/intellij.zip $FOLDER_NAME
 cp threadfix-ide-plugin/intellij/README $FOLDER_NAME
 cd  $FOLDER_NAME
-zip  -q ThreadFix-IntelliJPlugin-Beta-$VERSION.zip -r ./*
-cp ThreadFix-IntelliJPlugin-Beta-$VERSION.zip $ARTIFACTS_FOLDER
+zip  -q ThreadFix-IntelliJPlugin-$VERSION.zip -r ./*
+cp ThreadFix-IntelliJPlugin-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
 # Build Eclipse--export 
-# FOLDER_NAME=Build/ThreadFix-EclipsePlugin-Beta-$VERSION
-# rm -r $FOLDER_NAME
-# mkdir $FOLDER_NAME
-# cp Build/intellij.zip $FOLDER_NAME
-# cp threadfix-ide-plugin/eclipse/README $FOLDER_NAME
-# cd  $FOLDER_NAME
-# zip  -q ThreadFix-EclipsePlugin-Beta-$VERSION.zip -r ./*
-# cp ThreadFix-EclipsePlugin-Beta-$VERSION.zip $ARTIFACTS_FOLDER
-# cd ../../
+FOLDER_NAME=Build/ThreadFix-EclipsePlugin-$VERSION
+rm -r $FOLDER_NAME
+mkdir $FOLDER_NAME
+cp Build/com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView_0.2.0.jar $FOLDER_NAME
+cp threadfix-ide-plugin/eclipse/README $FOLDER_NAME
+cd  $FOLDER_NAME
+zip  -q ThreadFix-EclipsePlugin-$VERSION.zip -r ./*
+cp ThreadFix-EclipsePlugin-$VERSION.zip $ARTIFACTS_FOLDER
+cd ../../
 
 # build zip
 cd Build
@@ -86,13 +107,15 @@ cp ../threadfix-main/util/zip/* ThreadFixBase
 
 cp -r ThreadFixBase ThreadFix
 
+cp ../threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar ThreadFix/command-line-interface/tfcli.jar
+
 cp ../threadfix-main/target/threadfix-$VERSION-SNAPSHOT.war ThreadFix/tomcat/webapps/
 mv ThreadFix/tomcat/webapps/threadfix-$VERSION-SNAPSHOT.war ThreadFix/tomcat/webapps/threadfix.war
 cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFix/database/
 cp ThreadFix/database/threadfix-backup.script ThreadFix/database/threadfix.script
 
-zip -q ThreadFix_2_0M2.zip -r ThreadFix
-mv ThreadFix_2_0M2.zip ../artifacts
+zip -q ThreadFix_$VERSION.zip -r ThreadFix
+mv ThreadFix_$VERSION.zip ../artifacts
 cd ..
 
 #rm /Volumes/Documents/ThreadFix/ThreadFix_2_0M1.zip

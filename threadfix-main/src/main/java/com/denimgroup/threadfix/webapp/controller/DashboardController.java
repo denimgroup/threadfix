@@ -101,12 +101,12 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
-	public String rightReport(Model model, HttpServletRequest request) {
+	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(Model model, HttpServletRequest request) {
 		model.addAttribute("showEmptyBox", true);
 		if (request.getParameter("appId") != null) {
-			return report(model, request, ReportFormat.TOP_TEN_VULNS);
+			return RestResponse.success(reportD3(model, request, ReportFormat.TOP_TEN_VULNS).getReportList());
 		} else {
-			return report(model, request, ReportFormat.TOP_TEN_APPS);
+			return RestResponse.success(reportD3(model, request, ReportFormat.TOP_TEN_APPS).getReportList());
 		}
 	}
 	
