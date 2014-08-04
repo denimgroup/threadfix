@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -44,6 +45,7 @@ import org.owasp.esapi.errors.EncryptionException;
 public class Application extends AuditableEntity {
 
 	private static final long serialVersionUID = 1175222046579045669L;
+    private final SanitizedLogger log = new SanitizedLogger(Application.class);
 	
 	public static final String TEMP_PASSWORD = "this is not the password";
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
@@ -255,12 +257,17 @@ public class Application extends AuditableEntity {
 
     @Transient
     @JsonView(AllViews.FormInfo.class)
-    public String getObscuredUserName() {
+    public String getObscuredUserName() throws IllegalAccessException {
+        String username = "";
+
         try {
-            return ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
-        }   catch (EncryptionException e) {
-            return "";
+            username = ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
+        } catch (EncryptionException e) {
+            log.error("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+            assert false;
         }
+
+        return username;
     }
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
