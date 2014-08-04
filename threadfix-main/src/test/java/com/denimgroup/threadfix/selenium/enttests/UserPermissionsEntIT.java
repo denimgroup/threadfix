@@ -60,7 +60,7 @@ public class UserPermissionsEntIT extends BaseIT{
     }
 
     @Test
-    public void addPermissionsTest() {
+    public void addAllPermissionsTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -87,6 +87,44 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertTrue("Permissions were not added properly.",
                 userPermissionsPage.isPermissionPresent(teamName, "all", role));
+    }
+
+    @Test
+    public void addAppPermissionsTest() {
+        String teamName = getRandomString(8);
+        String appName1 = getRandomString(8);
+        String appName2 = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName1);
+        DatabaseUtils.createApplication(teamName, appName2);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+        String role1 = "Administrator";
+        String role2 = "User";
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .setTeam(teamName)
+                .toggleAllApps()
+                .setApplicationRole(appName1, role1)
+                .setApplicationRole(appName2, role2)
+                .clickModalSubmit();
+
+        assertTrue("Permissions were not added properly for the first application.",
+                userPermissionsPage.isPermissionPresent(teamName, appName1, role1));
+
+        assertTrue("Permissions were not added properly for the second application",
+                userPermissionsPage.isPermissionPresent(teamName, appName2, role2));
     }
 
     @Test
@@ -167,7 +205,6 @@ public class UserPermissionsEntIT extends BaseIT{
                 userPermissionsPage.isErrorPresent(duplicateErrorMessage));
     }
 
-    //TODO finish up
     @Test
     public void deletePermissions() {
         String teamName = getRandomString(8);

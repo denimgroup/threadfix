@@ -120,16 +120,16 @@ public class LoginPage extends BasePage {
 	private DashboardPage clickLogin() {
         driver.findElementById("login").click();
 
-        /*if (!isElementPresent("tab-dashboard")) {
-            throw new LoginFailedException("Login failed.");
-        }*/
+        if (!isElementPresent("tab-dashboard")) {
+            driver.findElementById("login").sendKeys(Keys.ENTER);
 
-        try {
-            waitForElement(driver.findElementById("tab-dashboard"));
-        } catch (TimeoutException e) {
-            throw new LoginFailedException("Login failed", e);
-        } catch (NoSuchElementException e) {
-            throw new LoginFailedException("Login failed", e);
+            try {
+                waitForElement(driver.findElementById("tab-dashboard"));
+            } catch (TimeoutException e) {
+                throw new LoginFailedException("Login failed", e);
+            } catch (NoSuchElementException e) {
+                throw new LoginFailedException("Login failed", e);
+            }
         }
 
 		waitForElement(driver.findElementById("main-content"));
