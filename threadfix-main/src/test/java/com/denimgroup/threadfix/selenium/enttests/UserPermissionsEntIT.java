@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 @Category(EnterpriseTests.class)
 public class UserPermissionsEntIT extends BaseIT{
@@ -194,6 +195,11 @@ public class UserPermissionsEntIT extends BaseIT{
                 .clickModalSubmit();
 
         assertTrue("Permissions were not added properly.",
+                userPermissionsPage.isPermissionPresent(teamName, "all", role));
+
+        userPermissionsPage.clickDeleteButton(teamName, "all", role);
+
+        assertFalse("Permissions were not properly deleted.",
                 userPermissionsPage.isPermissionPresent(teamName, "all", role));
     }
 }

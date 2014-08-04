@@ -24,9 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import com.denimgroup.threadfix.selenium.utils.LoginFailedException;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public class LoginPage extends BasePage {
@@ -120,12 +118,18 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-
         driver.findElementById("login").click();
-        sleep(1000);
 
-        if (!isElementPresent("tab-dashboard")) {
+        /*if (!isElementPresent("tab-dashboard")) {
             throw new LoginFailedException("Login failed.");
+        }*/
+
+        try {
+            waitForElement(driver.findElementById("tab-dashboard"));
+        } catch (TimeoutException e) {
+            throw new LoginFailedException("Login failed", e);
+        } catch (NoSuchElementException e) {
+            throw new LoginFailedException("Login failed", e);
         }
 
 		waitForElement(driver.findElementById("main-content"));

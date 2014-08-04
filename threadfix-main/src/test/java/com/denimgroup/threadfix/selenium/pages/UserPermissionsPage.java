@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -63,6 +64,12 @@ public class UserPermissionsPage extends BasePage {
         return this;
     }
 
+    public UserPermissionsPage clickDeleteButton(String teamName, String appName, String role) {
+        driver.findElementById("deleteAppMap" + teamName + appName + role).click();
+        handleAlert();
+        return new UserPermissionsPage(driver);
+    }
+
     /*_____________________ Boolean Methods ______________________*/
 
     public boolean isUserNamePresent(String userName) {
@@ -74,21 +81,26 @@ public class UserPermissionsPage extends BasePage {
     }
 
     public boolean isPermissionPresent(String teamName, String appName, String role) {
-        if (!driver.findElementById("teamName" + teamName + appName + role).getText().contains(teamName)) {
-            return false;
-        }
-
-        if (appName.equals("all")) {
-            if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains("All")) {
+        try {
+            if (!driver.findElementById("teamName" + teamName + appName + role).getText().contains(teamName)) {
                 return false;
             }
-        } else {
-            if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains(appName)) {
+
+            if (appName.equals("all")) {
+                if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains("All")) {
+                    return false;
+                }
+            } else {
+                if (!driver.findElementById("applicationName" + teamName + appName + role).getText().contains(appName)) {
+                    return false;
+                }
+            }
+
+            if (!driver.findElementById("roleName" + teamName + appName + role).getText().contains(role)) {
                 return false;
             }
-        }
-
-        if (!driver.findElementById("roleName" + teamName + appName + role).getText().contains(role)) {
+        } catch (NoSuchElementException e) {
+            System.err.println(e.getMessage());
             return false;
         }
 

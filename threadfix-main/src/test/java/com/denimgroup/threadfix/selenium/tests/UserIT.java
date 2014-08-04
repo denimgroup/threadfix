@@ -42,7 +42,7 @@ public class UserIT extends BaseIT {
 		String userName = "testCreateUser" + getRandomString(3);
         String password = "testCreateUser";
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
-												.clickManageUsersLink();
+                .clickManageUsersLink();
 
 		userIndexPage.clickAddUserLink()
                     .enterName(userName)
