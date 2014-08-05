@@ -128,6 +128,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                                 test = test / 10;
                             }
 
+                            //expand each severity level of vulns on page load
+                            treeElement.expanded = true;
+
                             if (size > $scope.badgeWidth) {
                                 $scope.badgeWidth = size;
                             }
