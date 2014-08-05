@@ -268,7 +268,7 @@ public class UserPermissionsEntIT extends BaseIT{
     }
 
     @Test
-    public void deletePermissions() {
+    public void deletePermissionsTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -301,4 +301,66 @@ public class UserPermissionsEntIT extends BaseIT{
         assertFalse("Permissions were not properly deleted.",
                 userPermissionsPage.isPermissionPresent(teamName, "all", role));
     }
+
+    @Test
+    public void deletePermissionsValidation() {
+        String teamName1 = getRandomString(8);
+        String teamName2 = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createTeam(teamName2);
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+        String role = "Administrator";
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickAddUserLink()
+                .enterName(userName)
+                .enterPassword(password)
+                .enterConfirmPassword(password)
+                .clickAddNewUserBtn();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .setTeam(teamName1)
+                .setTeamRole(role)
+                .clickModalSubmit();
+
+        userPermissionsPage.clickAddPermissionsLink()
+                .setTeam(teamName2)
+                .setTeamRole(role)
+                .clickModalSubmit();
+
+        TeamIndexPage teamIndexPage = userPermissionsPage.logout()
+                .login(userName, password)
+                .clickOrganizationHeaderLink();
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
+
+        assertTrue("Add application button is not present.", teamDetailPage.isAddAppBtnPresent());
+
+        teamDetailPage.clickAddApplicationButton()
+                .setApplicationInfo(appName, "http://test.com", "Medium")
+                .clickModalSubmit();
+
+        assertTrue("User was unable to add an application.", teamDetailPage.isAppPresent(appName));
+
+        userIndexPage = teamDetailPage.logout()
+                .login("user", "password")
+                .clickManageUsersLink();
+
+        userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickDeleteButton(teamName1, "all", role);
+
+        teamIndexPage = userPermissionsPage.logout()
+                .login(userName, password)
+                .clickOrganizationHeaderLink();
+
+        assertFalse("User should not be able to view this team.", teamIndexPage.isTeamPresent(teamName1));
+    }
+
+
 }
