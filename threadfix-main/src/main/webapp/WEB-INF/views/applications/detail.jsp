@@ -51,21 +51,23 @@
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/unmappedFindingsTab.jsp" %>
-            <c:if test="${isEnterprise}">
-                <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
-                    <!-- TODO refactor this nesting -->
-                    <c:if test="${ canManageApplications }">
-                        <div style="margin-top:10px;margin-bottom:7px;">
-                            <a id="addScanQueueLink" class="btn" ng-click="openNewScanAgentTaskModal()">Add New Task</a>
-                        </div>
-                    </c:if>
+            <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
+                <c:if test="${isEnterprise}">
+                    <tab id="scanAgentTasksTab" ng-controller="ScanAgentTasksTabController" heading="{{ heading }}">
+                        <!-- TODO refactor this nesting -->
+                        <c:if test="${ canManageApplications }">
+                            <div style="margin-top:10px;margin-bottom:7px;">
+                                <a id="addScanQueueLink" class="btn" ng-click="openNewScanAgentTaskModal()">Add New Task</a>
+                            </div>
+                        </c:if>
 
-                    <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
-                </tab>
-                <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}">
-                    <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
-                </tab>
-            </c:if>
+                        <%@ include file="/WEB-INF/views/applications/tabs/scanQueueTab.jsp" %>
+                    </tab>
+                    <tab id="scheduledScanTab" ng-controller="ScheduledScanTabController" heading="{{ heading }}">
+                        <%@ include file="/WEB-INF/views/applications/tabs/scheduledScanTab.jsp" %>
+                    </tab>
+                </c:if>
+            </security:authorize>
         </tabset>
     </div>
 

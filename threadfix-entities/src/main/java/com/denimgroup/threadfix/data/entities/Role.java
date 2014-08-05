@@ -50,23 +50,32 @@ public class Role extends AuditableEntity {
 			canManageApplications, canManageDefectTrackers,
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
-			canSubmitDefects, canUploadScans, canViewErrorLogs,
+			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
             canViewJobStatuses, enterprise;
 
-    public static final String[] PROTECTED_PERMISSIONS = new String[]{
+    public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
     };
 
-    public static final String[] ALL_PERMISSIONS = new String[]{
+    public static final String[] ALL_PERMISSIONS = {
             "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
             "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-            "canGenerateReports", "canManageApplications", "enterprise"
+            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings"
     };
 
     @NotEmpty(message = "{errors.required}")
     @Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
     private String displayName;
+
+    @Column
+    public Boolean getCanManageSystemSettings() {
+        return canManageSystemSettings != null && canManageSystemSettings;
+    }
+
+    public void setCanManageSystemSettings(Boolean canManageSystemSettings) {
+        this.canManageSystemSettings = canManageSystemSettings;
+    }
 
     @JsonView(Object.class)
     @Column(length = DISPLAY_NAME_LENGTH, nullable = false)
@@ -76,6 +85,15 @@ public class Role extends AuditableEntity {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    @Column
+    public Boolean getCanManageScanAgents() {
+        return canManageScanAgents != null && canManageScanAgents;
+    }
+
+    public void setCanManageScanAgents(Boolean canManageScanAgents) {
+        this.canManageScanAgents = canManageScanAgents;
     }
 
     @Column
@@ -147,29 +165,29 @@ public class Role extends AuditableEntity {
     }
 
     public void setCanManageTeams(Boolean canManageTeams) {
-		this.canManageTeams = canManageTeams;
-	}
+        this.canManageTeams = canManageTeams;
+    }
 
-	@Column
-	public Boolean getCanManageUsers() {
-		return canManageUsers != null && canManageUsers;
-	}
+    @Column
+    public Boolean getCanManageUsers() {
+        return canManageUsers != null && canManageUsers;
+    }
 
-	public void setCanManageUsers(Boolean canManageUsers) {
-		this.canManageUsers = canManageUsers;
-	}
+    public void setCanManageUsers(Boolean canManageUsers) {
+        this.canManageUsers = canManageUsers;
+    }
 
-	@Column
-	public Boolean getCanManageWafs() {
-		return canManageWafs != null && canManageWafs;
-	}
+    @Column
+    public Boolean getCanManageWafs() {
+        return canManageWafs != null && canManageWafs;
+    }
 
-	public void setCanManageWafs(Boolean canManageWafs) {
-		this.canManageWafs = canManageWafs;
-	}
+    public void setCanManageWafs(Boolean canManageWafs) {
+        this.canManageWafs = canManageWafs;
+    }
 
-	@Column
-	public Boolean getCanModifyVulnerabilities() {
+    @Column
+    public Boolean getCanModifyVulnerabilities() {
 		return canModifyVulnerabilities != null && canModifyVulnerabilities;
 	}
 
@@ -232,6 +250,9 @@ public class Role extends AuditableEntity {
 		if (getCanGenerateWafRules())
 			permissions.add(Permission.CAN_GENERATE_WAF_RULES);
 
+		if (getCanManageScanAgents())
+			permissions.add(Permission.CAN_MANAGE_SCAN_AGENTS);
+
 		if (getCanManageApiKeys())
 			permissions.add(Permission.CAN_MANAGE_API_KEYS);
 
@@ -252,6 +273,9 @@ public class Role extends AuditableEntity {
 
 		if (getCanManageUsers())
 			permissions.add(Permission.CAN_MANAGE_USERS);
+
+		if (getCanManageSystemSettings())
+			permissions.add(Permission.CAN_MANAGE_SYSTEM_SETTINGS);
 
 		if (getCanManageWafs())
 			permissions.add(Permission.CAN_MANAGE_WAFS);
