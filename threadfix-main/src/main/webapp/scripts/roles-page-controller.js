@@ -43,6 +43,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canManageApplications": "false",
                          "canManageDefectTrackers": "false",
                          "canManageRemoteProviders": "false",
+                         "canManageScanAgents": "false",
                          "canManageRoles": "false",
                          "canManageTeams": "false",
 //                         "canViewJobStatuses": "false",
@@ -80,7 +81,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     var addKeys = function(role) {
 
@@ -91,6 +92,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canManageApplications = role.canManageApplications === true ? "true" : "false";
             role.canManageDefectTrackers = role.canManageDefectTrackers === true ? "true" : "false";
             role.canManageRemoteProviders = role.canManageRemoteProviders === true ? "true" : "false";
+            role.canManageScanAgents = role.canManageScanAgents === true ? "true" : "false";
             role.canManageRoles = role.canManageRoles === true ? "true" : "false";
             role.canManageTeams = role.canManageTeams === true ? "true" : "false";
 //            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
@@ -103,7 +105,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
 
             role.stringed = true;
         }
-    }
+    };
 
     $scope.openEditModal = function(role) {
         var modalInstance = $modal.open({

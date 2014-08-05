@@ -84,9 +84,9 @@
                         <li class="normalLinks">
                             <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
                         </li>
-                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                        <security:authorize ifAllGranted="ROLE_ENTERPRISE, ROLE_CAN_MANAGE_SCAN_AGENTS">
                             <li class="normalLinks">
-                                    <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
+                                <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
                             </li>
                         </security:authorize>
                         <li class="normalLinks">
