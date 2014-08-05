@@ -120,12 +120,12 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             }
         });
 
-        modalInstance.result.then(function (newApplication) {
+        modalInstance.result.then(function (object) {
 
             if (!$scope.applications || $scope.applications.length === 0) {
                 $scope.applications = [];
             }
-            $scope.applications.push(newApplication);
+            $scope.applications.push(object.application);
 
             $scope.applications.sort(nameCompare);
 

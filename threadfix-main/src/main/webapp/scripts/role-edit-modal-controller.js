@@ -56,21 +56,22 @@ myAppModule.controller('RoleEditModalController',
         $scope.object.canManageDefectTrackers = value;
         $scope.object.canManageRemoteProviders = value;
         $scope.object.canManageRoles = value;
+        $scope.object.canManageScanAgents = value;
+        $scope.object.canManageSystemSettings = value;
         $scope.object.canManageTeams = value;
-//        $scope.object.canViewJobStatuses = value;
         $scope.object.canViewErrorLogs = value;
         $scope.object.canUploadScans = value;
         $scope.object.canSubmitDefects = value;
         $scope.object.canModifyVulnerabilities = value;
         $scope.object.canManageWafs = value;
         $scope.object.canManageUsers = value;
-    }
+    };
 
     $scope.focusInput = true;
 
     $scope.switchTo = function(name) {
         $rootScope.$broadcast('modalSwitch', name);
-    }
+    };
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
