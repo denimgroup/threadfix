@@ -43,6 +43,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/configuration/defecttrackers")
 @SessionAttributes({"defectTracker","editDefectTracker"})
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_DEFECT_TRACKERS')")
 public class DefectTrackersController {
 	
     @Autowired

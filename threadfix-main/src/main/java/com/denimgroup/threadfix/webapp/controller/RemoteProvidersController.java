@@ -50,6 +50,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("configuration/remoteproviders")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 @SessionAttributes({"remoteProviderType", "remoteProviderApplication"})
 public class RemoteProvidersController {
 
