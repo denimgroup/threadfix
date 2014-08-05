@@ -32,20 +32,19 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
-
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.errors.EncryptionException;
 
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
 
 	private static final long serialVersionUID = 1175222046579045669L;
-    private final SanitizedLogger log = new SanitizedLogger(Application.class);
+    private static final SanitizedLogger log = new SanitizedLogger(Application.class);
 	
 	public static final String TEMP_PASSWORD = "this is not the password";
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
