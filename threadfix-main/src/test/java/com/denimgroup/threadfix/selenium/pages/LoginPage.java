@@ -122,6 +122,7 @@ public class LoginPage extends BasePage {
 
         if (!isElementPresent("tab-dashboard")) {
             driver.findElementById("login").sendKeys(Keys.ENTER);
+            sleep(1500);
 
             if (!isElementPresent("logo")) {
                 throw new LoginFailedException("Login Failed");
