@@ -209,7 +209,7 @@ public class RoleEntIT extends BaseIT {
 				.setRoleName(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
+            if (permission.equals("enterprise")) {
                 assertFalse("Permission was set to yes when it should have been set to no.",
                         rolesIndexPage.getPermissionValue(permission));
             }
@@ -221,7 +221,7 @@ public class RoleEntIT extends BaseIT {
                 .clickEditLink(roleName);
 
 		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
+            if (permission.equals("enterprise")) {
                 assertTrue("Permission was set to no when it should have been set to yes."
                         , rolesIndexPage.getPermissionValue(permission));
             }
@@ -233,7 +233,7 @@ public class RoleEntIT extends BaseIT {
                 .clickEditLink(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
+            if (permission.equals("enterprise")) {
                 assertFalse("Permission was set to yes when it should have been set to no.",
                         rolesIndexPage.getPermissionValue(permission));
             }
@@ -259,7 +259,7 @@ public class RoleEntIT extends BaseIT {
 				.setRoleName(roleName);
 		
 		for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
+            if (permission.equals("enterprise")) {
                 rolesIndexPage = rolesIndexPage.setPermissionValue(permission, true);
             }
 		}
@@ -287,7 +287,7 @@ public class RoleEntIT extends BaseIT {
                 .clickEditLink("Administrator");
 
         for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission != "enterprise") {
+            if (permission.equals("enterprise")) {
                 assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
             }
         }
