@@ -65,7 +65,7 @@
 				<td id="tab-config" style="width: 30px;padding-left:0;">
 					
 					<div class="dropdown normalLinks">
-					<div class="dropdown-toggle data-target="#" style="height:32px;text-align:center;">
+					<div class="dropdown-toggle" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
 						<a id="tabConfigAnchor" href="#">
 							<i class="icon-cog icon-white"></i>
@@ -89,9 +89,11 @@
                                 <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
                             </li>
                         </security:authorize>
-                        <li class="normalLinks">
-                            <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
-                        </li>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                            <li class="normalLinks">
+                                <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
+                            </li>
+                        </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 						    <li class="normalLinks">
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
@@ -100,7 +102,7 @@
 
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
-                            <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                            <security:authorize ifAllGranted="ROLE_ENTERPRISE, ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                 <li class="normalLinks">
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>

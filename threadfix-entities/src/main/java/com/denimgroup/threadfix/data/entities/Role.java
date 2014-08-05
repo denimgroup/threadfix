@@ -50,7 +50,7 @@ public class Role extends AuditableEntity {
 			canManageApplications, canManageDefectTrackers,
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canModifyVulnerabilities,
-			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents,
+			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
             canViewJobStatuses, enterprise;
 
     public static final String[] PROTECTED_PERMISSIONS = {
@@ -61,12 +61,21 @@ public class Role extends AuditableEntity {
             "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
             "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents"
+            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings"
     };
 
     @NotEmpty(message = "{errors.required}")
     @Size(max = DISPLAY_NAME_LENGTH, message = "{errors.maxlength}" + DISPLAY_NAME_LENGTH)
     private String displayName;
+
+    @Column
+    public Boolean getCanManageSystemSettings() {
+        return canManageSystemSettings != null && canManageSystemSettings;
+    }
+
+    public void setCanManageSystemSettings(Boolean canManageSystemSettings) {
+        this.canManageSystemSettings = canManageSystemSettings;
+    }
 
     @JsonView(Object.class)
     @Column(length = DISPLAY_NAME_LENGTH, nullable = false)
@@ -264,6 +273,9 @@ public class Role extends AuditableEntity {
 
 		if (getCanManageUsers())
 			permissions.add(Permission.CAN_MANAGE_USERS);
+
+		if (getCanManageSystemSettings())
+			permissions.add(Permission.CAN_MANAGE_SYSTEM_SETTINGS);
 
 		if (getCanManageWafs())
 			permissions.add(Permission.CAN_MANAGE_WAFS);

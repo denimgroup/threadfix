@@ -128,9 +128,22 @@
                     <td class="inputValue" style="text-align: center;"><input type="radio"
                                                                               id="canManageScanAgentsFalse" ng-model="object.canManageScanAgents"
                                                                               name="canManageScanAgents" value="false" /></td>
-                    <td style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
                         <form:errors id="canManageScanAgentsError"
                                      name="canManageScanAgents" cssClass="errors" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Manage System Settings</td>
+                    <td class="inputValue" style="text-align: center;"><input type="radio"
+                                                                              id="canManageSystemSettingsTrue" name="canManageSystemSettings" ng-model="object.canManageSystemSettings"
+                                                                              value="true" /></td>
+                    <td class="inputValue" style="text-align: center;"><input type="radio"
+                                                                              id="canManageSystemSettingsFalse" ng-model="object.canManageSystemSettings"
+                                                                              name="canManageSystemSettings" value="false" /></td>
+                    <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+                        <form:errors id="canManageSystemSettingsError"
+                                     name="canManageSystemSettings" cssClass="errors" />
                     </td>
                 </tr>
 				<tr>

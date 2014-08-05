@@ -44,6 +44,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canManageDefectTrackers": "false",
                          "canManageRemoteProviders": "false",
                          "canManageScanAgents": "false",
+                         "canManageSystemSettings": "false",
                          "canManageRoles": "false",
                          "canManageTeams": "false",
 //                         "canViewJobStatuses": "false",
@@ -93,6 +94,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canManageDefectTrackers = role.canManageDefectTrackers === true ? "true" : "false";
             role.canManageRemoteProviders = role.canManageRemoteProviders === true ? "true" : "false";
             role.canManageScanAgents = role.canManageScanAgents === true ? "true" : "false";
+            role.canManageSystemSettings = role.canManageSystemSettings === true ? "true" : "false";
             role.canManageRoles = role.canManageRoles === true ? "true" : "false";
             role.canManageTeams = role.canManageTeams === true ? "true" : "false";
 //            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
