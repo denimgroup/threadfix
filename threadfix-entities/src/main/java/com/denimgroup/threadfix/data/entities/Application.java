@@ -260,7 +260,9 @@ public class Application extends AuditableEntity {
         String username = "";
 
         try {
-            username = ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
+            if (repositoryEncryptedUserName != null) {
+                username = ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
+            }
         } catch (EncryptionException e) {
             log.error("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
             assert false;
