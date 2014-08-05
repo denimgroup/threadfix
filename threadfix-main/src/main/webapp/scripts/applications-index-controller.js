@@ -21,7 +21,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
                 if (data.success) {
                     $scope.teams = data.object;
-                    $scope.teams.sort(nameCompare)
+                    $scope.teams.sort(nameCompare);
 
                     if ($scope.teams.length == 0 && $scope.canCreateTeams) {
                         $scope.openTeamModal();
@@ -72,7 +72,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
                         var imageTagHtml = matches[1];
 
-                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' id="teamGraph' + team.name + '" alt=""/>';
+                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' alt=""/>';
 
                         team.report = imageTagHtml;
                     }
