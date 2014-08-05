@@ -16,8 +16,8 @@
         <tbody ng-repeat="category in vulnTree" ng-show="category.total > 0">
             <tr>
                 <td>
-                    <span id="expand{{ category.name }}" ng-hide="category.expanded" ng-click="category.expanded = true" class="icon icon-plus-sign"></span>
-                    <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="category.expanded = false" class="icon icon-minus-sign"></span>
+                    <span id="expand{{ category.name }}" ng-hide="category.expanded" ng-click="toggleVulnCategory(category, true)" class="icon icon-plus-sign"></span>
+                    <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="toggleVulnCategory(category, false)" class="icon icon-minus-sign"></span>
                 </td>
                 <td style="width:50px">
                     {{ category.name }}
