@@ -20,7 +20,19 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                 $scope.initialized = true;
 
                 if (data.success) {
-                    $scope.teams = data.object;
+                    $scope.teams = data.object.teams;
+
+                    $scope.canEditIds = data.object.canEditIds;
+                    $scope.canUploadIds = data.object.canUploadIds;
+
+                    $scope.teams.forEach(function(team) {
+                        team.showEditButton = $scope.canEditIds.indexOf(team.id) !== -1;
+
+                        team.applications.forEach(function(application) {
+                            application.showUploadScanButton = $scope.canUploadIds.indexOf(application.id) !== -1;
+                        });
+                    });
+
                     $scope.teams.sort(nameCompare);
 
                     if ($scope.teams.length == 0 && $scope.canCreateTeams) {
@@ -165,11 +177,14 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             }
         });
 
-        modalInstance.result.then(function (newApplication) {
+        modalInstance.result.then(function (object) {
 
             if (!team.applications || team.applications.length === 0) {
                 team.applications = [];
             }
+
+            var newApplication = object.application;
+            newApplication.showUploadScanButton = object.uploadScan;
 
             team.applications.push(newApplication);
 

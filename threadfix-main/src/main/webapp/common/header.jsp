@@ -51,9 +51,7 @@
 						    	</a>
 						    </li>
 						</c:if>
-						<li class="normalLinks">
-							<a id="toggleHelpLink" href="javascript:toggleHelp()">Toggle Help</a>
-						</li>
+
 						<li class="normalLinks">
 							<a id="logoutLink" href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
 								<spring:message code="user.logout"/>
