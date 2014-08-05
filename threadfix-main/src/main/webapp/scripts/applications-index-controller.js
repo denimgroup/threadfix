@@ -124,11 +124,14 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         });
 
-        modalInstance.result.then(function (newTeam) {
+        modalInstance.result.then(function (object) {
 
             if (!$scope.teams || $scope.teams.length === 0) {
                 $scope.teams = [];
             }
+
+            var newTeam = object.team;
+            newTeam.showEditButton = object.canEdit;
 
             $scope.teams.push(newTeam);
 
