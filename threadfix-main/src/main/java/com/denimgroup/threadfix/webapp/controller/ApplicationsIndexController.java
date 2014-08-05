@@ -113,7 +113,7 @@ public class ApplicationsIndexController {
             Map<String, Object> map = newMap();
 
             map.put("teams", organizations);
-            map.put("canEditIds", PermissionUtils.getIdsWithPermission(Permission.CAN_MANAGE_TEAMS, organizations));
+            map.put("canEditIds", PermissionUtils.getIdsWithPermission(Permission.CAN_MANAGE_APPLICATIONS, organizations));
             map.put("canUploadIds", PermissionUtils.getAppIdsWithPermission(Permission.CAN_UPLOAD_SCANS, organizations));
 
             return writeSuccessObjectWithView(map, AllViews.TableRow.class);
