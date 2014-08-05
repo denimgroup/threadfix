@@ -37,7 +37,7 @@
 
     <c:if test="${ canUpdate }">
         <br>
-        <a class="btn" href="mailto:mcollins@denimgroup.com?subject=Mappings-Update&body=<c:out value="${ fn:escapeXml(exportText) }"/>" target="_top">
+        <a class="btn" href="mailto:support@threadfix.org?subject=Mappings-Update&body=<c:out value="${ fn:escapeXml(exportText) }"/>" target="_top">
             Export Mappings (through email)
         </a>
     </c:if>
