@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -36,11 +37,15 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.errors.EncryptionException;
+
 @Entity
 @Table(name = "Application")
 public class Application extends AuditableEntity {
 
 	private static final long serialVersionUID = 1175222046579045669L;
+    private final SanitizedLogger log = new SanitizedLogger(Application.class);
 	
 	public static final String TEMP_PASSWORD = "this is not the password";
 	private List<AccessControlApplicationMap> accessControlApplicationMaps;
@@ -116,6 +121,12 @@ public class Application extends AuditableEntity {
 	
 	@Size(max = 1024, message = "{errors.maxlength} 1024.")
 	private String encryptedUserName;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String obscuredPassword;
+
+    @Size(max = 80, message = "{errors.maxlength} 80.")
+    private String obscuredUserName;
 	
 	private List<Defect> defectList;
 
@@ -233,6 +244,31 @@ public class Application extends AuditableEntity {
 	public void setEncryptedUserName(String encryptedUserName) {
 		this.encryptedUserName = encryptedUserName;
 	}
+
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public String getObscuredPassword() {
+        if(repositoryEncryptedPassword == null || repositoryEncryptedPassword.trim().length() == 0) {
+            return "";
+        } else {
+            return "12345678";
+        }
+    }
+
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public String getObscuredUserName() throws IllegalAccessException {
+        String username = "";
+
+        try {
+            username = ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
+        } catch (EncryptionException e) {
+            log.error("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+            assert false;
+        }
+
+        return username;
+    }
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "defectTrackerId")
@@ -593,7 +629,7 @@ public class Application extends AuditableEntity {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
     public String getRepositoryBranch() {
         return repositoryBranch;
     }
@@ -612,7 +648,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
     public String getRepositoryUserName() {
         return repositoryUserName;
     }
@@ -622,7 +658,7 @@ public class Application extends AuditableEntity {
     }
 
     @Transient
-    @JsonIgnore
+    @JsonView(AllViews.FormInfo.class)
     public String getRepositoryPassword() {
         return repositoryPassword;
     }
