@@ -451,7 +451,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         }
     };
 
-
     $scope.exportCSV = function() {
         console.log('Downloading vulnerabilities list');
 
