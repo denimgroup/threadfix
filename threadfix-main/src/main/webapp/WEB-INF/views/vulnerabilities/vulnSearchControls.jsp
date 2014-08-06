@@ -11,7 +11,6 @@
                     Action <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-
                     <c:if test="${ canSubmitDefects }">
                         <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="submitDefectButton" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
                         <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="mergeDefectButton" ng-click="showMergeDefectModal()">Merge Defect</a></li>
@@ -23,6 +22,7 @@
                         <li ng-show="parameters.showFalsePositive"><a class="pointer" id="unmarkFalsePositivesButton" ng-click="unmarkFalsePositives()">Unmark as False Positive</a></li>
                     </c:if>
                 </ul>
+
                 <button id="submittingButton" ng-disabled class="btn" ng-show="submitting">
                     <span class="spinner dark"></span>
                     Submitting
@@ -51,6 +51,5 @@
     </div>
 
     <%@ include file="vulnSearchTree.jsp" %>
-    <%--<%@ include file="vulnerabilityTable.jsp" %>--%>
 
 </div>
