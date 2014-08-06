@@ -72,7 +72,8 @@ public class ChannelType extends BaseEntity {
 			ScannerType.VERACODE.getFullName(), 
 			ScannerType.CAT_NET.getFullName(),
 			ScannerType.BRAKEMAN.getFullName(),
-            ScannerType.PMD.getFullName());
+            ScannerType.PMD.getFullName(),
+            ScannerType.CLANG.getFullName());
 
 	public static final List<String> MIXED_TYPES = Arrays.asList(ScannerType.SENTINEL.getFullName());
 	public static final String DYNAMIC="Dynamic", STATIC="Static", MIXED="Mixed";
