@@ -6,6 +6,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     $scope.currentModal = null;
 
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
+    };
+
     // initialize objects for forms
     $scope.$on('rootScopeInitialized', function() {
        $http.get(tfEncoder.encode(currentUrl + "/objects")).
@@ -24,6 +28,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    }
                    if (!$scope.config.recentPathList) {
                        $scope.config.recentPathList = [];
+                   }
+                   if ($scope.config.teams) {
+                       $scope.config.teams.sort(nameCompare);
                    }
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;

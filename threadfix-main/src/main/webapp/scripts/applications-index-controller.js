@@ -258,6 +258,15 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
     };
 
     var updateTeam = function(oldTeam, newTeam) {
+        newTeam.applications.forEach(function(application) {
+            oldTeam.applications.forEach(function(oldApplication) {
+                if (application.id === oldApplication.id) {
+                    application.showUploadScanButton = oldApplication.showUploadScanButton;
+                }
+            });
+        });
+
+        newTeam.showEditButton = oldTeam.showEditButton;
 
         var index = $scope.teams.indexOf(oldTeam);
         if (index > -1) { // let's hope it is
