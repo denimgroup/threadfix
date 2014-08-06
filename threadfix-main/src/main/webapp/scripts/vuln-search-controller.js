@@ -53,6 +53,48 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         }
     };
 
+    $scope.toggleVulnCategory = function(treeElement, expanded) {
+        treeElement.expanded = expanded;
+        $scope.checkIfVulnTreeExpanded();
+    };
+
+    $scope.checkIfVulnTreeExpanded = function() {
+        var expanded = false;
+
+        $scope.vulnTree.forEach(function(treeElement) {
+            if(treeElement.expanded){
+                expanded = true;
+            }
+        });
+
+        $scope.vulnTree.expanded = expanded;
+
+        return expanded;
+    };
+
+    $scope.toggleVulnTree = function() {
+        var expanded = false;
+
+        if ($scope.vulnTree) {
+            expanded = $scope.checkIfVulnTreeExpanded();
+
+            $scope.vulnTree.map(function(treeElement){
+                treeElement.expanded = !expanded;
+
+                if(treeElement.entries){
+                    treeElement.entries.map(function(entry){
+
+                        if(entry.expanded && expanded){
+                            entry.expanded = !expanded;
+                        }
+                    });
+                }
+            });
+        }
+
+        $scope.vulnTree.expanded = !expanded;
+    };
+
     $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);
 
     $scope.maxDate = new Date();
@@ -117,6 +159,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object);
+
                     $scope.badgeWidth = 0;
 
                     if ($scope.vulnTree) {
@@ -137,6 +180,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         });
                     }
 
+                    $scope.checkIfVulnTreeExpanded();
+
                     $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
                 } else if (data.message) {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -149,7 +194,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
-    }
+    };
 
     $scope.refresh = function() {
         $scope.loading = true;
