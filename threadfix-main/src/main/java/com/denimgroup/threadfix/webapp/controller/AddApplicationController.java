@@ -41,6 +41,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 @Controller
 @RequestMapping("/organizations/{orgId}/modalAddApp")
@@ -94,7 +97,7 @@ public class AddApplicationController {
 
     @RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
             produces="application/json")
-    public @ResponseBody RestResponse<Application> submit(@PathVariable("orgId") int orgId,
+    public @ResponseBody Object submit(@PathVariable("orgId") int orgId,
                                                       @Valid @ModelAttribute Application application, BindingResult result,
                                                       Model model) {
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
@@ -119,7 +122,13 @@ public class AddApplicationController {
 
             model.addAttribute("application", new Application());
 
-            return RestResponse.success(application);
+            Map<String, Object> map = newMap();
+
+            map.put("application", application);
+            map.put("uploadScan", PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId,
+                    application.getId()));
+
+            return RestResponse.success(map);
         } else {
             model.addAttribute("organization", team);
 

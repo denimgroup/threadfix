@@ -97,7 +97,6 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canManageSystemSettings = role.canManageSystemSettings === true ? "true" : "false";
             role.canManageRoles = role.canManageRoles === true ? "true" : "false";
             role.canManageTeams = role.canManageTeams === true ? "true" : "false";
-//            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
             role.canViewErrorLogs = role.canViewErrorLogs === true ? "true" : "false";
             role.canUploadScans = role.canUploadScans === true ? "true" : "false";
             role.canSubmitDefects = role.canSubmitDefects === true ? "true" : "false";

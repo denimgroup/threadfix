@@ -176,5 +176,34 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
         return returnList;
     }
 
+    public static List<Integer> getIdsWithPermission(Permission permission, List<Organization> organizations) {
+        List<Integer> returnList = list();
 
+        for (Organization organization : organizations) {
+            Integer id = organization.getId();
+            if (id != null && isAuthorized(permission, id, null)) {
+                returnList.add(id);
+            }
+        }
+
+        return returnList;
+    }
+
+    public static List<Integer> getAppIdsWithPermission(Permission permission, List<Organization> organizations) {
+        List<Integer> returnList = list();
+
+        for (Organization organization : organizations) {
+            Integer teamId = organization.getId();
+            for (Application application : organization.getApplications()) {
+                Integer applicationId = application.getId();
+
+                if (teamId != null && applicationId != null && isAuthorized(permission, teamId, applicationId)) {
+                    returnList.add(applicationId);
+                }
+
+            }
+        }
+
+        return returnList;
+    }
 }

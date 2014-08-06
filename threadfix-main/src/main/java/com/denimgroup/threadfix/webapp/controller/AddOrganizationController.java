@@ -40,6 +40,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 @Controller
 @RequestMapping("/organizations/modalAdd")
@@ -62,7 +65,7 @@ public class AddOrganizationController {
 	
 	@RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
             produces="application/json")
-	public @ResponseBody RestResponse<Organization> newSubmit(@Valid @ModelAttribute Organization organization,
+	public @ResponseBody Object newSubmit(@Valid @ModelAttribute Organization organization,
                                                                BindingResult result, SessionStatus status,
                                                                Model model) {
         if (!PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_TEAMS)) {
@@ -91,7 +94,13 @@ public class AddOrganizationController {
 					" and ID " + organization.getId());
 
 			status.setComplete();
-			return RestResponse.success(organization);
+
+            Map<String, Object> map = newMap();
+
+            map.put("team", organization);
+            map.put("canEdit", PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_APPLICATIONS));
+
+			return RestResponse.success(map);
 		}
 	}
 }
