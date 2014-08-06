@@ -86,6 +86,9 @@ public interface ThreadFixRestClient {
     // QA only
     public RestResponse<User> createUser(String username, String password);
 
+    // QA only
+    public RestResponse<Role> createRole(String roleName);
+
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
                                     String nativeId, String parameter, String longDescription,
                                     String fullUrl, String path);

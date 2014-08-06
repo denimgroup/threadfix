@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.bcel.generic.DUP;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -328,6 +329,8 @@ public class UserPermissionsEntIT extends BaseIT{
         assertFalse("User should not be able to view this team.", teamIndexPage.isTeamPresent(teamName1));
     }
 
+    //TODO finish up
+    @Ignore
     @Test
     public void reportPermissionsTest() {
         String teamName = getRandomString(8);
@@ -342,6 +345,8 @@ public class UserPermissionsEntIT extends BaseIT{
 
         String roleName = getRandomString(8);
         String deniedPermission = "canGenerateReports";
+
+        //DatabaseUtils.createRole(roleName);
 
         RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
                 .clickManageRolesLink()

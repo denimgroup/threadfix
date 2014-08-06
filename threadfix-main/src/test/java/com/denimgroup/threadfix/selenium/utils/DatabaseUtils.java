@@ -1,9 +1,6 @@
 package com.denimgroup.threadfix.selenium.utils;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.User;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -50,6 +47,12 @@ public class DatabaseUtils {
 
     public static void createUser(String username, String password) {
         RestResponse<User> response = CLIENT.createUser(username, password);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void createRole(String roleName) {
+        RestResponse<Role> response = CLIENT.createRole(roleName);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }

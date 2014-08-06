@@ -264,6 +264,14 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] { username,   password }, User.class);
     }
 
+    // QA only
+    @Override
+    public RestResponse<Role> createRole(String roleName) {
+        return httpRestUtils.httpPost("/role/create",
+                new String[] {"roleName"},
+                new String[] {roleName}, Role.class);
+    }
+
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {
