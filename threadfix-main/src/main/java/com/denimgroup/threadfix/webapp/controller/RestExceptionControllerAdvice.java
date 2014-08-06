@@ -37,8 +37,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.nio.file.AccessDeniedException;
-
+import org.springframework.security.access.AccessDeniedException;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 
 /**
@@ -75,6 +74,9 @@ public class RestExceptionControllerAdvice {
         assert !(ex instanceof RestException) :
                 "ControllerAdvice received a RestException in its generic Exception handler";
 
+        assert !(ex instanceof AccessDeniedException) :
+                "ControllerAdvice received a AccessDeniedException in its generic Exception handler";
+
         ExceptionLog exceptionLog = new ExceptionLog(ex);
 
         exceptionLogService.storeExceptionLog(exceptionLog);
@@ -88,6 +90,8 @@ public class RestExceptionControllerAdvice {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = AccessDeniedException.class)
-    public void handleAccessDeniedException() {}
+    public ModelAndView handleAccessDeniedException() {
+        return new ModelAndView("403");
+    }
 
 }
