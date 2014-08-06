@@ -12,6 +12,10 @@
         No results found.
     </div>
 
+    <a id="toggleVulnTree" class="btn" ng-click="toggleVulnTree()" ng-show="vulnTree && vulnTree.length > 0" style="margin: -9px 0 8px 0;">
+        {{ vulnTree.expanded ? 'Collapse' : 'Expand' }} All
+    </a>
+
     <table ng-show="vulnTree">
         <tbody ng-repeat="category in vulnTree" ng-show="category.total > 0">
             <tr>

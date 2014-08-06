@@ -10,9 +10,6 @@
                 <button ng-hide="submitting" id="actionItems" class="btn dropdown-toggle" data-toggle="dropdown" type="button">
                     Action <span class="caret"></span>
                 </button>
-                <a id="toggleVulnTree" class="btn" ng-click="toggleVulnTree()" style="margin-left: 5px;">
-                    {{ vulnTree.expanded ? 'Collapse' : 'Expand' }} All
-                </a>
                 <ul class="dropdown-menu">
                     <c:if test="${ canSubmitDefects }">
                         <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="submitDefectButton" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
