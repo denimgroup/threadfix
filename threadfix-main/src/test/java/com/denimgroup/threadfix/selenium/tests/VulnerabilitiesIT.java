@@ -52,8 +52,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
@@ -78,8 +77,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
@@ -123,8 +121,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
@@ -149,8 +146,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
@@ -194,8 +190,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
@@ -220,8 +215,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
@@ -265,8 +259,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
@@ -291,8 +284,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
                 .clickMarkFalseVulnerability()
@@ -337,8 +329,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
                 .addComment("Critical790")
                 .setComment(comment)
@@ -366,8 +357,7 @@ public class VulnerabilitiesIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.expandResultsByLevel("Critical")
-                .expandVulnerabilityByType("Critical79")
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
                 .addComment("Critical790")
                 .setComment(comment)

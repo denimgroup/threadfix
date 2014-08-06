@@ -24,11 +24,9 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.bcel.generic.DUP;
 import org.junit.Test;
@@ -360,5 +358,32 @@ public class UserPermissionsEntIT extends BaseIT{
                 .clickOrganizationHeaderLink();
 
         assertFalse("User should not be able to view this team.", teamIndexPage.isTeamPresent(teamName1));
+    }
+
+    @Test
+    public void reportPermissionsTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String userName = getRandomString(8);
+        String password = getRandomString(15);
+
+        String roleName = getRandomString(8);
+        String deniedPermission = "canGenerateReports";
+
+        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .setPermissionValue(deniedPermission,false)
+                .clickModalSubmit();
+
+
+
     }
 }

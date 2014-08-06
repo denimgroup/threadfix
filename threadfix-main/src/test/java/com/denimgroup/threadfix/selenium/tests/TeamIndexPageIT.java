@@ -42,8 +42,6 @@ public class TeamIndexPageIT extends BaseIT {
         assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
         assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
         assertTrue("User change password link is not clickable", dashboardPage.isChangePasswordMenuLinkClickable());
-        assertTrue("Toggle help is not present", dashboardPage.isToggleHelpLinkPresent());
-        assertTrue("Toggle help is not clickable", dashboardPage.isToggleHelpMenuLinkClickable());
         assertTrue("Logout link is not present", dashboardPage.isLogoutLinkPresent());
         assertTrue("Logout link is not clickable", dashboardPage.isLogoutMenuLinkClickable() );
     }

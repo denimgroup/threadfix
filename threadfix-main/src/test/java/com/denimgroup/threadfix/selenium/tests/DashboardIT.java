@@ -81,7 +81,6 @@ public class DashboardIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .expandResultsByLevel("High")
                 .expandVulnerabilityByType("High79")
                 .expandCommentSection("High790")
                 .addComment("High790")

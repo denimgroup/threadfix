@@ -456,6 +456,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    //Application Detail Page default is now to have the top level expanded
+    @Deprecated
     public ApplicationDetailPage expandResultsByLevel(String level) {
         driver.findElementById("expand" + level).click();
         return new ApplicationDetailPage(driver);
