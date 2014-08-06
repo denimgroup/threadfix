@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +51,8 @@ public class RestConnector extends SpringBeanAutowiringSupport {
     protected String              serverUrl;
     protected String              domain;
     protected String              project;
+
+    private int redirectTimes = 0;
 
     public RestConnector init(
             Map<String, String> cookies,
@@ -150,14 +155,12 @@ public class RestConnector extends SpringBeanAutowiringSupport {
             String queryString,
             byte[] data,
             Map<String, String> headers) {
-
         HttpURLConnection con;
         try {
 
             if ((queryString != null) && !queryString.isEmpty()) {
                 url += "?" + queryString;
             }
-
 
             if (proxyService != null) {
                 con = proxyService.getConnectionWithProxyConfig(new URL(url), HPQualityCenterDefectTracker.class);
@@ -176,12 +179,24 @@ public class RestConnector extends SpringBeanAutowiringSupport {
 
             updateCookies(ret);
 
+            // Reset redirect counting
+            redirectTimes = 0;
             return ret;
 
         } catch (IOException e) {
+            redirectTimes = 0;
             throw new DefectTrackerCommunicationException(e, "Unable to communicate with the HPQC server.");
         } catch (RestRedirectException e) {
-            log.info("Redirecting to " + e.getTargetUrl());
+
+            // Only redirect up to 5 times
+            if (redirectTimes >= 5) {
+                log.warn("Already redirected " + redirectTimes +" times, not going to do it anymore");
+                redirectTimes = 0;
+                throw e;
+            }
+
+            redirectTimes ++;
+            log.info("Redirecting " + redirectTimes +" times to " + e.getTargetUrl());
             return doHttp(type, e.getTargetUrl(), queryString, data, headers);
         }
 
