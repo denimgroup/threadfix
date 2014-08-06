@@ -32,12 +32,24 @@ public class DatabaseUtils {
             throw new IllegalStateException("API_KEY system variable was null.");
         }
         if (REST_URL == null) {
-            throw new IllegalStateException("REST_URL system variable was null.");
+            throw new IllegalStateException("REST_URL system varteiable was null.");
         }
     }
 
     public static void createTeam(String teamName) {
         RestResponse<Organization> response = CLIENT.createTeam(teamName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void createUser(String username, String password, String globalRoleName) {
+        RestResponse<User> response = CLIENT.createUser(username, password, globalRoleName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void createUser(String username, String password) {
+        RestResponse<User> response = CLIENT.createUser(username, password);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }

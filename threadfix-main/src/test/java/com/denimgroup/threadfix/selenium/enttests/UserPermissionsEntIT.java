@@ -43,15 +43,11 @@ public class UserPermissionsEntIT extends BaseIT{
         String userName = getRandomString(8);
         String password = getRandomString(15);
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
+        DatabaseUtils.createUser(userName, password);
 
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName);
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions(userName);
 
         assertTrue("Unable to navigate to users permissions page.", userPermissionsPage.isUserNamePresent(userName));
 
@@ -72,15 +68,11 @@ public class UserPermissionsEntIT extends BaseIT{
         String password = getRandomString(15);
         String role = "Administrator";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
+        DatabaseUtils.createUser(userName, password, role);
 
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName)
                 .setTeamRole(role)
@@ -102,30 +94,26 @@ public class UserPermissionsEntIT extends BaseIT{
 
         String userName = getRandomString(8);
         String password = getRandomString(15);
-        String role1 = "Administrator";
-        String role2 = "User";
+        String appRole1 = "Administrator";
+        String appRole2 = "User";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        DatabaseUtils.createUser(userName, password);
+
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
-
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName)
                 .toggleAllApps()
-                .setApplicationRole(appName1, role1)
-                .setApplicationRole(appName2, role2)
+                .setApplicationRole(appName1, appRole1)
+                .setApplicationRole(appName2, appRole2)
                 .clickModalSubmit();
 
         assertTrue("Permissions were not added properly for the first application.",
-                userPermissionsPage.isPermissionPresent(teamName, appName1, role1));
+                userPermissionsPage.isPermissionPresent(teamName, appName1, appRole1));
 
         assertTrue("Permissions were not added properly for the second application",
-                userPermissionsPage.isPermissionPresent(teamName, appName2, role2));
+                userPermissionsPage.isPermissionPresent(teamName, appName2, appRole2));
     }
 
     @Test
@@ -139,18 +127,14 @@ public class UserPermissionsEntIT extends BaseIT{
         String userName = getRandomString(8);
         String password = getRandomString(15);
 
+        DatabaseUtils.createUser(userName, password);
+
         String noTeamRoleError = "Failure. Message was : You must pick a Role.";
         String noApplicationRoleSelectedError = "Failure. Message was : You must select at least one application.";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
-
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName)
                 .clickModalSubmitInvalid();
@@ -176,30 +160,26 @@ public class UserPermissionsEntIT extends BaseIT{
 
         String userName = getRandomString(8);
         String password = getRandomString(15);
-        String role = "Administrator";
+        String teamRole = "Administrator";
+
+        DatabaseUtils.createUser(userName, password);
 
         String duplicateErrorMessage = "Failure. Message was : That team / role combo already exists for this user.";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
-
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName)
-                .setTeamRole(role)
+                .setTeamRole(teamRole)
                 .clickModalSubmit();
 
         assertTrue("Permissions were not added properly.",
-                userPermissionsPage.isPermissionPresent(teamName, "all", role));
+                userPermissionsPage.isPermissionPresent(teamName, "all", teamRole));
 
         userPermissionsPage.clickAddPermissionsLink()
                 .setTeam(teamName)
-                .setTeamRole(role)
+                .setTeamRole(teamRole)
                 .clickModalSubmitInvalid();
 
         assertTrue("Duplicate team/role combinations should not be allowed.",
@@ -220,15 +200,11 @@ public class UserPermissionsEntIT extends BaseIT{
         String role1 = "Administrator";
         String role2 = "User";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
+        DatabaseUtils.createUser(userName, password);
 
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName1)
                 .setTeamRole(role1)
@@ -277,15 +253,11 @@ public class UserPermissionsEntIT extends BaseIT{
         String password = getRandomString(15);
         String role = "Administrator";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
+        DatabaseUtils.createUser(userName, password);
 
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName)
                 .setTeamRole(role)
@@ -313,15 +285,11 @@ public class UserPermissionsEntIT extends BaseIT{
         String password = getRandomString(15);
         String role = "Administrator";
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
-                .clickAddNewUserBtn();
+        DatabaseUtils.createUser(userName, password);
 
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions(userName)
                 .clickAddPermissionsLink()
                 .setTeam(teamName1)
                 .setTeamRole(role)
@@ -346,7 +314,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertTrue("User was unable to add an application.", teamDetailPage.isAppPresent(appName));
 
-        userIndexPage = teamDetailPage.logout()
+        UserIndexPage userIndexPage = teamDetailPage.logout()
                 .login("user", "password")
                 .clickManageUsersLink();
 

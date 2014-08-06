@@ -287,7 +287,7 @@ public class RoleEntIT extends BaseIT {
                 .clickEditLink("Administrator");
 
         for (String permission : Role.ALL_PERMISSIONS) {
-            if (permission.equals("enterprise")) {
+            if (!permission.equals("enterprise")) {
                 assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
             }
         }
