@@ -65,7 +65,7 @@
                                                                       id="canGenerateWafRulesFalse" name="canGenerateWafRules" ng-model="object.canGenerateWafRules"
                                                                       value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canGenerateWafRulesError"
                                 name="canGenerateWafRules" cssClass="errors" />
                         </td>
@@ -79,7 +79,7 @@
                                                                       id="canManageApiKeysFalse" name="canManageApiKeys" value="false" />
             </td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageApiKeysError" name="canManageApiKeys"
                                 cssClass="errors" />
                         </td>
@@ -93,7 +93,7 @@
                                                                       id="canManageApplicationsFalse" name="canManageApplications" ng-model="object.canManageApplications"
                                                                       value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageApplicationsError"
                                 name="canManageApplications" cssClass="errors" />
                         </td>
@@ -107,7 +107,7 @@
                                                                       id="canManageDefectTrackersFalse" name="canManageDefectTrackers" ng-model="object.canManageDefectTrackers"
                                                                       value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageDefectTrackersError"
                                 name="canManageDefectTrackers" cssClass="errors" />
                         </td>
@@ -121,7 +121,7 @@
                                                                       id="canManageRemoteProvidersFalse" ng-model="object.canManageRemoteProviders"
                                                                       name="canManageRemoteProviders" value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageRemoteProvidersError"
                                 name="canManageRemoteProviders" cssClass="errors" />
                         </td>
@@ -134,7 +134,7 @@
             <td class="inputValue" style="text-align: center;"><input type="radio"
                                                                       id="canManageScanAgentsFalse" ng-model="object.canManageScanAgents"
                                                                       name="canManageScanAgents" value="false" /></td>
-            <td style="border: 0px solid black; background-color: white; padding-left: 5px">
+            <td style="border: 0 solid black; background-color: white; padding-left: 5px">
                 <form:errors id="canManageScanAgentsError"
                     name="canManageScanAgents" cssClass="errors" />
             </td>
@@ -147,7 +147,7 @@
             <td class="inputValue" style="text-align: center;"><input type="radio"
                                                                       id="canManageSystemSettingsFalse" ng-model="object.canManageSystemSettings"
                                                                       name="canManageSystemSettings" value="false" /></td>
-            <td style="border: 0px solid black; background-color: white; padding-left: 5px">
+            <td style="border: 0 solid black; background-color: white; padding-left: 5px">
                 <form:errors id="canManageSystemSettingsError"
                     name="canManageSystemSettings" cssClass="errors" />
             </td>
@@ -158,7 +158,7 @@
                                                                       id="canManageRolesTrue" name="canManageRoles" value="true" /></td>
             <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageRoles"
                                                                       id="canManageRolesFalse" name="canManageRoles" value="false" /></td>
-            <td style="border: 0px solid black; background-color: white; padding-left: 5px">
+            <td style="border: 0 solid black; background-color: white; padding-left: 5px">
                 <form:errors id="canManageRolesError" name="canManageRoles"
                     cssClass="errors" />
             </td>
@@ -170,7 +170,7 @@
             <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTeams"
                                                                       id="canManageTeamsFalse" name="canManageTeams" value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageTeamsError" name="canManageTeams"
                                 cssClass="errors" />
                         </td>
@@ -182,7 +182,7 @@
             <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageUsers"
                                                                       id="canManageUsersFalse" name="canManageUsers" value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageUsersError" name="canManageUsers"
                                 cssClass="errors" />
                         </td>
@@ -194,7 +194,7 @@
             <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageWafs"
                                                                       id="canManageWafsFalse" name="canManageWafs" value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canManageWafsError" name="canManageWafs"
                                 cssClass="errors" />
                         </td>
@@ -208,10 +208,24 @@
                                                                       id="canModifyVulnerabilitiesFalse" ng-model="object.canModifyVulnerabilities"
                                                                       name="canModifyVulnerabilities" value="false" /></td>
             <td
-                    style="border: 0px solid black; background-color: white; padding-left: 5px">
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
                             <form:errors id="canModifyVulnerabilitiesError"
                                 name="canModifyVulnerabilities" cssClass="errors" />
                         </td>
+        </tr>
+        <tr>
+            <td>Manage Vulnerability Filters</td>
+            <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageVulnFilters"
+                                                                      id="canManageVulnFiltersTrue" name="canManageVulnFilters"
+                                                                      value="true" /></td>
+            <td class="inputValue" style="text-align: center;"><input type="radio"
+                                                                      id="canManageVulnFiltersFalse" ng-model="object.canManageVulnFilters"
+                                                                      name="canManageVulnFilters" value="false" /></td>
+            <td
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
+                <form:errors id="canManageVulnFiltersError"
+                             name="canManageVulnFilters" cssClass="errors" />
+            </td>
         </tr>
         <tr>
             <td>Submit Defects</td>
