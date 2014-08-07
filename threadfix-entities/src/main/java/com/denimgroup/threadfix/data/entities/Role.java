@@ -49,7 +49,7 @@ public class Role extends AuditableEntity {
 	private Boolean canGenerateReports, canGenerateWafRules, canManageApiKeys,
 			canManageApplications, canManageDefectTrackers,
 			canManageRemoteProviders, canManageRoles, canManageTeams,
-			canManageUsers, canManageWafs, canModifyVulnerabilities,
+			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
             canViewJobStatuses, enterprise;
 
@@ -59,7 +59,7 @@ public class Role extends AuditableEntity {
 
     public static final String[] ALL_PERMISSIONS = {
             "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
-            "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
+            "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
             "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings"
     };
@@ -196,6 +196,15 @@ public class Role extends AuditableEntity {
 	}
 
 	@Column
+    public Boolean getCanManageVulnFilters() {
+		return canManageVulnFilters != null && canManageVulnFilters;
+	}
+
+	public void setCanManageVulnFilters(Boolean canManageVulnFilters) {
+		this.canManageVulnFilters = canManageVulnFilters;
+	}
+
+	@Column
 	public Boolean getCanSubmitDefects() {
 		return canSubmitDefects != null && canSubmitDefects;
 	}
@@ -282,6 +291,9 @@ public class Role extends AuditableEntity {
 
 		if (getCanModifyVulnerabilities())
 			permissions.add(Permission.CAN_MODIFY_VULNERABILITIES);
+
+		if (getCanManageVulnFilters())
+			permissions.add(Permission.CAN_MANAGE_VULN_FILTERS);
 
 		if (getCanSubmitDefects())
 			permissions.add(Permission.CAN_SUBMIT_DEFECTS);
