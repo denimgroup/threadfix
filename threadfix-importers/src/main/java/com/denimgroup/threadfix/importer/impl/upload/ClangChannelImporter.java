@@ -1,7 +1,6 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -118,23 +117,27 @@ public class ClangChannelImporter extends AbstractChannelImporter {
     public ScanCheckResultBean checkFile() {return testSAXInput(new ClangSAXValidator());}
 
     public class ClangSAXValidator extends DefaultHandler {
-        private boolean hasFindings = false;
-        private boolean hasDate = false;
-        private boolean correctFormat = false;
+        //private boolean hasFindings = false;
+        //private boolean hasDate = false;
+        //private boolean correctFormat = false;
 
         private void setTestStatus() {
-            if(!correctFormat) {
-                testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-            } else if (hasDate) {
-                testStatus = checkTestDate();
-            }
 
-            if((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
-                testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-            } else if (testStatus == null){
-                testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
-            }
         }
+
+//        private void setTestStatus() {
+//            if(!correctFormat) {
+//                testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+//            } else if (hasDate) {
+//                testStatus = checkTestDate();
+//            }
+//
+//            if((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
+//                testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
+//            } else if (testStatus == null){
+//                testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+//            }
+//        }
     }
 
 }
