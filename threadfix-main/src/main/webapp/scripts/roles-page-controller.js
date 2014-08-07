@@ -52,6 +52,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canUploadScans": "false",
                          "canSubmitDefects": "false",
                          "canModifyVulnerabilities": "false",
+                         "canManageVulnFilters": "false",
                          "canManageWafs": "false",
                          "canManageUsers": "false"
                     };
@@ -101,6 +102,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canUploadScans = role.canUploadScans === true ? "true" : "false";
             role.canSubmitDefects = role.canSubmitDefects === true ? "true" : "false";
             role.canModifyVulnerabilities = role.canModifyVulnerabilities === true ? "true" : "false";
+            role.canManageVulnFilters = role.canManageVulnFilters === true ? "true" : "false";
             role.canManageWafs = role.canManageWafs === true ? "true" : "false";
             role.canManageUsers = role.canManageUsers === true ? "true" : "false";
 

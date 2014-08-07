@@ -112,7 +112,7 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public String indexBackend(Model model, int orgId, int appId) {
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -124,7 +124,7 @@ public abstract class AbstractVulnFilterController {
 	}
 
 	public RestResponse<Map<String, Object>> mapBackend(int orgId, int appId) {
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure("You don't have permission to edit these filters.");
 		}
 
@@ -157,7 +157,7 @@ public abstract class AbstractVulnFilterController {
 	
 	public String tabBackend(Model model, int orgId, int appId) {
 		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
 		
@@ -176,7 +176,7 @@ public abstract class AbstractVulnFilterController {
 			int orgId,
 			int appId) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 
@@ -205,7 +205,7 @@ public abstract class AbstractVulnFilterController {
 			int appId,
 			int filterId) {
 		
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure(AUTHORIZATION_FAILED);
 		}
 		
@@ -229,7 +229,7 @@ public abstract class AbstractVulnFilterController {
 	
 	public String submitDeleteBackend(Model model, int orgId, int appId, int filterId) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return "403";
 		}
 		
