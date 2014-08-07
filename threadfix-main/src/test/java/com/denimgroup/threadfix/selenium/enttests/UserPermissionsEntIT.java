@@ -329,7 +329,6 @@ public class UserPermissionsEntIT extends BaseIT{
         assertFalse("User should not be able to view this team.", teamIndexPage.isTeamPresent(teamName1));
     }
 
-    //TODO finish up
     @Ignore
     @Test
     public void reportPermissionsTest() {

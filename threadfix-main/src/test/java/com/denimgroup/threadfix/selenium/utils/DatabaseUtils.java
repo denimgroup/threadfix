@@ -51,8 +51,8 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
-    public static void createRole(String roleName) {
-        RestResponse<Role> response = CLIENT.createRole(roleName);
+    public static void createRole(String roleName, boolean allPermissions) {
+        RestResponse<Role> response = CLIENT.createRole(roleName, allPermissions);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }

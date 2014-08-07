@@ -49,10 +49,31 @@ public class RoleRestController {
     RoleService roleService;
 
     @RequestMapping(value= "create", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Role> createRole(@RequestParam String roleName) {
+    public @ResponseBody RestResponse<Role> createRole(@RequestParam String roleName,
+                                                       @RequestParam Boolean allPermissions) {
 
         Role role = new Role();
         role.setDisplayName(roleName);
+
+        if (allPermissions) {
+            role.setCanGenerateReports(allPermissions);
+            role.setCanGenerateWafRules(allPermissions);
+            role.setCanManageApiKeys(allPermissions);
+            role.setCanManageApplications(allPermissions);
+            role.setCanManageDefectTrackers(allPermissions);
+            role.setCanManageRemoteProviders(allPermissions);
+            role.setCanManageScanAgents(allPermissions);
+            role.setCanManageSystemSettings(allPermissions);
+            role.setCanManageRoles(allPermissions);
+            role.setCanManageTeams(allPermissions);
+            role.setCanManageUsers(allPermissions);
+            role.setCanManageUsers(allPermissions);
+            role.setCanManageWafs(allPermissions);
+            role.setCanModifyVulnerabilities(allPermissions);
+            role.setCanSubmitDefects(allPermissions);
+            role.setCanUploadScans(allPermissions);
+            role.setCanViewErrorLogs(allPermissions);
+        }
 
         roleService.storeRole(role);
 
