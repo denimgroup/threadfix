@@ -75,6 +75,8 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Remote Provider Page not found",pageHeader.contains("Remote Providers"));
 	}
 
+    //TODO Add back when Qualys credentials are fixed
+    @Ignore
     @Test
     public void configureQualysTest() {
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
@@ -174,6 +176,8 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Incorrect credentials accepted", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
 	}
 
+    //TODO Add back when Qualys credentials are fixed
+    @Ignore
     @Test
     public void editQualysMapping() {
         String teamName = getRandomString(8);
