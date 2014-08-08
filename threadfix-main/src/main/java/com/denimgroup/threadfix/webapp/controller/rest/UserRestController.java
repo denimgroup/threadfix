@@ -54,20 +54,18 @@ public class UserRestController {
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public @ResponseBody RestResponse<User> createUser(@RequestParam String username,
-                                                       @RequestParam String password,
                                                        @RequestParam(required = false) String globalRoleName) {
+
         User user = new User();
         user.setName(username);
 
         user.setHasGlobalGroupAccess(globalRoleName != null);
         if (globalRoleName != null) {
-            //user.setSalt("test");
             user.setGlobalRole(roleService.loadRole(globalRoleName));
         }
 
-        user.setSalt("qa");
-        user.setPassword(password);
-        user.setPasswordConfirm(password);
+        user.setSalt("c892c2c6-2bd9-4b6a-a826-d9a71f5db441");
+        user.setPassword("3ac7de35360886d9aa7c821e4908f7c260c63eea9c229bff38ac40b28279b7a5");
 
         userService.storeUser(user);
 

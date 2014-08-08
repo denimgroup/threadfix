@@ -250,18 +250,18 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     // QA only
     @Override
-    public RestResponse<User> createUser(String username, String password, String globalRoleName) {
+    public RestResponse<User> createUser(String username, String globalRoleName) {
         return httpRestUtils.httpPost("/user/create",
-                new String[] {"username", "password", "globalRoleName" },
-                new String[] { username,	  password,   globalRoleName }, User.class);
+                new String[] {"username", "globalRoleName" },
+                new String[] { username, globalRoleName }, User.class);
     }
 
     // QA only
     @Override
-    public RestResponse<User> createUser(String username, String password) {
+    public RestResponse<User> createUser(String username) {
         return httpRestUtils.httpPost("/user/create",
-                new String[] {"username", "password" },
-                new String[] { username,   password }, User.class);
+                new String[] {"username"},
+                new String[] { username}, User.class);
     }
 
     // QA only

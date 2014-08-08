@@ -92,7 +92,7 @@ public class RolesIndexPage extends BasePage {
 	}
 
     public boolean getPermissionValue(String permissionName) {
-        return driver.findElementById("newRoleModalBody").findElement(By.id(permissionName + "True")).isSelected();
+        return driver.findElement(By.id(permissionName + "True")).isSelected();
     }
 
     public RolesIndexPage setPermissionValue(String permissionValue, boolean value) {

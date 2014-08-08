@@ -42,9 +42,8 @@ public class UserPermissionsEntIT extends BaseIT{
     @Test
     public void navigationTest() {
         String userName = getRandomString(8);
-        String password = getRandomString(15);
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -69,7 +68,7 @@ public class UserPermissionsEntIT extends BaseIT{
         String password = getRandomString(15);
         String role = "Administrator";
 
-        DatabaseUtils.createUser(userName, password, role);
+        DatabaseUtils.createUser(userName, role);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -94,11 +93,10 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.createApplication(teamName, appName2);
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
         String appRole1 = "Administrator";
         String appRole2 = "User";
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -126,9 +124,8 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.createApplication(teamName, appName);
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         String noTeamRoleError = "Failure. Message was : You must pick a Role.";
         String noApplicationRoleSelectedError = "Failure. Message was : You must select at least one application.";
@@ -160,10 +157,9 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.createApplication(teamName, appName);
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
         String teamRole = "Administrator";
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         String duplicateErrorMessage = "Failure. Message was : That team / role combo already exists for this user.";
 
@@ -197,11 +193,11 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.createTeam(teamName2);
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
+        String password = "TestPassword";
         String role1 = "Administrator";
         String role2 = "User";
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -251,10 +247,9 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.createApplication(teamName, appName);
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
         String role = "Administrator";
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -283,10 +278,10 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.createTeam(teamName2);
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
+        String password = "TestPassword";
         String role = "Administrator";
 
-        DatabaseUtils.createUser(userName, password);
+        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()

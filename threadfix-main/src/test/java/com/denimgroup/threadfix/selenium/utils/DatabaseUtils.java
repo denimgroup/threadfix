@@ -39,14 +39,14 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
-    public static void createUser(String username, String password, String globalRoleName) {
-        RestResponse<User> response = CLIENT.createUser(username, password, globalRoleName);
+    public static void createUser(String username, String globalRoleName) {
+        RestResponse<User> response = CLIENT.createUser(username, globalRoleName);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
-    public static void createUser(String username, String password) {
-        RestResponse<User> response = CLIENT.createUser(username, password);
+    public static void createUser(String username) {
+        RestResponse<User> response = CLIENT.createUser(username);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
