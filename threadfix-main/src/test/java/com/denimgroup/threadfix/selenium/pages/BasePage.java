@@ -37,8 +37,23 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 
 public abstract class BasePage {
-	
-	public final static int NUM_SECONDS_TO_WAIT = 20;
+
+    public final static int NUM_SECONDS_TO_WAIT;
+
+    static {
+        String waitTimeProperty = System.getProperty("WAIT_TIME");
+        if (null == waitTimeProperty) {
+            NUM_SECONDS_TO_WAIT = 20;
+        } else {
+            int parsedTime = Integer.parseInt(waitTimeProperty);
+            if (0 <= parsedTime) {
+                throw new RuntimeException("WAIT_TIME must be greater than " +
+                        "zero");
+            }
+
+            NUM_SECONDS_TO_WAIT = parsedTime;
+        }
+    }
 	
 	protected RemoteWebDriver driver;
 	
