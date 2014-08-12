@@ -39,7 +39,8 @@ public class ThreadFixRestClientStub extends ThreadFixRestClientImpl {
     List<String> scannerNames;
     String parameter, path;
     Date startDate, endDate;
-    Boolean showOpen, showClosed, showFalsePositive, showHidden;
+    Boolean showOpen, showClosed, showFalsePositive, showHidden,
+            showDefectPresent, showDefectNotPresent, showDefectOpen, showDefectClosed;
     Integer numberMerged, numberVulnerabilities;
 
     @Override
@@ -47,7 +48,8 @@ public class ThreadFixRestClientStub extends ThreadFixRestClientImpl {
                List<Integer> teamIds, List<Integer> applicationIds, List<String> scannerNames,
                List<Integer> genericSeverityValues, Integer numberVulnerabilities, String parameter, String path,
                Date startDate, Date endDate, Boolean showOpen, Boolean showClosed, Boolean showFalsePositive,
-               Boolean showHidden, Integer numberMerged) {
+               Boolean showHidden, Integer numberMerged,  Boolean showDefectPresent, Boolean showDefectNotPresent,
+               Boolean showDefectOpen, Boolean showDefectClosed) {
         this.genericVulnerabilityIds = genericVulnerabilityIds;
         this.teamIds = teamIds;
         this.applicationIds = applicationIds;
@@ -63,6 +65,10 @@ public class ThreadFixRestClientStub extends ThreadFixRestClientImpl {
         this.showFalsePositive = showFalsePositive;
         this.showHidden = showHidden;
         this.numberMerged = numberMerged;
+        this.showDefectPresent = showDefectPresent;
+        this.showDefectNotPresent = showDefectNotPresent;
+        this.showDefectOpen = showDefectOpen;
+        this.showDefectClosed = showDefectClosed;
         return null;
     }
 
