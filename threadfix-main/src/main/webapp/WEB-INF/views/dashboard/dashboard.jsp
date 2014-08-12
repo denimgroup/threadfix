@@ -4,12 +4,12 @@
 	<title>Dashboard</title>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/vuln-summary-modal-controller.js"></script>
 </head>
 
 <body class="dashboard">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
-    <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
 
 	<h2>Dashboard</h2>
 	

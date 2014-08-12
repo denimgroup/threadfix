@@ -21,7 +21,12 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.clickVulnTab = function() {
         $rootScope.$broadcast('loadVulnerabilitySearchTable');
+//        $scope.showVulnTab = true;
     }
+
+    $scope.$on('showVulnTab', function() {
+        $scope.showVulnTab = true;
+    });
 
     var countVulnerabilities = function() {
         $scope.vulnerabilityCount = 0;

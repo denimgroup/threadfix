@@ -291,6 +291,7 @@ public class XMonthSummaryReport {
 
 		if (dateList.get(index) != null) {
             hash.put("title", dateList.get(index));
+            hash.put("time", dateList.get(index));
 		}
 
         return hash;

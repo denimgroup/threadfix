@@ -6,7 +6,8 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
         return {
             restrict: 'EA',
             scope: {
-                data: '='
+                data: '=',
+                label: '='
             }
             ,
             link: function(scope, ele, attrs) {
@@ -44,7 +45,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
 
                     if (!data || data.length < 1) return;
 
-                    barGraphData(d3, data, color);
+                    barGraphData(d3, data, color, true, scope.label);
 
                     x.domain(data.map(function(d) { return d.title; }));
                     y.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -83,7 +84,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
                         .on('mouseout', tip.hide)
                         .on('click', function(d) {
                             tip.hide();
-                            threadFixModalService.showVulnsModal(createFilterCriteria(d));
+                            threadFixModalService.showVulnsModal(createFilterCriteria(d), scope.label.teamId || scope.label.appId);
                         })
                         .transition()
                         .attr("width", x.rangeBand())
@@ -105,7 +106,8 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
         return {
             restrict: 'EA',
             scope: {
-                data: '='
+                data: '=',
+                label: '='
             }
             ,
             link: function(scope, ele, attrs) {
@@ -143,7 +145,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3',
 
                     if (!data || data.length < 1) return;
 
-                    barGraphData(d3, data, color);
+                    barGraphData(d3, data, color, false, scope.label);
 
                     y.domain(data.map(function(d) { return d.title; }));
                     x.domain([0, d3.max(data, function(d) { return d.total; })]);
@@ -284,7 +286,7 @@ function getTip(d3, clazz, offset) {
         .offset(offset);
 }
 
-function barGraphData(d3, data, color) {
+function barGraphData(d3, data, color, isLeftReport, label) {
     var keys = d3.keys(data[0]).filter(function(key) { return key; });
 //    keys.sort(function(a, b) { return a.localeCompare(b); });
 //
@@ -300,16 +302,21 @@ function barGraphData(d3, data, color) {
     else
         color.domain(vulnTypeList);
 
-    data.forEach(function(d) {
+    data.forEach(function(d, index) {
         var y0 = 0;
         d.vulns = color.domain().map(function(key) {
+            //If it is top vulnerability report, then pick color of "High"
             var _key = (topVulnsReport) ? "High" : key;
             var tip = (topVulnsReport) ? d.title + " " + d.name : key;
             return {
+                time: (isLeftReport) ? getTime(data.length-index) : undefined,
                 fillColor: _key,
                 tip : tip,
                 y0: y0,
-                y1: y0 += +d[key]
+                y1: y0 += +d[key],
+                teamId: (label) ? label.teamId : undefined,
+                appId: (label) ? label.appId : undefined,
+                severity: (topVulnsReport) ? undefined : key
             };
         });
         d.total = d.vulns[d.vulns.length - 1].y1;
@@ -318,23 +325,55 @@ function barGraphData(d3, data, color) {
 
 function createFilterCriteria(d) {
     var criteria = {};
-    criteria.endDate = new Date();
+    criteria.endDate = d.time;
     criteria.parameters = {};
-    criteria.parameters.severities = {};
-    criteria.parameters.teams = [];
-    criteria.teams = [];
-    criteria.parameters.applications = [];
-    criteria.searchApplications = [];
+    criteria.parameters.severities = {
+        info: d.severity === "Info",
+        low: d.severity === "Low",
+        medium: d.severity === "Medium",
+        high: d.severity === "High",
+        critical: d.severity === "Critical"
+    };
+
+    if (d.teamId) {
+        criteria.treeTeam = {id: d.teamId};
+    } else {
+        criteria.parameters.teams = [];
+        criteria.teams = [];
+    }
+
+    if (d.appId) {
+        criteria.treeApplication = {id: d.appId};
+    } else {
+        criteria.parameters.applications = [];
+        criteria.searchApplications = [];
+    }
+
     criteria.parameters.channelTypes = [];
     criteria.parameters.scanners = [];
     criteria.scanners = [];
     criteria.parameters.genericVulnerabilities = [];
-    criteria.parameters.severities.high = true;
+    criteria.parameters.showOpen = true;
+    criteria.parameters.showClosed = false;
+    criteria.parameters.showFalsePositive = false;
+    criteria.parameters.showHidden = false;
+
     return criteria;
 
 }
+
+function getTime(index) {
+    return new Date(currentYear, currentMonth - index + 2, 0);
+}
 var vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
 var vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
-var topVulnColor = ["#6b486b"];
+//var topVulnColor = ["#6b486b"];
 var topVulnMapKeyword = ["count"];
 var drawingDuration = 500;
+//var timeMap = {"January": 0, "February": 1, "March": 2, "April": 3,
+//    "May": 4, "June": 5, "July": 6, "August": 7,
+//    "September": 8, "October": 9, "November": 10, "December": 11};
+//var vulnTypeMap = {"Info": true, "Low": true, "Medium": true, "High": true, "Critical": true};
+var currentDate = new Date();
+var currentYear = currentDate.getFullYear();
+var currentMonth = currentDate.getMonth();

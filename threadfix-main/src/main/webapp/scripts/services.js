@@ -94,50 +94,24 @@ threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncod
         elementList.push(element);
     };
 
-    threadFixModalService.showVulnsModal = function(scope) {
+    threadFixModalService.showVulnsModal = function(scope, isStay) {
+        var modalInstance = $modal.open({
+            templateUrl: 'vulnSummaryModal.html',
+            controller: 'VulnSummaryModalController',
+            resolve: {
+                scope: function () {
+                    return scope;
+                },
+                isStay: function() {
+                    return isStay;
+                }
+            }
+        });
 
-        vulnSearchParameterService.updateParameters(scope, scope.parameters);
-
-        $http.post(tfEncoder.encode("/reports/tree"), scope.parameters).
-            success(function(data, status, headers, config) {
-//                if (data.success) {
-//
-//
-//                    $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
-//                } else if (data.message) {
-//                    $scope.errorMessage = "Failure. Message was : " + data.message;
-//                }
-
-                var modalInstance = $modal.open({
-                    templateUrl: 'newApplicationModal.html',
-                    controller: 'ModalControllerWithConfig',
-                    resolve: {
-                        url: function() {
-                            return tfEncoder.encode("/organizations/" + 1 + "/modalAddApp");
-                        },
-                        object: function () {
-                            return data.object;
-                        },
-                        config: function() {
-                            return {};
-                        },
-                        buttonText: function() {
-                            return "Add Application";
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (newApplication) {
-
-                }, function () {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
-
-            }).
-            error(function(data, status, headers, config) {
-                console.log("Got " + status + " back.");
+        modalInstance.result.then(function () {},
+            function () {
+                $log.info('Modal dismissed at: ' + new Date());
             });
-
     };
 
     return threadFixModalService;
@@ -255,6 +229,49 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 parameters.startDate = date.getTime();
             }
         }
+    };
+
+
+    updater.convertFromSpringToAngular = function($scope, parameters) {
+        parameters.genericSeverities.forEach(function(severity) {
+            if (severity.intValue === 1)
+                $scope.parameters.severities.info = true;
+            if (severity.intValue === 2)
+                $scope.parameters.severities.low = true;
+            if (severity.intValue === 3)
+                $scope.parameters.severities.medium = true;
+            if (severity.intValue === 4)
+                $scope.parameters.severities.high = true;
+            if (severity.intValue === 5)
+                $scope.parameters.severities.critical = true;
+        });
+
+        parameters.teams.forEach(function(team){
+            $scope.treeTeam= { id: team.id }
+        });
+
+        parameters.applications.forEach(function(application){
+            $scope.treeApplication= { id: application.id }
+        });
+
+
+//        var numberRegex = /^([0-9]+)$/;
+//        var autocompleteRegex = /.* ([0-9]+)\)$/;
+//
+//        parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
+//            if (numberRegex.test(genericVulnerability.name)) {
+//                genericVulnerability.id = numberRegex;
+//            } else if (autocompleteRegex.test(genericVulnerability.name)) {
+//                var matches = autocompleteRegex.exec(genericVulnerability.name);
+//                genericVulnerability.id = matches[1];
+//            } else {
+//                genericVulnerability.id = undefined;
+//            }
+//        });
+
+        $scope.endDate = parameters.endDate;
+        $scope.startDate = parameters.startDate;
+
     };
 
     updater.serialize = function($scope, parameters) {

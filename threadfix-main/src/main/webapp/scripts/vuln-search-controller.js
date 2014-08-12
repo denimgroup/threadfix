@@ -9,6 +9,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.resetFiltersIfEnabled = function() {
         if ($scope.selectedFilter) {
             $scope.resetFilters();
+            $scope.refresh();
         }
     };
 
@@ -30,11 +31,17 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.selectedFilter = undefined;
         $scope.startDate = undefined;
 
-        $scope.refresh();
+//        $scope.refresh();
     };
 
     $scope.toggleAllFilters = function() {
-        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showSaveFilter || $scope.showDetailsControls || $scope.showDateControls || $scope.showDateRange || $scope.showTypeAndMergedControls) {
+        if ($scope.showSaveAndLoadControls
+            || $scope.showTeamAndApplicationControls
+            || $scope.showSaveFilter
+            || $scope.showDetailsControls
+            || $scope.showDateControls
+            || $scope.showDateRange
+            || $scope.showTypeAndMergedControls) {
             $scope.showSaveAndLoadControls = false;
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
@@ -89,7 +96,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     });
 
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
-        if (!$scope.teams) {
+//        if (!$scope.teams) {
             threadfixAPIService.getVulnSearchParameters()
                 .success(function(data, status, headers, config) {
                     if (data.success) {
@@ -98,16 +105,31 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
                         $scope.savedFilters = data.object.savedFilters;
+                        $scope.filterParameters = data.object.filterParameters;
                     }
-                    $scope.resetFilters();
+                    if ($scope.filterParameters) {
+
+//                        $scope.$parent.showVulnTab = true;
+                        $scope.toggleAllFilters();
+                        $scope.resetFilters();
+
+                        vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
+                        $scope.refresh();
+                        $rootScope.$broadcast('showVulnTab');
+
+                    } else {
+                        $scope.resetFilters();
+                        $scope.refresh();
+                    }
                 }).
                 error(function(data, status, headers, config) {
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loadingTree = false;
                 });
-        } else {
-            $scope.resetFilters();
-        }
+//        } else {
+//            $scope.resetFilters();
+//            $scope.refresh();
+//        }
     });
 
     var refreshVulnTree = function(parameters) {

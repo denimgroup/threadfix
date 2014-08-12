@@ -731,9 +731,10 @@ public class Application extends AuditableEntity {
         Organization team = getOrganization();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", team.getId());
-        map.put("name", team.getName());
-
+        if (team != null) {
+            map.put("id", team.getId());
+            map.put("name", team.getName());
+        }
         return map;
     }
 
