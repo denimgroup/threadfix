@@ -68,6 +68,11 @@ public class LoginPage extends BasePage {
 	public LoginPage loginInvalid(String user, String password) {
 		setUsername(user).setPassword(password);
 		driver.findElementById("login").click();
+
+        if (!isElementPresent("loginError")) {
+            driver.findElementById("login").click();
+        }
+
 		sleep(3000);
 		return new LoginPage(driver);
 	}
@@ -121,7 +126,7 @@ public class LoginPage extends BasePage {
         driver.findElementById("login").click();
 
         if (!isElementPresent("tab-dashboard")) {
-            driver.findElementById("login").sendKeys(Keys.ENTER);
+            driver.findElementById("login").click();
 
             if (isElementPresent("loginError")) {
                 throw new LoginFailedException("Login Failed");
