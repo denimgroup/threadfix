@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -21,12 +21,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.clickVulnTab = function() {
         $rootScope.$broadcast('loadVulnerabilitySearchTable');
-//        $scope.showVulnTab = true;
     }
-
-    $scope.$on('showVulnTab', function() {
-        $scope.showVulnTab = true;
-    });
 
     var countVulnerabilities = function() {
         $scope.vulnerabilityCount = 0;

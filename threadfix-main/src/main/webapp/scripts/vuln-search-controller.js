@@ -30,8 +30,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.endDate = undefined;
         $scope.selectedFilter = undefined;
         $scope.startDate = undefined;
-
-//        $scope.refresh();
     };
 
     $scope.toggleAllFilters = function() {
@@ -97,6 +95,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
 //        if (!$scope.teams) {
+        if (!$scope.$parent.filterParameters) {
             threadfixAPIService.getVulnSearchParameters()
                 .success(function(data, status, headers, config) {
                     if (data.success) {
@@ -109,13 +108,12 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     }
                     if ($scope.filterParameters) {
 
-//                        $scope.$parent.showVulnTab = true;
-                        $scope.toggleAllFilters();
+                        $scope.$parent.showVulnTab = true;
+                        $scope.$parent.showAppsTab = false;
                         $scope.resetFilters();
 
                         vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
                         $scope.refresh();
-                        $rootScope.$broadcast('showVulnTab');
 
                     } else {
                         $scope.resetFilters();
@@ -126,10 +124,18 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loadingTree = false;
                 });
-//        } else {
-//            $scope.resetFilters();
-//            $scope.refresh();
-//        }
+        } else {
+            $scope.$parent.showVulnTab = true;
+            if ($scope.$parent.tabs) {
+                $scope.$parent.tabs.forEach(function(tab){
+                    tab.active = false;
+                });
+            }
+            $scope.filterParameters = $scope.$parent.filterParameters;
+            $scope.resetFilters();
+            vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
+            $scope.refresh();
+        }
     });
 
     var refreshVulnTree = function(parameters) {

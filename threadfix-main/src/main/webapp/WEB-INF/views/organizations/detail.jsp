@@ -59,10 +59,10 @@
     </div>
 
     <tabset style="margin-top:10px;">
-        <tab heading="{{ applications.length }} Applications" active="!showVulnTab" ng-click="showVulnTab = false">
+        <tab heading="{{ applications.length }} Applications" active="showAppsTab" >
             <%@ include file="applicationsTable.jsp" %>
         </tab>
-        <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()">
+        <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()" >
             <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
         </tab>
 

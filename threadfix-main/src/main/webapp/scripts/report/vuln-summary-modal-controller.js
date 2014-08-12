@@ -46,13 +46,12 @@ myAppModule.controller('VulnSummaryModalController', function ($scope, $window, 
     $scope.goToDetail = function () {
         $http.post(tfEncoder.encode("/reports/saveParameters"), scope.parameters).
             success(function() {
-//                if (!isStay) {
-//                    $window.location.href = tfEncoder.encode(url);
-                $modalInstance.dismiss('cancel');
-                $rootScope.$broadcast('loadVulnerabilitySearchTable');
-//                } else {
-//
-//                }
+                if (isStay) {
+                    $modalInstance.dismiss('cancel');
+                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
+                } else {
+                    $window.location.href = tfEncoder.encode(url);
+                }
             }).
             error(function(data, status, headers, config) {
                 $scope.error = "Failure. HTTP status was " + status;

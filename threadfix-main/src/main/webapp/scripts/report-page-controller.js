@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService) {
+myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService, vulnSearchParameterService) {
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
@@ -146,6 +146,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.genericVulnerabilities = data.object.vulnTypes;
                     $scope.savedFilters = data.object.savedFilters;
                     $scope.searchApplications = data.object.applications;
+                    $scope.filterParameters = data.object.filterParameters;
 
                     $scope.teams.sort(nameCompare)
 
@@ -186,7 +187,13 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                         $scope.reportId = 1;
                     }
 
-                    loadReport();
+                    if ($scope.filterParameters) {
+                        $scope.vulnSearch = true;
+                        $scope.loading = false;
+                        $scope.$broadcast('loadVulnerabilitySearchTable');
+                    } else {
+                        loadReport();
+                    }
 
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
@@ -269,8 +276,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
+        $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
-
     }
 
 });
