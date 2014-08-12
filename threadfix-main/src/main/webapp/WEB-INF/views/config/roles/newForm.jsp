@@ -211,10 +211,10 @@
                 <tr>
                     <td>Manage Vulnerability Filters</td>
                     <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageVulnFilters"
-                                                                              id="canManageVulnerabilityFiltersTrue" name="canManageVulnFilters"
+                                                                              id="canManageVulnFiltersTrue" name="canManageVulnFilters"
                                                                               value="true" /></td>
                     <td class="inputValue" style="text-align: center;"><input type="radio"
-                                                                              id="canManageVulnerabilityFiltersFalse" ng-model="object.canManageVulnFilters"
+                                                                              id="canManageVulnFiltersFalse" ng-model="object.canManageVulnFilters"
                                                                               name="canManageVulnFilters" value="false" /></td>
                     <td
                             style="border: 0 solid black; background-color: white; padding-left: 5px">
