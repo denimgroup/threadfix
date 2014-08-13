@@ -23,7 +23,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showOpen: true,
             showClosed: false,
             showFalsePositive: false,
-            showHidden: false
+            showHidden: false,
+            showDefectPresent: false,
+            showDefectNotPresent: false,
+            showDefectOpen: false,
+            showDefectClosed: false
         };
 
         $scope.endDate = undefined;
@@ -200,14 +204,13 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.loading = true;
         vulnSearchParameterService.updateParameters($scope, $scope.parameters);
 
-//        refreshVulnTable($scope.parameters);
         refreshVulnTree($scope.parameters);
         $scope.lastLoadedFilterName = undefined;
-    }
+    };
 
     $scope.add = function(collection) {
         collection.push({ name: '' })
-    }
+    };
 
     $scope.addNew = function(collection, name) {
         var found = false;

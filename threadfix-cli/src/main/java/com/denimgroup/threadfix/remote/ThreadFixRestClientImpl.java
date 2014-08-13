@@ -304,7 +304,8 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                List<Integer> teamIds, List<Integer> applicationIds, List<String> scannerNames,
                List<Integer> genericSeverityValues, Integer numberVulnerabilities, String parameter, String path,
                Date startDate, Date endDate, Boolean showOpen, Boolean showClosed, Boolean showFalsePositive,
-               Boolean showHidden, Integer numberMerged) {
+               Boolean showHidden, Integer numberMerged, Boolean showDefectPresent, Boolean showDefectNotPresent,
+               Boolean showDefectOpen, Boolean showDefectClosed) {
         List<String> paramNames  = new ArrayList<String>();
         List<String> paramValues = new ArrayList<String>();
 
