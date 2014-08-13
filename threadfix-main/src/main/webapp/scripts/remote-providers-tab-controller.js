@@ -1,8 +1,10 @@
-var module = angular.module('threadfix')
+var module = angular.module('threadfix');
 
-module.controller('RemoteProvidersController', function($scope, $http, $modal, $log, tfEncoder){
+module.controller('RemoteProvidersTabController', function($scope, $http, $modal, $log, tfEncoder){
 
     $scope.providers = [];
+
+    $scope.heading = 'Remote Providers';
 
     $scope.initialized = false;
 
