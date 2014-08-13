@@ -63,7 +63,8 @@ public interface ThreadFixRestClient {
                List<Integer> teamIds, List<Integer> applicationIds,
                List<String> scannerNames, List<Integer> genericSeverityValues, Integer numberVulnerabilities,
                String parameter, String path, Date startDate, Date endDate, Boolean showOpen, Boolean showClosed,
-               Boolean showFalsePositive, Boolean showHidden, Integer numberMerged);
+               Boolean showFalsePositive, Boolean showHidden, Integer numberMerged, Boolean showDefectPresent,
+               Boolean showDefectNotPresent, Boolean showDefectOpen, Boolean showDefectClosed);
 
     public void setKey(String key);
     public void setUrl(String url);
