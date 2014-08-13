@@ -7,11 +7,11 @@ myAppModule.controller('VulnSummaryModalController', function ($scope, $window, 
     var severities = ['Info','Low', 'Medium', 'High', 'Critical'];
 
     var url;
-    if (scope.treeApplication) {
-        url = "/organizations/" + scope.treeTeam.id + "/applications/" + scope.treeApplication.id;
-    } else if (scope.treeTeam) {
-        url = "/organizations/" + scope.treeTeam.id;
-    } else
+//    if (scope.treeApplication) {
+//        url = "/organizations/" + scope.treeTeam.id + "/applications/" + scope.treeApplication.id;
+//    } else if (scope.treeTeam) {
+//        url = "/organizations/" + scope.treeTeam.id;
+//    } else
         url = "/reports";
 
     if (scope.treeApplication) {

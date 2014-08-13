@@ -232,8 +232,8 @@ threadfixModule.factory('vulnSearchParameterService', function() {
     };
 
 
-    updater.convertFromSpringToAngular = function($scope, parameters) {
-        parameters.genericSeverities.forEach(function(severity) {
+    updater.convertFromSpringToAngular = function($scope, filterParameters) {
+        filterParameters.genericSeverities.forEach(function (severity) {
             if (severity.intValue === 1)
                 $scope.parameters.severities.info = true;
             if (severity.intValue === 2)
@@ -246,31 +246,24 @@ threadfixModule.factory('vulnSearchParameterService', function() {
                 $scope.parameters.severities.critical = true;
         });
 
-        parameters.teams.forEach(function(team){
-            $scope.treeTeam= { id: team.id }
+        filterParameters.teams.forEach(function (team) {
+            $scope.treeTeam = { id: team.id }
         });
 
-        parameters.applications.forEach(function(application){
-            $scope.treeApplication= { id: application.id }
-        });
+        if (!$scope.treeTeam) {
+            filterParameters.applications.forEach(function (application) {
+                $scope.treeApplication = { id: application.id }
+            });
+        } else {
+            filterParameters.applications.forEach(function (application) {
+                $scope.parameters.applications.push(application);
+            });
+        }
 
+        $scope.parameters.genericVulnerabilities = filterParameters.genericVulnerabilities;
 
-//        var numberRegex = /^([0-9]+)$/;
-//        var autocompleteRegex = /.* ([0-9]+)\)$/;
-//
-//        parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
-//            if (numberRegex.test(genericVulnerability.name)) {
-//                genericVulnerability.id = numberRegex;
-//            } else if (autocompleteRegex.test(genericVulnerability.name)) {
-//                var matches = autocompleteRegex.exec(genericVulnerability.name);
-//                genericVulnerability.id = matches[1];
-//            } else {
-//                genericVulnerability.id = undefined;
-//            }
-//        });
-
-        $scope.endDate = parameters.endDate;
-        $scope.startDate = parameters.startDate;
+        $scope.endDate = filterParameters.endDate;
+        $scope.startDate = filterParameters.startDate;
 
     };
 

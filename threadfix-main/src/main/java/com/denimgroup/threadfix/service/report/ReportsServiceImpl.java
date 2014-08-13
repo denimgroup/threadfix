@@ -332,11 +332,13 @@ public class ReportsServiceImpl implements ReportsService {
 
                 if (!(objects[0] instanceof Integer)) continue;
                 GenericVulnerability genericVulnerability = genericVulnerabilityDao.retrieveById((Integer) objects[0]);
-                String cweId = "CWE-" + genericVulnerability.getDisplayId();
                 Map<String, Object> hash = newMap();
                 hash.put("count", objects[1]);
-                hash.put("title", cweId);
+                hash.put("title", "CWE-" + genericVulnerability.getDisplayId());
                 hash.put("name", genericVulnerability.getName());
+                hash.put("cweId", genericVulnerability.getId());
+                hash.put("displayId", genericVulnerability.getDisplayId());
+                hash.put("appId", applicationIdList.get(0));
                 resultList.add(hash);
             }
         }
@@ -436,6 +438,10 @@ public class ReportsServiceImpl implements ReportsService {
                 hash.put("Medium", app.getMediumVulnCount());
                 hash.put("Low", app.getLowVulnCount());
                 hash.put("Info", app.getInfoVulnCount());
+                hash.put("appId", app.getId());
+                hash.put("appName", app.getName());
+                hash.put("teamId", app.getOrganization().getId());
+                hash.put("teamName", app.getOrganization().getName());
 
                 hash.put("title", app.getName());
                 resultList.add(hash);
