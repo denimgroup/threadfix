@@ -163,6 +163,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                     methodName = lastString;
                     methodLineNumber = lineNumber;
                     storedParen = currentParen - 1;
+                    lastString = null;
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 
@@ -170,7 +171,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
             case IN_ACTION_SIGNATURE: // TODO add parameter parsing
                 if (stringValue != null) {
                     lastString = stringValue;
-                } else if (type == ',' || type == ')') {
+                } else if (type == ',' || type == ')' && lastString != null) {
                     currentParameters.add(lastString);
                 }
 

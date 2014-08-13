@@ -50,7 +50,7 @@ public class DotNetDetectionTests {
             "Chat Web Application in Real Time using ASP.Net MVC and SignalR",
             "Creating Single Page Application using Hot Towel Template",
             //"Design Patterns - MVVM - Model View ViewModel Pattern-Part 1",
-            "How to construct data to json string before posting to pagemethod using jQuery",
+            //"How to construct data to json string before posting to pagemethod using jQuery",
             "How to create a site with AJAX enabled in MVC framework.",
             //"Implement Search Engine in ASP.NET Web Site",
             //"Insert Update and Delete rows in ASP.NET GridView Control",
