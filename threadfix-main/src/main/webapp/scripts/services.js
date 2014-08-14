@@ -167,12 +167,13 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             $scope.parameters.applications = [ { id: $scope.treeApplication.id } ];
         } else {
             // This may be a problem down the road, but it's easier than fighting angular / bootstrap typeahead
+            //STran 8/14/2014: oh yes, I'm having problem with this right now
             parameters.applications.forEach(function(filteredApp) {
                 filteredApp.id = undefined;
             });
             $scope.searchApplications.forEach(function(app) {
                 parameters.applications.forEach(function(filteredApp) {
-                    if (filteredApp.name === (app.team.name + " / " + app.name)) {
+                    if (filteredApp.name === app.name || filteredApp.name === (app.team.name + " / " + app.name)) {
                         filteredApp.id = app.id;
 
                         // If we're on the teams page, we should remove the teams restriction
@@ -250,7 +251,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             $scope.treeTeam = { id: team.id }
         });
 
-        if (!$scope.treeTeam) {
+        if (!$scope.treeTeam && $scope.treeApplication) {
             filterParameters.applications.forEach(function (application) {
                 $scope.treeApplication = { id: application.id }
             });
@@ -266,6 +267,54 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         $scope.startDate = filterParameters.startDate;
 
     };
+
+
+    updater.createFilterCriteria = function (d, label) {
+        var criteria = {};
+        criteria.endDate = d.time;
+        criteria.parameters = {};
+        criteria.parameters.severities = {
+            info: d.severity === "Info",
+            low: d.severity === "Low",
+            medium: d.severity === "Medium",
+            high: d.severity === "High",
+            critical: d.severity === "Critical"
+        };
+
+        if (d.teamId && label.teamId) {
+            criteria.treeTeam = {id: d.teamId};
+        } else if (d.teamId) {
+            criteria.parameters.teams = [{id: d.teamId, name: d.teamName}];
+            criteria.teams = [];
+        } else {
+            criteria.parameters.teams = [];
+            criteria.teams = [];
+        }
+
+        if (d.appId && label.appId) {
+            criteria.treeApplication = {id: d.appId};
+        } else if (d.appId) {
+            criteria.parameters.applications = [{id: d.appId, name: d.teamName + " / " + d.appName}];
+            criteria.searchApplications = [];
+        } else {
+            criteria.parameters.applications = [];
+            criteria.searchApplications = [];
+        }
+
+        criteria.parameters.channelTypes = [];
+        criteria.parameters.scanners = [];
+        criteria.scanners = [];
+        criteria.parameters.genericVulnerabilities = [];
+        if (d.tip.indexOf("CWE") > -1)
+            criteria.parameters.genericVulnerabilities = [{name: d.tip}];
+        criteria.parameters.showOpen = true;
+        criteria.parameters.showClosed = false;
+        criteria.parameters.showFalsePositive = false;
+        criteria.parameters.showHidden = false;
+
+        return criteria;
+    };
+
 
     updater.serialize = function($scope, parameters) {
 

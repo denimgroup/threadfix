@@ -1,5 +1,5 @@
 angular.module('threadfix')
-    .factory('d3donut',['d3', function(d3){
+    .factory('d3donut',['d3', 'threadFixModalService', 'vulnSearchParameterService', function(d3, threadFixModalService, vulnSearchParameterService){
 
         var Donut={};
 
@@ -287,7 +287,10 @@ angular.module('threadfix')
                 .style("fill", function(d) { return d.data.color; })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
-                .on('click', tip.hide)
+                .on('click', function(d) {
+                    tip.hide();
+                    threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, {}), false);
+                })
                 .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
                 .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })
                 .attrTween('d', function(d) {

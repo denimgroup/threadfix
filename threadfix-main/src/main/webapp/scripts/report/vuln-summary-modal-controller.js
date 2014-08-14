@@ -14,13 +14,12 @@ myAppModule.controller('VulnSummaryModalController', function ($scope, $window, 
 //    } else
         url = "/reports";
 
-    if (scope.treeApplication) {
+    if (scope.treeApplication || (scope.parameters.applications && scope.parameters.applications.length > 0)) {
         scope.treeTeam = undefined;
         scope.parameters.teams = [];
         scope.teams = [];
     }
-
-    var _scope = angular.copy(scope);
+    scope.searchApplications = angular.copy(scope.parameters.applications);
 
     vulnSearchParameterService.updateParameters(scope, scope.parameters);
 

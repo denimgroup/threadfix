@@ -1,8 +1,8 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Months Summary report
-d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixModalService',
-    function($window, $timeout, d3, threadFixModalService) {
+d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixModalService', 'vulnSearchParameterService',
+    function($window, $timeout, d3, threadFixModalService, vulnSearchParameterService) {
         return {
             restrict: 'EA',
             scope: {
@@ -84,7 +84,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
                         .on('mouseout', tip.hide)
                         .on('click', function(d) {
                             tip.hide();
-                            threadFixModalService.showVulnsModal(createFilterCriteria(d, scope.label), scope.label.teamId || scope.label.appId);
+                            threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, scope.label), scope.label.teamId || scope.label.appId);
                         })
                         .transition()
                         .attr("width", x.rangeBand())
@@ -101,8 +101,8 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
 
 
 // Top Applications Summary report
-d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixModalService',
-    function($window, $timeout, d3, threadFixModalService) {
+d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixModalService', 'vulnSearchParameterService',
+    function($window, $timeout, d3, threadFixModalService, vulnSearchParameterService) {
         return {
             restrict: 'EA',
             scope: {
@@ -185,7 +185,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
                         .on('mouseout', tip.hide)
                         .on('click', function(d) {
                             tip.hide();
-                            threadFixModalService.showVulnsModal(createFilterCriteria(d, scope.label), scope.label.teamId || scope.label.appId);
+                            threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, scope.label), scope.label.teamId || scope.label.appId);
                         })
                         .transition()
                         .attr("height", y.rangeBand())
@@ -324,52 +324,52 @@ function barGraphData(d3, data, color, isLeftReport, label) {
     });
 }
 
-function createFilterCriteria(d, label) {
-    var criteria = {};
-    criteria.endDate = d.time;
-    criteria.parameters = {};
-    criteria.parameters.severities = {
-        info: d.severity === "Info",
-        low: d.severity === "Low",
-        medium: d.severity === "Medium",
-        high: d.severity === "High",
-        critical: d.severity === "Critical"
-    };
-
-    if (d.teamId && label.teamId) {
-        criteria.treeTeam = {id: d.teamId};
-    } else if (d.teamId) {
-        criteria.parameters.teams = [{id: d.teamId, name: d.teamName}];
-        criteria.teams = [];
-    } else {
-        criteria.parameters.teams = [];
-        criteria.teams = [];
-    }
-
-    if (d.appId && label.appId) {
-        criteria.treeApplication = {id: d.appId};
-    } else if (d.appId) {
-        criteria.parameters.applications = [{id: d.appId, name: d.teamName + " / " + d.appName}];
-        criteria.searchApplications = [];
-    } else {
-        criteria.parameters.applications = [];
-        criteria.searchApplications = [];
-    }
-
-    criteria.parameters.channelTypes = [];
-    criteria.parameters.scanners = [];
-    criteria.scanners = [];
-    criteria.parameters.genericVulnerabilities = [];
-    if (d.tip.indexOf("CWE") > -1)
-        criteria.parameters.genericVulnerabilities = [{name: d.tip}];
-    criteria.parameters.showOpen = true;
-    criteria.parameters.showClosed = false;
-    criteria.parameters.showFalsePositive = false;
-    criteria.parameters.showHidden = false;
-
-    return criteria;
-
-}
+//function createFilterCriteria(d, label) {
+//    var criteria = {};
+//    criteria.endDate = d.time;
+//    criteria.parameters = {};
+//    criteria.parameters.severities = {
+//        info: d.severity === "Info",
+//        low: d.severity === "Low",
+//        medium: d.severity === "Medium",
+//        high: d.severity === "High",
+//        critical: d.severity === "Critical"
+//    };
+//
+//    if (d.teamId && label.teamId) {
+//        criteria.treeTeam = {id: d.teamId};
+//    } else if (d.teamId) {
+//        criteria.parameters.teams = [{id: d.teamId, name: d.teamName}];
+//        criteria.teams = [];
+//    } else {
+//        criteria.parameters.teams = [];
+//        criteria.teams = [];
+//    }
+//
+//    if (d.appId && label.appId) {
+//        criteria.treeApplication = {id: d.appId};
+//    } else if (d.appId) {
+//        criteria.parameters.applications = [{id: d.appId, name: d.teamName + " / " + d.appName}];
+//        criteria.searchApplications = [];
+//    } else {
+//        criteria.parameters.applications = [];
+//        criteria.searchApplications = [];
+//    }
+//
+//    criteria.parameters.channelTypes = [];
+//    criteria.parameters.scanners = [];
+//    criteria.scanners = [];
+//    criteria.parameters.genericVulnerabilities = [];
+//    if (d.tip.indexOf("CWE") > -1)
+//        criteria.parameters.genericVulnerabilities = [{name: d.tip}];
+//    criteria.parameters.showOpen = true;
+//    criteria.parameters.showClosed = false;
+//    criteria.parameters.showFalsePositive = false;
+//    criteria.parameters.showHidden = false;
+//
+//    return criteria;
+//
+//}
 
 function getTime(index) {
     return new Date(currentYear, currentMonth - index + 2, 0);
