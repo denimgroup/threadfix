@@ -203,8 +203,7 @@ public class ApplicationsController {
     }
 
     private String getSerializedMap(Map<String, Object> map) throws IOException {
-        String data = getWriter().writeValueAsString(RestResponse.success(map));
-        return data;
+        return getWriter().writeValueAsString(RestResponse.success(map));
     }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
@@ -229,9 +228,9 @@ public class ApplicationsController {
         Collections.sort(scannerTypeList);
         model.addAttribute("scannerTypeList", scannerTypeList);
         model.addAttribute("scheduledScan", new ScheduledScan());
-        model.addAttribute("frequencyTypes", ScheduledScan.ScheduledFrequencyType.values());
-        model.addAttribute("periodTypes", ScheduledScan.ScheduledPeriodType.values());
-        model.addAttribute("scheduledDays", ScheduledScan.DayInWeek.values());
+        model.addAttribute("frequencyTypes", ScheduledFrequencyType.values());
+        model.addAttribute("periodTypes", ScheduledPeriodType.values());
+        model.addAttribute("scheduledDays", DayInWeek.values());
     }
 	
 	// TODO move this to a different spot so as to be less annoying

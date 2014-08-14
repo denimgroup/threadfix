@@ -27,6 +27,9 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ScheduledScanDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
+import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
+import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
+import com.denimgroup.threadfix.data.entities.DayInWeek;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,18 +72,18 @@ public class ScheduledScanServiceImpl implements ScheduledScanService {
             result.rejectValue("dateError", null, null, "Input minute as a number from 0 to 59");
             return;
         }
-        if (result.hasFieldErrors("period") || ScheduledScan.ScheduledPeriodType.getPeriod(period)==null) {
+        if (result.hasFieldErrors("period") || ScheduledPeriodType.getPeriod(period)==null) {
             result.rejectValue("dateError", null, null, "Select AM or PM");
             return;
         }
 
-        if (ScheduledScan.ScheduledFrequencyType.getFrequency(frequency) == ScheduledScan.ScheduledFrequencyType.WEEKLY
-                && ScheduledScan.DayInWeek.getDay(day)==null) {
+        if (ScheduledFrequencyType.getFrequency(frequency) == ScheduledFrequencyType.WEEKLY
+                && DayInWeek.getDay(day)==null) {
             result.rejectValue("dateError", null, null, "Select day from list");
         }
 
         // Clean day if it is Daily schedule
-        if (ScheduledScan.ScheduledFrequencyType.getFrequency(frequency) == ScheduledScan.ScheduledFrequencyType.DAILY) {
+        if (ScheduledFrequencyType.getFrequency(frequency) == ScheduledFrequencyType.DAILY) {
             scheduledScan.setDay(null);
         }
     }
