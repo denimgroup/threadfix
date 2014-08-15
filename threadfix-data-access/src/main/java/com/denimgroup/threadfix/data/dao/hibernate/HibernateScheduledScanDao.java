@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.ScheduledScanDao;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,11 +41,10 @@ import java.util.List;
 @Repository
 public class HibernateScheduledScanDao extends HibernateScheduledJobDao<ScheduledScan> implements ScheduledScanDao {
 
+    @Autowired
     public HibernateScheduledScanDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
-
-//    public HibernateScheduledScanDao(){}
 
     @Override
     protected Class<ScheduledScan> getClassReference() {
