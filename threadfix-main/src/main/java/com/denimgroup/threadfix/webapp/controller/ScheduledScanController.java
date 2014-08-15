@@ -63,10 +63,13 @@ public class ScheduledScanController {
                                    @Valid @ModelAttribute ScheduledScan scheduledScan,
                                    BindingResult result) {
 		log.info("Start adding scheduled scan to application " + appId);
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
+
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)){
             return RestResponse.failure("You are not allowed to modify scheduled scans for this application.");
         }
-        scheduledScanService.validateScheduledDate(scheduledScan, result);
+
+        scheduledScanService.validateDate(scheduledScan, result);
+
         if (result.hasErrors()) {
             return FormRestResponse.failure("Encountered errors.", result);
         }
@@ -77,7 +80,7 @@ public class ScheduledScanController {
             return RestResponse.failure("Application was not found for ID " + appId);
         }
 
-        int scheduledScanId = scheduledScanService.saveScheduledScan(appId, scheduledScan);
+        int scheduledScanId = scheduledScanService.save(appId, scheduledScan);
 		if (scheduledScanId < 0) {
 			return RestResponse.failure("Adding Scheduled Scan failed.");
 		}
@@ -91,13 +94,13 @@ public class ScheduledScanController {
             log.warn("Failed to add new scheduled scan to scheduler");
             String message = "Adding new "+ scheduledScan.getFrequency() + " Scan for " + scheduledScan.getScanner() + " failed.";
 
-            scheduledScanService.deleteScheduledScan(scheduledScan);
+            scheduledScanService.delete(scheduledScan);
             return RestResponse.failure(message);
         }
 	}
 
 	@RequestMapping(value = "/scheduledScan/{scheduledScanId}/delete", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<String> deleteScheduledScan(@PathVariable("appId") int appId,
+	public @ResponseBody RestResponse<String> delete(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@PathVariable("scheduledScanId") int scheduledScanId) {
 		
@@ -105,14 +108,14 @@ public class ScheduledScanController {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS,orgId,appId)){
 			return RestResponse.failure("You are not authorized to delete this scheduled scan.");
 		}
-        ScheduledScan scheduledScan = scheduledScanService.loadScheduledScanById(scheduledScanId);
+        ScheduledScan scheduledScan = scheduledScanService.loadById(scheduledScanId);
         if (scheduledScan == null) {
             return RestResponse.failure("That scheduled scan was not found.");
         }
 
         //Remove job from scheduler
         if (scheduledScanScheduler.removeScheduledScan(scheduledScan)) {
-            String ret = scheduledScanService.deleteScheduledScan(scheduledScan);
+            String ret = scheduledScanService.delete(scheduledScan);
             if (ret != null) {
                 log.warn(ret);
                 return RestResponse.failure(ret);
@@ -128,5 +131,4 @@ public class ScheduledScanController {
             return RestResponse.failure(message);
         }
 	}
-
 }

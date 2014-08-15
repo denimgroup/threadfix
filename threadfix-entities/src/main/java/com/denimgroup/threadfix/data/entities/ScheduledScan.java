@@ -31,15 +31,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="ScheduledScan")
-public class ScheduledScan extends AuditableEntity {
+public class ScheduledScan extends ScheduledJob {
 
-	private static final long serialVersionUID = 23434234234L;
+    private static final long serialVersionUID = 3165699013829091108L;
 
 	private Application application;
-    private int hour, minute;
-    private String period, day;
-    private String scanner, frequency;
-    private String dateError;
+    private String scanner;
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
@@ -53,56 +50,6 @@ public class ScheduledScan extends AuditableEntity {
 
     @Column(nullable=false)
     @JsonView(Object.class)
-    public int getHour() {
-        return hour;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public int getMinute() {
-        return minute;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
-    }
-
-    @Column(nullable=true)
-    @JsonView(Object.class)
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
     public String getScanner() {
         return scanner;
     }
@@ -111,12 +58,4 @@ public class ScheduledScan extends AuditableEntity {
         this.scanner = scanner;
     }
 
-    @Transient
-    public String getDateError() {
-        return dateError;
-    }
-
-    public void setDateError(String dateError) {
-        this.dateError = dateError;
-    }
 }

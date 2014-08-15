@@ -58,6 +58,7 @@ public class ScheduledScanScheduler {
 
     @Autowired
     private ScheduledScanService scheduledScanService;
+
     @Autowired
     private QueueSender queueSender;
 
@@ -78,7 +79,7 @@ public class ScheduledScanScheduler {
             return;
 
         log.info("Loading all Scheduled Scans from database");
-        List<ScheduledScan> scheduledScans = scheduledScanService.loadAllScheduledScan();
+        List<ScheduledScan> scheduledScans = scheduledScanService.loadAll();
         log.info("Got " + scheduledScans.size() + " Scheduled Scans");
 
         log.info("------- Scheduling Jobs ----------------");
