@@ -25,6 +25,34 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
     protected abstract ScheduledJobDao<S> getScheduledJobDao();
 
     @Override
+    public int save(S scheduledJob) {
+        getScheduledJobDao().saveOrUpdate(scheduledJob);
+        int scheduledJobId = scheduledJob.getId();
+
+        log.info("Created ScheduledJob with id: " + scheduledJobId);
+
+        return scheduledJobId;
+    }
+
+    @Override
+    public String delete(S scheduledJob) {
+        log.info("Deleting scheduled job");
+
+        getScheduledJobDao().delete(scheduledJob);
+        return null;
+    }
+
+    @Override
+    public List<S> loadAll() {
+        return getScheduledJobDao().retrieveAll();
+    }
+
+    @Override
+    public S loadById(int scheduledJobId) {
+        return getScheduledJobDao().retrieveById(scheduledJobId);
+    }
+
+    @Override
     public void validateDate(S scheduledJob, BindingResult result) {
 
         int hour = scheduledJob.getHour();
@@ -56,34 +84,6 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
         if (ScheduledFrequencyType.getFrequency(frequency) == ScheduledFrequencyType.DAILY) {
             scheduledJob.setDay(null);
         }
-    }
-
-    @Override
-    public int save(S scheduledJob) {
-        getScheduledJobDao().saveOrUpdate(scheduledJob);
-        int scheduledJobId = scheduledJob.getId();
-
-        log.info("Created ScheduledJob with id: " + scheduledJobId);
-
-        return scheduledJobId;
-    }
-
-    @Override
-    public String delete(S scheduledJob) {
-        log.info("Deleting scheduled job");
-
-        getScheduledJobDao().delete(scheduledJob);
-        return null;
-    }
-
-    @Override
-    public List<S> loadAll() {
-        return getScheduledJobDao().retrieveAll();
-    }
-
-    @Override
-    public S loadById(int scheduledJobId) {
-        return getScheduledJobDao().retrieveById(scheduledJobId);
     }
 
 }
