@@ -5,9 +5,12 @@ import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.ScheduledJob;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by zabdisubhan on 8/15/14.
@@ -24,6 +27,14 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
     @Override
     public void delete(S scheduledJob) {
         sessionFactory.getCurrentSession().delete(scheduledJob);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<S> retrieveAll() {
+        return (List<S>) sessionFactory.getCurrentSession().createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .list();
     }
 
 }

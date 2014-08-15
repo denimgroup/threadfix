@@ -54,7 +54,7 @@ public class HibernateScheduledScanDao extends HibernateScheduledJobDao<Schedule
     @Override
     @SuppressWarnings("unchecked")
     public List<ScheduledScan> retrieveAll() {
-        return (List<ScheduledScan>) sessionFactory.getCurrentSession().createCriteria(ScheduledScan.class)
+        return (List<ScheduledScan>) sessionFactory.getCurrentSession().createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
                 .createAlias("application", "application")
                 .add(Restrictions.eq("application.active", true))
