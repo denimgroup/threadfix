@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <tabset style="margin-top:10px;">
+    <tabset>
         <%@ include file="/WEB-INF/views/config/remoteproviders/tabs/remoteProvidersTab.jsp" %>
         <%@ include file="/WEB-INF/views/config/remoteproviders/tabs/scheduledUpdateTab.jsp" %>
     </tabset>
