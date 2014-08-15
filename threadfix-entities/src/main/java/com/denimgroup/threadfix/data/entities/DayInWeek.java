@@ -1,7 +1,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 /**
- * Created by dzabdi88 on 8/14/14.
+ * Created by zabdisubhan on 8/14/14.
  */
 
 public enum DayInWeek {
