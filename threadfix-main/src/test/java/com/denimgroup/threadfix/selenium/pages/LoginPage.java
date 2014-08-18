@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.selenium.pages;
 import com.denimgroup.threadfix.selenium.utils.LoginFailedException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginPage extends BasePage {
 
@@ -134,7 +136,9 @@ public class LoginPage extends BasePage {
 
         }
 
-		waitForElement(driver.findElementById("main-content"));
+        WebDriverWait waitForHeader = new WebDriverWait(driver, 90);
+        waitForHeader.until(ExpectedConditions.elementToBeClickable(By.id("orgHeader")));
+
 		return new DashboardPage(driver);
 	}
 
