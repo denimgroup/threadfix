@@ -240,7 +240,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
                     function getData(){
                         var d = data[0];
                         return color.domain().map(function(vulnType) {
-                            return {label:vulnType, value:d[vulnType], color:color(vulnType)};});
+                            return {label:vulnType, value:d[vulnType], color:color(vulnType), severity: vulnType, teamId: d.teamId, teamName: d.teamName};});
                     }
 
                 };

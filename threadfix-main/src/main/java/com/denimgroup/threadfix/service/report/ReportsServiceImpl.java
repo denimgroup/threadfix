@@ -146,7 +146,7 @@ public class ReportsServiceImpl implements ReportsService {
             report = getTopAppsReportD3(applicationIdList);
         }
         if (parameters.getReportFormat() == ReportFormat.POINT_IN_TIME_GRAPH) {
-            report = getPointInTimeD3(applicationIdList);
+            report = getPointInTimeD3(applicationIdList, parameters.getOrganizationId());
         }
 
         if (parameters.getReportFormat() == ReportFormat.TOP_TEN_VULNS) {
@@ -457,9 +457,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
     }
 
-    private ReportCheckResultBean getPointInTimeD3(List<Integer> applicationIdList) {
+    private ReportCheckResultBean getPointInTimeD3(List<Integer> applicationIdList, int teamId) {
 
         List<Object[]> objects = applicationDao.getPointInTime(applicationIdList);
+        Organization team = organizationDao.retrieveById(teamId);
         List<Map<String, Object>> resultList = list();
         for (Object[] infoArr: objects) {
             Map<String, Object> hash = newMap();
@@ -470,6 +471,9 @@ public class ReportsServiceImpl implements ReportsService {
                 hash.put("Medium", infoArr[2]);
                 hash.put("Low", infoArr[1]);
                 hash.put("Info", infoArr[0]);
+                hash.put("teamId", teamId);
+                if (team != null)
+                    hash.put("teamName", team.getName());
             }
             resultList.add(hash);
         }

@@ -289,7 +289,7 @@ angular.module('threadfix')
                 .on('mouseout', tip.hide)
                 .on('click', function(d) {
                     tip.hide();
-                    threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, {}), false);
+                    threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, {}), false);
                 })
                 .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
                 .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })

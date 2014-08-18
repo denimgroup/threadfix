@@ -94,7 +94,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     });
 
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
-//        if (!$scope.teams) {
         if (!$scope.$parent.filterParameters) {
             threadfixAPIService.getVulnSearchParameters()
                 .success(function(data, status, headers, config) {
@@ -125,12 +124,28 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     $scope.loadingTree = false;
                 });
         } else {
+
+            // If it was navigated from other page then display vuln search tab
             $scope.$parent.showVulnTab = true;
             if ($scope.$parent.tabs) {
                 $scope.$parent.tabs.forEach(function(tab){
                     tab.active = false;
                 });
-            }
+            };
+
+            // Remove the element team of All in vuln search page
+            if ($scope.$parent.teams) {
+                var index = -1;
+                $scope.$parent.teams.forEach(function(team, i) {
+                    if (team.id == -1 && team.name == "All") {
+                        index = i;
+                    }
+                });
+                if (index > -1) {
+                    $scope.$parent.teams.splice(index, 1);
+                }
+            };
+
             $scope.filterParameters = $scope.$parent.filterParameters;
             $scope.resetFilters();
             vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);

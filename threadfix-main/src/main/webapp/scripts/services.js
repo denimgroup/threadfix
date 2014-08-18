@@ -248,7 +248,11 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         });
 
         filterParameters.teams.forEach(function (team) {
-            $scope.treeTeam = { id: team.id }
+            if ($scope.treeTeam) {
+                $scope.treeTeam = { id: team.id };
+            } else {
+                $scope.parameters.teams.push(team);
+            }
         });
 
         if (!$scope.treeTeam && $scope.treeApplication) {
@@ -305,7 +309,7 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         criteria.parameters.scanners = [];
         criteria.scanners = [];
         criteria.parameters.genericVulnerabilities = [];
-        if (d.tip.indexOf("CWE") > -1)
+        if (d.tip && d.tip.indexOf("CWE") > -1)
             criteria.parameters.genericVulnerabilities = [{name: d.tip}];
         criteria.parameters.showOpen = true;
         criteria.parameters.showClosed = false;

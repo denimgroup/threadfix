@@ -5,10 +5,13 @@
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applications-index-controller.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/vuln-summary-modal-controller.js"></script>
+
 </head>
 
 <body id="apps">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp"%>
 
 	<h2>Teams</h2>
 
