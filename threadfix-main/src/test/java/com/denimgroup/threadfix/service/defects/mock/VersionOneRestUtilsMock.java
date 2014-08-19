@@ -1,5 +1,3 @@
-package com.denimgroup.threadfix.service.defects.mock;
-
 ////////////////////////////////////////////////////////////////////////
 //
 //     Copyright (c) 2009-2014 Denim Group, Ltd.
@@ -23,6 +21,7 @@ package com.denimgroup.threadfix.service.defects.mock;
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service.defects.mock;
 
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.service.defects.util.HttpTrafficFileLoader;
@@ -35,7 +34,10 @@ import java.util.Map;
 import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
 import static org.junit.Assert.assertTrue;
 
-public class RestUtilsMock implements RestUtils {
+/**
+ * Created by mac on 8/18/14.
+ */
+public class VersionOneRestUtilsMock implements RestUtils {
 
     // don't do this in actual code
     public boolean reporterRestricted = false;
@@ -43,21 +45,11 @@ public class RestUtilsMock implements RestUtils {
     private String postErrorResponse = null;
 
     public static final Map<String, String> urlToResponseMap = new HashMap<>();
+
     static {
-        urlToResponseMap.put("/rest/api/2/search", "jira/issue-search");
-        urlToResponseMap.put("/rest/api/2/priority", "jira/priorities");
-        urlToResponseMap.put("/rest/api/2/project/", "jira/projects");
-        urlToResponseMap.put("/rest/api/2/project", "jira/projects");
-        urlToResponseMap.put("/rest/api/2/issue", "jira/issue-submit");
-        urlToResponseMap.put("/rest/api/2/project/NCT/components", "jira/nct-components");
-        urlToResponseMap.put("/rest/api/2/issue/NCT-38", "jira/issue-status-NCT-38");
-        urlToResponseMap.put("/rest/api/2/issue/PDP-60", "jira/issue-status-PDP-60");
-        urlToResponseMap.put("/rest/api/2/user?username=threadfix", "jira/user-search");
-        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
-        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
-        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=TEST", "jira/custom-fields");
-        urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=NCT&permissions=ASSIGNABLE_USER&username", "jira/users");
-        urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=TEST&permissions=ASSIGNABLE_USER&username", "jira/users");
+        urlToResponseMap.put("/rest-1.v1/Data/Member?where=Username='" +
+                VERSION_ONE_USERNAME +
+                "'&sel=Scopes", "versionone/response");
 
         for (String value : urlToResponseMap.values()) {
             assertTrue("Missing file for " + value, HttpTrafficFileLoader.getResponse(value) != null);
@@ -70,9 +62,11 @@ public class RestUtilsMock implements RestUtils {
     }
 
     private String getResponse(String urlString, String username, String password) {
-        if (JIRA_USERNAME.equals(username) && JIRA_PASSWORD.equals(password)) {
+        System.out.println(urlString);
+
+        if (VERSION_ONE_USERNAME.equals(username) && VERSION_ONE_PASSWORD.equals(password)) {
             for (Map.Entry<String, String> entry : urlToResponseMap.entrySet()) {
-                if ((JIRA_BASE_URL + entry.getKey()).equals(urlString)) {
+                if ((VERSION_ONE_URL + entry.getKey()).equals(urlString)) {
                     return HttpTrafficFileLoader.getResponse(entry.getValue());
                 }
             }
@@ -82,7 +76,7 @@ public class RestUtilsMock implements RestUtils {
 
     @Override
     public String postUrlAsString(String urlString, String data, String username, String password, String contentType) {
-        if ((JIRA_BASE_URL + "/rest/api/2/issue").equals(urlString) && hasReporter(data) && reporterRestricted) {
+        if ((VERSION_ONE_URL + "/rest/api/2/issue").equals(urlString) && hasReporter(data) && reporterRestricted) {
             postErrorResponse = "{\"errorMessages\":[],\"errors\":{\"reporter\":\"Field 'reporter' cannot be set. It is not on the appropriate screen, or unknown.\"}}";
             throw new RestIOException(new Exception(), "Throwing mock 401 error.", 401);
         } else {
@@ -103,7 +97,11 @@ public class RestUtilsMock implements RestUtils {
 
     @Override
     public boolean requestHas401Error(String urlString) {
-        return urlString.equals(JIRA_BASE_URL + "/rest/api/2/user");
+        return urlString.equals(
+                VERSION_ONE_URL +
+                "/rest-1.v1/Data/Member?where=Username='" +
+                VERSION_ONE_USERNAME +
+                "'&sel=Scopes");
     }
 
     // TODO actually test this

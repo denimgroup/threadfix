@@ -87,6 +87,21 @@ public class CollectionUtils {
         return new HashSet<T>(Arrays.asList(args));
     }
 
+
+    /**
+     *
+     * Create a set out of arguments. This is as close to an object literal as you can get in Java and very similar to
+     * the scala Set()
+     *
+     * @param targetCollection items to put in a set
+     * @param <T> type of set
+     * @return set of items passed as arguments
+     */
+    @Nonnull
+    public static <T> Set<T> setFrom(Collection<T> targetCollection) {
+        return new HashSet<T>(targetCollection);
+    }
+
     /**
      *
      * @param separator character to put between arguments

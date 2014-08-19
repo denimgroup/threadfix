@@ -57,6 +57,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -315,7 +317,7 @@ public class ApplicationsController {
 
 	// TODO move this elsewhere?
 	@RequestMapping(value = "/jsontest", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<? extends Object> readJson(@ModelAttribute DefectTrackerBean bean) {
+	public @ResponseBody RestResponse<?> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
 		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
@@ -328,6 +330,9 @@ public class ApplicationsController {
 		if (result.isEmpty() || (result.size() == 1 && result.contains("Authentication failed"))) {
 			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
+
+        // ensure there are no duplicates. There's probably a better idiom
+        result = listFrom(setFrom(result));
 
         Collections.sort(result);
 

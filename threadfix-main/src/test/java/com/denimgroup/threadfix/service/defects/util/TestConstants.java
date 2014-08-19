@@ -26,19 +26,20 @@ package com.denimgroup.threadfix.service.defects.util;
 /**
  * Created by mac on 4/4/14.
  */
-public interface TestConstants {
+public final class TestConstants {
 
-    static final String
+    private TestConstants(){}
+
+    public static final String
             JIRA_USERNAME = "threadfix",
             JIRA_BASE_URL = "http://test.atlassian.net",
             JIRA_PASSWORD = "password",
-            JIRA_PROJECT = "No Component Test",
-            BUGZILLA_USERNAME = "threadfix@denimgroup.com",
-            BUGZILLA_PASSWORD = "password",
-            BUGZILLA_BASE_URL = "http://192.168.0.1/bugzilla",
-            BUGZILLA_PROJECT = "For ThreadFix",
-            TFS_USERNAME = "tfsuser",
-            TFS_PASSWORD = "password",
-            TFS_BASE_URL = "https://tfs.test.com:8080",
-            TFS_PROJECT = "ThreadFixProject";
+            JIRA_VALID_PROJECT = "No Component Test",
+            VERSION_ONE_URL = "http://test.versionone.net",
+            VERSION_ONE_USERNAME = "testusername",
+            VERSION_ONE_PASSWORD = "testpassword",
+            VERSION_ONE_PROJECT = "projectName";
+
+
+
 }
