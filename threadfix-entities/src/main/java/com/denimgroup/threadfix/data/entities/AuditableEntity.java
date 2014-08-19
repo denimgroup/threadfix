@@ -40,7 +40,7 @@ import java.util.Date;
  * 
  */
 @MappedSuperclass
-public abstract class AuditableEntity extends BaseEntity {
+public class AuditableEntity extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 
