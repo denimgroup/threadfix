@@ -10,6 +10,7 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,8 @@ public class ScheduledRemoteProviderUpdateController {
 
     @RequestMapping(value = "/addUpdate", method = RequestMethod.POST)
     public @ResponseBody
-    RestResponse<List<ScheduledRemoteProviderUpdate>> addScheduledRemoteProviderUpdate(@Valid @ModelAttribute ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate,
+    RestResponse<List<ScheduledRemoteProviderUpdate>> addScheduledRemoteProviderUpdate(
+            @Valid @ModelAttribute ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate,
                                                        BindingResult result) {
 
         log.info("Start adding scheduled remote provider update.");
@@ -67,7 +69,8 @@ public class ScheduledRemoteProviderUpdateController {
 
         } else {
             log.warn("Failed to add new scheduled remote provider update to scheduler");
-            String message = "Adding new "+ scheduledRemoteProviderUpdate.getFrequency() + " Remote Provider Update failed.";
+            String message = "Adding new "+ scheduledRemoteProviderUpdate.getFrequency() +
+                    " Remote Provider Update failed.";
 
             scheduledRemoteProviderUpdateService.delete(scheduledRemoteProviderUpdate);
             return RestResponse.failure(message);
@@ -75,7 +78,8 @@ public class ScheduledRemoteProviderUpdateController {
     }
 
     @RequestMapping(value = "/update/{scheduledRemoteProviderUpdateId}/delete", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<String> delete(@PathVariable("scheduledRemoteProviderUpdateId") int scheduledRemoteProviderUpdateId) {
+    public @ResponseBody RestResponse<String> delete(
+            @PathVariable("scheduledRemoteProviderUpdateId") int scheduledRemoteProviderUpdateId) {
 
         log.info("Start deleting scheduled remote provider update");
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_REMOTE_PROVIDERS, null, null)){

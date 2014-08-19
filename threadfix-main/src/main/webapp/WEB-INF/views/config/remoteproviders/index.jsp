@@ -14,4 +14,6 @@
         <%@ include file="/WEB-INF/views/config/remoteproviders/tabs/remoteProvidersTab.jsp" %>
         <%@ include file="/WEB-INF/views/config/remoteproviders/tabs/scheduledUpdateTab.jsp" %>
     </tabset>
+
+    <%@ include file="/WEB-INF/views/applications/forms/addScheduledRemoteProviderUpdateForm.jsp"%>
 </body>

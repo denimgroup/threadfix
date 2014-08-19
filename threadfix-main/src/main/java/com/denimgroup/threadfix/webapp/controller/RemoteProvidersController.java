@@ -27,12 +27,14 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderUpdate;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
+import com.denimgroup.threadfix.service.ScheduledRemoteProviderUpdateService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -62,6 +64,8 @@ public class RemoteProvidersController {
     private RemoteProviderApplicationService remoteProviderApplicationService;
     @Autowired
 	private OrganizationService organizationService;
+    @Autowired
+    ScheduledRemoteProviderUpdateService scheduledRemoteProviderUpdateService;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -250,6 +254,7 @@ public class RemoteProvidersController {
 
         map.put("remoteProviders", remoteProviderTypeService.loadAll());
         map.put("teams", organizationService.loadAllActive());
+        map.put("scheduledUpdates", scheduledRemoteProviderUpdateService.loadAll());
 
 		return ControllerUtils.writeSuccessObjectWithView(map, AllViews.TableRow.class);
 	}
