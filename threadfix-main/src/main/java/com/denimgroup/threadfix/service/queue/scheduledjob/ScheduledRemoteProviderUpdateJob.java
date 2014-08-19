@@ -21,7 +21,6 @@ public class ScheduledRemoteProviderUpdateJob implements Job {
     private static final SanitizedLogger log = new SanitizedLogger(ScheduledScanJob.class);
 
     @Override
-//    @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext context) throws JobExecutionException {
         String jobName = context.getJobDetail().getFullName();
         log.info("ScheduledRemoteProviderUpdateJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
