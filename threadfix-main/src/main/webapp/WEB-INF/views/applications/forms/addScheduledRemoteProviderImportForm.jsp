@@ -1,7 +1,7 @@
-<script type="text/ng-template" id="newScheduledUpdate.html">
+<script type="text/ng-template" id="newScheduledImport.html">
 
     <div class="modal-header">
-        <h4>New Scheduled Update</h4>
+        <h4>New Scheduled Import</h4>
     </div>
     <div class="modal-body" ng-form="form">
         <table>

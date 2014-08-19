@@ -4,7 +4,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
-import com.denimgroup.threadfix.service.ScheduledRemoteProviderUpdateService;
+import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.apache.commons.collections.CollectionUtils;
@@ -30,13 +30,13 @@ import java.util.List;
  */
 
 @Component
-public class ScheduledRemoteProviderUpdater {
+public class ScheduledRemoteProviderImporter {
 
-    private static final SanitizedLogger log = new SanitizedLogger(ScheduledRemoteProviderUpdater.class);
+    private static final SanitizedLogger log = new SanitizedLogger(ScheduledRemoteProviderImporter.class);
     private static Scheduler scheduler = getScheduler();
 
     @Autowired
-    private ScheduledRemoteProviderUpdateService scheduledRemoteProviderUpdateService;
+    private ScheduledRemoteProviderImportService scheduledRemoteProviderImportService;
 
     @Autowired
     private QueueSender queueSender;
@@ -61,12 +61,12 @@ public class ScheduledRemoteProviderUpdater {
             return;
 
         log.info("Loading all Scheduled Scans from database");
-        List<ScheduledRemoteProviderUpdate> scheduledRemoteProviderUpdates = scheduledRemoteProviderUpdateService.loadAll();
-        log.info("Got " + scheduledRemoteProviderUpdates.size() + " Scheduled Remote Provider Updates");
+        List<ScheduledRemoteProviderImport> scheduledRemoteProviderImports = scheduledRemoteProviderImportService.loadAll();
+        log.info("Got " + scheduledRemoteProviderImports.size() + " Scheduled Remote Provider Imports");
 
         log.info("------- Scheduling Jobs ----------------");
-        for (ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate: scheduledRemoteProviderUpdates) {
-            addScheduledRemoteProviderUpdate(scheduledRemoteProviderUpdate);
+        for (ScheduledRemoteProviderImport scheduledRemoteProviderImport : scheduledRemoteProviderImports) {
+            addScheduledRemoteProviderImport(scheduledRemoteProviderImport);
         }
         log.info("------- End Scheduling Jobs ----------------");
 
@@ -77,18 +77,18 @@ public class ScheduledRemoteProviderUpdater {
         }
     }
 
-    private String getCronExpression(ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate) {
+    private String getCronExpression(ScheduledRemoteProviderImport scheduledRemoteProviderImport) {
 
-        DayInWeek dayInWeek = DayInWeek.getDay(scheduledRemoteProviderUpdate.getDay());
-        ScheduledFrequencyType frequencyType = ScheduledFrequencyType.getFrequency(scheduledRemoteProviderUpdate.getFrequency());
-        ScheduledPeriodType scheduledPeriodType = ScheduledPeriodType.getPeriod(scheduledRemoteProviderUpdate.getPeriod());
+        DayInWeek dayInWeek = DayInWeek.getDay(scheduledRemoteProviderImport.getDay());
+        ScheduledFrequencyType frequencyType = ScheduledFrequencyType.getFrequency(scheduledRemoteProviderImport.getFrequency());
+        ScheduledPeriodType scheduledPeriodType = ScheduledPeriodType.getPeriod(scheduledRemoteProviderImport.getPeriod());
         String cronExpression = null;
 
         // Set DayOfWeek is ? if schedule daily, and MON-SUN otherwise
         String day = "?";
         if (frequencyType == ScheduledFrequencyType.WEEKLY) {
             if (dayInWeek == null) {
-                log.warn("Unable to schedule ScheduledRemoteProviderUpdateId " + scheduledRemoteProviderUpdate.getId() + " " + scheduledRemoteProviderUpdate.getFrequency() + " " + scheduledRemoteProviderUpdate.getDay());
+                log.warn("Unable to schedule ScheduledRemoteProviderImportId " + scheduledRemoteProviderImport.getId() + " " + scheduledRemoteProviderImport.getFrequency() + " " + scheduledRemoteProviderImport.getDay());
                 return cronExpression;
             }
             day = Strings.toUpperCase(dayInWeek.getDay());
@@ -97,18 +97,18 @@ public class ScheduledRemoteProviderUpdater {
         // Set DayOfMonth is ? if schedule weekly, and * otherwise
         String dayOfMonth = (ScheduledFrequencyType.WEEKLY == frequencyType?"?":"*");
 
-        int hour = scheduledRemoteProviderUpdate.getHour();
+        int hour = scheduledRemoteProviderImport.getHour();
         if (ScheduledPeriodType.PM == scheduledPeriodType && hour < 12)
             hour += 12;
 
-        cronExpression = "0 " + scheduledRemoteProviderUpdate.getMinute() + " " + hour + " " + dayOfMonth+ " * " + day;
+        cronExpression = "0 " + scheduledRemoteProviderImport.getMinute() + " " + hour + " " + dayOfMonth+ " * " + day;
 
         return cronExpression;
     }
 
-    public boolean removeScheduledRemoteProviderUpdate(ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate) {
+    public boolean removeScheduledRemoteProviderImport(ScheduledRemoteProviderImport scheduledRemoteProviderImport) {
         String groupName = createGroupName();
-        String jobName = createJobName(scheduledRemoteProviderUpdate);
+        String jobName = createJobName(scheduledRemoteProviderImport);
         try {
             scheduler.deleteJob(jobName, groupName);
             log.info(groupName + "." + jobName + " was successfully deleted from scheduler");
@@ -120,12 +120,12 @@ public class ScheduledRemoteProviderUpdater {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean addScheduledRemoteProviderUpdate(ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate) {
+    public boolean addScheduledRemoteProviderImport(ScheduledRemoteProviderImport scheduledRemoteProviderImport) {
 
         String groupName = createGroupName();
-        String jobName = createJobName(scheduledRemoteProviderUpdate);
+        String jobName = createJobName(scheduledRemoteProviderImport);
 
-        JobDetail job = new JobDetail(jobName, groupName, ScheduledRemoteProviderUpdateJob.class);
+        JobDetail job = new JobDetail(jobName, groupName, ScheduledRemoteProviderImportJob.class);
 
         List<RemoteProviderType> remoteProviderTypes = remoteProviderTypeService.loadAll();
         List<Integer> idList = (List<Integer>)CollectionUtils.collect(remoteProviderTypes, new BeanToPropertyValueTransformer("id"));
@@ -135,7 +135,7 @@ public class ScheduledRemoteProviderUpdater {
         job.getJobDataMap().put("queueSender", queueSender);
 
         try {
-            String cronExpression = getCronExpression(scheduledRemoteProviderUpdate);
+            String cronExpression = getCronExpression(scheduledRemoteProviderImport);
             if (cronExpression == null)
                 return false;
 
@@ -160,9 +160,7 @@ public class ScheduledRemoteProviderUpdater {
         return "RemoteProviders";
     }
 
-    private String createJobName(ScheduledRemoteProviderUpdate scheduledRemoteProviderUpdate) {
-        return "ScheduledRemoteProviderUpdateId_" + scheduledRemoteProviderUpdate.getId();
+    private String createJobName(ScheduledRemoteProviderImport scheduledRemoteProviderImport) {
+        return "ScheduledRemoteProviderImportId_" + scheduledRemoteProviderImport.getId();
     }
-
-
 }

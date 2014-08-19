@@ -8,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ScheduledRemoteProviderUpdate")
-public class ScheduledRemoteProviderUpdate extends ScheduledJob {
+@Table(name="ScheduledRemoteProviderImport")
+public class ScheduledRemoteProviderImport extends ScheduledJob {
 
     private static final long serialVersionUID = 1223869621339558275L;
 

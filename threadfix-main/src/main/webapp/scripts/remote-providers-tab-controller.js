@@ -27,7 +27,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 if (data.success) {
                     $scope.providers = data.object.remoteProviders;
                     $scope.teams = data.object.teams;
-                    $scope.scheduledUpdates = data.object.scheduledUpdates;
+                    $scope.scheduledImports = data.object.scheduledImports;
 
                     $scope.defectTrackerTypes = data.object.defectTrackerTypes;
 
@@ -37,7 +37,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
                     $scope.providers.forEach(calculateShowImportAll);
 
-                    $rootScope.$broadcast('scheduledUpdates', $scope.scheduledUpdates);
+                    $rootScope.$broadcast('scheduledImports', $scope.scheduledImports);
 
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;

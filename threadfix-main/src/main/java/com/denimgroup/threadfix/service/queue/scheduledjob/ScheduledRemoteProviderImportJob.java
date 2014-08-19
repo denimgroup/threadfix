@@ -16,14 +16,14 @@ import java.util.List;
  * Created by dzabdi88 on 8/15/14.
  */
 
-public class ScheduledRemoteProviderUpdateJob implements Job {
+public class ScheduledRemoteProviderImportJob implements Job {
 
     private static final SanitizedLogger log = new SanitizedLogger(ScheduledScanJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         String jobName = context.getJobDetail().getFullName();
-        log.info("ScheduledRemoteProviderUpdateJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
+        log.info("ScheduledRemoteProviderImportJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         String remoteProviderTypeIds = dataMap.getString("remoteProviderTypeIds");
@@ -34,8 +34,5 @@ public class ScheduledRemoteProviderUpdateJob implements Job {
         for(String remoteProviderTypeId : remoteProviderTypeIdList ) {
             queueSender.addRemoteProviderImport(Integer.parseInt(remoteProviderTypeId));
         }
-
-
     }
-
 }
