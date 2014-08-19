@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,10 +204,15 @@ public class QueueSenderImpl implements QueueSender {
 
     @Override
 	public void addRemoteProviderImport(RemoteProviderType remoteProviderType) {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-		log.info("User " + userName + " is adding a remote provider import to the queue for " +
-				remoteProviderType.getName() + ".");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String userName = authentication.getName();
+            log.info("User " + userName + " is adding a remote provider import to the queue for " +
+                    remoteProviderType.getName() + ".");
+        } else {
+            log.info("Scheduled Job is adding a remote provider import to the queue for " +
+                    remoteProviderType.getName() + ".");
+        }
 
 		MapMessage remoteProviderImportMap = new ActiveMQMapMessage();
 
