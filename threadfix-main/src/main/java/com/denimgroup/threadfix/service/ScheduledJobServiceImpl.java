@@ -44,7 +44,7 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
 
     @Override
     public List<S> loadAll() {
-        return getScheduledJobDao().retrieveAll();
+        return getScheduledJobDao().retrieveAllActive();
     }
 
     @Override

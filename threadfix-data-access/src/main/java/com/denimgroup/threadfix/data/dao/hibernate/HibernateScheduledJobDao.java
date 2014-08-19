@@ -29,12 +29,4 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
         sessionFactory.getCurrentSession().delete(scheduledJob);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<S> retrieveAll() {
-        return (List<S>) sessionFactory.getCurrentSession().createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .list();
-    }
-
 }
