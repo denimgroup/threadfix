@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by mac on 6/11/14.
@@ -32,13 +33,15 @@ import java.util.List;
 public class DotNetRouteMappings {
 
     static class ConcreteRoute {
-        ConcreteRoute(String controller, String action) {
+        ConcreteRoute(String controller, String action, String parameter) {
             assert action != null;
             assert controller != null;
             this.action = action;
+            this.parameter = parameter;
             this.controller = controller;
         }
 
+        String parameter;
         String action;
         String controller;
     }
@@ -57,13 +60,22 @@ public class DotNetRouteMappings {
         }
     }
 
+    public boolean hasDefaultParam(Set<String> parameters) {
+        assert !routes.isEmpty() : "Attempting to access data from empty DotNetRouteMappings";
+        if (routes.size() > 1) {
+            throw new IllegalStateException("Throwing an exception for now until we figure out what to do in this case");
+        }
+
+        return parameters.contains(routes.get(0).defaultRoute.parameter);
+    }
+
     List<MapRoute> routes = new ArrayList<>();
 
     public DotNetRouteMappings() {}
 
-    public void addRoute(String name, String url, String controller, String action) {
+    public void addRoute(String name, String url, String controller, String action, String parameter) {
         ConcreteRoute defaultRoute = controller != null && action != null ?
-                new ConcreteRoute(controller, action) :
+                new ConcreteRoute(controller, action, parameter) :
                 null;
         routes.add(new MapRoute(name, url, defaultRoute));
     }

@@ -21,31 +21,32 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.dotNet;
+package com.denimgroup.threadfix.importer.utils;
+
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.importer.cli.ScanParser;
+import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import org.springframework.stereotype.Component;
 
 /**
- * Created by mac on 6/11/14.
+ * Created by mac on 8/18/14.
  */
-interface DotNetKeywords {
+@Component
+public class ParserUtils {
 
-    public static final String
-            PUBLIC = "public",
-            CLASS = "class",
-            ROUTE_CONFIG = "RouteConfig",
-            REGISTER_ROUTES = "RegisterRoutes",
-            ROUTE_COLLECTION = "RouteCollection",
-            MAP_ROUTE = "MapRoute",
-            URL = "url",
-            NAME = "name",
-            DEFAULTS = "defaults",
-            NEW = "new",
-            CONTROLLER = "controller",
-            ACTION = "action",
-            ID = "id",
-            SYSTEM_HTTP_APPLICATION = "System.Web.HttpApplication",
-            ACTION_RESULT = "ActionResult",
-            VIEW_RESULT = "ViewResult",
-            HTTP_MESSAGE_RESPONSE = "HttpResponseMessage";
+    private ParserUtils(){}
 
+    /**
+     *
+     * @param filePath path from scan file repository root
+     * @return parsed Scan (no linked Vulnerability objects)
+     */
+    public static Scan getScan(String filePath) {
+        return SpringConfiguration
+                .getContext()
+                .getBean(ScanParser.class)
+                .getScan(ScanLocationManager.getRoot() + filePath);
+    }
 
 }

@@ -197,11 +197,17 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
 
     }
 
-    String currentUrl = null, currentName = null, currentDefaultController = null, currentDefaultAction = null;
+    String currentUrl = null,
+            currentName = null,
+            currentDefaultController = null,
+            currentDefaultAction = null,
+            parameterName = null,
+            parameterValue = null;
+    // TODO split this up
     enum MapRouteState { // these states are to be used with the IN_METHOD Phase
         START, URL, URL_COLON, NAME, NAME_COLON, DEFAULTS,
         DEFAULTS_COLON, DEFAULTS_NEW, DEFAULTS_OBJECT, DEFAULTS_CONTROLLER, DEFAULTS_CONTROLLER_EQUALS,
-        DEFAULTS_ACTION, DEFAULTS_ACTION_EQUALS
+        DEFAULTS_ACTION, DEFAULTS_ACTION_EQUALS, DEFAULTS_PARAM, DEFAULTS_PARAM_EQUALS
     }
 
     int commaCount = 0;
@@ -276,6 +282,9 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
                     currentMapRouteState = MapRouteState.DEFAULTS_CONTROLLER;
                 } else if (ACTION.equals(stringValue)) {
                     currentMapRouteState = MapRouteState.DEFAULTS_ACTION;
+                } else if (stringValue != null) {
+                    parameterName = stringValue;
+                    currentMapRouteState = MapRouteState.DEFAULTS_PARAM;
                 } else if ('}' == type) {
                     currentMapRouteState = MapRouteState.START;
                 }
@@ -298,12 +307,22 @@ public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
                 currentDefaultAction = stringValue;
                 currentMapRouteState = MapRouteState.DEFAULTS_OBJECT;
                 break;
+            case DEFAULTS_PARAM:
+                if ('=' == type) {
+                    currentMapRouteState = MapRouteState.DEFAULTS_PARAM_EQUALS;
+                }
+                break;
+            case DEFAULTS_PARAM_EQUALS:
+                parameterValue = stringValue;
+                currentMapRouteState = MapRouteState.DEFAULTS_OBJECT;
+                break;
+
         }
 
         if (parenCount == currentParenCount) {
             log("Paren count: " + parenCount);
             log("Paren current: " + currentParenCount);
-            mappings.addRoute(currentName, currentUrl, currentDefaultController, currentDefaultAction);
+            mappings.addRoute(currentName, currentUrl, currentDefaultController, currentDefaultAction, parameterName);
             commaCount = 0;
             currentPhase = Phase.IN_CLASS;
         }

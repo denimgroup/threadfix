@@ -148,7 +148,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 }
                 break;
             case PUBLIC_IN_BODY:
-                if (ACTION_RESULT.equals(stringValue) || HTTP_MESSAGE_RESPONSE.equals(stringValue)) {
+                if (ACTION_RESULT.equals(stringValue) ||
+                        HTTP_MESSAGE_RESPONSE.equals(stringValue) ||
+                        VIEW_RESULT.equals(stringValue)) {
                     currentState = State.ACTION_RESULT;
                 } else if (type == '(' || type == ';' || type == '{') {
                     currentState = State.BODY;

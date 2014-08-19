@@ -85,12 +85,19 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
 
                 String result = pattern
                         // substitute in controller name for {controller}
-                        .replaceAll("\\{\\w*controller\\w*\\}", mappings.getControllerName())
-                                // substitute in action for {action}
-                        .replaceAll("\\{\\w*action\\w*\\}", action.name);
+                        .replaceAll("\\{\\w*controller\\w*\\}", mappings.getControllerName());
+
+                if (action.name.equals("Index")) {
+                    result = result.replaceAll("/\\{\\w*action\\w*\\}", "");
+                } else {
+                    result = result.replaceAll("\\{\\w*action\\w*\\}", action.name);
+                }
+
+                if (!action.parameters.contains(mapRoute.defaultRoute.parameter)) {
+                    result = result.replaceAll("/\\{[^\\}]*\\}", "");
+                }
 
                 result = cleanStringFromCode(result);
-
 
                 if (!result.startsWith("/")) {
                     result = "/" + result;

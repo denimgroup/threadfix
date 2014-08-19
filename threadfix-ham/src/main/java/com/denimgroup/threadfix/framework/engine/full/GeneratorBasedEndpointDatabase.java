@@ -164,7 +164,14 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             // this code will just ignore the parameter lookup for now.
             // TODO deal with false positives in a more effective manner
             if (useStatic || !parameterEndpoints.isEmpty()) {
-                resultingSet.retainAll(parameterEndpoints);
+
+                // doing blanket retainAll can lead to false negatives in some cases
+                for (Endpoint parameterEndpoint : parameterEndpoints) {
+                    if (resultingSet.contains(parameterEndpoint)) {
+                        resultingSet.retainAll(parameterEndpoints);
+                        break;
+                    }
+                }
             }
         }
 

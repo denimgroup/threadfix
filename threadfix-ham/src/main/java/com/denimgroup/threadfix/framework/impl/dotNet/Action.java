@@ -23,7 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import org.apache.commons.lang.StringUtils;
+
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +54,16 @@ class Action {
         action.name = name;
         action.attributes = attributes;
         action.lineNumber = lineNumber;
-        action.parameters = parameters;
+
+        for (String parameter : parameters) {
+            if (parameter.contains(",")) {
+                action.parameters.addAll(Arrays.asList(StringUtils.split(parameter, ',')));
+            } else {
+                action.parameters.add(parameter);
+            }
+        }
+
+
         return action;
     }
 

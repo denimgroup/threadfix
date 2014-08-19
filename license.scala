@@ -15,7 +15,7 @@ object doIt {
       if (string startsWith oldString) {
         println("Found old copyright at " + file.getAbsolutePath())
         printToFile(newString + string.substring(oldString.length), file.getAbsolutePath())
-      } else {
+      } else if (!(string startsWith newString)) {
         printToFile(newString + "\n\n" + string, file.getAbsolutePath)
       }
     } else if (file.isDirectory() && !file.getName().startsWith(".")) {
