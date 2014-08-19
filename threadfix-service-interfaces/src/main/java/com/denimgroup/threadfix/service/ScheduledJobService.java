@@ -22,40 +22,26 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.data.entities;
+package com.denimgroup.threadfix.service;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.denimgroup.threadfix.data.entities.ScheduledJob;
+import org.springframework.validation.BindingResult;
 
-import javax.persistence.*;
+import java.util.List;
 
-@Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
+/**
+ * Created by zabdisubhan on 8/14/14.
+ */
 
-    private static final long serialVersionUID = 3165699013829091108L;
+public interface ScheduledJobService<S extends ScheduledJob> {
 
-	private Application application;
-    private String scanner;
+    public List<S> loadAll();
 
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;	}
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
+    public int save(S scheduledJob);
 
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
-    }
+    public String delete(S scheduledJob);
 
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
-    }
+    public S loadById(int scheduledJobId);
 
+    public void validateDate(S scheduledJob, BindingResult result);
 }

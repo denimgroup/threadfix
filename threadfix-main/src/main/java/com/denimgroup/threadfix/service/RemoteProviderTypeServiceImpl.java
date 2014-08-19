@@ -46,14 +46,23 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 
     @Autowired
 	private RemoteProviderTypeDao remoteProviderTypeDao;
+
     @Autowired
 	private RemoteProviderApplicationService remoteProviderApplicationService;
+
     @Autowired
 	private ScanMergeService scanMergeService;
+
     @Autowired
     private RemoteProviderFactory remoteProviderFactory;
+
     @Autowired
     private VulnerabilityService vulnerabilityService;
+
+    @Autowired
+    RemoteProviderTypeServiceImpl (RemoteProviderTypeDao remoteProviderTypeDao) {
+        this.remoteProviderTypeDao = remoteProviderTypeDao;
+    }
 
 	@Override
 	@Transactional

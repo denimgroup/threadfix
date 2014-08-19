@@ -22,40 +22,35 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.data.entities;
+package com.denimgroup.threadfix.data.dao.hibernate;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
+import com.denimgroup.threadfix.data.entities.ScheduledJob;
 
-import javax.persistence.*;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
-@Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-    private static final long serialVersionUID = 3165699013829091108L;
+import java.util.List;
 
-	private Application application;
-    private String scanner;
+/**
+ * Created by zabdisubhan on 8/15/14.
+ */
 
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;	}
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
+@Repository
+public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends AbstractObjectDao<S> implements ScheduledJobDao<S> {
 
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
+    @Autowired
+    public HibernateScheduledJobDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
+    @Override
+    public void delete(S scheduledJob) {
+        sessionFactory.getCurrentSession().delete(scheduledJob);
     }
 
 }

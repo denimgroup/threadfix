@@ -24,38 +24,35 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+/**
+ * Created by zabdisubhan on 8/14/14.
+ */
 
-import javax.persistence.*;
+public enum DayInWeek {
+    MON("Monday"),
+    TUE("Tuesday"),
+    WED("Wednesday"),
+    THU("Thursday"),
+    FRI("Friday"),
+    SAT("Saturday"),
+    SUN("Sunday");
 
-@Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
+    private String day;
 
-    private static final long serialVersionUID = 3165699013829091108L;
-
-	private Application application;
-    private String scanner;
-
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;	}
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
+    public String getDay() {
+        return this.day;
     }
 
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
+    private DayInWeek(String day) {
+        this.day = day;
     }
 
+    public static DayInWeek getDay(String keyword) {
+        for (DayInWeek t: values()) {
+            if (keyword != null && keyword.equalsIgnoreCase(t.getDay())) {
+                return t;
+            }
+        }
+        return null;
+    }
 }
