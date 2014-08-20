@@ -79,7 +79,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
                         .attr("width", 0)
                         .attr("y", function(d) { return y(d.y1); })
                         .attr("height", function(d) { return y(d.y0) - y(d.y1); })
-                        .style("fill", function(d) { return color(d.fillColor); })
+                        .style("fill", function(d) { return d.fillColor; })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                         .on('click', function(d) {
@@ -180,7 +180,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
                         .attr("height", 0)
                         .attr("x", function(d) { return x(d.y0); })
                         .attr("width", function(d) { return x(d.y1) - x(d.y0); })
-                        .style("fill", function(d) { return color(d.fillColor); })
+                        .style("fill", function(d) { return d.fillColor; })
                         .on('mouseover', tip.show)
                         .on('mouseout', tip.hide)
                         .on('click', function(d) {
@@ -240,7 +240,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
                     function getData(){
                         var d = data[0];
                         return color.domain().map(function(vulnType) {
-                            return {label:vulnType, value:d[vulnType], color:color(vulnType), severity: vulnType, teamId: d.teamId, teamName: d.teamName};});
+                            return {tip:vulnType, value:d[vulnType], fillColor:color(vulnType), severity: vulnType, teamId: d.teamId, teamName: d.teamName};});
                     }
 
                 };
@@ -309,7 +309,8 @@ function barGraphData(d3, data, color, isLeftReport, label) {
             var tip = (topVulnsReport) ? d.name + " (CWE " + d.displayId + ")" : key;
             return {
                 time: (isLeftReport) ? getTime(data.length-index) : undefined,
-                fillColor: _key,
+//                fillColor: _key,
+                fillColor: color(_key),
                 tip : tip,
                 y0: y0,
                 y1: y0 += +d[key],

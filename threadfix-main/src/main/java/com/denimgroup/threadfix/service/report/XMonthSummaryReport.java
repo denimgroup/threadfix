@@ -25,6 +25,9 @@
 package com.denimgroup.threadfix.service.report;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Scan;
 
 import java.text.DateFormatSymbols;
@@ -56,10 +59,14 @@ public class XMonthSummaryReport {
 	private int numMonths = 0;
 
 	private ScanDao scanDao = null;
+
+    private Integer teamId, appId;
+    private String teamName, appName;
+
 	
 	private static final String[] months = new DateFormatSymbols().getMonths();
 	
-	public XMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths) {
+	public XMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths, ReportParameters parameters) {
 		this.scanDao = scanDao;
 		
 		if (numMonths > 0 && numMonths <= 12) {
@@ -69,6 +76,30 @@ public class XMonthSummaryReport {
 		}
 		
 		if (scanLists != null && scanLists.size() > 0) {
+
+            if (parameters.getOrganizationId() != -1 || parameters.getApplicationId() != -1) {
+                Scan scan = null;
+                for (List<Scan> scanList : scanLists) {
+                    if (scanList != null && scanList.size() > 0) {
+                        scan = scanList.get(0);
+                        break;
+                    }
+                }
+                if (scan != null) {
+                    if (parameters.getApplicationId() != -1) {
+                        Application application = scan.getApplication();
+                        appId = application.getId();
+                        appName = application.getName();
+                        teamId = application.getOrganization().getId();
+                        teamName = application.getOrganization().getName();
+                    } else {
+                        Organization organization = scan.getApplication().getOrganization();
+                        teamId = organization.getId();
+                        teamName = organization.getName();
+                    }
+                }
+            }
+
 			for (List<Scan> scanList : scanLists) {
 				Collections.sort(scanList, Scan.getTimeComparator());
 				normalizedScans.add(buildNormalizedScans(scanList));
@@ -288,6 +319,11 @@ public class XMonthSummaryReport {
         hash.put("Medium", numMedium);
         hash.put("Low", numLow);
         hash.put("Info", numInfo);
+
+        hash.put("appId", appId);
+        hash.put("appName", appName);
+        hash.put("teamId", teamId);
+        hash.put("teamName", teamName);
 
 		if (dateList.get(index) != null) {
             hash.put("title", dateList.get(index));

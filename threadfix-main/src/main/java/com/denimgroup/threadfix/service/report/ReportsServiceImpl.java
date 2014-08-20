@@ -155,7 +155,7 @@ public class ReportsServiceImpl implements ReportsService {
         }
 
         if (parameters.getReportFormat() == ReportFormat.SIX_MONTH_SUMMARY) {
-            report = getXMonthReportD3(applicationIdList, 6);
+            report = getXMonthReportD3(applicationIdList, 6, parameters);
         }
 
         if (report == null || report.getReportList() == null || report.getReportList().size()==0)
@@ -327,6 +327,7 @@ public class ReportsServiceImpl implements ReportsService {
 
         List<Object[]> vulns = vulnerabilityDao.getTopVulnsInfo(applicationIdList, vulnIds);
         List<Map<String, Object>> resultList = list();
+        Application application = applicationDao.retrieveById(applicationIdList.get(0));
         for (Object[] objects: vulns) {
             if (objects != null && objects.length == 2) {
 
@@ -339,6 +340,12 @@ public class ReportsServiceImpl implements ReportsService {
                 hash.put("cweId", genericVulnerability.getId());
                 hash.put("displayId", genericVulnerability.getDisplayId());
                 hash.put("appId", applicationIdList.get(0));
+                if (application != null){
+                    hash.put("appName", application.getName());
+                    hash.put("teamId", application.getOrganization().getId());
+                    hash.put("teamName", application.getOrganization().getName());
+                }
+
                 resultList.add(hash);
             }
         }
@@ -405,7 +412,7 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 	}
 
-    private ReportCheckResultBean getXMonthReportD3(List<Integer> applicationIdList, int numMonths) {
+    private ReportCheckResultBean getXMonthReportD3(List<Integer> applicationIdList, int numMonths, ReportParameters parameters) {
         List<List<Scan>> scanList = new ArrayList<>();
         boolean containsVulns = false;
         for (Integer id : applicationIdList) {
@@ -421,7 +428,7 @@ public class ReportsServiceImpl implements ReportsService {
             log.info("Unable to fill Report - no scans were found.");
             return null;
         } else {
-            XMonthSummaryReport reportExporter = new XMonthSummaryReport(scanList, scanDao, numMonths);
+            XMonthSummaryReport reportExporter = new XMonthSummaryReport(scanList, scanDao, numMonths, parameters);
             return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
         }
     }

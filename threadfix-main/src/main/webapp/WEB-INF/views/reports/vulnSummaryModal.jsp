@@ -1,7 +1,16 @@
 <script type="text/ng-template" id="vulnSummaryModal.html">
 
     <div class="modal-header">
-        <h4 id="myModalLabel">{{ header }}</h4>
+        <h4 id="myModalLabel">Vulnerabilities Summary</h4>
+        <div ng-show="headers" class="modal-body">
+            <table >
+                <tbody>
+                <tr ng-repeat="header in headers">
+                    <td style="text-align:left;" ng-style="{color: headerColor}"> <b>{{ header }} </b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div ng-show="loading" style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>

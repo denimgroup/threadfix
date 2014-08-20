@@ -1,18 +1,14 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('VulnSummaryModalController', function ($scope, $window, $rootScope, $modalInstance, $modal, $http, tfEncoder, threadFixModalService, scope, isStay, vulnSearchParameterService) {
+myAppModule.controller('VulnSummaryModalController', function ($scope, $window, $rootScope, $modalInstance, $modal, $http, tfEncoder, threadFixModalService, scope, headers, headerColor, isStay, vulnSearchParameterService) {
 
     $scope.header = "Vulnerabilities Summary";
+    $scope.headers = headers;
+    $scope.headerColor = headerColor;
     $scope.loading = true;
     var severities = ['Info','Low', 'Medium', 'High', 'Critical'];
 
-    var url;
-//    if (scope.treeApplication) {
-//        url = "/organizations/" + scope.treeTeam.id + "/applications/" + scope.treeApplication.id;
-//    } else if (scope.treeTeam) {
-//        url = "/organizations/" + scope.treeTeam.id;
-//    } else
-        url = "/reports";
+    var  url = "/reports"; // Navigated Url
 
     if (scope.treeApplication || (scope.parameters.applications && scope.parameters.applications.length > 0)) {
         scope.treeTeam = undefined;

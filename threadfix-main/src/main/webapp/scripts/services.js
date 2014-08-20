@@ -102,6 +102,12 @@ threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncod
                 scope: function () {
                     return scope;
                 },
+                headers: function () {
+                    return scope.headers;
+                },
+                headerColor: function () {
+                    return scope.fillColor;
+                },
                 isStay: function() {
                     return isStay;
                 }
@@ -316,9 +322,28 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         criteria.parameters.showFalsePositive = false;
         criteria.parameters.showHidden = false;
 
+        criteria.headers = getHeaders(d);
+        criteria.fillColor = d.fillColor;
+
         return criteria;
     };
 
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    var getHeaders = function(data) {
+        var headers = [];
+        if (data.teamId) {
+            headers.push("Team: " + data.teamName);
+        }
+        if (data.appId) {
+            headers.push("Application: " + data.appName);
+        }
+        headers.push(data.tip + ": " + (data.value ? data.value : (data.y1 - data.y0)));
+        if (data.time) {
+            headers.push(months[data.time.getMonth()] + " " + data.time.getFullYear());
+        }
+        return headers;
+    };
 
     updater.serialize = function($scope, parameters) {
 
