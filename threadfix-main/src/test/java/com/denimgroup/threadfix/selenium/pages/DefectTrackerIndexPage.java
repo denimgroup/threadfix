@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 
 public class DefectTrackerIndexPage extends BasePage {
 
-	public static String DT_URL = "http://10.2.10.145/bugzilla";
+	public static String DT_URL = "http://10.2.10.171/bugzilla";
 	public static String JIRA_URL = "https://threadfix.atlassian.net/";
 
 	public DefectTrackerIndexPage(@Nonnull WebDriver webdriver) {

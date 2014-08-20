@@ -282,7 +282,7 @@ public class DefectTrackerIT extends BaseIT {
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .enterName(defectTrackerName)
                 .enterType(defectTrackerType)
-                .enterURL("http://10.2.10.145/bugzilla/")
+                .enterURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
 
         assertTrue("DefectTracker Page did not create correctly.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
