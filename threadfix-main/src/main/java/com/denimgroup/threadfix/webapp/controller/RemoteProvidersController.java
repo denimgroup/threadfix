@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
+import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -62,6 +63,8 @@ public class RemoteProvidersController {
     private RemoteProviderApplicationService remoteProviderApplicationService;
     @Autowired
 	private OrganizationService organizationService;
+    @Autowired
+    ScheduledRemoteProviderImportService scheduledRemoteProviderImportService;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -250,6 +253,7 @@ public class RemoteProvidersController {
 
         map.put("remoteProviders", remoteProviderTypeService.loadAll());
         map.put("teams", organizationService.loadAllActive());
+        map.put("scheduledImports", scheduledRemoteProviderImportService.loadAll());
 
 		return ControllerUtils.writeSuccessObjectWithView(map, AllViews.TableRow.class);
 	}

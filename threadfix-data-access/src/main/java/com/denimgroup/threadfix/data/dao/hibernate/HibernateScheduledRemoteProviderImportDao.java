@@ -22,40 +22,28 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.data.entities;
+package com.denimgroup.threadfix.data.dao.hibernate;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.denimgroup.threadfix.data.dao.ScheduledRemoteProviderImportDao;
+import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+/**
+ * Created by zabdisubhan on 8/15/14.
+ */
 
-@Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
+@Repository
+public class HibernateScheduledRemoteProviderImportDao extends HibernateScheduledJobDao<ScheduledRemoteProviderImport> implements ScheduledRemoteProviderImportDao {
 
-    private static final long serialVersionUID = 3165699013829091108L;
-
-	private Application application;
-    private String scanner;
-
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;	}
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
+    @Autowired
+    public HibernateScheduledRemoteProviderImportDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
     }
 
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
+    @Override
+    protected Class<ScheduledRemoteProviderImport> getClassReference() {
+        return ScheduledRemoteProviderImport.class;
     }
-
 }

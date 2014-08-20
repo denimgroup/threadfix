@@ -1,8 +1,10 @@
-var module = angular.module('threadfix')
+var module = angular.module('threadfix');
 
-module.controller('RemoteProvidersController', function($scope, $http, $modal, $log, tfEncoder){
+module.controller('RemoteProvidersTabController', function($scope, $http, $modal, $rootScope, $log, tfEncoder){
 
     $scope.providers = [];
+
+    $scope.heading = 'Remote Providers';
 
     $scope.initialized = false;
 
@@ -25,15 +27,17 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 if (data.success) {
                     $scope.providers = data.object.remoteProviders;
                     $scope.teams = data.object.teams;
+                    $scope.scheduledImports = data.object.scheduledImports;
 
                     $scope.defectTrackerTypes = data.object.defectTrackerTypes;
 
                     $scope.providers.sort(nameCompare);
 
-                    $scope.providers.forEach($scope.paginate)
+                    $scope.providers.forEach($scope.paginate);
 
                     $scope.providers.forEach(calculateShowImportAll);
 
+                    $rootScope.$broadcast('scheduledImports', $scope.scheduledImports);
 
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
@@ -61,7 +65,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 provider.displayApps = provider.remoteProviderApplications.slice(targetPage * 100)
             }
         }
-    }
+    };
 
     $scope.clearConfiguration = function(provider) {
 
@@ -120,7 +124,7 @@ module.controller('RemoteProvidersController', function($scope, $http, $modal, $
                 provider.errorMessage = "Failed to import scans. HTTP status was " + status;
                 provider.importingScans = false;
             });
-    }
+    };
 
     $scope.importScansApp = function(provider, app) {
         var url = tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/import");

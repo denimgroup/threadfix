@@ -22,40 +22,15 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.data.entities;
+package com.denimgroup.threadfix.data.dao;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.denimgroup.threadfix.data.entities.ScheduledJob;
 
-import javax.persistence.*;
+/**
+ * Created by zabdisubhan on 8/15/14.
+ */
+public interface ScheduledJobDao<S extends ScheduledJob> extends GenericObjectDao<S> {
 
-@Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
-
-    private static final long serialVersionUID = 3165699013829091108L;
-
-	private Application application;
-    private String scanner;
-
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;	}
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
-    }
-
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
-    }
+    public void delete(S scheduledJob);
 
 }

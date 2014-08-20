@@ -24,38 +24,17 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonView;
+/**
+ * Created by zabdisubhan on 8/14/14.
+ */
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-@Table(name="ScheduledScan")
-public class ScheduledScan extends ScheduledJob {
+@Table(name="ScheduledRemoteProviderImport")
+public class ScheduledRemoteProviderImport extends ScheduledJob {
 
-    private static final long serialVersionUID = 3165699013829091108L;
-
-	private Application application;
-    private String scanner;
-
-	@ManyToOne
-	@JoinColumn(name = "applicationId")
-	@JsonIgnore
-	public Application getApplication() {
-		return this.application;	}
-	
-	public void setApplication(Application application) {
-		this.application = application;
-	}
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getScanner() {
-        return scanner;
-    }
-
-    public void setScanner(String scanner) {
-        this.scanner = scanner;
-    }
+    private static final long serialVersionUID = 1223869621339558275L;
 
 }
