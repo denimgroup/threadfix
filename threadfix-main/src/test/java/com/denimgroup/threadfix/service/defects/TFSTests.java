@@ -27,21 +27,19 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.TFSClientMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
-import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
 
 /**
  * Created by mac on 4/7/14.
  */
-public class TFSTests implements TestConstants {
+public class TFSTests {
 
     public AbstractDefectTracker getTracker() {
         DefectTrackerType type = new DefectTrackerType();

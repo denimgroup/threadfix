@@ -24,14 +24,15 @@
 package com.denimgroup.threadfix.service.defects.mock;
 
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
-import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class TFSClientMock implements TFSClient, TestConstants {
+import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
+
+public class TFSClientMock implements TFSClient {
     ConnectionStatus status = ConnectionStatus.INVALID;
 
     public static final List<String> projectNames = Arrays.asList(TFS_PROJECT, "Project A", "Project B", "Project C",

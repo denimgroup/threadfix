@@ -1,6 +1,5 @@
 package com.denimgroup.threadfix.service.defects.mock;
 
-import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClient;
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -8,12 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.Assert.assertTrue;
+import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
 
 /**
  * Created by denimgroup on 4/7/14.
  */
 @SuppressWarnings("unchecked")
-public class BugzillaClientMock implements BugzillaClient, TestConstants{
+public class BugzillaClientMock implements BugzillaClient{
 
     ConnectionStatus status = ConnectionStatus.INVALID;
 
@@ -115,7 +115,7 @@ public class BugzillaClientMock implements BugzillaClient, TestConstants{
 
                 if (names == null) { // this means that the ids hash was passed in (probably) and we're in getProductNamesTest
                     return productMap;
-                } else if (names.length == 1 && names[0].equals(TestConstants.BUGZILLA_PROJECT)) {
+                } else if (names.length == 1 && names[0].equals(BUGZILLA_PROJECT)) {
                     return productMap; // TODO return the expected map for valid project lookup
                 } else { // this means it's the wrong project name
                     return null; // TODO return null or whatever

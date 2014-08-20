@@ -38,8 +38,15 @@ public final class TestConstants {
             VERSION_ONE_URL = "http://test.versionone.net",
             VERSION_ONE_USERNAME = "testusername",
             VERSION_ONE_PASSWORD = "testpassword",
-            VERSION_ONE_PROJECT = "projectName";
-
+            VERSION_ONE_PROJECT = "projectName",
+            BUGZILLA_USERNAME = "threadfix@denimgroup.com",
+            BUGZILLA_PASSWORD = "password",
+            BUGZILLA_BASE_URL = "http://192.168.0.1/bugzilla",
+            BUGZILLA_PROJECT = "For ThreadFix",
+            TFS_USERNAME = "tfsuser",
+            TFS_PASSWORD = "password",
+            TFS_BASE_URL = "https://tfs.test.com:8080",
+            TFS_PROJECT = "ThreadFixProject";
 
 
 }
