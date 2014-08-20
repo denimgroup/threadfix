@@ -68,11 +68,10 @@ public class RemoteProvidersIT extends BaseIT {
 
 	@Test
 	public void navigationTest() {
-		String pageHeader = loginPage.login("user", "password")
-									.clickRemoteProvidersLink()
-									.getH2Tag();
+		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+									.clickRemoteProvidersLink();
 		
-		assertTrue("Remote Provider Page not found",pageHeader.contains("Remote Providers"));
+		assertTrue("Remote Provider Page not found", remoteProvidersIndexPage.isTabPresent());
 	}
 
     //TODO Add back when Qualys credentials are fixed
@@ -356,4 +355,8 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
+
+    /*------------------------------ Scheduling ------------------------------*/
+
+
 }

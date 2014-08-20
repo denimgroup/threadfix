@@ -408,6 +408,10 @@ public class RemoteProvidersIndexPage extends BasePage {
         return true;
     }
 
+    public boolean isTabPresent() {
+        return driver.findElementById("remoteProvidersTab").isDisplayed();
+    }
+
 
 //old methods
 /*	

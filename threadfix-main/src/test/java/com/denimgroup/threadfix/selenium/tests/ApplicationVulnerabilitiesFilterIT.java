@@ -419,8 +419,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
                 .toggleLessThan()
                 .toggle90Days();
 
-        assertTrue("Only 10 high vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("High", "10"));
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "9"));
         assertTrue("Only 21 low vulnerabilities should be shown.",
@@ -436,8 +436,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.toggleMoreThan();
         sleep(1000);
 
-        assertTrue("Only 16 high vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("High", "16"));
+        assertTrue("Only 16 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
         assertTrue("Only 15 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "15"));
         assertTrue("Only 25 low vulnerabilities should be shown.",
@@ -448,8 +448,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.toggle90Days();
         sleep(1000);
 
-        assertTrue("Only 6 high vulnerabilities should be shown.",
-                applicationDetailPage.isVulnerabilityCountCorrect("High", "6"));
+        assertTrue("Only 6 critical vulnerabilities should be shown.",
+                applicationDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
         assertTrue("Only 6 medium vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Medium", "6"));
         assertTrue("Only 4 low vulnerabilities should be shown.",
