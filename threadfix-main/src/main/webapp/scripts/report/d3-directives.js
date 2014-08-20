@@ -309,7 +309,6 @@ function barGraphData(d3, data, color, isLeftReport, label) {
             var tip = (topVulnsReport) ? d.name + " (CWE " + d.displayId + ")" : key;
             return {
                 time: (isLeftReport) ? getTime(data.length-index) : undefined,
-//                fillColor: _key,
                 fillColor: color(_key),
                 tip : tip,
                 y0: y0,
