@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
+import com.denimgroup.threadfix.selenium.pages.RemoteProvidersSchedulePage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
@@ -358,5 +359,20 @@ public class RemoteProvidersIT extends BaseIT {
 
     /*------------------------------ Scheduling ------------------------------*/
 
+    @Test
+    public void ScheduledImportNavigationTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        assertTrue("Navigation to scheduled imports failed.",
+                remoteProvidersSchedulePage.isNewImportButtonDisplayed());
+    }
 
 }

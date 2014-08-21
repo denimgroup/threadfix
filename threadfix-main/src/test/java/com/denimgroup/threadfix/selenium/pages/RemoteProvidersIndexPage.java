@@ -361,6 +361,14 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public RemoteProvidersSchedulePage clickScheduleTab() {
+        String linkText = driver.findElementById("scheduledImportTab").getAttribute("heading");
+        driver.findElementByLinkText(linkText).click();
+
+        waitForElement(driver.findElementById("addImportQueueLink"));
+        return new RemoteProvidersSchedulePage(driver);
+    }
+
 	public String getErrorMessage(){
         waitForElementPresence("errorSpan",60);
 		return driver.findElementById("errorSpan").getText();
