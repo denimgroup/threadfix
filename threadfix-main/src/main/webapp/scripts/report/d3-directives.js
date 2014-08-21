@@ -23,7 +23,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
 
                 var xAxis = getAxis(d3, x, "bottom");
 
-                var yAxis = getAxisFormat(d3, y, "left", d3.format(".2s"));
+                var yAxis = getAxis(d3, y, "left");
 
                 var svg = getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom)
                     .append("g")
@@ -57,12 +57,12 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
 
                     svg.append("g")
                         .attr("class", "y axis")
-                        .call(yAxis)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", 6)
-                        .attr("dy", ".71em")
-                        .style("text-anchor", "end");
+                        .call(yAxis);
+//                        .append("text")
+//                        .attr("transform", "rotate(-90)")
+//                        .attr("y", 6)
+//                        .attr("dy", ".71em")
+//                        .style("text-anchor", "end");
 
                     var col = svg.selectAll(".title")
                         .data(data)
@@ -124,6 +124,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
                 var xAxis = getAxis(d3, x, "bottom");
 
                 var yAxis = getAxis(d3, y, "left");
+//                var yAxis = getAxisFormat(d3, y, "left", d3.requote(function(d) { return textFormatter(d); }));
 
                 var svg = getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom)
                     .append("g")
@@ -157,12 +158,12 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
 
                     svg.append("g")
                         .attr("class", "x axis")
-                        .call(yAxis)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", 6)
-                        .attr("dy", ".71em")
-                        .style("text-anchor", "end");
+                        .call(yAxis);
+//                        .append("text")
+//                        .attr("transform", "rotate(-90)")
+//                        .attr("y", 12)
+//                        .attr("dy", ".71em")
+//                        .style("text-anchor", "end");
 
                     var col = svg.selectAll(".title")
                         .data(data)
@@ -324,56 +325,19 @@ function barGraphData(d3, data, color, isLeftReport, label) {
     });
 }
 
-//function createFilterCriteria(d, label) {
-//    var criteria = {};
-//    criteria.endDate = d.time;
-//    criteria.parameters = {};
-//    criteria.parameters.severities = {
-//        info: d.severity === "Info",
-//        low: d.severity === "Low",
-//        medium: d.severity === "Medium",
-//        high: d.severity === "High",
-//        critical: d.severity === "Critical"
-//    };
-//
-//    if (d.teamId && label.teamId) {
-//        criteria.treeTeam = {id: d.teamId};
-//    } else if (d.teamId) {
-//        criteria.parameters.teams = [{id: d.teamId, name: d.teamName}];
-//        criteria.teams = [];
-//    } else {
-//        criteria.parameters.teams = [];
-//        criteria.teams = [];
-//    }
-//
-//    if (d.appId && label.appId) {
-//        criteria.treeApplication = {id: d.appId};
-//    } else if (d.appId) {
-//        criteria.parameters.applications = [{id: d.appId, name: d.teamName + " / " + d.appName}];
-//        criteria.searchApplications = [];
-//    } else {
-//        criteria.parameters.applications = [];
-//        criteria.searchApplications = [];
-//    }
-//
-//    criteria.parameters.channelTypes = [];
-//    criteria.parameters.scanners = [];
-//    criteria.scanners = [];
-//    criteria.parameters.genericVulnerabilities = [];
-//    if (d.tip.indexOf("CWE") > -1)
-//        criteria.parameters.genericVulnerabilities = [{name: d.tip}];
-//    criteria.parameters.showOpen = true;
-//    criteria.parameters.showClosed = false;
-//    criteria.parameters.showFalsePositive = false;
-//    criteria.parameters.showHidden = false;
-//
-//    return criteria;
-//
-//}
-
 function getTime(index) {
     return new Date(currentYear, currentMonth - index + 2, 0);
 }
+
+function textFormatter(text) {
+//    n = Math.round(n);
+//    var result = n;
+//    if (Math.abs(n) > 1000) {
+//        result = Math.round(n/1000) + 'K';
+//    }
+    return text;
+}
+
 var vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
 var vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
 var topVulnMapKeyword = ["count"];
