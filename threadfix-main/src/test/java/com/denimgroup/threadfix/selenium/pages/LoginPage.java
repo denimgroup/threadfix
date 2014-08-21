@@ -125,10 +125,11 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
+        WebElement passwordField = driver.findElementById("password");
         driver.findElementById("login").click();
 
         if (!isElementPresent("tab-dashboard")) {
-            driver.findElementById("login").click();
+            passwordField.sendKeys(Keys.ENTER);
 
             if (isElementPresent("loginError")) {
                 throw new LoginFailedException("Login Failed");
