@@ -360,7 +360,7 @@ public class RemoteProvidersIT extends BaseIT {
     /*------------------------------ Scheduling ------------------------------*/
 
     @Test
-    public void ScheduledImportNavigationTest() {
+    public void scheduledImportNavigationTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -374,5 +374,26 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue("Navigation to scheduled imports failed.",
                 remoteProvidersSchedulePage.isNewImportButtonDisplayed());
     }
+
+    @Test
+    public void scheduledDailyImportCreationTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Daily")
+                .setHour(8)
+                .setMinute(30)
+                .setPeriodOfDay("PM")
+                .clickModalSubmit();
+    }
+
 
 }

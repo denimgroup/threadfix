@@ -164,9 +164,28 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("urlInput").getAttribute("value");
     }
 
+    public ApplicationDetailPage clickVulnerabilitiesTab(int numberOfVulnerabilities) {
+        driver.findElementByLinkText(numberOfVulnerabilities + " Vulnerabilities").click();
+        waitForElement(driver.findElementById("actionItems"));
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickScansTab() {
         sleep(1000);
         driver.findElementByLinkText("1 Scan").click();
+        waitForElement(driver.findElementByLinkText("Delete Scan"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickScansTab(int numberOfScans) {
+        sleep(1000);
+
+        if (numberOfScans == 1) {
+            driver.findElementByLinkText("1 Scan").click();
+        } else {
+            driver.findElementByLinkText(Integer.toString(numberOfScans) + " Scans").click();
+        }
+
         waitForElement(driver.findElementByLinkText("Delete Scan"));
         return new ApplicationDetailPage(driver);
     }
@@ -754,6 +773,17 @@ public class ApplicationDetailPage extends BasePage {
         }
         if (!vulnerabilityCount.equals("0")) {
             System.out.println(severity + "= " + vulnerabilityCount);
+        }
+    }
+
+    public void printScanDates() {
+        String scanDate;
+        List<WebElement> scanList = driver.findElementsByClassName("ng-binding");
+        for (WebElement element : scanList) {
+            scanDate = element.getText();
+            if (scanDate.matches("[0-9]+/[0-9]+/[0-9]+")) {
+                System.out.println("Scan Date: " + scanDate);
+            }
         }
     }
 

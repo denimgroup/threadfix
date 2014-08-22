@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class RemoteProvidersSchedulePage extends BasePage{
 
@@ -41,6 +42,33 @@ public class RemoteProvidersSchedulePage extends BasePage{
     public RemoteProvidersIndexPage clickRemoteProvidersTab() {
         driver.findElementById("remoteProvidersTab").click();
         return new RemoteProvidersIndexPage(driver);
+    }
+
+    /*------------------------------ Set Methods ------------------------------*/
+
+    public RemoteProvidersSchedulePage setFrequency(String frequency) {
+        new Select(driver.findElementById("frequency")).selectByVisibleText(frequency);
+        return this;
+    }
+
+    public RemoteProvidersSchedulePage setHour(int hour) {
+        new Select(driver.findElementById("hour")).selectByVisibleText(Integer.toString(hour));
+        return this;
+    }
+
+    public RemoteProvidersSchedulePage setMinute(int minute) {
+        new Select(driver.findElementById("minute")).selectByVisibleText(Integer.toString(minute));
+        return this;
+    }
+
+    public RemoteProvidersSchedulePage setPeriodOfDay(String periodOfDay) {
+        new Select(driver.findElementById("selectedPeriod")).selectByVisibleText(periodOfDay);
+        return this;
+    }
+
+    public RemoteProvidersSchedulePage setDay(String day) {
+        new Select(driver.findElementById("selectedDay")).selectByVisibleText(day);
+        return this;
     }
 
     /*------------------------------ Boolean Methods ------------------------------*/
