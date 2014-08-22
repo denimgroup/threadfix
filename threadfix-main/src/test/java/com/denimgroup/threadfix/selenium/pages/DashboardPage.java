@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.openqa.selenium.NoSuchElementException;
 
@@ -33,6 +35,9 @@ public class DashboardPage extends BasePage{
 
 	public DashboardPage(WebDriver webdriver) {
 		super(webdriver);
+
+        WebDriverWait waitForHeader = new WebDriverWait(driver, 150);
+        waitForHeader.until(ExpectedConditions.elementToBeClickable(By.id("dashboardHeader")));
 	}
 	
 	public boolean is6MonthGraphNoDataFound(){
