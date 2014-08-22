@@ -79,8 +79,7 @@ public class ScheduledRemoteProviderImportController {
             return FormRestResponse.failure("Encountered errors.", result);
         }
 
-        int scheduledRemoteProviderImportId = scheduledRemoteProviderImportService.save(scheduledRemoteProviderImport);
-        if (scheduledRemoteProviderImportId < 0) {
+        if (scheduledRemoteProviderImportService.save(scheduledRemoteProviderImport) < 0) {
             return RestResponse.failure("Adding Scheduled Remote Provider Import failed.");
         }
 

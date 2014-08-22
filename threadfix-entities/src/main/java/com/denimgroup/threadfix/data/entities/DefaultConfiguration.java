@@ -39,19 +39,11 @@ public class DefaultConfiguration extends BaseEntity {
 	private static final long serialVersionUID = 2584623185996706729L;
 	
 	private Boolean globalGroupEnabled = null;
-
-    @Column
-    public Boolean getHasCachedData() {
-        return hasCachedData != null && hasCachedData;
-    }
-
-    public void setHasCachedData(Boolean hasCachedData) {
-        this.hasCachedData = hasCachedData;
-    }
+    private Boolean hasAddedScheduledImports = null;
+    private Integer defaultRoleId = null;
 
     private Boolean hasCachedData = null;
-	private Integer defaultRoleId = null;
-	
+
 	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
 
     private String proxyHost = null, proxyUsername = null, proxyPassword = null, proxyUsernameEncrypted = null, proxyPasswordEncrypted = null;
@@ -63,7 +55,26 @@ public class DefaultConfiguration extends BaseEntity {
         DefaultConfiguration config = new DefaultConfiguration();
         config.setDefaultRoleId(1);
         config.setGlobalGroupEnabled(true);
+        config.setHasAddedScheduledImports(false);
         return config;
+    }
+
+    @Column
+    public Boolean getHasAddedScheduledImports() {
+        return hasAddedScheduledImports != null && hasAddedScheduledImports;
+    }
+
+    public void setHasAddedScheduledImports(Boolean hasAddedScheduledImports){
+        this.hasAddedScheduledImports = hasAddedScheduledImports;
+    }
+
+    @Column
+    public Boolean getHasCachedData() {
+        return hasCachedData != null && hasCachedData;
+    }
+
+    public void setHasCachedData(Boolean hasCachedData) {
+        this.hasCachedData = hasCachedData;
     }
 	
 	@Column
