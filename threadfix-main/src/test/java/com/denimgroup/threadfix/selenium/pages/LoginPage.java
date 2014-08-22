@@ -136,11 +136,15 @@ public class LoginPage extends BasePage {
             }
         }
 
-        try {
+        /*try {
             WebDriverWait waitForHeader = new WebDriverWait(driver, 150);
             waitForHeader.until(ExpectedConditions.elementToBeClickable(By.id("orgHeader")));
         } catch (TimeoutException e) {
             throw new LoginFailedException("Login Failed", e);
+        }*/
+
+        if (driver.findElementsById("login").size() != 0) {
+            throw new LoginFailedException("LoginFailed");
         }
 
 		return new DashboardPage(driver);
