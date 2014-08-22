@@ -744,6 +744,19 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
     }
 
+    public void printVulnerabilityCount(String severity) {
+        String vulnerabilityCount = "0";
+        try {
+            vulnerabilityCount = driver.findElementById("totalBadge" + severity).getText().trim();
+        } catch (NoSuchElementException e) {
+            System.out.println(severity + "= " + vulnerabilityCount);
+            System.err.println(e.getMessage());
+        }
+        if (!vulnerabilityCount.equals("0")) {
+            System.out.println(severity + "= " + vulnerabilityCount);
+        }
+    }
+
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {

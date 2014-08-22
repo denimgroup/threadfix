@@ -125,34 +125,23 @@ public class LoginPage extends BasePage {
 	
 	/*----------------click Functions----------------*/
 	private DashboardPage clickLogin() {
-//        WebElement passwordField = driver.findElementById("password");
-//        driver.findElementById("login").click();
-//
-//        if (!isElementPresent("tab-dashboard")) {
-//            passwordField.sendKeys(Keys.ENTER);
-//
-//            if (isElementPresent("loginError")) {
-//                throw new LoginFailedException("Login Failed");
-//            }
-//
-//        }
-//
-//        try {
-//            WebDriverWait waitForHeader = new WebDriverWait(driver, 90);
-//            waitForHeader.until(ExpectedConditions.elementToBeClickable(By.id("orgHeader")));
-//        } catch (TimeoutException e) {
-//            throw new LoginFailedException("Login Failed", e);
-//        }
-
         WebElement passwordField = driver.findElementById("password");
-
         driver.findElementById("login").click();
+
         if (!isElementPresent("tab-dashboard")) {
             passwordField.sendKeys(Keys.ENTER);
+
+            if (isElementPresent("loginError")) {
+                throw new LoginFailedException("Login Failed");
+            }
         }
 
-        waitForElement(driver.findElementById("main-content"));
-
+        try {
+            WebDriverWait waitForHeader = new WebDriverWait(driver, 150);
+            waitForHeader.until(ExpectedConditions.elementToBeClickable(By.id("orgHeader")));
+        } catch (TimeoutException e) {
+            throw new LoginFailedException("Login Failed", e);
+        }
 
 		return new DashboardPage(driver);
 	}
