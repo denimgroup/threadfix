@@ -53,9 +53,7 @@ public class ScheduledRemoteProviderImportJob implements Job {
         String remoteProviderTypeIds = dataMap.getString("remoteProviderTypeIds");
         QueueSender queueSender = (QueueSender)dataMap.get("queueSender");
 
-        List<String> remoteProviderTypeIdList = new ArrayList<>(Arrays.asList(remoteProviderTypeIds.split(",")));
-
-        for(String remoteProviderTypeId : remoteProviderTypeIdList ) {
+        for (String remoteProviderTypeId : remoteProviderTypeIds.split(",")) {
             queueSender.addRemoteProviderImport(Integer.parseInt(remoteProviderTypeId));
         }
     }
