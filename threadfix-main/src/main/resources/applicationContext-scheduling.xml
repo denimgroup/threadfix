@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:amq="http://activemq.apache.org/schema/core"
 	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 	   					   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-	   					   http://www.springframework.org/schema/context
-						   http://www.springframework.org/schema/context/spring-context-3.2.xsd
 						   http://activemq.apache.org/schema/core
 						   http://activemq.apache.org/schema/core/activemq-core-5.2.0.xsd
 						   http://www.springframework.org/schema/jms 
@@ -52,21 +50,11 @@
 		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
 		p:targetObject-ref="queueSenderImpl" p:targetMethod="startDefectTrackerSync" />
 
-	<!-- Job Detail bean run by Quartz to start Import Scans -->
-	<bean name="importScansJob"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
-		p:targetObject-ref="queueSenderImpl" p:targetMethod="startImportScans" />
-
 	<!-- cron based trigger for synchronization with Defect Trackers -->
 	<!-- run every morning at 2 AM -->
 	<bean id="defectTrackerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"
 		p:jobDetail-ref="defectTrackerJob" p:cronExpression="2 0 0 * * ?" />
 
-	<!-- cron based trigger for Import Scans -->
-	<!-- run every morning at 6 AM -->
-	<bean id="importScansCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"
-		p:jobDetail-ref="importScansJob" p:cronExpression="6 0 0 * * ?" />
-		
 	<!--
 		SchedulerFactoryBean to set up cron triggers for importing scans and
 		defect tracker synchronization
@@ -75,7 +63,6 @@
 		<property name="triggers">
 			<list>
 				<ref bean="defectTrackerCronTrigger" />
-				<ref bean="importScansCronTrigger" />
 			</list>
 		</property>
 	</bean>
