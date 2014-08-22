@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
@@ -307,37 +308,36 @@ public class HibernateScanDao
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> getCountsForScans(List<Integer> ids) {
+        Map<String, Object> map = newMap();
 		if (ids == null || ids.isEmpty()) {
-			return new HashMap<>();
+			return map;
 		}
 		
-		String selectStart = "(select count(*) from Vulnerability vulnerability where vulnerability.isFalsePositive = false and vulnerability.hidden = false and " +
-				"(vulnerability.active = true OR vulnerability.foundByScanner = true) AND " +
-				"(vulnerability.genericSeverity.intValue = ";
-		String vulnIds = " and (vulnerability in (select finding.vulnerability.id from Finding finding where finding.vulnerability.hidden = false and finding.scan.id in ";
-		String orMapIds = " or vulnerability in (select map.finding.vulnerability.id from ScanRepeatFindingMap map where map.finding.vulnerability.hidden = false and map.scan.id in ";
+        String select = "select sum(";
+        String from = ") from Scan scan where scan.id in ";
 
-		return (Map<String, Object>) sessionFactory.getCurrentSession().createQuery(
-				"select new map( scan.id as id, " +
-						selectStart + "1" + vulnIds + "(:scanIds1))" + orMapIds + "(:scanIds12))))) as info, " +
-						selectStart + "2" + vulnIds + "(:scanIds2))" + orMapIds + "(:scanIds22))))) as low, " +
-						selectStart + "3" + vulnIds + "(:scanIds3))" + orMapIds + "(:scanIds32))))) as medium, " +
-						selectStart + "4" + vulnIds + "(:scanIds4))" + orMapIds + "(:scanIds42))))) as high, " +
-						selectStart + "5" + vulnIds + "(:scanIds5))" + orMapIds + "(:scanIds52))))) as critical)" +
-						" from Scan scan where scan.id = :scanId"
-				)
-				.setParameterList("scanIds1", ids)
-				.setParameterList("scanIds2", ids)
-				.setParameterList("scanIds3", ids)
-				.setParameterList("scanIds4", ids)
-				.setParameterList("scanIds5", ids)
-				.setParameterList("scanIds12", ids)
-				.setParameterList("scanIds22", ids)
-				.setParameterList("scanIds32", ids)
-				.setParameterList("scanIds42", ids)
-				.setParameterList("scanIds52", ids)
-				.setInteger("scanId", ids.get(0))
-				.uniqueResult();
+        Object infoNum = sessionFactory.getCurrentSession().createQuery(select + "numberInfoVulnerabilities" + from + "(:scanIds)")
+                .setParameterList("scanIds", ids)
+                .uniqueResult();
+        Object lowNum = sessionFactory.getCurrentSession().createQuery(select + "numberLowVulnerabilities" + from + "(:scanIds)")
+                .setParameterList("scanIds", ids)
+                .uniqueResult();
+        Object mediumNum = sessionFactory.getCurrentSession().createQuery(select + "numberMediumVulnerabilities" + from + "(:scanIds)")
+                .setParameterList("scanIds", ids)
+                .uniqueResult();
+        Object highNum = sessionFactory.getCurrentSession().createQuery(select + "numberHighVulnerabilities" + from + "(:scanIds)")
+                .setParameterList("scanIds", ids)
+                .uniqueResult();
+        Object criticalNum = sessionFactory.getCurrentSession().createQuery(select + "numberCriticalVulnerabilities" + from + "(:scanIds)")
+                .setParameterList("scanIds", ids)
+                .uniqueResult();
+        map.put("info", infoNum);
+        map.put("low", lowNum);
+        map.put("medium", mediumNum);
+        map.put("high", highNum);
+        map.put("critical", criticalNum);
+
+        return map;
 	}
 
 	@SuppressWarnings("unchecked")
