@@ -96,4 +96,19 @@ public abstract class ScheduledJob extends AuditableEntity {
     public void setDateError(String dateError) {
         this.dateError = dateError;
     }
+
+    @Transient
+    public String getScheduledDate(){
+        String scheduledDate;
+
+        if (this.day==null){
+            scheduledDate = this.frequency + " at " + this.hour
+                    + ":" + (this.minute == 0 ? "00" : this.minute);
+        } else {
+            scheduledDate = this.day + "s at " + this.hour
+                    + ":" + (this.minute == 0 ? "00" : this.minute);
+        }
+
+        return scheduledDate;
+    }
 }

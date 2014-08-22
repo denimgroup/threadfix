@@ -37,4 +37,17 @@ public class ScheduledRemoteProviderImport extends ScheduledJob {
 
     private static final long serialVersionUID = 1223869621339558275L;
 
+    public static ScheduledRemoteProviderImport getDefaultScheduledImport(){
+
+        ScheduledRemoteProviderImport defaultScheduledImport = new ScheduledRemoteProviderImport();
+
+        defaultScheduledImport.setFrequency(ScheduledFrequencyType.DAILY.getDescription());
+        defaultScheduledImport.setHour(6);
+        defaultScheduledImport.setMinute(0);
+        defaultScheduledImport.setPeriod("AM");
+        defaultScheduledImport.setDay(null);
+
+        return defaultScheduledImport;
+    }
+
 }
