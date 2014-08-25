@@ -128,23 +128,19 @@ public class LoginPage extends BasePage {
         WebElement passwordField = driver.findElementById("password");
         driver.findElementById("login").click();
 
-        if (!isElementPresent("tab-dashboard")) {
+        if (isElementPresent("login")) {
             passwordField.sendKeys(Keys.ENTER);
 
             if (isElementPresent("loginError")) {
-                throw new LoginFailedException("Login Failed");
+                throw new LoginFailedException("Login Failed, username and password were not accepted.");
             }
         }
 
-        /*try {
+        try {
             WebDriverWait waitForHeader = new WebDriverWait(driver, 150);
             waitForHeader.until(ExpectedConditions.elementToBeClickable(By.id("orgHeader")));
         } catch (TimeoutException e) {
             throw new LoginFailedException("Login Failed", e);
-        }*/
-
-        if (driver.findElementsById("login").size() != 0) {
-            throw new LoginFailedException("LoginFailed");
         }
 
 		return new DashboardPage(driver);

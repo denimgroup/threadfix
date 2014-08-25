@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.RemoteProvidersIndexPage;
-import com.denimgroup.threadfix.selenium.pages.RemoteProvidersSchedulePage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -375,6 +372,7 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersSchedulePage.isNewImportButtonDisplayed());
     }
 
+    @Ignore
     @Test
     public void scheduledDailyImportCreationTest() {
         String teamName = getRandomString(8);
@@ -394,6 +392,5 @@ public class RemoteProvidersIT extends BaseIT {
                 .setPeriodOfDay("PM")
                 .clickModalSubmit();
     }
-
 
 }
