@@ -151,6 +151,7 @@ public class LoginPage extends BasePage {
 
             try {
                 FileUtils.copyFile(screenShot, new File(System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg"));
+                System.out.println("Saving screen shot with filename: " + System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg");
             } catch (IOException f) {
                 System.err.println("Unable to save file.\n" + f.getMessage());
             }
