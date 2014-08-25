@@ -57,14 +57,11 @@ public class LoginIT extends BaseIT {
 	
 	@Test
 	public void validLoginLogout(){
-		DashboardPage dashboardPage;
-		String username = "user";
-		dashboardPage = loginPage.login(username,"password");
-		assertTrue("Correct user was not logged in",dashboardPage.isLoggedInUser(username));
+		DashboardPage dashboardPage = loginPage.login("user","password");
+		assertTrue("Correct user was not logged in",dashboardPage.isLoggedInUser("user"));
 		loginPage = dashboardPage.logout();
 		assertTrue("User was not logged out",loginPage.isLoggedOut());
 		
 	}
-	
 	
 }

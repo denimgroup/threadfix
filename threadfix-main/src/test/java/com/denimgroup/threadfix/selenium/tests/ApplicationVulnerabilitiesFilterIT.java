@@ -415,20 +415,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        applicationDetailPage.clickScansTab(2);
-
-        applicationDetailPage.printScanDates();
-
-        System.out.println("Vulnerabilities before filtering");
-
-        applicationDetailPage = applicationDetailPage.clickVulnerabilitiesTab(71);
-
-        applicationDetailPage.printVulnerabilityCount("Critical");
-        applicationDetailPage.printVulnerabilityCount("High");
-        applicationDetailPage.printVulnerabilityCount("Medium");
-        applicationDetailPage.printVulnerabilityCount("Low");
-        applicationDetailPage.printVulnerabilityCount("Info");
-
         applicationDetailPage = applicationDetailPage.expandAging()
                 .toggleLessThan()
                 .toggle90Days();

@@ -372,6 +372,7 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersSchedulePage.isNewImportButtonDisplayed());
     }
 
+    //TODO when issue 524 is fixed finish test.
     @Ignore
     @Test
     public void scheduledDailyImportCreationTest() {
