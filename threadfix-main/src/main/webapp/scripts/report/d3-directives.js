@@ -11,7 +11,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
             }
             ,
             link: function(scope, ele, attrs) {
-                var margin = {top: 20, right: 20, bottom: 30, left: 40},
+                var margin = {top: 20, right: 20, bottom: 30, left: 60},
                     width = 422 - margin.left - margin.right,
                     height = 250 - margin.top - margin.bottom;
 
@@ -58,11 +58,6 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'threadFixM
                     svg.append("g")
                         .attr("class", "y axis")
                         .call(yAxis);
-//                        .append("text")
-//                        .attr("transform", "rotate(-90)")
-//                        .attr("y", 6)
-//                        .attr("dy", ".71em")
-//                        .style("text-anchor", "end");
 
                     var col = svg.selectAll(".title")
                         .data(data)
@@ -111,7 +106,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
             }
             ,
             link: function(scope, ele, attrs) {
-                var margin = {top: 20, right: 20, bottom: 30, left: 40},
+                var margin = {top: 20, right: 20, bottom: 30, left: 60},
                     width = 422 - margin.left - margin.right,
                     height = 250 - margin.top - margin.bottom;
 
@@ -123,8 +118,14 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
 
                 var xAxis = getAxis(d3, x, "bottom");
 
-                var yAxis = getAxis(d3, y, "left");
-//                var yAxis = getAxisFormat(d3, y, "left", d3.requote(function(d) { return textFormatter(d); }));
+                var yAxis = getAxis(d3, y, "left")
+                        .tickFormat(function(d){
+                            if (d && d.length > 8)
+                                return d.substring(0,8) + "...";
+                            else
+                                return d;
+                        })
+                    ;
 
                 var svg = getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom)
                     .append("g")
@@ -159,11 +160,6 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
                     svg.append("g")
                         .attr("class", "x axis")
                         .call(yAxis);
-//                        .append("text")
-//                        .attr("transform", "rotate(-90)")
-//                        .attr("y", 12)
-//                        .attr("dy", ".71em")
-//                        .style("text-anchor", "end");
 
                     var col = svg.selectAll(".title")
                         .data(data)
@@ -235,7 +231,6 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut',
 
                     svg.append("g").attr("id",scope.label);
 
-//                    d3donut.draw3D(scope.label, getData(), 135, 90, 85, 55, 30, 0.4);
                     d3donut.draw2D(scope.label, getData(), 200, 260);
 
                     function getData(){
@@ -327,15 +322,6 @@ function barGraphData(d3, data, color, isLeftReport, label) {
 
 function getTime(index) {
     return new Date(currentYear, currentMonth - index + 2, 0);
-}
-
-function textFormatter(text) {
-//    n = Math.round(n);
-//    var result = n;
-//    if (Math.abs(n) > 1000) {
-//        result = Math.round(n/1000) + 'K';
-//    }
-    return text;
 }
 
 var vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
