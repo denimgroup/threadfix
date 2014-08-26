@@ -120,11 +120,19 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
     @Override
 	public Set<Endpoint> findAllMatches(@Nonnull EndpointQuery query) {
 		Set<Endpoint> resultingSet = new HashSet<>();
-		
+        boolean assignedInitial = false;
         List<Set<Endpoint>> resultSets = new ArrayList<>();
         
         boolean useStatic = query.getStaticPath() != null &&
         		query.getInformationSourceType() == InformationSourceType.STATIC;
+
+        List<CodePoint> codePoints = query.getCodePoints();
+        if (codePoints != null && !codePoints.isEmpty()) {
+            resultingSet = getFromCodePoints(codePoints);
+            if (!resultingSet.isEmpty()) {
+                assignedInitial = true;
+            }
+        }
 
         if (!useStatic && query.getDynamicPath() != null) {
             String cleaned = pathCleaner.cleanDynamicPath(query.getDynamicPath());
@@ -141,8 +149,6 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         }
 
         if (resultSets.size() > 0) {
-            boolean assignedInitial = false;
-
             for (Set<Endpoint> endpoints : resultSets) {
                 if (endpoints != null) {
 
@@ -175,11 +181,6 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             }
         }
 
-        List<CodePoint> codePoints = query.getCodePoints();
-        if (resultingSet.isEmpty() && codePoints != null) {
-            resultingSet = getFromCodePoints(codePoints);
-        }
-
 		return resultingSet;
 	}
 
@@ -194,8 +195,10 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
                 String sourceFileName = codePoint.getSourceFileName();
 
                 if (sourceFileName != null) {
+                    String cleanedSourceFileName = pathCleaner.cleanStaticPath(sourceFileName);
                     for (String key : staticMap.keySet()) {
-                        if (key.endsWith(sourceFileName)) {
+                        if (key.endsWith(sourceFileName) ||
+                                (cleanedSourceFileName != null && key.endsWith(cleanedSourceFileName))) {
                             sourceFileKey = key;
                         }
                     }

@@ -136,7 +136,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.scan = scan;
 	}
 
-	@ManyToOne
+    @ManyToOne
 	@JoinColumn(name = "channelVulnerabilityId")
 	@JsonView({AllViews.TableRow.class, AllViews.VulnerabilityDetail.class})
 	public ChannelVulnerability getChannelVulnerability() {
@@ -434,5 +434,24 @@ public class Finding extends AuditableEntity implements FindingLike {
                 getChannelSeverity().getName();
     }
 
+    @Override
+    public String toString() {
+
+        if (dependency != null) {
+            return "Finding{ Dependency{ CVEID=" + dependency.getCve() + "}}";
+        } else if (isStatic) {
+            return "Finding{ " +
+                    "staticPath=" + getSourceFileLocation() +
+                    ", channelSeverity=" + channelSeverity +
+                    ", channelVulnerability=" + channelVulnerability +
+                    "}";
+        } else {
+            return "Finding {" +
+                    "channelSeverity=" + channelSeverity +
+                    ", channelVulnerability=" + channelVulnerability +
+                    ", surfaceLocation=" + surfaceLocation +
+                    '}';
+        }
+    }
 
 }

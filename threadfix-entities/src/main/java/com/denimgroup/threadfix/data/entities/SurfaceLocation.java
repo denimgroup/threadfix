@@ -231,4 +231,12 @@ public class SurfaceLocation extends BaseEntity {
 		this.protocol = url.getProtocol();
 		this.query = url.getQuery();
 	}
+
+    @Override
+    public String toString() {
+        return "SurfaceLocation{" +
+                "parameter='" + parameter + '\'' +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }

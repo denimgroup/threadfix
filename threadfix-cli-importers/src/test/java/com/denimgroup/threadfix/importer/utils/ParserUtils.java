@@ -29,6 +29,8 @@ import com.denimgroup.threadfix.importer.cli.ScanParser;
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 /**
  * Created by mac on 8/18/14.
  */
@@ -43,10 +45,17 @@ public class ParserUtils {
      * @return parsed Scan (no linked Vulnerability objects)
      */
     public static Scan getScan(String filePath) {
+        String fullPath = ScanLocationManager.getRoot() + filePath;
+
+        File scanFile = new File(fullPath);
+
+        assert scanFile.exists() && scanFile.isFile() :
+            "Invalid file path: " + fullPath + " passed to getScan().";
+
         return SpringConfiguration
                 .getContext()
                 .getBean(ScanParser.class)
-                .getScan(ScanLocationManager.getRoot() + filePath);
+                .getScan(fullPath);
     }
 
 }
