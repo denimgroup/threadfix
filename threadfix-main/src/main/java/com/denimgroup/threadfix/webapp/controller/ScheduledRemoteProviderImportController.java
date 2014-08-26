@@ -74,6 +74,7 @@ public class ScheduledRemoteProviderImportController {
         }
 
         scheduledRemoteProviderImportService.validateDate(scheduledRemoteProviderImport, result);
+        scheduledRemoteProviderImportService.validateSameDate(scheduledRemoteProviderImport, result);
 
         if (result.hasErrors()) {
             return FormRestResponse.failure("Encountered errors.", result);

@@ -32,4 +32,6 @@ import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
 
 public interface ScheduledRemoteProviderImportDao extends ScheduledJobDao<ScheduledRemoteProviderImport> {
 
+    public boolean checkSameDate(ScheduledRemoteProviderImport scheduledRemoteProviderImport);
+
 }
