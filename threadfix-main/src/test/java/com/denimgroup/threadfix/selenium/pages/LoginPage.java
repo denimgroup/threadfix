@@ -78,7 +78,7 @@ public class LoginPage extends BasePage {
 
         driver.findElementById("login").click();
 
-        if (isElementPresent("login")) {
+        if (!isElementPresent("tab-dashboard")) {
 
             if (driver.findElementById("username").getAttribute("value").equals("")) {
                 System.out.println("Username field was empty, re-entering username.");
@@ -86,10 +86,6 @@ public class LoginPage extends BasePage {
             }
 
             driver.findElementById("password").sendKeys(Keys.ENTER);
-
-            if (isElementPresent("loginError")) {
-                throw new LoginFailedException("Login Failed, username and password were not accepted.");
-            }
         }
 
         try {
