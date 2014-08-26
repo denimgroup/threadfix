@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
@@ -50,6 +51,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
+@ScanImporter(ScannerType.MANUAL)
 class SSVLChannelImporter extends AbstractChannelImporter {
 
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
@@ -44,6 +45,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.APPSCAN_DYNAMIC)
 class AppScanWebImporter extends AbstractChannelImporter {
 
 	public AppScanWebImporter() {

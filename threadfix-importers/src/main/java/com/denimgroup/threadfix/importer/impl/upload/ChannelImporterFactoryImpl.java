@@ -24,15 +24,34 @@
 
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
+
 @Service
 class ChannelImporterFactoryImpl implements ChannelImporterFactory {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(ChannelImporterFactoryImpl.class);
+
+    Map<String, Class<?>> classMap = newMap();
+
+    boolean initialized = false;
 
     @Override
     @Transactional
@@ -44,47 +63,75 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
             return null;
         }
 
-        ScannerType type = ScannerType.getScannerType(applicationChannel.getChannelType().getName());
-
-        ChannelImporter channelImporter = null;
-
-        // This is gross, but better than the now unnecessary plugin loading.
-        // This also has the advantage of static type checking.
-        // The compiler will let us know if we're missing a branch.
-        switch (type) {
-            case ACUNETIX_WVS:       channelImporter = new AcunetixChannelImporter(); break;
-            case APPSCAN_DYNAMIC:    channelImporter = new AppScanWebImporter(); break;
-            case APPSCAN_SOURCE:     channelImporter = new AppScanSourceChannelImporter(); break;
-            case APPSCAN_ENTERPRISE: channelImporter = new AppScanEnterpriseChannelImporter(); break;
-            case ARACHNI:            channelImporter = new ArachniChannelImporter(); break;
-            case BRAKEMAN:           channelImporter = new BrakemanChannelImporter(); break;
-            case BURPSUITE:          channelImporter = new BurpSuiteChannelImporter(); break;
-            case CAT_NET:            channelImporter = new CatNetChannelImporter(); break;
-            case CENZIC_HAILSTORM:   channelImporter = new CenzicChannelImporter(); break;
-            case CHECKMARX:          channelImporter = new CheckMarxChannelImporter(); break;
-            case DEPENDENCY_CHECK:   channelImporter = new DependencyCheckChannelImporter(); break;
-            case FINDBUGS:           channelImporter = new FindBugsChannelImporter(); break;
-            case FORTIFY:            channelImporter = new FortifyChannelImporter(); break;
-            case NESSUS:             channelImporter = new NessusChannelImporter(); break;
-            case NTO_SPIDER:         channelImporter = new NTOSpiderChannelImporter(); break;
-            case NETSPARKER:         channelImporter = new NetsparkerChannelImporter(); break;
-            case SKIPFISH:           channelImporter = new SkipfishChannelImporter(); break;
-            case W3AF:               channelImporter = new W3afChannelImporter(); break;
-            case WEBINSPECT:         channelImporter = new WebInspectChannelImporter(); break;
-            case ZAPROXY:            channelImporter = new ZaproxyChannelImporter(); break;
-            case MANUAL:             channelImporter = new SSVLChannelImporter(); break;
-
-            // these don't get anything
-            case QUALYSGUARD_WAS:
-            case SENTINEL:
-            case VERACODE:
+        if (!initialized) {
+            init();
+            assert initialized : "Initialization failed.";
         }
 
-        if (channelImporter != null) {
-            channelImporter.setChannel(applicationChannel);
+        String scannerName = applicationChannel.getChannelType().getName();
+
+        Class<?> channelImporterClass = classMap.get(scannerName);
+
+        ChannelImporter importer;
+
+        try {
+            Constructor<?>[] constructors = channelImporterClass.getConstructors();
+
+            assert constructors.length == 1 : "Got " + constructors.length + " constructors.";
+
+            Object maybeImporter = constructors[0].newInstance();
+
+            if (maybeImporter instanceof ChannelImporter) {
+                importer = (ChannelImporter) maybeImporter;
+            } else {
+                throw new IllegalStateException(channelImporterClass +
+                        " didn't implement ChannelImporter. Fix your code and try again.");
+            }
+
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
 
-        return channelImporter;
+        importer.setChannel(applicationChannel);
+
+        return importer;
+    }
+
+    private void init() {
+
+        ClassPathScanningCandidateComponentProvider provider =
+                new ClassPathScanningCandidateComponentProvider(false);
+
+        provider.addIncludeFilter(new AnnotationTypeFilter(ScanImporter.class));
+
+        ClassLoader classLoader = ChannelImporterFactoryImpl.class.getClassLoader();
+        provider.setResourceLoader(new PathMatchingResourcePatternResolver(classLoader));
+
+        Set<BeanDefinition> candidateComponents = provider.findCandidateComponents("com.denimgroup.threadfix.importer.impl.upload");
+
+        for (BeanDefinition candidateComponent : candidateComponents) {
+            candidateComponent.getBeanClassName();
+            try {
+
+                Class<?> scannerClass = Class.forName(candidateComponent.getBeanClassName());
+
+                ScannerType scannerType = scannerClass.getAnnotation(ScanImporter.class).value();
+
+                assert scannerType != null : "Unable to get scanner type from annotation, something is wrong.";
+
+                LOG.info("Successfully loaded " + scannerClass + " from classpath.");
+
+                classMap.put(scannerType.getFullName(), scannerClass);
+
+            } catch (ClassNotFoundException e) {
+                LOG.error("Class " + candidateComponent + " wasn't loadable even though we found it with " +
+                        "ClassPathScanningCandidateComponentProvider. Something is wrong.");
+                throw new IllegalStateException(e);
+            }
+        }
+
+        initialized = true;
     }
 
 }
