@@ -65,11 +65,13 @@ public class DashboardPage extends BasePage{
     }
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
+        waitForElement(driver.findElementById("csvLink"));
 		return new AnalyticsPage(driver);
 	}
 	
 	public AnalyticsPage clickRightViewMore(){
 		driver.findElementById("rightViewMore").click();
+        waitForElement(driver.findElementById("csvLink"));
 		return new AnalyticsPage(driver);
 	}
 	
