@@ -419,12 +419,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
                 .toggleLessThan()
                 .toggle90Days();
 
-        applicationDetailPage.printVulnerabilityCount("Critical");
-        applicationDetailPage.printVulnerabilityCount("High");
-        applicationDetailPage.printVulnerabilityCount("Medium");
-        applicationDetailPage.printVulnerabilityCount("Low");
-        applicationDetailPage.printVulnerabilityCount("Info");
-
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",

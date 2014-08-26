@@ -69,9 +69,48 @@ public class LoginPage extends BasePage {
 		return new LoginPage(webdriver);
 	}
 	
-	public DashboardPage login(String user, String password) {
+	/*public DashboardPage login(String user, String password) {
 		return setUsername(user).setPassword(password).clickLogin();
-	}
+	}*/
+
+    public DashboardPage login(String user, String password) {
+        setUsername(user).setPassword(password);
+
+        driver.findElementById("login").click();
+
+        if (isElementPresent("login")) {
+
+            if (driver.findElementById("username").getAttribute("value").equals("")) {
+                System.out.println("Username field was empty, re-entering username.");
+                driver.findElementById("username").sendKeys(user);
+            }
+
+            driver.findElementById("password").sendKeys(Keys.ENTER);
+
+            if (isElementPresent("loginError")) {
+                throw new LoginFailedException("Login Failed, username and password were not accepted.");
+            }
+        }
+
+        try {
+            WebDriverWait waitForHeader = new WebDriverWait(driver, 60);
+            waitForHeader.until(ExpectedConditions.presenceOfElementLocated(By.id("orgHeader")));
+        } catch (TimeoutException e) {
+            File screenShot = driver.getScreenshotAs(OutputType.FILE);
+            String fileName = DateFormatUtils.format(new Date(), "HH-MM-SS");
+
+            try {
+                FileUtils.copyFile(screenShot, new File(System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg"));
+                System.out.println("Saving screen shot with filename: " + System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg");
+            } catch (IOException f) {
+                System.err.println("Unable to save file.\n" + f.getMessage());
+            }
+
+            throw new LoginFailedException("Login Failed", e);
+        }
+
+        return new DashboardPage(driver);
+    }
 	
 	public LoginPage loginInvalid(String user, String password) {
 		setUsername(user).setPassword(password);
