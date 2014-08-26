@@ -184,7 +184,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 break;
             case IN_ACTION_BODY:
                 if (currentCurlyBrace == methodBraceLevel) {
-                    mappings.addAction(methodName, currentAttributes, methodLineNumber, currentParameters);
+                    mappings.addAction(methodName, currentAttributes, methodLineNumber, lineNumber, currentParameters);
                     currentAttributes = new HashSet<>();
                     currentParameters = new HashSet<>();
                     methodName = null;

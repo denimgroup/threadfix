@@ -81,6 +81,6 @@ class DotNetEndpoint extends AbstractEndpoint {
 
     @Override
     public boolean matchesLineNumber(int lineNumber) {
-        return lineNumber == action.lineNumber;
+        return lineNumber >= action.lineNumber && lineNumber <= action.endLineNumber;
     }
 }

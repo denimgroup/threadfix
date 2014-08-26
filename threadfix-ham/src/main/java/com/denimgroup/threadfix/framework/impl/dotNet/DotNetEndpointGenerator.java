@@ -72,6 +72,8 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
                 continue;
             }
 
+            String lowerCaseParameterName = mapRoute.defaultRoute.parameter.toLowerCase();
+
             for (Action action : mappings.getActions()) {
                 if (action == null) {
                     LOG.debug("Action was null. Skipping to the next.");
@@ -93,7 +95,15 @@ public class DotNetEndpointGenerator implements EndpointGenerator {
                     result = result.replaceAll("\\{\\w*action\\w*\\}", action.name);
                 }
 
-                if (!action.parameters.contains(mapRoute.defaultRoute.parameter)) {
+                boolean shouldReplaceParameterSection = true;
+                for (String parameter : action.parameters) {
+                    if (parameter.toLowerCase().equals(lowerCaseParameterName)) {
+                        shouldReplaceParameterSection = false;
+                        break;
+                    }
+                }
+
+                if (shouldReplaceParameterSection) {
                     result = result.replaceAll("/\\{[^\\}]*\\}", "");
                 }
 

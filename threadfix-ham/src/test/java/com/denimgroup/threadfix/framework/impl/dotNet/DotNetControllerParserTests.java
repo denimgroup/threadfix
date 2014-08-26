@@ -160,7 +160,17 @@ public class DotNetControllerParserTests {
         assert targetAction != null : "Edit action was null. Can't continue.";
 
         assert targetAction.parameters.contains("id") : "Parameters didn't contain id.";
+    }
 
+    @Test
+    public void testBindIncludeSettings() {
+        DotNetControllerMappings mappings = getControllerMappings("BindingController.cs");
+
+        Action targetAction = mappings.getActionForNameAndMethod("Edit", "POST");
+
+        assert targetAction != null : "Edit action was null. Can't continue.";
+
+        assert targetAction.parameters.contains("ID") : "Parameters didn't contain id.";
     }
 
 

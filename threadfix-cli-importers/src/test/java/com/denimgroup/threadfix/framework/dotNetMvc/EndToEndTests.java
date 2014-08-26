@@ -75,6 +75,8 @@ public class EndToEndTests {
 
         assert new File(total).exists() : "Contoso project didn't exist at " + total;
 
+        System.out.println("Getting database from " + total);
+
         return new File(total);
     }
 
@@ -130,6 +132,8 @@ public class EndToEndTests {
 
     // This is basically the model we're trying to create
     private String getExpectedPath(String fileName, int lineNumber) {
+        System.out.println(fileName + ": " + lineNumber);
+
         if (fileName.endsWith("Controller.cs")) {
             String shorterName = fileName.substring(fileName.lastIndexOf('/') + 1);
 
@@ -189,17 +193,15 @@ public class EndToEndTests {
                     }
                     break;
                 case "StudentController.cs":
-                    if (lineNumber >= 21 && lineNumber <= 69) {
+                    if (lineNumber >= 21 && lineNumber <= 65) {
                         return "/Student";
-                    } else if (lineNumber >= 71 && lineNumber <= 75) {
-                        return "/Student/XssPage";
-                    } else if (lineNumber >= 78 && lineNumber <= 90) {
+                    } else if (lineNumber >= 67 && lineNumber <= 79) {
                         return "/Student/Details/{variable}";
-                    } else if (lineNumber >= 93 && lineNumber <= 97) {
+                    } else if (lineNumber >= 82 && lineNumber <= 111) {
                         return "/Student/Create";
-                    } else if (lineNumber >= 85 && lineNumber <= 165) {
+                    } else if (lineNumber >= 114 && lineNumber <= 159) {
                         return "/Student/Edit/{variable}";
-                    } else if (lineNumber >= 189 && lineNumber <= 248) {
+                    } else if (lineNumber >= 161 && lineNumber <= 196) {
                         return "/Student/Delete/{variable}";
                     }
                     break;
@@ -210,7 +212,6 @@ public class EndToEndTests {
 
         return null;
     }
-
 
     @Test
     public void testStaticDatabaseLookups() {

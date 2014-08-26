@@ -41,6 +41,8 @@ class Action {
     @Nonnull
     Integer     lineNumber;
     @Nonnull
+    Integer     endLineNumber;
+    @Nonnull
     Set<String> parameters = new HashSet<>();
 
     String getMethod() {
@@ -48,12 +50,16 @@ class Action {
                 "POST" : "GET";
     }
 
-    static Action action(@Nonnull String name, @Nonnull Set<String> attributes,
-                         @Nonnull Integer lineNumber, @Nonnull Set<String> parameters) {
+    static Action action(@Nonnull String name,
+                         @Nonnull Set<String> attributes,
+                         @Nonnull Integer lineNumber,
+                         @Nonnull Integer endLineNumber,
+                         @Nonnull Set<String> parameters) {
         Action action = new Action();
         action.name = name;
         action.attributes = attributes;
         action.lineNumber = lineNumber;
+        action.endLineNumber = endLineNumber;
 
         for (String parameter : parameters) {
             if (parameter.contains(",")) {
@@ -62,7 +68,6 @@ class Action {
                 action.parameters.add(parameter);
             }
         }
-
 
         return action;
     }

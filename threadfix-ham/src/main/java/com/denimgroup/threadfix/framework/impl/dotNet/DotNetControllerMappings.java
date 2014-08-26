@@ -57,9 +57,12 @@ public class DotNetControllerMappings {
         return controllerName != null && !actions.isEmpty();
     }
 
-    public void addAction(@Nonnull String action, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber,
+    public void addAction(@Nonnull String action,
+                          @Nonnull Set<String> attributes,
+                          @Nonnull Integer lineNumber,
+                          @Nonnull Integer endLineNumber,
                           @Nonnull Set<String> parameters) {
-        actions.add(action(action, attributes, lineNumber, parameters));
+        actions.add(action(action, attributes, lineNumber, endLineNumber, parameters));
     }
 
     @Nonnull
