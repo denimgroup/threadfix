@@ -57,11 +57,11 @@ myAppModule.controller('ScheduledRemoteProviderImportTabController', function ($
                         }
 
                         setHeader();
-                        $scope.$parent.successMessage = "Successfully deleted document " + document.name;
+                        $scope.successMessage = data.object;
 
                     } else {
                         sImport.deleting = false;
-                        $scope.errorMessage = "Something went wrong. " + data.message;
+                        $scope.errorMessage = data.object;
                     }
                 }).
                 error(function(data, status, headers, config) {

@@ -2,6 +2,15 @@
 
 <tab id="scheduledImportTab" ng-controller="ScheduledRemoteProviderImportTabController" heading="{{ heading }}">
 
+    <div ng-show="successMessage" class="alert alert-success">
+        <button class="close" ng-click="successMessage = undefined" type="button">&times;</button>
+        {{ successMessage }}
+    </div>
+    <div ng-show="errorMessage" class="alert alert-danger">
+        <button class="close" ng-click="errorMessage = undefined" type="button">&times;</button>
+        {{ errorMessage }}
+    </div>
+
     <c:if test="${ canManageRemoteProviders }">
         <div style="margin-top:10px;margin-bottom:7px;">
             <a id="addImportQueueLink" class="btn" ng-click="openNewScheduledImportModal()">Schedule New Import</a>
