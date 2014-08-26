@@ -367,15 +367,7 @@ public abstract class BasePage {
 	public boolean isChangePasswordMenuLinkClickable(){
         return isClickable("changePasswordLink");
 	}
-	
-	public boolean isToggleHelpLinkPresent(){
-		return driver.findElementById("toggleHelpLink").isDisplayed();
-	}
-	
-	public boolean isToggleHelpMenuLinkClickable(){
-        return isClickable("toggleHelpLink");
-	}
-	
+
 	public boolean isLogoutLinkPresent(){
 		return driver.findElementById("logoutLink").isDisplayed();
 	}
@@ -394,7 +386,6 @@ public abstract class BasePage {
                 driver.findElementById(elementID)) ;
 
         return condition.apply(driver) != null;
-
     }
 
     public boolean isElementVisible(String elementID){

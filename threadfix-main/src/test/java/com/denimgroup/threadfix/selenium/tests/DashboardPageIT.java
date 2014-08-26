@@ -110,22 +110,4 @@ public class DashboardPageIT extends BaseIT {
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
     }
 
-    @Test
-	public void teamIndexGraphPresentTest(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
-        DashboardPage dashboardPage = loginPage.login("user", "password");
-        dashboardPage.clickDashboardLink();
-        sleep(3000);
-
-		assertFalse("6 month burndown graph section is not present", dashboardPage.is6MonthGraphNoDataFound());
-        assertFalse("Top 10 graph section is not present", dashboardPage.isTop10GraphNoDataFound());
-	}
-
-
 }

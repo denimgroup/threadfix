@@ -23,20 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-
-import com.denimgroup.threadfix.data.entities.Application;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ApplicationDetailPage extends BasePage {
-
-    WebDriverWait wait = new WebDriverWait(driver, 10);
 
     public ApplicationDetailPage(WebDriver webdriver) {
         super(webdriver);
@@ -51,12 +45,6 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setUsername(String dtName) {
         driver.findElementById("username").clear();
         driver.findElementById("username").sendKeys(dtName);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage clickEditDefectTrackerButton() {
-        driver.findElementById("editDefectTrackerButton").click();
-        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -761,30 +749,6 @@ public class ApplicationDetailPage extends BasePage {
 
     public String getScannerDate(int row) {
         return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
-    }
-
-    public void printVulnerabilityCount(String severity) {
-        String vulnerabilityCount = "0";
-        try {
-            vulnerabilityCount = driver.findElementById("totalBadge" + severity).getText().trim();
-        } catch (NoSuchElementException e) {
-            System.out.println(severity + "= " + vulnerabilityCount);
-            System.err.println(e.getMessage());
-        }
-        if (!vulnerabilityCount.equals("0")) {
-            System.out.println(severity + "= " + vulnerabilityCount);
-        }
-    }
-
-    public void printScanDates() {
-        String scanDate;
-        List<WebElement> scanList = driver.findElementsByClassName("ng-binding");
-        for (WebElement element : scanList) {
-            scanDate = element.getText();
-            if (scanDate.matches("[0-9]+/[0-9]+/[0-9]+")) {
-                System.out.println("Scan Date: " + scanDate);
-            }
-        }
     }
 
     /*________________ Boolean Functions ________________*/

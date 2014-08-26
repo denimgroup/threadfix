@@ -63,10 +63,6 @@ public class LoginPage extends BasePage {
 		return new LoginPage(webdriver);
 	}
 	
-	/*public DashboardPage login(String user, String password) {
-		return setUsername(user).setPassword(password).clickLogin();
-	}*/
-
     public DashboardPage login(String user, String password) {
         setUsername(user).setPassword(password);
 
@@ -84,7 +80,7 @@ public class LoginPage extends BasePage {
 
         try {
             WebDriverWait waitForHeader = new WebDriverWait(driver, 45);
-            waitForHeader.until(ExpectedConditions.presenceOfElementLocated(By.id("teststuff")));
+            waitForHeader.until(ExpectedConditions.presenceOfElementLocated(By.id("orgHeader")));
         } catch (TimeoutException e) {
             takeScreenShot();
             throw new LoginFailedException("Login Failed", e);

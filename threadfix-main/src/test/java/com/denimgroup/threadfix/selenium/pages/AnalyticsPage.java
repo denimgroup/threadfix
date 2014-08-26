@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class AnalyticsPage extends BasePage {
 
@@ -110,5 +111,10 @@ public class AnalyticsPage extends BasePage {
 
     public boolean areAllVulnerabilitiesHidden() {
         return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
+    }
+
+    public boolean isReportCorrect(String report) {
+        Select reportSelection = new Select(driver.findElementById("reportSelect"));
+        return reportSelection.getFirstSelectedOption().getText().equals(report);
     }
 }
