@@ -24,16 +24,10 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import com.denimgroup.threadfix.selenium.utils.LoginFailedException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 
 public class LoginPage extends BasePage {
 
@@ -89,19 +83,10 @@ public class LoginPage extends BasePage {
         }
 
         try {
-            WebDriverWait waitForHeader = new WebDriverWait(driver, 60);
-            waitForHeader.until(ExpectedConditions.presenceOfElementLocated(By.id("orgHeader")));
+            WebDriverWait waitForHeader = new WebDriverWait(driver, 45);
+            waitForHeader.until(ExpectedConditions.presenceOfElementLocated(By.id("teststuff")));
         } catch (TimeoutException e) {
-            File screenShot = driver.getScreenshotAs(OutputType.FILE);
-            String fileName = DateFormatUtils.format(new Date(), "HH-MM-SS");
-
-            try {
-                FileUtils.copyFile(screenShot, new File(System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg"));
-                System.out.println("Saving screen shot with filename: " + System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg");
-            } catch (IOException f) {
-                System.err.println("Unable to save file.\n" + f.getMessage());
-            }
-
+            takeScreenShot();
             throw new LoginFailedException("Login Failed", e);
         }
 
@@ -164,37 +149,4 @@ public class LoginPage extends BasePage {
         return this;
 	}
 	
-	/*----------------click Functions----------------*/
-	private DashboardPage clickLogin() {
-        WebElement passwordField = driver.findElementById("password");
-        driver.findElementById("login").click();
-
-        if (isElementPresent("login")) {
-            passwordField.sendKeys(Keys.ENTER);
-
-            if (isElementPresent("loginError")) {
-                throw new LoginFailedException("Login Failed, username and password were not accepted.");
-            }
-        }
-
-        try {
-            WebDriverWait waitForHeader = new WebDriverWait(driver, 60);
-            waitForHeader.until(ExpectedConditions.presenceOfElementLocated(By.id("orgHeader")));
-        } catch (TimeoutException e) {
-            File screenShot = driver.getScreenshotAs(OutputType.FILE);
-            String fileName = DateFormatUtils.format(new Date(), "HH-MM-SS");
-
-            try {
-                FileUtils.copyFile(screenShot, new File(System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg"));
-                System.out.println("Saving screen shot with filename: " + System.getProperty("SCREENSHOT_BASE") + fileName + ".jpg");
-            } catch (IOException f) {
-                System.err.println("Unable to save file.\n" + f.getMessage());
-            }
-
-            throw new LoginFailedException("Login Failed", e);
-        }
-
-		return new DashboardPage(driver);
-	}
-
 }

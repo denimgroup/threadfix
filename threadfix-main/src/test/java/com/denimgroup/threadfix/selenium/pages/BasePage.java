@@ -23,14 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -436,6 +441,18 @@ public abstract class BasePage {
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(e.getAttribute("id"))));
 	}
+
+    public void takeScreenShot() {
+        File screenShot = driver.getScreenshotAs(OutputType.FILE);
+        String fileName = System.getProperty("SCREENSHOT_BASE") + DateFormatUtils.format(new Date(), "HH-MM-SS") + ".jpg";
+
+        try {
+            FileUtils.copyFile(screenShot, new File(fileName));
+            System.out.println("Saving screen shot with filename: " + fileName);
+        } catch (IOException f) {
+            System.err.println("Unable to save file.\n" + f.getMessage());
+        }
+    }
 	
 	protected static String getRandomString(int length) {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
