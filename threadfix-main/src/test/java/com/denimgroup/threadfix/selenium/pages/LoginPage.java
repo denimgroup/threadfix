@@ -68,7 +68,7 @@ public class LoginPage extends BasePage {
 
         driver.findElementById("login").click();
 
-        if (isElementPresent("login")) {
+        if (!isElementPresent("tab-dashboard")) {
 
             if (driver.findElementById("username").getAttribute("value").equals("")) {
                 System.out.println("Username field was empty, re-entering username.");

@@ -163,8 +163,8 @@ public class DefectTrackerIT extends BaseIT {
 
 	@Test
 	public void editDefectTrackerTest() {
-		String originalDefectTrackerName = "testEditDefectTracker"+ getRandomString(3);
-		String editedDefectTrackerName = "testEditDefectTracker-edit"+ getRandomString(3);
+		String originalDefectTrackerName = getRandomString(8);
+		String editedDefectTrackerName = getRandomString(8);
 		String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "Bugzilla";
 
