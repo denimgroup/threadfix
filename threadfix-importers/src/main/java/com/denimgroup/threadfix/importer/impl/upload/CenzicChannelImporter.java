@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -44,6 +45,7 @@ import java.util.Map;
  * 
  * @author stran
  */
+@ScanImporter(ScannerType.CENZIC_HAILSTORM)
 class CenzicChannelImporter extends AbstractChannelImporter {
 
     private static final String EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet, Script, or Object",

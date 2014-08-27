@@ -27,12 +27,16 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.dao.ScheduledRemoteProviderImportDao;
 
+import com.denimgroup.threadfix.data.entities.DayInWeek;
+import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
+import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
 import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 /**
  * Created by dzabdi88 on 8/15/14.
@@ -54,5 +58,12 @@ public class ScheduledRemoteProviderImportServiceImpl extends ScheduledJobServic
     @Override
     protected ScheduledJobDao<ScheduledRemoteProviderImport> getScheduledJobDao() {
         return scheduledRemoteProviderImportDao;
+    }
+
+    @Override
+    public void validateSameDate(ScheduledRemoteProviderImport scheduledRemoteProviderImport, BindingResult result) {
+        if (scheduledRemoteProviderImportDao.checkSameDate(scheduledRemoteProviderImport)) {
+            result.rejectValue("dateError", null, null, "Another import is scheduled at that time/frequency");
+        }
     }
 }

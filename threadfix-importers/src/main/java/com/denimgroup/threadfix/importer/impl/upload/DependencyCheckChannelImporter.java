@@ -23,10 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
@@ -40,6 +41,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+@ScanImporter(ScannerType.DEPENDENCY_CHECK)
 class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();

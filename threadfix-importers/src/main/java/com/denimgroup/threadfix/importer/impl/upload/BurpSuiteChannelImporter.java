@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -51,6 +52,7 @@ import java.util.regex.Pattern;
  * @author mcollins
  *
  */
+@ScanImporter(ScannerType.BURPSUITE)
 class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";

@@ -5,7 +5,7 @@
     </div>
     <div class="modal-body" ng-form="form">
         <table>
-            <tr class="left-align">
+            <tr align="left">
                 <td style="padding:5px;">Frequency</td>
                 <td style="padding:5px;">
                     <select style="width:243px;" name="frequency" ng-model="object.frequency" id="frequency">
@@ -15,7 +15,7 @@
                 </td>
             </tr>
 
-            <tr class="left-align">
+            <tr align="left">
                 <td style="padding:5px;">Time</td>
                 <td style="padding:5px;">
                     <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour">

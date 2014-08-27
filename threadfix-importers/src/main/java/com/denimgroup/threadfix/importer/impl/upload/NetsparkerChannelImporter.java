@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.ChannelSeverity;
@@ -47,6 +48,7 @@ import java.util.Map;
  * @author mcollins
  *
  */
+@ScanImporter(ScannerType.NETSPARKER)
 class NetsparkerChannelImporter extends AbstractChannelImporter {
 
     public NetsparkerChannelImporter() {
