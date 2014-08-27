@@ -42,7 +42,7 @@ import java.util.List;
 
 public class ScheduledRemoteProviderImportJob implements Job {
 
-    private static final SanitizedLogger log = new SanitizedLogger(ScheduledScanJob.class);
+    private static final SanitizedLogger log = new SanitizedLogger(ScheduledRemoteProviderImportJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
