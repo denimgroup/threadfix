@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import org.apache.commons.io.FileUtils;
@@ -79,51 +80,7 @@ class SpringEntityMappings {
      * added in addition to all of the normal parameters (@RequestMapping, @PathVariable)
      */
     public ModelFieldSet getPossibleParametersForModelType(String className) {
-        ModelFieldSet fields = fieldMap.get(className);
-
-        if (fields == null) {
-            fields = new ModelFieldSet(new HashSet<ModelField>());
-        }
-
-        Set<String> alreadyVisited = new HashSet<>();
-		alreadyVisited.add(className);
-		
-		ModelFieldSet fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>());
-		
-		for (ModelField field : fields) {
-			if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
-				alreadyVisited.add(field.getType());
-				fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
-			}
-		}
-		
-		return fields.addAll(fieldsToAdd);
-	}
-	
-	@Nonnull
-    private ModelFieldSet spiderFields(String prefix, String className, @Nonnull Set<String> alreadyVisited) {
-		ModelFieldSet fields = fieldMap.get(className);
-		
-		if (fields == null) {
-			fields = new ModelFieldSet(new HashSet<ModelField>());
-		}
-		
-		ModelFieldSet
-			fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>()),
-			fieldsWithPrefixes = new ModelFieldSet(new HashSet<ModelField>());
-		
-		for (ModelField field : fields) {
-			if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
-				alreadyVisited.add(field.getType());
-				fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
-			}
-		}
-		
-		for (ModelField field : fieldsToAdd.addAll(fields)) {
-			fieldsWithPrefixes.add(new ModelField(field.getType(), prefix + field.getParameterKey()));
-		}
-		
-		return fieldsWithPrefixes;
+        return FieldSetLookupUtils.getPossibleParametersForModelType(fieldMap, className);
 	}
 	
 	@Nonnull

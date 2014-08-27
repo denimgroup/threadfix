@@ -24,13 +24,13 @@
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
@@ -72,10 +72,6 @@ public class DotNetModelMappings {
         collapse();
     }
 
-    public ModelFieldSet getPossibleParametersForModelType(@Nonnull ModelField beanField) {
-        return getPossibleParametersForModelType(beanField.getType());
-    }
-
     private void collapse() {
         for (ViewModelParser parser : modelParsers) {
             for (Map.Entry<String, Set<ModelField>> entry : parser.map.entrySet()) {
@@ -90,130 +86,11 @@ public class DotNetModelMappings {
      * added in addition to all of the normal parameters (@RequestMapping, @PathVariable)
      */
     public ModelFieldSet getPossibleParametersForModelType(String className) {
-        ModelFieldSet fields = fieldMap.get(className);
-
-        if (fields == null) {
-            fields = new ModelFieldSet(new HashSet<ModelField>());
-        }
-
-        Set<String> alreadyVisited = new HashSet<>();
-        alreadyVisited.add(className);
-
-        ModelFieldSet fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>());
-
-        for (ModelField field : fields) {
-            if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
-                alreadyVisited.add(field.getType());
-                fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
-            }
-        }
-
-        return fields.addAll(fieldsToAdd);
-    }
-
-    @Nonnull
-    private ModelFieldSet spiderFields(String prefix, String className, @Nonnull Set<String> alreadyVisited) {
-        ModelFieldSet fields = fieldMap.get(className);
-
-        if (fields == null) {
-            fields = new ModelFieldSet(new HashSet<ModelField>());
-        }
-
-        ModelFieldSet
-                fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>()),
-                fieldsWithPrefixes = new ModelFieldSet(new HashSet<ModelField>());
-
-        for (ModelField field : fields) {
-            if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
-                alreadyVisited.add(field.getType());
-                fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
-            }
-        }
-
-        for (ModelField field : fieldsToAdd.addAll(fields)) {
-            fieldsWithPrefixes.add(new ModelField(field.getType(), prefix + field.getParameterKey()));
-        }
-
-        return fieldsWithPrefixes;
-    }
-
-    @Nonnull
-    public List<ModelField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable ModelField initialField) {
-        List<ModelField> fields = new ArrayList<>();
-
-
-        if (methodCalls != null && initialField != null) {
-            fields.add(initialField);
-
-            ModelField currentField = initialField;
-            String editedCalls = methodCalls;
-
-            if (methodCalls.startsWith(initialField.getParameterKey())) {
-                editedCalls = methodCalls.substring(initialField.getParameterKey().length());
-            }
-
-            String[] calls = editedCalls.split("(\\(\\))");
-
-            for (String call : calls) {
-                if (call != null && !call.isEmpty()) {
-                    String beanAccessor = getParameterFromBeanAccessor(call);
-                    if (fieldMap.containsKey(currentField.getType()) &&
-                            fieldMap.get(currentField.getType()).contains(beanAccessor)) {
-                        ModelField resultField = fieldMap.get(currentField.getType()).getField(beanAccessor);
-                        if (resultField != null && !resultField.equals(currentField)) {
-                            fields.add(resultField);
-                            currentField = resultField;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return fields;
+        return FieldSetLookupUtils.getPossibleParametersForModelType(fieldMap, className);
     }
 
     public boolean isEmpty() {
         return fieldMap.isEmpty();
-    }
-
-    private void addSuperClassFieldsToModels(@Nonnull Map<String, String> superClassMap) {
-        Set<String> done = new HashSet<>();
-
-        for (String key : fieldMap.keySet()) {
-            if (!superClassMap.containsKey(key)) {
-                done.add(key);
-            }
-        }
-
-        // we need to do it this way in case we miss some class in the hierarchy and can't resolve
-        // all of the superclasses
-        int lastSize = 0;
-
-        while (superClassMap.size() != lastSize) {
-            lastSize = superClassMap.size();
-            for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
-                if (done.contains(entry.getValue())) {
-                    fieldMap.get(entry.getKey()).addAll(fieldMap.get(entry.getValue()));
-                    done.add(entry.getKey());
-                }
-            }
-            superClassMap.keySet().removeAll(done);
-        }
-    }
-
-    @Nullable
-    private String getParameterFromBeanAccessor(@Nonnull String methodCall) {
-
-        String propertyName = null;
-
-        if (methodCall.startsWith(".get")) {
-            propertyName = methodCall.substring(4);
-            propertyName = propertyName.substring(0, 1).toLowerCase() + propertyName.substring(1);
-        }
-
-        return propertyName;
     }
 
     @Override
