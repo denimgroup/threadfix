@@ -21,17 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.annotations;
 
-package com.denimgroup.threadfix.data.dao;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 
-import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Created by zabdisubhan on 8/15/14.
+ * Created by mac on 8/26/14.
  */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ScanImporter {
 
-public interface ScheduledRemoteProviderImportDao extends ScheduledJobDao<ScheduledRemoteProviderImport> {
-
-    public boolean checkSameDate(ScheduledRemoteProviderImport scheduledRemoteProviderImport);
+    public ScannerType value();
 
 }

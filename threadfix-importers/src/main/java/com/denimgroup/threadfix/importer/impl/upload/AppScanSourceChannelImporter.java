@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
@@ -45,6 +46,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.APPSCAN_SOURCE)
 class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
 	private static final Map<String, String> REGEX_MAP = new HashMap<>();

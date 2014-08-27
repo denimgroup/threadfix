@@ -24,13 +24,14 @@
 
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -48,6 +49,7 @@ import java.util.*;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.BRAKEMAN)
 class BrakemanChannelImporter extends AbstractChannelImporter {
 
 	boolean hasFindings = false, correctFormat = false, hasDate = false;

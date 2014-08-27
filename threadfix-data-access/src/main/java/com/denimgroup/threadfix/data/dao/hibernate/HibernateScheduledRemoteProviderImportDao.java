@@ -25,8 +25,12 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.ScheduledRemoteProviderImportDao;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -45,5 +49,42 @@ public class HibernateScheduledRemoteProviderImportDao extends HibernateSchedule
     @Override
     protected Class<ScheduledRemoteProviderImport> getClassReference() {
         return ScheduledRemoteProviderImport.class;
+    }
+
+    @Override
+    public boolean checkSameDate(ScheduledRemoteProviderImport scheduledRemoteProviderImport) {
+
+        Query query = null;
+
+        if (scheduledRemoteProviderImport.getDay() != null){
+            query = sessionFactory.getCurrentSession().createQuery(
+                    "select count(*) from ScheduledRemoteProviderImport scheduledImport " +
+                            "where scheduledImport.day=:day and scheduledImport.period=:period " +
+                            "and scheduledImport.hour=:hour and scheduledImport.minute=:minute");
+
+            query.setString("day", scheduledRemoteProviderImport.getDay());
+
+        } else if (scheduledRemoteProviderImport.getFrequency() != null) {
+            query = sessionFactory.getCurrentSession().createQuery(
+                    "select count(*) from ScheduledRemoteProviderImport scheduledImport " +
+                            "where scheduledImport.frequency=:frequency and scheduledImport.period=:period " +
+                            "and scheduledImport.hour=:hour and scheduledImport.minute=:minute");
+
+            query.setString("frequency", scheduledRemoteProviderImport.getFrequency());
+
+        }
+
+        if(query != null) {
+            query.setInteger("hour", scheduledRemoteProviderImport.getHour());
+            query.setInteger("minute", scheduledRemoteProviderImport.getMinute());
+            query.setString("period", scheduledRemoteProviderImport.getPeriod());
+
+            Long count = (Long)query.uniqueResult();
+
+            return (count > 0);
+
+        }  else {
+            return false;
+        }
     }
 }
