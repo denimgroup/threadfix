@@ -394,7 +394,7 @@ public abstract class BasePage {
     }
 
 
-    /*--------------helper functions--------------*/
+    /*--------------------------------- Helper Methods ---------------------------------*/
 	public void sleep(int num) {
 		try {
 			Thread.sleep(num);
@@ -443,6 +443,10 @@ public abstract class BasePage {
         } catch (IOException f) {
             System.err.println("Unable to save file.\n" + f.getMessage());
         }
+    }
+
+    public void refreshPage() {
+        driver.navigate().refresh();
     }
 	
 	protected static String getRandomString(int length) {

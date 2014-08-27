@@ -32,9 +32,6 @@ import javax.annotation.Nonnull;
 
 public class DefectTrackerIndexPage extends BasePage {
 
-	public static String DT_URL = "http://10.2.10.171/bugzilla";
-	public static String JIRA_URL = "https://threadfix.atlassian.net/";
-
 	public DefectTrackerIndexPage(@Nonnull WebDriver webdriver) {
 		super(webdriver);
 	}
@@ -46,18 +43,18 @@ public class DefectTrackerIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 	
-	public DefectTrackerIndexPage enterName(String newName){
+	public DefectTrackerIndexPage setName(String newName){
         driver.findElementById("nameInput").clear();
         driver.findElementById("nameInput").sendKeys(newName);
 		return this;
 	}
 	
-	public DefectTrackerIndexPage enterType(String newType){
+	public DefectTrackerIndexPage setType(String newType){
 		new Select(driver.findElementById("defectTrackerTypeSelect")).selectByVisibleText(newType);
 		return this;
 	}
 	
-	public DefectTrackerIndexPage enterURL(String newURL){
+	public DefectTrackerIndexPage setURL(String newURL){
 			driver.findElementById("urlInput").clear();
 			driver.findElementById("urlInput").sendKeys(newURL);
 		return this;
