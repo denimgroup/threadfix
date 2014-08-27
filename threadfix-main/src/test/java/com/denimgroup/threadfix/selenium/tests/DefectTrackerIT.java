@@ -103,6 +103,7 @@ public class DefectTrackerIT extends BaseIT {
 				.enterType(defectTrackerType)
                 .enterURL(TEST_BUGZILLA_URL)
                 .clickSaveDefectTracker();
+
         assertTrue("Success message error.",defectTrackerIndexPage.getSuccessMessage().contains("Successfully created defect tracker " + newDefectTrackerName));
 		assertTrue("The defectTracker was not present in the table.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(newDefectTrackerName));
 	}
@@ -176,6 +177,8 @@ public class DefectTrackerIT extends BaseIT {
                 .enterType(originalDefectTrackerType)
 				.enterURL(TEST_JIRA_URL)
                 .clickSaveDefectTracker();
+
+        driver.navigate().refresh();
 
         //Edit previously created defect tracker
 		defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(originalDefectTrackerName)
@@ -272,8 +275,8 @@ public class DefectTrackerIT extends BaseIT {
 
 	@Test
 	public void bugzillaEdit() {
-		String defectTrackerName = "bugzillaEdit" + getRandomString(3);
-        String replacementName = "bugzillaEditNew" + getRandomString(3);
+		String defectTrackerName = getRandomString(8);
+        String replacementName = getRandomString(8);
 		String defectTrackerType = "Bugzilla";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
@@ -284,6 +287,8 @@ public class DefectTrackerIT extends BaseIT {
                 .enterType(defectTrackerType)
                 .enterURL(BUGZILLA_URL)
                 .clickSaveDefectTracker();
+
+        driver.navigate().refresh();
 
         assertTrue("DefectTracker Page did not create correctly.",defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
 

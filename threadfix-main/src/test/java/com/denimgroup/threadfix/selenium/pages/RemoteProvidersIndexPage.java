@@ -425,8 +425,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     /*-------------------------------- Helper Methods --------------------------------*/
 
     public void waitForErrorMessage() {
-        WebDriverWait wait = new WebDriverWait(driver, 30);
-        wait.until(ExpectedConditions.visibilityOf(driver.findElementById("errorSpan")));
+        sleep(5000);
     }
 
 

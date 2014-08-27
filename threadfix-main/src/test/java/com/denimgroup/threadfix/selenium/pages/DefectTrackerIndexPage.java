@@ -120,7 +120,6 @@ public class DefectTrackerIndexPage extends BasePage {
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
 
-        driver.navigate().refresh();
         return new DefectTrackerIndexPage(driver);
 	}
 
