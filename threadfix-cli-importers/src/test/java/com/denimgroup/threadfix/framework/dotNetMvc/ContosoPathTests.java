@@ -29,12 +29,11 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.impl.dotNet.ContosoUtilities;
 import com.denimgroup.threadfix.importer.utils.ParserUtils;
 import org.junit.Test;
 
 import java.util.Set;
-
-import static com.denimgroup.threadfix.framework.dotNetMvc.ContosoUtilities.getContosoEndpointDatabase;
 
 /**
  * Created by mac on 8/26/14.
@@ -139,7 +138,7 @@ public class ContosoPathTests {
     public void testStaticDatabaseLookups() {
         Scan scan = ParserUtils.getScan("SBIR/contoso.fpr");
 
-        EndpointDatabase database = getContosoEndpointDatabase(scan);
+        EndpointDatabase database = ContosoUtilities.getContosoEndpointDatabase(scan);
 
         assert database != null : "Database was null, can't continue";
 

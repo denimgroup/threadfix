@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.dotNetMvc;
+package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
@@ -42,7 +42,7 @@ public class ContosoUtilities {
         );
     }
 
-    private static File getContosoLocation() {
+    public static File getContosoLocation() {
         String root = System.getProperty("PROJECTS_ROOT");
         assert root != null && new File(root).exists() : "Projects root didn't exist or was invalid.";
 

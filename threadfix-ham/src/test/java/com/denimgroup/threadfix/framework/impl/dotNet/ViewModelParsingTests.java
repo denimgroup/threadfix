@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
+import java.util.Collection;
+
 /**
  * Created by mac on 8/27/14.
  */
@@ -53,9 +55,41 @@ public class ViewModelParsingTests {
         }
 
         for (int i = 0; i < models.length; i++) {
-            assert parser.map.get(models[i]).size() == expectedSizes[i] :
-                    models[i] + " had " + parser.map.get(models[i]).size() +
-                            " but was expecting " + expectedSizes[i];
+            int actualSize = parser.map.get(models[i]).size();
+            int expected = expectedSizes[i];
+
+            assert actualSize == expected :
+                    models[i] + " had " + actualSize + " but was expecting " + expected;
         }
+    }
+
+    @Test
+    public void testDirectorySpidering() {
+        DotNetModelMappings mappings = getDotNetModelMappings();
+
+        Collection<String> parameters = mappings.getPossibleParametersForModelType("Course").getPossibleParameters();
+        int courseFieldSize = parameters.size();
+
+        assert courseFieldSize > 0 : "Got 0 fields for Course.";
+
+        assert parameters.contains("Title") : "Fields didn't contain 'Title'";
+    }
+
+    private DotNetModelMappings getDotNetModelMappings() {
+        return new DotNetModelMappings(ContosoUtilities.getContosoLocation());
+    }
+
+    @Test
+    public void testFieldSpidering() {
+        DotNetModelMappings mappings = getDotNetModelMappings();
+
+        Collection<String> parameters = mappings.getPossibleParametersForModelType("Course").getPossibleParameters();
+        int courseFieldSize = parameters.size();
+
+        assert courseFieldSize > 0 : "Got 0 fields for Course.";
+
+        System.out.println("Got parameters " + parameters);
+
+        assert parameters.contains("Department.Name") : "Fields didn't contain 'Department.Name'";
     }
 }
