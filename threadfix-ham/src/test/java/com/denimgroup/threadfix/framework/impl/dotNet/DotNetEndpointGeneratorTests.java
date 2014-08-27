@@ -35,7 +35,7 @@ public class DotNetEndpointGeneratorTests {
     @Test
     public void testBasicEndpointGenerator() {
         DotNetRouteMappings routeMappings =
-                DotNetRoutesParser.parse(ResourceManager.getFile("code.dotNet.mvc/routeConfig.cs"));
+                DotNetRoutesParser.parse(ResourceManager.getFile("code.dotNet.mvc/RouteConfig.cs"));
         DotNetControllerMappings controllerMappings =
                 DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/ChatController.cs"));
 
@@ -50,8 +50,8 @@ public class DotNetEndpointGeneratorTests {
             "Parameters weren't empty. Got " + endpoint.getParameters();
         assert endpoint.getFilePath().endsWith("ChatController.cs") :
             "File path was " + endpoint.getFilePath() + " but should have ended with ChatController.cs";
-        assert endpoint.getUrlPath().equals("/Chat/Index/{variable}") :
-            "Actual path was " + endpoint.getUrlPath() + " when it should have been \"/Chat/Index/{variable}\"";
+        assert endpoint.getUrlPath().equals("/Chat") :
+            "Actual path was " + endpoint.getUrlPath() + " when it should have been \"/Chat\"";
         assert endpoint.getStartingLineNumber() == 13 :
             "Starting line number was " + endpoint.getStartingLineNumber() + " but should have been 13.";
 
