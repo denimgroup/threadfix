@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,8 @@ class Action {
     Integer     endLineNumber;
     @Nonnull
     Set<String> parameters = new HashSet<>();
+    @Nonnull
+    Set<ModelField> parametersWithTypes;
 
     String getMethod() {
         return attributes.contains("HttpPost") ?
@@ -54,18 +57,21 @@ class Action {
                          @Nonnull Set<String> attributes,
                          @Nonnull Integer lineNumber,
                          @Nonnull Integer endLineNumber,
-                         @Nonnull Set<String> parameters) {
+                         @Nonnull Set<String> parameters,
+                         @Nonnull Set<ModelField> parametersWithTypes) {
         Action action = new Action();
         action.name = name;
         action.attributes = attributes;
         action.lineNumber = lineNumber;
+        action.parametersWithTypes = parametersWithTypes;
         action.endLineNumber = endLineNumber;
+        action.parameters = parameters;
 
-        for (String parameter : parameters) {
-            if (parameter.contains(",")) {
-                action.parameters.addAll(Arrays.asList(StringUtils.split(parameter, ',')));
+        for (ModelField field : parametersWithTypes) {
+            if (field.getType().equals("Include")) {
+                action.parameters.addAll(Arrays.asList(StringUtils.split(field.getParameterKey(), ',')));
             } else {
-                action.parameters.add(parameter);
+                action.parameters.add(field.getParameterKey());
             }
         }
 

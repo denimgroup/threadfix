@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -84,8 +85,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
     int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0,
             methodBraceLevel = 0, storedParen = 0, methodLineNumber = 0;
     boolean shouldContinue = true;
-    String  lastString     = null, methodName = null;
+    String  lastString     = null, methodName = null, twoStringsAgo = null;
     Set<String> currentParameters = new HashSet<>();
+    Set<ModelField> parametersWithTypes = new HashSet<>();
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
@@ -170,11 +172,12 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 }
 
                 break;
-            case IN_ACTION_SIGNATURE: // TODO add parameter parsing
+            case IN_ACTION_SIGNATURE:
                 if (stringValue != null) {
+                    twoStringsAgo = lastString;
                     lastString = stringValue;
                 } else if (type == ',' || type == ')' && lastString != null) {
-                    currentParameters.add(lastString);
+                    parametersWithTypes.add(new ModelField(twoStringsAgo, lastString));
                 }
 
                 if (currentParen == storedParen) {
@@ -184,7 +187,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 break;
             case IN_ACTION_BODY:
                 if (currentCurlyBrace == methodBraceLevel) {
-                    mappings.addAction(methodName, currentAttributes, methodLineNumber, lineNumber, currentParameters);
+                    mappings.addAction(
+                            methodName, currentAttributes, methodLineNumber,
+                            lineNumber, currentParameters, parametersWithTypes);
                     currentAttributes = new HashSet<>();
                     currentParameters = new HashSet<>();
                     methodName = null;

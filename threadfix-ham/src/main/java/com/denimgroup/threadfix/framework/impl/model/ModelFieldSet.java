@@ -83,6 +83,10 @@ public class ModelFieldSet implements Iterable<ModelField> {
         return fieldSet.toString();
     }
 
+    public Set<ModelField> getFieldSet() {
+        return fieldSet;
+    }
+
     @Nonnull
     @Override
     public Iterator<ModelField> iterator() {

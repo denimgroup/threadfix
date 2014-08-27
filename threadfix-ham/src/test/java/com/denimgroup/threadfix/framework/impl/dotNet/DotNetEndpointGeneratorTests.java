@@ -39,7 +39,7 @@ public class DotNetEndpointGeneratorTests {
         DotNetControllerMappings controllerMappings =
                 DotNetControllerParser.parse(ResourceManager.getFile("code.dotNet.mvc/ChatController.cs"));
 
-        DotNetEndpointGenerator generator = new DotNetEndpointGenerator(routeMappings, controllerMappings);
+        DotNetEndpointGenerator generator = new DotNetEndpointGenerator(routeMappings, null, controllerMappings);
 
         assert generator.generateEndpoints().size() == 1 : "Size should have been 1 but was " +
                 generator.generateEndpoints().size();
