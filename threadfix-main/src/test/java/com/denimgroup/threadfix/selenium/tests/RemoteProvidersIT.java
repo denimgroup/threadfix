@@ -95,16 +95,16 @@ public class RemoteProvidersIT extends BaseIT {
     @Test
     public void invalidQualysTest(){
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername("No Such User")
                 .setQualysPassword("Password Bad")
                 .clickModalSubmitInvalid();
-        sleep(15000);
-        String error = remoteProvidersIndexPage.getErrorMessage();
-        System.out.println(error);
-        assertTrue("Expected failure", error.contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
+
+        remoteProvidersIndexPage.waitForErrorMessage();
+
+        assertTrue("Failure message detailing why credentials were not accepted should have been displayed.",
+                remoteProvidersIndexPage.getErrorMessage().contains("We were unable to retrieve a list of applications using these credentials. Please ensure that the credentials are valid and that there are applications available in the account."));
     }
 
 	@Test
@@ -160,7 +160,6 @@ public class RemoteProvidersIT extends BaseIT {
 	@Test
 	public void invalidVeracodeTest(){
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername("No Such User")

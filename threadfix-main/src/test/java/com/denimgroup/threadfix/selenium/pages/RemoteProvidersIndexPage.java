@@ -24,7 +24,9 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -418,6 +420,13 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public boolean isTabPresent() {
         return driver.findElementById("remoteProvidersTab").isDisplayed();
+    }
+
+    /*-------------------------------- Helper Methods --------------------------------*/
+
+    public void waitForErrorMessage() {
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+        wait.until(ExpectedConditions.visibilityOf(driver.findElementById("errorSpan")));
     }
 
 

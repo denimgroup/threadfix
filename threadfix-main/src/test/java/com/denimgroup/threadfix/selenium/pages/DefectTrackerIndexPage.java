@@ -116,8 +116,11 @@ public class DefectTrackerIndexPage extends BasePage {
 
 	public DefectTrackerIndexPage clickSaveDefectTracker() {
 		driver.findElementById("submit").click();
+
 		WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
+
+        driver.navigate().refresh();
         return new DefectTrackerIndexPage(driver);
 	}
 
