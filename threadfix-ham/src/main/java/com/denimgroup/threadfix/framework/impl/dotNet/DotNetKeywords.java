@@ -26,7 +26,9 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 /**
  * Created by mac on 6/11/14.
  */
-interface DotNetKeywords {
+final class DotNetKeywords {
+
+    private DotNetKeywords() {}
 
     public static final String
             PUBLIC = "public",
@@ -35,6 +37,7 @@ interface DotNetKeywords {
             REGISTER_ROUTES = "RegisterRoutes",
             ROUTE_COLLECTION = "RouteCollection",
             MAP_ROUTE = "MapRoute",
+            NAMESPACE = "namespace",
             URL = "url",
             NAME = "name",
             DEFAULTS = "defaults",

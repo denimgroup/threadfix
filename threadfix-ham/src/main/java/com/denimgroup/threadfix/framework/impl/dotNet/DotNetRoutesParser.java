@@ -30,10 +30,12 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import java.io.File;
 
+import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.*;
+
 /**
  * Created by mac on 6/11/14.
  */
-public class DotNetRoutesParser implements EventBasedTokenizer, DotNetKeywords {
+public class DotNetRoutesParser implements EventBasedTokenizer {
 
     DotNetRouteMappings mappings = new DotNetRouteMappings();
 

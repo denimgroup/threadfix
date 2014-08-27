@@ -24,6 +24,8 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
+import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import javax.annotation.Nonnull;
@@ -35,60 +37,60 @@ import java.util.*;
 class SpringEntityMappings {
 
     // This should be done by the end of the constructor
-	@Nonnull
+    @Nonnull
     private final Collection<SpringEntityParser> entityParsers;
-	
-	@Nonnull
-    private final Map<String, BeanFieldSet> fieldMap = new HashMap<>();
+
+    @Nonnull
+    private final Map<String, ModelFieldSet> fieldMap = new HashMap<>();
 
     // This version will parse all the Java files in the directory.
-	@SuppressWarnings("unchecked")
-	public SpringEntityMappings(@Nonnull File rootDirectory) {
+    @SuppressWarnings("unchecked")
+    public SpringEntityMappings(@Nonnull File rootDirectory) {
 
         entityParsers = new ArrayList<>();
 
-		if (rootDirectory.exists() && rootDirectory.isDirectory()) {
+        if (rootDirectory.exists() && rootDirectory.isDirectory()) {
 
-			Collection<File> modelFiles = FileUtils.listFiles(rootDirectory,
+            Collection<File> modelFiles = FileUtils.listFiles(rootDirectory,
                     new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
 
-            for (File file: modelFiles) {
+            for (File file : modelFiles) {
                 if (file != null && file.exists() && file.isFile()) {
                     entityParsers.add(SpringEntityParser.parse(file));
                 }
             }
-		
+
             generateMap();
-		}
-	}
+        }
+    }
 
     public SpringEntityMappings(@Nonnull Collection<SpringEntityParser> entityParsers) {
         this.entityParsers = entityParsers;
         generateMap();
     }
-	
-	public BeanFieldSet getPossibleParametersForModelType(@Nonnull BeanField beanField) {
-		return getPossibleParametersForModelType(beanField.getType());
-	}
-	
-	/**
-	 * This method uses recursion to walk the tree of possible parameters that the spring
-	 * controller will accept and bind to the model object. This information should be
-	 * added in addition to all of the normal parameters (@RequestMapping, @PathVariable)
-	 */
-	public BeanFieldSet getPossibleParametersForModelType(String className) {
-		BeanFieldSet fields = fieldMap.get(className);
-		
-		if (fields == null) {
-			fields = new BeanFieldSet(new HashSet<BeanField>());
-		}
-		
-		Set<String> alreadyVisited = new HashSet<>();
+
+    public ModelFieldSet getPossibleParametersForModelType(@Nonnull ModelField beanField) {
+        return getPossibleParametersForModelType(beanField.getType());
+    }
+
+    /**
+     * This method uses recursion to walk the tree of possible parameters that the spring
+     * controller will accept and bind to the model object. This information should be
+     * added in addition to all of the normal parameters (@RequestMapping, @PathVariable)
+     */
+    public ModelFieldSet getPossibleParametersForModelType(String className) {
+        ModelFieldSet fields = fieldMap.get(className);
+
+        if (fields == null) {
+            fields = new ModelFieldSet(new HashSet<ModelField>());
+        }
+
+        Set<String> alreadyVisited = new HashSet<>();
 		alreadyVisited.add(className);
 		
-		BeanFieldSet fieldsToAdd = new BeanFieldSet(new HashSet<BeanField>());
+		ModelFieldSet fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>());
 		
-		for (BeanField field : fields) {
+		for (ModelField field : fields) {
 			if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
 				alreadyVisited.add(field.getType());
 				fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
@@ -99,40 +101,40 @@ class SpringEntityMappings {
 	}
 	
 	@Nonnull
-    private BeanFieldSet spiderFields(String prefix, String className, @Nonnull Set<String> alreadyVisited) {
-		BeanFieldSet fields = fieldMap.get(className);
+    private ModelFieldSet spiderFields(String prefix, String className, @Nonnull Set<String> alreadyVisited) {
+		ModelFieldSet fields = fieldMap.get(className);
 		
 		if (fields == null) {
-			fields = new BeanFieldSet(new HashSet<BeanField>());
+			fields = new ModelFieldSet(new HashSet<ModelField>());
 		}
 		
-		BeanFieldSet
-			fieldsToAdd = new BeanFieldSet(new HashSet<BeanField>()),
-			fieldsWithPrefixes = new BeanFieldSet(new HashSet<BeanField>());
+		ModelFieldSet
+			fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>()),
+			fieldsWithPrefixes = new ModelFieldSet(new HashSet<ModelField>());
 		
-		for (BeanField field : fields) {
+		for (ModelField field : fields) {
 			if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
 				alreadyVisited.add(field.getType());
 				fieldsToAdd.addAll(spiderFields(field.getParameterKey() + ".", field.getType(), alreadyVisited));
 			}
 		}
 		
-		for (BeanField field : fieldsToAdd.addAll(fields)) {
-			fieldsWithPrefixes.add(new BeanField(field.getType(), prefix + field.getParameterKey()));
+		for (ModelField field : fieldsToAdd.addAll(fields)) {
+			fieldsWithPrefixes.add(new ModelField(field.getType(), prefix + field.getParameterKey()));
 		}
 		
 		return fieldsWithPrefixes;
 	}
 	
 	@Nonnull
-    public List<BeanField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable BeanField initialField) {
-		List<BeanField> fields = new ArrayList<>();
+    public List<ModelField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable ModelField initialField) {
+		List<ModelField> fields = new ArrayList<>();
 		
 	
 		if (methodCalls != null && initialField != null) {
 			fields.add(initialField);
 			
-			BeanField currentField = initialField;
+			ModelField currentField = initialField;
 			String editedCalls = methodCalls;
 			
 			if (methodCalls.startsWith(initialField.getParameterKey())) {
@@ -146,7 +148,7 @@ class SpringEntityMappings {
 					String beanAccessor = getParameterFromBeanAccessor(call);
 					if (fieldMap.containsKey(currentField.getType()) &&
 							fieldMap.get(currentField.getType()).contains(beanAccessor)) {
-						BeanField resultField = fieldMap.get(currentField.getType()).getField(beanAccessor);
+						ModelField resultField = fieldMap.get(currentField.getType()).getField(beanAccessor);
 						if (resultField != null && !resultField.equals(currentField)) {
 							fields.add(resultField);
 							currentField = resultField;
@@ -207,7 +209,7 @@ class SpringEntityMappings {
                     superClassMap.put(entityParser.getClassName(), entityParser.getSuperClass());
                 }
 
-                fieldMap.put(entityParser.getClassName(), new BeanFieldSet(entityParser.getFieldMappings()));
+                fieldMap.put(entityParser.getClassName(), new ModelFieldSet(entityParser.getFieldMappings()));
             }
 		}
 	}

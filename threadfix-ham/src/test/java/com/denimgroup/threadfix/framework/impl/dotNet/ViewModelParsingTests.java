@@ -1,0 +1,61 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.framework.impl.dotNet;
+
+import com.denimgroup.threadfix.framework.ResourceManager;
+import org.junit.Test;
+
+/**
+ * Created by mac on 8/27/14.
+ */
+public class ViewModelParsingTests {
+
+    String[] models = {
+            "ExternalLoginConfirmationViewModel",
+            "ManageUserViewModel",
+            "LoginViewModel",
+            "RegisterViewModel"
+    };
+
+    int[] expectedSizes = { 1, 3, 3, 3 };
+
+    @Test
+    public void testBasicModelParsing() {
+        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetFile("AccountViewModels.cs"));
+
+        assert parser.map.size() == 4 :
+                "Map had " + parser.map.size() + " entries instead of 3.";
+
+        for (String model : models) {
+            assert parser.map.containsKey(model) :
+                    "Map didn't have an entry for " + model;
+        }
+
+        for (int i = 0; i < models.length; i++) {
+            assert parser.map.get(models[i]).size() == expectedSizes[i] :
+                    models[i] + " had " + parser.map.get(models[i]).size() +
+                            " but was expecting " + expectedSizes[i];
+        }
+    }
+}

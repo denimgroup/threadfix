@@ -21,14 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.spring;
+package com.denimgroup.threadfix.framework.impl.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-class BeanField {
-	
-	public BeanField(@Nonnull String fieldType, @Nonnull String methodName) {
+public class ModelField {
+
+	public ModelField(@Nonnull String fieldType, @Nonnull String methodName) {
 		this.fieldType = fieldType;
         this.parameterKey = getParameterKey(methodName);
 	}
@@ -76,6 +76,6 @@ class BeanField {
 	
 	@Override
 	public boolean equals(@Nullable Object object) {
-		return object instanceof BeanField && object.hashCode() == hashCode();
+		return object instanceof ModelField && object.hashCode() == hashCode();
 	}
 }
