@@ -30,7 +30,7 @@ public class DotNetRoutesParserTests {
 
     @Test
     public void testBasicRouteConfig() {
-        testFile("code.dotNet.mvc/routeConfig.cs", "Chat", "Index");
+        testFile("code.dotNet.mvc/RouteConfig.cs", "Chat", "Index");
     }
 
     @Test
