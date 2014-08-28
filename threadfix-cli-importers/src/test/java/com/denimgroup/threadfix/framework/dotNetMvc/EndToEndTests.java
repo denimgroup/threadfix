@@ -33,7 +33,7 @@ import org.junit.Test;
 
 import java.util.Set;
 
-import static com.denimgroup.threadfix.framework.dotNetMvc.ContosoUtilities.getContosoEndpointDatabase;
+import static com.denimgroup.threadfix.framework.impl.dotNet.ContosoUtilities.getContosoEndpointDatabase;
 
 /**
  * Created by mac on 8/18/14.
