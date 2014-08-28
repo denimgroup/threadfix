@@ -27,9 +27,6 @@ package com.denimgroup.threadfix.service;
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.dao.ScheduledRemoteProviderImportDao;
 
-import com.denimgroup.threadfix.data.entities.DayInWeek;
-import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
-import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
 import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
