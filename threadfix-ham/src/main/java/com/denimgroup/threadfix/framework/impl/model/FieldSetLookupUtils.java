@@ -110,7 +110,10 @@ public final class FieldSetLookupUtils {
             lastSize = superClassMap.size();
             for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
                 if (done.contains(entry.getValue())) {
-                    fieldMap.get(entry.getKey()).addAll(fieldMap.get(entry.getValue()));
+                    ModelFieldSet modelFields = fieldMap.get(entry.getKey());
+                    if (modelFields != null) {
+                        modelFields.addAll(fieldMap.get(entry.getValue()));
+                    }
                     done.add(entry.getKey());
                 }
             }
