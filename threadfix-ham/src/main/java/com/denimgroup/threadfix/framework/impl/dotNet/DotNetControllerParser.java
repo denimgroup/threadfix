@@ -189,8 +189,13 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 }
                 break;
             case AFTER_BIND_INCLUDE:
-                if (type == ',' || type == ')') {
+                if (type == ',') {
                     currentState = State.IN_ACTION_SIGNATURE;
+                }
+
+                if (type == ')' && currentParen == storedParen) {
+                    currentState = State.IN_ACTION_BODY;
+                    methodBraceLevel = currentCurlyBrace;
                 }
                 break;
             case IN_ACTION_BODY:
