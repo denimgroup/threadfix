@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,7 +68,9 @@ class Action {
 
         for (ModelField field : parametersWithTypes) {
             if (field.getType().equals("Include")) {
-                action.parameters.addAll(Arrays.asList(StringUtils.split(field.getParameterKey(), ',')));
+                for (String s : StringUtils.split(field.getParameterKey(), ',')) {
+                    action.parameters.add(s.trim());
+                }
             } else {
                 action.parameters.add(field.getParameterKey());
             }

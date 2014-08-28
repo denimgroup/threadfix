@@ -226,17 +226,17 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         if (key == null)
             return new HashSet<>();
 
-        String keyFS = key.replace("\\","/");
+        String keyForwardSlash = key.replace("\\","/");
 
         for (Map.Entry<String,Set<Endpoint>> entry: map.entrySet()) {
             String keyEntry = entry.getKey();
-            String keyEntryFS = keyEntry.replace("\\","/");
+            String keyEntryForwardSlash = keyEntry.replace("\\","/");
 
             if ((keyEntry.isEmpty() && !key.isEmpty())
                     || (key.isEmpty() && !keyEntry.isEmpty()))
                 return new HashSet<>();
 
-            if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
+            if (keyEntryForwardSlash.endsWith(keyForwardSlash) || keyForwardSlash.endsWith(keyEntryForwardSlash))
                 return new HashSet<>(entry.getValue());
         }
 

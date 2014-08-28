@@ -35,6 +35,8 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.framework.impl.dotNet.ContosoUtilities.getContosoLocation;
+
 /**
  * Created by mac on 8/26/14.
  */
@@ -75,5 +77,34 @@ public class DotNetModelBindingTests {
                 "Endpoint didn't have the RememberMe parameter.";
     }
 
+    // This test is meant to ensure that the model parameter is not included (student in this case)
+    @Test
+    public void testBindIncludeParameters() {
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(getContosoLocation());
+
+        assert database != null : "Unable to generate a database for " + folderName + ", check the filesystem.";
+
+        EndpointQuery endpointQuery = EndpointQueryBuilder.start()
+                .setHttpMethod("POST")
+                .setDynamicPath("/Student/Create")
+                .setParameter("LastName")
+                .setInformationSourceType(InformationSourceType.DYNAMIC)
+                .generateQuery();
+
+        Set<Endpoint> allMatches = database.findAllMatches(endpointQuery);
+
+        assert allMatches.size() == 1 : allMatches.size() + " endpoint(s) found.";
+
+        Set<String> parameters = allMatches.iterator().next().getParameters();
+
+        assert parameters.size() == 3 :
+                "Got " + parameters.size() + " parameters instead of 3: " + parameters;
+        assert parameters.contains("LastName") :
+                "Endpoint didn't have the LastName parameter.";
+        assert parameters.contains("FirstMidName") :
+                "Endpoint didn't have the FirstMidName parameter.";
+        assert parameters.contains("EnrollmentDate") :
+                "Endpoint didn't have the EnrollmentDate parameter.";
+    }
 
 }

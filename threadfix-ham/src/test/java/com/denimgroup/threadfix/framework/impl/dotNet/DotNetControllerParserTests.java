@@ -45,7 +45,6 @@ public class DotNetControllerParserTests {
     public void testBasicController() {
         DotNetControllerMappings mappings = getControllerMappings("ChatController.cs");
 
-
         assert mappings.getControllerName() != null :
                 "Controller name was null.";
         assert mappings.getControllerName().equals("Chat") :
