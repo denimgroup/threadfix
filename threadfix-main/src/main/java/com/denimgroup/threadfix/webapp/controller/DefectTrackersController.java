@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.service.ScheduledDefectTrackerUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,9 @@ public class DefectTrackersController {
 	
     @Autowired
 	private DefectTrackerService defectTrackerService;
+
+    @Autowired
+    private ScheduledDefectTrackerUpdateService scheduledDefectTrackerUpdateService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectTrackersController.class);
 
@@ -93,6 +97,7 @@ public class DefectTrackersController {
 		Map<String, Object> map = new HashMap<>();
         map.put("defectTrackerTypes", defectTrackerService.loadAllDefectTrackerTypes());
         map.put("defectTrackers", defectTrackerService.loadAllDefectTrackers());
+        map.put("scheduledUpdates", scheduledDefectTrackerUpdateService.loadAll());
         return RestResponse.success(map);
 	}
 }

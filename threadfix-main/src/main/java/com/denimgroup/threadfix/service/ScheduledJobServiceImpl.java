@@ -25,10 +25,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
-import com.denimgroup.threadfix.data.entities.DayInWeek;
-import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
-import com.denimgroup.threadfix.data.entities.ScheduledJob;
-import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,6 +104,13 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
         // Clean day if it is Daily schedule
         if (ScheduledFrequencyType.getFrequency(frequency) == ScheduledFrequencyType.DAILY) {
             scheduledJob.setDay(null);
+        }
+    }
+
+    @Override
+    public void validateSameDate(S scheduledJob, BindingResult result) {
+        if (getScheduledJobDao().checkSameDate(scheduledJob)) {
+            result.rejectValue("dateError", null, null, "Another job is scheduled at that time/frequency");
         }
     }
 
