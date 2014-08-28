@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
@@ -33,6 +34,7 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.framework.impl.dotNet.ContosoUtilities.getContosoLocation;
@@ -105,6 +107,25 @@ public class DotNetModelBindingTests {
                 "Endpoint didn't have the FirstMidName parameter.";
         assert parameters.contains("EnrollmentDate") :
                 "Endpoint didn't have the EnrollmentDate parameter.";
+    }
+
+    @Test
+    public void testSuperclassPropertiesIncluded() {
+        DotNetEndpointGenerator generator = new DotNetEndpointGenerator(
+                DotNetRoutesParser.parse(ResourceManager.getDotNetFile("RouteConfig.cs")),
+                new DotNetModelMappings(getContosoLocation()),
+                DotNetControllerParser.parse(ResourceManager.getDotNetFile("SuperclassBindingController.cs"))
+        );
+
+        List<Endpoint> endpoints = generator.generateEndpoints();
+        assert endpoints.size() == 1 : endpoints.size() + " endpoints found instead of 1.";
+
+        Set<String> parameters = endpoints.get(0).getParameters();
+
+        System.out.println("Parameters: " + parameters);
+
+        assert parameters.contains("ID") : "ID parameter wasn't found. " +
+                "It is a valid property of Student because it's in Person and Student extends Person.";
     }
 
 }

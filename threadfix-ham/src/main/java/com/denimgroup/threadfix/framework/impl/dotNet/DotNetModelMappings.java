@@ -34,6 +34,8 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.*;
 
+import static com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils.addSuperClassFieldsToModels;
+
 /**
  * Created by mac on 8/27/14.
  */
@@ -73,11 +75,17 @@ public class DotNetModelMappings {
     }
 
     private void collapse() {
+        Map<String, String> superClassMap = new HashMap<>();
+
         for (ViewModelParser parser : modelParsers) {
             for (Map.Entry<String, Set<ModelField>> entry : parser.map.entrySet()) {
                 fieldMap.put(entry.getKey(), new ModelFieldSet(entry.getValue()));
             }
+
+            superClassMap.putAll(parser.superClassMap);
         }
+
+        addSuperClassFieldsToModels(fieldMap, superClassMap);
     }
 
     /**

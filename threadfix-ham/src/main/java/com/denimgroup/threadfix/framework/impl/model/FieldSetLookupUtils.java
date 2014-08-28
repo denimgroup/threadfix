@@ -91,4 +91,31 @@ public final class FieldSetLookupUtils {
         return fieldsWithPrefixes;
     }
 
+
+    public static void addSuperClassFieldsToModels(@Nonnull Map<String, ModelFieldSet> fieldMap,
+                                                   @Nonnull Map<String, String> superClassMap) {
+        Set<String> done = new HashSet<>();
+
+        for (String key : fieldMap.keySet()) {
+            if (!superClassMap.containsKey(key)) {
+                done.add(key);
+            }
+        }
+
+        // we need to do it this way in case we miss some class in the hierarchy and can't resolve
+        // all of the superclasses
+        int lastSize = 0;
+
+        while (superClassMap.size() != lastSize) {
+            lastSize = superClassMap.size();
+            for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
+                if (done.contains(entry.getValue())) {
+                    fieldMap.get(entry.getKey()).addAll(fieldMap.get(entry.getValue()));
+                    done.add(entry.getKey());
+                }
+            }
+            superClassMap.keySet().removeAll(done);
+        }
+    }
+
 }

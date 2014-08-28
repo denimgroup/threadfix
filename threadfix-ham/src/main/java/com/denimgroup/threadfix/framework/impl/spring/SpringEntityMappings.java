@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 
+import static com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils.addSuperClassFieldsToModels;
+
 class SpringEntityMappings {
 
     // This should be done by the end of the constructor
@@ -86,8 +88,8 @@ class SpringEntityMappings {
 	@Nonnull
     public List<ModelField> getFieldsFromMethodCalls(@Nullable String methodCalls, @Nullable ModelField initialField) {
 		List<ModelField> fields = new ArrayList<>();
-		
-	
+
+
 		if (methodCalls != null && initialField != null) {
 			fields.add(initialField);
 			
@@ -129,36 +131,11 @@ class SpringEntityMappings {
 		
 		addModelsToSuperClassAndFieldMaps(superClassMap);
 		
-		addSuperClassFieldsToModels(superClassMap);
-	}
-	
-	private void addSuperClassFieldsToModels(@Nonnull Map<String, String> superClassMap) {
-		Set<String> done = new HashSet<>();
-		
-		for (String key : fieldMap.keySet()) {
-			if (!superClassMap.containsKey(key)) {
-				done.add(key);
-			}
-		}
-		
-		// we need to do it this way in case we miss some class in the hierarchy and can't resolve
-		// all of the superclasses
-		int lastSize = 0;
-		
-		while (superClassMap.size() != lastSize) {
-			lastSize = superClassMap.size();
-			for (Map.Entry<String, String> entry : superClassMap.entrySet()) {
-				if (done.contains(entry.getValue())) {
-					fieldMap.get(entry.getKey()).addAll(fieldMap.get(entry.getValue()));
-					done.add(entry.getKey());
-				}
-			}
-			superClassMap.keySet().removeAll(done);
-		}
+		addSuperClassFieldsToModels(fieldMap, superClassMap);
 	}
 
-	private void addModelsToSuperClassAndFieldMaps(@Nonnull Map<String, String> superClassMap) {
-		for (SpringEntityParser entityParser : entityParsers) {
+    private void addModelsToSuperClassAndFieldMaps(@Nonnull Map<String, String> superClassMap) {
+        for (SpringEntityParser entityParser : entityParsers) {
 
             if (entityParser.getClassName() != null) {
 
@@ -168,8 +145,8 @@ class SpringEntityMappings {
 
                 fieldMap.put(entityParser.getClassName(), new ModelFieldSet(entityParser.getFieldMappings()));
             }
-		}
-	}
+        }
+    }
 	
 	@Nullable
     private String getParameterFromBeanAccessor(@Nonnull String methodCall) {

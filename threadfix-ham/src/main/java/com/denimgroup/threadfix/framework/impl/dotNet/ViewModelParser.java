@@ -44,6 +44,7 @@ import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.NAME
 public class ViewModelParser implements EventBasedTokenizer {
 
     Map<String, Set<ModelField>> map = new HashMap<>();
+    Map<String, String> superClassMap = new HashMap<>();
 
     public static final SanitizedLogger LOG = new SanitizedLogger(ViewModelParser.class);
 
@@ -65,7 +66,7 @@ public class ViewModelParser implements EventBasedTokenizer {
 
     enum ClassState {
         GET_NAME, WAIT_FOR_BRACE, IN_CLASS, ATTRIBUTE, PAREN, METHOD,
-        IN_PROPERTY, PROPERTY_GET, PROPERTY_SET, PROPERTY_DONE
+        IN_PROPERTY, PROPERTY_GET, PROPERTY_SET, EXTENDS, PROPERTY_DONE
     }
 
     Phase      currentPhase = Phase.START;
@@ -83,9 +84,9 @@ public class ViewModelParser implements EventBasedTokenizer {
             braceLevel--;
         }
 
-        LOG.info("type = " + type + ", line = " + lineNumber + ", stringValue = " + stringValue);
-        LOG.info("phase = " + currentPhase + ", state = " + classState);
-        System.out.println();
+        LOG.debug("type = " + type + ", line = " + lineNumber + ", stringValue = " + stringValue);
+        LOG.debug("phase = " + currentPhase + ", state = " + classState);
+        LOG.debug("braceLevel is " + braceLevel);
 
         switch (currentPhase) {
             case START:
@@ -103,6 +104,7 @@ public class ViewModelParser implements EventBasedTokenizer {
                 processClassEvent(type, stringValue);
                 break;
         }
+        System.out.println();
     }
 
     String currentModelName;
@@ -122,9 +124,15 @@ public class ViewModelParser implements EventBasedTokenizer {
             case WAIT_FOR_BRACE:
                 if (type == '{') {
                     classState = ClassState.IN_CLASS;
-                } else {
-                    currentPhase = Phase.NAMESPACE;
-                    classState = ClassState.GET_NAME;
+                } else if (":".equals(stringValue)) {
+                    classState = ClassState.EXTENDS;
+                }
+                break;
+            case EXTENDS:
+                if (type == '{') {
+                    classState = ClassState.IN_CLASS;
+                } else if (stringValue != null) {
+                    superClassMap.put(currentModelName, stringValue);
                 }
                 break;
             case IN_CLASS:
@@ -135,6 +143,7 @@ public class ViewModelParser implements EventBasedTokenizer {
                     classState = ClassState.METHOD;
                 } else if ('{' == type) {
                     classState = ClassState.IN_PROPERTY;
+                    LOG.debug("Setting classBraceLevel to " + (braceLevel - 1));
                     classBraceLevel = braceLevel - 1;
                 } else if ('[' == type) {
                     classState = ClassState.ATTRIBUTE;
@@ -177,5 +186,9 @@ public class ViewModelParser implements EventBasedTokenizer {
         map.get(currentModelName).add(new ModelField(propertyType, propertyName));
     }
 
+    @Override
+    public String toString() {
+        return map.toString();
+    }
 
 }

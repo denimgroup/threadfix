@@ -92,4 +92,24 @@ public class ViewModelParsingTests {
 
         assert parameters.contains("Department.Name") : "Fields didn't contain 'Department.Name'";
     }
+
+    @Test
+    public void testStudentParsing() {
+        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetFile("Student.cs"));
+
+        assert parser.map.size() == 1 :
+                "Map had " + parser.map.size() + " entries instead of 1.";
+
+        assert parser.map.containsKey("Student") :
+                "Map didn't contain the 'Student' key.";
+
+        assert parser.superClassMap.size() == 1 :
+                "Superclass not found.";
+
+        assert parser.superClassMap.containsKey("Student") :
+                "Didn't have Student key in " + parser.superClassMap;
+
+        assert parser.superClassMap.get("Student").equals("Person") :
+                "Student's superclass was " + parser.superClassMap.get("Student");
+    }
 }
