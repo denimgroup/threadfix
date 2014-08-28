@@ -192,6 +192,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                             lineNumber, currentParameters, parametersWithTypes);
                     currentAttributes = new HashSet<>();
                     currentParameters = new HashSet<>();
+                    parametersWithTypes = new HashSet<>();
                     methodName = null;
                     currentState = State.BODY;
                 }
