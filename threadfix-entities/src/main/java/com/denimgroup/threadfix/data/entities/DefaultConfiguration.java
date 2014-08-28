@@ -40,6 +40,7 @@ public class DefaultConfiguration extends BaseEntity {
 	
 	private Boolean globalGroupEnabled = null;
     private Boolean hasAddedScheduledImports = null;
+    private Boolean hasAddedScheduledDefectTrackerUpdates = null;
     private Integer defaultRoleId = null;
 
     private Boolean hasCachedData = null;
@@ -56,6 +57,7 @@ public class DefaultConfiguration extends BaseEntity {
         config.setDefaultRoleId(1);
         config.setGlobalGroupEnabled(true);
         config.setHasAddedScheduledImports(false);
+        config.setHasAddedScheduledDefectTrackerUpdates(false);
         return config;
     }
 
@@ -66,6 +68,15 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setHasAddedScheduledImports(Boolean hasAddedScheduledImports){
         this.hasAddedScheduledImports = hasAddedScheduledImports;
+    }
+
+    @Column
+    public Boolean getHasAddedScheduledDefectTrackerUpdates() {
+        return hasAddedScheduledDefectTrackerUpdates != null && hasAddedScheduledDefectTrackerUpdates;
+    }
+
+    public void setHasAddedScheduledDefectTrackerUpdates(Boolean hasAddedScheduledDefectTrackerUpdates){
+        this.hasAddedScheduledDefectTrackerUpdates = hasAddedScheduledDefectTrackerUpdates;
     }
 
     @Column
