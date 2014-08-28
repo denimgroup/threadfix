@@ -35,6 +35,10 @@ public class ModelFieldSet implements Iterable<ModelField> {
     @Nonnull
     private final Set<ModelField> fieldSet;
 
+    public ModelFieldSet() {
+        fieldSet = new HashSet<>();
+    }
+
     public ModelFieldSet(@Nonnull Set<ModelField> fields) {
         fieldSet = fields;
         for (ModelField field : fields) {

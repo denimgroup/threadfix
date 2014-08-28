@@ -31,9 +31,11 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
+import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -126,6 +128,27 @@ public class DotNetModelBindingTests {
 
         assert parameters.contains("ID") : "ID parameter wasn't found. " +
                 "It is a valid property of Student because it's in Person and Student extends Person.";
+    }
+
+    @Test
+    public void testSuperclassPropertiesInModelFields() {
+        DotNetModelMappings mappings = new DotNetModelMappings(getContosoLocation());
+
+        ModelFieldSet enrollmentFields = mappings.getPossibleParametersForModelType("Enrollment");
+
+        assert enrollmentFields.contains("Student.ID") :
+                "Student.ID wasn't found in Enrollment.Student.ID";
+    }
+
+    @Test
+    public void testObjectPropertiesNotIncluded() {
+        DotNetModelMappings mappings = new DotNetModelMappings(getContosoLocation());
+
+        Collection<String> enrollmentFields =
+                mappings.getPossibleParametersForModelType("Enrollment").getPossibleParameters();
+
+        assert !enrollmentFields.contains("Student"):
+                "Student was found in Enrollment even though it's an object type";
     }
 
 }

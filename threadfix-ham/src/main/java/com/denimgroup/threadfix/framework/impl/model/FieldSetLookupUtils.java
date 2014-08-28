@@ -44,14 +44,15 @@ public final class FieldSetLookupUtils {
         ModelFieldSet fields = fieldMap.get(className);
 
         if (fields == null) {
-            fields = new ModelFieldSet(new HashSet<ModelField>());
+            fields = new ModelFieldSet();
         }
 
         Set<String> alreadyVisited = new HashSet<>();
         alreadyVisited.add(className);
 
-        ModelFieldSet fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>());
+        ModelFieldSet fieldsToAdd = new ModelFieldSet(), finalFieldSet = new ModelFieldSet();
 
+        // traverse the models to get properties
         for (ModelField field : fields) {
             if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
                 alreadyVisited.add(field.getType());
@@ -59,7 +60,14 @@ public final class FieldSetLookupUtils {
             }
         }
 
-        return fields.addAll(fieldsToAdd);
+        // remove properties that are model objects themselves; we can't bind directly to these
+        for (ModelField field : fields.addAll(fieldsToAdd)) {
+            if (!fieldMap.containsKey(field.getType())) {
+                finalFieldSet.add(field);
+            }
+        }
+
+        return finalFieldSet;
     }
 
     @Nonnull
@@ -67,15 +75,15 @@ public final class FieldSetLookupUtils {
                                               String prefix,
                                               String className,
                                               @Nonnull Set<String> alreadyVisited) {
-        ModelFieldSet fields = fieldMap.get(className);
 
-        if (fields == null) {
-            fields = new ModelFieldSet(new HashSet<ModelField>());
-        }
+        ModelFieldSet fields =
+                fieldMap.get(className) == null ?
+                        new ModelFieldSet() :
+                        fieldMap.get(className);
 
         ModelFieldSet
-                fieldsToAdd = new ModelFieldSet(new HashSet<ModelField>()),
-                fieldsWithPrefixes = new ModelFieldSet(new HashSet<ModelField>());
+                fieldsToAdd = new ModelFieldSet(),
+                fieldsWithPrefixes = new ModelFieldSet();
 
         for (ModelField field : fields) {
             if (fieldMap.containsKey(field.getType()) && !alreadyVisited.contains(field.getType())) {
