@@ -19,25 +19,25 @@
                 <td style="padding:5px;">Time</td>
                 <td style="padding:5px;">
                     <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour">
-                        <option value="0" label="0"/>
-                        <option value="1" label="1"/>
-                        <option value="2" label="2"/>
-                        <option value="3" label="3"/>
-                        <option value="4" label="4"/>
-                        <option value="5" label="5"/>
-                        <option value="6" label="6"/>
-                        <option value="7" label="7"/>
-                        <option value="8" label="8"/>
-                        <option value="9" label="9"/>
-                        <option value="10" label="10"/>
-                        <option value="11" label="11"/>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
                     </select>
                     :
                     <select name="minute" ng-model="object.minute" style="margin-bottom:0; width:52px;" id="minute">
-                        <option value="0" label="00"/>
-                        <option value="15" label="15"/>
-                        <option value="30" label="30"/>
-                        <option value="45" label="45"/>
+                        <option value="0">00</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="45">45</option>
                     </select>
 
                     <select style="margin-bottom:0; width:60px;"
@@ -45,8 +45,8 @@
                             id="selectedPeriod"
                             ng-model="object.period"
                             name="period">
-                        <option value="AM" label="AM"/>
-                        <option value="PM" label="PM"/>
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
                     </select>
 
                     <select style="margin-bottom:0; width:110px;" name="selectedDay"
