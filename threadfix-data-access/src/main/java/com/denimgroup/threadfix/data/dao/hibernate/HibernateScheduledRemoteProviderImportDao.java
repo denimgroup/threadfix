@@ -25,12 +25,9 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.ScheduledRemoteProviderImportDao;
-import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
