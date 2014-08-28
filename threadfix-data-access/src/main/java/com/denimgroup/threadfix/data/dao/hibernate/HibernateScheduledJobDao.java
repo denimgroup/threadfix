@@ -28,13 +28,11 @@ import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.ScheduledJob;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Created by zabdisubhan on 8/15/14.
@@ -53,4 +51,40 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
         sessionFactory.getCurrentSession().delete(scheduledJob);
     }
 
+    @Override
+    public boolean checkSameDate(S scheduledJob) {
+
+        Query query = null;
+
+        if (scheduledJob.getDay() != null){
+            query = sessionFactory.getCurrentSession().createQuery(
+                    "select count(*) from " + getClassReference() + " scheduledJob " +
+                            "where scheduledJob.day=:day and scheduledJob.period=:period " +
+                            "and scheduledJob.hour=:hour and scheduledJob.minute=:minute");
+
+            query.setString("day", scheduledJob.getDay());
+
+        } else if (scheduledJob.getFrequency() != null) {
+            query = sessionFactory.getCurrentSession().createQuery(
+                    "select count(*) from "+  getClassReference() + " scheduledJob" +
+                            "where scheduledJob.frequency=:frequency and scheduledJob.period=:period " +
+                            "and scheduledJob.hour=:hour and scheduledJob.minute=:minute");
+
+            query.setString("frequency", scheduledJob.getFrequency());
+
+        }
+
+        if(query != null) {
+            query.setInteger("hour", scheduledJob.getHour());
+            query.setInteger("minute", scheduledJob.getMinute());
+            query.setString("period", scheduledJob.getPeriod());
+
+            Long count = (Long)query.uniqueResult();
+
+            return (count > 0);
+
+        }  else {
+            return false;
+        }
+    }
 }
