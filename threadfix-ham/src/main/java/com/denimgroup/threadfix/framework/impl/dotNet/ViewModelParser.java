@@ -43,8 +43,10 @@ import static com.denimgroup.threadfix.framework.impl.dotNet.DotNetKeywords.NAME
  */
 public class ViewModelParser implements EventBasedTokenizer {
 
-    Map<String, Set<ModelField>> map = new HashMap<>();
-    Map<String, String> superClassMap = new HashMap<>();
+    final static boolean shouldLog = false;
+
+    Map<String, Set<ModelField>> map           = new HashMap<>();
+    Map<String, String>          superClassMap = new HashMap<>();
 
     public static final SanitizedLogger LOG = new SanitizedLogger(ViewModelParser.class);
 
@@ -84,9 +86,11 @@ public class ViewModelParser implements EventBasedTokenizer {
             braceLevel--;
         }
 
-        LOG.debug("type = " + type + ", line = " + lineNumber + ", stringValue = " + stringValue);
-        LOG.debug("phase = " + currentPhase + ", state = " + classState);
-        LOG.debug("braceLevel is " + braceLevel);
+        if (shouldLog) {
+            LOG.debug("type = " + type + ", line = " + lineNumber + ", stringValue = " + stringValue);
+            LOG.debug("phase = " + currentPhase + ", state = " + classState);
+            LOG.debug("braceLevel is " + braceLevel);
+        }
 
         switch (currentPhase) {
             case START:

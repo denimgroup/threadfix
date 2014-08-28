@@ -59,8 +59,9 @@ public class ModelFieldSet implements Iterable<ModelField> {
     }
 
     @Nonnull
-    public ModelFieldSet add(ModelField beanField) {
-        this.fieldSet.add(beanField);
+    public ModelFieldSet add(ModelField field) {
+        this.fieldSet.add(field);
+        fieldMap.put(field.getParameterKey(), field);
         return this;
     }
 

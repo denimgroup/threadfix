@@ -23,16 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.List;
-
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import org.junit.Test;
 
-import com.denimgroup.threadfix.framework.TestConstants;
+import java.io.File;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 
 public class SpringEntityMappingsTests {
@@ -50,7 +49,6 @@ public class SpringEntityMappingsTests {
 		assertTrue(ownerFields.getField("address").getType().equals("String"));
 		assertTrue(ownerFields.getField("city").getType().equals("String"));
 		assertTrue(ownerFields.getField("telephone").getType().equals("String"));
-		assertTrue(ownerFields.getField("pet").getType().equals("Pet"));
 		assertTrue(ownerFields.getField("id").getType().equals("Integer"));
 	}
 	
@@ -64,8 +62,7 @@ public class SpringEntityMappingsTests {
 		assertTrue(petFields.getField("id").getType().equals("Integer"));
 		assertTrue(petFields.getField("name").getType().equals("String"));
 		assertTrue(petFields.getField("birthDate").getType().equals("DateTime"));
-		assertTrue(petFields.getField("owner").getType().equals("Owner"));
-		assertTrue(petFields.getField("type").getType().equals("PetType"));
+		assertTrue(petFields.getField("type.name").getType().equals("String"));
 		
 	}
 	
