@@ -112,10 +112,11 @@ public class ViewModelParser implements EventBasedTokenizer {
     }
 
     String currentModelName;
-    String previousString = null, twoStringsAgo = null;
+    String previousString = null, twoStringsAgo = null, threeStringsAgo = null;
 
     int classBraceLevel  = -1;
     int methodBraceLevel = -1;
+    boolean isMultiValueType = false, isFirstTypeAfterBracket = true;
 
     private void processClassEvent(int type, String stringValue) {
         switch (classState) {
@@ -141,6 +142,7 @@ public class ViewModelParser implements EventBasedTokenizer {
                 break;
             case IN_CLASS:
                 if (stringValue != null) {
+                    threeStringsAgo = twoStringsAgo;
                     twoStringsAgo = previousString;
                     previousString = stringValue;
                 } else if ('(' == type) {
@@ -156,6 +158,9 @@ public class ViewModelParser implements EventBasedTokenizer {
             case ATTRIBUTE:
                 if (']' == type) {
                     classState = ClassState.IN_CLASS;
+                    isMultiValueType = isFirstTypeAfterBracket;
+                } else {
+                    isFirstTypeAfterBracket = false;
                 }
                 break;
             case PAREN:
@@ -170,8 +175,19 @@ public class ViewModelParser implements EventBasedTokenizer {
                 break;
             case IN_PROPERTY:
                 if (classBraceLevel == braceLevel) {
-                    add(currentModelName, twoStringsAgo, previousString);
+
+                    String parameter = previousString;
+
+                    if ((threeStringsAgo != null && threeStringsAgo.contains("Collection"))
+                            || isMultiValueType
+                            ) {
+                        parameter = parameter + "[0]";
+                    }
+
+                    add(currentModelName, twoStringsAgo, parameter);
                     classState = ClassState.IN_CLASS;
+                    isMultiValueType = false;
+                    isFirstTypeAfterBracket = true;
                 }
                 break;
         }

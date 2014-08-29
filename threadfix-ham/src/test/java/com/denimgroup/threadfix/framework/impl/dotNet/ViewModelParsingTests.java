@@ -112,4 +112,20 @@ public class ViewModelParsingTests {
         assert parser.superClassMap.get("Student").equals("Person") :
                 "Student's superclass was " + parser.superClassMap.get("Student");
     }
+
+    @Test
+    public void testMultiValueProperty() {
+        DotNetModelMappings mappings = getDotNetModelMappings();
+
+        Collection<String> parameters = mappings.getPossibleParametersForModelType("Student").getPossibleParameters();
+        int courseFieldSize = parameters.size();
+
+        assert courseFieldSize > 0 : "Got 0 fields for Course.";
+
+        System.out.println("Got parameters " + parameters);
+
+        assert !parameters.contains("Enrollments.EnrollmentID") : "Enrollments.EnrollmentID was found. This is impossible to bind to.";
+
+        assert parameters.contains("Enrollments[0].EnrollmentID") : "Enrollments[0].EnrollmentID";
+    }
 }

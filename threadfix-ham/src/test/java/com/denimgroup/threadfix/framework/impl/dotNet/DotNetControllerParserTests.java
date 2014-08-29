@@ -171,6 +171,4 @@ public class DotNetControllerParserTests {
 
         assert targetAction.parameters.contains("ID") : "Parameters didn't contain id.";
     }
-
-
 }
