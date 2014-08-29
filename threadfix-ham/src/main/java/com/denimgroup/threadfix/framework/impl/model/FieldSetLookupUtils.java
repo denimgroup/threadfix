@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.model;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,6 +34,8 @@ import java.util.Set;
  * Created by mac on 8/27/14.
  */
 public final class FieldSetLookupUtils {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(FieldSetLookupUtils.class);
 
     private FieldSetLookupUtils() {}
 
@@ -120,7 +124,12 @@ public final class FieldSetLookupUtils {
                 if (done.contains(entry.getValue())) {
                     ModelFieldSet modelFields = fieldMap.get(entry.getKey());
                     if (modelFields != null) {
-                        modelFields.addAll(fieldMap.get(entry.getValue()));
+                        if (fieldMap.containsKey(entry.getValue())) {
+                            modelFields.addAll(fieldMap.get(entry.getValue()));
+                        } else {
+                            LOG.error("Missing mapping for " + entry.getValue() +
+                                    ". ThreadFix is unable to properly generate parameters until this bug is fixed.");
+                        }
                     }
                     done.add(entry.getKey());
                 }

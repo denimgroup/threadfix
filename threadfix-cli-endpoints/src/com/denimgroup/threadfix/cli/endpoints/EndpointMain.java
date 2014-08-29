@@ -38,27 +38,52 @@ import java.util.Collections;
 import java.util.List;
 
 public class EndpointMain {
+
+    enum Logging {
+        ON, OFF
+    }
+
+    static Logging logging = Logging.OFF;
 	
 	public static void main(String[] args) {
 
-        resetLoggingConfiguration();
+		if (args.length == 0 || args.length > 2) {
+            printError();
 
-		if (args.length != 1) {
-			System.out.println("This program takes 1 argument, the file root.");
-			
-		} else {
-		
-			File rootFile = new File(args[0]);
-			
-			if (!rootFile.exists()) {
-				System.out.println("The root file didn't exist.");
-			} else {
-				listEndpoints(rootFile);
-			}
-		}
+        } else if (args.length == 1) {
+            resetLoggingConfiguration();
+
+            processFile(args[0]);
+        } else if (args.length == 2) {
+            logging = Logging.ON;
+
+            resetLoggingConfiguration();
+
+            if (args[0].equals("-debug")) {
+                processFile(args[1]);
+            } else if (args[1].equals("-debug")) {
+                processFile(args[0]);
+            } else {
+                printError();
+            }
+        }
 	}
-	
-	private static void listEndpoints(File rootFile) {
+
+    static void printError() {
+        System.out.println("This program takes 1 argument, the file root.");
+    }
+
+    static void processFile(String arg) {
+        File rootFile = new File(arg);
+
+        if (!rootFile.exists()) {
+            System.out.println("The root file didn't exist.");
+        } else {
+            listEndpoints(rootFile);
+        }
+    }
+
+    private static void listEndpoints(File rootFile) {
 
         List<Endpoint> endpoints = new ArrayList<>();
 
@@ -77,14 +102,23 @@ public class EndpointMain {
 				System.out.println(endpoint.getCSVLine());
 			}
 		}
-	}
+
+        System.out.println("To enable logging include the -debug argument");
+    }
 
     private static void resetLoggingConfiguration() {
         ConsoleAppender console = new ConsoleAppender(); //create appender
         String pattern = "%d [%p|%c|%C{1}] %m%n";
         console.setLayout(new PatternLayout(pattern));
-        console.setThreshold(Level.FATAL);
+
+        if (logging == Logging.ON) {
+            console.setThreshold(Level.DEBUG);
+        } else {
+            console.setThreshold(Level.INFO);
+        }
+
         console.activateOptions();
+        Logger.getRootLogger().removeAllAppenders();
         Logger.getRootLogger().addAppender(console);
     }
 }

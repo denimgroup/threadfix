@@ -114,6 +114,17 @@ public class ViewModelParsingTests {
     }
 
     @Test
+    public void testProblemParsing() {
+        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetFile("ProblemEntity.cs"));
+
+        assert parser.map.size() == 1 :
+                "Map had " + parser.map.size() + " entries instead of 1.";
+
+        assert parser.map.containsKey("TestApplication") :
+                "Map didn't contain the 'TestApplication' key.";
+    }
+
+    @Test
     public void testMultiValueProperty() {
         DotNetModelMappings mappings = getDotNetModelMappings();
 

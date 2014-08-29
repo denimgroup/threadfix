@@ -143,7 +143,8 @@ public class ViewModelParser implements EventBasedTokenizer {
                     twoStringsAgo = previousString;
                     previousString = stringValue;
                 } else if ('(' == type) {
-                    classState = ClassState.METHOD;
+                    classState = ClassState.PAREN;
+                    methodBraceLevel = braceLevel;
                 } else if ('{' == type) {
                     classState = ClassState.IN_PROPERTY;
                     LOG.debug("Setting classBraceLevel to " + (braceLevel - 1));
@@ -175,7 +176,11 @@ public class ViewModelParser implements EventBasedTokenizer {
 
                     String parameter = previousString;
 
-                    if ((threeStringsAgo != null && threeStringsAgo.contains("Collection"))
+                    if ((threeStringsAgo != null &&
+                            (threeStringsAgo.contains("Collection") ||
+                             threeStringsAgo.contains("Enumerable") ||
+                             threeStringsAgo.contains("List") ||
+                             threeStringsAgo.contains("Set")))
                             || isMultiValueType
                             ) {
                         parameter = parameter + "[0]";
