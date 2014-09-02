@@ -181,7 +181,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                     if (twoStringsAgo.equals("Include")) {
                         currentState = State.AFTER_BIND_INCLUDE;
                     }
-                } else if (type == '=') {
+                } else if (type == '=' && !"Include".equals(lastString)) {
                     currentState = State.DEFAULT_VALUE;
                 }
 

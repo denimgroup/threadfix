@@ -150,7 +150,11 @@ public class ContosoPathTests {
             if (!endpointList.isEmpty()) {
                 String expected = getExpectedPath(finding);
                 if (expected != null) {
-                    String firstPath = endpointList.iterator().next().getUrlPath();
+                    Endpoint endpoint = endpointList.iterator().next();
+
+                    System.out.println(endpoint.getCSVLine(Endpoint.PrintFormat.STATIC));
+
+                    String firstPath = endpoint.getUrlPath();
                     assert expected.equals(firstPath) :
                             "Failed for Finding : " + finding +
                                     ", was expecting the path " + expected +
