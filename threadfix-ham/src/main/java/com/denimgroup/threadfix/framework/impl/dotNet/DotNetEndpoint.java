@@ -26,9 +26,7 @@ package com.denimgroup.threadfix.framework.impl.dotNet;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by mac on 6/11/14.
@@ -82,5 +80,21 @@ class DotNetEndpoint extends AbstractEndpoint {
     @Override
     public boolean matchesLineNumber(int lineNumber) {
         return lineNumber >= action.lineNumber && lineNumber <= action.endLineNumber;
+    }
+
+    @Nonnull
+    @Override
+    protected List<String> getLintLine() {
+        List<String> lintLines = new ArrayList<>();
+
+        if (!action.attributes.contains("HttpPost") && !action.attributes.contains("HttpGet")) {
+            lintLines.add("No HTTP method limiting annotation ([HttpGet], [HttpPost]) found.");
+        }
+
+        if (!action.attributes.contains("ValidateAntiForgeryToken")) {
+            lintLines.add("[ValidateAntiForgeryToken] missing.");
+        }
+
+        return lintLines;
     }
 }

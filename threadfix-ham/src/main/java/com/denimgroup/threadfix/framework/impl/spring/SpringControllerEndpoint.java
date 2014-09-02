@@ -29,10 +29,7 @@ import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SpringControllerEndpoint extends AbstractEndpoint {
 	
@@ -190,8 +187,14 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public boolean matchesLineNumber(int lineNumber) {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
-	
-	@Nonnull
+
+    @Nonnull
+    @Override
+    protected List<String> getLintLine() {
+        return new ArrayList<>();
+    }
+
+    @Nonnull
     @Override
 	public String toString() {
 		return "[" + getCleanedFilePath() +

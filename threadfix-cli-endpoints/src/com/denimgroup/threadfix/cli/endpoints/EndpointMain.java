@@ -34,6 +34,7 @@ import org.apache.log4j.PatternLayout;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,44 +44,53 @@ public class EndpointMain {
         ON, OFF
     }
 
-    static Logging logging = Logging.OFF;
-	
-	public static void main(String[] args) {
+    static Logging              logging     = Logging.OFF;
+    static Endpoint.PrintFormat printFormat = Endpoint.PrintFormat.DYNAMIC;
 
-		if (args.length == 0 || args.length > 2) {
+    public static void main(String[] args) {
+        if (checkArguments(args)) {
+            resetLoggingConfiguration();
+            listEndpoints(new File(args[0]));
+        } else {
             printError();
-
-        } else if (args.length == 1) {
-            resetLoggingConfiguration();
-
-            processFile(args[0]);
-        } else if (args.length == 2) {
-            logging = Logging.ON;
-
-            resetLoggingConfiguration();
-
-            if (args[0].equals("-debug")) {
-                processFile(args[1]);
-            } else if (args[1].equals("-debug")) {
-                processFile(args[0]);
-            } else {
-                printError();
-            }
         }
-	}
-
-    static void printError() {
-        System.out.println("This program takes 1 argument, the file root.");
     }
 
-    static void processFile(String arg) {
-        File rootFile = new File(arg);
-
-        if (!rootFile.exists()) {
-            System.out.println("The root file didn't exist.");
-        } else {
-            listEndpoints(rootFile);
+    private static boolean checkArguments(String[] args) {
+        if (args.length == 0) {
+            return false;
         }
+
+        File rootFile = new File(args[0]);
+
+        if (rootFile.exists() && rootFile.isDirectory()) {
+
+            List<String> strings = new ArrayList<>(Arrays.asList(args));
+
+            strings.remove(0);
+
+            for (String string : strings) {
+                if (string.equals("-debug")) {
+                    logging = Logging.ON;
+                } else if (string.equals("-lint")) {
+                    printFormat = Endpoint.PrintFormat.LINT;
+                } else {
+                    System.out.println("Received unsupported option " + string + ", valid arguments are -lint and -debug");
+                    return false;
+                }
+            }
+
+            return true;
+
+        } else {
+            System.out.println("Please enter a valid file path as the first parameter.");
+        }
+
+        return false;
+    }
+
+    static void printError() {
+        System.out.println("The first argument should be a valid file path to scan. Other flags supported: -lint, -debug");
     }
 
     private static void listEndpoints(File rootFile) {
@@ -99,7 +109,7 @@ public class EndpointMain {
 			System.out.println("No endpoints were found.");
 		} else {
 			for (Endpoint endpoint : endpoints) {
-				System.out.println(endpoint.getCSVLine());
+				System.out.println(endpoint.getCSVLine(printFormat));
 			}
 		}
 
