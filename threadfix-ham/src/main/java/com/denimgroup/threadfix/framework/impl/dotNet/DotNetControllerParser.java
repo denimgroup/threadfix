@@ -71,7 +71,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
     }
 
     enum State {
-        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, PUBLIC_IN_BODY, ACTION_RESULT, IN_ACTION_SIGNATURE, AFTER_BIND_INCLUDE, IN_ACTION_BODY
+        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, PUBLIC_IN_BODY, ACTION_RESULT, IN_ACTION_SIGNATURE, AFTER_BIND_INCLUDE, DEFAULT_VALUE, IN_ACTION_BODY
     }
 
     enum AttributeState {
@@ -181,11 +181,18 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                     if (twoStringsAgo.equals("Include")) {
                         currentState = State.AFTER_BIND_INCLUDE;
                     }
+                } else if (type == '=') {
+                    currentState = State.DEFAULT_VALUE;
                 }
 
                 if (currentParen == storedParen) {
                     currentState = State.IN_ACTION_BODY;
                     methodBraceLevel = currentCurlyBrace;
+                }
+                break;
+            case DEFAULT_VALUE:
+                if (stringValue != null) {
+                    currentState = State.IN_ACTION_SIGNATURE;
                 }
                 break;
             case AFTER_BIND_INCLUDE:
