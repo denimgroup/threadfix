@@ -36,6 +36,8 @@ public class DefectTrackerIndexPage extends BasePage {
 		super(webdriver);
 	}
 
+    /*----------------------------------- Action Methods -----------------------------------*/
+
 	public DefectTrackerIndexPage clickEditLink(String defectTrackerName) {
 		waitForElement(driver.findElementById("editDefectTrackerButton" + defectTrackerName));
         driver.findElementById("editDefectTrackerButton" + defectTrackerName).click();
@@ -78,6 +80,15 @@ public class DefectTrackerIndexPage extends BasePage {
 		return new DefectTrackerIndexPage(driver);
 	}
 
+    public DefectTrackerIndexPage clickSaveDefectTracker() {
+        driver.findElementById("submit").click();
+
+        WebDriverWait wait = new WebDriverWait(driver, 60);
+        wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
+
+        return new DefectTrackerIndexPage(driver);
+    }
+
 	public String getNameRequiredErrorsText() {
 		return driver.findElementById("nameRequiredError").getText();
 	}
@@ -95,6 +106,8 @@ public class DefectTrackerIndexPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText();
     }
 
+    /*----------------------------------- Boolean Methods -----------------------------------*/
+
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
@@ -110,14 +123,4 @@ public class DefectTrackerIndexPage extends BasePage {
     public boolean isTypeCorrect(String type, String name) {
         return driver.findElementById("defectTrackerType" + name).getText().contains(type);
     }
-
-	public DefectTrackerIndexPage clickSaveDefectTracker() {
-		driver.findElementById("submit").click();
-
-		WebDriverWait wait = new WebDriverWait(driver, 60);
-        wait.until(ExpectedConditions.visibilityOf(driver.findElementByClassName("alert-success")));
-
-        return new DefectTrackerIndexPage(driver);
-	}
-
 }

@@ -461,12 +461,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProviderCredentialsPage(driver);
 	}
 
-	public EditMappingPage clickEdit(int Row) {
-		appEditLink.get(Row).click();
-		sleep(1000);
-		return new EditMappingPage(driver);
-	}
-
 	public void clickImport(int Row) {
 		appImportScanLinks.get(Row).click();
 		sleep(1000);

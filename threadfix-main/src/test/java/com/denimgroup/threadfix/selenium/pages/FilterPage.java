@@ -36,7 +36,7 @@ public class FilterPage extends BasePage {
         super(webDriver);
     }
 
-    /*_____________ Vulnerability Filter ______________*/
+    /*---------------------------- Vulnerability Filter ----------------------------*/
     public FilterPage clickCreateNewFilter() {
         WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.visibilityOf(driver.findElementById("createNewKeyModalButton")));
@@ -79,7 +79,7 @@ public class FilterPage extends BasePage {
         return new FilterPage(driver);
     }
 
-    /*_____________ Severity Filter ______________*/
+    /*---------------------------- Severity Filter ----------------------------*/
     public FilterPage enableSeverityFilters() {
         if (driver.findElementById("enabledBox").getAttribute("checked") == null) {
             driver.findElementById("enabledBox").click();
@@ -155,14 +155,13 @@ public class FilterPage extends BasePage {
         return new FilterPage(driver);
     }
 
-    /*_____________ Page Methods ______________*/
+    /*---------------------------- Page Methods ----------------------------*/
     public FilterPage waitForChanges() {
         sleep(300000);
-        //sleep(30000);
         return this;
     }
 
-    /*_____________ Boolean Methods ______________*/
+    /*---------------------------- Boolean Methods ----------------------------*/
 
     public boolean isCreateNewFilterPresent() {
         return driver.findElementById("createNewKeyModalButton").isDisplayed();
