@@ -23,14 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import java.net.URL;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
@@ -39,13 +32,20 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
+import java.net.URL;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.ARACHNI)
 class ArachniChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();

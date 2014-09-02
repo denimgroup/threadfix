@@ -27,6 +27,8 @@ package com.denimgroup.threadfix.service.queue.scheduledjob;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
@@ -68,12 +70,15 @@ public class ScheduledRemoteProviderImporter {
     @Autowired
     private RemoteProviderTypeService remoteProviderTypeService;
 
+    @Autowired
+    DefaultConfigService defaultConfigService;
+
     public static Scheduler getScheduler() {
         if (scheduler == null) {
             SchedulerFactory schedulerFactory = new StdSchedulerFactory();
             try {
                 scheduler = schedulerFactory.getScheduler();
-            }   catch (SchedulerException ex) {
+            } catch (SchedulerException ex) {
                 log.error("Error when trying to get a reference to a scheduler", ex);
             }
         }
@@ -81,18 +86,38 @@ public class ScheduledRemoteProviderImporter {
     }
     @PostConstruct
     public void run() {
-        if (scheduler == null)
-            return;
-
-        log.info("Loading all Scheduled Scans from database");
-        List<ScheduledRemoteProviderImport> scheduledRemoteProviderImports = scheduledRemoteProviderImportService.loadAll();
-        log.info("Got " + scheduledRemoteProviderImports.size() + " Scheduled Remote Provider Imports");
-
-        log.info("------- Scheduling Jobs ----------------");
-        for (ScheduledRemoteProviderImport scheduledRemoteProviderImport : scheduledRemoteProviderImports) {
-            addScheduledRemoteProviderImport(scheduledRemoteProviderImport);
+        if (scheduler == null) {
+            throw new IllegalStateException("Scheduler is null");
         }
-        log.info("------- End Scheduling Jobs ----------------");
+
+        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+
+        if (!config.getHasAddedScheduledImports()) {
+            //Add default scheduled import
+            ScheduledRemoteProviderImport defaultScheduledImport = ScheduledRemoteProviderImport.getDefaultScheduledImport();
+
+            if (scheduledRemoteProviderImportService.save(defaultScheduledImport) < 0) {
+                throw new IllegalStateException("Saving Default Scheduled Remote Provider Import failed.");
+            } else {
+
+                log.info("------- Scheduling Default Job: "+defaultScheduledImport.getScheduledDate()+" ----------------");
+                addScheduledRemoteProviderImport(defaultScheduledImport);
+                log.info("------- End Scheduling Job ----------------");
+
+                config.setHasAddedScheduledImports(true);
+                defaultConfigService.saveConfiguration(config);
+            }
+        } else {
+            log.info("Loading all Scheduled Imports from database");
+            List<ScheduledRemoteProviderImport> scheduledRemoteProviderImports = scheduledRemoteProviderImportService.loadAll();
+            log.info("Got " + scheduledRemoteProviderImports.size() + " Scheduled Remote Provider Imports");
+
+            log.info("------- Scheduling Jobs ----------------");
+            for (ScheduledRemoteProviderImport scheduledRemoteProviderImport : scheduledRemoteProviderImports) {
+                addScheduledRemoteProviderImport(scheduledRemoteProviderImport);
+            }
+            log.info("------- End Scheduling Jobs ----------------");
+        }
 
         try {
             scheduler.start();

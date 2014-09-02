@@ -33,4 +33,6 @@ public interface ScheduledJobDao<S extends ScheduledJob> extends GenericObjectDa
 
     public void delete(S scheduledJob);
 
+    public boolean checkSameDate(S scheduledJob);
+
 }

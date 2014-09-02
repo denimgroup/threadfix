@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
@@ -51,6 +52,7 @@ import java.util.regex.Pattern;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.NESSUS)
 class NessusChannelImporter extends AbstractChannelImporter {
 	
 	private static final String SIMPLE_HTTP_REGEX = "(http[^\n]*)";

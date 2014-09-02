@@ -23,13 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.Attributes;
@@ -44,6 +45,7 @@ import java.util.Map;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.APPSCAN_ENTERPRISE)
 class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
