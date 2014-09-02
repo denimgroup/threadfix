@@ -137,6 +137,12 @@ public class LoginPage extends BasePage {
 	/*----------------set functions----------------*/
 	public LoginPage setUsername(String user) {
 		driver.findElementById("username").sendKeys(user);
+
+        if (driver.findElementById("username").getAttribute("value").equals("")) {
+            System.out.println("Username field was empty, re-entering username.");
+            driver.findElementById("username").sendKeys(user);
+        }
+
         return this;
 	}
 	
