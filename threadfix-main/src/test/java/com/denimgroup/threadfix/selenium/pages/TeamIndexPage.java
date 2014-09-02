@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import com.denimgroup.threadfix.selenium.tests.TeamIndexCache;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -31,11 +30,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class TeamIndexPage extends BasePage {
@@ -157,7 +151,63 @@ public class TeamIndexPage extends BasePage {
         setApplicationName(appName);
         setApplicationUrl(url);
         setApplicationCriticality(criticality);
+        return this;
+    }
+
+
+    public TeamIndexPage addRemoteSourceCodeInformation(String url, String revision, String userName, String password) {
+        expandSourceCodeFields();
+        setRepositoryURL(url);
+        setRepositoryRevision(revision);
+        setRepositoryUserName(userName);
+        setRepositoryPassword(password);
+        return this;
+    }
+    public TeamIndexPage setSourceCodeFolder(String path) {
+        expandSourceCodeFields();
+        setRepositoryPath(path);
+        return this;
+    }
+    public TeamIndexPage setRemoteSourceCodeURL(String url) {
+        expandSourceCodeFields();
+        repositoryURL(url);
+        return this;
+    }
+
+    public TeamIndexPage setRepositoryPath(String path) {
+        driver.findElementById("repositoryFolderInput").sendKeys(path);
+        return this;
+    }
+
+    public TeamIndexPage repositoryURL(String url) {
+        driver.findElementById("repositoryUrlInput").sendKeys(url);
+        return this;
+    }
+
+    public TeamIndexPage expandSourceCodeFields() {
+        driver.findElementByLinkText("Source Code Information").click();
+        waitForElement(driver.findElementById("repositoryUrlInput"));
         return new TeamIndexPage(driver);
+    }
+
+    public TeamIndexPage setRepositoryURL(String url) {
+        driver.findElementById("repositoryUrlInput").sendKeys(url);
+        return this;
+    }
+
+    public TeamIndexPage setRepositoryRevision(String revision) {
+        driver.findElementById("repositoryBranch").sendKeys(revision);
+        return this;
+    }
+
+    public TeamIndexPage setRepositoryUserName(String userName) {
+        driver.findElementById("repositoryUsername").sendKeys(userName);
+        return this;
+    }
+
+    public TeamIndexPage setRepositoryPassword(String password) {
+        driver.findElementById("repositoryPassword").sendKeys(password);
+        return this;
     }
 
     public String getLengthError() {
@@ -211,16 +261,24 @@ public class TeamIndexPage extends BasePage {
 		return driver.findElementById("addTeamModalButton").isDisplayed();	
 	}
 	
-	public boolean isAddTeamBtnClickable(){
+	public boolean isAddTeamBtnClickable() {
         return isClickable("addTeamModalButton");
 	}
+
+    public boolean isAddApplicationButtonClickable() {
+        return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
+    }
+
+    public String getUrlRepositoryError() {
+        return driver.findElementById("sourceUrlValidError").getText().trim();
+    }
 
     public boolean isTeamsExpanded(String teamName, String appName) {
         return driver.findElementById("applicationLink" + teamName + "-" + appName).isDisplayed();
     }
 
 
-	public boolean isExpandAllBtnPresent(){
+	public boolean isExpandAllBtnPresent() {
         WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.elementToBeClickable(By.id("expandAllButton")));
 		return driver.findElementById("expandAllButton").isDisplayed();	

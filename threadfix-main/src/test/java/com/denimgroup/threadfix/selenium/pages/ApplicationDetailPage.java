@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
@@ -133,6 +134,50 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage expandSourceCodeFields() {
+        driver.findElementByLinkText("Source Code Information").click();
+        waitForElement(driver.findElementById("repositoryUrl"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setRemoteSourceCodeInformation(String url, String revision, String userName, String password) {
+        setRepositoryURLEdited(url);
+        setRepositoryRevisionEdited(revision);
+        setRepositoryUserNameEdited(userName);
+        setRepositoryPasswordEdited(password);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryURLEdited(String url) {
+
+        driver.findElementById("repositoryUrl").clear();
+        driver.findElementById("repositoryUrl").sendKeys(url);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryRevisionEdited(String revision) {
+        sleep(1000);
+        driver.findElementById("repositoryBranch").clear();
+        driver.findElementById("repositoryBranch").sendKeys(revision);
+        return this;
+    }
+
+    public ApplicationDetailPage setRepositoryUserNameEdited(String userName) {
+        sleep(1000);
+        driver.findElementById("repositoryUsername").clear();
+        driver.findElementById("repositoryUsername").sendKeys(userName);
+        return this;
+    }
+    public ApplicationDetailPage setRepositoryPasswordEdited(String password){
+        sleep(1000);
+        driver.findElementById("repositoryPassword").clear();
+        driver.findElementById("repositoryPassword").sendKeys(password);
+        return this;
+    }
+    public String checkWafName() {
+        waitForElement(driver.findElementById("wafNameText"));
+        return driver.findElementById("wafNameText").getText();
+    }
     public TeamDetailPage clickDeleteLink() {
         driver.findElementById("deleteLink").click();
         handleAlert();
@@ -222,6 +267,30 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickCreateNewWaf() {
+        sleep(1000);
+        driver.findElementById("addWafButtonInModal").click();
+        return this;
+    }
+
+    public ApplicationDetailPage clickCreateWAfButtom() {
+        sleep(1000);
+        driver.findElementById("submit").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setWafName(String name) {
+        sleep(1000);
+        driver.findElementById("wafCreateNameInput").sendKeys(name);
+        return this;
+    }
+
+    public ApplicationDetailPage clickSetWaf() {
+        driver.findElementById("addWafButton").click();
+        sleep(1500);
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage setNameInput(String appName2) {
         driver.findElementById("nameInput").clear();
         driver.findElementById("nameInput").sendKeys(appName2);
@@ -258,6 +327,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public String getUrlError() {
         return driver.findElementById("applicationUrlInputInvalidUrlError").getText().trim();
+    }
+
+    public String getUrlRepositoryError() {
+        return driver.findElementById("sourceUrlValidError").getText().trim();
     }
 
     public ApplicationDetailPage clickDeleteScanButton() {
@@ -1025,4 +1098,34 @@ public class ApplicationDetailPage extends BasePage {
         }
         return actual.trim().equals(expected);
     }
+
+    public boolean isRepositoryURLCorrect(String repositoryURL) {
+        return driver.findElementById("repositoryUrl").getAttribute("value").trim().equals(repositoryURL);
+    }
+
+    public boolean isRepositoryRevisionCorrect(String repositoryRevision) {
+        return driver.findElementById("repositoryBranch").getAttribute("value").trim().equals(repositoryRevision);
+    }
+
+    public boolean isRepositoryUserNameCorrect(String repositoryUserName) {
+        return driver.findElementById("repositoryUsername").getAttribute("value").trim().equals(repositoryUserName);
+    }
+
+    public boolean isRepositoryPasswordEmpty() {
+        return driver.findElementById("repositoryPassword").getAttribute("value").isEmpty();
+    }
+
+    public boolean isRepositoryPathEmpty(String repositoryPath) {
+        return driver.findElementById("repositoryFolderInput").getAttribute("value").equals(repositoryPath);
+    }
+
+    public boolean isApplicationSaveChangesButtonClickable() {
+        return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
+    }
+
+    public boolean isWafPresent() {
+        String temp = driver.findElementById("myModalLabel").getText().trim();
+        return temp.equals("Add WAF");
+    }
+
 }

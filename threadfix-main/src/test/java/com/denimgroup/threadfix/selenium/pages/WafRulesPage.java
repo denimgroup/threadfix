@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import com.denimgroup.threadfix.data.entities.WafRule;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -31,95 +32,109 @@ import org.openqa.selenium.support.ui.Select;
 
 public class WafRulesPage extends BasePage {
 
-	private WebElement nameText;
-	private WebElement wafTypeText;
-	private WebElement editLink;
-	private WebElement lastItemFoundInApplicationsTableBodyLink;
-	private WebElement deleteButton;
-	
-	public WafRulesPage(WebDriver webdriver) {
-		super(webdriver);
-		
-		nameText = driver.findElementById("nameText");
-		wafTypeText = driver.findElementById("wafTypeText");
-	}
+    private WebElement nameText;
+    private WebElement wafTypeText;
+    private WebElement editLink;
+    private WebElement lastItemFoundInApplicationsTableBodyLink;
+    private WebElement deleteButton;
 
-	public String getNameText(){
-		return nameText.getText();
-	}
+    public WafRulesPage(WebDriver webdriver) {
+        super(webdriver);
 
-	public String getWafTypeText(){
-		return wafTypeText.getText();
-	}
+        nameText = driver.findElementById("nameText");
+        wafTypeText = driver.findElementById("wafTypeText");
+    }
 
-	public WafEditPage clickEditLink() {
-		editLink.click();
-		return new WafEditPage(driver);
-	}
+    public String getNameText() {
+        return nameText.getText();
+    }
 
+    public String getWafTypeText() {
+        return wafTypeText.getText();
+    }
 
-	public WafRulesPage clickGenerateWafRulesButton() {
-		driver.findElementById("generateWafRulesButton").click();
-		return new WafRulesPage(driver);
-	}
+    public WafEditPage clickEditLink() {
+        editLink.click();
+        return new WafEditPage(driver);
+    }
 
-	public TeamIndexPage clickDownloadWafRulesButton() {
-		driver.findElementById("downloadWafRulesButton").click();
-		return new TeamIndexPage(driver);
-	}
+    public WafRulesPage clickGenerateWafRulesButton() {
+        driver.findElementById("generateWafRulesButton").click();
+        return new WafRulesPage(driver);
+    }
 
-	public boolean isTextPresentInApplicationsTableBody(String text) {
-		if (isElementPresent("applicationsTableBody")) {
-			for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
-				if (element.getText().contains(text)) {
-					lastItemFoundInApplicationsTableBodyLink = element;
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
+    public WafRulesPage setLogFile(String file) {
+        driver.findElementByLinkText("Browse...").sendKeys(file);
+        return new WafRulesPage(driver);
+    }
 
-	public ApplicationDetailPage clickTextLinkInApplicationsTableBody(String text) {
-		if (isTextPresentInApplicationsTableBody(text)) {
-			lastItemFoundInApplicationsTableBodyLink.click();
-			return new ApplicationDetailPage(driver);
-		} else {
-			return null;
-		}
-	}
+    //TODO change this to the correct return type
+    public WafRulesPage clickUploadLogFile() {
+        driver.findElementByLinkText("Upload File");
+        return new WafRulesPage(driver);
+    }
 
-	public WafIndexPage clickDeleteButton() {
-		deleteButton.click();
-		
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
-		
-		return new WafIndexPage(driver);
-	}
-	
-	public WafRulesPage clickDeleteButtonInvalid() {
-		deleteButton.click();
-		
-		Alert alert = driver.switchTo().alert();
-		alert.accept();
-		
-		return new WafRulesPage(driver);
-	}
+    public TeamIndexPage clickDownloadWafRulesButton() {
+        driver.findElementById("downloadWafRulesButton").click();
+        return new TeamIndexPage(driver);
+    }
 
-	public String getWafDirectiveSelect(){
-		return new Select(driver.findElementById("wafDirectiveSelect")).getFirstSelectedOption().getText();
-	}
+    public boolean isTextPresentInApplicationsTableBody(String text) {
+        if (isElementPresent("applicationsTableBody")) {
+            for (WebElement element : driver.findElementById("applicationsTableBody").findElements(By.xpath(".//tr/td/a"))) {
+                if (element.getText().contains(text)) {
+                    lastItemFoundInApplicationsTableBodyLink = element;
+                    return true;
+                }
+            }
+        }
 
-	public WafRulesPage setWafDirectiveSelect(String code){
-		new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
-		return new WafRulesPage(driver);
-	}
+        return false;
+    }
+
+    public ApplicationDetailPage clickTextLinkInApplicationsTableBody(String text) {
+        if (isTextPresentInApplicationsTableBody(text)) {
+            lastItemFoundInApplicationsTableBodyLink.click();
+            return new ApplicationDetailPage(driver);
+        } else {
+            return null;
+        }
+    }
+
+    public WafIndexPage clickDeleteButton() {
+        deleteButton.click();
+
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+
+        return new WafIndexPage(driver);
+    }
+
+    public WafRulesPage clickDeleteButtonInvalid() {
+        deleteButton.click();
+
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+
+        return new WafRulesPage(driver);
+    }
+
+    public String getWafDirectiveSelect() {
+        return new Select(driver.findElementById("wafDirectiveSelect")).getFirstSelectedOption().getText();
+    }
+
+    public WafRulesPage setWafDirectiveSelect(String code) {
+        new Select(driver.findElementById("wafDirectiveSelect")).selectByVisibleText(code);
+        return new WafRulesPage(driver);
+    }
 
     public WafRulesPage setWafApplicationSelect(String teamName, String appName) {
         new Select(driver.findElementById("wafApplicationSelect")).selectByVisibleText(teamName + "/" + appName);
         return new WafRulesPage(driver);
     }
-	
+
+    public boolean isDownloadWafRulesDisplay() {
+        return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
+    }
+
 }

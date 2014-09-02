@@ -577,7 +577,6 @@ public class ApplicationIT extends BaseIT {
                 editedParameter.equals(findingDetailPage.getDetail("parameter")));
     }
 
-    //TODO add validation test for dynamic manual finding modal
 
     @Test
     public void testAddStaticManualFinding() {
@@ -747,6 +746,331 @@ public class ApplicationIT extends BaseIT {
                 .expandTeamRowByName(teamName);
 
         assertFalse("Application is still present on the team index page.", teamIndexPage.isAppPresent(teamName, appName));
+    }
+
+    @Test
+    public void remoteSourceCodeTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String repositoryURL = "http://test.com";
+        String repositoryRevision = "QA";
+        String repositoryUserName = "user";
+        String repositoryPassword = "password";
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addRemoteSourceCodeInformation(repositoryURL, repositoryRevision, repositoryUserName, repositoryPassword)
+                .clickModalSubmit();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .expandSourceCodeFields();
+
+        assertTrue("Repository URL was not saved properly.",
+                applicationDetailPage.isRepositoryURLCorrect(repositoryURL));
+        assertTrue("Repository Revision was not saved properly.",
+                applicationDetailPage.isRepositoryRevisionCorrect(repositoryRevision));
+        assertTrue("Repository User Name was not saved properly",
+                applicationDetailPage.isRepositoryUserNameCorrect(repositoryUserName));
+        assertFalse("Repository Password was not saved properly",
+                applicationDetailPage.isRepositoryPasswordEmpty());
+    }
+
+
+    @Test
+    public void editSourceCodeTest() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String repositoryURL = "http://test.com";
+        String repositoryRevision = "QA";
+        String repositoryUserName = "user";
+        String repositoryPassword = "password";
+
+        String repositoryURLEdited = "http://test2.com";
+        String repositoryRevisionEdited = "QA2";
+        String repositoryUserNameEdited = "user2";
+        String repositoryPasswordEdited = "password2";
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addRemoteSourceCodeInformation(repositoryURL, repositoryRevision, repositoryUserName, repositoryPassword)
+                .clickModalSubmit();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .expandSourceCodeFields()
+                .setRemoteSourceCodeInformation(repositoryURLEdited, repositoryRevisionEdited, repositoryUserNameEdited, repositoryPasswordEdited)
+                .clickModalSubmit();
+
+        applicationDetailPage.clickEditDeleteBtn()
+                  .expandSourceCodeFields();
+
+        assertTrue("Repository URL was not saved properly.",
+                applicationDetailPage.isRepositoryURLCorrect(repositoryURLEdited));
+        assertTrue("Repository Revision was not saved properly.",
+                applicationDetailPage.isRepositoryRevisionCorrect(repositoryRevisionEdited));
+        assertTrue("Repository User Name was not saved properly",
+                applicationDetailPage.isRepositoryUserNameCorrect(repositoryUserNameEdited));
+        assertFalse("Repository Password was not saved properly",
+                applicationDetailPage.isRepositoryPasswordEmpty());
+    }
+
+    @Test
+    public void localSourceCodeTest() {
+
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String repositoryPath = "C:\\Users\\mghanizadeh\\threadfix";
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName,appName,"http://testapp.com","High")
+                .setSourceCodeFolder(repositoryPath)
+                .clickModalSubmit();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .expandSourceCodeFields();
+
+        assertTrue("Repository Path was not saved properly",
+                applicationDetailPage.isRepositoryPathEmpty(repositoryPath));
+    }
+
+    @Test
+    public void createAppSourceCodeValidate() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String repositoryURL = "htt://test.com";
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .setRemoteSourceCodeURL(repositoryURL);
+
+        assertTrue("The correct error did not appear for the url field.",
+                teamIndexPage.getUrlRepositoryError().equals("URL is invalid."));
+        assertFalse("Add Application Button is clickable",
+                teamIndexPage.isAddApplicationButtonClickable());
+
+    }
+
+    @Test
+    public void editApplicationSourceCodeValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String repositoryURL = "http://test.com";
+        String repositoryURLEdited = "htp://test1.com";
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .setRemoteSourceCodeURL(repositoryURL)
+                .clickModalSubmit();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
+                .clickEditDeleteBtn()
+                .expandSourceCodeFields()
+                .setRepositoryURLEdited(repositoryURLEdited)
+                .clickUpdateApplicationButtonInvalid();
+
+        assertTrue("The correct error did not appear for the url field.",
+                applicationDetailPage.getUrlRepositoryError().equals("URL is invalid."));
+        assertFalse("Add Application Button is clickable",
+                applicationDetailPage.isApplicationSaveChangesButtonClickable());
+    }
+
+    @Test
+    public void createApplicationNewWaf() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String wafName = getRandomString(8);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+                    applicationDetailPage.clickCreateNewWaf()
+                        .setWafName(wafName)
+                        .clickCreateWAfButtom()
+                        .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        applicationDetailPage.clickEditDeleteBtn();
+
+        assertTrue("The correct error did not appear for the url field.",
+                applicationDetailPage.checkWafName().equals(wafName));
+    }
+
+    @Test
+    public void switchWafOnApplications() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String type = "Snort";
+        String wafName1 = getRandomString(8);
+        String wafName2 = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickWafsHeaderLink()
+                .clickAddWafLink()
+                .createNewWaf(wafName1,type)
+                .clickCreateWaf()
+                .clickAddWafLink()
+                .createNewWaf(wafName2,type)
+                .clickCreateWaf();
+
+        // Assign WAf to the application
+        ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf()
+                .addWaf(wafName1)
+                .clickUpdateApplicationButton()
+                .clickModalSubmit();
+
+        //switch from the first WAF to the second WAF
+        applicationDetailPage.clickEditDeleteBtn()
+                .clickSetWaf()
+                .addWaf(wafName2)
+                .clickUpdateApplicationButton()
+                .clickModalSubmit();
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .checkWafName();
+
+        assertTrue("The WAF wasn't switch correctly",
+                applicationDetailPage.checkWafName().equals(wafName2));
+    }
+
+    @Test
+    public void removeWaf() {
+
+        String type = "Snort";
+        String wafName1 = getRandomString(8);
+
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickWafsHeaderLink()
+                .clickAddWafLink()
+                .createNewWaf(wafName1,type)
+                .clickCreateWaf()
+                .clickDeleteWaf(wafName1);
+
+        assertFalse("The Application was not removed from the WAF correctly.",
+                wafIndexPage.isWafPresent(wafName1));
+    }
+
+    @Test
+    public void generateWafRules() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String wafName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink();
+
+        WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName)
+                .clickGenerateWafRulesButton();
+
+        assertTrue("WAf Rule does not exist",
+                wafRulesPage.isDownloadWafRulesDisplay());
+    }
+
+    @Test
+    public void uploadLogFile() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String wafName = getRandomString(8);
+        String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink();
+
+        WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName)
+                .clickGenerateWafRulesButton();
+
+        wafRulesPage.refreshPage();
+        wafRulesPage.setLogFile(logFile);
+
+        wafRulesPage.clickUploadLogFile();
+
+        wafRulesPage.logout();
+
+       // assertTrue("WAf Rule does not exist",
+         //       wafRulesPage.isDownloadWafRulesDisplay());
     }
 
     public void sleep(int num) {
