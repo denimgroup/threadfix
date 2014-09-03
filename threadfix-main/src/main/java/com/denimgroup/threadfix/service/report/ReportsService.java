@@ -58,6 +58,8 @@ public interface ReportsService {
 
     ReportCheckResultBean generateDashboardReport(ReportParameters parameters, HttpServletRequest request);
 
+    Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request);
+
     Map<String, Object> scannerComparisonByVulnerability(Model model,
 			ReportParameters reportParameters);
 

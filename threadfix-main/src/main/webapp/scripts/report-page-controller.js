@@ -8,6 +8,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.base = window.location.pathname;
 
+    $scope.trendingActive = false;
+
     $scope.tabs = [
         {
             title: "Trending",
@@ -15,8 +17,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             options: [
                 { name: "Trending Scans", id: 1 },
                 { name: "Monthly Progress", id: 7 },
-                { name: "Vulnerability Trending", id: 9 },
-                { name: "Most Vulnerable Applications", id: 10 }
+                { name: "Vulnerability Trending", id: 9 }
             ]
         },
         {
@@ -25,6 +26,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 { name: "Point in Time", id: 2 },
                 { name: "Progress By Vulnerability", id: 3 },
                 { name: "Portfolio Report", id: 8 },
+                { name: "Most Vulnerable Applications", id: 10 },
                 { name: "Vulnerability List", id: 11 }
             ]
         },
@@ -130,6 +132,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadReport = function() { loadReport(); }
 
     $scope.updateOptions = function(tab) {
+        $scope.trendingActive = false;
         $scope.vulnSearch = false;
         $scope.options = tab.options;
         $scope.reportId = tab.options[0].id;
@@ -276,8 +279,20 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
+        $scope.trendingActive = false;
         $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
+    }
+
+    $scope.loadTrending = function() {
+
+        $scope.trendingActive = true;
+        $scope.vulnSearch = false;
+        $scope.tabs.forEach(function(tab) {
+            tab.active = false;
+        });
+        $scope.$broadcast('loadTrendingReport');
+
     }
 
 });

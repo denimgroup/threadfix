@@ -503,4 +503,10 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 
         return map;
     }
+
+    @JsonView(AllViews.TableRow.class)
+    @Transient
+    private Integer getApplicationChannelId(){
+        return (getApplicationChannel()==null ? null : getApplicationChannel().getId());
+    }
 }

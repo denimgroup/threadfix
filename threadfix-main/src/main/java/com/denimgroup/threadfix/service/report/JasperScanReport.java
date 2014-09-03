@@ -29,12 +29,10 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRField;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * This class provides the data source for the Trending Report.
@@ -76,25 +74,30 @@ public class JasperScanReport implements JRDataSource {
 			} else {
 				index++;
 			}
-			buildHash();
+			buildHash(index);
 			return true;
 		}
 		else
 			return false;
 	}
 	
-	private void buildHash() {
+	private Map<String, Object> buildHash(int index) {
+        Map<String, Object> hash = newMap();
 		Scan scan = scanList.get(index);
 		
 		if (scan == null) {
-			return;
+			return hash;
 		}
 					
 		resultsHash.put("newVulns", scan.getNumberNewVulnerabilities());
 		resultsHash.put("resurfacedVulns", scan.getNumberResurfacedVulnerabilities());
+        hash.put("New", scan.getNumberNewVulnerabilities());
+        hash.put("Resurfaced", scan.getNumberResurfacedVulnerabilities());
 		
-		if (scan.getImportTime() != null)
-			resultsHash.put("importTime", scan.getImportTime());
+		if (scan.getImportTime() != null) {
+            resultsHash.put("importTime", scan.getImportTime());
+            hash.put("importTime", scan.getImportTime());
+        }
 		
 		// Take out from the count old vulns from other channels.
 		Integer adjustedTotal = scan.getNumberTotalVulnerabilities() -
@@ -119,6 +122,21 @@ public class JasperScanReport implements JRDataSource {
 		}
 		
 		resultsHash.put("totVulns", numTotal);
+        hash.put("Total", numTotal);
+
+        return hash;
 	}
 
+
+    public List<Map<String, Object>> buildReportList() {
+        List<Map<String, Object>> resultList = null;
+        if (scanList != null && scanList.size() > 0) {
+            resultList = new ArrayList<>();
+            for (int i=0; i< scanList.size(); i++) {
+                resultList.add(buildHash(i));
+            }
+
+        }
+        return resultList;
+    }
 }

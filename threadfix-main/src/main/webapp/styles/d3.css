@@ -88,3 +88,14 @@ svg text.percent{
 .arc path {
     stroke: #fff;
 }
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}

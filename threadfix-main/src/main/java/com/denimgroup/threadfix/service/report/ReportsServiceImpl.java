@@ -164,6 +164,46 @@ public class ReportsServiceImpl implements ReportsService {
         return report;
     }
 
+    @Override
+    public Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request) {
+
+        List<Integer> applicationIdList = getApplicationIdList(parameters);
+        if (applicationIdList == null || applicationIdList.isEmpty()) {
+            return newMap();
+        }
+
+        ReportCheckResultBean report;
+
+        List<List<Scan>> scanList = new ArrayList<>();
+        boolean containsVulns = false;
+        for (Integer id : applicationIdList) {
+            scanList.add(applicationDao.retrieveById(id).getScans());
+        }
+        for(List<Scan> scan : scanList){
+            if (!scan.isEmpty()){
+                containsVulns = true;
+                break;
+            }
+        }
+        if (scanList.isEmpty() || !containsVulns ) {
+            log.info("Unable to fill Report - no scans were found.");
+            return newMap();
+        } else {
+            JasperScanReport reportExporter = new JasperScanReport(applicationIdList, scanDao);
+            report = new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
+        }
+
+        if (report == null || report.getReportList() == null || report.getReportList().size()==0)
+            return newMap();
+
+
+        Map<String, Object> map = newMap();
+        map.put("trendingScans", report.getReportList());
+        map.put("scanList", scanDao.retrieveByApplicationIdList(applicationIdList));
+
+        return map;
+    }
+
     @SuppressWarnings("resource")
     private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
                                             Map<String, Object> parameters, List<Integer> applicationIdList,

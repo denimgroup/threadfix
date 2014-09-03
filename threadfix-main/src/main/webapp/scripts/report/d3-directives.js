@@ -266,6 +266,7 @@ function getScaleLinearRange(d3, range) {
 function getAxis(d3, scale, orient) {
     return  d3.svg.axis()
         .scale(scale)
+        .tickSize(3)
         .orient(orient);
 };
 
