@@ -1,5 +1,7 @@
 cd ../../..
 
+echo $CLIENT $VERSION
+
 if [[ $1 ]]
 then
     echo "Got license file: $1"
@@ -17,12 +19,16 @@ ARTIFACTS_FOLDER=$(pwd)/artifacts
 rm -r $ARTIFACTS_FOLDER
 mkdir $ARTIFACTS_FOLDER
 
-# Build cli
-FOLDER_NAME=Build/ThreadFix-CLI-$VERSION
+FOLDER_NAME=Build
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
+
+# Build cli
+FOLDER_NAME=Build/ThreadFix-CLI-$VERSION
+#rm -r $FOLDER_NAME
+mkdir $FOLDER_NAME
 cp threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/tfcli.jar
-cp threadfix-cli/README $FOLDER_NAME
+cp threadfix-cli/README.md $FOLDER_NAME
 cd  $FOLDER_NAME
 zip  -q ThreadFix-CLI-$VERSION.zip -r ./*
 cp ThreadFix-CLI-$VERSION.zip $ARTIFACTS_FOLDER
@@ -30,7 +36,7 @@ cd ../../
 
 # Build endpoint cli
 FOLDER_NAME=Build/ThreadFix-EndpointCLI-$VERSION
-rm -r $FOLDER_NAME
+#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-cli-endpoints/target/threadfix-endpoint-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/endpoints.jar
 cp threadfix-cli-endpoints/README $FOLDER_NAME
@@ -56,7 +62,7 @@ cd ../../
 
 # Build ZAP plugin
 FOLDER_NAME=Build/ThreadFix-ZapPlugin-$VERSION
-rm -r $FOLDER_NAME
+#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-scanner-plugin/zaproxy/target/Zap-Plugin-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.zap
 cp threadfix-scanner-plugin/zaproxy/README $FOLDER_NAME
@@ -67,7 +73,7 @@ cd ../../
 
 # Build Burp plugin
 FOLDER_NAME=Build/ThreadFix-BurpPlugin-$VERSION
-rm -r $FOLDER_NAME
+#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-scanner-plugin/burp/target/threadfix-release-2-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.jar
 cp threadfix-scanner-plugin/burp/README $FOLDER_NAME
@@ -78,9 +84,9 @@ cd ../../
 
 # Build IntelliJ--export intellij.zip to Build folder using "Prepare module for deployment"
 FOLDER_NAME=Build/ThreadFix-IntelliJPlugin-$VERSION
-rm -r $FOLDER_NAME
+#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
-cp Build/intellij.zip $FOLDER_NAME
+cp $BUILD_FILES/intellij.zip $FOLDER_NAME
 cp threadfix-ide-plugin/intellij/README $FOLDER_NAME
 cd  $FOLDER_NAME
 zip  -q ThreadFix-IntelliJPlugin-$VERSION.zip -r ./*
@@ -89,19 +95,21 @@ cd ../../
 
 # Build Eclipse--export 
 FOLDER_NAME=Build/ThreadFix-EclipsePlugin-$VERSION
-rm -r $FOLDER_NAME
+#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
-cp Build/com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView_0.2.0.jar $FOLDER_NAME
+cp $BUILD_FILES/com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView_0.2.0.jar $FOLDER_NAME
 cp threadfix-ide-plugin/eclipse/README $FOLDER_NAME
 cd  $FOLDER_NAME
 zip  -q ThreadFix-EclipsePlugin-$VERSION.zip -r ./*
 cp ThreadFix-EclipsePlugin-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
-# build zip
+# Build Zip
 cd Build
+cp -r $BUILD_FILES/ThreadFixBase .
 
 rm -r ThreadFix
+pwd
 cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix-backup.script
 cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix.script
 cp ../threadfix-main/util/zip/* ThreadFixBase
@@ -130,7 +138,3 @@ cp ThreadFix/database/threadfix-backup.script ThreadFix/database/threadfix.scrip
 zip -q ThreadFix_$VERSION.zip -r ThreadFix
 mv ThreadFix_$VERSION.zip ../artifacts
 cd ..
-
-#rm /Volumes/Documents/ThreadFix/ThreadFix_2_0M1.zip
-#cp ThreadFix_2_0M1.zip /Volumes/Documents/ThreadFix/
-
