@@ -1,6 +1,6 @@
 cd ../../..
 
-echo $CLIENT:$VERSION
+echo $CLIENT $VERSION
 
 if [[ $1 ]]
 then
