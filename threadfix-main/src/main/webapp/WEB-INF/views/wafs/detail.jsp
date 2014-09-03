@@ -42,13 +42,13 @@
 					<tr>
 						<td>Log File:</td>
 						<td class="inputValue">
-							<input type="file" name="file" size="50" />
+							<input id="fileInput" type="file" name="file" size="50" />
 						</td>
 					</tr>
 				</tbody>
 			</table>
 			<br />
-			<input class="btn btn-primary" type="submit" value="Upload File"/>
+			<input id="submitButton" class="btn btn-primary" type="submit" value="Upload File"/>
 			<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 		</form:form>
 	</c:if>
