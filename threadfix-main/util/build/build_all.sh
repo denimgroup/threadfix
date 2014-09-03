@@ -1,6 +1,6 @@
 cd ../../..
 
-echo $CLIENT $VERSION
+echo $BUILD_FILES
 
 if [[ $1 ]]
 then
@@ -25,7 +25,6 @@ mkdir $FOLDER_NAME
 
 # Build cli
 FOLDER_NAME=Build/ThreadFix-CLI-$VERSION
-#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/tfcli.jar
 cp threadfix-cli/README.md $FOLDER_NAME
@@ -36,7 +35,6 @@ cd ../../
 
 # Build endpoint cli
 FOLDER_NAME=Build/ThreadFix-EndpointCLI-$VERSION
-#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-cli-endpoints/target/threadfix-endpoint-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/endpoints.jar
 cp threadfix-cli-endpoints/README $FOLDER_NAME
@@ -62,7 +60,6 @@ cd ../../
 
 # Build ZAP plugin
 FOLDER_NAME=Build/ThreadFix-ZapPlugin-$VERSION
-#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-scanner-plugin/zaproxy/target/Zap-Plugin-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.zap
 cp threadfix-scanner-plugin/zaproxy/README $FOLDER_NAME
@@ -73,7 +70,6 @@ cd ../../
 
 # Build Burp plugin
 FOLDER_NAME=Build/ThreadFix-BurpPlugin-$VERSION
-#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-scanner-plugin/burp/target/threadfix-release-2-jar-with-dependencies.jar $FOLDER_NAME/threadfix-release-2.jar
 cp threadfix-scanner-plugin/burp/README $FOLDER_NAME
@@ -84,7 +80,6 @@ cd ../../
 
 # Build IntelliJ--export intellij.zip to Build folder using "Prepare module for deployment"
 FOLDER_NAME=Build/ThreadFix-IntelliJPlugin-$VERSION
-#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp $BUILD_FILES/intellij.zip $FOLDER_NAME
 cp threadfix-ide-plugin/intellij/README $FOLDER_NAME
@@ -95,7 +90,6 @@ cd ../../
 
 # Build Eclipse--export 
 FOLDER_NAME=Build/ThreadFix-EclipsePlugin-$VERSION
-#rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp $BUILD_FILES/com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView_0.2.0.jar $FOLDER_NAME
 cp threadfix-ide-plugin/eclipse/README $FOLDER_NAME
