@@ -1,5 +1,7 @@
 cd ../../..
 
+echo $BUILD_FILES
+
 if [[ $1 ]]
 then
     echo "Got license file: $1"
