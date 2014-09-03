@@ -61,6 +61,10 @@ public class RestResponse<T> {
         return jsonString;
     }
 
+    public void setJsonString(String jsonString) {
+        this.jsonString = jsonString;
+    }
+
     public String toString() {
         return jsonString;
     }
