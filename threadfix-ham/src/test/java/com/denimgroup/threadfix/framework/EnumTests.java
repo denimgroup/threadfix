@@ -42,8 +42,12 @@ public class EnumTests {
 	@Test
 	public void testFrameworkType() {
 		for (FrameworkType frameworkType : FrameworkType.values()) {
-			assertTrue("Enum lookup is broken for " + frameworkType,
-                    FrameworkType.getFrameworkType(upperAndUnderscore(frameworkType.getDisplayName())) == frameworkType);
+            String lookupString = frameworkType == FrameworkType.DOT_NET_MVC ?
+                "DOT_NET_MVC":
+                upperAndUnderscore(frameworkType.getDisplayName());
+
+			assertTrue("Enum lookup is broken",
+                    FrameworkType.getFrameworkType(lookupString) == frameworkType);
 		}
 	}
 	

@@ -25,8 +25,13 @@
 package com.denimgroup.threadfix.framework.engine;
 
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public abstract class AbstractEndpoint implements Endpoint {
@@ -52,9 +57,54 @@ public abstract class AbstractEndpoint implements Endpoint {
 	// TODO finalize this
 	@Nonnull
     @Override
-	public String getCSVLine() {
-		return getToStringNoCommas(getHttpMethods()) + "," + getUrlPath() + "," + getToStringNoCommas(getParameters());
+	public String getCSVLine(PrintFormat... formats) {
+        Set<PrintFormat> formatSet = new HashSet<>(Arrays.asList(formats));
+
+        StringBuilder builder = new StringBuilder();
+
+        if (formatSet.contains(PrintFormat.LINT)) {
+            List<String> lintLines = getLintLine();
+
+            if (!lintLines.isEmpty()) {
+                String staticInformation = getStaticCSVFields();
+
+                for (String lintLine : lintLines) {
+                    builder.append(staticInformation).append(",").append(lintLine).append("\n");
+                }
+
+                builder.deleteCharAt(builder.length() - 1);
+            }
+        }
+
+        if (formatSet.contains(PrintFormat.STATIC) && formatSet.contains(PrintFormat.DYNAMIC)) {
+            builder.append(getStaticCSVFields()).append(',').append(getDynamicCSVFields());
+        } else if (formatSet.contains(PrintFormat.STATIC)) {
+            builder.append(getStaticCSVFields());
+        } else if (!formatSet.contains(PrintFormat.LINT)) {
+		    builder.append(getDynamicCSVFields());
+        }
+
+        return builder.toString();
 	}
+
+    @Nonnull
+    protected abstract List<String> getLintLine();
+
+    protected String getDynamicCSVFields() {
+        String parameters = getToStringNoCommas(getParameters());
+
+        if (parameters.length() > 200) {
+            parameters = parameters.substring(0, 200) + "...";
+        }
+
+        return getToStringNoCommas(getHttpMethods()) + "," +
+                getUrlPath() + "," +
+                parameters;
+    }
+
+    protected String getStaticCSVFields() {
+        return getFilePath() + "," + getStartingLineNumber();
+    }
 	
 	private String getToStringNoCommas(@Nonnull Object object) {
         return object.toString().replaceAll(",", "");

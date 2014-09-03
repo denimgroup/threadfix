@@ -93,7 +93,7 @@ public class FrameworkCalculator {
                 }
             }
 		} else {
-            log.warn("Invalid directory passed to FrameworkCalculator.getType(File)");
+            log.warn("Invalid directory passed to FrameworkCalculator.getType(File): " + rootFile);
         }
 		
 		log.info("Source tree framework type detection returned: " + frameworkType.getDisplayName());

@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
 
 import javax.annotation.Nonnull;
@@ -211,13 +212,13 @@ public class SpringDataFlowParser implements ParameterParser {
 
             if (modelObject != null && initialType != null) {
 			
-                BeanField beanField = new BeanField(initialType, modelObject);
+                ModelField beanField = new ModelField(initialType, modelObject);
 
-                List<BeanField> fieldChain = list(beanField);
-					
+                List<ModelField> fieldChain = list(beanField);
+
                 for (String elementText : lines) {
                     if (elementText != null) {
-                        List<BeanField> beanFields = getParameterWithEntityData(elementText,
+                        List<ModelField> beanFields = getParameterWithEntityData(elementText,
                                 fieldChain.get(fieldChain.size() - 1));
 
                         if (beanFields.size() > 1) {
@@ -240,12 +241,12 @@ public class SpringDataFlowParser implements ParameterParser {
 	}
 	
 	@Nonnull
-    private String buildStringFromFieldChain(@Nonnull List<BeanField> fieldChain) {
+    private String buildStringFromFieldChain(@Nonnull List<ModelField> fieldChain) {
 		StringBuilder parameterChainBuilder = new StringBuilder();
 		
 		if (fieldChain.size() > 1) {
 			fieldChain.remove(0);
-			for (BeanField field : fieldChain) {
+			for (ModelField field : fieldChain) {
 				parameterChainBuilder.append(field.getParameterKey()).append('.');
 			}
 			parameterChainBuilder.setLength(parameterChainBuilder.length() - 1);
@@ -265,11 +266,11 @@ public class SpringDataFlowParser implements ParameterParser {
 	}
 
     @Nonnull
-	private List<BeanField> getParameterWithEntityData(String line, @Nonnull BeanField beanField) {
+	private List<ModelField> getParameterWithEntityData(String line, @Nonnull ModelField beanField) {
 		String methodCall = RegexUtils.getRegexResult(line, getPatternForString(beanField.getParameterKey()));
-		
-		List<BeanField> returnField = list();
-		
+
+		List<ModelField> returnField = list();
+
 		if (mappings != null && methodCall != null) {
 			returnField = mappings.getFieldsFromMethodCalls(methodCall, beanField);
 		}

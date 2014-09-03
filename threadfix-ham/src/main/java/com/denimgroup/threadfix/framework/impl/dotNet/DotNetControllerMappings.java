@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -57,9 +59,14 @@ public class DotNetControllerMappings {
         return controllerName != null && !actions.isEmpty();
     }
 
-    public void addAction(@Nonnull String action, @Nonnull Set<String> attributes, @Nonnull Integer lineNumber,
-                          @Nonnull Set<String> parameters) {
-        actions.add(action(action, attributes, lineNumber, parameters));
+    // TODO refactor, this is a lot of parameters
+    public void addAction(@Nonnull String action,
+                          @Nonnull Set<String> attributes,
+                          @Nonnull Integer lineNumber,
+                          @Nonnull Integer endLineNumber,
+                          @Nonnull Set<String> parameters,
+                          @Nonnull Set<ModelField> parametersWithTypes) {
+        actions.add(action(action, attributes, lineNumber, endLineNumber, parameters, parametersWithTypes));
     }
 
     @Nonnull

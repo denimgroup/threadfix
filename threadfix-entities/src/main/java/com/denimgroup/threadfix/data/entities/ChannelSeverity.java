@@ -102,4 +102,11 @@ public class ChannelSeverity extends BaseEntity {
 	public void setNumericValue(int numericValue) {
 		this.numericValue = numericValue;
 	}
+
+    @Override
+    public String toString() {
+        return "ChannelSeverity{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
