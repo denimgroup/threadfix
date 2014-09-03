@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.remote;
 
 import com.denimgroup.threadfix.VulnerabilityInfo;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 
@@ -34,6 +35,8 @@ import java.util.Date;
 import java.util.List;
 
 public class ThreadFixRestClientImpl implements ThreadFixRestClient {
+
+    private static final SanitizedLogger LOGGER = new SanitizedLogger(ThreadFixRestClientImpl.class);
 
     final HttpRestUtils httpRestUtils;
     final PropertiesManager propertiesManager;
@@ -152,7 +155,11 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
             }
 
             outputBuilder.setLength(outputBuilder.length() - 1);
-            return RestResponse.success(outputBuilder.toString());
+            String outputString = outputBuilder.toString();
+            RestResponse<String> response = RestResponse.success(outputString);
+            response.setJsonString(outputString);
+
+            return response;
         } else {
             return RestResponse.failure("No Teams found.");
         }
