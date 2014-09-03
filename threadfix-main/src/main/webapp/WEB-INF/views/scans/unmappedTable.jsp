@@ -13,6 +13,7 @@
     <thead>
         <tr>
             <th class="first">Severity</th>
+            <th class="first">Scanner</th>
             <th>Vulnerability Type</th>
             <th>Path</th>
             <th style="min-width:90px;">Parameter</th>
@@ -33,6 +34,7 @@
                         info: finding.channelSeverity.numericValue === 2 || finding.channelSeverity.numericValue === 1
                         }">
             <td id="unmappedSeverity{{ index }}">{{ finding.channelSeverity.name }}</td>
+            <td id="scannerName">{{ finding.scannerName }}</td>
             <td>{{ finding.channelVulnerability.name }}</td>
             <td ng-hide="finding.dependency" class="long-path-word-wrap" id="unmappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
             <td ng-hide="finding.dependency" id="unmappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>

@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -85,6 +87,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@ManyToOne
+    @JsonIgnore
 	@JoinColumn(name = "applicationId")
 	public Application getApplication() {
 		return application;
@@ -95,6 +98,7 @@ public class SeverityFilter extends BaseEntity {
 	}
 
 	@ManyToOne
+    @JsonIgnore
 	@JoinColumn(name = "organizationId")
 	public Organization getOrganization() {
 		return organization;

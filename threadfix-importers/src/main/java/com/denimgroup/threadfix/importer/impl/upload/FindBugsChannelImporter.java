@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.DataFlowElement;
@@ -42,6 +43,7 @@ import java.util.*;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.FINDBUGS)
 class FindBugsChannelImporter extends AbstractChannelImporter {
 
 	public FindBugsChannelImporter() {

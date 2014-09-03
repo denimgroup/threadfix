@@ -27,9 +27,11 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.JobStatusService;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,9 @@ public class QueueSenderImpl implements QueueSender {
 
 	private JmsTemplate jmsTemplate = null;
 	private JobStatusService jobStatusService = null;
+
+    @Autowired
+    RemoteProviderTypeService remoteProviderTypeService;
 	
 	
 	String jmsErrorString = "The JMS system encountered an error that prevented the message from being correctly created.";
@@ -190,13 +195,25 @@ public class QueueSenderImpl implements QueueSender {
 
 		sendMap(submitDefectMap);
 	}
-	
+
+
+	@Override
+    public void addRemoteProviderImport(int remoteProviderTypeId) {
+		addRemoteProviderImport(remoteProviderTypeService.load(remoteProviderTypeId));
+	}
+
+    @Override
 	public void addRemoteProviderImport(RemoteProviderType remoteProviderType) {
-		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		log.info("User " + userName + " is adding a remote provider import to the queue for " + 
-				remoteProviderType.getName() + ".");
-		
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String userName = authentication.getName();
+            log.info("User " + userName + " is adding a remote provider import to the queue for " +
+                    remoteProviderType.getName() + ".");
+        } else {
+            log.info("Scheduled Job is adding a remote provider import to the queue for " +
+                    remoteProviderType.getName() + ".");
+        }
+
 		MapMessage remoteProviderImportMap = new ActiveMQMapMessage();
 
 		try {

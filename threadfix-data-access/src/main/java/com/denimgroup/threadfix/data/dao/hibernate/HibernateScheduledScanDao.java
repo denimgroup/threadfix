@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ScheduledScanDao;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
 import org.hibernate.SessionFactory;
@@ -35,19 +34,17 @@ import java.util.List;
 
 /**
  * Hibernate ScheduledScan DAO implementation. Most basic methods are implemented in
- * the AbstractGenericDao
+ * the AbstractGenericDao and others in ScheduledJobDao
  * 
  * @author stran
  */
 @Repository
-public class HibernateScheduledScanDao
-        extends AbstractObjectDao<ScheduledScan>
-        implements ScheduledScanDao {
+public class HibernateScheduledScanDao extends HibernateScheduledJobDao<ScheduledScan> implements ScheduledScanDao {
 
-	@Autowired
-	public HibernateScheduledScanDao(SessionFactory sessionFactory) {
-		super(sessionFactory);
-	}
+    @Autowired
+    public HibernateScheduledScanDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     protected Class<ScheduledScan> getClassReference() {
@@ -55,14 +52,9 @@ public class HibernateScheduledScanDao
     }
 
     @Override
-    public void delete(ScheduledScan scheduledScan) {
-        sessionFactory.getCurrentSession().delete(scheduledScan);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public List<ScheduledScan> retrieveAll() {
-        return (List<ScheduledScan>) sessionFactory.getCurrentSession().createCriteria(ScheduledScan.class)
+        return (List<ScheduledScan>) sessionFactory.getCurrentSession().createCriteria(getClassReference())
                 .add(Restrictions.eq("active", true))
                 .createAlias("application", "application")
                 .add(Restrictions.eq("application.active", true))

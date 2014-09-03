@@ -24,15 +24,9 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
-import org.springframework.validation.BindingResult;
 
-import java.util.List;
+public interface ScheduledScanService extends ScheduledJobService<ScheduledScan> {
 
-public interface ScheduledScanService {
+    public int save(int appId, ScheduledScan scheduledJob);
 
-    void validateScheduledDate(ScheduledScan scheduledScan, BindingResult result);
-    int saveScheduledScan(Integer appId, ScheduledScan scheduledScan);
-    String deleteScheduledScan(ScheduledScan scheduledScan);
-    List<ScheduledScan> loadAllScheduledScan();
-    ScheduledScan loadScheduledScanById(int scheduledScanId);
 }

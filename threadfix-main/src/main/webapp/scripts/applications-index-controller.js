@@ -20,8 +20,20 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
                 $scope.initialized = true;
 
                 if (data.success) {
-                    $scope.teams = data.object;
-                    $scope.teams.sort(nameCompare)
+                    $scope.teams = data.object.teams;
+
+                    $scope.canEditIds = data.object.canEditIds;
+                    $scope.canUploadIds = data.object.canUploadIds;
+
+                    $scope.teams.forEach(function(team) {
+                        team.showEditButton = $scope.canEditIds.indexOf(team.id) !== -1;
+
+                        team.applications.forEach(function(application) {
+                            application.showUploadScanButton = $scope.canUploadIds.indexOf(application.id) !== -1;
+                        });
+                    });
+
+                    $scope.teams.sort(nameCompare);
 
                     if ($scope.teams.length == 0 && $scope.canCreateTeams) {
                         $scope.openTeamModal();
@@ -72,7 +84,7 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
                         var imageTagHtml = matches[1];
 
-                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' id="teamGraph' + team.name + '" alt=""/>';
+                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' alt=""/>';
 
                         team.report = imageTagHtml;
                     }
@@ -112,11 +124,14 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
         });
 
-        modalInstance.result.then(function (newTeam) {
+        modalInstance.result.then(function (object) {
 
             if (!$scope.teams || $scope.teams.length === 0) {
                 $scope.teams = [];
             }
+
+            var newTeam = object.team;
+            newTeam.showEditButton = object.canEdit;
 
             $scope.teams.push(newTeam);
 
@@ -165,11 +180,14 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             }
         });
 
-        modalInstance.result.then(function (newApplication) {
+        modalInstance.result.then(function (object) {
 
             if (!team.applications || team.applications.length === 0) {
                 team.applications = [];
             }
+
+            var newApplication = object.application;
+            newApplication.showUploadScanButton = object.uploadScan;
 
             team.applications.push(newApplication);
 
@@ -240,6 +258,15 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
     };
 
     var updateTeam = function(oldTeam, newTeam) {
+        newTeam.applications.forEach(function(application) {
+            oldTeam.applications.forEach(function(oldApplication) {
+                if (application.id === oldApplication.id) {
+                    application.showUploadScanButton = oldApplication.showUploadScanButton;
+                }
+            });
+        });
+
+        newTeam.showEditButton = oldTeam.showEditButton;
 
         var index = $scope.teams.indexOf(oldTeam);
         if (index > -1) { // let's hope it is

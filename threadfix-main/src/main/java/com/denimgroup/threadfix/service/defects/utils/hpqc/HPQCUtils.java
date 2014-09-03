@@ -4,6 +4,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
 import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
+import com.denimgroup.threadfix.exception.RestRedirectException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
@@ -43,7 +44,7 @@ public class HPQCUtils {
                 "",
                 "");
 
-        String authenticationPoint = isAuthenticated();
+        String authenticationPoint = getAuthenticationUrl();
         if (authenticationPoint == null) {
             log.warn("HP Quality Center was invalid, 401 response was expected but 200 returned.");
             return false;
@@ -382,7 +383,10 @@ public class HPQCUtils {
             requestHeaders.put("Accept", "application/xml");
 
             Response serverResponse = con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
-            if (serverResponse.getStatusCode() == HttpURLConnection.HTTP_OK) {
+            int statusCode = serverResponse.getStatusCode();
+            if (statusCode == HttpURLConnection.HTTP_OK ||
+                    statusCode == HttpURLConnection.HTTP_CREATED ||
+                    statusCode == HttpURLConnection.HTTP_ACCEPTED) {
                 return serverResponse;
             } else {
                 log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
@@ -526,7 +530,7 @@ public class HPQCUtils {
      */
     private static boolean login(String username, String password) {
 
-        String authenticationPoint = isAuthenticated();
+        String authenticationPoint = getAuthenticationUrl();
 
         boolean isLogin = authenticationPoint.equals(String.valueOf(HttpURLConnection.HTTP_OK)) ||
                 (authenticationPoint != null && login(authenticationPoint, username, password));
@@ -571,41 +575,53 @@ public class HPQCUtils {
      * @return null if authenticated.<br>
      *         a url to authenticate against if not authenticated.
      */
-    private static String isAuthenticated() {
+    private static String getAuthenticationUrl() {
 
-        String isAuthenticateUrl = con.buildUrl("rest/is-authenticated");
-        String ret;
+        try {
+            String isAuthenticateUrl = con.buildUrl("rest/is-authenticated");
+            String ret;
 
-        Response response = con.httpGet(isAuthenticateUrl, null, null);
-        int responseCode = response.getStatusCode();
+            Response response = con.httpGet(isAuthenticateUrl, null, null);
+            int responseCode = response.getStatusCode();
 
-        //if already authenticated
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+            //if already authenticated
+            if (responseCode == HttpURLConnection.HTTP_OK) {
 
-            ret = String.valueOf(HttpURLConnection.HTTP_OK);
+                ret = String.valueOf(HttpURLConnection.HTTP_OK);
+            }
+
+            //if not authenticated - get the address where to authenticate
+            // via WWW-Authenticate
+            else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+
+                Iterable<String> authenticationHeader =
+                        response.getResponseHeaders().get("WWW-Authenticate");
+
+                // TODO some format checking here
+                String newUrl = authenticationHeader.iterator().next().split("=")[1];
+                newUrl = newUrl.replace("\"", "");
+                newUrl += "/authenticate";
+                ret = newUrl;
+            }
+
+            //Not ok, not unauthorized. An error, such as 404, or 500
+            else {
+                throw new DefectTrackerCommunicationException(
+                        "Unable to communicate with the HPQC server. Response code was " + responseCode);
+            }
+
+            return ret;
+        } catch (RestRedirectException e) {
+
+            // The redirect will probably be the place we need to authenticate to.
+            // We may need to make this recursive.
+            log.info("Got redirected while attempting to authenticate, returning location of redirect.");
+            if (e.getTargetUrl() != null) {
+                return e.getTargetUrl();
+            } else {
+                throw e;
+            }
         }
-
-        //if not authenticated - get the address where to authenticate
-        // via WWW-Authenticate
-        else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-
-            Iterable<String> authenticationHeader =
-                    response.getResponseHeaders().get("WWW-Authenticate");
-
-            String newUrl =
-                    authenticationHeader.iterator().next().split("=")[1];
-            newUrl = newUrl.replace("\"", "");
-            newUrl += "/authenticate";
-            ret = newUrl;
-        }
-
-        //Not ok, not unauthorized. An error, such as 404, or 500
-        else {
-            throw new DefectTrackerCommunicationException(
-                    "Unable to communicate with the HPQC server. Response code was " + responseCode);
-        }
-
-        return ret;
     }
 
     public static <T> T marshalWithExceptionClass(Class<T> c, @Nonnull String xml) {

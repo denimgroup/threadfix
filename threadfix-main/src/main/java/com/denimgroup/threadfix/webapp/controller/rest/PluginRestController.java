@@ -32,7 +32,8 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
-import com.denimgroup.threadfix.service.repository.GitService;
+import com.denimgroup.threadfix.service.GitService;
+import com.denimgroup.threadfix.service.repository.GitServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,75 +53,83 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class PluginRestController extends RestController {
 
     @Autowired
-	private ApplicationService applicationService;
+    private GitService         gitService;
+    @Autowired
+    private ApplicationService applicationService;
 
     /**
      *
      * @see com.denimgroup.threadfix.remote.PluginClient#getVulnerabilityMarkers(String)
      */
-	@RequestMapping(value="/markers/{appId}", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<VulnerabilityMarker[]> getMarkers(
-			HttpServletRequest request,
-			@PathVariable("appId") int appId) {
-		log.info("Received REST request for marker information for application with id = " + appId);
-		
-		String result = checkKey(request, "markers");
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
-		
-		Application application = applicationService.loadApplication(appId);
-		
-		if (application == null) {
+    @RequestMapping(value = "/markers/{appId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RestResponse<VulnerabilityMarker[]> getMarkers(
+            HttpServletRequest request,
+            @PathVariable("appId") int appId) {
+        log.info("Received REST request for marker information for application with id = " + appId);
+
+        String result = checkKey(request, "markers");
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return RestResponse.failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
+
+        if (application == null) {
             String message = "Couldn't find the application with ID " + appId;
-			log.warn(message);
-			return RestResponse.failure(message);
-		}
+            log.warn(message);
+            return RestResponse.failure(message);
+        }
 
         List<VulnerabilityMarker> markers = application.getMarkers();
 
         Collections.sort(markers, new VulnMarkerComparator());
 
-		return RestResponse.success(markers.toArray(new VulnerabilityMarker[markers.size()]));
-	}
+        return RestResponse.success(markers.toArray(new VulnerabilityMarker[markers.size()]));
+    }
 
     /**
      *
      * @see com.denimgroup.threadfix.remote.PluginClient#getThreadFixApplications()
      */
-	@RequestMapping(value="/applications", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
-		log.info("Received REST request for application CSV list");
-		
-		String result = checkKey(request, "markers");
-		if (!result.equals(API_KEY_SUCCESS)) {
+    @RequestMapping(value = "/applications", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RestResponse<Application.Info[]> getApplicationList(HttpServletRequest request) {
+        log.info("Received REST request for application CSV list");
+
+        String result = checkKey(request, "markers");
+        if (!result.equals(API_KEY_SUCCESS)) {
             return RestResponse.failure(result);
-		}
-		
-		List<Application> applications = applicationService.loadAllActive();
-		
-		if (applications == null) {
+        }
+
+        List<Application> applications = applicationService.loadAllActive();
+
+        if (applications == null) {
             String response = "Couldn't find any active applications.";
-			log.warn(response);
-			RestResponse.failure(response);
-		}
-		return RestResponse.success(getApplicationInfo(applications));
-	}
+            log.warn(response);
+            RestResponse.failure(response);
+        }
+        return RestResponse.success(getApplicationInfo(applications));
+    }
 
     /**
      * @see com.denimgroup.threadfix.remote.PluginClient#getEndpoints(String)
      */
-	@RequestMapping(value="/applications/{appId}/endpoints", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Endpoint.Info[]> getEndpoints(@PathVariable int appId,
-			HttpServletRequest request) {
-		log.info("Received REST request for application CSV list");
-		
-		String result = checkKey(request, "markers");
-		if (!result.equals(API_KEY_SUCCESS)) {
-			return RestResponse.failure(result);
-		}
-		
-		Application application = applicationService.loadApplication(appId);
+    @RequestMapping(value = "/applications/{appId}/endpoints", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    RestResponse<Endpoint.Info[]> getEndpoints(@PathVariable int appId,
+                                               HttpServletRequest request) {
+        log.info("Received REST request for application CSV list");
+
+        String result = checkKey(request, "markers");
+        if (!result.equals(API_KEY_SUCCESS)) {
+            return RestResponse.failure(result);
+        }
+
+        Application application = applicationService.loadApplication(appId);
 		
 		if (application == null) {
             String message = "Couldn't find the application.";
@@ -144,7 +153,7 @@ public class PluginRestController extends RestController {
     public ProjectConfig getProjectConfig(Application application) {
         return new ProjectConfig(application.getFrameworkTypeEnum(),
                 application.getSourceCodeAccessLevelEnum(),
-                GitService.getWorkTree(application),
+                gitService.getWorkTree(application),
                 application.getProjectRoot()
         );
     }

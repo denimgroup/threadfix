@@ -31,94 +31,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="ScheduledScan")
-public class ScheduledScan extends AuditableEntity {
+public class ScheduledScan extends ScheduledJob {
 
-	private static final long serialVersionUID = 23434234234L;
-
-	public enum ScheduledFrequencyType {
-		DAILY("Daily"),
-		WEEKLY("Weekly");
-//		STATUS_COMPLETE_SUCCESSFUL("Monthly")
-//        ;
-		
-		private String description;
-		
-		public String getDescription() {
-			return this.description;
-		}
-		
-		private ScheduledFrequencyType(String description) {
-			this.description = description;
-		}
-
-        public static ScheduledFrequencyType getFrequency(String keyword) {
-            for (ScheduledFrequencyType t: values()) {
-                if (keyword.equalsIgnoreCase(t.getDescription())) {
-                    return t;
-                }
-            }
-            return null;
-        }
-	}
-
-    public enum ScheduledPeriodType {
-        AM("AM"),
-        PM("PM");
-
-        private String period;
-
-        public String getPeriod() {
-            return this.period;
-        }
-
-        private ScheduledPeriodType(String period) {
-            this.period = period;
-        }
-
-        public static ScheduledPeriodType getPeriod(String keyword) {
-            for (ScheduledPeriodType t: values()) {
-                if (keyword.equalsIgnoreCase(t.getPeriod())) {
-                    return t;
-                }
-            }
-            return null;
-        }
-    }
-
-    public enum DayInWeek {
-        MON("Monday"),
-        TUE("Tuesday"),
-        WED("Wednesday"),
-        THU("Thursday"),
-        FRI("Friday"),
-        SAT("Saturday"),
-        SUN("Sunday");
-
-        private String day;
-
-        public String getDay() {
-            return this.day;
-        }
-
-        private DayInWeek(String day) {
-            this.day = day;
-        }
-
-        public static DayInWeek getDay(String keyword) {
-            for (DayInWeek t: values()) {
-                if (keyword != null && keyword.equalsIgnoreCase(t.getDay())) {
-                    return t;
-                }
-            }
-            return null;
-        }
-    }
+    private static final long serialVersionUID = 3165699013829091108L;
 
 	private Application application;
-    private int hour, minute;
-    private String period, day;
-    private String scanner, frequency;
-    private String dateError;
+    private String scanner;
 
 	@ManyToOne
 	@JoinColumn(name = "applicationId")
@@ -132,56 +50,6 @@ public class ScheduledScan extends AuditableEntity {
 
     @Column(nullable=false)
     @JsonView(Object.class)
-    public int getHour() {
-        return hour;
-    }
-
-    public void setHour(int hour) {
-        this.hour = hour;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public int getMinute() {
-        return minute;
-    }
-
-    public void setMinute(int minute) {
-        this.minute = minute;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
-    }
-
-    @Column(nullable=true)
-    @JsonView(Object.class)
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
-    public String getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
-
-    @Column(nullable=false)
-    @JsonView(Object.class)
     public String getScanner() {
         return scanner;
     }
@@ -190,12 +58,4 @@ public class ScheduledScan extends AuditableEntity {
         this.scanner = scanner;
     }
 
-    @Transient
-    public String getDateError() {
-        return dateError;
-    }
-
-    public void setDateError(String dateError) {
-        this.dateError = dateError;
-    }
 }

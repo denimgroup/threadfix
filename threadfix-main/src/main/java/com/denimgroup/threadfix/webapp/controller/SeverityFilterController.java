@@ -92,7 +92,7 @@ public class SeverityFilterController {
 	public @ResponseBody RestResponse<SeverityFilter> setGlobalSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, null, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, null, null)) {
 			return RestResponse.failure("You are not authorized to edit this filter.");
 		}
 
@@ -103,7 +103,7 @@ public class SeverityFilterController {
 	public @ResponseBody RestResponse<SeverityFilter> setApplicationSeverityFilters(SeverityFilter severityFilter,
 			BindingResult bindingResult, @PathVariable int orgId) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, null)) {
 			return RestResponse.failure("You are not authorized to edit this filter.");
 		}
 
@@ -116,7 +116,7 @@ public class SeverityFilterController {
 			@PathVariable int appId, @PathVariable int orgId,
 			HttpServletRequest request) {
 
-		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_VULN_FILTERS, orgId, appId)) {
 			return RestResponse.failure("You are not authorized to edit this filter.");
 		}
 

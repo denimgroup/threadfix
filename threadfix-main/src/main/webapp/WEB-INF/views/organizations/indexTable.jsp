@@ -47,18 +47,16 @@
             <td class="centered" ng-click="toggle(team)" id="numInfoVulns{{ team.name }}">{{ team.infoVulnCount }}</td>
             <td ng-click="toggle(team)"></td>
             <td>
-                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
-                    <c:if test="${ underEnterpriseLimit }">
-                        <a id="addApplicationModalButton{{ team.name }}" ng-click="openAppModal(team)" class="btn btn-default">
-                            Add Application
-                        </a>
-                    </c:if>
-                    <c:if test="${ not underEnterpriseLimit }">
-                        <a id="addApplicationModalButton{{ team.name }}" class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
-                            Add Application
-                        </a>
-                    </c:if>
-                </security:authorize>
+                <c:if test="${ underEnterpriseLimit }">
+                    <a ng-if="team.showEditButton" id="addApplicationModalButton{{ team.name }}" ng-click="openAppModal(team)" class="btn btn-default">
+                        Add Application
+                    </a>
+                </c:if>
+                <c:if test="${ not underEnterpriseLimit }">
+                    <a ng-if="team.showEditButton" id="addApplicationModalButton{{ team.name }}" class="btn" ng-click="showAppLimitMessage(<c:out value="${ appLimit }"/>)">
+                        Add Application
+                    </a>
+                </c:if>
             <td>
                 <a style="text-decoration:none" id="organizationLink{{ team.name }}" ng-click="goTo(team)">View Team</a>
             </td>
@@ -73,7 +71,7 @@
                          class="collapse applicationSection"
                          ng-class="{ expanded: team.expanded }">
                     <div ng-show="team.applications">
-                        <div ng-show="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="reportDiv{{ team.id }}"></div>
+                        <div ng-if="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="teamGraph{{ team.name }}"></div>
                         <div ng-hide="team.report || team.reportFailed" class="team-report-wrapper">
                             <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                         </div>
@@ -113,12 +111,10 @@
                                 <td class="centered" id="numLowVulns{{ team.name }}-{{ app.name }}">{{ app.lowVulnCount }}</td>
                                 <td class="centered" id="numInfoVulns{{ team.name }}-{{ app.name }}">{{ app.infoVulnCount }}</td>
                                 <td class="centered" style="padding:5px;">
-                                    <security:authorize ifAnyGranted="ROLE_CAN_UPLOAD_SCANS">
-                                        <a id="uploadScanModalLink{{ team.name }}-{{ app.name }}" class="btn"
-                                           ng-click="showUploadForm(team, app)">
-                                            Upload Scan
-                                        </a>
-                                    </security:authorize>
+                                    <a ng-if="app.showUploadScanButton" id="uploadScanModalLink{{ team.name }}-{{ app.name }}" class="btn"
+                                       ng-click="showUploadForm(team, app)">
+                                        Upload Scan
+                                    </a>
                                 </td>
                             </tr>
                         </table>

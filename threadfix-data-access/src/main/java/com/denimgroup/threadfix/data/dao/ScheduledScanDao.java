@@ -30,8 +30,6 @@ import com.denimgroup.threadfix.data.entities.ScheduledScan;
  * 
  * @author stran
  */
-public interface ScheduledScanDao extends GenericObjectDao<ScheduledScan>{
-
-	void delete(ScheduledScan scheduledScan);
+public interface ScheduledScanDao extends ScheduledJobDao<ScheduledScan> {
 
 }
