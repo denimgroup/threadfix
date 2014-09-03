@@ -1,5 +1,7 @@
 cd ../../..
 
+echo $CLIENT:$VERSION
+
 if [[ $1 ]]
 then
     echo "Got license file: $1"
@@ -22,7 +24,7 @@ FOLDER_NAME=Build/ThreadFix-CLI-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
 cp threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/tfcli.jar
-cp threadfix-cli/README $FOLDER_NAME
+cp threadfix-cli/README.md $FOLDER_NAME
 cd  $FOLDER_NAME
 zip  -q ThreadFix-CLI-$VERSION.zip -r ./*
 cp ThreadFix-CLI-$VERSION.zip $ARTIFACTS_FOLDER
@@ -80,7 +82,7 @@ cd ../../
 FOLDER_NAME=Build/ThreadFix-IntelliJPlugin-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
-cp Build/intellij.zip $FOLDER_NAME
+cp $BUILD_FILES/intellij.zip $FOLDER_NAME
 cp threadfix-ide-plugin/intellij/README $FOLDER_NAME
 cd  $FOLDER_NAME
 zip  -q ThreadFix-IntelliJPlugin-$VERSION.zip -r ./*
@@ -91,17 +93,18 @@ cd ../../
 FOLDER_NAME=Build/ThreadFix-EclipsePlugin-$VERSION
 rm -r $FOLDER_NAME
 mkdir $FOLDER_NAME
-cp Build/com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView_0.2.0.jar $FOLDER_NAME
+cp $BUILD_FILES/com.denimgroup.threadfix.plugin.eclipse.views.VulnerabilitiesView_0.2.0.jar $FOLDER_NAME
 cp threadfix-ide-plugin/eclipse/README $FOLDER_NAME
 cd  $FOLDER_NAME
 zip  -q ThreadFix-EclipsePlugin-$VERSION.zip -r ./*
 cp ThreadFix-EclipsePlugin-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
-# build zip
+# Build Zip
 cd Build
 
 rm -r ThreadFix
+pwd
 cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix-backup.script
 cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/database/threadfix.script
 cp ../threadfix-main/util/zip/* ThreadFixBase
@@ -130,7 +133,3 @@ cp ThreadFix/database/threadfix-backup.script ThreadFix/database/threadfix.scrip
 zip -q ThreadFix_$VERSION.zip -r ThreadFix
 mv ThreadFix_$VERSION.zip ../artifacts
 cd ..
-
-#rm /Volumes/Documents/ThreadFix/ThreadFix_2_0M1.zip
-#cp ThreadFix_2_0M1.zip /Volumes/Documents/ThreadFix/
-
