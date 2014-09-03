@@ -40,18 +40,19 @@ cp ThreadFix-EndpointCLI-$VERSION.zip $ARTIFACTS_FOLDER
 cd ../../
 
 # Build scan agent
-#FOLDER_NAME=Build/ThreadFix-ScanAgent-$VERSION
-#rm -r $FOLDER_NAME
-#mkdir $FOLDER_NAME
-#cp threadfix-scanagent/target/threadfix-scanagent-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/scanagent.jar
-#cp threadfix-scanagent/README $FOLDER_NAME
-#cp threadfix-scanagent/scanagent.properties $FOLDER_NAME
-#cp threadfix-scanagent/zapStarter.jar $FOLDER_NAME
-#cp threadfix-scanagent/burp-agent.jar $FOLDER_NAME
-#cd  $FOLDER_NAME
-#zip  -q ThreadFix-ScanAgent-$VERSION.zip -r ./*
-#cp ThreadFix-ScanAgent-$VERSION.zip $ARTIFACTS_FOLDER
-#cd ../../
+
+# FOLDER_NAME=Build/ThreadFix-ScanAgent-$VERSION
+# rm -r $FOLDER_NAME
+# mkdir $FOLDER_NAME
+# cp threadfix-scanagent/target/threadfix-scanagent-$VERSION-SNAPSHOT-jar-with-dependencies.jar $FOLDER_NAME/scanagent.jar
+# cp threadfix-scanagent/README $FOLDER_NAME
+# cp threadfix-scanagent/scanagent.properties $FOLDER_NAME
+# cp threadfix-scanagent/zapStarter.jar $FOLDER_NAME
+# cp threadfix-scanagent/burp-agent.jar $FOLDER_NAME
+# cd  $FOLDER_NAME
+# zip  -q ThreadFix-ScanAgent-$VERSION.zip -r ./*
+# cp ThreadFix-ScanAgent-$VERSION.zip $ARTIFACTS_FOLDER
+# cd ../../
 
 # Build ZAP plugin
 FOLDER_NAME=Build/ThreadFix-ZapPlugin-$VERSION
@@ -106,6 +107,18 @@ cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFixBase/da
 cp ../threadfix-main/util/zip/* ThreadFixBase
 
 cp -r ThreadFixBase ThreadFix
+
+if [[ $1 ]]
+then
+  echo "Adding scanagent stuff to ThreadFix package"
+  cd ThreadFix
+  mkdir scanagent
+  cd ../
+  cp ../threadfix-scanagent/target/threadfix-scanagent-$VERSION-SNAPSHOT-jar-with-dependencies.jar ThreadFix/scanagent/scanagent.jar
+  cp ../threadfix-scanagent/scanagent.properties ThreadFix/scanagent/scanagent.properties
+  cp ../threadfix-scanagent/burp-agent.jar ThreadFix/scanagent/burp-agent.jar 
+  cp ../threadfix-scanagent/zapStarter.jar ThreadFix/scanagent/zapStarter.jar 
+fi
 
 cp ../threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar ThreadFix/command-line-interface/tfcli.jar
 
