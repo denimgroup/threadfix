@@ -1,6 +1,8 @@
 cd ../../..
 
 echo $BUILD_FILES
+echo $VERSION
+echo $CLIENT
 
 if [[ $1 ]]
 then
