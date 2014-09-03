@@ -26,8 +26,6 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -45,9 +43,9 @@ public class UserEntIT extends BaseIT {
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPassword(password)
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
 
@@ -67,9 +65,9 @@ public class UserEntIT extends BaseIT {
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPassword(password)
                 .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess("Administrator")
                 .clickAddNewUserBtn()
@@ -91,7 +89,7 @@ public class UserEntIT extends BaseIT {
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName)
+                .setName(userName)
 				.toggleLDAP();
         assertFalse("Password fields are still present.", userIndexPage.isPasswordFieldPresent());
 
@@ -106,8 +104,8 @@ public class UserEntIT extends BaseIT {
         assertTrue("Password fields are not present when switching from a LDAP user to regular user.",
                 userIndexPage.isPasswordFieldPresent());
 
-        userIndexPage.enterPassword(password)
-                .enterConfirmPassword(password)
+        userIndexPage.setPassword(password)
+                .setConfirmPassword(password)
                 .clickUpdateUserBtn(userName)
                 .clickEditLink(userName);
 		assertFalse("LDAP remained selected after editing.", userIndexPage.isLDAPSelected());
@@ -126,9 +124,9 @@ public class UserEntIT extends BaseIT {
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
 				.clickManageUsersLink()
 				.clickAddUserLink()
-				.enterName(userName)
-				.enterPassword("TestPassword")
-				.enterConfirmPassword("TestPassword")
+				.setName(userName)
+				.setPassword("TestPassword")
+				.setConfirmPassword("TestPassword")
                 .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess("User")
 				.clickAddNewUserBtn()

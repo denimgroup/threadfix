@@ -28,13 +28,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import java.util.List;
-
 public class UserIndexPage extends BasePage {
 
     public UserIndexPage(WebDriver webdriver) {
         super(webdriver);
     }
+
+    /*------------------------------------ Action Methods ------------------------------------*/
 
     public UserIndexPage clickDeleteButton(String roleName) {
 		clickEditLink(roleName);
@@ -68,36 +68,28 @@ public class UserIndexPage extends BasePage {
 		return new UserIndexPage(driver);
 	}
 
-    public UserIndexPage enterName(String username) {
+    public UserIndexPage setName(String username) {
         WebElement nameField = driver.findElementById("name");
         nameField.clear();
         nameField.sendKeys(username);
-        return new UserIndexPage(driver);
+        return this;
     }
 
-    public UserIndexPage enterPassword(String password) {
+    public UserIndexPage setPassword(String password) {
         driver.findElementById("password").clear();
         driver.findElementById("password").sendKeys(password);
-        return new UserIndexPage(driver);
+        return this;
     }
 
-    public UserIndexPage enterConfirmPassword(String password) {
+    public UserIndexPage setConfirmPassword(String password) {
         driver.findElementById("confirm").clear();
         driver.findElementById("confirm").sendKeys(password);
-        return new UserIndexPage(driver);
-    }
-
-    public boolean isPasswordFieldPresent() {
-        return driver.findElementsById("password").size() != 0;
+        return this;
     }
 
     public UserIndexPage toggleLDAP() {
         driver.findElementById("isLdapUserCheckbox").click();
         return this;
-    }
-
-    public boolean isLDAPSelected() {
-        return driver.findElementById("isLdapUserCheckbox").isSelected();
     }
 
     public UserIndexPage toggleGlobalAccess() {
@@ -140,20 +132,12 @@ public class UserIndexPage extends BasePage {
 	public String getGlobalAccessRole(String name){
 		return new Select(driver.findElementById("roleSelect"+(name))).getAllSelectedOptions().get(0).getText().trim();
 	}
-	
-	public boolean isUserNamePresent(String userName) {
-        return driver.findElementsById("editUserModal" + userName).size() != 0;
-	}
-	
+
 	public UserIndexPage clickEditLink(String userName) {
         waitForElement(driver.findElementById("editUserModal"+userName));
 		driver.findElementById("editUserModal"+userName).click();
 		sleep(1000);
 		return new UserIndexPage(driver);
-	}
-	
-	public boolean isSuccessDisplayed(String name){
-		return driver.findElementByClassName("alert-success").getText().contains(name);
 	}
 	
 	public String getNameError(){
@@ -188,7 +172,25 @@ public class UserIndexPage extends BasePage {
 		sleep(1000);
 		return new UserIndexPage(driver);	
 	}
-	
+
+    /*----------------------------------- Boolean Methods -----------------------------------*/
+
+    public boolean isPasswordFieldPresent() {
+        return driver.findElementsById("password").size() != 0;
+    }
+
+    public boolean isLDAPSelected() {
+        return driver.findElementById("isLdapUserCheckbox").isSelected();
+    }
+
+    public boolean isUserNamePresent(String userName) {
+        return driver.findElementsById("editUserModal" + userName).size() != 0;
+    }
+
+    public boolean isSuccessDisplayed(String name){
+        return driver.findElementByClassName("alert-success").getText().contains(name);
+    }
+
 	public boolean isGlobalAccessErrorPresent(){
 		return driver.findElementById("hasGlobalGroupAccessErrors").getText().contains("This would leave users unable to access the user management portion of ThreadFix.");
 	}

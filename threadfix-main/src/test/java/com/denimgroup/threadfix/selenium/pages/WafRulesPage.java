@@ -52,11 +52,6 @@ public class WafRulesPage extends BasePage {
 		return wafTypeText.getText();
 	}
 
-	public WafEditPage clickEditLink() {
-		editLink.click();
-		return new WafEditPage(driver);
-	}
-
 
 	public WafRulesPage clickGenerateWafRulesButton() {
 		driver.findElementById("generateWafRulesButton").click();

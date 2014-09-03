@@ -32,6 +32,8 @@ public class WafIndexPage extends BasePage {
 		super(webdriver);
 	}
 
+    /*------------------------------------ Action Methods ------------------------------------*/
+
 	public WafRulesPage clickRules(String wafName){
 		driver.findElementById("rulesButton" + wafName).click();
 		return new WafRulesPage(driver);
@@ -69,11 +71,6 @@ public class WafIndexPage extends BasePage {
         new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
         return this;
     }
-
-    public boolean isWafPresent(String name){
-        boolean presence = driver.findElementsById("wafName" + name).size() == 1;
-        return presence;
-    }
 	
 	public WafIndexPage clickCreateWaf(){
 		driver.findElementById("submit").click();
@@ -83,15 +80,6 @@ public class WafIndexPage extends BasePage {
 		return new WafIndexPage(driver);
     }
 
-	public boolean isTextPresentInWafTableBody(String text) {
-		return driver.findElementById("wafTableBody").getText().contains(text);
-	}
-
-    //todo replace with wafName once success message is fixed.
-	public boolean isSuccessPresent(String wafName){
-		return driver.findElementByClassName("alert-success").getText().contains(wafName);
-	}
-	
 	public WafIndexPage clickEditWaf(String wafName){
 		driver.findElementById("editWafModalButton"+wafName).click();
 		waitForElement(driver.findElementById("myModalLabel"));
@@ -123,4 +111,21 @@ public class WafIndexPage extends BasePage {
 	public int getWafEditHeaderWidth(String wafName) {
 		return 0;
 	}
+
+    /*------------------------------------ Boolean Methods ------------------------------------*/
+
+    public boolean isTextPresentInWafTableBody(String text) {
+        return driver.findElementById("wafTableBody").getText().contains(text);
+    }
+
+    //todo replace with wafName once success message is fixed.
+    public boolean isSuccessPresent(String wafName){
+        return driver.findElementByClassName("alert-success").getText().contains(wafName);
+    }
+
+    public boolean isWafPresent(String name){
+        boolean presence = driver.findElementsById("wafName" + name).size() == 1;
+        return presence;
+    }
+
 }

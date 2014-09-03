@@ -35,6 +35,8 @@ public class UserPermissionsPage extends BasePage {
 	public UserPermissionsPage(WebDriver webdriver) {
 		super(webdriver);
 	}
+
+    /*------------------------------------ Action Methods ------------------------------------*/
 	
 	public UserPermissionsPage clickAddPermissionsLink(){
 		driver.findElementById("addPermissionButton").click();
@@ -70,7 +72,7 @@ public class UserPermissionsPage extends BasePage {
         return new UserPermissionsPage(driver);
     }
 
-    /*_____________________ Boolean Methods ______________________*/
+    /*------------------------------------ Boolean Methods ------------------------------------*/
 
     public boolean isUserNamePresent(String userName) {
         return driver.findElementByTagName("h2").getText().contains(userName);
