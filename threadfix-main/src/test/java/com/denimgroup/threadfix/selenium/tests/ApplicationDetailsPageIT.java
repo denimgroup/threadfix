@@ -170,9 +170,9 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testApplicationTypeDefect() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
-        ap.clickEditDeleteBtn();
-        assertTrue("Application Type is not set to Detect.", ap.isAppTypeDetect());
+        ApplicationDetailPage applicationDetailPage = buildTeamAppandScan();
+        applicationDetailPage.clickEditDeleteBtn();
+        assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
     }
 
     public ApplicationDetailPage buildTeamAppandScan() {

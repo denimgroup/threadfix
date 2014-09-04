@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -103,5 +104,16 @@ public class ScanDetailPage extends BasePage{
         sleep(3000);
 		return new FindingDetailPage(driver);
 	}
-	
+    public ScanDetailPage toggleStatistics(){
+        driver.findElementById("statisticButton").click();
+        return new ScanDetailPage(driver);
+    }
+
+    public boolean areStatisticsDisplayed() {
+        return driver.findElementById("statisticsDiv").isDisplayed();
+    }
+
+    public boolean isViewFindingPresent() {
+        return driver.findElementById("mappedVulnType").isDisplayed();
+    }
 }

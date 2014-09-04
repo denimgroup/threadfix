@@ -59,19 +59,21 @@ public class WafRulesPage extends BasePage {
     }
 
     public WafRulesPage clickGenerateWafRulesButton() {
+        sleep(2000);
         driver.findElementById("generateWafRulesButton").click();
+        waitForElement(driver.findElementByLinkText("Download Waf Rules"));
         return new WafRulesPage(driver);
     }
 
     public WafRulesPage setLogFile(String file) {
-        driver.findElementByLinkText("Browse...").sendKeys(file);
+        driver.findElementById("fileInput").sendKeys(file);
         return new WafRulesPage(driver);
     }
 
-    //TODO change this to the correct return type
-    public WafRulesPage clickUploadLogFile() {
-        driver.findElementByLinkText("Upload File");
-        return new WafRulesPage(driver);
+    public WafLogPage clickUploadLogFile() {
+        driver.findElementById("submitButton").click();
+        waitForElement(driver.findElementByLinkText("Continue"));
+        return new WafLogPage(driver);
     }
 
     public TeamIndexPage clickDownloadWafRulesButton() {
@@ -135,6 +137,9 @@ public class WafRulesPage extends BasePage {
 
     public boolean isDownloadWafRulesDisplay() {
         return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
+    }
+    public boolean isLogsUploaded() {
+        return driver.findElementByLinkText("100000 - fired 52 times").isDisplayed();
     }
 
 }

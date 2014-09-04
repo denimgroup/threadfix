@@ -31,4 +31,7 @@ public class MergeFindingPage extends BasePage {
 		super(webdriver);
 
 	}
+    public boolean isMergeFindingPagePresent() {
+        return driver.findElementByClassName("dataTable").isDisplayed();
+    }
 }

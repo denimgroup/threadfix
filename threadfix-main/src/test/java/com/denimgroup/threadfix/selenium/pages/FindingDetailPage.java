@@ -38,7 +38,17 @@ public class FindingDetailPage extends BasePage {
         return new VulnerabilityDetailPage(driver);
     }
 
+    public MergeFindingPage clickMergeWithOtherFindings() {
+        driver.findElementByLinkText("Merge with Other Findings").click();
+        sleep(3000);
+        waitForElement(driver.findElementByClassName("dataTable"));
+        return new MergeFindingPage(driver);
+    }
     public String getDetail(String detailId) {
         return driver.findElementById(detailId).getText().trim();
+    }
+
+    public boolean isViewVulnetabilityButtonDisplayed() {
+        return driver.findElementByLinkText("View Vulnerability").isDisplayed();
     }
 }

@@ -35,7 +35,7 @@ import org.junit.experimental.categories.Category;
 import static junit.framework.TestCase.assertTrue;
 
 @Category(CommunityTests.class)
-public class VulnerabilitiesIT extends BaseIT{
+public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markSingleVulnerabilityClosedTest() {
