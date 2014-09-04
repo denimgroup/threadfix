@@ -3,11 +3,12 @@ cd ../../..
 echo $BUILD_FILES
 echo $VERSION
 echo $CLIENT
+echo $LICENSE
 
-if [[ $1 ]]
+if [[ $VERSION == "Enterprise" ]]
 then
-    echo "Got license file: $1"
-    cp $1 threadfix-main/src/main/resources/threadfix.license
+    echo "Building ThreadFix Enterprise with license: $LICENSE"
+    cp $LICENSE threadfix-main/src/main/resources/threadfix.license
     mvn clean install -P enterprise -DskipTests
     rm threadfix-main/src/main/resources/threadfix.license
 
@@ -112,7 +113,7 @@ cp ../threadfix-main/util/zip/* ThreadFixBase
 
 cp -r ThreadFixBase ThreadFix
 
-if [[ $1 ]]
+if [[ $VERSION == "Enterprise" ]]
 then
   echo "Adding scanagent stuff to ThreadFix package"
   cd ThreadFix
@@ -131,6 +132,6 @@ mv ThreadFix/tomcat/webapps/threadfix-$VERSION-SNAPSHOT.war ThreadFix/tomcat/web
 cp ../threadfix-main/src/main/resources/threadfix-backup.script ThreadFix/database/
 cp ThreadFix/database/threadfix-backup.script ThreadFix/database/threadfix.script
 
-zip -q ThreadFix_$VERSION.zip -r ThreadFix
-mv ThreadFix_$VERSION.zip ../artifacts
+zip -q ThreadFix_$VERSION_$CLIENT.zip -r ThreadFix
+mv ThreadFix_$VERSION_$CLIENT.zip ../artifacts
 cd ..
