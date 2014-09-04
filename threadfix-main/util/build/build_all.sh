@@ -115,7 +115,7 @@ then
   cp $THREADFIX_SOURCE/threadfix-scanagent/target/threadfix-scanagent-$VERSION-SNAPSHOT-jar-with-dependencies.jar ThreadFix/scanagent/scanagent.jar
   cp $THREADFIX_SOURCE/threadfix-scanagent/scanagent.properties ThreadFix/scanagent/scanagent.properties
   cp $THREADFIX_SOURCE/threadfix-scanagent/burp-agent.jar ThreadFix/scanagent/burp-agent.jar 
-  cp $THREADFIX_SOURCE/threadfix-scanagent/zapStarter.jar ThreadFix/scanagent/zapStarter.jar 
+  cp $BUILD_FILES/zapStarter.jar ThreadFix/scanagent/zapStarter.jar 
 fi
 
 cp $THREADFIX_SOURCE/threadfix-cli/target/threadfix-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar ThreadFix/command-line-interface/tfcli.jar
