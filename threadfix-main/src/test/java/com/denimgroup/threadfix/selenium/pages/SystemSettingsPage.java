@@ -33,7 +33,8 @@ public class SystemSettingsPage extends BasePage {
 		super(webdriver);
 	}
 
-    /*________________ DEFAULT LDAP ROLE ________________*/
+    /*------------------------------ DEFAULT LDAP ROLE ------------------------------*/
+
     public SystemSettingsPage expandDefaultLDAPRole() {
         driver.findElementById("defaultPermissionsPanel").click();
         return new SystemSettingsPage(driver);
@@ -56,7 +57,8 @@ public class SystemSettingsPage extends BasePage {
         return this;
     }
 
-    /*________________ LDAP SETTINGS ________________*/
+    /*------------------------------ LDAP SETTINGS ------------------------------*/
+
     public SystemSettingsPage expandLDAPSettings() {
         driver.findElementById("ldapSettingsPanel").click();
         return new SystemSettingsPage(driver);
@@ -86,20 +88,22 @@ public class SystemSettingsPage extends BasePage {
         return this;
     }
 
-    /*________________ Proxy Settings ________________*/
+    /*------------------------------ Proxy Settings ------------------------------*/
+
     public SystemSettingsPage expandProxySettings() {
         driver.findElementById("proxySettingsPanel").click();
         return new SystemSettingsPage(driver);
     }
 
-    /*________________ Page Methods ________________*/
+    /*------------------------------ Page Methods ------------------------------*/
 
 	public SystemSettingsPage clickSaveChanges() {
 		driver.findElementById("updateDefaultsButton").click();
 		return new SystemSettingsPage(driver);
 	}
 
-    /*________________ Boolean Methods ________________*/
+    /*------------------------------ Boolean Methods ------------------------------*/
+
     public boolean isSaveSuccessful(){
         return driver.findElementByClassName("alert-success").getText().trim().contains("Configuration was saved successfully.");
     }

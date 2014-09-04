@@ -25,12 +25,9 @@ package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 
 public class TeamIndexPage extends BasePage {
 
@@ -234,6 +231,8 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById("applicationUrlInputInvalidUrlError").getText();
     }
 
+    /*----------------------------------- Boolean Methods -----------------------------------*/
+
     public boolean isAppPresent(String teamName, String appName) {
         return driver.findElementsById("applicationLink" + teamName + "-" + appName).size() != 0;
     }
@@ -250,12 +249,6 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText()
                 .contains("Successfully added team " + teamName);
     }
-
-    public TeamDetailPage clickViewTeamLink(String teamName) {
-        driver.findElementById("organizationLink" + teamName).click();
-        sleep(4000);
-		return new TeamDetailPage(driver);
-	}
 	
 	public boolean isAddTeamBtnPresent(){
 		return driver.findElementById("addTeamModalButton").isDisplayed();	

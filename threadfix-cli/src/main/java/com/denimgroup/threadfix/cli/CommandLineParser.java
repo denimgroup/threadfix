@@ -29,9 +29,10 @@ import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import org.apache.commons.cli.*;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 public class CommandLineParser {
 
@@ -39,13 +40,11 @@ public class CommandLineParser {
 
 	private static ThreadFixRestClient client = new ThreadFixRestClientImpl();
 	
-	private static final Map<String, String[]> scanOptions = new HashMap<String, String[]>();
-		
-	static {
-		scanOptions.put("Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" });
-		scanOptions.put("Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC" });
-		scanOptions.put("Repository URL", new String[]{ "Arbitrary Git URL" });
-	}
+	private static final Map<String, String[]> scanOptions = map(
+		"Source Code Access Level", new String[]{ "None", "Detect", "Partial", "Full" },
+		"Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC" },
+		"Repository URL", new String[]{ "Arbitrary Git URL" }
+    );
 	
 	public static void main(String[] args) {
 		

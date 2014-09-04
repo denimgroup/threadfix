@@ -47,9 +47,9 @@ public class TeamEntIT extends BaseIT {
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(userName)
-                .enterPassword(password)
-                .enterConfirmPassword(password)
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPassword(password)
                 .clickAddNewUserBtn();
 
         TeamDetailPage teamDetailPage = userIndexPage

@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -178,9 +177,9 @@ public class RoleEntIT extends BaseIT {
 
         teamIndexPage.clickManageUsersLink()
                  .clickAddUserLink()
-                 .enterName(userName)
-                 .enterPassword(password)
-                 .enterConfirmPassword(password)
+                 .setName(userName)
+                 .setPassword(password)
+                 .setConfirmPassword(password)
                  .toggleGlobalAccess()
                  .chooseRoleForGlobalAccess(roleName)
                  .clickAddNewUserBtn();
@@ -267,9 +266,9 @@ public class RoleEntIT extends BaseIT {
 		rolesIndexPage = rolesIndexPage.clickSaveRole()
                 .clickManageUsersLink()
                 .clickAddUserLink()
-                .enterName(tempUser)
-                .enterPassword("TestPassword")
-                .enterConfirmPassword("TestPassword")
+                .setName(tempUser)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
                 .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess(roleName)
                 .clickModalSubmit()
