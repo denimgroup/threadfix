@@ -147,4 +147,276 @@ public class CollectionUtils {
     public static <K, V> Map<K, V> newMap() {
         return new HashMap<K, V>();
     }
+
+
+    /**
+     * The following methods all create maps in a Scala Map style.
+     * @param key1 first key
+     * @param value1 first value
+     * @param <K> Key type
+     * @param <V> Value type
+     * @return map with given keys and values
+     */
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9, K key10, V value10) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+        map.put(key10, value10);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9, K key10, V value10,
+                                       K key11, V value11) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+        map.put(key10, value10);
+        map.put(key11, value11);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9, K key10, V value10,
+                                       K key11, V value11, K key12, V value12) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+        map.put(key10, value10);
+        map.put(key11, value11);
+        map.put(key12, value12);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9, K key10, V value10,
+                                       K key11, V value11, K key12, V value12,
+                                       K key13, V value13, K key14, V value14) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+        map.put(key10, value10);
+        map.put(key11, value11);
+        map.put(key12, value12);
+        map.put(key13, value13);
+        map.put(key14, value14);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9, K key10, V value10,
+                                       K key11, V value11, K key12, V value12,
+                                       K key13, V value13, K key14, V value14,
+                                       K key15, V value15) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+        map.put(key10, value10);
+        map.put(key11, value11);
+        map.put(key12, value12);
+        map.put(key13, value13);
+        map.put(key14, value14);
+        map.put(key15, value15);
+
+        return map;
+    }
+
+
+
 }
