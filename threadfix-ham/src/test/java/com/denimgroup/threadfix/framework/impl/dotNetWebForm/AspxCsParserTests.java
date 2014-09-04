@@ -47,5 +47,4 @@ public class AspxCsParserTests {
                 "Aspx.cs parser failed to get newitem at line 20: " + csParser;
     }
 
-
 }

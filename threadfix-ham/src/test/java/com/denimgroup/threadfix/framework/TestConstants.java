@@ -53,6 +53,8 @@ public class TestConstants {
 		PETCLINIC_WEB_XML = PETCLINIC_SOURCE_LOCATION + "/src/main/webapp/WEB-INF/web.xml",
 		WAVSEP_WEB_XML = WAVSEP_SOURCE_LOCATION + "/trunk/WebContent/WEB-INF/web.xml",
 		BODGEIT_WEB_XML = BODGEIT_JSP_ROOT + "/WEB-INF/web.xml",
+        WEB_FORMS_ROOT = testRoot + "/ASP.NET",
+        WEB_FORMS_SAMPLE = WEB_FORMS_ROOT + "/Add new DropDownList option",
         DOT_NET_ROOT = testRoot + "/ASP.NET MVC",
         DOT_NET_SAMPLE = DOT_NET_ROOT + "/ASP.NET MVC Application Using Entity Framework Code First",
 		FAKE_FILE = "",

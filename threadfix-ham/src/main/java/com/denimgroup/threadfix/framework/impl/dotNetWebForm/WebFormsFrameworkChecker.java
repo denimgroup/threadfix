@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.dotNet;
+package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
@@ -35,26 +35,21 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
- * Created by mac on 6/17/14.
+ * Created by mac on 9/4/14.
  */
-public class DotNetFrameworkChecker extends FrameworkChecker {
+public class WebFormsFrameworkChecker extends FrameworkChecker {
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(DotNetFrameworkChecker.class);
+    private static final SanitizedLogger LOG = new SanitizedLogger(WebFormsFrameworkChecker.class);
 
     @Nonnull
     @Override
     public FrameworkType check(@Nonnull ProjectDirectory directory) {
-        Collection csFiles = FileUtils.listFiles(directory.getDirectory(),
-                new FileExtensionFileFilter("cs"), TrueFileFilter.INSTANCE);
-
-        LOG.info("Got " + csFiles.size() + " .cs files from the directory.");
-
-        Collection aspxFiles = FileUtils.listFiles(directory.getDirectory(),
+        Collection files = FileUtils.listFiles(directory.getDirectory(),
                 new FileExtensionFileFilter("aspx"), TrueFileFilter.INSTANCE);
 
-        LOG.info("Got " + aspxFiles.size() + " .aspx files from the directory.");
+        LOG.info("Got " + files.size() + " .aspx files from the directory.");
 
-        return csFiles.isEmpty() || !aspxFiles.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
+        return files.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_WEB_FORMS;
     }
 
 }
