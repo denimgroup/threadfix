@@ -44,7 +44,7 @@ public class ViewModelParsingTests {
 
     @Test
     public void testBasicModelParsing() {
-        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetFile("AccountViewModels.cs"));
+        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetMvcFile("AccountViewModels.cs"));
 
         assert parser.map.size() == 4 :
                 "Map had " + parser.map.size() + " entries instead of 3.";
@@ -95,7 +95,7 @@ public class ViewModelParsingTests {
 
     @Test
     public void testStudentParsing() {
-        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetFile("Student.cs"));
+        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetMvcFile("Student.cs"));
 
         assert parser.map.size() == 1 :
                 "Map had " + parser.map.size() + " entries instead of 1.";
@@ -115,7 +115,7 @@ public class ViewModelParsingTests {
 
     @Test
     public void testProblemParsing() {
-        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetFile("ProblemEntity.cs"));
+        ViewModelParser parser = ViewModelParser.parse(ResourceManager.getDotNetMvcFile("ProblemEntity.cs"));
 
         assert parser.map.size() == 1 :
                 "Map had " + parser.map.size() + " entries instead of 1.";

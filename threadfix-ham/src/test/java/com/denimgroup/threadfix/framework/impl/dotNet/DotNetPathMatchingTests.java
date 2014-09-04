@@ -37,13 +37,13 @@ import java.util.Set;
 public class DotNetPathMatchingTests {
 
     public static DotNetRouteMappings routeMappings =
-            DotNetRoutesParser.parse(ResourceManager.getDotNetFile("InstructorRoutes.cs"));
+            DotNetRoutesParser.parse(ResourceManager.getDotNetMvcFile("InstructorRoutes.cs"));
 
     @Test
     public void testPathMatchingWithParameter() {
 
         DotNetControllerMappings mappings =
-                DotNetControllerParser.parse(ResourceManager.getDotNetFile("InstructorController.cs"));
+                DotNetControllerParser.parse(ResourceManager.getDotNetMvcFile("InstructorController.cs"));
 
         DotNetEndpointGenerator generator =
                 new DotNetEndpointGenerator(routeMappings, null, mappings);
