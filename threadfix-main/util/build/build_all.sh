@@ -1,6 +1,6 @@
 cd $THREADFIX_SOURCE
 
-if [[ $VERSION == "Enterprise" ]]
+if [[ $THREADFIX_VERSION == "Enterprise" ]]
 then
     echo "Building ThreadFix Enterprise with license: $LICENSE"
     cp $LICENSE threadfix-main/src/main/resources/threadfix.license
@@ -106,7 +106,7 @@ cp $THREADFIX_SOURCE/threadfix-main/util/zip/* ThreadFixBase
 
 cp -r ThreadFixBase ThreadFix
 
-if [[ $VERSION == "Enterprise" ]]
+if [[ $THREADFIX_VERSION == "Enterprise" ]]
 then
   echo "Adding scanagent stuff to ThreadFix package"
   cd ThreadFix
