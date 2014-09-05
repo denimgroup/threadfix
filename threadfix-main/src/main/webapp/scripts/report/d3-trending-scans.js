@@ -135,8 +135,8 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
 
                     var diffMonths = monthDiff(new Date(xmin), new Date(xmax));
                     var intervalMonths = Math.round(diffMonths/6);
-                    if (intervalMonths > 6)
-                        intervalMonths = 12;
+                    intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
+                    intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
                     xAxis.ticks(d3.time.month, intervalMonths);
 
                     // Update the x-axis.
