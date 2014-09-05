@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -10,17 +11,23 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class TeamDetailPageIT extends BaseIT {
+    private String teamName;
+    private String appName;
+    private String file;
 
-	@Test
-	public void actionButtonTest(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String file = ScanContents.getScanFilePath();
+    @Before
+    public void initialize() {
+        teamName = getRandomString(8);
+        appName = getRandomString(8);
+        file = ScanContents.getScanFilePath();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, file);
+    }
 
+	@Test
+	public void actionButtonTest(){
         TeamDetailPage teamDetailPage = loginPage.login("user", "password").
                 clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
@@ -34,14 +41,6 @@ public class TeamDetailPageIT extends BaseIT {
 	
 	@Test
 	public void editDeleteModalTest(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String file = ScanContents.getScanFilePath();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, file);
-
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
@@ -59,14 +58,6 @@ public class TeamDetailPageIT extends BaseIT {
 	
 	@Test
 	public void chartTest(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String file = ScanContents.getScanFilePath();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, file);
-
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
@@ -81,14 +72,6 @@ public class TeamDetailPageIT extends BaseIT {
 	
 	@Test
 	public void addApplicationButtonTest(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String file = ScanContents.getScanFilePath();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, file);
-
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
@@ -100,14 +83,6 @@ public class TeamDetailPageIT extends BaseIT {
 
 	@Test
 	public void applicationDetailLink(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String file = ScanContents.getScanFilePath();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, file);
-
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);

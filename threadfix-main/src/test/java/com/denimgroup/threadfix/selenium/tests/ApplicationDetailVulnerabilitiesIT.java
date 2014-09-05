@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -36,17 +37,21 @@ import static junit.framework.TestCase.assertTrue;
 
 @Category(CommunityTests.class)
 public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
+    private String teamName;
+    private String appName;
 
-    @Test
-    public void markSingleVulnerabilityClosedTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+    @Before
+    public void initialize() {
+        teamName = getRandomString(8);
+        appName = getRandomString(8);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+    }
 
+    @Test
+    public void markSingleVulnerabilityClosedTest() {
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -64,14 +69,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void reopenSingleVulnerabilityTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -108,14 +105,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markMultipleVulnerabilitiesClosedTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -133,14 +122,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void reopenMultipleVulnerabilitiesTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -177,14 +158,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markSingleVulnerabilityFalsePositiveTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -202,14 +175,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void unMarkSingleVulnerabilityFalsePositiveTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -246,14 +211,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markMultipleVulnerabilitiesFalsePositiveTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -271,14 +228,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void unMarkMultipleVulnerabilitiesFalsePositiveTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -315,14 +264,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void viewMoreLinkTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
         String comment = "This is a test.";
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -343,14 +285,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void addCommentToVulnerabilityTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
         String comment = "This is a test.";
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, scanFile);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()

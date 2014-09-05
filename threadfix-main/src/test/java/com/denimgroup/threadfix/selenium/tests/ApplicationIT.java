@@ -671,7 +671,6 @@ public class ApplicationIT extends BaseIT {
     }
 
     //TODO add validation test for static manual finding modal
-
     @Test
     public void deleteManualFindingScan() {
         String teamName = "TeamName" + getRandomString(5);
@@ -683,23 +682,23 @@ public class ApplicationIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage ap = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
         sleep(3000);
-        ap.clickActionButton()
+        applicationDetailPage.clickActionButton()
                 .clickManualFindingButton()
                 .setCWE(CWE)
                 .setURL(url)
                 .setDescription(desc)
                 .clickDynamicSubmit();
 
-        ap.clickScansTab()
+        applicationDetailPage.clickScansTab()
                 .clickDeleteScanButton();
 
-        assertTrue("Manual Finding was not deleted correctly.", ap.isScanDeleted());
+        assertTrue("Manual Finding was not deleted correctly.", applicationDetailPage.isScanDeleted());
 
     }
 
@@ -832,7 +831,7 @@ public class ApplicationIT extends BaseIT {
 
         DatabaseUtils.createTeam(teamName);
 
-        String repositoryPath = "C:\\Users\\mghanizadeh\\threadfix";
+        String repositoryPath = System.getProperty("sourceCodeLocation");
 
         TeamIndexPage teamIndexPage = loginPage.login("user","password")
                 .clickOrganizationHeaderLink()
@@ -1066,10 +1065,15 @@ public class ApplicationIT extends BaseIT {
 
         wafRulesPage.refreshPage();
 
-        wafRulesPage.setLogFile("C:/Users/mghanizadeh/threadfix/threadfix-main/src/test/resources/SupportingFiles\\Realtime\\Snort\\snort_log.txt");
+        wafRulesPage.setLogFile(logFile);
 
-        wafIndexPage = wafRulesPage.clickUploadLogFile()
-                .clickContinue();
+        WafLogPage wafLogPage =wafRulesPage.clickUploadLogFile();
+
+        wafLogPage.clickContinue();
+
+        wafIndexPage.clickRules(wafName);
+
+      //  wafRulesPage.clickViewDetails()
     }
 
     public void sleep(int num) {
