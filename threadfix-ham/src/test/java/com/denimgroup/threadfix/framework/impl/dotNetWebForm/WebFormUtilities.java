@@ -23,31 +23,35 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import org.junit.Test;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 
 import java.io.File;
-import java.util.List;
-import java.util.Set;
 
 /**
- * Created by mac on 9/4/14.
+ * Created by mac on 9/5/14.
  */
-public class WebFormsEndpointGeneratorTests {
+public class WebFormUtilities {
 
-    @Test
-    public void testBasic() {
-        EndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(new File(TestConstants.WEB_FORMS_SAMPLE));
-
-        List<Endpoint> endpoints = endpointGenerator.generateEndpoints();
-        assert !endpoints.isEmpty() : "Got empty endpoints for " + TestConstants.WEB_FORMS_SAMPLE;
-
-        Set<String> parameters = endpoints.get(0).getParameters();
-        assert parameters.contains("newitem") :
-            "Parameters didn't contain newitem: " + parameters;
-
+    public static EndpointDatabase getWebFormDatabase(Scan inputScan) {
+        return EndpointDatabaseFactory.getDatabase(
+                getWebFormLocation(),
+                ThreadFixInterface.toPartialMappingList(inputScan)
+        );
     }
 
+    public static File getWebFormLocation() {
+        String root = System.getProperty("PROJECTS_ROOT");
+        assert root != null && new File(root).exists() : "Projects root didn't exist or was invalid.";
+
+        String total = root + "ASP.NET/Add new DropDownList option";
+
+        assert new File(total).exists() : "WebForms project didn't exist at " + total;
+
+        System.out.println("Getting database from " + total);
+
+        return new File(total);
+    }
 }

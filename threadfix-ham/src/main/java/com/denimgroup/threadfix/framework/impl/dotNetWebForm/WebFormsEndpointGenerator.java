@@ -46,7 +46,7 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
 
     private List<Endpoint> endpoints = list();
 
-    public static WebFormsEndpointGenerator getGenerator(@Nonnull File rootDirectory) {
+    public WebFormsEndpointGenerator(@Nonnull File rootDirectory) {
         if (!rootDirectory.exists() || !rootDirectory.isDirectory()) {
             throw new IllegalArgumentException("Invalid directory passed to WebFormsEndpointGenerator: " + rootDirectory);
         }
@@ -73,10 +73,14 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
             }
         }
 
-        return new WebFormsEndpointGenerator(aspxCsParsers, aspxParsers);
+        collapseToEndpoints(aspxCsParsers, aspxParsers);
     }
 
     public WebFormsEndpointGenerator(Collection<AspxCsParser> csParsers, Collection<AspxParser> aspxParsers) {
+        collapseToEndpoints(csParsers, aspxParsers);
+    }
+
+    void collapseToEndpoints(Collection<AspxCsParser> csParsers, Collection<AspxParser> aspxParsers) {
         Map<String, AspxParser> aspxParserMap = newMap();
         Map<String, AspxCsParser> aspxCsParserMap = newMap();
 

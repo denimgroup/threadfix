@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.framework.engine.cleaner.PathCleanerFactory;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.dotNet.DotNetMappings;
+import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsEndpointGenerator;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPMappings;
 import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -107,6 +108,7 @@ public class EndpointDatabaseFactory {
             case JSP:         generator = new JSPMappings(rootFile);              break;
 			case SPRING_MVC:  generator = new SpringControllerMappings(rootFile); break;
 			case DOT_NET_MVC: generator = new DotNetMappings(rootFile);           break;
+            case DOT_NET_WEB_FORMS: generator = new WebFormsEndpointGenerator(rootFile); break;
 
 			default:
                 String logError = "You should never be here. You are missing a case statement for " + frameworkType;
