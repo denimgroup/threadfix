@@ -62,7 +62,7 @@
     <div class="filter-group-body" ng-show="showDetailsControls">
 
         <div class="accordion-inner">
-            Severity
+            Severity (In Total)
             <br>
             <div>
                 <input id="showInfo" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info"/>Info<br>
@@ -74,13 +74,15 @@
         </div>
 
         <div class="accordion-inner">
-            Status
+            Status (Each Scan)
             <br>
             <div>
-                <input id="showOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOpen"/>Open<br>
+                <%--<input id="showOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOpen"/>Open<br>--%>
                 <input id="showClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showClosed"/>Closed<br>
-                <input id="showFalsePositive" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showFalsePositive"/>False Positive<br>
-                <input id="showHidden" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showHidden"/>Hidden
+                <input id="showOld" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOld"/>Old<br>
+                <input id="showHidden" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showHidden"/>Hidden<br>
+                <input id="showNew" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showNew"/>New<br>
+                <input id="showResurfaced" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showResurfaced"/>Resurfaced<br>
             </div>
         </div>
 
@@ -89,8 +91,6 @@
             <br>
             <div>
                 <input id="showTotal" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showTotal"/>Total<br>
-                <input id="showNew" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showNew"/>New<br>
-                <input id="showResurfaced" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showResurfaced"/>Resurfaced<br>
             </div>
         </div>
     </div>

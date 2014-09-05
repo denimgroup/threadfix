@@ -1,18 +1,18 @@
 var module = angular.module('threadfix');
 
-module.controller('ReportFilterController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
+module.controller('ReportFilterController', function($scope, $rootScope, $window, $http, tfEncoder) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
+    $scope.noData = false;
 
     $scope.resetFilters = function() {
         $scope.parameters = {
             teams: [],
             applications: [],
             severities: {},
-            showOpen: false,
             showClosed: false,
-            showFalsePositive: false,
+            showOld: false,
             showHidden: false,
             showTotal: true,
             showNew: true,
@@ -65,6 +65,7 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
     $scope.$on('loadTrendingReport', function() {
 
         $scope.noData = false;
+
         if (!$scope.allScans) {
             $scope.loading = true;
             $http.post(tfEncoder.encode("/reports/trendingScans"), $scope.getReportParameters()).
@@ -98,14 +99,54 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
     });
 
     $scope.refreshScans = function(){
+        $scope.loading = true;
         filterByTeamAndApp();
         filterByTime();
+        if ($scope.filterScans.length === 0) {
+            $scope.noData = true;
+        } else {
+            $scope.noData = false;
+        }
         $scope.refresh();
+        $scope.loading = false;
     };
 
     var updateDisplayData = function(){
+        var teams;
+        var apps;
+        if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0) {
+            teams = "All";
+            apps = "All";
+        }
+        else {
+            if ($scope.parameters.teams.length > 0) {
+                teams = $scope.parameters.teams[0].name;
+            }
+            var i;
+            for (i=1; i<$scope.parameters.teams.length; i++) {
+                teams += ", " + $scope.parameters.teams[i].name;
+            }
+
+            if ($scope.parameters.applications.length > 0) {
+                apps = $scope.parameters.applications[0].name;
+            }
+            for (i=1; i<$scope.parameters.applications.length; i++) {
+                apps += ", " + $scope.parameters.applications[i].name;
+            }
+        }
+
+        $scope.title = {
+            teams: teams,
+            apps: apps
+
+        };
         $scope.trendingScansData = [];
-        $scope.oldVulnsByChannelMap = {};
+        $scope.totalVulnsByChannelMap = {};
+        $scope.infoVulnsByChannelMap = {};
+        $scope.lowVulnsByChannelMap = {};
+        $scope.mediumVulnsByChannelMap = {};
+        $scope.highVulnsByChannelMap = {};
+        $scope.criticalVulnsByChannelMap = {};
         $scope.filterScans.forEach(function(scan){
             $scope.trendingScansData.push(filterDisplayData(scan));
         });
@@ -122,25 +163,28 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
         if ($scope.parameters.showTotal) {
             data.Total = calculateTotal(scan);
         }
-        if ($scope.parameters.showOpen)
-            data.Open = scan.numberOldVulnerabilities + scan.numberNewVulnerabilities + scan.numberResurfacedVulnerabilities;
         if ($scope.parameters.showClosed)
             data.Closed = scan.numberClosedVulnerabilities;
-        if ($scope.parameters.showFalsePositive)
-            data.FalsePositive = scan.numberTotalVulnerabilities;
+        if ($scope.parameters.showOld)
+            data.Old = scan.numberOldVulnerabilities;
         if ($scope.parameters.showHidden)
             data.Hidden = scan.numberHiddenVulnerabilities;
 
-        if ($scope.parameters.severities.info)
-            data.Info = scan.numberInfoVulnerabilities;
-        if ($scope.parameters.severities.low)
-            data.Low = scan.numberLowVulnerabilities;
-        if ($scope.parameters.severities.medium)
-            data.Medium = scan.numberMediumVulnerabilities;
-        if ($scope.parameters.severities.high)
-            data.High = scan.numberHighVulnerabilities;
-        if ($scope.parameters.severities.critical)
-            data.Critical = scan.numberCriticalVulnerabilities;
+        if ($scope.parameters.severities.info) {
+            data.Info = calculateInfo(scan);
+        }
+        if ($scope.parameters.severities.low) {
+            data.Low = calculateLow(scan);
+        }
+        if ($scope.parameters.severities.medium) {
+            data.Medium = calculateMedium(scan);
+        }
+        if ($scope.parameters.severities.high) {
+            data.High = calculateHigh(scan);
+        }
+        if ($scope.parameters.severities.critical) {
+            data.Critical = calculateCritical(scan);
+        }
 
         return data;
     }
@@ -149,22 +193,48 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
         var adjustedTotal = scan.numberTotalVulnerabilities -
             scan.numberOldVulnerabilities +
             scan.numberOldVulnerabilitiesInitiallyFromThisChannel;
+
+        return trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal);
+    }
+
+    var calculateInfo = function(scan) {
+        return trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities);
+    }
+
+    var calculateLow = function(scan) {
+        return trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities);
+    }
+
+    var calculateMedium = function(scan) {
+        return trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities);
+    }
+
+    var calculateHigh = function(scan) {
+        return trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities);
+    }
+
+    var calculateCritical = function(scan) {
+        return trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities);
+    }
+
+    var trendingTotal = function(map, scan, newNum) {
         if (scan.applicationChannelId) {
-            $scope.oldVulnsByChannelMap[scan.applicationChannelId] = adjustedTotal;
+            map[scan.applicationChannelId] = newNum;
         }
 
-        var numTotal = adjustedTotal;
+        var numTotal = newNum;
         // This code counts in the old vulns from other channels.
-        for (var key in $scope.oldVulnsByChannelMap) {
-            if ($scope.oldVulnsByChannelMap.hasOwnProperty(key)) {
+        for (var key in map) {
+            if (map.hasOwnProperty(key)) {
                 if (!scan.applicationChannelId || scan.applicationChannelId != key) {
-                    numTotal += $scope.oldVulnsByChannelMap[key];
+                    numTotal += map[key];
                 }
             }
         }
 
         return numTotal;
     }
+
 
     var filterByTeamAndApp = function() {
 
@@ -223,7 +293,6 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
     };
 
     $scope.refresh = function() {
-        $scope.loading = true;
         updateDisplayData();
     };
 

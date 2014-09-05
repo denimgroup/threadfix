@@ -1,8 +1,8 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Trending scans report
-d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadFixModalService', 'vulnSearchParameterService',
-    function($window, $timeout, d3, threadFixModalService, vulnSearchParameterService) {
+d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
+    function($window, $timeout, d3) {
         return {
             restrict: 'EA',
             scope: {
@@ -11,20 +11,25 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
             }
             ,
             link: function(scope, ele, attrs) {
-                var margin = {top: 160, right: 100, bottom: 200, left: 60},
+                var margin = {top: 50, right: 100, bottom: 200, left: 60},
                     width = 670 - margin.left - margin.right,
                     height = 612 - margin.top - margin.bottom;
 
                 var x = d3.time.scale()
+                    .nice(d3.time.week)
                     .range([0, width]);
 
                 var y = d3.scale.linear()
                     .range([height, 0]);
 
+                var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
                 var xAxis = d3.svg.axis()
                     .scale(x)
-                    .ticks(10)
                     .tickSize(3)
+                    .tickFormat(function(d) {
+                        return monthList[d.getMonth()] + "-" + d.getFullYear();
+                    })
                     .orient("bottom");
 
                 var yAxis = d3.svg.axis()
@@ -42,7 +47,10 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+                var tip =  d3.tip()
+                    .attr('class', 'd3-tip')
+                    .offset([-10, 0]);
+                svg.call(tip);
 
                 function processData(data) {
                     return color.domain().map(function(name){
@@ -52,11 +60,15 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
                         })
                         return {name: name, values: values};
                     })
-                }
+                };
 
-//                var color = d3.scale.ordinal()
-//                    .range(["#000000", "#DB6D1D", "#FDE05E"])
-//                    .domain(["Total", "New", "Resurfaced"]);
+                function monthDiff(d1, d2) {
+                    var months;
+                    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+                    months -= d1.getMonth() + 1;
+                    months += d2.getMonth();
+                    return months <= 0 ? 0 : months;
+                };
 
                 var color = d3.scale.category10();
 
@@ -74,12 +86,23 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
 
                     svg.selectAll('*').remove();
 
+                    if (data.length === 0) {
+                        svg.append("g")
+                            .append("text")
+                            .attr("x", width/3 + 30)
+                            .attr("y", 10)
+                            .style("font-size", "20px")
+                            .style("font-weight", "bold")
+                            .text("No results found")
+                        return;
+                    }
+
                     var colorDomain = d3.keys(data[0]).filter(function(key){return key !== "importTime";});
 
                     if (colorDomain.length === 0) {
                         svg.append("g")
                             .append("text")
-                            .attr("x", width/5)
+                            .attr("x", width/3)
                             .attr("y", 10)
                             .style("font-size", "20px")
                             .style("font-weight", "bold")
@@ -99,6 +122,8 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
                         .attr("class", "y axis");
 
                     var rates = processData(data);
+                    var xmax = d3.max(rates, function(c) { return d3.max(c.values, function(v) { return v.time; }); });
+                    var xmin = d3.min(rates, function(c) { return d3.min(c.values, function(v) { return v.time; }); });
                     x.domain([
                         d3.min(rates, function(c) { return d3.min(c.values, function(v) { return v.time; }); }),
                         d3.max(rates, function(c) { return d3.max(c.values, function(v) { return v.time; }); })
@@ -107,6 +132,12 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
                         d3.min(rates, function(c) { return d3.min(c.values, function(v) { return v.count; }); }),
                         d3.max(rates, function(c) { return d3.max(c.values, function(v) { return v.count; }); })
                     ]);
+
+                    var diffMonths = monthDiff(new Date(xmin), new Date(xmax));
+                    var intervalMonths = Math.round(diffMonths/6);
+                    if (intervalMonths > 6)
+                        intervalMonths = 12;
+                    xAxis.ticks(d3.time.month, intervalMonths);
 
                     // Update the x-axis.
                     d3.transition(svg).select('.x.axis')
@@ -158,12 +189,14 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
                         .attr("width", width)
                         .attr("height", height)
                         .on("mouseover", function() { focus.style("display", null); })
-                        .on("mouseout", function() { focus.style("display", "none"); })
+                        .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
 
                     function mousemove() {
                         var x0 = x.invert(d3.mouse(this)[0]),
                             month = Math.round(x0);
+                        var time;
+                        var tips = [];
                         circles.attr('transform', function (d) {
                             var i;
                             if (month <= d.values[0].time)
@@ -179,8 +212,22 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3', 'threadF
                                 }
                             }
 
+                            time = d.values[i].time;
+                            tips.push("<strong>" + d.name + ":</strong> <span style='color:red'>" + d.values[i].count + "</span>")
                             return 'translate(' + x(d.values[i].time) + ',' + y(d.values[i].count) + ')';
                         });
+
+                        tip.html(function(){
+                            var date = new Date(time);
+                            var tipContent = "<strong>" + "Time" + ":</strong> <span style='color:red'>" +
+                                (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</span>";
+                            tips.forEach(function(tip) {
+                                tipContent += "<br/>" + tip;
+                            })
+
+                            return tipContent;
+                        });
+                        tip.show();
                     }
 
                     // EXIT
