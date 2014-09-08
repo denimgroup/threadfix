@@ -23,30 +23,41 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
-import java.util.Set;
 
 /**
- * Created by mac on 9/4/14.
+ * Created by mac on 9/8/14.
  */
-public class WebFormsEndpointGeneratorTests {
-
+public class WebFormsDetectionTests {
     @Test
-    public void testBasic() {
-        EndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(new File(TestConstants.WEB_FORMS_SAMPLE));
+    public void testAll() {
 
-        List<Endpoint> endpoints = endpointGenerator.generateEndpoints();
-        assert !endpoints.isEmpty() : "Got empty endpoints for " + TestConstants.WEB_FORMS_SAMPLE;
+        File rootFile = new File(TestConstants.WEB_FORMS_ROOT);
 
-        Set<String> parameters = endpoints.get(0).getParameters();
-        assert parameters.contains("newitem") :
-            "Parameters didn't contain newitem: " + parameters;
+        assert rootFile.exists() : "File at " + TestConstants.WEB_FORMS_ROOT + " was invalid.";
+
+        assert rootFile.isDirectory() : TestConstants.WEB_FORMS_ROOT + " wasn't a directory.";
+
+        File[] files = rootFile.listFiles();
+
+        assert files != null : "Files returned from listFiles() were null.";
+
+        for (File file : files) {
+            if (file.getName().startsWith(".") || file.isFile()) {
+                continue;
+            }
+
+            System.out.println(file.getName());
+
+            FrameworkType type = FrameworkCalculator.getType(file);
+
+            assert type == FrameworkType.DOT_NET_WEB_FORMS
+                    : "Got " + type + " instead of DOT_NET_WEB_FORMS for " + file;
+        }
     }
-
 }
