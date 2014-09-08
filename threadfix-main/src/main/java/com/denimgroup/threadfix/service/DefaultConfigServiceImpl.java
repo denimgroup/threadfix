@@ -43,7 +43,7 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 	@Autowired
 	private DefaultConfigurationDao defaultConfigurationDao;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
 	@Override
 	public DefaultConfiguration loadCurrentConfiguration() {
         DefaultConfiguration configuration;
