@@ -32,6 +32,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormUtilities.getSampleProjects;
+
 /**
  * Created by mac on 9/4/14.
  */
@@ -49,4 +51,13 @@ public class WebFormsEndpointGeneratorTests {
             "Parameters didn't contain newitem: " + parameters;
     }
 
+    @Test
+    public void testAtLeastOneEndpointPerProject() {
+        for (File file : getSampleProjects()) {
+            WebFormsEndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(file);
+
+            int size = endpointGenerator.generateEndpoints().size();
+            assert size > 0 : "Got " + size + " endpoints for " + file + ", was expecting at least one.";
+        }
+    }
 }

@@ -24,33 +24,22 @@
 package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
 import org.junit.Test;
 
 import java.io.File;
 
+import static com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormUtilities.getSampleProjects;
+
 /**
  * Created by mac on 9/8/14.
  */
 public class WebFormsDetectionTests {
+
     @Test
     public void testAll() {
 
-        File rootFile = new File(TestConstants.WEB_FORMS_ROOT);
-
-        assert rootFile.exists() : "File at " + TestConstants.WEB_FORMS_ROOT + " was invalid.";
-
-        assert rootFile.isDirectory() : TestConstants.WEB_FORMS_ROOT + " wasn't a directory.";
-
-        File[] files = rootFile.listFiles();
-
-        assert files != null : "Files returned from listFiles() were null.";
-
-        for (File file : files) {
-            if (file.getName().startsWith(".") || file.isFile()) {
-                continue;
-            }
+        for (File file : getSampleProjects()) {
 
             System.out.println(file.getName());
 
