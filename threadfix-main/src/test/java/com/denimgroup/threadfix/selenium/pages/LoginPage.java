@@ -69,12 +69,6 @@ public class LoginPage extends BasePage {
         driver.findElementById("login").click();
 
         if (!isElementPresent("tab-dashboard")) {
-
-            if (driver.findElementById("username").getAttribute("value").equals("")) {
-                System.out.println("Username field was empty, re-entering username.");
-                driver.findElementById("username").sendKeys(user);
-            }
-
             driver.findElementById("password").sendKeys(Keys.ENTER);
         }
 
@@ -136,18 +130,26 @@ public class LoginPage extends BasePage {
 
 	/*----------------set functions----------------*/
 	public LoginPage setUsername(String user) {
-		driver.findElementById("username").sendKeys(user);
+        WebElement usernameField = driver.findElementById("username");
+        usernameField.sendKeys(user);
 
-        if (driver.findElementById("username").getAttribute("value").equals("")) {
+        if (usernameField.getAttribute("value").equals("")) {
             System.out.println("Username field was empty, re-entering username.");
-            driver.findElementById("username").sendKeys(user);
+            usernameField.sendKeys(user);
         }
 
         return this;
 	}
 	
 	public LoginPage setPassword(String password) {
-		driver.findElementById("password").sendKeys(password);
+		WebElement passwordField = driver.findElementById("password");
+        passwordField.sendKeys(password);
+
+        if (passwordField.getAttribute("value").equals("")) {
+            System.out.println("Password field was empty, re-entering password.");
+            passwordField.sendKeys(password);
+        }
+
         return this;
 	}
 	
