@@ -42,9 +42,26 @@
             </c:if>
         </div>
 
-        <div class="container-fluid">
-            <%@include file="reports.jspf"%>
-        </div>
+        <tabset style="margin-top:10px;">
+
+            <tab id="vulnTrend" ng-controller="ReportsController" heading="Vulnerability Trending">
+                <%@include file="vulnTrending.jsp"%>
+            </tab>
+
+            <tab id="topTen" ng-controller="ReportsController" heading="10 Most Occurring">
+                <%@include file="topTen.jsp"%>
+            </tab>
+
+            <tab id="mit" ng-controller="MitigationProgressReport" heading="Mitigation">
+                <%@include file="/WEB-INF/views/organizations/mitigationReport.jsp"%>
+            </tab>
+            <!--<tab id="report"  heading="Reports">
+                <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
+                <%@include file="reports.jspf"%>
+            </tab> -->
+
+        </tabset>
+
 
         <tabset style="margin-top:10px;">
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTabTree.jsp" %>

@@ -154,6 +154,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 if (data.success) {
                     $parent.successMessage = object.vulnerabilityIds.length + " vulnerabilities successfully " + messageExtension + ".";
                     $parent.refresh();
+                    $rootScope.$broadcast('vulnChanged', messageExtension);
                 } else {
                     $scope.errorMessage = "Failure. Message was : " + data.message;
                 }
