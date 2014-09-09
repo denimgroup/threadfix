@@ -127,3 +127,6 @@ cp ThreadFix/database/threadfix-backup.script ThreadFix/database/threadfix.scrip
 
 zip -q ThreadFix_$VERSION.zip -r ThreadFix
 mv ThreadFix_$VERSION.zip $ARTIFACTS_FOLDER
+
+rm $FINAL_DESTINATION/ThreadFix*
+cp $ARTIFACTS_FOLDER/ThreadFix_$VERSION.zip $FINAL_DESTINATION
