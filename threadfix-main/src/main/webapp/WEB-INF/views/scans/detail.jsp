@@ -1,11 +1,12 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Scan Details</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-detail-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-mapped-finding-table-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-unmapped-finding-table-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<cbs:cachebustscript src="/scripts/scan-detail-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/scan-mapped-finding-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="scanDetail"

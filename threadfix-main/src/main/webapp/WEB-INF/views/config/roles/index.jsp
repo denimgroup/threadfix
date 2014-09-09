@@ -1,10 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Manage Roles</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/roles-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/role-edit-modal-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/roles-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+    <cbs:cachebustscript src="/scripts/role-edit-modal-controller.js"/>
 </head>
 
 <body ng-controller="RolesPageController">

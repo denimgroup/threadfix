@@ -1,9 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Logs</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/toggle.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/error-logs-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/toggle.js"/>
+	<cbs:cachebustscript src="/scripts/error-logs-controller.js"/>
 </head>
 
 <body ng-controller="ErrorLogsController" ng-init="initialId = '<c:out value="log.id"/>'">
@@ -32,7 +33,5 @@
         <pre ng-show="log.expanded">{{ log.exceptionStackTrace }}</pre>
         <br>
     </span>
-
-
 
 </body>

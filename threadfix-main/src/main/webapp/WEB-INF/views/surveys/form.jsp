@@ -1,8 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
     <title><c:out value="${ surveyResult.survey.name }" /></title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/survey-sections.js"></script>
+    <cbs:cachebustscript src="/scripts/survey-sections.js"/>
 </head>
 
 <body id="apps">
