@@ -125,7 +125,7 @@
                         </manifest>
                         <manifestEntries>
                             <!-- Adds ${buildNumber} as an entry in the manifest file -->
-                            <Git-SHA-1>${buildNumber}</Git-SHA-1>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
                         </manifestEntries>
                     </archive>
                 </configuration>
