@@ -97,8 +97,8 @@ public class FindingsDetailIT extends BaseIT{
         FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
 
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings()
-                .selectVariablleOrLocation()
-                .clickSubmitMergeButton;
+                .selectVariablleOrLocation();
+               // .clickSubmitMergeButton();
     }
 
 }

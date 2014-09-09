@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.context.ApplicationContextAware;
@@ -1113,8 +1114,10 @@ public class ApplicationIT extends BaseIT {
                 .clickActionButton()
                 .clickUploadScan()
                 .uploadScan(newScan);
-        assertTrue("Scan didnt Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Scan didn't Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
     }
+
+    @Ignore
     @Test
     public void uploadSameScanTwiceOnApplicationPage() {
         String teamName = getRandomString(8);
@@ -1134,7 +1137,7 @@ public class ApplicationIT extends BaseIT {
                 .clickUploadScan()
                 .uploadScan(newScan);
 
-      //  assertTrue("The first scan hasn't uploaded yet", applicationDetailPage.isScanUploadedAlready(teamName, appName));
+        assertTrue("The first scan hasn't uploaded yet", applicationDetailPage.isScanUploadedAlready(teamName, appName));
     }
 
     public void sleep(int num) {

@@ -38,13 +38,13 @@ public class MergeFindingPage extends BasePage {
         driver.findElementByName("vulnerabilityId").click();
         return new MergeFindingPage(driver);
     }
-
+/*
     public VulnerabilityDetailPage clickSubmitMergeButton() {
         driver.fin("").click();
         return new VulnerabilityDetailPage(driver);
 
     }
-
+*/
     //-------------------------------------Boolean Functions-------------------------------------------------------------
     public boolean isMergeFindingPagePresent() {
         return driver.findElementByClassName("dataTable").isDisplayed();
