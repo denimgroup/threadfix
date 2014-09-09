@@ -1,8 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title><c:out value="${ waf.name }"/></title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/waf-detail-page-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/waf-detail-page-controller.js"/>
 </head>
 
 <body id="waf" ng-controller="WafDetailPageController" ng-init="loading = true; showRuleInfo = false;">
