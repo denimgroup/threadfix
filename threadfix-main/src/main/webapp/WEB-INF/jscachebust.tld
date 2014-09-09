@@ -4,7 +4,7 @@
     <jsp-version>2.0</jsp-version>
     <short-name>JS Cache Bust Tag</short-name>
     <tag>
-        <name>cachebust</name>
+        <name>cachebustscript</name>
         <tag-class>com.denimgroup.threadfix.webapp.tags.JsCacheBusterTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
