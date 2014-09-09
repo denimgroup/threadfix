@@ -66,6 +66,27 @@ svg text.percent{
     font-size:10px;
 }
 
+svg text.warning{
+    fill:red;
+    text-anchor:middle;
+    font-size:20px;
+    font-weight:bold;
+}
+
+svg text.header{
+    fill:black;
+    text-anchor:middle;
+    font-size:20px;
+    font-weight:bold;
+}
+
+svg text.title{
+    fill:black;
+    text-anchor:middle;
+    font-size:13px;
+    font-weight:bold;
+}
+
 .background path {
     fill: none;
     stroke: #ccc;

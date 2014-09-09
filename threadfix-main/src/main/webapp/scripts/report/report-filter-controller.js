@@ -23,6 +23,11 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
         };
     };
 
+    $scope.reset = function() {
+        $scope.resetFilters();
+        $scope.refreshScans();
+    };
+
     $scope.toggleAllFilters = function() {
         if ($scope.showTeamAndApplicationControls
             || $scope.showDetailsControls

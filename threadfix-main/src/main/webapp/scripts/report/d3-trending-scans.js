@@ -1,19 +1,19 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Trending scans report
-d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
-    function($window, $timeout, d3) {
+d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
+    function(d3, reportExporter) {
         return {
             restrict: 'EA',
             scope: {
                 data: '=',
                 label: '='
-            }
-            ,
+            },
             link: function(scope, ele, attrs) {
-                var margin = {top: 50, right: 100, bottom: 200, left: 60},
-                    width = 670 - margin.left - margin.right,
-                    height = 612 - margin.top - margin.bottom;
+                var svgWidth = 670, svgHeight = 612,
+                    margin = {top: 70, right: 100, bottom: 200, left: 60},
+                    width = svgWidth - margin.left - margin.right,
+                    height = svgHeight - margin.top - margin.bottom;
 
                 var x = d3.time.scale()
                     .nice(d3.time.week)
@@ -42,8 +42,8 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
                     .y(function(d) { return y(d.count); });
 
                 var svg = d3.select(ele[0]).append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
+                    .attr("width", svgWidth)
+                    .attr("height", svgHeight)
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -86,13 +86,37 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
 
                     svg.selectAll('*').remove();
 
+                    svg.append("g")
+                        .append("text")
+                        .attr("x", width/2)
+                        .attr("y", -30)
+                        .attr("class", "header")
+                        .text("Trending Report")
+                    var i = 0;
+                    if (scope.label.teams) {
+                        i++;
+                        svg.append("g")
+                            .append("text")
+                            .attr("x", width/2)
+                            .attr("y", -10)
+                            .attr("class", "title")
+                            .text("Team: " + scope.label.teams)
+                    }
+                    if (scope.label.apps) {
+                        svg.append("g")
+                            .append("text")
+                            .attr("x", width/2)
+                            .attr("y", -10 + i*15)
+                            .attr("class", "title")
+                            .text("Application: " + scope.label.apps)
+                    }
+
                     if (data.length === 0) {
                         svg.append("g")
                             .append("text")
-                            .attr("x", width/3 + 30)
-                            .attr("y", 10)
-                            .style("font-size", "20px")
-                            .style("font-weight", "bold")
+                            .attr("x", width/2)
+                            .attr("y", 70)
+                            .attr("class", "warning")
                             .text("No results found")
                         return;
                     }
@@ -102,10 +126,9 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
                     if (colorDomain.length === 0) {
                         svg.append("g")
                             .append("text")
-                            .attr("x", width/3)
-                            .attr("y", 10)
-                            .style("font-size", "20px")
-                            .style("font-weight", "bold")
+                            .attr("x", width/2)
+                            .attr("y", 70)
+                            .attr("class", "warning")
                             .text("Select fields to display")
                         return;
                     }
@@ -220,7 +243,7 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
                         tip.html(function(){
                             var date = new Date(time);
                             var tipContent = "<strong>" + "Time" + ":</strong> <span style='color:red'>" +
-                                (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</span>";
+                                (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</span>";
                             tips.forEach(function(tip) {
                                 tipContent += "<br/>" + tip;
                             })
@@ -233,6 +256,13 @@ d3ThreadfixModule.directive('d3Trending', ['$window', '$timeout', 'd3',
                     // EXIT
                     rate.exit().remove();
                 }
+
+                d3.select("#exportCSVButton").on('click', function(){
+                    var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
+                    var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
+                    reportExporter.exportPDF(d3, svgWidth, svgHeight,
+                    "TrendingScans" + teamsName + appsName);
+                });
             }
         }
     }]);

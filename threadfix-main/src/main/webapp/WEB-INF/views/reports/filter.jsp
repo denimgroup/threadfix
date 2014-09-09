@@ -5,7 +5,7 @@
         <a id="toggleAllButton" class="btn" ng-click="toggleAllFilters()">
             {{ (showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange) ? 'Collapse' : 'Expand' }} All
         </a>
-        <a id="clearFiltersButton" class="btn" ng-click="resetFilters()">Clear</a>
+        <a id="clearFiltersButton" class="btn" ng-click="reset()">Clear</a>
     </div>
 </div>
 
@@ -155,7 +155,7 @@
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
     <div class="accordion-group">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportCSVButton" ng-click="exportCSV()" class="btn">Export CSV</a>
+            <a id="exportCSVButton" class="btn">Export PNG</a>
         </div>
     </div>
 </security:authorize>

@@ -7,6 +7,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3-trending-scans.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-filter-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-services.js"></script>
 </head>
 
 <body id="reports">
@@ -60,10 +61,6 @@
             </select>
         </span>
         <span style="float:right" ng-show="loading" class="spinner dark"></span>
-
-        <%--<div ng-show="trendingActive">--%>
-            <%--<d3-trending data="trendingScansData"></d3-trending>--%>
-        <%--</div>--%>
 
         <div ng-hide="vulnSearch || trendingActive" style="margin-top: 10px" id="successDiv">
             <c:if test="${ not hasVulnerabilities }">
