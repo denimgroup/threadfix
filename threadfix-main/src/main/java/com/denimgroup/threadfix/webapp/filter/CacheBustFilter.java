@@ -55,11 +55,7 @@ public class CacheBustFilter extends GenericFilterBean {
 
         // If there was a build number defined in the war,
         // then use it for the cache buster.
-        if (buildNumber != null) {
-            req.setAttribute("buildNumber", buildNumber);
-        } else {
-            req.setAttribute("buildNumber", "2.1-SNAPSHOT-" + new Random().nextInt(10000000));
-        }
+        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.1-SNAPSHOT-" + new Random().nextInt(10000000));
 
         chain.doFilter(request, response);
     }
