@@ -5,13 +5,13 @@
 		<from>/images/**</from>
 		<to>/images/$1</to>
 	</rule>
-    <rule match-type="regex">
-        <from>/v/[0-9A-Za-z_.\-]+/scripts/(.*)</from>
-        <to>/scripts/$1</to>
-    </rule>
     <rule>
         <from>/scripts/**</from>
         <to>/scripts/$1</to>
+    </rule>
+    <rule>
+        <from>/v/*/scripts/**</from>
+        <to>/scripts/$2</to>
     </rule>
 	<rule>
 		<from>/jasper/**</from>
