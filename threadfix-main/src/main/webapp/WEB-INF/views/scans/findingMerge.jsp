@@ -136,6 +136,6 @@
 			</tbody>
 		</table>
 		<br/>
-		<input type="submit" value="Submit Merge">
+		<input id="submitMerge" type="submit" value="Submit Merge">
 	</form:form>
 </body>
