@@ -53,11 +53,13 @@ public class CacheBustFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
 
-        // If there was a build number defined in the war, then use it for
-        // the cache buster. Otherwise, assume we are in development mode
-        // and use a random cache buster so developers don't have to clear
-        // their browser cache.
-        req.setAttribute("cachebust", buildNumber != null ? buildNumber : "2.1-SNAPSHOT-" + new Random().nextInt(100000));
+        // If there was a build number defined in the war,
+        // then use it for the cache buster.
+        if (buildNumber != null) {
+            req.setAttribute("buildNumber", buildNumber);
+        } else {
+            req.setAttribute("buildNumber", "2.1-SNAPSHOT-" + new Random().nextInt(10000000));
+        }
 
         chain.doFilter(request, response);
     }
@@ -66,9 +68,9 @@ public class CacheBustFilter extends GenericFilterBean {
     public void initFilterBean() throws ServletException {
         try {
             InputStream is =
-                    getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF");
+                getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF");
             if (is == null) {
-                log.warn("META-INF/MANIFEST.MF not found.");
+                log.warn("/META-INF/MANIFEST.MF not found.");
             } else {
                 Manifest mf = new Manifest();
                 mf.read(is);
