@@ -28,27 +28,30 @@ package com.denimgroup.threadfix.selenium.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
+import java.util.List;
 
 public class UserPermissionsPage extends BasePage {
 
-	public UserPermissionsPage(WebDriver webdriver) {
-		super(webdriver);
-	}
+    public UserPermissionsPage(WebDriver webdriver) {
+        super(webdriver);
+    }
 
     /*------------------------------------ Action Methods ------------------------------------*/
-	
-	public UserPermissionsPage clickAddPermissionsLink(){
-		driver.findElementById("addPermissionButton").click();
-		waitForElement(driver.findElementById("myModalLabel"));
-		sleep(3000);
-		return new UserPermissionsPage(driver);
-	}
-	
-	public UserPermissionsPage setTeam(String team){
-		new Select(driver.findElement(By.id("orgSelect"))).selectByVisibleText(team);
-		return this;
-	}
+
+    public UserPermissionsPage clickAddPermissionsLink() {
+        driver.findElementById("addPermissionButton").click();
+        waitForElement(driver.findElementById("myModalLabel"));
+        sleep(3000);
+        return new UserPermissionsPage(driver);
+    }
+
+    public UserPermissionsPage setTeam(String team) {
+        new Select(driver.findElement(By.id("orgSelect"))).selectByVisibleText(team);
+        return this;
+    }
 
     //Note, the default is that all apps is selected
     public UserPermissionsPage toggleAllApps() {
@@ -70,6 +73,11 @@ public class UserPermissionsPage extends BasePage {
         driver.findElementById("deleteAppMap" + teamName + appName + role).click();
         handleAlert();
         return new UserPermissionsPage(driver);
+    }
+
+    public UserPermissionsPage expandTeamName() {
+        driver.findElementById("orgSelect").click();
+        return this;
     }
 
     /*------------------------------------ Boolean Methods ------------------------------------*/
@@ -112,4 +120,20 @@ public class UserPermissionsPage extends BasePage {
     public boolean isErrorPresent(String errorMessage) {
         return driver.findElementByClassName("errors").getText().contains(errorMessage);
     }
+
+    public boolean compareOrderOfSelector(String firstTeam, String secondTeam) {
+        int firstTeamValue;
+        int secondTeamValue;
+
+        Select teamSelector = new Select(driver.findElementById("orgSelect"));
+
+        teamSelector.selectByVisibleText(firstTeam);
+        firstTeamValue = Integer.parseInt(teamSelector.getFirstSelectedOption().getAttribute("value"));
+
+        teamSelector.selectByVisibleText(secondTeam);
+        secondTeamValue = Integer.parseInt(teamSelector.getFirstSelectedOption().getAttribute("value"));
+
+        return secondTeamValue > firstTeamValue;
+    }
+
 }

@@ -72,6 +72,11 @@ public class WafRulesPage extends BasePage {
         return new WafLogPage(driver);
     }
 
+    public WafRulesPage clickViewDetails() {
+        driver.findElementByLinkText("View Details").click();
+        return new WafRulesPage(driver);
+    }
+
     public TeamIndexPage clickDownloadWafRulesButton() {
         driver.findElementById("downloadWafRulesButton").click();
         return new TeamIndexPage(driver);
@@ -134,7 +139,7 @@ public class WafRulesPage extends BasePage {
     public boolean isDownloadWafRulesDisplay() {
         return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
     }
-    public boolean isLogsUploaded() {
+    public boolean isLogsNumberPresent() {
         return driver.findElementByLinkText("100000 - fired 52 times").isDisplayed();
     }
 

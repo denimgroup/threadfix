@@ -29,10 +29,12 @@ import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 @Category(CommunityTests.class)
@@ -303,5 +305,37 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("The comment was not preserved correctly.",
                 applicationDetailPage.isCommentCorrect("0", comment));
+    }
+
+    @Test
+    public void vulnerabilityPaginationTestingAvailable() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Low209");
+
+        assertTrue("Pagination available", applicationDetailPage.isPaginationPresent("Low209"));
+    }
+
+    @Test
+    public void vulnerabilityPaginationTestingunavailable() {
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79");
+
+        assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("Critical79"));
+
     }
 }

@@ -210,6 +210,18 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickUnmappedFindings() {
+        sleep(1500);
+        driver.findElementByLinkText("20 Unmapped Findings").click();
+        waitForElement(driver.findElementById("unmappedVulnType"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public FindingDetailPage clickUnmappedViewFinding() {
+        driver.findElementById("unmappedVulnType").click();
+        return new FindingDetailPage(driver);
+    }
+
     public ApplicationDetailPage clickScansTab(int numberOfScans) {
         sleep(1000);
 
@@ -825,6 +837,16 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
     }
 
+    public ApplicationDetailPage clickUploadScan() {
+        driver.findElementById("uploadScanModalLink").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage uploadScan(String file) {
+        driver.findElementById("scanFileInput").sendKeys(file);
+        return new ApplicationDetailPage(driver);
+    }
+
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {
@@ -1127,6 +1149,14 @@ public class ApplicationDetailPage extends BasePage {
     public boolean isWafPresent() {
         String temp = driver.findElementById("myModalLabel").getText().trim();
         return temp.equals("Add WAF");
+    }
+
+    public boolean isPaginationPresent(String name) {
+        return driver.findElementById("pagination" + name).isDisplayed();
+    }
+
+    public boolean isScanUploadedAlready(String teamName, String appName) {
+        return driver.findElementByXPath("//span[text()='Scan file has already been uploaded.']").isDisplayed();
     }
 
 }

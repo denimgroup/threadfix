@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -92,5 +93,20 @@ public class ScanDetailIT extends BaseIT {
 
         assertTrue("Finding Vulnerabilities Detail is not available"
                 ,findingDetailPage.isViewVulnetabilityButtonDisplayed());
+    }
+    //TODO refactor when Ids present
+    @Ignore
+    @Test
+    public void showStatisticResultsCorrect() {
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab();
+
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
+                .toggleStatistics();
+
+        //assertTrue("Statistics were not show.", scanDetailPage.isStatisticsTableInformationCorrect());
     }
 }

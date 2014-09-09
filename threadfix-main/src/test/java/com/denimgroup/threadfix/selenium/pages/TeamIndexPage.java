@@ -213,6 +213,17 @@ public class TeamIndexPage extends BasePage {
         return this;
     }
 
+    public TeamIndexPage uploadScanButton(String teamName, String appName) {
+        driver.findElementById("uploadScanModalLink" + teamName + "-" + appName).click();
+        return this;
+    }
+
+    public TeamIndexPage uploadNewScan(String file, String teamName, String appName) {
+        driver.findElementById("scanFileInput").sendKeys(file);
+        waitForElement(driver.findElementById("applicationLink" + teamName + "-" + appName));
+        return new TeamIndexPage(driver);
+    }
+
     public String getLengthError() {
         return driver.findElementById("lengthError").getText();
     }
@@ -311,4 +322,12 @@ public class TeamIndexPage extends BasePage {
         return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText();
     }
 
+    public boolean isUploadScanButtonAvailabe() {
+        return driver.findElementByLinkText("Upload Scan").isDisplayed();
+    }
+
+    public boolean isScanUploadedAlready(String teamName, String appName) {
+        return driver.findElementByXPath("//span[text()='Scan file has already been uploaded.']").isDisplayed();
+    }
 }
+

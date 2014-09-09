@@ -50,7 +50,9 @@ public class ScanContents extends BaseIT {
 		SCAN_FILE_MAP.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml") );
 		SCAN_FILE_MAP.put("IBM Rational AppScan Source Edition", null);
 
+        SCAN_FILE_MAP.put("Unmapped Scan", getScanFilePath("UnmappedFindings", "results", "unmapped.xml"));
         SCAN_FILE_MAP.put("Snort Log", getScanFilePath("Realtime", "Snort", "snort_log.txt"));
+        SCAN_FILE_MAP.put("AppScanEnterprise", getScanFilePath("Dynamic", "AppScanEnterprise", "Application_Security_Issues.xml"));
 	}
 
     public static String getScanFilePath(String scannerName) {

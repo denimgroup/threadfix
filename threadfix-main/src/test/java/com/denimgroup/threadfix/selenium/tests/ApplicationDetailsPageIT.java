@@ -175,8 +175,8 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
     }
 
+    @Test
     public ApplicationDetailPage buildTeamAppandScan() {
-
         dashboardPage = loginPage.login("user", "password");
 
         DatabaseUtils.createTeam(teamName);
@@ -188,4 +188,6 @@ public class ApplicationDetailsPageIT extends BaseIT {
                 .clickViewAppLink(appName, teamName);
         return new ApplicationDetailPage(driver);
     }
+
+
 }

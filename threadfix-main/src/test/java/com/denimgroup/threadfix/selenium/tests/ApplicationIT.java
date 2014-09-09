@@ -27,9 +27,9 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.springframework.context.ApplicationContextAware;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -391,7 +391,7 @@ public class ApplicationIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-        WafIndexPage waf = teamIndexPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
                 .clickAddWafLink()
                 .setWafName(wafName1)
                 .setWafType(type1)
@@ -401,7 +401,7 @@ public class ApplicationIT extends BaseIT {
                 .setWafType(type2)
                 .clickCreateWaf();
 
-        ApplicationDetailPage ap = waf.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
@@ -410,7 +410,7 @@ public class ApplicationIT extends BaseIT {
                 .saveWafAdd()
                 .clickUpdateApplicationButton();
 
-        TeamIndexPage ti = ap.clickOrganizationHeaderLink();
+        TeamIndexPage ti = applicationDetailPage.clickOrganizationHeaderLink();
 
         ApplicationDetailPage apt = ti.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -1027,8 +1027,6 @@ public class ApplicationIT extends BaseIT {
                 wafRulesPage.isDownloadWafRulesDisplay());
     }
 
-    //TODO setFile not working properly
-    @Ignore
     @Test
     public void uploadLogFile() {
         String teamName = getRandomString(8);
@@ -1067,13 +1065,76 @@ public class ApplicationIT extends BaseIT {
 
         wafRulesPage.setLogFile(logFile);
 
-        WafLogPage wafLogPage =wafRulesPage.clickUploadLogFile();
+        WafLogPage wafLogPage = wafRulesPage.clickUploadLogFile();
 
         wafLogPage.clickContinue();
 
         wafIndexPage.clickRules(wafName);
 
-      //  wafRulesPage.clickViewDetails()
+        wafRulesPage.clickViewDetails();
+
+        assertTrue("Logs are available", wafRulesPage.isLogsNumberPresent());
+    }
+
+    @Test
+    public void checkunmappedFindingsLink() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickUnmappedFindings()
+                .clickUnmappedViewFinding();
+
+        assertTrue("Finding Detail Page is not valid", findingDetailPage.isScannerVulnerabilityTextPresent());
+    }
+
+    @Test
+    public void uploadNewScan() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName,appName);
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton()
+                .clickUploadScan()
+                .uploadScan(newScan);
+        assertTrue("Scan didnt Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+    }
+    @Test
+    public void uploadSameScanTwiceOnApplicationPage() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton()
+                .clickUploadScan()
+                .uploadScan(newScan);
+
+        assertTrue("The first scan hasn't uploaded yet", applicationDetailPage.isScanUploadedAlready(teamName, appName));
     }
 
     public void sleep(int num) {

@@ -27,6 +27,8 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -385,4 +387,33 @@ public class UserIT extends BaseIT {
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
         assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }
+
+    @Test
+    public void testAscendingForAssignPermission() {
+        String firstTeamName = "A" + getRandomString(8);
+        String firstAppName = getRandomString(8);
+
+        DatabaseUtils.createTeam(firstTeamName);
+        DatabaseUtils.createApplication(firstTeamName, firstAppName);
+
+        String secondTeamName = "Z" + getRandomString(8);
+        String secondAppName = getRandomString(8);
+
+        DatabaseUtils.createTeam(secondTeamName);
+        DatabaseUtils.createApplication(secondTeamName, secondAppName);
+
+        String userName = getRandomString(8);
+
+        DatabaseUtils.createUser(userName);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+            .clickManageUsersLink();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .expandTeamName();
+
+        assertTrue("The applications are sorted",userPermissionsPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+    }
+
 }

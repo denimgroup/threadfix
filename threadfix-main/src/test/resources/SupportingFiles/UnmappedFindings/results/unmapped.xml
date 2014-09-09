@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<netsparker generated="12/10/2009 9:49:50 AM">
+
+  <target>
+    <url><![CDATA[http://satoffice044/RiskE/]]></url>
+  </target>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/1]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 1</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/2]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 2</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/3]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 3</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/4]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 4</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/5]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 5</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/6]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 6</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/7]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 7</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/8]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 8</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/9]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 9</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/10]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 10</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/11]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 11</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/12]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 12</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/13]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 13</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/14]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 14</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/15]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 15</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/16]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 16</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/17]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 17</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/18]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 18</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/19]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 19</type>
+  </vulnerability>
+
+  <vulnerability>
+    <url><![CDATA[http://satoffice044/RiskE/Images/20]]></url>
+    <extracteddata></extracteddata>
+    <type>ForbiddenResource 20</type>
+  </vulnerability>
+</netsparker>

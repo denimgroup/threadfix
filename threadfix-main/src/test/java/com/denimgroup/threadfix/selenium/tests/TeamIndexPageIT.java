@@ -91,4 +91,35 @@ public class TeamIndexPageIT extends BaseIT {
 
         return new TeamIndexPage(driver);
     }
+
+    @Test
+    public void isUploadScanButtonAvailableAfterUploading() {
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName,appName);
+        DatabaseUtils.uploadScan(teamName, appName,ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonAvailabe());
+    }
+
+    @Test
+    public void uploadSameScanTwice() {
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .uploadScanButton(teamName, appName)
+                .uploadNewScan(newScan, teamName, appName);
+
+        assertTrue("The first scan hasn't uploaded yet", teamIndexPage.isScanUploadedAlready(teamName, appName));
+    }
 }
