@@ -319,6 +319,7 @@
         <json.version>20090211</json.version>
         <jspf.version>1.0.2</jspf.version>
         <jstl.version>1.2</jstl.version>
+        <jsp-api.version>2.3.1</jsp-api.version>
         <jta.version>1.1</jta.version>
         <lablib-checkboxtree.version>3.2</lablib-checkboxtree.version>
         <log4j.version>1.2.16</log4j.version>

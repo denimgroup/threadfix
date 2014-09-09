@@ -1,9 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Dashboard</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/dashboard-controller.js"/>
+	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
 </head>
 
 <body class="dashboard">
