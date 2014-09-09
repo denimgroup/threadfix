@@ -107,6 +107,7 @@ public class ScanDetailPage extends BasePage {
 
     public ScanDetailPage toggleStatistics() {
         driver.findElementById("statisticButton").click();
+        waitForElement(driver.findElementById("importedResults"));
         return new ScanDetailPage(driver);
     }
 
@@ -117,5 +118,65 @@ public class ScanDetailPage extends BasePage {
     public boolean isViewFindingPresent() {
         return driver.findElementById("mappedVulnType").isDisplayed();
     }
+
+    public boolean isImportedResultsCorrect() {
+        String temp = driver.findElementById("importedResults").getText().trim();
+        return temp.equals("45");
+    }
+
+    public boolean isDuplicatedResultsCorrect() {
+        String temp = driver.findElementById("duplicateResults").getText().trim();
+        return temp.equals("0");
+    }
+    public boolean isTotalFindingCorrect() {
+        String temp = driver.findElementById("totalFindings").getText().trim();
+        return temp.equals("45");
+    }
+
+    public boolean isFindingsWithoutVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("findingsWithoutVulnerabilities").getText().trim();
+        return temp.equals("0");
+    }
+
+    public boolean isFindingsWithVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("findingsWithVulnerabilities").getText().trim();
+        return temp.equals("45");
+    }
+
+    public boolean isDuplicateFindingCorrect() {
+        String temp = driver.findElementById("duplicateFindings").getText().trim();
+        return temp.equals("0");
+    }
+
+    public boolean isHiddenVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("hiddenVulnerabilities").getText().trim();
+        return temp.equals("0");
+    }
+
+    public boolean isTotalVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("totalVulnerabilities").getText().trim();
+        return temp.equals("45");
+    }
+
+    public boolean isNewVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("newVulnerabilities").getText().trim();
+        return temp.equals("45");
+    }
+
+    public boolean isOldVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("oldVulnerabilities").getText().trim();
+        return temp.equals("0");
+    }
+
+    public boolean isResurfacedVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("resurfacedVulnerabilities").getText().trim();
+        return temp.equals("0");
+    }
+
+    public boolean isClosedVulnerabilitiesCorrect() {
+        String temp = driver.findElementById("closedVulnerabilities").getText().trim();
+        return temp.equals("0");
+    }
+
 }
 

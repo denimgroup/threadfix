@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -94,8 +93,7 @@ public class ScanDetailIT extends BaseIT {
         assertTrue("Finding Vulnerabilities Detail is not available"
                 ,findingDetailPage.isViewVulnetabilityButtonDisplayed());
     }
-    //TODO refactor when Ids present
-    @Ignore
+
     @Test
     public void showStatisticResultsCorrect() {
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -107,6 +105,17 @@ public class ScanDetailIT extends BaseIT {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
 
-        //assertTrue("Statistics were not show.", scanDetailPage.isStatisticsTableInformationCorrect());
+        assertTrue("Imported Result is incorrect", scanDetailPage.isImportedResultsCorrect());
+        assertTrue("Duplicate Results is incorrect", scanDetailPage.isDuplicatedResultsCorrect());
+        assertTrue("Total finding result is incorrect", scanDetailPage.isTotalFindingCorrect());
+        assertTrue("Finding Without Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithoutVulnerabilitiesCorrect());
+        assertTrue("Finding With Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithVulnerabilitiesCorrect());
+        assertTrue("Duplicate Finding result is incorrect",scanDetailPage.isDuplicateFindingCorrect());
+        assertTrue("Hidden Vulnerabilities result is incorrect",scanDetailPage.isHiddenVulnerabilitiesCorrect());
+        assertTrue("Total Vulnerabilities is incorrect", scanDetailPage.isTotalVulnerabilitiesCorrect());
+        assertTrue("New Vulnerabilities is incorrect", scanDetailPage.isNewVulnerabilitiesCorrect());
+        assertTrue("Old Vulnerabilities result is incorrect", scanDetailPage.isOldVulnerabilitiesCorrect());
+        assertTrue("Resurfaced Vulnerabilities result is incorrect", scanDetailPage.isResurfacedVulnerabilitiesCorrect());
+        assertTrue("Closed Vulnerabilities result is incorrect", scanDetailPage.isClosedVulnerabilitiesCorrect());
     }
 }

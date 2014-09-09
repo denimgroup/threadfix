@@ -84,4 +84,21 @@ public class FindingsDetailIT extends BaseIT{
         assertTrue("Vulnerability Details Page is not Available",
                 mergeFindingPage.isMergeFindingPagePresent());
     }
+
+    @Test
+    public void mergeSameVariableOrLocation() {
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab();
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
+
+        FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
+
+        MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings()
+                .selectVariablleOrLocation()
+                .clickSubmitMergeButton;
+    }
+
 }
