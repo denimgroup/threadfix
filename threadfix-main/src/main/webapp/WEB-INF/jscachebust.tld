@@ -11,9 +11,5 @@
             <name>src</name>
             <required>true</required>
         </attribute>
-        <attribute>
-            <name>type</name>
-            <required>true</required>
-        </attribute>
     </tag>
 </taglib>

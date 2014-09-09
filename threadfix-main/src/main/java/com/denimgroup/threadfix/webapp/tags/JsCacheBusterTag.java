@@ -39,7 +39,6 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class JsCacheBusterTag extends SimpleTagSupport {
 
     private String src;
-    private String type;
 
     public void doTag() throws JspException, IOException {
         try {
@@ -48,7 +47,7 @@ public class JsCacheBusterTag extends SimpleTagSupport {
             String buildNumber = (String) request.getAttribute("buildNumber");
 
             src = request.getContextPath() + "/v/" + buildNumber + src;
-            String scriptTag = "<script type=\"" + type + "\" src=\"" + src + "\"></script>";
+            String scriptTag = "<script type=\"text/javascript\" src=\"" + src + "\"></script>";
 
             //Get the writer object for output.
             JspWriter out = pageContext.getOut();
@@ -65,13 +64,5 @@ public class JsCacheBusterTag extends SimpleTagSupport {
 
     public void setSrc(String src) {
         this.src = src;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
     }
 }
