@@ -456,7 +456,7 @@ public class ApplicationIT extends BaseIT {
 	}
 
     @Test
-    public void switchAppTeam() {
+    public void switchTeamTest() {
         String teamName1 = "switchAppTeam" + getRandomString(3);
         String teamName2 = "switchAppTeam" + getRandomString(3);
         String appName = "switchApp" + getRandomString(3);

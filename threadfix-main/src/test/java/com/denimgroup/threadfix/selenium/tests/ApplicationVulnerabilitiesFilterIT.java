@@ -59,8 +59,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
         applicationDetailPage = applicationDetailPage.toggleAllFilter();
-        assertFalse("Filters were not collapsed.",
-                filtersExpandedSize == applicationDetailPage.getFilterDivHeight());
+        assertTrue("Filters were not collapsed completely.",
+                filtersCollapsedSize == applicationDetailPage.getFilterDivHeight());
     }
 
     @Test

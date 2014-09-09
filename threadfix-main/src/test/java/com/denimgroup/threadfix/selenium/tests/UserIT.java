@@ -384,6 +384,7 @@ public class UserIT extends BaseIT {
                 .clickAddNewUserBtn()
                 .clickEditLink(userName)
                 .clickDelete(userName);
+
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
         assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }

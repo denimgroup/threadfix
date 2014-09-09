@@ -65,7 +65,6 @@ public abstract class BaseIT {
 
 	@Before
 	public void init() {
-        TeamIndexCache.getCache().clear();
         loginPage = LoginPage.open(driver);
     }
 

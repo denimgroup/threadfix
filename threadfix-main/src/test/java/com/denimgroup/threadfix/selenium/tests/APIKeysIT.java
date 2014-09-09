@@ -52,7 +52,6 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void createAPIKeyTest() {
-        //Create API Key
         apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("createAPIKey")
                 .setRestricted()
@@ -65,12 +64,10 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void editKeyTest() {
-        //Create API Key
 		apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote("editAPIKeyNote")
                 .clickSubmitButton();
 
-        //Edit API Key
         apiIndexPage =	apiIndexPage.clickEdit("editAPIKeyNote")
                 .setNote("editAPIKeyNote-Edited")
                 .clickSubmitButton();
@@ -78,6 +75,10 @@ public class APIKeysIT extends BaseIT {
 		assertTrue("API note was not edited properly.", apiIndexPage.isAPINotePresent("editAPIKeyNote-Edited"));
 		assertFalse("Previous API note still present.", apiIndexPage.isAPINotePresent("editAPIKeyNote"));
 		assertTrue("Edit validation message not present.", apiIndexPage.isEditSuccessAlertPresent());
+
+        apiIndexPage.refreshPage();
+        assertTrue("API note was not edited properly.", apiIndexPage.isAPINotePresent("editAPIKeyNote-Edited"));
+        assertFalse("Previous API note still present.", apiIndexPage.isAPINotePresent("editAPIKeyNote"));
 	}
 
 	@Test
