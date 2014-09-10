@@ -324,6 +324,34 @@ public class UserPermissionsEntIT extends BaseIT{
         assertFalse("User should not be able to view this team.", teamIndexPage.isTeamPresent(teamName1));
     }
 
+    @Test
+    public void permissionsAlphabeticalOrderTest() {
+        String firstTeamName = "A" + getRandomString(8);
+        String firstAppName = getRandomString(8);
+
+        DatabaseUtils.createTeam(firstTeamName);
+        DatabaseUtils.createApplication(firstTeamName, firstAppName);
+
+        String secondTeamName = "Z" + getRandomString(8);
+        String secondAppName = getRandomString(8);
+
+        DatabaseUtils.createTeam(secondTeamName);
+        DatabaseUtils.createApplication(secondTeamName, secondAppName);
+
+        String userName = getRandomString(8);
+
+        DatabaseUtils.createUser(userName);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink();
+
+        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
+                .clickAddPermissionsLink()
+                .expandTeamName();
+
+        assertTrue("The applications are sorted",userPermissionsPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+    }
+
     @Ignore
     @Test
     public void reportPermissionsTest() {
@@ -349,8 +377,5 @@ public class UserPermissionsEntIT extends BaseIT{
                 .toggleAllPermissions(true)
                 .setPermissionValue(deniedPermission,false)
                 .clickModalSubmit();
-
-
-
     }
 }

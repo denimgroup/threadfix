@@ -616,6 +616,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ScanDetailPage clickViewScan() {
         driver.findElementByLinkText("View Scan").click();
+        waitForElement(driver.findElementById("statisticButton"));
         return new ScanDetailPage(driver);
     }
 

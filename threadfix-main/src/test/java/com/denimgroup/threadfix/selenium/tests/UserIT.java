@@ -389,33 +389,4 @@ public class UserIT extends BaseIT {
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
         assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }
-
-    @Test
-    public void permissionsAlphabeticalOrderTest() {
-        String firstTeamName = "A" + getRandomString(8);
-        String firstAppName = getRandomString(8);
-
-        DatabaseUtils.createTeam(firstTeamName);
-        DatabaseUtils.createApplication(firstTeamName, firstAppName);
-
-        String secondTeamName = "Z" + getRandomString(8);
-        String secondAppName = getRandomString(8);
-
-        DatabaseUtils.createTeam(secondTeamName);
-        DatabaseUtils.createApplication(secondTeamName, secondAppName);
-
-        String userName = getRandomString(8);
-
-        DatabaseUtils.createUser(userName);
-
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-            .clickManageUsersLink();
-
-        UserPermissionsPage userPermissionsPage = userIndexPage.clickEditPermissions(userName)
-                .clickAddPermissionsLink()
-                .expandTeamName();
-
-        assertTrue("The applications are sorted",userPermissionsPage.compareOrderOfSelector(firstTeamName, secondTeamName));
-    }
-
 }

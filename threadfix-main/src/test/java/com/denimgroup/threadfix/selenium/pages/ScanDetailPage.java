@@ -68,7 +68,7 @@ public class ScanDetailPage extends BasePage {
 
     public ScanDetailPage toggleStatistics() {
         driver.findElementById("statisticButton").click();
-        waitForElement(driver.findElementById("importedResults"));
+        sleep(500);
         return new ScanDetailPage(driver);
     }
 
