@@ -21,36 +21,35 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
-import javax.annotation.Nonnull;
+import com.denimgroup.threadfix.framework.ResourceManager;
+import org.junit.Test;
 
-import java.io.File;
+/**
+ * Created by mac on 9/4/14.
+ */
+public class AspxParserTests {
 
-import static org.junit.Assert.assertTrue;
+    @Test
+    public void testBasicNameParsing() {
+        AspxParser parser = AspxParser.parse(ResourceManager.getDotNetWebFormsFile("WebForm1.aspx"));
 
-public class ResourceManager {
-
-	@Nonnull
-    public static File getFile(String name) {
-		File file = new File(TestConstants.THREADFIX_SOURCE_ROOT + "threadfix-ham/target/test-classes/" + name);
-        assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
-
-        return file;
+        assert parser.aspName.equals("WebForm1.aspx") :
+                "Got " + parser.aspName + " instead of WebForm1.aspx.";
     }
 
-	@Nonnull
-    public static File getSpringFile(String name) {
-		return getFile("code/spring/" + name);
-	}
+    @Test
+    public void testBasicIdParsing() {
+        AspxParser parser = AspxParser.parse(ResourceManager.getDotNetWebFormsFile("WebForm1.aspx"));
 
-    @Nonnull
-    public static File getDotNetMvcFile(String name) {
-        return getFile("code.dotNet.mvc/" + name);
+        assert parser.ids.contains("ddl") :
+                "Parser didn't find ddl: " + parser;
+        assert parser.ids.contains("newitem") :
+                "Parser didn't find newitem: " + parser;
+        assert parser.ids.contains("test") :
+                "Parser didn't find test: " + parser;
     }
 
-    @Nonnull
-    public static File getDotNetWebFormsFile(String name) {
-        return getFile("code.dotNet.webforms/" + name);
-    }
+
 }

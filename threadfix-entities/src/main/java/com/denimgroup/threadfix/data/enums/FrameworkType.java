@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.data.enums;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 public enum FrameworkType {
-	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC"), DOT_NET_MVC(".NET MVC");
+	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC"), DOT_NET_MVC(".NET MVC"), DOT_NET_WEB_FORMS("ASP.NET WebForms");
 	
 	FrameworkType(String displayName) {
 		this.displayName = displayName;

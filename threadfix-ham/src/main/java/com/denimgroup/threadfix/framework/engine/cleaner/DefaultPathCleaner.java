@@ -24,13 +24,12 @@
 
 package com.denimgroup.threadfix.framework.engine.cleaner;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class DefaultPathCleaner implements PathCleaner {
 
@@ -38,7 +37,27 @@ public class DefaultPathCleaner implements PathCleaner {
 	
 	public DefaultPathCleaner(String staticRoot, String dynamicRoot) {
 		this.staticRoot  = staticRoot;
-		this.dynamicRoot = dynamicRoot;
+
+        // let's make sure that the last segment doesn't contain a .
+        if (dynamicRoot != null) {
+            String[] split = dynamicRoot.split("/");
+            if (split[split.length - 1].contains(".")) {
+                StringBuilder builder = new StringBuilder();
+
+                // add all the segments except for the last one
+                for (int i = 0; i < split.length - 1; i++) {
+                    if (!"".equals(split[i])) {
+                        builder.append('/').append(split[i]);
+                    }
+                }
+
+                this.dynamicRoot = builder.toString();
+            } else {
+                this.dynamicRoot = dynamicRoot;
+            }
+        } else {
+            this.dynamicRoot = null;
+        }
 	}
 	
 	public DefaultPathCleaner(List<PartialMapping> partialMappings){

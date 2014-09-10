@@ -52,4 +52,10 @@ public class FrameworkCalculatorTests {
 		assertTrue("Didn't find DOT_NET_MVC, found " + type + ".", type == FrameworkType.DOT_NET_MVC);
 	}
 
+	@Test
+	public void basicWebFormsTest() {
+		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.WEB_FORMS_SAMPLE));
+		assertTrue("Didn't find DOT_NET_WEB_FORMS, found " + type + ".", type == FrameworkType.DOT_NET_WEB_FORMS);
+	}
+
 }

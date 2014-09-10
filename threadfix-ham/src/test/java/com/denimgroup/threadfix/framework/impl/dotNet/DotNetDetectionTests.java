@@ -34,31 +34,17 @@ import org.junit.Test;
 public class DotNetDetectionTests {
 
     static String[] projects = {
-            //"%5bCCS LABS%5d ASP.NET Get Page Version and Platform Version",
-            //"ASP.NET AJAX web chat application",
-            //"ASP.NET CMS Administration Template User Administration",
             "ASP.NET MVC 5 Demo Authentication App with Facebook and Google",
             "ASP.NET MVC Application Using Entity Framework Code First",
             "ASP.NET MVC DataView sample (CSASPNETMVCDataView)",
-            //"ASP.NET Web Forms Application Using Entity Framework 4.0 Database First",
-            //"Add new DropDownList option",
             "Architecting Web application using ASP.NET MVC5%2c Web API2 and Knockoutjs",
-            //"Asp.net Web API CRUD Operations using HTML5 and JQuery",
-            //"Auto user login in ASP.NET site w HttpWebRequest (CSASPNETAutoLogin)",
-            //"Background worker thread in ASP.NET (CSASPNETBackgroundWorker)",
             "CRUD Grid Using AngularJS%2c WebAPI%2c Entity Framework (EF)%2c Bootstrap",
             "Chat Web Application in Real Time using ASP.Net MVC and SignalR",
             "Creating Single Page Application using Hot Towel Template",
-            //"Design Patterns - MVVM - Model View ViewModel Pattern-Part 1",
-            //"How to construct data to json string before posting to pagemethod using jQuery",
             "How to create a site with AJAX enabled in MVC framework.",
-            //"Implement Search Engine in ASP.NET Web Site",
-            //"Insert Update and Delete rows in ASP.NET GridView Control",
             "MVC 4 %2b Knockout CRUD Operations",
             "Magazine management website - An ASP.NET MVC 4 Sample",
-            //"PDF Editor to Edit PDF Files in your ASP.NET Applications",
             "RESTful API using Web API - Tutorial",
-            //"Reverse AJAX technique in ASP.NET"
     };
 
     @Test
@@ -71,7 +57,6 @@ public class DotNetDetectionTests {
 
             assert type == FrameworkType.DOT_NET_MVC
                     : "Got " + type + " instead of DOT_NET for " + project;
-
         }
     }
 }

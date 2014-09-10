@@ -21,36 +21,32 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
-import javax.annotation.Nonnull;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
+import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertTrue;
+import static com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormUtilities.getSampleProjects;
 
-public class ResourceManager {
+/**
+ * Created by mac on 9/8/14.
+ */
+public class WebFormsDetectionTests {
 
-	@Nonnull
-    public static File getFile(String name) {
-		File file = new File(TestConstants.THREADFIX_SOURCE_ROOT + "threadfix-ham/target/test-classes/" + name);
-        assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
+    @Test
+    public void testAll() {
 
-        return file;
-    }
+        for (File file : getSampleProjects()) {
 
-	@Nonnull
-    public static File getSpringFile(String name) {
-		return getFile("code/spring/" + name);
-	}
+            System.out.println(file.getName());
 
-    @Nonnull
-    public static File getDotNetMvcFile(String name) {
-        return getFile("code.dotNet.mvc/" + name);
-    }
+            FrameworkType type = FrameworkCalculator.getType(file);
 
-    @Nonnull
-    public static File getDotNetWebFormsFile(String name) {
-        return getFile("code.dotNet.webforms/" + name);
+            assert type == FrameworkType.DOT_NET_WEB_FORMS
+                    : "Got " + type + " instead of DOT_NET_WEB_FORMS for " + file;
+        }
     }
 }

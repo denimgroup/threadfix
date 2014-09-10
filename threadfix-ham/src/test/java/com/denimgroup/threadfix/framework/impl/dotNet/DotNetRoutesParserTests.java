@@ -40,7 +40,7 @@ public class DotNetRoutesParserTests {
 
     public void testFile(String fileExtension, String controller, String action) {
         DotNetRouteMappings mappings =
-                DotNetRoutesParser.parse(ResourceManager.getDotNetFile(fileExtension));
+                DotNetRoutesParser.parse(ResourceManager.getDotNetMvcFile(fileExtension));
 
         assert mappings.routes.size() == 1 : mappings.routes.size() + " routes were found, but 1 was expected.";
 

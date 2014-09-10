@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.framework.engine.framework;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.impl.dotNet.DotNetFrameworkChecker;
+import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsFrameworkChecker;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -65,6 +66,7 @@ public class FrameworkCalculator {
         // TODO add .NET code
         register(new JavaAndJspFrameworkChecker());
         register(new DotNetFrameworkChecker());
+        register(new WebFormsFrameworkChecker());
     }
 
     public static void register(FrameworkChecker checker) {
