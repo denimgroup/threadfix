@@ -53,7 +53,7 @@ public class ScanTypeCalculatorTests {
         for (Map.Entry<ScannerType, Collection<String>> entry : FolderMappings.getEntries()) {
             for (String file : entry.getValue()) {
                 String type = service.getScannerType(file, file);
-                assertEquals("Failed for file " + file, entry.getKey().getFullName(), type);
+                assertEquals("Failed for file " + file, entry.getKey().getDbName(), type);
             }
         }
     }
