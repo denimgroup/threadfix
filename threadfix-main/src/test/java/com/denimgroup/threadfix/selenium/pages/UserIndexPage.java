@@ -51,7 +51,7 @@ public class UserIndexPage extends BasePage {
     }
 
 	public UserPermissionsPage clickEditPermissions(String name){
-		driver.findElementById("editPermissions" + (name)).click();
+		driver.findElementById("editPermissions" + name).click();
 		sleep(500);
 		return new UserPermissionsPage(driver);
 	}

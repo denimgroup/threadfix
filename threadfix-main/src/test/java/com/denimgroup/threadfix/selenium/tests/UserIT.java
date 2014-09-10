@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -390,7 +391,7 @@ public class UserIT extends BaseIT {
     }
 
     @Test
-    public void testAscendingForAssignPermission() {
+    public void permissionsAlphabeticalOrderTest() {
         String firstTeamName = "A" + getRandomString(8);
         String firstAppName = getRandomString(8);
 

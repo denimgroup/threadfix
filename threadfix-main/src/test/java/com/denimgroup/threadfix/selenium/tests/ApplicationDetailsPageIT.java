@@ -24,7 +24,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testHeaderNavigation() {
-        buildTeamAppandScan();
+        initialize();
         assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
         assertTrue("Application link is not present", dashboardPage.isApplicationMenuLinkPresent());
@@ -43,7 +43,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testTabUserNavigation() {
-        buildTeamAppandScan();
+        initialize();
         sleep(3000);
         dashboardPage.clickUserTab();
         sleep(2000);
@@ -56,7 +56,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testConfigTabNavigation() {
-        buildTeamAppandScan();
+        initialize();
         dashboardPage.clickConfigTab();
         assertTrue("Configuration tab is not dropped down", dashboardPage.isConfigDropDownPresent());
         assertTrue("API link is not present", dashboardPage.isApiKeysLinkPresent());
@@ -79,7 +79,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testBreadCrumbNavigation() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
+        ApplicationDetailPage ap = initialize();
         sleep(1000);
         assertTrue("BreadCrumb Application is not present", ap.isBreadcrumbPresent());
         assertTrue("BreadCrumb Application is not present", ap.isApplicationBreadcrumbPresent());
@@ -87,20 +87,20 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testApplicationName() {
-        ApplicationDetailPage applicationDetailPage = buildTeamAppandScan();
+        ApplicationDetailPage applicationDetailPage = initialize();
         assertTrue("Application Name is not present", applicationDetailPage.isApplicationNamePresent());
     }
 
     @Test
     public void testActionButton() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
+        ApplicationDetailPage ap = initialize();
         assertTrue("Action Button is not present", ap.isActionButtonPresent());
         assertTrue("Action Button is not Clickable", ap.isActionButtonClickable());
     }
 
     @Test
     public void testActionButtonContents() {
-        ApplicationDetailPage ap =  buildTeamAppandScan();
+        ApplicationDetailPage ap =  initialize();
         sleep(3000);
         ap.clickActionButton();
         sleep(1000);
@@ -116,7 +116,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testActionButtonEditDeleteButton() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
+        ApplicationDetailPage ap = initialize();
         sleep(2000);
         ap.clickEditDeleteBtn();
         ap.clickSourceInfo();
@@ -138,7 +138,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testActionButtonEditVulnFilter() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
+        ApplicationDetailPage ap = initialize();
         sleep(3000);
         ap.clickActionButton();
         sleep(2000);
@@ -149,7 +149,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testActionButtonAddManualFinding() {
-        ApplicationDetailPage ap = buildTeamAppandScan();
+        ApplicationDetailPage ap = initialize();
         ap.clickActionButton()
                 .clickManualFindingButton();
         assertTrue("Dynamic Radio button is not present.", ap.isDynamicRadioPresent());
@@ -170,24 +170,22 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testApplicationTypeDefect() {
-        ApplicationDetailPage applicationDetailPage = buildTeamAppandScan();
+        ApplicationDetailPage applicationDetailPage = initialize();
         applicationDetailPage.clickEditDeleteBtn();
         assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
     }
 
-    @Test
-    public ApplicationDetailPage buildTeamAppandScan() {
-        dashboardPage = loginPage.login("user", "password");
-
+    public ApplicationDetailPage initialize() {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
+        dashboardPage = loginPage.login("user", "password");
+
         dashboardPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
+
         return new ApplicationDetailPage(driver);
     }
-
-
 }
