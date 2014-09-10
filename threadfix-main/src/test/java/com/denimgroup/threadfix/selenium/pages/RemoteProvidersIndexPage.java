@@ -79,17 +79,13 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveVera(){
 		driver.findElementById("submit").click();
-        sleep(6000);
-		waitForElement(driver.findElementById("configure1"));
-        sleep(6000);
+		waitForElement(driver.findElementById("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage saveWhiteHat(){
 		driver.findElementById("submit").click();
-        sleep(6000);
-        waitForElement(driver.findElementById("configure2"));
-        sleep(6000);
+        waitForElement(driver.findElementById("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -138,6 +134,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
         clickUpdateMappings();
+        waitForElement(driver.findElementByLinkText("appName"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -151,6 +148,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
 		clickUpdateMappings();
+        waitForElement(driver.findElementById("provider1import" + appRow));
 		return new RemoteProvidersIndexPage(driver);
 	}
 
@@ -159,16 +157,16 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
-	public UserIndexPage selectTeamMapping(String teamName){
+	public RemoteProvidersIndexPage selectTeamMapping(String teamName){
 		WebElement a = driver.findElementById("orgSelect1");
 		new Select(a).selectByVisibleText(teamName);
-		return new UserIndexPage(driver);
+		return this;
 	}
 
-	public UserIndexPage selectAppMapping(String appName){
+	public RemoteProvidersIndexPage selectAppMapping(String appName){
 		WebElement a = driver.findElementById("appSelect1");
 		new Select(a).selectByVisibleText(appName);
-		return new UserIndexPage(driver);
+		return this;
 	}
 
     public ApplicationDetailPage clickWhiteHatImportScan(int appRow) {
@@ -185,16 +183,13 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
         clickUpdateMappings();
-        sleep(6000);
+        waitForElement(driver.findElementById("provider2import" + appRow));
         return new RemoteProvidersIndexPage(driver);
     }
 
     public RemoteProvidersIndexPage clickVeraCodeEditMappingButton(int appRow) {
-        String elementToClick = "provider2updateMapping" + appRow;
-        waitForElement(driver.findElementById(elementToClick));
-        if (!tryClick(By.id(elementToClick))) {
-            throw new ElementNotVisibleException(elementToClick);
-        }
+        driver.findElementById("provider2updateMapping" + appRow).click();
+        waitForElement(driver.findElementById("orgSelect1"));
         return new RemoteProvidersIndexPage(driver);
     }
 

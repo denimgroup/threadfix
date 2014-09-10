@@ -453,6 +453,15 @@ public abstract class BasePage {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 
+    public void checkForAlert() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 60);
+            wait.until(ExpectedConditions.alertIsPresent());
+        } catch (NoAlertPresentException e) {
+            throw new RuntimeException("Alert was not displayed as it should have been.", e);
+        }
+    }
+
     public boolean tryClick(By by) {
         int attempts = 0;
         boolean result = false;

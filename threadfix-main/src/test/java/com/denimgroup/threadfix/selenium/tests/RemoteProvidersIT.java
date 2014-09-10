@@ -257,20 +257,20 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
-        remoteProvidersIndexPage.clickConfigureWhiteHat();
-        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
-        remoteProvidersIndexPage.saveWhiteHat();
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat()
+                .mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
-        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
-        sleep(40000);
+        remoteProvidersIndexPage.clickWhiteHatImportScan(1)
+                .checkForAlert();
+
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
-        driver.switchTo().alert().accept();
-
-        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
+        driver.switchTo().alert().dismiss();
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 
@@ -286,21 +286,23 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
-        remoteProvidersIndexPage.clickConfigureVeracode();
-        remoteProvidersIndexPage.setVeraUsername(VERACODE_USER);
-        remoteProvidersIndexPage.setVeraPassword(VERACODE_PASSWORD);
-        remoteProvidersIndexPage.saveVera();
-        remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera()
+                .mapVeracodeToTeamAndApp(0, teamName, appName);
+
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("Veracode"));
-        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickVeracodeImportScan(0);
-        sleep(40000);
+
+        remoteProvidersIndexPage.clickVeracodeImportScan(0)
+                .checkForAlert();
+
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
-        driver.switchTo().alert().accept();
+        driver.switchTo().alert().dismiss();
 
-        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
+        remoteProvidersIndexPage.clearVeraCode();
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
