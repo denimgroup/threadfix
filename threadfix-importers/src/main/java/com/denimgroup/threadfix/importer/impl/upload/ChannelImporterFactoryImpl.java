@@ -122,7 +122,7 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
 
                 LOG.info("Successfully loaded " + scannerClass + " from classpath.");
 
-                classMap.put(scannerType.getFullName(), scannerClass);
+                classMap.put(scannerType.getDbName(), scannerClass);
 
             } catch (ClassNotFoundException e) {
                 LOG.error("Class " + candidateComponent + " wasn't loadable even though we found it with " +
