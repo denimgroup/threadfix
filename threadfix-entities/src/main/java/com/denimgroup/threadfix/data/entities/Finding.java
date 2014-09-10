@@ -140,7 +140,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.scan = scan;
 	}
 
-	@ManyToOne
+    @ManyToOne
 	@JoinColumn(name = "channelVulnerabilityId")
 	@JsonView({AllViews.TableRow.class, AllViews.VulnerabilityDetail.class})
 	public ChannelVulnerability getChannelVulnerability() {
@@ -161,6 +161,13 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
 	}
+
+    // TODO add more information to the native ID
+    @Transient
+    @JsonIgnore
+    public String getNonMergingKey() {
+        return getDependency() == null ? getNativeId() : getDependency().getKey();
+    }
 
 	@Column(length = NATIVE_ID_LENGTH)
     @JsonView({AllViews.TableRow.class, AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
@@ -448,11 +455,21 @@ public class Finding extends AuditableEntity implements FindingLike {
 
     @Override
     public String toString() {
-        return "Finding{" +
-                "channelVulnerability=" + channelVulnerability.getName() +
-                ", displayId=" + displayId +
-                ", path=" + surfaceLocation.getPath() +
-                ", parameter=" + surfaceLocation.getParameter() +
-                '}';
+
+        if (dependency != null) {
+            return "Finding{ Dependency{ CVEID=" + dependency.getCve() + "}}";
+        } else if (isStatic) {
+            return "Finding{ " +
+                    "staticPath=" + getSourceFileLocation() +
+                    ", channelSeverity=" + channelSeverity +
+                    ", channelVulnerability=" + channelVulnerability +
+                    "}";
+        } else {
+            return "Finding {" +
+                    "channelSeverity=" + channelSeverity +
+                    ", channelVulnerability=" + channelVulnerability +
+                    ", surfaceLocation=" + surfaceLocation +
+                    '}';
+        }
     }
 }

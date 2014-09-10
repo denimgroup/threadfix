@@ -94,6 +94,7 @@ public class TeamDetailPageController {
                     Permission.CAN_MANAGE_APPLICATIONS,
                     Permission.CAN_MANAGE_TEAMS,
                     Permission.CAN_MODIFY_VULNERABILITIES,
+                    Permission.CAN_MANAGE_VULN_FILTERS,
                     Permission.CAN_GENERATE_REPORTS,
                     Permission.CAN_MANAGE_USERS);
             mav.addObject("apps", apps);

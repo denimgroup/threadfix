@@ -26,16 +26,16 @@ package com.denimgroup.threadfix.service.defects.mock;
 
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.service.defects.util.HttpTrafficFileLoader;
-import com.denimgroup.threadfix.service.defects.util.TestConstants;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
 import static org.junit.Assert.assertTrue;
 
-public class RestUtilsMock implements RestUtils, TestConstants {
+public class RestUtilsMock implements RestUtils {
 
     // don't do this in actual code
     public boolean reporterRestricted = false;

@@ -25,7 +25,7 @@
     </ul>
     <h2 id="name" style="padding-top:5px;">
         {{ team.name }}
-        <c:if test="${ canManageTeams || canManageUsers }">
+        <c:if test="${ canManageTeams || canManageUsers || canManageVulnFilters }">
             <div id="btnDiv1" class="btn-group">
                 <button id="actionButton" class="btn dropdown-toggle" data-toggle="dropdown" type="button">Action <span class="caret"></span></button>
                 <ul class="dropdown-menu">
@@ -34,7 +34,7 @@
                             <a id="teamModalButton" ng-click="openEditModal()">Edit / Delete</a>
                         </li>
                     </c:if>
-                    <c:if test="${ canModifyVulnerabilities }">
+                    <c:if test="${ canManageVulnFilters }">
                         <li>
                             <spring:url value="{orgId}/filters" var="filterUrl">
                                 <spring:param name="orgId" value="${ organization.id }"/>

@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -43,19 +44,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/configuration/settings")
 @SessionAttributes("defaultConfiguration")
+@PreAuthorize("hasRole('ROLE_CAN_MANAGE_SYSTEM_SETTINGS')")
 public class SystemSettingsController {
 	
 	protected final SanitizedLogger log = new SanitizedLogger(SystemSettingsController.class);
 
+    @Autowired
 	private RoleService roleService = null;
-	private DefaultConfigService defaultConfigService = null;
-	
 	@Autowired
-	public SystemSettingsController(DefaultConfigService defaultConfigService,
-                                    RoleService roleService) {
-		this.roleService = roleService;
-		this.defaultConfigService = defaultConfigService;
-	}
+    private DefaultConfigService defaultConfigService = null;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {

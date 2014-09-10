@@ -185,6 +185,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 	
 		scanMerger.merge(scan, scan.getApplicationChannel());
 
+        scanDao.saveOrUpdate(scan);
+
         // set numbers correctly
         updateScanCounts(scan);
 	
@@ -237,8 +239,10 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		updateJobStatus(statusId, "Findings successfully parsed, starting channel merge.");
 		
 		scanMerger.merge(scan, applicationChannel);
-		
-		vulnerabilityFilterService.updateVulnerabilities(
+
+        scanDao.saveOrUpdate(scan);
+
+        vulnerabilityFilterService.updateVulnerabilities(
 				applicationChannel.getApplication().getOrganization().getId(),
 				applicationChannel.getApplication().getId());
 		

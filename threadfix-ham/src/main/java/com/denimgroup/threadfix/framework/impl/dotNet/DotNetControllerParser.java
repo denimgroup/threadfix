@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -70,7 +71,7 @@ public class DotNetControllerParser implements EventBasedTokenizer {
     }
 
     enum State {
-        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, PUBLIC_IN_BODY, ACTION_RESULT, IN_ACTION_SIGNATURE, IN_ACTION_BODY
+        START, PUBLIC, CLASS, TYPE_SIGNATURE, BODY, PUBLIC_IN_BODY, ACTION_RESULT, IN_ACTION_SIGNATURE, AFTER_BIND_INCLUDE, DEFAULT_VALUE, IN_ACTION_BODY
     }
 
     enum AttributeState {
@@ -84,8 +85,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
     int   currentCurlyBrace = 0, currentParen = 0, classBraceLevel = 0,
             methodBraceLevel = 0, storedParen = 0, methodLineNumber = 0;
     boolean shouldContinue = true;
-    String  lastString     = null, methodName = null;
+    String  lastString     = null, methodName = null, twoStringsAgo = null;
     Set<String> currentParameters = new HashSet<>();
+    Set<ModelField> parametersWithTypes = new HashSet<>();
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
@@ -148,7 +150,9 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                 }
                 break;
             case PUBLIC_IN_BODY:
-                if (ACTION_RESULT.equals(stringValue) || HTTP_MESSAGE_RESPONSE.equals(stringValue)) {
+                if (ACTION_RESULT.equals(stringValue) ||
+                        HTTP_MESSAGE_RESPONSE.equals(stringValue) ||
+                        VIEW_RESULT.equals(stringValue)) {
                     currentState = State.ACTION_RESULT;
                 } else if (type == '(' || type == ';' || type == '{') {
                     currentState = State.BODY;
@@ -164,15 +168,22 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                     lastString = null;
                     methodLineNumber = lineNumber;
                     storedParen = currentParen - 1;
+                    lastString = null;
                     currentState = State.IN_ACTION_SIGNATURE;
                 }
 
                 break;
-            case IN_ACTION_SIGNATURE: // TODO add parameter parsing
+            case IN_ACTION_SIGNATURE:
                 if (stringValue != null) {
+                    twoStringsAgo = lastString;
                     lastString = stringValue;
-                } else if ((type == ',' || type == ')') && lastString != null) {
-                    currentParameters.add(lastString);
+                } else if (type == ',' || type == ')' && lastString != null) {
+                    parametersWithTypes.add(new ModelField(twoStringsAgo, lastString));
+                    if (twoStringsAgo.equals("Include")) {
+                        currentState = State.AFTER_BIND_INCLUDE;
+                    }
+                } else if (type == '=' && !"Include".equals(lastString)) {
+                    currentState = State.DEFAULT_VALUE;
                 }
 
                 if (currentParen == storedParen) {
@@ -180,11 +191,29 @@ public class DotNetControllerParser implements EventBasedTokenizer {
                     methodBraceLevel = currentCurlyBrace;
                 }
                 break;
+            case DEFAULT_VALUE:
+                if (stringValue != null) {
+                    currentState = State.IN_ACTION_SIGNATURE;
+                }
+                break;
+            case AFTER_BIND_INCLUDE:
+                if (type == ',') {
+                    currentState = State.IN_ACTION_SIGNATURE;
+                }
+
+                if (type == ')' && currentParen == storedParen) {
+                    currentState = State.IN_ACTION_BODY;
+                    methodBraceLevel = currentCurlyBrace;
+                }
+                break;
             case IN_ACTION_BODY:
                 if (currentCurlyBrace == methodBraceLevel) {
-                    mappings.addAction(methodName, currentAttributes, methodLineNumber, currentParameters);
+                    mappings.addAction(
+                            methodName, currentAttributes, methodLineNumber,
+                            lineNumber, currentParameters, parametersWithTypes);
                     currentAttributes = new HashSet<>();
                     currentParameters = new HashSet<>();
+                    parametersWithTypes = new HashSet<>();
                     methodName = null;
                     currentState = State.BODY;
                 }

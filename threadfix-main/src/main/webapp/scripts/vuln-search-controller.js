@@ -24,7 +24,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             showOpen: true,
             showClosed: false,
             showFalsePositive: false,
-            showHidden: false
+            showHidden: false,
+            showDefectPresent: false,
+            showDefectNotPresent: false,
+            showDefectOpen: false,
+            showDefectClosed: false
         };
 
         $scope.endDate = undefined;
@@ -56,6 +60,48 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showTypeAndMergedControls = true;
             $scope.showSaveFilter = true;
         }
+    };
+
+    $scope.toggleVulnCategory = function(treeElement, expanded) {
+        treeElement.expanded = expanded;
+        $scope.checkIfVulnTreeExpanded();
+    };
+
+    $scope.checkIfVulnTreeExpanded = function() {
+        var expanded = false;
+
+        $scope.vulnTree.forEach(function(treeElement) {
+            if(treeElement.expanded){
+                expanded = true;
+            }
+        });
+
+        $scope.vulnTree.expanded = expanded;
+
+        return expanded;
+    };
+
+    $scope.toggleVulnTree = function() {
+        var expanded = false;
+
+        if ($scope.vulnTree) {
+            expanded = $scope.checkIfVulnTreeExpanded();
+
+            $scope.vulnTree.map(function(treeElement){
+                treeElement.expanded = !expanded;
+
+                if(treeElement.entries){
+                    treeElement.entries.map(function(entry){
+
+                        if(entry.expanded && expanded){
+                            entry.expanded = !expanded;
+                        }
+                    });
+                }
+            });
+        }
+
+        $scope.vulnTree.expanded = !expanded;
     };
 
     $scope.$watch(function() { return $scope.parameters; }, $scope.refresh, true);
@@ -160,6 +206,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object);
+
                     $scope.badgeWidth = 0;
 
                     if ($scope.vulnTree) {
@@ -171,11 +218,16 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                                 test = test / 10;
                             }
 
+                            //expand each severity level of vulns on page load
+                            treeElement.expanded = true;
+
                             if (size > $scope.badgeWidth) {
                                 $scope.badgeWidth = size;
                             }
                         });
                     }
+
+                    $scope.checkIfVulnTreeExpanded();
 
                     $scope.badgeWidth = { "text-align": "right", width: $scope.badgeWidth + 'px' };
                 } else if (data.message) {
@@ -189,7 +241,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
-    }
+    };
 
     $scope.refresh = function() {
         $scope.loading = true;
@@ -197,11 +249,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
         refreshVulnTree($scope.parameters);
         $scope.lastLoadedFilterName = undefined;
-    }
+    };
 
     $scope.add = function(collection) {
         collection.push({ name: '' })
-    }
+    };
 
     $scope.addNew = function(collection, name) {
         var found = false;
@@ -489,7 +541,6 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             element.checked = checked;
         }
     };
-
 
     $scope.exportCSV = function() {
         console.log('Downloading vulnerabilities list');

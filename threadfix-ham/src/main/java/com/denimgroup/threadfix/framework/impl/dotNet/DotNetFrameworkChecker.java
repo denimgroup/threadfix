@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkChecker;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -38,13 +39,15 @@ import java.util.Collection;
  */
 public class DotNetFrameworkChecker extends FrameworkChecker {
 
+    private static final SanitizedLogger LOG = new SanitizedLogger(DotNetFrameworkChecker.class);
+
     @Nonnull
     @Override
     public FrameworkType check(@Nonnull ProjectDirectory directory) {
         Collection files = FileUtils.listFiles(directory.getDirectory(),
                 new FileExtensionFileFilter("cs"), TrueFileFilter.INSTANCE);
 
-        System.out.println("." + files);
+        LOG.info("Got " + files.size() + " .cs files from the directory.");
 
         return files.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
     }

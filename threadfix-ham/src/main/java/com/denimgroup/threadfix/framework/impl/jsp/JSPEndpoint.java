@@ -23,16 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.jsp;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.*;
 
 class JSPEndpoint extends AbstractEndpoint {
 
@@ -155,7 +151,11 @@ class JSPEndpoint extends AbstractEndpoint {
 		    return value;
         }
 	}
-	
-	
 
+
+    @Nonnull
+    @Override
+    protected List<String> getLintLine() {
+        return new ArrayList<>();
+    }
 }

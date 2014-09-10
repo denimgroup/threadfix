@@ -24,8 +24,12 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.service.defects.mock.VersionOneRestUtilsMock;
 import org.junit.Test;
 
+import java.util.List;
+
+import static com.denimgroup.threadfix.service.defects.util.TestConstants.*;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -40,8 +44,12 @@ public class VersionOneTests {
 
         AbstractDefectTracker tracker = DefectTrackerFactory.getTracker(type);
 
+        tracker.setUsername(VERSION_ONE_USERNAME);
+        tracker.setPassword(VERSION_ONE_PASSWORD);
+        tracker.setUrl(VERSION_ONE_URL);
+
         // TODO mock the appropriate class
-        //((JiraDefectTracker) tracker).restUtils = new RestUtilsMock();
+        ((VersionOneDefectTracker) tracker).restUtils = new VersionOneRestUtilsMock();
 
         return tracker;
     }
@@ -51,6 +59,15 @@ public class VersionOneTests {
         AbstractDefectTracker tracker = getTracker();
 
         assertTrue("Tracker should have been HPQC but wasn't.", tracker instanceof VersionOneDefectTracker);
+    }
+
+    @Test
+    public void testResponseWithSpecialCharacters() {
+        AbstractDefectTracker tracker = getTracker();
+        List<String> productNames = tracker.getProductNames();
+
+        System.out.println(productNames);
+
     }
 
 }

@@ -6,6 +6,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
     $scope.currentModal = null;
 
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
+    };
+
     // initialize objects for forms
     $scope.$on('rootScopeInitialized', function() {
        $http.get(tfEncoder.encode(currentUrl + "/objects")).
@@ -24,6 +28,9 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    }
                    if (!$scope.config.recentPathList) {
                        $scope.config.recentPathList = [];
+                   }
+                   if ($scope.config.teams) {
+                       $scope.config.teams.sort(nameCompare);
                    }
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
@@ -115,7 +122,11 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 object: function () {
                     var appCopy = angular.copy($scope.config.application);
                     var app = $scope.config.application;
-                    app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete")
+                    app.deleteUrl = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/delete");
+
+                    // this is a shim for displaying the unencrypted username and a dummy password
+                    appCopy.repositoryUserName = app.obscuredUserName;
+                    appCopy.repositoryPassword = app.obscuredPassword;
                     return appCopy;
                 },
                 config: function() {

@@ -26,6 +26,9 @@ package com.denimgroup.threadfix.service.queue.scheduledjob;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.ScheduledScan;
+import com.denimgroup.threadfix.data.entities.ScheduledFrequencyType;
+import com.denimgroup.threadfix.data.entities.ScheduledPeriodType;
+import com.denimgroup.threadfix.data.entities.DayInWeek;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ScheduledScanService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
@@ -39,7 +42,6 @@ import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * Created with IntelliJ IDEA.
@@ -56,6 +58,7 @@ public class ScheduledScanScheduler {
 
     @Autowired
     private ScheduledScanService scheduledScanService;
+
     @Autowired
     private QueueSender queueSender;
 
@@ -76,7 +79,7 @@ public class ScheduledScanScheduler {
             return;
 
         log.info("Loading all Scheduled Scans from database");
-        List<ScheduledScan> scheduledScans = scheduledScanService.loadAllScheduledScan();
+        List<ScheduledScan> scheduledScans = scheduledScanService.loadAll();
         log.info("Got " + scheduledScans.size() + " Scheduled Scans");
 
         log.info("------- Scheduling Jobs ----------------");
@@ -94,14 +97,14 @@ public class ScheduledScanScheduler {
 
     private String getCronExpression(ScheduledScan scheduledScan) {
 
-        ScheduledScan.DayInWeek dayInWeek = ScheduledScan.DayInWeek.getDay(scheduledScan.getDay());
-        ScheduledScan.ScheduledFrequencyType frequencyType = ScheduledScan.ScheduledFrequencyType.getFrequency(scheduledScan.getFrequency());
-        ScheduledScan.ScheduledPeriodType scheduledPeriodType = ScheduledScan.ScheduledPeriodType.getPeriod(scheduledScan.getPeriod());
+        DayInWeek dayInWeek = DayInWeek.getDay(scheduledScan.getDay());
+        ScheduledFrequencyType frequencyType = ScheduledFrequencyType.getFrequency(scheduledScan.getFrequency());
+        ScheduledPeriodType scheduledPeriodType = ScheduledPeriodType.getPeriod(scheduledScan.getPeriod());
         String cronExpression = null;
 
         // Set DayOfWeek is ? if schedule daily, and MON-SUN otherwise
         String day = "?";
-        if (frequencyType == ScheduledScan.ScheduledFrequencyType.WEEKLY) {
+        if (frequencyType == ScheduledFrequencyType.WEEKLY) {
             if (dayInWeek == null) {
                 log.warn("Unable to schedule ScheduledScanId " + scheduledScan.getId() + " " + scheduledScan.getFrequency() + " " + scheduledScan.getDay());
                 return cronExpression;
@@ -110,11 +113,11 @@ public class ScheduledScanScheduler {
         }
 
         // Set DayOfMonth is ? if schedule weekly, and * otherwise
-        String dayOfMonth = (ScheduledScan.ScheduledFrequencyType.WEEKLY ==
+        String dayOfMonth = (ScheduledFrequencyType.WEEKLY ==
                 frequencyType?"?":"*");
 
         int hour = scheduledScan.getHour();
-        if (ScheduledScan.ScheduledPeriodType.PM == scheduledPeriodType && hour < 12)
+        if (ScheduledPeriodType.PM == scheduledPeriodType && hour < 12)
             hour += 12;
 
         cronExpression = "0 " + scheduledScan.getMinute() + " " + hour + " " + dayOfMonth+ " * " + day;

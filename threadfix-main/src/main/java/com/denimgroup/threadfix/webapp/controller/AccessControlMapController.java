@@ -36,6 +36,7 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,9 +44,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
 @RequestMapping("/configuration/users/{userId}")
@@ -100,14 +103,14 @@ public class AccessControlMapController {
 	}
 
 	@RequestMapping(value="/permissions/map", method = RequestMethod.GET)
-	public @ResponseBody RestResponse<Map<String, Object>> map(@PathVariable("userId") int userId) {
-		Map<String, Object> returnMap = new HashMap<>();
+	public @ResponseBody String map(@PathVariable("userId") int userId) {
+		Map<String, Object> returnMap = newMap();
 
         returnMap.put("maps", accessControlMapService.loadAllMapsForUser(userId));
         returnMap.put("teams", organizationService.loadAllActive());
         returnMap.put("roles", roleService.loadAll());
 
-		return RestResponse.success(returnMap);
+		return writeSuccessObjectWithView(returnMap, AllViews.TableRow.class);
 	}
 	
 	private AccessControlMapModel getMapModel(Integer userId) {

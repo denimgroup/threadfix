@@ -67,7 +67,7 @@ public class ScanComparisonUtils {
                 }
                 needsUpdating = false;
             } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException
-                throw new IllegalStateException("Encountered error while updating channel vulns. Fix it.", e);
+                throw new IllegalStateException("Encountered exception while updating channel vulns. Fix it.", e);
             }
         }
         compare(array, scanParser.getScan(filePath));

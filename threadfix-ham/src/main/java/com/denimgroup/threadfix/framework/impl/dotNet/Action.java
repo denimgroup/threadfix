@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
+import org.apache.commons.lang.StringUtils;
+
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,20 +41,41 @@ class Action {
     @Nonnull
     Integer     lineNumber;
     @Nonnull
+    Integer     endLineNumber;
+    @Nonnull
     Set<String> parameters = new HashSet<>();
+    @Nonnull
+    Set<ModelField> parametersWithTypes;
 
     String getMethod() {
         return attributes.contains("HttpPost") ?
                 "POST" : "GET";
     }
 
-    static Action action(@Nonnull String name, @Nonnull Set<String> attributes,
-                         @Nonnull Integer lineNumber, @Nonnull Set<String> parameters) {
+    static Action action(@Nonnull String name,
+                         @Nonnull Set<String> attributes,
+                         @Nonnull Integer lineNumber,
+                         @Nonnull Integer endLineNumber,
+                         @Nonnull Set<String> parameters,
+                         @Nonnull Set<ModelField> parametersWithTypes) {
         Action action = new Action();
         action.name = name;
         action.attributes = attributes;
         action.lineNumber = lineNumber;
+        action.parametersWithTypes = parametersWithTypes;
+        action.endLineNumber = endLineNumber;
         action.parameters = parameters;
+
+        for (ModelField field : parametersWithTypes) {
+            if (field.getType().equals("Include")) {
+                for (String s : StringUtils.split(field.getParameterKey(), ',')) {
+                    action.parameters.add(s.trim());
+                }
+            } else {
+                action.parameters.add(field.getParameterKey());
+            }
+        }
+
         return action;
     }
 

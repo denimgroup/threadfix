@@ -5,6 +5,11 @@
 	version="3.0" metadata-complete="true">
 	<display-name>threadfix</display-name>
 	<description>ThreadFix Vulnerability Manager</description>
+    <session-config>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>

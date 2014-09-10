@@ -23,10 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
-import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
@@ -40,6 +41,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+@ScanImporter(ScannerType.DEPENDENCY_CHECK)
 class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
@@ -64,10 +66,13 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	public class DependencyCheckSAXParser extends HandlerWithBuilder {
 		
 		private boolean getDate   = false;
-		private boolean inFinding = false;
+		private boolean inFinding = false, inDependency = false;
 
-        private boolean getFileName = false, getDescription = false;
-        private String lastFileName = null, lastDescription = null;
+        private boolean getFileName = false, getDescription = false, getFilePath = false;
+        private String lastFileName = null, lastDescription = null, lastFilePath = null;
+
+        private StringBuffer currentRawFinding	  = new StringBuffer(),
+                currentDependency	  = new StringBuffer();
 		
 		private FindingKey itemKey = null;
 	
@@ -93,20 +98,37 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    	} else if ("vulnerability".equals(qName)) {
 	    		findingMap = new EnumMap<>(FindingKey.class);
 	    		inFinding = true;
+                inDependency = false;
 	    	} else if (inFinding && tagMap.containsKey(qName)) {
 	    		itemKey = tagMap.get(qName);
 	    	} else if (!inFinding && "fileName".equals(qName)) {
 	    	    // this should be the JAR's name, like activeio-core-3.1.2.jar
-
                 getFileName = true;
+            } else if (!inFinding && "filePath".equals(qName)) {
+                getFilePath = true;
             } else if (inFinding && "description".equals(qName)) {
                 getDescription = true;
+            } else if ("dependency".equals(qName)) {
+                inDependency = true;
+            }
+
+            if (inFinding){
+                currentRawFinding.append(makeTag(name, qName , atts));
+            }
+
+            if (!inFinding && inDependency){
+                currentDependency.append(makeTag(name, qName , atts));
             }
 	    }
 	    
 	    @Override
 		public void endElement (String uri, String name, String qName)
 	    {
+
+            if (inFinding){
+                currentRawFinding.append("</").append(qName).append(">");
+            }
+
 	    	if ("vulnerability".equals(qName)) {
 	    		updateVulnCode(findingMap);
                 findingMap.put(FindingKey.PATH, "Dependencies");
@@ -115,10 +137,17 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
                     Dependency dependency = new Dependency();
                     dependency.setCve(findingMap.get(FindingKey.CVE));
                     dependency.setComponentName(lastFileName);
+                    dependency.setComponentFilePath(lastFilePath);
                     dependency.setDescription(lastDescription);
                     finding.setDependency(dependency);
+
+                    currentRawFinding.append("\n        </").append("vulnerabilities").append(">\n");
+                    currentRawFinding.append("</").append("dependency").append(">\n");
+                    finding.setRawFinding(currentDependency.toString() + currentRawFinding.toString());
+
                     add(finding);
                 }
+                currentRawFinding.setLength(0);
 	    		findingMap = null;
 	    		inFinding = false;
 	    	} else if (inFinding && itemKey != null) {
@@ -131,9 +160,15 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    	} else if (getFileName) {
                 lastFileName = getBuilderText();
                 getFileName = false;
+            } else if (getFilePath) {
+                lastFilePath = getBuilderText();
+                getFilePath = false;
             } else if (getDescription) {
                 lastDescription = getBuilderText();
                 getDescription = false;
+            } else if ("dependency".equals(qName) || "vulnerabilities".equals(qName)) {
+                inDependency = false;
+                currentDependency.setLength(0);
             }
 	    	
 	    	if (getDate) {
@@ -144,13 +179,23 @@ class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	    		}
 	    		getDate = false;
 	    	}
+
+            if (!inFinding && inDependency){
+                currentDependency.append("</").append(qName).append(">");
+            }
 	    }
 
 	    @Override
 		public void characters (char ch[], int start, int length) {
-	    	if (getDate || getFileName || getDescription || itemKey != null) {
+	    	if (getDate || getFileName || getDescription || itemKey != null || getFilePath) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
+
+            if (inFinding)
+                currentRawFinding.append(ch,start,length);
+
+            if (!inFinding && inDependency)
+                currentDependency.append(ch,start,length);
 	    }
 	    
 	    private void updateVulnCode(Map<FindingKey, String> findingMap) {

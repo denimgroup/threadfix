@@ -105,7 +105,6 @@ public class ScanController {
 		return mav;
 	}
 	
-	@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,

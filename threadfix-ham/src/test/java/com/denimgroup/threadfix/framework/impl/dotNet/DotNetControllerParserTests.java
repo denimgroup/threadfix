@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by mac on 6/11/14.
@@ -44,7 +45,6 @@ public class DotNetControllerParserTests {
     @Test
     public void testBasicController() {
         DotNetControllerMappings mappings = getControllerMappings("ChatController.cs");
-
 
         assert mappings.getControllerName() != null :
                 "Controller name was null.";
@@ -160,8 +160,38 @@ public class DotNetControllerParserTests {
         assert targetAction != null : "Edit action was null. Can't continue.";
 
         assert targetAction.parameters.contains("id") : "Parameters didn't contain id.";
-
     }
 
+    @Test
+    public void testBindIncludeSettings() {
+        DotNetControllerMappings mappings = getControllerMappings("BindingController.cs");
 
+        Action targetAction = mappings.getActionForNameAndMethod("Edit", "POST");
+
+        assert targetAction != null : "Edit action was null. Can't continue.";
+
+        assert targetAction.parameters.contains("ID") : "Parameters didn't contain id.";
+    }
+
+    @Test
+    public void testDefaultValuesParsing() {
+        DotNetControllerMappings mappings = getControllerMappings("DefaultParametersController.cs");
+
+        assert mappings.getActions().size() == 1 :
+                "Had " + mappings.getActions().size() + " actions, should have had 1.";
+
+        Set<String> parameters = mappings.getActions().get(0).parameters;
+
+        assert parameters.contains("id") :
+                "Parameters didn't contain id but should have: " + parameters;
+        assert parameters.contains("type") :
+                "Parameters didn't contain type but should have: " + parameters;
+        assert parameters.contains("expires") :
+                "Parameters didn't contain expires but should have: " + parameters;
+
+        assert !parameters.contains("null") :
+                "Parameters contained null but shouldn't have: " + parameters;
+        assert parameters.size() == 3 :
+                "Size should have been 3 but was " + parameters;
+    }
 }

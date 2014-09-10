@@ -24,12 +24,12 @@
 package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
+import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SpringControllerEndpoint extends AbstractEndpoint {
 	
@@ -44,35 +44,35 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	
 	@Nullable
     private String cleanedFilePath = null, cleanedUrlPath = null;
-	
-	private String fileRoot;
+
+    private String fileRoot;
 
     @Nullable
-    private BeanField modelObject;
+    private ModelField modelObject;
 
     @Nullable
     private SpringDataBinderParser dataBinderParser = null;
-	
-	public SpringControllerEndpoint(@Nonnull String filePath,
-                                    @Nonnull String urlPath,
-            @Nonnull Collection<String> methods,
-            @Nonnull Collection<String> parameters,
-            @Nonnull Collection<String> pathParameters,
-			int startLineNumber,
-            int endLineNumber,
-            @Nullable BeanField modelObject) {
 
-		this.rawFilePath     = filePath;
-		this.rawUrlPath      = urlPath;
-		this.startLineNumber = startLineNumber;
-		this.endLineNumber   = endLineNumber;
+    public SpringControllerEndpoint(@Nonnull String filePath,
+                                    @Nonnull String urlPath,
+                                    @Nonnull Collection<String> methods,
+                                    @Nonnull Collection<String> parameters,
+                                    @Nonnull Collection<String> pathParameters,
+                                    int startLineNumber,
+                                    int endLineNumber,
+                                    @Nullable ModelField modelObject) {
+
+        this.rawFilePath = filePath;
+        this.rawUrlPath = urlPath;
+        this.startLineNumber = startLineNumber;
+        this.endLineNumber = endLineNumber;
 
         this.modelObject = modelObject;
-		
-		this.parameters = new HashSet<>(parameters);
+
+        this.parameters = new HashSet<>(parameters);
         this.pathParameters = new HashSet<>(pathParameters);
-		this.methods    = getCleanedSet(methods);
-	}
+        this.methods = getCleanedSet(methods);
+    }
 
     /**
      * TODO change this API, the globalDataBinderParser is confusing
@@ -81,9 +81,9 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
      * @param globalDataBinderParser can be null, if a databinderparser is set with the setter it will be used too
      */
     public void expandParameters(@Nonnull SpringEntityMappings entityMappings,
-                          @Nullable SpringDataBinderParser globalDataBinderParser) {
+                                 @Nullable SpringDataBinderParser globalDataBinderParser) {
         if (modelObject != null) {
-            BeanFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);
+            ModelFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);
             parameters.addAll(fields.getPossibleParameters());
         }
 
@@ -187,8 +187,14 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
 	public boolean matchesLineNumber(int lineNumber) {
 		return lineNumber < endLineNumber && lineNumber > startLineNumber;
 	}
-	
-	@Nonnull
+
+    @Nonnull
+    @Override
+    protected List<String> getLintLine() {
+        return new ArrayList<>();
+    }
+
+    @Nonnull
     @Override
 	public String toString() {
 		return "[" + getCleanedFilePath() +

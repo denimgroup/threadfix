@@ -33,14 +33,15 @@ import org.junit.Test;
 public class DependencyCheckTests extends TransactionalTest implements TestConstants {
 
     // TODO fill in the rest
-    public final static String[][] resultsVersion1_1 = new String[][] {
+    public final static String[][] resultsVersion1_1 = new String[][]{
             {IMPROPER_AUTHENTICATION, "Medium", "Dependencies", null},
     };
+    public static final String     FILE_PATH         = ScanLocationManager.getRoot() +
+            "Static/DependencyCheck/DependencyCheck-Report-1.1.1.xml";
 
     @Test
     public void test1_1scan() {
-        ScanComparisonUtils.compare(resultsVersion1_1, ScanLocationManager.getRoot() +
-                "Static/DependencyCheck/DependencyCheck-Report-1.1.1.xml");
+        ScanComparisonUtils.compare(resultsVersion1_1, FILE_PATH);
     }
 
 }

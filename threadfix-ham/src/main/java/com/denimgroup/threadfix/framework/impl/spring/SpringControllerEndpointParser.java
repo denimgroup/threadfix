@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 
@@ -53,7 +54,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     @Nonnull
     private final String rootFilePath;
     @Nullable
-    private BeanField currentModelObject = null;
+    private ModelField currentModelObject = null;
     @Nonnull
     private List<String>
             classMethods  = list(),
@@ -62,20 +63,20 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
             currentPathParameters = list();
 
     private static final String
-            VALUE = "value",
-            METHOD = "method",
-            REQUEST_PARAM = "RequestParam",
-            PATH_VARIABLE = "PathVariable",
+            VALUE           = "value",
+            METHOD          = "method",
+            REQUEST_PARAM   = "RequestParam",
+            PATH_VARIABLE   = "PathVariable",
             REQUEST_MAPPING = "RequestMapping",
-            CLASS = "class",
-            BINDING_RESULT = "BindingResult",
-            CONTROLLER = "Controller";
+            CLASS           = "class",
+            BINDING_RESULT  = "BindingResult",
+            CONTROLLER      = "Controller";
 
     @Nonnull
-    private Phase phase = Phase.ANNOTATION;
+    private Phase           phase           = Phase.ANNOTATION;
     @Nonnull
     private AnnotationState annotationState = AnnotationState.START;
-    private SignatureState signatureState = SignatureState.START;
+    private SignatureState  signatureState  = SignatureState.START;
 
     @Nullable
     private SpringEntityMappings entityMappings = null;
@@ -146,7 +147,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
                     setState(SignatureState.ARROBA);
                 } else if (stringValue != null && stringValue.equals(BINDING_RESULT) &&
                         lastParamType != null && lastParam != null) {
-                    currentModelObject = new BeanField(lastParamType, lastParam); // should be type and variable name
+                    currentModelObject = new ModelField(lastParamType, lastParam); // should be type and variable name
                 }
                 break;
             case ARROBA:
