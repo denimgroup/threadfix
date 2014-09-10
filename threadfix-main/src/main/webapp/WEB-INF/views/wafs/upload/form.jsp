@@ -15,13 +15,13 @@
 			<tr>
 				<td>Log File:</td>
 				<td class="inputValue">
-					<input type="file" name="file" size="50" />
+					<input type="file" name="file" size="50" id="logField" />
 				</td>
 			</tr>
 		</tbody>
 	</table>
 	<br />
-	<input type="submit" value="Upload File"/>
+	<input type="submit" value="Upload File" id="uploadLogButton"/>
 	<span style="padding-left: 10px"><a href="<spring:url value="/wafs"/>">Cancel</a></span>
 </form:form>
 </body>

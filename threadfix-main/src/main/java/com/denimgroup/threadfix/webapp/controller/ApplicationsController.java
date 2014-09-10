@@ -57,6 +57,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.listFrom;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -203,8 +205,7 @@ public class ApplicationsController {
     }
 
     private String getSerializedMap(Map<String, Object> map) throws IOException {
-        String data = getWriter().writeValueAsString(RestResponse.success(map));
-        return data;
+        return getWriter().writeValueAsString(RestResponse.success(map));
     }
 
     private String getActiveTab(HttpServletRequest request, long falsePositiveCount, long numClosedVulns) {
@@ -229,9 +230,9 @@ public class ApplicationsController {
         Collections.sort(scannerTypeList);
         model.addAttribute("scannerTypeList", scannerTypeList);
         model.addAttribute("scheduledScan", new ScheduledScan());
-        model.addAttribute("frequencyTypes", ScheduledScan.ScheduledFrequencyType.values());
-        model.addAttribute("periodTypes", ScheduledScan.ScheduledPeriodType.values());
-        model.addAttribute("scheduledDays", ScheduledScan.DayInWeek.values());
+        model.addAttribute("frequencyTypes", ScheduledFrequencyType.values());
+        model.addAttribute("periodTypes", ScheduledPeriodType.values());
+        model.addAttribute("scheduledDays", DayInWeek.values());
     }
 	
 	// TODO move this to a different spot so as to be less annoying
@@ -315,7 +316,7 @@ public class ApplicationsController {
 
 	// TODO move this elsewhere?
 	@RequestMapping(value = "/jsontest", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<? extends Object> readJson(@ModelAttribute DefectTrackerBean bean) {
+	public @ResponseBody RestResponse<?> readJson(@ModelAttribute DefectTrackerBean bean) {
 		DefectTracker defectTracker = defectTrackerService.loadDefectTracker(bean
 				.getDefectTrackerId());
 		AbstractDefectTracker dt = DefectTrackerFactory.getTrackerByType(defectTracker,
@@ -328,6 +329,9 @@ public class ApplicationsController {
 		if (result.isEmpty() || (result.size() == 1 && result.contains("Authentication failed"))) {
 			return RestResponse.failure(JSONObject.quote(dt.getLastError()));
 		}
+
+        // ensure there are no duplicates. There's probably a better idiom
+        result = listFrom(setFrom(result));
 
         Collections.sort(result);
 

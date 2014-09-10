@@ -71,9 +71,13 @@ public abstract class RestController {
 
 		if (apiKey == null) {
 			log.warn("Request to " + request.getPathInfo()
-					+ " did not contain an API Key.");
+					+ " did not contain an API Key(null).");
 			return API_KEY_NOT_FOUND_ERROR;
-		}
+		} else if(apiKey.length() == 0) {
+            log.warn("Request to " + request.getPathInfo()
+                    + " did not contain an API Key(blank).");
+            return API_KEY_NOT_FOUND_ERROR;
+        }
 
 		APIKey key = apiKeyService.loadAPIKey(apiKey);
 		boolean validRequest = key != null;

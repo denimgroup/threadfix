@@ -25,12 +25,14 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -45,6 +47,9 @@ public class Dependency extends AuditableEntity {
     @Size(max = 1024)
     private String componentName = null;
 
+    @Size(max = 1024)
+    private String componentFilePath = null;
+
     @Size(max = 1024000)
     private String description = null;
 
@@ -57,6 +62,16 @@ public class Dependency extends AuditableEntity {
 
     public void setComponentName(String componentName) {
         this.componentName = componentName;
+    }
+
+    @Nullable
+    @Column(nullable = true)
+    public String getComponentFilePath() {
+        return componentFilePath;
+    }
+
+    public void setComponentFilePath(String componentFilePath) {
+        this.componentFilePath = componentFilePath;
     }
 
     @Nullable
@@ -80,4 +95,22 @@ public class Dependency extends AuditableEntity {
         this.cve = cve;
     }
 
+    /**
+     * This is used to identify the dependency in an unambiguous way.
+     * @return
+     */
+    @Transient
+    @JsonIgnore
+    public String getKey() {
+        return componentName + " - " + getCve();
+    }
+
+    @Override
+    public String toString() {
+        return "Dependency{" +
+                "cve='" + cve + '\'' +
+                ", componentName='" + componentName + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

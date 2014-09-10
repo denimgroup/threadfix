@@ -25,34 +25,35 @@
 package com.denimgroup.threadfix.data.entities;
 
 public enum ScannerType {
-	ACUNETIX_WVS("acunetix", "Acunetix WVS"),
-	APPSCAN_DYNAMIC("appscan", "IBM Rational AppScan"),
-	ARACHNI("arachni", "Arachni"),
-	BRAKEMAN("brakeman", "Brakeman"),
-	BURPSUITE("burp", "Burp Suite"),
-	CAT_NET("catnet", "Microsoft CAT.NET"),
-    CENZIC_HAILSTORM("cenzic", "Cenzic Hailstorm"),
-    CHECKMARX("checkmarx", "CheckMarx"),
-	DEPENDENCY_CHECK("dependencycheck", "Dependency Check"),
-	FINDBUGS("findbugs", "FindBugs"),
-	FORTIFY("fortify", "Fortify 360"),
-	NESSUS("nessus", "Nessus"),
-	NTO_SPIDER("nto", "NTO Spider"),
-	NETSPARKER("netsparker", "Mavituna Security Netsparker"),
-	SKIPFISH("skipfish", "Skipfish"),
-	W3AF("w3af", "w3af"),
-	WEBINSPECT("webinspect", "WebInspect"),
-	ZAPROXY("zap", "OWASP Zed Attack Proxy"),
-	APPSCAN_SOURCE("appscansource", "IBM Rational AppScan Source Edition"),
-	APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise"),
-	QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS"),
-	SENTINEL("whitehat", "WhiteHat Sentinel"),
-	VERACODE("veracode", "Veracode"),
-	MANUAL("manual", "Manual");
+	ACUNETIX_WVS("acunetix", "Acunetix WVS", "Acunetix WVS"),
+	APPSCAN_DYNAMIC("appscan", "IBM Rational AppScan", "IBM Rational AppScan"),
+	ARACHNI("arachni", "Arachni", "Arachni"),
+	BRAKEMAN("brakeman", "Brakeman", "Brakeman"),
+	BURPSUITE("burp", "Burp Suite", "Burp Suite"),
+	CAT_NET("catnet", "Microsoft CAT.NET", "Microsoft CAT.NET"),
+    CENZIC_HAILSTORM("cenzic", "Cenzic Hailstorm", "Cenzic Hailstorm"),
+    CHECKMARX("checkmarx", "CheckMarx", "CheckMarx"),
+	DEPENDENCY_CHECK("dependencycheck", "Dependency Check", "Dependency Check"),
+	FINDBUGS("findbugs", "FindBugs", "FindBugs"),
+	FORTIFY("fortify", "Fortify SCA", "Fortify 360"),
+	NESSUS("nessus", "Nessus", "Nessus"),
+	NTO_SPIDER("nto", "NTO Spider", "NTO Spider"),
+	NETSPARKER("netsparker", "Mavituna Security Netsparker", "Mavituna Security Netsparker"),
+	SKIPFISH("skipfish", "Skipfish", "Skipfish"),
+	W3AF("w3af", "w3af", "w3af"),
+	WEBINSPECT("webinspect", "WebInspect", "WebInspect"),
+	ZAPROXY("zap", "OWASP Zed Attack Proxy", "OWASP Zed Attack Proxy"),
+	APPSCAN_SOURCE("appscansource", "IBM Rational AppScan Source Edition", "IBM Rational AppScan Source Edition"),
+	APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise", "IBM Rational AppScan Enterprise"),
+	QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS", "QualysGuard WAS"),
+	SENTINEL("whitehat", "WhiteHat Sentinel", "WhiteHat Sentinel"),
+	VERACODE("veracode", "Veracode", "Veracode"),
+	MANUAL("manual", "Manual", "Manual");
 
 	private String fullName;
 	private String shortName;
-	
+	private String dbName;
+
 	public String getFullName() { 
 		return this.fullName; 
 	}
@@ -60,11 +61,16 @@ public enum ScannerType {
 	public String getShortName() {
 		return this.shortName;
 	}
-	
-	private ScannerType(String shortName, String fullName) { 
-		this.shortName = shortName;
-		this.fullName = fullName;
-	}
+
+    public String getDbName() {
+        return this.dbName;
+    }
+
+    private ScannerType(String shortName, String fullName, String dbName) {
+        this.shortName = shortName;
+        this.fullName = fullName;
+        this.dbName = dbName;
+    }
 	
 	public static ScannerType getScannerType(String keyword) {
 		ScannerType type = null;

@@ -1,8 +1,9 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Password Change</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/focus-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/focus-controller.js"/>
 </head>
 
 <body id="config">

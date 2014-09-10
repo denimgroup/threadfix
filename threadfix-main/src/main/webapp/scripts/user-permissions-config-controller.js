@@ -4,8 +4,8 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
 
     $scope.keys = [];
 
-    var keyCompare = function(a,b) {
-        return a.apiKey.localeCompare(b.apiKey);
+    var nameCompare = function(a,b) {
+        return a.name.localeCompare(b.name);
     };
 
     var defaultTeam = { id: 0, name: 'Select a Team'};
@@ -17,6 +17,12 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                 if (data.success) {
                     $scope.maps = data.object.maps;
                     $scope.teams = data.object.teams;
+                    $scope.teams.sort(nameCompare);
+
+                    $scope.teams.forEach(function(team) {
+                        team.applications.sort(nameCompare);
+                    });
+
                     $scope.roles = data.object.roles;
 
                     $scope.teams.push(defaultTeam);
@@ -31,7 +37,7 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
-    }
+    };
 
     // TODO move to service
     $scope.$on('rootScopeInitialized', function() {
@@ -123,7 +129,7 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
         });
 
         return appList;
-    }
+    };
 
     $scope.edit = function(permObject) {
 
@@ -171,7 +177,7 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     var makeDeleteRequest = function(url) {
         if (confirm("Are you sure you want to delete this permission?")) {
@@ -191,14 +197,14 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                 });
         }
-    }
+    };
 
     $scope.deleteApp = function(map) {
         makeDeleteRequest('/access/app/' + map.id + '/delete')
-    }
+    };
 
     $scope.deleteTeam = function(map) {
         makeDeleteRequest('/access/team/' + map.id + '/delete')
-    }
+    };
 
 });

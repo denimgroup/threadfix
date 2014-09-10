@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
@@ -43,6 +44,7 @@ import java.util.Map;
  * 
  * @author mcollins
  */
+@ScanImporter(ScannerType.NTO_SPIDER)
 class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = new HashMap<>();

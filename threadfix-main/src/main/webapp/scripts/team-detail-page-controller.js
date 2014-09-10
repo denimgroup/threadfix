@@ -81,7 +81,7 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
                 $scope.team = editedTeam;
                 $scope.successMessage = "Successfully edited team " + editedTeam.name;
             } else {
-                $window.location.href = tfEncoder.encode("/organizations");
+                $window.location.href = tfEncoder.encode("/teams");
             }
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -120,12 +120,12 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
             }
         });
 
-        modalInstance.result.then(function (newApplication) {
+        modalInstance.result.then(function (object) {
 
             if (!$scope.applications || $scope.applications.length === 0) {
                 $scope.applications = [];
             }
-            $scope.applications.push(newApplication);
+            $scope.applications.push(object.application);
 
             $scope.applications.sort(nameCompare);
 

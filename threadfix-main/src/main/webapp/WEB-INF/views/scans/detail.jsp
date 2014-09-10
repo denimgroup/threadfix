@@ -1,11 +1,12 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Scan Details</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-detail-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-mapped-finding-table-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-unmapped-finding-table-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<cbs:cachebustscript src="/scripts/scan-detail-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/scan-mapped-finding-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="scanDetail"
@@ -23,7 +24,7 @@
 	</spring:url>
 
 	<ul class="breadcrumb">
-	    <li><a href="<spring:url value="/organizations"/>">Applications Index</a> <span class="divider">/</span></li>
+	    <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(orgUrl) }">Team: <c:out value="${ scan.application.organization.name }"/></a> <span class="divider">/</span></li>
 	    <li><a href="${ fn:escapeXml(appUrl) }">Application: <c:out value="${ scan.application.name }"/></a><span class="divider">/</span></li>
 	    <li class="active"><fmt:formatDate value="${ scan.importTime.time }" type="both" dateStyle="short" timeStyle="short"/> <c:out value="${ fn:escapeXml(scan.applicationChannel.channelType.name) }"/> Scan</li>
@@ -56,18 +57,18 @@
 					<tbody>
 						<tr>
 							<td>Imported Results</td>
-							<td class="inputValue">
+							<td class="inputValue" id="importedResults">
 								<c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults + 
 													totalFindings + scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/>
 							</td>
 						</tr>
 						<tr>
 							<td>Duplicate Results</td>
-							<td class="inputValue"><c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults }"/></td>
+							<td class="inputValue" id="duplicateResults"><c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults }"/></td>
 						</tr>
 						<tr>
 							<td style="font-weight:bold">Total Findings</td>
-							<td class="inputValue"><c:out value="${ totalFindings + 
+							<td class="inputValue" id="totalFindings"><c:out value="${ totalFindings +
 														scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
 						</tr>
 					</tbody>
@@ -79,23 +80,23 @@
 					<tbody>
 						<tr>
 							<td>Findings without Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
+							<td class="inputValue" id="findingsWithoutVulnerabilities"><c:out value="${ scan.numWithoutChannelVulns + scan.numWithoutGenericMappings }"/></td>
 						</tr>
 						<tr>
 							<td>Findings with Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ totalFindings }"/></td>
+							<td class="inputValue" id="findingsWithVulnerabilities"><c:out value="${ totalFindings }"/></td>
 						</tr>
 						<tr>
 							<td>Duplicate Findings</td>
-							<td class="inputValue"><c:out value="${ totalFindings - vulnData[1] - scan.numberHiddenVulnerabilities }"/></td>
+							<td class="inputValue" id="duplicateFindings"><c:out value="${ totalFindings - vulnData[1] - scan.numberHiddenVulnerabilities }"/></td>
 						</tr>
 						<tr>
 							<td>Hidden Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ scan.numberHiddenVulnerabilities }"/></td>
+							<td class="inputValue" id="hiddenVulnerabilities"><c:out value="${ scan.numberHiddenVulnerabilities }"/></td>
 						</tr>
 						<tr>
 							<td style="font-weight:bold">Total Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ vulnData[1] }"/></td>
+							<td class="inputValue" id="totalVulnerabilities"><c:out value="${ vulnData[1] }"/></td>
 						</tr>
 					</tbody>
 				</table>
@@ -106,19 +107,19 @@
 					<tbody>
 						<tr>
 							<td>New Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ vulnData[2] }"/></td>
+							<td class="inputValue" id="newVulnerabilities"><c:out value="${ vulnData[2] }"/></td>
 						</tr>
 						<tr>
 							<td>Old Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ vulnData[3] }"/></td>
+							<td class="inputValue" id="oldVulnerabilities"><c:out value="${ vulnData[3] }"/></td>
 						</tr>
 						<tr>
 							<td>Resurfaced Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ vulnData[4] }"/></td>
+							<td class="inputValue" id="resurfacedVulnerabilities"><c:out value="${ vulnData[4] }"/></td>
 						</tr>
 						<tr>
 							<td>Closed Vulnerabilities</td>
-							<td class="inputValue"><c:out value="${ vulnData[5] }"/></td>
+							<td class="inputValue" id="closedVulnerabilities"><c:out value="${ vulnData[5] }"/></td>
 						</tr>
 					</tbody>
 				</table>

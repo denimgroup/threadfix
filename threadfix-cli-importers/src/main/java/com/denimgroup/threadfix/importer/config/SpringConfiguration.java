@@ -45,4 +45,8 @@ public class SpringConfiguration {
         return context;
     }
 
+    public static <T> T getSpringBean(Class<T> targetClass) {
+        return getContext().getBean(targetClass);
+    }
+
 }

@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -52,7 +53,8 @@ public class AccessControlApplicationMap extends AuditableEntity {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "applicationId", nullable = false)
+    @JsonView(Object.class)
+    @JoinColumn(name = "applicationId", nullable = false)
 	public Application getApplication() {
 		return application;
 	}
@@ -62,6 +64,7 @@ public class AccessControlApplicationMap extends AuditableEntity {
 	}
 	
 	@ManyToOne
+    @JsonView(Object.class)
     @JoinColumn(name = "roleId", nullable = true)
 	public Role getRole() {
 		return role;

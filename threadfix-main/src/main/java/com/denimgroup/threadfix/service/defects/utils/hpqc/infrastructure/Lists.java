@@ -95,12 +95,23 @@ public class Lists {
             @XmlAttribute(name="value")
             String value;
 
+            @XmlElement(name="Item")
+            List<Item> subItemList;
+
             public String getValue() {
                 return value;
             }
 
             public void setValue(String value) {
                 this.value = value;
+            }
+
+            public List<Item> getSubItemList() {
+                return subItemList;
+            }
+
+            public void setSubItemList(List<Item> subItemList) {
+                this.subItemList = subItemList;
             }
         }
     }

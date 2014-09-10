@@ -31,6 +31,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,9 +43,9 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 	@Autowired
 	private DefaultConfigurationDao defaultConfigurationDao;
 
+    @Transactional(readOnly = false)
 	@Override
 	public DefaultConfiguration loadCurrentConfiguration() {
-
         DefaultConfiguration configuration;
 
 		List<DefaultConfiguration> list = defaultConfigurationDao.retrieveAll();

@@ -8,7 +8,7 @@
 				           http://www.springframework.org/schema/security
 				           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<bean id="CustomUserDetailService" class="com.denimgroup.threadfix.service.login.CustomUserDetailService"/>
+	<bean id="customUserDetailService" class="com.denimgroup.threadfix.service.CustomUserDetailServiceImpl"/>
 	<bean id="ThreadFixPasswordEncoder" class="com.denimgroup.threadfix.service.ThreadFixPasswordEncoder"/>
 	
 	<bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
@@ -42,7 +42,7 @@
     
 	    <security:authentication-provider ref="customAuthenticationProvider"/>	
 	    
-	    <security:authentication-provider user-service-ref="CustomUserDetailService">
+	    <security:authentication-provider user-service-ref="customUserDetailService">
 	    	<security:password-encoder ref="ThreadFixPasswordEncoder">
 	    		<security:salt-source ref="saltSource" />
 	    	</security:password-encoder>

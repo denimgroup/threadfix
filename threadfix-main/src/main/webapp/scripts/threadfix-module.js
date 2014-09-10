@@ -10,6 +10,7 @@ angular.module('threadfix', ['ui.bootstrap', 'angularFileUpload', 'threadfixFilt
 
     $httpProvider.defaults.transformResponse.push(function(data) {
         if (/<div ng\-controller="LoginController">/.exec(data)) {
+            // this self-assignment makes the page reload, forcing a redirect to login.jsp
             window.location.pathname = window.location.pathname;
         }
 

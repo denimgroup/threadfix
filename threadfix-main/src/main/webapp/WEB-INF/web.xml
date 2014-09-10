@@ -5,6 +5,11 @@
 	version="3.0" metadata-complete="true">
 	<display-name>threadfix</display-name>
 	<description>ThreadFix Vulnerability Manager</description>
+    <session-config>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
@@ -14,6 +19,14 @@
 			classpath:/applicationContext-scheduling.xml
 		</param-value>
 	</context-param>
+    <filter>
+        <filter-name>CacheBustFilter</filter-name>
+        <filter-class>com.denimgroup.threadfix.webapp.filter.CacheBustFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CacheBustFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter>
         <filter-name>EnterpriseFilter</filter-name>
         <filter-class>com.denimgroup.threadfix.webapp.filter.EnterpriseFilter</filter-class>
@@ -75,11 +88,12 @@
         		,/,/index.jsp,/login.jsp,/organizations,/wafs,/configuration,/reports,/dashboard,/scans,
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
-        		/configuration/settings,/configuration/filters,/configuration/scanqueue,/scanplugin/index,
+        		/configuration/settings,/configuration/filters,/configuration/scanqueue,/scanplugin/index,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/jasper/*,/rest/*,
         		regex ^/rest/[a-zA-Z0-9/]*$,
         		regex ^/jasperimage/[0-9a-zA-Z=]+/[0-9a-zA-Z_]+$,
-        		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_cwe$,
+                regex ^/v/[^/]+/scripts/.*$,
+                regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_cwe$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_url$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/table$,
         		regex ^/organizations/[0-9]+/applications/[0-9]+/defectTable$,
@@ -275,5 +289,4 @@
 		<error-code>404</error-code>
 		<location>/404.jsp</location>
 	</error-page>
-
 </web-app>

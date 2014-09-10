@@ -1,10 +1,11 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Analytics</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/report-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+    <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
 </head>
 
 <body id="reports">
@@ -61,7 +62,7 @@
                 <div class="alert alert-danger" style="margin-top:10px">
                     <button class="close" data-dismiss="alert" type="button">&times;</button>
                     <strong>No Vulnerabilities found.</strong> Upload a scan and try again.
-                    <spring:url value="/organizations" var="teamsPageUrl"/>
+                    <spring:url value="/teams" var="teamsPageUrl"/>
                     <a href="${ teamsPageUrl }">Get Started</a>
                 </div>
             </c:if>

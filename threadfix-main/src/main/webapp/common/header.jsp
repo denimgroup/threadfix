@@ -20,7 +20,7 @@
 					<a id="dashboardHeader" href="<spring:url value="/dashboard" htmlEscape="true"/>">Dashboard</a>
 				</td>
 				<td class="pointer" ng-click="goTo('/organizations')"  id="tab-apps" style="width: 120px;">
-					<a id="orgHeader" href="<spring:url value="/organizations" htmlEscape="true"/>">Applications</a>
+					<a id="orgHeader" href="<spring:url value="/teams" htmlEscape="true"/>">Teams</a>
 				</td>
 				<td class="pointer" ng-click="goTo('/scans')" id="tab-scans" style="width: 90px;">
 					<a id="scansHeader" href="<spring:url value="/scans" htmlEscape="true"/>">Scans</a>
@@ -51,9 +51,7 @@
 						    	</a>
 						    </li>
 						</c:if>
-						<li class="normalLinks">
-							<a id="toggleHelpLink" href="javascript:toggleHelp()">Toggle Help</a>
-						</li>
+
 						<li class="normalLinks">
 							<a id="logoutLink" href="<spring:url value="/j_spring_security_logout" htmlEscape="true" />">
 								<spring:message code="user.logout"/>
@@ -65,7 +63,7 @@
 				<td id="tab-config" style="width: 30px;padding-left:0;">
 					
 					<div class="dropdown normalLinks">
-					<div class="dropdown-toggle data-target="#" style="height:32px;text-align:center;">
+					<div class="dropdown-toggle" data-target="#" style="height:32px;text-align:center;">
 						<div style="display:inline-block;margin-top:6px;">
 						<a id="tabConfigAnchor" href="#">
 							<i class="icon-cog icon-white"></i>
@@ -78,29 +76,35 @@
 						    	<a id="apiKeysLink" href="<spring:url value="/configuration/keys" htmlEscape="true"/>">API Keys</a>
 						    </li>
 					    </security:authorize>
-                        <li class="normalLinks">
-                            <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
-                        </li>
-                        <li class="normalLinks">
-                            <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
-                        </li>
-                        <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_DEFECT_TRACKERS">
                             <li class="normalLinks">
-                                    <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
+                                <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
                             </li>
                         </security:authorize>
-                        <li class="normalLinks">
-                            <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
-                        </li>
+                        <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
+                            <li class="normalLinks">
+                                <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>
+                            </li>
+                        </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_ENTERPRISE, ROLE_CAN_MANAGE_SCAN_AGENTS">
+                            <li class="normalLinks">
+                                <a id="scanQueueLink" href="<spring:url value="/configuration/scanqueue" htmlEscape="true"/>">Scan Agent Tasks</a>
+                            </li>
+                        </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                            <li class="normalLinks">
+                                <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
+                            </li>
+                        </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 						    <li class="normalLinks">
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
 						    </li>
 					    </security:authorize>
 
-						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
+						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
-                            <security:authorize ifAnyGranted="ROLE_ENTERPRISE">
+                            <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                 <li class="normalLinks">
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>

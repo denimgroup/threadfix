@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
@@ -38,7 +39,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -46,6 +50,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 /**
  * Parses the SCA Fortify fpr output file.
  */
+@ScanImporter(ScannerType.FORTIFY)
 class FortifyChannelImporter extends AbstractChannelImporter {
 
 	// TODO run through more files and determine whether this method is still valuable

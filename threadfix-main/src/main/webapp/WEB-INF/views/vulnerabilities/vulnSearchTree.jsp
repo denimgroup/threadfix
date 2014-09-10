@@ -12,12 +12,16 @@
         No results found.
     </div>
 
+    <a id="toggleVulnTree" class="btn" ng-click="toggleVulnTree()" ng-show="vulnTree && vulnTree.length > 0" style="margin: -9px 0 8px 0;">
+        {{ vulnTree.expanded ? 'Collapse' : 'Expand' }} All
+    </a>
+
     <table ng-show="vulnTree">
         <tbody ng-repeat="category in vulnTree" ng-show="category.total > 0">
             <tr>
                 <td>
-                    <span id="expand{{ category.name }}" ng-hide="category.expanded" ng-click="category.expanded = true" class="icon icon-plus-sign"></span>
-                    <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="category.expanded = false" class="icon icon-minus-sign"></span>
+                    <span id="expand{{ category.name }}" ng-hide="category.expanded" ng-click="toggleVulnCategory(category, true)" class="icon icon-plus-sign"></span>
+                    <span id="collapse{{ category.name }}" ng-show="category.expanded" ng-click="toggleVulnCategory(category, false)" class="icon icon-minus-sign"></span>
                 </td>
                 <td style="width:50px">
                     {{ category.name }}

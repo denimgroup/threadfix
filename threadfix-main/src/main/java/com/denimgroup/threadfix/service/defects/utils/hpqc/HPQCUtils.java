@@ -4,6 +4,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
 import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
+import com.denimgroup.threadfix.exception.RestRedirectException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
@@ -43,7 +44,7 @@ public class HPQCUtils {
                 "",
                 "");
 
-        String authenticationPoint = isAuthenticated();
+        String authenticationPoint = getAuthenticationUrl();
         if (authenticationPoint == null) {
             log.warn("HP Quality Center was invalid, 401 response was expected but 200 returned.");
             return false;
@@ -366,10 +367,12 @@ public class HPQCUtils {
                 return serverResponse;
             } else {
                 log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
+                throw new DefectTrackerCommunicationException(
+                        "Got " + serverResponse.getStatusCode() + " response from server.");
             }
+        } else {
+            throw new DefectTrackerCommunicationException("Invalid project selected.");
         }
-
-        throw new DefectTrackerCommunicationException("Unable to get response from server.");
     }
 
     @Nonnull
@@ -379,10 +382,20 @@ public class HPQCUtils {
             requestHeaders.put("Content-Type", "application/xml");
             requestHeaders.put("Accept", "application/xml");
 
-            return con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
+            Response serverResponse = con.httpPost(postUrl, dataXml.getBytes(), requestHeaders);
+            int statusCode = serverResponse.getStatusCode();
+            if (statusCode == HttpURLConnection.HTTP_OK ||
+                    statusCode == HttpURLConnection.HTTP_CREATED ||
+                    statusCode == HttpURLConnection.HTTP_ACCEPTED) {
+                return serverResponse;
+            } else {
+                log.warn("The response for the get request was " + serverResponse.getStatusCode() + ", not 200.");
+                throw new DefectTrackerCommunicationException(
+                        "Got " + serverResponse.getStatusCode() + " response from server.");
+            }
+        } else {
+            throw new DefectTrackerCommunicationException("Invalid project selected.");
         }
-
-        throw new DefectTrackerCommunicationException("Unable to get response from server.");
     }
 
     private static boolean checkProjectName(String serverUrl, String domain_project) {
@@ -460,7 +473,7 @@ public class HPQCUtils {
                     List<String> values = list();
                     for (Lists.ListInfo.Item item: listInfo.getItems().getItemList()) {
                         if (item != null) {
-                            values.add(item.getValue());
+                            values.addAll(getItemValues(item));
                         }
                     }
                     map.put(listInfo.getId(), values);
@@ -468,6 +481,20 @@ public class HPQCUtils {
             }
         }
         return map;
+    }
+
+    @Nonnull
+    private static List<String> getItemValues(Lists.ListInfo.Item item) {
+        List<String> values = list();
+        if (item != null) {
+            values.add(item.getValue());
+            if (item.getSubItemList() != null)  {
+                for (Lists.ListInfo.Item subItem: item.getSubItemList()) {
+                    values.addAll(getItemValues(subItem));
+                }
+            }
+        }
+        return values;
     }
 
     @Nonnull
@@ -503,7 +530,7 @@ public class HPQCUtils {
      */
     private static boolean login(String username, String password) {
 
-        String authenticationPoint = isAuthenticated();
+        String authenticationPoint = getAuthenticationUrl();
 
         boolean isLogin = authenticationPoint.equals(String.valueOf(HttpURLConnection.HTTP_OK)) ||
                 (authenticationPoint != null && login(authenticationPoint, username, password));
@@ -548,41 +575,53 @@ public class HPQCUtils {
      * @return null if authenticated.<br>
      *         a url to authenticate against if not authenticated.
      */
-    private static String isAuthenticated() {
+    private static String getAuthenticationUrl() {
 
-        String isAuthenticateUrl = con.buildUrl("rest/is-authenticated");
-        String ret;
+        try {
+            String isAuthenticateUrl = con.buildUrl("rest/is-authenticated");
+            String ret;
 
-        Response response = con.httpGet(isAuthenticateUrl, null, null);
-        int responseCode = response.getStatusCode();
+            Response response = con.httpGet(isAuthenticateUrl, null, null);
+            int responseCode = response.getStatusCode();
 
-        //if already authenticated
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+            //if already authenticated
+            if (responseCode == HttpURLConnection.HTTP_OK) {
 
-            ret = String.valueOf(HttpURLConnection.HTTP_OK);
+                ret = String.valueOf(HttpURLConnection.HTTP_OK);
+            }
+
+            //if not authenticated - get the address where to authenticate
+            // via WWW-Authenticate
+            else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+
+                Iterable<String> authenticationHeader =
+                        response.getResponseHeaders().get("WWW-Authenticate");
+
+                // TODO some format checking here
+                String newUrl = authenticationHeader.iterator().next().split("=")[1];
+                newUrl = newUrl.replace("\"", "");
+                newUrl += "/authenticate";
+                ret = newUrl;
+            }
+
+            //Not ok, not unauthorized. An error, such as 404, or 500
+            else {
+                throw new DefectTrackerCommunicationException(
+                        "Unable to communicate with the HPQC server. Response code was " + responseCode);
+            }
+
+            return ret;
+        } catch (RestRedirectException e) {
+
+            // The redirect will probably be the place we need to authenticate to.
+            // We may need to make this recursive.
+            log.info("Got redirected while attempting to authenticate, returning location of redirect.");
+            if (e.getTargetUrl() != null) {
+                return e.getTargetUrl();
+            } else {
+                throw e;
+            }
         }
-
-        //if not authenticated - get the address where to authenticate
-        // via WWW-Authenticate
-        else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-
-            Iterable<String> authenticationHeader =
-                    response.getResponseHeaders().get("WWW-Authenticate");
-
-            String newUrl =
-                    authenticationHeader.iterator().next().split("=")[1];
-            newUrl = newUrl.replace("\"", "");
-            newUrl += "/authenticate";
-            ret = newUrl;
-        }
-
-        //Not ok, not unauthorized. An error, such as 404, or 500
-        else {
-            throw new DefectTrackerCommunicationException(
-                    "Unable to communicate with the HPQC server. Response code was " + responseCode);
-        }
-
-        return ret;
     }
 
     public static <T> T marshalWithExceptionClass(Class<T> c, @Nonnull String xml) {

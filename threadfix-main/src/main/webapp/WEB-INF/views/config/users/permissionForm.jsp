@@ -29,7 +29,7 @@
                 <tr ng-repeat="app in config.appList">
                     <td>{{ app.name }}</td>
                     <td>
-                        <select id="roleSelectTeam" name="roleId" ng-model="app.role.id">
+                        <select id="roleSelectApp{{ app.name }}" name="roleId" ng-model="app.role.id">
                             <option value="0" label="No Role" />
                             <option ng-selected="role.id === app.role.id" ng-repeat="role in config.roles" value="{{ role.id }}" >
                                 {{ role.displayName }}

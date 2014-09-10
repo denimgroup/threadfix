@@ -23,19 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.ApplicationCriticalityService;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.ScanMergeService;
-import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.LicenseService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -50,7 +46,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
@@ -62,7 +60,6 @@ import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccess
  */
 @Controller
 @SessionAttributes(value = {"organization", "application"})
-@RequestMapping("/organizations")
 public class ApplicationsIndexController {
 	
 	@ModelAttribute
@@ -87,7 +84,7 @@ public class ApplicationsIndexController {
     @Autowired(required = false)
     private LicenseService licenseService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/teams", method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
         model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 		model.addAttribute("application", new Application());
@@ -105,20 +102,25 @@ public class ApplicationsIndexController {
 		return "organizations/index";
 	}
 
-	@RequestMapping(value="/jsonList", method = RequestMethod.GET)
+	@RequestMapping(value="/organizations/jsonList", method = RequestMethod.GET)
 	public @ResponseBody Object jsonList() {
         List<Organization> organizations = organizationService.loadAllActiveFilter();
 
         organizations = PermissionUtils.filterTeamList(organizations);
-
         if (organizations == null) {
             return failure("No organizations found.");
         } else {
-            return writeSuccessObjectWithView(organizations, AllViews.TableRow.class);
+            Map<String, Object> map = newMap();
+
+            map.put("teams", organizations);
+            map.put("canEditIds", PermissionUtils.getIdsWithPermission(Permission.CAN_MANAGE_APPLICATIONS, organizations));
+            map.put("canUploadIds", PermissionUtils.getAppIdsWithPermission(Permission.CAN_UPLOAD_SCANS, organizations));
+
+            return writeSuccessObjectWithView(map, AllViews.TableRow.class);
         }
 	}
-	
-	@RequestMapping("/{orgId}/getReport")
+
+	@RequestMapping("/organizations/{orgId}/getReport")
 	public ModelAndView getReport(@PathVariable("orgId") int orgId,
 			HttpServletRequest request, Model model) {
 		Organization organization = organizationService.loadById(orgId);
@@ -144,7 +146,7 @@ public class ApplicationsIndexController {
      *
      * @return Team with updated stats.
      */
-    @RequestMapping(headers="Accept=application/json", value="/{orgId}/applications/{appId}/upload/remote", method=RequestMethod.POST)
+    @RequestMapping(headers="Accept=application/json", value="/organizations/{orgId}/applications/{appId}/upload/remote", method=RequestMethod.POST)
     public @ResponseBody RestResponse<Organization> uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
                                                        HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 

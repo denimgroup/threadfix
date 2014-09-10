@@ -96,8 +96,6 @@ angular.module('dynform', [])
                   newElement.attr('type', supported[field.type].type);
                 }
 
-
-
                 //  Editable fields (those that can feed models)
                 if (angular.isDefined(supported[field.type].editable) && supported[field.type].editable) {
                   newElement.attr('name', field.model);
@@ -115,7 +113,7 @@ angular.module('dynform', [])
                 if (angular.isDefined(supported[field.type].textBased) && supported[field.type].textBased) {
                   if (angular.isDefined(field.minLength)) {newElement.attr('ng-minlength', field.minLength);}
                   if (angular.isDefined(field.maxLength) && field.maxLength !== 0) {newElement.attr('ng-maxlength', field.maxLength);}
-                  if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', field.validate);}
+                  if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
                 }
                 
@@ -144,14 +142,22 @@ angular.module('dynform', [])
                       if (angular.isDefined(option['class'])) {newChild.attr('ng-class', option['class']);}
                       if (angular.isDefined(field.disabled)) {newChild.attr('ng-disabled', field.disabled);}
                       if (angular.isDefined(field.readonly)) {newChild.attr('ng-readonly', field.readonly);}
-                      if (angular.isDefined(field.required)) {newChild.attr('ng-required', field.required);}
+                      if (angular.isDefined(field.required)) {
+                          if (field.required) {
+                            // again this is gross and coupled to defect submission. We can decouple it if there's a reason to later.
+                            newChild.attr('ng-required', "!requiredErrorMap.hasOwnProperty('" + field.model + "') || requiredErrorMap['" + field.model + "']");
+                            newChild.attr('ng-change', "checkAndReset('" + field.model + "','" + childId + "')");
+                          } else {
+                            newChild.attr('ng-required', false);
+                          }
+                      }
                       if (angular.isDefined(field.callback)) {newChild.attr('ng-change', field.callback);}
                       if (angular.isDefined(option.isOn)) {newChild.attr('ng-true-value', option.isOn);}
                       if (angular.isDefined(option.isOff)) {newChild.attr('ng-false-value', option.isOff);}
                       if (angular.isDefined(option.slaveTo)) {newChild.attr('ng-checked', option.slaveTo);}
                       if (angular.isDefined(option.val)) {
                         model[field.model][childId] = angular.copy(option.val);
-                        newChlid.attr('value', field.val);
+                          newChild.attr('value', field.val);
                       }
                       
                       if (angular.isDefined(option.label)) {
@@ -186,7 +192,10 @@ angular.module('dynform', [])
                   }
                 }
                 else if (field.type === 'select') {
-                  if (angular.isDefined(field.multiple) && field.multiple !== false) {newElement.attr('multiple', 'multiple');}
+                  if (angular.isDefined(field.multiple) && field.multiple !== false) {
+                      newElement.attr('multiple', 'multiple');
+                      newElement.attr('ng-change', "emptyMultiChoice('" + field.model + "')");
+                  }
                   if (angular.isDefined(field.empty) && field.empty !== false) {newElement.append(angular.element($document[0].createElement('option')).attr('value', '').html(field.empty));}
                   
                   if (angular.isDefined(field.autoOptions)) {
@@ -293,7 +302,7 @@ angular.module('dynform', [])
                     if (angular.isDefined(field.errorsMap)) {
                         Object.keys(field.errorsMap).forEach(function(key) {
                             // this is dirty but should allow us lots of flexibility in error handling
-                            var objectPath = 'form.$error.' + key + '[0].' + field.model;
+                            var objectPath = 'form.$error.' + key + "[0]['" + field.model + "']";
                             var text = '<span class="errors" ng-show="' + objectPath + '.$dirty && ' + objectPath + '.$error.' + key + '">' + field.errorsMap[key] + '</span>';
                             divElement.append(angular.element(text));
 

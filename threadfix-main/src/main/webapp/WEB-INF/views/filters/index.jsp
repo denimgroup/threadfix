@@ -1,9 +1,10 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Manage Filters</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vulnerability-filters-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<cbs:cachebustscript src="/scripts/vulnerability-filters-controller.js"/>
+	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body ng-controller="VulnerabilityFiltersController">

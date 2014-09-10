@@ -185,7 +185,7 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
+            <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
             <type>pom</type>
         </dependency>
@@ -295,6 +295,16 @@
         </dependency>
         <dependency>
             <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-service-interfaces</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-data-access</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
             <artifactId>threadfix-entities</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
@@ -321,6 +331,11 @@
             <artifactId>dependency-check-maven</artifactId>
             <version>${dependencycheck.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${springsecurity.version}</version>
         </dependency>
     </dependencies>
 

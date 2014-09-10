@@ -43,6 +43,8 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canManageApplications": "false",
                          "canManageDefectTrackers": "false",
                          "canManageRemoteProviders": "false",
+                         "canManageScanAgents": "false",
+                         "canManageSystemSettings": "false",
                          "canManageRoles": "false",
                          "canManageTeams": "false",
 //                         "canViewJobStatuses": "false",
@@ -50,6 +52,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canUploadScans": "false",
                          "canSubmitDefects": "false",
                          "canModifyVulnerabilities": "false",
+                         "canManageVulnFilters": "false",
                          "canManageWafs": "false",
                          "canManageUsers": "false"
                     };
@@ -80,7 +83,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     var addKeys = function(role) {
 
@@ -91,19 +94,21 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canManageApplications = role.canManageApplications === true ? "true" : "false";
             role.canManageDefectTrackers = role.canManageDefectTrackers === true ? "true" : "false";
             role.canManageRemoteProviders = role.canManageRemoteProviders === true ? "true" : "false";
+            role.canManageScanAgents = role.canManageScanAgents === true ? "true" : "false";
+            role.canManageSystemSettings = role.canManageSystemSettings === true ? "true" : "false";
             role.canManageRoles = role.canManageRoles === true ? "true" : "false";
             role.canManageTeams = role.canManageTeams === true ? "true" : "false";
-//            role.canViewJobStatuses = role.canViewJobStatuses === true ? "true" : "false";
             role.canViewErrorLogs = role.canViewErrorLogs === true ? "true" : "false";
             role.canUploadScans = role.canUploadScans === true ? "true" : "false";
             role.canSubmitDefects = role.canSubmitDefects === true ? "true" : "false";
             role.canModifyVulnerabilities = role.canModifyVulnerabilities === true ? "true" : "false";
+            role.canManageVulnFilters = role.canManageVulnFilters === true ? "true" : "false";
             role.canManageWafs = role.canManageWafs === true ? "true" : "false";
             role.canManageUsers = role.canManageUsers === true ? "true" : "false";
 
             role.stringed = true;
         }
-    }
+    };
 
     $scope.openEditModal = function(role) {
         var modalInstance = $modal.open({

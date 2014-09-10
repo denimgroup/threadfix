@@ -57,84 +57,84 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  */
 @Service
 public class ReportsServiceImpl implements ReportsService {
-	
-	private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
+
+    private final SanitizedLogger log = new SanitizedLogger(ReportsServiceImpl.class);
 
     @Autowired
-    private SessionFactory sessionFactory = null;
-	@Autowired
-    private ChannelTypeDao channelTypeDao = null;
-	@Autowired
-    private ScanDao scanDao = null;
-	@Autowired
-    private VulnerabilityDao vulnerabilityDao = null;
-	@Autowired
-    private OrganizationDao organizationDao = null;
-	@Autowired
-    private ApplicationDao applicationDao = null;
-	@Autowired(required=false)
+    private SessionFactory    sessionFactory    = null;
+    @Autowired
+    private ChannelTypeDao    channelTypeDao    = null;
+    @Autowired
+    private ScanDao           scanDao           = null;
+    @Autowired
+    private VulnerabilityDao  vulnerabilityDao  = null;
+    @Autowired
+    private OrganizationDao   organizationDao   = null;
+    @Autowired
+    private ApplicationDao    applicationDao    = null;
+    @Autowired(required = false)
     @Nullable
     private PermissionService permissionService = null;
 
-	@Override
-	public ReportCheckResultBean generateReport(ReportParameters parameters,
-			HttpServletRequest request) {
-		if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
-			return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE);
-		}
-		
-		List<Integer> applicationIdList = getApplicationIdList(parameters);
-	
-		if (applicationIdList == null || applicationIdList.isEmpty()) {
-			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
-		}
-		
-		if (parameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
-			StringBuffer dataExport = getDataVulnListReport(getListofRowParams(applicationIdList), applicationIdList);
-			return new ReportCheckResultBean(ReportCheckResult.VALID, dataExport, null);
-		}
-		
-		if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
-			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
-		} else if (parameters.getReportFormat() == ReportFormat.TOP_TWENTY_APPS) {
-			applicationIdList = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
-		}
-		
-		if (applicationIdList == null || applicationIdList.isEmpty()) {
-			return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
-		}
-		log.info("About to generate report for " + applicationIdList.size() + " applications.");
+    @Override
+    public ReportCheckResultBean generateReport(ReportParameters parameters,
+                                                HttpServletRequest request) {
+        if (parameters.getReportFormat() == ReportFormat.BAD_FORMAT) {
+            return new ReportCheckResultBean(ReportCheckResult.BAD_REPORT_TYPE);
+        }
 
-		Map<String, Object> params = new HashMap<>();
-		params.put("appId", applicationIdList);
-		String path = request.getSession().getServletContext().getRealPath("/");
-		
-		String format = null;
-		if(parameters.getFormatId() == 2) {
-			format = "CSV";
-		} else if(parameters.getFormatId() == 3) {
-			format = "PDF";
-		} else {
-			format = "HTML";
-		}
-		
-		ReportFormat reportFormat = parameters.getReportFormat();
-		try {
-			return getReport(path, reportFormat, format, params, applicationIdList, request);
-		} catch (IOException e) {
-			log.error("IOException encountered while trying to generate report.", e);
-			return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
-		} finally {
+        List<Integer> applicationIdList = getApplicationIdList(parameters);
+
+        if (applicationIdList == null || applicationIdList.isEmpty()) {
+            return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+        }
+
+        if (parameters.getReportFormat() == ReportFormat.VULNERABILITY_LIST) {
+            StringBuffer dataExport = getDataVulnListReport(getListofRowParams(applicationIdList), applicationIdList);
+            return new ReportCheckResultBean(ReportCheckResult.VALID, dataExport, null);
+        }
+
+        if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
+            applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
+        } else if (parameters.getReportFormat() == ReportFormat.TOP_TWENTY_APPS) {
+            applicationIdList = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
+        }
+
+        if (applicationIdList == null || applicationIdList.isEmpty()) {
+            return new ReportCheckResultBean(ReportCheckResult.NO_APPLICATIONS);
+        }
+        log.info("About to generate report for " + applicationIdList.size() + " applications.");
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("appId", applicationIdList);
+        String path = request.getSession().getServletContext().getRealPath("/");
+
+        String format = null;
+        if (parameters.getFormatId() == 2) {
+            format = "CSV";
+        } else if (parameters.getFormatId() == 3) {
+            format = "PDF";
+        } else {
+            format = "HTML";
+        }
+
+        ReportFormat reportFormat = parameters.getReportFormat();
+        try {
+            return getReport(path, reportFormat, format, params, applicationIdList, request);
+        } catch (IOException e) {
+            log.error("IOException encountered while trying to generate report.", e);
+            return new ReportCheckResultBean(ReportCheckResult.IO_ERROR);
+        } finally {
             log.info("Finished generating report.");
         }
-	}
+    }
 
-	@SuppressWarnings("resource")
-	private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
-			Map<String, Object> parameters, List<Integer> applicationIdList,
-			HttpServletRequest request) throws IOException {
+    @SuppressWarnings("resource")
+    private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
+                                            Map<String, Object> parameters, List<Integer> applicationIdList,
+                                            HttpServletRequest request) throws IOException {
 
-		if (reportFormat == null || reportFormat.getFileName() == null ||
+        if (reportFormat == null || reportFormat.getFileName() == null ||
 				reportFormat.getFileName().trim().equals("")) {
 			return null;
 		}

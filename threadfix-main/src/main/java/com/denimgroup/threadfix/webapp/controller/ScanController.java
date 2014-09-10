@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -104,7 +105,6 @@ public class ScanController {
 		return mav;
 	}
 	
-	@PreAuthorize("hasRole('ROLE_CAN_UPLOAD_SCANS')")
 	@RequestMapping(value = "/{scanId}/delete", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> deleteScan(@PathVariable("orgId") Integer orgId,
 			@PathVariable("appId") Integer appId,
@@ -144,9 +144,9 @@ public class ScanController {
 		}
 
 		long numFindings = scanService.getFindingCount(scanId);
-		long numPages = numFindings / ControllerUtils.NUMBER_ITEM_PER_PAGE;
+		long numPages = numFindings / Finding.NUMBER_ITEM_PER_PAGE;
 		
-		if (numFindings % ControllerUtils.NUMBER_ITEM_PER_PAGE == 0) {
+		if (numFindings % Finding.NUMBER_ITEM_PER_PAGE == 0) {
 			numPages -= 1;
 		}
 		

@@ -1,16 +1,17 @@
 <%@ include file="/common/taglibs.jsp"%>
+<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
 	<title>Applications</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applications-index-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+	<cbs:cachebustscript src="/scripts/applications-index-controller.js"/>
+	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="apps">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 
-	<h2>Applications</h2>
+	<h2>Teams</h2>
 
     <div ng-controller="ApplicationsIndexController">
 

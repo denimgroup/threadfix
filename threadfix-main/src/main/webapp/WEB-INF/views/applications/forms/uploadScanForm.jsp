@@ -23,7 +23,7 @@
 	</div>
     <div style="text-align:left" ng-show="ready()" class="modal-body">
         Select Scan
-        <input style="height:auto" type="file" ng-file-select="onFileSelect($files)">
+        <input id="scanFileInput" style="height:auto" type="file" ng-file-select="onFileSelect($files)">
     </div>
 	<div class="modal-footer">
 		<span style="float:left;font-size:8;" class="errors">Average file uploads take a few seconds but <br>larger files (2GB+) can take several minutes.</span>
