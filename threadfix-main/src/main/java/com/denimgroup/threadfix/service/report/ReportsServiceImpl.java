@@ -490,7 +490,7 @@ public class ReportsServiceImpl implements ReportsService {
                 hash.put("teamId", app.getOrganization().getId());
                 hash.put("teamName", app.getOrganization().getName());
 
-                hash.put("title", app.getName());
+                hash.put("title", app.getOrganization().getName() + "/" + app.getName());
                 resultList.add(hash);
 
 

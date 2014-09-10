@@ -120,6 +120,8 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'threadFixM
 
                 var yAxis = getAxis(d3, y, "left")
                         .tickFormat(function(d){
+                            var arr = d.split("/");
+                            d = (arr.length >1) ? arr[1] : d;
                             if (d && d.length > 8)
                                 return d.substring(0,8) + "...";
                             else
