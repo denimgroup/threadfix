@@ -111,7 +111,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		String result = null;
 		try (ZipFile zipFile = new ZipFile(fileName)) {
 			if (zipFile.getEntry("audit.fvdl") != null) {
-				result = ScannerType.FORTIFY.getFullName();
+				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
 				result = ScannerType.SKIPFISH.getFullName();
 			}
