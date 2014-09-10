@@ -43,7 +43,9 @@ public enum FrameworkType {
             type = DOT_NET_MVC;
         } else if (input != null) {
 			for (FrameworkType frameworkType : values()) {
-				if (frameworkType.toString().equals(input) || frameworkType.displayName.equals(input)) {
+				if (frameworkType.toString().equals(input) ||
+                        frameworkType.displayName.equals(input) ||
+                        frameworkType.displayName.replace(' ', '_').equals(input)) {
 					type = frameworkType;
 					break;
 				}
