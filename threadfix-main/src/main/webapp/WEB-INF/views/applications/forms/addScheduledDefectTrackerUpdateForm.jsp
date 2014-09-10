@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="newScheduledImport.html">
+<script type="text/ng-template" id="newScheduledUpdate.html">
 
     <div class="modal-header">
         <h4>New Scheduled Update</h4>
