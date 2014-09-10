@@ -50,9 +50,9 @@ public class DotNetFrameworkChecker extends FrameworkChecker {
         LOG.info("Got " + csFiles.size() + " .cs files from the directory.");
 
         Collection aspxFiles = FileUtils.listFiles(directory.getDirectory(),
-                new FileExtensionFileFilter("aspx"), TrueFileFilter.INSTANCE);
+                new FileExtensionFileFilter("aspx.cs"), TrueFileFilter.INSTANCE);
 
-        LOG.info("Got " + aspxFiles.size() + " .aspx files from the directory.");
+        LOG.info("Got " + aspxFiles.size() + " .aspx.cs files from the directory.");
 
         return csFiles.isEmpty() || !aspxFiles.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
     }
