@@ -55,6 +55,8 @@ public class WafLogParserFactory {
 			return new ModSecurityLogParser(wafRuleDao, securityEventDao);
 		} else if (wafName.equals(WafType.SNORT)) {
 			return new SnortLogParser(wafRuleDao, securityEventDao);
+		} else if (wafName.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
+			return new RiverbedWebAppFirewallLogParser(wafRuleDao, securityEventDao);
 		} else {
 			log.warn("Invalid WAF type name '"
 					+ wafName
