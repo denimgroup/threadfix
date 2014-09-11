@@ -355,7 +355,7 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
-    @Ignore
+
     @Test
     public void checkDeletedApplicationInRemoteProvider() {
         String teamName = "importWhiteHatTeam" + getRandomString(3);
@@ -385,6 +385,44 @@ public class RemoteProvidersIT extends BaseIT {
 
         remoteProvidersIndexPage.clickCloseButton()
                 .clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+    }
+
+    @Test
+    public void checkNumberUnderSeverityForRemoteProvider() {
+        String teamName = "importWhiteHatTeam" + getRandomString(3);
+        String appName = "importWhiteHatApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat()
+                .mapWhiteHatToTeamAndApp(1, teamName, appName);
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+
+        remoteProvidersIndexPage.clickWhiteHatImportScan(1)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickWhiteHatTeamName(teamName);
+
+        assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("14", 0));
+        assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("2", 0));
+        assertTrue("Number of High Vulnerability is not correct", teamDetailPage.isNumberOfHighCorrect("8", 0));
+        assertTrue("Number of Medium Vulnerability is not correct", teamDetailPage.isNumberOfMediumCorrect("4", 0));
+        assertTrue("Number of Low Vulnerability is not correct", teamDetailPage.isNumberOfLowCorrect("0", 0));
+
+        remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
+                                    .clearWhiteHat();
 
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));

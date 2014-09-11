@@ -57,6 +57,34 @@ public class UserIT extends BaseIT {
 	}
 
     @Test
+    public void testCreateTwoUsers() {
+        String userName = "testCreateUser" + getRandomString(3);
+        String password = "testCreateUser";
+
+        String secondUserName = "testCreateUser" + getRandomString(3);
+
+        UserIndexPage userIndexPage = loginPage.login("user", "password")
+                .clickManageUsersLink();
+
+        userIndexPage.clickAddUserLink()
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPassword(password)
+                .clickAddNewUserBtn();
+        assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
+        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
+
+        userIndexPage.clickAddUserLink()
+                .setName(secondUserName)
+                .setPassword(password)
+                .setConfirmPassword(password)
+                .clickAddNewUserBtn();
+        assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(secondUserName));
+        assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(secondUserName));
+        assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
+    }
+
+    @Test
     public void testUserFieldValidation() {
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()

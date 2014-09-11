@@ -1168,24 +1168,4 @@ public class ApplicationDetailPage extends BasePage {
         List<WebElement> bodyRows = driver.findElementById("1").findElements(By.className("bodyRow"));
         return bodyRows.size() == expectedNumberOfFindings;
     }
-
-    public boolean isNumberOfOpenVulnerabilityCorrect(String expectedNumber) {
-        return driver.findElementById("appTotalVulns0").getText().trim().equals(expectedNumber);
-    }
-
-    public boolean isNumberOfCriticalCorrect(String expectedNumber) {
-        return driver.findElementById("appCriticalVulns0").getText().trim().equals(expectedNumber);
-    }
-
-    public boolean isNumberOfHighCorrect(String expectedNumber) {
-        return driver.findElementById("appHighVulns0").getText().trim().equals(expectedNumber);
-    }
-
-    public boolean isNumberOfMediumCorrect(String expectedNumber) {
-        return driver.findElementById("appMediumVulns0").getText().trim().equals(expectedNumber);
-    }
-
-    public boolean isNumberOfLowCorrect(String expectedNumber) {
-        return driver.findElementById("appLowVulns0").getText().trim().equals(expectedNumber);
-    }
 }

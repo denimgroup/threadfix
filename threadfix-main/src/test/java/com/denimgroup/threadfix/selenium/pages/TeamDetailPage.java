@@ -557,4 +557,24 @@ public class TeamDetailPage extends BasePage {
             return false;
         }
     }
+
+    public boolean isNumberOfOpenVulnerabilityCorrect(String expectedNumber, int row) {
+        return driver.findElementById("appTotalVulns" + row).getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfCriticalCorrect(String expectedNumber, int row) {
+        return driver.findElementById("appCriticalVulns" + row).getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfHighCorrect(String expectedNumber, int row) {
+        return driver.findElementById("appHighVulns" + row).getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfMediumCorrect(String expectedNumber, int row) {
+        return driver.findElementById("appMediumVulns" + row).getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfLowCorrect(String expectedNumber, int row) {
+        return driver.findElementById("appLowVulns" + row).getText().trim().equals(expectedNumber);
+    }
 }

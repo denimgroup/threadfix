@@ -178,9 +178,9 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickWhiteHatTeamName(String teamName) {
+    public TeamDetailPage clickWhiteHatTeamName(String teamName) {
         driver.findElementByLinkText(teamName).click();
-        return new ApplicationDetailPage(driver);
+        return new TeamDetailPage(driver);
     }
 
     public RemoteProvidersIndexPage mapVeracodeToTeamAndApp(int appRow, String teamName, String appName) {

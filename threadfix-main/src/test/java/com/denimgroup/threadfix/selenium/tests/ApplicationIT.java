@@ -1180,47 +1180,6 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.checkNumberOfUnmappedCorrect(21));
     }
 
-    //TODO
-    @Ignore
-    @Test
-    public void checkNumberUnderSeverityForRemoteProvider() {
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
-        remoteProvidersIndexPage.clickConfigureWhiteHat();
-        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
-        remoteProvidersIndexPage.saveWhiteHat();
-
-        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
-        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
-
-        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
-        sleep(40000);
-        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
-        driver.switchTo().alert().accept();
-
-        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
-
-        remoteProvidersIndexPage.clickWhiteHatTeamName(teamName);
-
-        assertTrue("Number of Open Vulnerabilities is not correct", applicationDetailPage.isNumberOfOpenVulnerabilityCorrect("14"));
-        assertTrue("Number of Critical Vulnerability is not correct", applicationDetailPage.isNumberOfCriticalCorrect("2"));
-        assertTrue("Number of High Vulnerability is not correct", applicationDetailPage.isNumberOfHighCorrect("8"));
-        assertTrue("Number of Medium Vulnerability is not correct", applicationDetailPage.isNumberOfMediumCorrect("4"));
-        assertTrue("Number of Low Vulnerability is not correct", applicationDetailPage.isNumberOfLowCorrect("0"));
-
-        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
-
-        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
-
-        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
-                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
-    }
-
     public void sleep(int num) {
 		try {
 			Thread.sleep(num);
