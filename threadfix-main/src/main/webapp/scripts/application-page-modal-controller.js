@@ -321,38 +321,44 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
-
-
+    };
 
     // Handle fileDragged event and upload scan button clicks
     $scope.$on('fileDragged', function(event, $files) {
         $scope.showUploadForm($files);
     });
 
+    $scope.fileModalOn = false;
     $scope.showUploadForm = function(files) {
-        var modalInstance = $modal.open({
-            templateUrl: 'uploadScanForm.html',
-            controller: 'UploadScanController',
-            resolve: {
-                url: function() {
-                    var app = $scope.config.application;
-                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote");
-                },
-                files: function() {
-                    return files;
+
+        if ($scope.fileModalOn) {
+            $rootScope.$broadcast('files', files);
+        } else {
+            var modalInstance = $modal.open({
+                templateUrl: 'uploadScanForm.html',
+                controller: 'UploadScanController',
+                resolve: {
+                    url: function() {
+                        var app = $scope.config.application;
+                        return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/upload/remote");
+                    },
+                    files: function() {
+                        return files;
+                    }
                 }
-            }
-        });
+            });
+            $scope.fileModalOn = true;
 
-        modalInstance.result.then(function (scan) {
-            $log.info("Successfully uploaded scan.");
-            $rootScope.$broadcast('scanUploaded');
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-
-    }
+            modalInstance.result.then(function (scan) {
+                $log.info("Successfully uploaded scan.");
+                $rootScope.$broadcast('scanUploaded');
+                $scope.fileModalOn = false;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+                $scope.fileModalOn = false;
+            });
+        }
+    };
 
     $scope.submitFindingForm = function() {
         var modalInstance = $modal.open({
