@@ -252,7 +252,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
 			if (app.getNativeId().equals(map.get("webAppName")) && map.get("date") != null) {
-                Calendar mapDate = DateUtils.getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", map.get("date"));
+                Calendar mapDate = DateUtils.getCalendarFromUTCString(map.get("date"));
 				if (mapDate != null && (app.getLastImportTime() == null ||
                         mapDate.after(app.getLastImportTime()))) {
 					scanIds.add(map.get("id"));
@@ -446,7 +446,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = DateUtils.getCalendarFromString("yyyy-MM-DD'T'HH:mm:ss'Z'", tempDateString);
+	    			date = DateUtils.getCalendarFromUTCString(tempDateString);
 	    		}
 	    		getDate = false;
 	    	} else if (getUri) {
