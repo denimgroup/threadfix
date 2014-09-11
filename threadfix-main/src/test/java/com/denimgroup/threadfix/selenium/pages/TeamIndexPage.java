@@ -253,6 +253,11 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById("applicationUrlInputInvalidUrlError").getText();
     }
 
+    public String successAlert(){
+        waitForElement(driver.findElementByClassName("alert-success"));
+        return driver.findElementByClassName("alert-success").getText().trim();
+    }
+
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
     public boolean isAppPresent(String teamName, String appName) {

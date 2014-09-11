@@ -357,7 +357,7 @@ public class RemoteProvidersIT extends BaseIT {
     }
 
     @Test
-    public void checkDeletedApplicationInRemoteProvider() {
+    public void testDeletedApplicationOnList() {
         String teamName = "importWhiteHatTeam" + getRandomString(3);
         String appName = "importWhiteHatApp" + getRandomString(3);
 
@@ -375,13 +375,44 @@ public class RemoteProvidersIT extends BaseIT {
         RemoteProvidersIndexPage remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
-                .saveWhiteHat();
+                .saveWhiteHat()
+                .clickEditWhiteHatButton(1)
+                .selectTeamMapping(teamName);
 
-        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+        assertFalse("Application wasn't deleted", remoteProvidersIndexPage.isElementPresentInSelect("appSelect1",appName));
 
-        remoteProvidersIndexPage.clickEditWhiteHatButton(1);
+        remoteProvidersIndexPage.clickCloseButton()
+               .clearWhiteHat();
 
-        assertFalse("application wasn't deleted", remoteProvidersIndexPage.isSaveButtonClickable());
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testDeletedTeamOnList() {
+        String teamName = "importWhiteHatTeam" + getRandomString(3);
+        String appName = "importWhiteHatApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink();
+
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
+
+        teamDetailPage.clickDeleteButton();
+
+        assertTrue("Team Name wasn't deleted",
+                teamDetailPage.successAlert().contains("Team" +  " " + teamName + " has been deleted successfully"));
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = teamIndexPage.clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat()
+                .clickEditWhiteHatButton(1);
+
+        assertFalse("Team wasn't deleted", remoteProvidersIndexPage.isElementPresentInSelect("orgSelect1",teamName));
 
         remoteProvidersIndexPage.clickCloseButton()
                 .clearWhiteHat();
@@ -391,7 +422,7 @@ public class RemoteProvidersIT extends BaseIT {
     }
 
     @Test
-    public void checkNumberUnderSeverityForRemoteProvider() {
+    public void checkNumberUnderSeverity() {
         String teamName = "importWhiteHatTeam" + getRandomString(3);
         String appName = "importWhiteHatApp" + getRandomString(3);
 
@@ -413,7 +444,7 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().dismiss();
 
-        TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickWhiteHatTeamName(teamName);
+        TeamDetailPage teamDetailPage = remoteProvidersIndexPage.clickTeamLink(teamName);
 
         assertTrue("Number of Open Vulnerabilities is not correct", teamDetailPage.isNumberOfOpenVulnerabilityCorrect("14", 0));
         assertTrue("Number of Critical Vulnerability is not correct", teamDetailPage.isNumberOfCriticalCorrect("2", 0));
@@ -426,6 +457,39 @@ public class RemoteProvidersIT extends BaseIT {
 
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+    }
+
+    @Test
+    public void testApplicationExistAfterDeleted() {
+        String teamName = "importWhiteHatTeam" + getRandomString(3);
+        String appName = "importWhiteHatApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat()
+                .mapWhiteHatToTeamAndApp(1, teamName, appName);
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickApplicationLink(appName);
+
+         TeamDetailPage teamDetailPage  = applicationDetailPage.clickEditDeleteBtn()
+                .clickDeleteLink();
+
+        teamDetailPage.clickRemoteProvidersLink();
+
+        assertFalse("Application wasn't Deleted", remoteProvidersIndexPage.isApplicationLinkPresent(appName));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+
     }
 
     /*------------------------------ Scheduling ------------------------------*/

@@ -30,6 +30,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -391,6 +392,16 @@ public abstract class BasePage {
     public boolean isElementVisible(String elementID){
         ExpectedCondition<WebElement> condition = ExpectedConditions.visibilityOf(driver.findElementById(elementID));
         return condition.apply(driver) != null;
+    }
+
+    public boolean isElementPresentInSelect(String selectID, String element) {
+        List<WebElement> teams = new Select(driver.findElementById(selectID)).getOptions();
+        for (WebElement team : teams) {
+            if (element.equals(team.getText().trim())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

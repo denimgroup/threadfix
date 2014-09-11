@@ -53,7 +53,7 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage clickActionButton(){
         driver.findElementById("actionButton").click();
-        sleep(2000);
+        waitForElement(driver.findElementById("teamModalButton"));
         return new TeamDetailPage(driver);
     }
 

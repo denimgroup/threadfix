@@ -28,6 +28,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -178,9 +179,14 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public TeamDetailPage clickWhiteHatTeamName(String teamName) {
+    public TeamDetailPage clickTeamLink(String teamName) {
         driver.findElementByLinkText(teamName).click();
         return new TeamDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickApplicationLink(String appName) {
+        driver.findElementByLinkText(appName).click();
+        return new ApplicationDetailPage(driver);
     }
 
     public RemoteProvidersIndexPage mapVeracodeToTeamAndApp(int appRow, String teamName, String appName) {
@@ -269,11 +275,13 @@ public class RemoteProvidersIndexPage extends BasePage {
         return true;
     }
 
+    public boolean isApplicationLinkPresent(String appName) {
+        return driver.findElementsByLinkText(appName).size() != 0;
+    }
+
     public boolean isTabPresent() {
         return driver.findElementById("remoteProvidersTab").isDisplayed();
     }
-
-    public boolean isSaveButtonClickable() { return driver.findElementsByCssSelector("#submit.disabled").isEmpty(); }
 
     /*-------------------------------- Helper Methods --------------------------------*/
 

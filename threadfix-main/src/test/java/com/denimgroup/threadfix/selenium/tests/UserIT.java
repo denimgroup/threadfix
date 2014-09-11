@@ -64,13 +64,13 @@ public class UserIT extends BaseIT {
         String secondUserName = "testCreateUser" + getRandomString(3);
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink();
-
-        userIndexPage.clickAddUserLink()
+                .clickManageUsersLink()
+                .clickAddUserLink()
                 .setName(userName)
                 .setPassword(password)
                 .setConfirmPassword(password)
                 .clickAddNewUserBtn();
+
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 
@@ -79,6 +79,7 @@ public class UserIT extends BaseIT {
                 .setPassword(password)
                 .setConfirmPassword(password)
                 .clickAddNewUserBtn();
+
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(secondUserName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(secondUserName));
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));

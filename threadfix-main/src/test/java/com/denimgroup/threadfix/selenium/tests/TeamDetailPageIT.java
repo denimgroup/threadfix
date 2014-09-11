@@ -92,13 +92,13 @@ public class TeamDetailPageIT extends BaseIT {
 	}
 
     @Test
-    public void testNoChangesToTeamName() {
+    public void testChangesToTeamName() {
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
-                .clickActionButton()
-                .clickEditDeleteButton()
+                .clickEditOrganizationLink()
                 .clickModalSubmit();
+
         assertTrue("Team Name couldn't Edited properly",
                 teamDetailPage.successAlert().contains("Successfully edited team" + " " + teamName));
     }
