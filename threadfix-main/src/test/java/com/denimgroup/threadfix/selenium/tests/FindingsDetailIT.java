@@ -99,7 +99,7 @@ public class FindingsDetailIT extends BaseIT{
 
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
 
-        VulnerabilityDetailPage vulnerabilityDetailPage = mergeFindingPage.setVariablleOrLocation()
+        VulnerabilityDetailPage vulnerabilityDetailPage = mergeFindingPage.setVariableOrLocation()
                 .clickSubmitMergeButton();
 
         vulnerabilityDetailPage.clickApplicationLink(appName);
