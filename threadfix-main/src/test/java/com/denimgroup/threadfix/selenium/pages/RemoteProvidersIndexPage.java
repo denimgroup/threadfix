@@ -178,6 +178,11 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickWhiteHatTeamName(String teamName) {
+        driver.findElementByLinkText(teamName).click();
+        return new ApplicationDetailPage(driver);
+    }
+
     public RemoteProvidersIndexPage mapVeracodeToTeamAndApp(int appRow, String teamName, String appName) {
         clickVeraCodeEditMappingButton(appRow);
         selectTeamMapping(teamName);
@@ -232,6 +237,11 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new RemoteProvidersIndexPage(driver);
     }
 
+    public RemoteProvidersIndexPage clickCloseButton() {
+        driver.findElementById("closeModalButton").click();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
     public RemoteProvidersIndexPage clearVeraCode() {
         driver.findElementById("clearConfig2").click();
         handleAlert();
@@ -262,6 +272,8 @@ public class RemoteProvidersIndexPage extends BasePage {
     public boolean isTabPresent() {
         return driver.findElementById("remoteProvidersTab").isDisplayed();
     }
+
+    public boolean isSaveButtonClickable() { return driver.findElementsByCssSelector("#submit.disabled").isEmpty(); }
 
     /*-------------------------------- Helper Methods --------------------------------*/
 

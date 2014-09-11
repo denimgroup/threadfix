@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,9 +211,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickUnmappedFindings() {
-        sleep(1500);
-        driver.findElementByLinkText("20 Unmapped Findings").click();
+    public ApplicationDetailPage clickUnmappedFindings(String unmappedFindingNumber) {
+        driver.findElementByLinkText(unmappedFindingNumber).click();
         waitForElement(driver.findElementById("unmappedVulnType"));
         return new ApplicationDetailPage(driver);
     }
@@ -1160,4 +1160,32 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementByXPath("//span[text()='Scan file has already been uploaded.']").isDisplayed();
     }
 
+    public boolean isUniqueIdAvailabe(String uniqueName) {
+     return driver.findElementById("uniqueIdInput").getAttribute("value").equals(uniqueName);
+    }
+
+    public boolean checkNumberOfUnmappedCorrect(int expectedNumberOfFindings) {
+        List<WebElement> bodyRows = driver.findElementById("1").findElements(By.className("bodyRow"));
+        return bodyRows.size() == expectedNumberOfFindings;
+    }
+
+    public boolean isNumberOfOpenVulnerabilityCorrect(String expectedNumber) {
+        return driver.findElementById("appTotalVulns0").getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfCriticalCorrect(String expectedNumber) {
+        return driver.findElementById("appCriticalVulns0").getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfHighCorrect(String expectedNumber) {
+        return driver.findElementById("appHighVulns0").getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfMediumCorrect(String expectedNumber) {
+        return driver.findElementById("appMediumVulns0").getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isNumberOfLowCorrect(String expectedNumber) {
+        return driver.findElementById("appLowVulns0").getText().trim().equals(expectedNumber);
+    }
 }

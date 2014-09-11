@@ -46,9 +46,19 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementById("name").getText();
     }
 
+    public String successAlert(){
+        waitForElement(driver.findElementByClassName("alert-success"));
+        return driver.findElementByClassName("alert-success").getText().trim();
+    }
+
     public TeamDetailPage clickActionButton(){
         driver.findElementById("actionButton").click();
         sleep(2000);
+        return new TeamDetailPage(driver);
+    }
+
+    public TeamDetailPage clickEditDeleteButton() {
+        driver.findElementById("teamModalButton").click();
         return new TeamDetailPage(driver);
     }
 

@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -96,9 +97,14 @@ public class FindingsDetailIT extends BaseIT{
 
         FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
 
-        MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings()
-                .selectVariablleOrLocation();
-               // .clickSubmitMergeButton();
+        MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = mergeFindingPage.setVariablleOrLocation()
+                .clickSubmitMergeButton();
+
+        vulnerabilityDetailPage.clickApplicationLink(appName);
+
+        assertTrue("Merge wasn't added", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
 
 }

@@ -187,6 +187,11 @@ public class TeamIndexPage extends BasePage {
         return this;
     }
 
+    public TeamIndexPage setUniqueId(String uniqueId) {
+        driver.findElementById("uniqueIdInput").sendKeys(uniqueId);
+        return this;
+    }
+
     public TeamIndexPage expandSourceCodeFields() {
         driver.findElementByLinkText("Source Code Information").click();
         waitForElement(driver.findElementById("repositoryUrlInput"));

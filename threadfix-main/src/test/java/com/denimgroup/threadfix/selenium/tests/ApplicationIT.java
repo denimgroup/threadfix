@@ -38,6 +38,8 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class ApplicationIT extends BaseIT {
 
+    private static String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
+
 	@Test 
 	public void testCreateBasicApplicationDisplayedTeamIndexPage() {
 		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
@@ -1091,7 +1093,7 @@ public class ApplicationIT extends BaseIT {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-        FindingDetailPage findingDetailPage = applicationDetailPage.clickUnmappedFindings()
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickUnmappedFindings("20 Unmapped Findings")
                 .clickUnmappedViewFinding();
 
         assertTrue("Finding Detail Page is not valid", findingDetailPage.isScannerVulnerabilityTextPresent());
@@ -1117,7 +1119,6 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Scan didn't Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
     }
 
-    @Ignore
     @Test
     public void uploadSameScanTwiceOnApplicationPage() {
         String teamName = getRandomString(8);
@@ -1138,6 +1139,86 @@ public class ApplicationIT extends BaseIT {
                 .uploadScan(newScan);
 
         assertTrue("The first scan hasn't uploaded yet", applicationDetailPage.isScanUploadedAlready(teamName, appName));
+    }
+
+    @Test
+    public void checkUniqueIdValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String uniqueId = getRandomString(8);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+                .clickOrganizationHeaderLink()
+                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .setUniqueId(uniqueId)
+                .clickModalSubmit();
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
+                .clickEditDeleteBtn();
+
+        assertTrue("Unique ID wasn't saved", applicationDetailPage.isUniqueIdAvailabe(uniqueId));
+    }
+
+    @Test
+    public void testUnmappedFindingScansValidation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickUnmappedFindings("20 Unmapped Findings");
+
+        assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.checkNumberOfUnmappedCorrect(21));
+    }
+
+    //TODO
+    @Ignore
+    @Test
+    public void checkNumberUnderSeverityForRemoteProvider() {
+        String teamName = "importWhiteHatTeam" + getRandomString(3);
+        String appName = "importWhiteHatApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        remoteProvidersIndexPage.clickConfigureWhiteHat();
+        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
+        remoteProvidersIndexPage.saveWhiteHat();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+        remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
+        sleep(40000);
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().accept();
+
+        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
+
+        remoteProvidersIndexPage.clickWhiteHatTeamName(teamName);
+
+        assertTrue("Number of Open Vulnerabilities is not correct", applicationDetailPage.isNumberOfOpenVulnerabilityCorrect("14"));
+        assertTrue("Number of Critical Vulnerability is not correct", applicationDetailPage.isNumberOfCriticalCorrect("2"));
+        assertTrue("Number of High Vulnerability is not correct", applicationDetailPage.isNumberOfHighCorrect("8"));
+        assertTrue("Number of Medium Vulnerability is not correct", applicationDetailPage.isNumberOfMediumCorrect("4"));
+        assertTrue("Number of Low Vulnerability is not correct", applicationDetailPage.isNumberOfLowCorrect("0"));
+
+        remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
     public void sleep(int num) {

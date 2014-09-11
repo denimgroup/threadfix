@@ -105,17 +105,17 @@ public class ScanDetailIT extends BaseIT {
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
 
-        assertTrue("Imported Result is incorrect", scanDetailPage.isImportedResultsCorrect());
-        assertTrue("Duplicate Results is incorrect", scanDetailPage.isDuplicatedResultsCorrect());
-        assertTrue("Total finding result is incorrect", scanDetailPage.isTotalFindingCorrect());
-        assertTrue("Finding Without Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithoutVulnerabilitiesCorrect());
-        assertTrue("Finding With Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithVulnerabilitiesCorrect());
-        assertTrue("Duplicate Finding result is incorrect",scanDetailPage.isDuplicateFindingCorrect());
-        assertTrue("Hidden Vulnerabilities result is incorrect",scanDetailPage.isHiddenVulnerabilitiesCorrect());
-        assertTrue("Total Vulnerabilities is incorrect", scanDetailPage.isTotalVulnerabilitiesCorrect());
-        assertTrue("New Vulnerabilities is incorrect", scanDetailPage.isNewVulnerabilitiesCorrect());
-        assertTrue("Old Vulnerabilities result is incorrect", scanDetailPage.isOldVulnerabilitiesCorrect());
-        assertTrue("Resurfaced Vulnerabilities result is incorrect", scanDetailPage.isResurfacedVulnerabilitiesCorrect());
-        assertTrue("Closed Vulnerabilities result is incorrect", scanDetailPage.isClosedVulnerabilitiesCorrect());
+        assertTrue("Imported Result is incorrect", scanDetailPage.isImportedResultsCorrect("45"));
+        assertTrue("Duplicate Results is incorrect", scanDetailPage.isDuplicatedResultsCorrect("0"));
+        assertTrue("Total finding result is incorrect", scanDetailPage.isTotalFindingCorrect("45"));
+        assertTrue("Finding Without Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithoutVulnerabilitiesCorrect("0"));
+        assertTrue("Finding With Vulnerabilities result is incorrect", scanDetailPage.isFindingsWithVulnerabilitiesCorrect("45"));
+        assertTrue("Duplicate Finding result is incorrect",scanDetailPage.isDuplicateFindingCorrect("0"));
+        assertTrue("Hidden Vulnerabilities result is incorrect",scanDetailPage.isHiddenVulnerabilitiesCorrect("0"));
+        assertTrue("Total Vulnerabilities is incorrect", scanDetailPage.isTotalVulnerabilitiesCorrect("45"));
+        assertTrue("New Vulnerabilities is incorrect", scanDetailPage.isNewVulnerabilitiesCorrect("45"));
+        assertTrue("Old Vulnerabilities result is incorrect", scanDetailPage.isOldVulnerabilitiesCorrect("0"));
+        assertTrue("Resurfaced Vulnerabilities result is incorrect", scanDetailPage.isResurfacedVulnerabilitiesCorrect("0"));
+        assertTrue("Closed Vulnerabilities result is incorrect", scanDetailPage.isClosedVulnerabilitiesCorrect("0"));
     }
 }

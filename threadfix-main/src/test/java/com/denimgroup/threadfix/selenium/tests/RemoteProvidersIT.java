@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
@@ -350,6 +351,40 @@ public class RemoteProvidersIT extends BaseIT {
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+    }
+    @Ignore
+    @Test
+    public void checkDeletedApplicationInRemoteProvider() {
+        String teamName = "importWhiteHatTeam" + getRandomString(3);
+        String appName = "importWhiteHatApp" + getRandomString(3);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickEditDeleteBtn()
+                .clickDeleteLink();
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = teamDetailPage.clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
+
+        remoteProvidersIndexPage.clickEditWhiteHatButton(1);
+
+        assertFalse("application wasn't deleted", remoteProvidersIndexPage.isSaveButtonClickable());
+
+        remoteProvidersIndexPage.clickCloseButton()
+                .clearWhiteHat();
 
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));

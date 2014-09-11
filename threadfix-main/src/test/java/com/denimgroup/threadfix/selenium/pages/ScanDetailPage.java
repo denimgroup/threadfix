@@ -31,7 +31,6 @@ public class ScanDetailPage extends BasePage {
 
     public ScanDetailPage(WebDriver webdriver) {
         super(webdriver);
-
     }
 
     public String getScanHeader() {
@@ -72,72 +71,60 @@ public class ScanDetailPage extends BasePage {
         return new ScanDetailPage(driver);
     }
 
-    public boolean areStatisticsDisplayed() {
-        return driver.findElementById("statisticsDiv").isDisplayed();
-    }
-
     public boolean isViewFindingPresent() {
         return driver.findElementById("mappedVulnType").isDisplayed();
     }
 
-    public boolean isImportedResultsCorrect() {
-        String temp = driver.findElementById("importedResults").getText().trim();
-        return temp.equals("45");
+    public boolean isImportedResultsCorrect(String expectedCount) {
+        return driver.findElementById("importedResults").getText().trim().equals(expectedCount);
     }
 
-    public boolean isDuplicatedResultsCorrect() {
-        String temp = driver.findElementById("duplicateResults").getText().trim();
-        return temp.equals("0");
-    }
-    public boolean isTotalFindingCorrect() {
-        String temp = driver.findElementById("totalFindings").getText().trim();
-        return temp.equals("45");
+    public boolean areStatisticsDisplayed() {
+        return driver.findElementById("statisticsDiv").isDisplayed();
     }
 
-    public boolean isFindingsWithoutVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("findingsWithoutVulnerabilities").getText().trim();
-        return temp.equals("0");
+    public boolean isDuplicatedResultsCorrect(String expectedCount) {
+        return driver.findElementById("duplicateResults").getText().trim().equals(expectedCount);
     }
 
-    public boolean isFindingsWithVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("findingsWithVulnerabilities").getText().trim();
-        return temp.equals("45");
+    public boolean isTotalFindingCorrect(String expectedCount) {
+        return driver.findElementById("totalFindings").getText().trim().equals(expectedCount);
     }
 
-    public boolean isDuplicateFindingCorrect() {
-        String temp = driver.findElementById("duplicateFindings").getText().trim();
-        return temp.equals("0");
+    public boolean isFindingsWithoutVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("findingsWithoutVulnerabilities").getText().trim().equals(expectedCount);
     }
 
-    public boolean isHiddenVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("hiddenVulnerabilities").getText().trim();
-        return temp.equals("0");
+    public boolean isFindingsWithVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("findingsWithVulnerabilities").getText().trim().equals(expectedCount);
     }
 
-    public boolean isTotalVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("totalVulnerabilities").getText().trim();
-        return temp.equals("45");
+    public boolean isDuplicateFindingCorrect(String expectedCount) {
+        return driver.findElementById("duplicateFindings").getText().trim().equals(expectedCount);
     }
 
-    public boolean isNewVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("newVulnerabilities").getText().trim();
-        return temp.equals("45");
+    public boolean isHiddenVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("hiddenVulnerabilities").getText().trim().equals(expectedCount);
     }
 
-    public boolean isOldVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("oldVulnerabilities").getText().trim();
-        return temp.equals("0");
+    public boolean isTotalVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("totalVulnerabilities").getText().trim().equals(expectedCount);
     }
 
-    public boolean isResurfacedVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("resurfacedVulnerabilities").getText().trim();
-        return temp.equals("0");
+    public boolean isNewVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("newVulnerabilities").getText().trim().equals(expectedCount);
     }
 
-    public boolean isClosedVulnerabilitiesCorrect() {
-        String temp = driver.findElementById("closedVulnerabilities").getText().trim();
-        return temp.equals("0");
+    public boolean isOldVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("oldVulnerabilities").getText().trim().equals(expectedCount);
     }
 
+    public boolean isResurfacedVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("resurfacedVulnerabilities").getText().trim().equals(expectedCount);
+    }
+
+    public boolean isClosedVulnerabilitiesCorrect(String expectedCount) {
+        return driver.findElementById("closedVulnerabilities").getText().trim().equals(expectedCount);
+    }
 }
 

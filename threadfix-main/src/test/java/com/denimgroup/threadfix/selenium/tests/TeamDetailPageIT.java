@@ -90,4 +90,16 @@ public class TeamDetailPageIT extends BaseIT {
         assertTrue("Link for application detail page was not present.", teamDetailPage.isAppLinkPresent(appName));
         assertTrue("Link for application detail page was not clickable.", teamDetailPage.isAppLinkClickable(appName));
 	}
+
+    @Test
+    public void testNoChangesToTeamName() {
+        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickActionButton()
+                .clickEditDeleteButton()
+                .clickModalSubmit();
+        assertTrue("Team Name couldn't Edited properly",
+                teamDetailPage.successAlert().contains("Successfully edited team" + " " + teamName));
+    }
 }
