@@ -23,15 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
-import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.ApplicationCriticalityService;
+import com.denimgroup.threadfix.service.LicenseService;
+import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -41,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +47,6 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
-import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 /**
@@ -75,12 +71,6 @@ public class ApplicationsIndexController {
 	private ReportsService reportsService;
     @Autowired
 	private ApplicationCriticalityService applicationCriticalityService;
-    @Autowired
-    private ScanTypeCalculationService scanTypeCalculationService;
-    @Autowired
-    private ScanService scanService;
-    @Autowired
-    private ScanMergeService scanMergeService;
     @Autowired(required = false)
     private LicenseService licenseService;
 
@@ -140,43 +130,4 @@ public class ApplicationsIndexController {
 			return new ModelAndView("reports/report");
 		}
 	}
-
-    /**
-     * Allows the user to upload a scan to an existing application.
-     *
-     * @return Team with updated stats.
-     */
-    @RequestMapping(headers="Accept=application/json", value="/organizations/{orgId}/applications/{appId}/upload/remote", method=RequestMethod.POST)
-    public @ResponseBody RestResponse<Organization> uploadScan(@PathVariable("appId") int appId, @PathVariable("orgId") int orgId,
-                                                       HttpServletRequest request, @RequestParam("file") MultipartFile file) {
-
-        log.info("Received REST request to upload a scan to application " + appId + ".");
-
-        if (!PermissionUtils.isAuthorized(Permission.CAN_UPLOAD_SCANS, orgId, appId)){
-            return failure("You don't have permission to upload scans.");
-        }
-
-        Integer myChannelId = scanTypeCalculationService.calculateScanType(appId, file, request.getParameter("channelId"));
-
-        if (myChannelId == null) {
-            return failure("Failed to determine the scan type.");
-        }
-
-        String fileName = scanTypeCalculationService.saveFile(myChannelId, file);
-
-        ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
-
-        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
-            Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
-
-            if (scan != null) {
-                Organization organization = organizationService.loadById(orgId);
-                return success(organization);
-            } else {
-                return failure("Something went wrong while processing the scan.");
-            }
-        } else {
-            return failure(returnValue.getScanCheckResult().toString());
-        }
-    }
 }

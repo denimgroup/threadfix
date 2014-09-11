@@ -366,6 +366,33 @@ public class CollectionUtils {
                                        K key7, V value7, K key8, V value8,
                                        K key9, V value9, K key10, V value10,
                                        K key11, V value11, K key12, V value12,
+                                       K key13, V value13) {
+        HashMap<K, V> map = new HashMap<K, V>();
+
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
+        map.put(key5, value5);
+        map.put(key6, value6);
+        map.put(key7, value7);
+        map.put(key8, value8);
+        map.put(key9, value9);
+        map.put(key10, value10);
+        map.put(key11, value11);
+        map.put(key12, value12);
+        map.put(key13, value13);
+
+        return map;
+    }
+
+    @Nonnull
+    public static <K, V> Map<K, V> map(K key1, V value1, K key2, V value2,
+                                       K key3, V value3, K key4, V value4,
+                                       K key5, V value5, K key6, V value6,
+                                       K key7, V value7, K key8, V value8,
+                                       K key9, V value9, K key10, V value10,
+                                       K key11, V value11, K key12, V value12,
                                        K key13, V value13, K key14, V value14) {
         HashMap<K, V> map = new HashMap<K, V>();
 
