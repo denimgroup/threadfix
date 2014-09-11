@@ -154,7 +154,12 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 }
             }
 
-            outputBuilder.setLength(outputBuilder.length() - 1);
+            if(outputBuilder.length() > 0){
+                outputBuilder.setLength(outputBuilder.length() - 1);
+            } else {
+                outputBuilder.append("No applications");
+            }
+
             String outputString = outputBuilder.toString();
             RestResponse<String> response = RestResponse.success(outputString);
             response.setJsonString(outputString);
