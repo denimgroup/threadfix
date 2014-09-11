@@ -25,6 +25,7 @@
         <cbs:cachebustscript src="/scripts/services.js"/>
         <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
         <cbs:cachebustscript src="/scripts/header-controller.js"/>
+        <cbs:cachebustscript src="/scripts/wrapper-controller.js"/>
         <cbs:cachebustscript src="/scripts/init-controller.js"/>
         <cbs:cachebustscript src="/scripts/directives.js"/>
 
@@ -53,9 +54,10 @@
                     <div class="right corner"><!-- --></div>
                     <div class="center"><!-- --></div>
                 </div>
-                <div id="main-content">
+                <div id="main-content" ng-controller="WrapperController" class="hide-wrapper" ng-class="{ 'cancel-hide-wrapper': loaded }">
                     {{name}}
                     <decorator:body/>
+                    <div ng-hide="loaded" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                 </div>
                 <div class="bottom-corners corners">
                     <div class="left corner"><!-- --></div>
