@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.springframework.context.ApplicationContextAware;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

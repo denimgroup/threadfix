@@ -43,8 +43,7 @@ public class UserPermissionsPage extends BasePage {
 
     public UserPermissionsPage clickAddPermissionsLink() {
         driver.findElementById("addPermissionButton").click();
-        waitForElement(driver.findElementById("myModalLabel"));
-        sleep(3000);
+        waitForElement(driver.findElementById("orgSelect"));
         return new UserPermissionsPage(driver);
     }
 

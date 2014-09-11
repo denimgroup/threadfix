@@ -32,7 +32,7 @@ public class MergeFindingPage extends BasePage {
 
 	}
 
-    public MergeFindingPage setVariablleOrLocation() {
+    public MergeFindingPage setVariableOrLocation() {
         driver.findElementByName("vulnerabilityId").click();
         return new MergeFindingPage(driver);
     }

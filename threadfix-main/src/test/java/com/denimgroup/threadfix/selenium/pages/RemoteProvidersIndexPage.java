@@ -218,7 +218,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
 	public String getErrorMessage(){
-        waitForElementPresence("errorSpan",60);
+        waitForElementPresence("errorSpan", 60);
 		return driver.findElementById("errorSpan").getText();
 	}
 	
