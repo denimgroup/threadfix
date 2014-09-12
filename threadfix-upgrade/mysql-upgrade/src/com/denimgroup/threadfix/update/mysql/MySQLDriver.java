@@ -149,6 +149,13 @@ public class MySQLDriver {
 		        } else {
 		        	System.out.println("1.2 Final vulnerabilities were found, not running rc3-final.sql.");
 			    }
+                // add Riverbed WAF (SteelApp Web App Firewall)
+                if (!wafExists("SteelApp Web App Firewall")) {
+                    System.out.println("SteelApp Web App Firewall not found, running add-steelapp-waf.sql");
+                    db.runSQLFile("add-steelapp-waf.sql");
+                } else {
+                    System.out.println("SteelApp Web App Firewall were found, not running add-steelapp-waf.sql");
+                }
 		        
 	        } finally {
 	        
@@ -222,6 +229,16 @@ public class MySQLDriver {
 			return false;
 		}
 	    
+        public static boolean wafExists(String wafName) {
+            ResultSet set = getResults("SELECT * FROM WAFTYPE WHERE name = '" + wafName + "';");
+            try {
+                return set != null && set.next();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
 	    public static ResultSet getResults(String query) {
 			try {
 	    		PreparedStatement statement = conn.prepareStatement(query);
