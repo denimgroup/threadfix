@@ -35,6 +35,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -47,15 +51,20 @@ import java.util.jar.Manifest;
 public class CacheBustFilter extends GenericFilterBean {
 
     private final SanitizedLogger log = new SanitizedLogger(CacheBustFilter.class);
+    private String gitCommit = null;
     private String buildNumber = null;
+    private Date buildDate = null;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
+        Integer randomInt = new Random().nextInt(10000000);
 
         // If there was a build number defined in the war,
         // then use it for the cache buster.
-        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.1-SNAPSHOT-" + new Random().nextInt(10000000));
+        req.setAttribute("gitCommit", (gitCommit != null) ? gitCommit : randomInt);
+        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.1-SNAPSHOT-" + randomInt);
+        req.setAttribute("buildDate", (buildDate != null) ? buildDate : Calendar.getInstance().getTime());
 
         chain.doFilter(request, response);
     }
@@ -72,12 +81,23 @@ public class CacheBustFilter extends GenericFilterBean {
                 mf.read(is);
                 Attributes attrs = mf.getMainAttributes();
                 String version = attrs.getValue("Implementation-Version");
-                String build = attrs.getValue("Implementation-Build");
+                String date = attrs.getValue("Implementation-Build-Date");
+                gitCommit = attrs.getValue("Implementation-Build");
 
-                if (version != null && build != null){
-                    buildNumber = version + "-" + build;
+                if (version != null && gitCommit != null){
+                    buildNumber = version + "-" + gitCommit;
                     log.info("Application version set to: " + buildNumber);
                 }
+
+                if(date != null) {
+                    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    try {
+                        buildDate = dt.parse(date);
+                    } catch (ParseException e) {
+                        log.debug("Exception thrown parsing build date from MANIFEST.mf file.");
+                    }
+                }
+
             }
         } catch (IOException e) {
             log.error("I/O Exception reading manifest: " + e.getMessage());

@@ -1,5 +1,4 @@
 <%@ include file="/common/taglibs.jsp"%>
-<%@ taglib prefix="cbs" uri="/WEB-INF/jscachebust.tld"%>
 
 <head>
     <title><c:out value="${ surveyResult.survey.name }" /></title>

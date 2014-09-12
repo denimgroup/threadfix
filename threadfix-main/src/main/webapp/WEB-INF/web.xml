@@ -85,7 +85,7 @@
 		<init-param>
 			<param-name>entryPoints</param-name>
 			<param-value>
-        		,/,/index.jsp,/login.jsp,/organizations,/wafs,/configuration,/reports,/dashboard,/scans,
+        		,/,/index.jsp,/login.jsp,/organizations,/about,/wafs,/configuration,/reports,/dashboard,/scans,
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/scanplugin/index,/teams,
