@@ -37,9 +37,7 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class ApplicationIT extends BaseIT {
 
-    private static String SENTINEL_API_KEY = System.getProperty("WHITEHAT_KEY");
-
-	@Test 
+	@Test
 	public void testCreateBasicApplicationDisplayedTeamIndexPage() {
 		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
 		String appName = "testCreateBasicApplicationApp" + getRandomString(3);
@@ -1141,7 +1139,7 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void checkUniqueIdValidation() {
+    public void uniqueIDTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
@@ -1162,7 +1160,7 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void testUnmappedFindingScansValidation() {
+    public void unmappedFindingScanTest() {
         String teamName = getRandomString(8);
         String appName = getRandomString(8);
 
