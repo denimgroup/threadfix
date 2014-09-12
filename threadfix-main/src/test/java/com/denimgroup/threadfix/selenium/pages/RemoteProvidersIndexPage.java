@@ -83,12 +83,19 @@ public class RemoteProvidersIndexPage extends BasePage {
 		waitForElement(driver.findElementById("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
-	
+
+    public RemoteProvidersIndexPage selectWhiteHatImportStyle() {
+        driver.findElementByLinkText("WhiteHat").click();
+        return this;
+    }
+
 	public RemoteProvidersIndexPage saveWhiteHat(){
+        selectWhiteHatImportStyle();
 		driver.findElementById("submit").click();
         waitForElement(driver.findElementById("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
+
 
 	public RemoteProvidersIndexPage setQualysUsername(String user){
 		driver.findElementById("usernameInput").clear();
@@ -277,6 +284,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public boolean isApplicationLinkPresent(String appName) {
         return driver.findElementsByLinkText(appName).size() != 0;
+    }
+
+    public boolean isTeamLinkPresent(String teamName) {
+        return driver.findElementsByLinkText(teamName).size() != 0;
     }
 
     public boolean isTabPresent() {

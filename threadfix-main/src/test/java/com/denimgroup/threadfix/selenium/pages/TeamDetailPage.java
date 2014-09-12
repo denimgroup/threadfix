@@ -577,4 +577,8 @@ public class TeamDetailPage extends BasePage {
     public boolean isNumberOfLowCorrect(String expectedNumber, int row) {
         return driver.findElementById("appLowVulns" + row).getText().trim().equals(expectedNumber);
     }
+
+    public boolean isNumberOfInfoCorrect(String expectedNumber, int row) {
+        return driver.findElementById("appInfoVulns" + row).getText().trim().equals(expectedNumber);
+    }
 }
