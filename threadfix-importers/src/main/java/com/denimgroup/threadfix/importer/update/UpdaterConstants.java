@@ -31,10 +31,10 @@ final class UpdaterConstants {
     private UpdaterConstants() {}
 
     public static final String
-            DEFECT_TRACKERS_FOLDER = "/mappings/defect",
-            GENERIC_VULNS_FOLDER = "/mappings/generic",
-            SCANNERS_FOLDER = "/mappings/scanner",
-            WAFS_FOLDER = "/mappings/waf",
+            DEFECT_TRACKERS_FOLDER = "mappings/defect",
+            GENERIC_VULNS_FOLDER = "mappings/generic",
+            SCANNERS_FOLDER = "mappings/scanner",
+            WAFS_FOLDER = "mappings/waf",
             DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
 
 }
