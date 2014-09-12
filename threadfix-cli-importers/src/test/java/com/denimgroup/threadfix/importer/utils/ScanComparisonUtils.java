@@ -60,11 +60,8 @@ public class ScanComparisonUtils {
     public void compareInternal(String[][] array, String filePath) {
         if (needsUpdating) {
             try {
-                List<String[]> lists = mappingsUpdaterService.updateChannelVulnerabilities();
+                mappingsUpdaterService.updateMappings();
                 System.out.println("Updated mappings.");
-                for (String[] items : lists) {
-                    System.out.println(Arrays.asList(items));
-                }
                 needsUpdating = false;
             } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException
                 throw new IllegalStateException("Encountered exception while updating channel vulns. Fix it.", e);

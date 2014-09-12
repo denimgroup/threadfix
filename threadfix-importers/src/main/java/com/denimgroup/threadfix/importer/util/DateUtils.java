@@ -43,7 +43,6 @@ public class DateUtils {
 
     /**
      * This method parses strings using the date format "yyyy-MM-DD'T'HH:mm:ss'Z'" which is ISO 8601
-     * @param formatString
      * @param dateString
      * @return
      */
@@ -132,6 +131,20 @@ public class DateUtils {
         } else {
             return null;
         }
+    }
+
+    public static Calendar getLatestCalendar(Calendar... calendars) {
+        Calendar latest = null;
+
+        for (Calendar calendar : calendars) {
+            if (calendar != null) {
+                if (latest == null || calendar.after(latest)) {
+                    latest = calendar;
+                }
+            }
+        }
+
+        return latest;
     }
 	
 }
