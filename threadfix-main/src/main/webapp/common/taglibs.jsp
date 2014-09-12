@@ -9,5 +9,6 @@
 
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator"%>
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/page" prefix="page"%>
+<%@ taglib uri="/WEB-INF/jscachebust.tld" prefix="cbs"%>
 
 <c:set var="datePattern"><fmt:message key="date.format"/></c:set>
