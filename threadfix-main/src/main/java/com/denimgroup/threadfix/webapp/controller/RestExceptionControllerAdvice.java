@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import org.springframework.orm.hibernate3.HibernateJdbcException;
+import com.mysql.jdbc.PacketTooBigException;
 import org.springframework.security.access.AccessDeniedException;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 
@@ -65,6 +67,26 @@ public class RestExceptionControllerAdvice {
 
         return failure(((RestException) ex).getResponseString());
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = HibernateJdbcException.class)
+    public @ResponseBody RestResponse<String> resolveException(HibernateJdbcException ex) {
+
+        ExceptionLog exceptionLog = new ExceptionLog(ex);
+
+        exceptionLogService.storeExceptionLog(exceptionLog);
+
+        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+
+        if(ex.getRootCause().getClass().equals(PacketTooBigException.class)){
+            return failure("Scan is too large to be handled by your MySQL Server. You can remediate this " +
+                    "by increasing the max_allowed_packet' size for your MySQL Server instance.");
+        }  else {
+            return failure(ex.getRootCause().getMessage());
+        }
+    }
+
+
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = Exception.class)
