@@ -53,6 +53,8 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     private ChannelVulnerabilityUpdater channelVulnerabilityUpdater;
     @Autowired
     private DefectTrackerUpdater        defectTrackerUpdater;
+    @Autowired
+    WafsUpdater wafsUpdater;
 
     private final SanitizedLogger log = new SanitizedLogger(ScannerMappingsUpdaterServiceImpl.class);
 
@@ -107,9 +109,10 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         Calendar genericMappingsTime = harness.executeUpdates(genericMappingsUpdater);
         Calendar channelMappingsTime = harness.executeUpdates(channelVulnerabilityUpdater);
         Calendar defectTrackerTime = harness.executeUpdates(defectTrackerUpdater);
+        Calendar wafTime = harness.executeUpdates(wafsUpdater);
 
         Calendar latestCalendar = getLatestCalendar(
-                pluginTimestamp, genericMappingsTime, channelMappingsTime, defectTrackerTime);
+                pluginTimestamp, genericMappingsTime, channelMappingsTime, defectTrackerTime, wafTime);
         config.setLastScannerMappingsUpdate(latestCalendar);
 
         defaultConfigurationDao.saveOrUpdate(config);
@@ -142,8 +145,9 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         Calendar genericMappingsTime = harness.findMostRecentDate(genericMappingsUpdater);
         Calendar channelMappingsTime = harness.findMostRecentDate(channelVulnerabilityUpdater);
         Calendar defectTrackerTime = harness.findMostRecentDate(defectTrackerUpdater);
+        Calendar wafsTime = harness.findMostRecentDate(wafsUpdater);
 
-        return DateUtils.getLatestCalendar(genericMappingsTime, channelMappingsTime, defectTrackerTime);
+        return DateUtils.getLatestCalendar(genericMappingsTime, channelMappingsTime, defectTrackerTime, wafsTime);
     }
 
 }
