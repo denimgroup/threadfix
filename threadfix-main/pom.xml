@@ -107,11 +107,15 @@
                         <phase>validate</phase>
                         <goals>
                             <goal>create</goal>
+                            <goal>create-timestamp</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
                     <shortRevisionLength>7</shortRevisionLength>
+                    <timestampFormat>{0, date, yyyy-MM-dd HH:mm:ss}</timestampFormat>
                 </configuration>
             </plugin>
             <plugin>
@@ -124,8 +128,9 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <!-- Adds ${buildNumber} as an entry in the manifest file -->
+                             <!--Adds ${buildNumber} as an entry in the manifest file-->
                             <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Build-Date>${timestamp}</Implementation-Build-Date>
                         </manifestEntries>
                     </archive>
                 </configuration>
