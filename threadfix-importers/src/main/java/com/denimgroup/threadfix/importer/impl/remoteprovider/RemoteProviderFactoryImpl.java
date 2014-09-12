@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.realtimeprovider.RealtimeFortifyClient;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +65,9 @@ public class RemoteProviderFactoryImpl implements RemoteProviderFactory {
             remoteProvider = new WhiteHatRemoteProvider();
         } else if (type == ScannerType.VERACODE) {
             remoteProvider = new VeracodeRemoteProvider();
+        }
+        else if (type == ScannerType.FORTIFY_SSC_REALTIME){
+            remoteProvider = new RealtimeFortifyClient();
         }
 
         return remoteProvider;

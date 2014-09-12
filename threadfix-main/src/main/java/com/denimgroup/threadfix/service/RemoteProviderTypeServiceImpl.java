@@ -24,7 +24,9 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.dao.RealtimeMetaDataScanDao;
 import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
+import com.denimgroup.threadfix.data.entities.RealtimeMetaDataScan;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -35,8 +37,11 @@ import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false)
@@ -58,6 +63,10 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 
     @Autowired
     private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private RealtimeMetaDataScanService realtimeMetaDataScanService;
+    @Autowired
+    private RealtimeMetaDataScanDao metaDataScanDao;
 
     @Autowired
     RemoteProviderTypeServiceImpl (RemoteProviderTypeDao remoteProviderTypeDao) {
@@ -67,9 +76,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	@Override
 	@Transactional
 	public ResponseCode importScansForApplications(Integer remoteProviderTypeId) {
-		
+
 		RemoteProviderType type = load(remoteProviderTypeId);
-		
+
 		if (type == null) {
 			log.error("Type was null, Remote Provider import failed.");
 			return ResponseCode.BAD_ID;
@@ -155,8 +164,25 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			
 			int noOfScanNotFound = 0;
 			int noOfNoNewScans = 0;
-			for (Scan resultScan : resultScans) {
-				if (resultScan == null || resultScan.getFindings() == null
+            for (Scan resultScan : resultScans) {
+                if (remoteProviderApplication.getRemoteProviderType().getIsFortifyRealtime())
+                {
+                    if(resultScan==null){
+                        success = ResponseCode.ERROR_OTHER;
+                    }
+                    remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
+                    if (realtimeMetaDataScanService.update((RealtimeMetaDataScan)resultScan) == 0 ) {
+                        log.info("Creating Realtime Metadata.");
+                        remoteProviderApplicationService.store(remoteProviderApplication);
+                        metaDataScanDao.saveOrUpdate((RealtimeMetaDataScan) resultScan);
+                        success = ResponseCode.SUCCESS;
+                    }
+                    else {
+                        log.info("Updating Realtime Metadata.");
+                        success = ResponseCode.SUCCESS;
+                    }
+                }
+				else if (resultScan == null || resultScan.getFindings() == null
 						|| resultScan.getFindings().size() == 0) {
 					log.warn("Remote Scan import returned a null scan or a scan with no findings.");
 					noOfScanNotFound++;
@@ -287,7 +313,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	
 	@Override
 	public ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
-			int typeId) {
+			int typeId, String url) {
 		
 		RemoteProviderType databaseRemoteProviderType = load(typeId);
 
@@ -301,7 +327,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		
 		// TODO test this
 		// If the username hasn't changed but the password has, update the apps instead of deleting them.
-		
+
 		if (databaseRemoteProviderType.getHasUserNamePassword() &&
 				username != null && password != null &&
 				username.equals(databaseRemoteProviderType.getUsername()) &&
@@ -312,6 +338,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			
 			databaseRemoteProviderType.setPassword(password);
             databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
+            databaseRemoteProviderType.setUrl(url);
 			remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
 			store(databaseRemoteProviderType);
 			return ResponseCode.SUCCESS;
@@ -327,6 +354,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			databaseRemoteProviderType.setApiKey(apiKey);
 			databaseRemoteProviderType.setUsername(username);
 			databaseRemoteProviderType.setPassword(password);
+            databaseRemoteProviderType.setUrl(url);
             databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
 
             List<RemoteProviderApplication> apps = remoteProviderApplicationService
@@ -373,6 +401,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			type.setEncryptedApiKey(null);
 			type.setEncryptedUsername(null);
 			type.setEncryptedPassword(null);
+            type.setUrl(null);
 			if (type.getRemoteProviderApplications() != null) {
 				remoteProviderApplicationService.deleteApps(type);
 			}

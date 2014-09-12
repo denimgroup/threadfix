@@ -29,11 +29,8 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.OrganizationService;
-import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
-import com.denimgroup.threadfix.service.RemoteProviderTypeService;
+import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
-import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -42,8 +39,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +67,8 @@ public class RemoteProvidersController {
 	private OrganizationService organizationService;
     @Autowired
     ScheduledRemoteProviderImportService scheduledRemoteProviderImportService;
+    @Autowired
+    private RealtimeMetaDataScanService realtimeMetaDataScanService;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -198,7 +202,10 @@ public class RemoteProvidersController {
                 remoteProviderApplicationService.load(rpAppId);
 
         remoteProviderApplicationService.deleteMapping(dbRemoteProviderApplication, appId);
-
+        /**
+         * Table entry is only delete if RemoteProviderApplication is a of realtime provider
+         * */
+        realtimeMetaDataScanService.deleteByRemoteProviderApplication(dbRemoteProviderApplication);
         return RestResponse.success(dbRemoteProviderApplication);
 	}
 
@@ -211,8 +218,9 @@ public class RemoteProvidersController {
 				request.getParameter("username"),
 				request.getParameter("password"),
 				request.getParameter("apiKey"),
-                request.getParameter("matchSourceNumbers"), typeId);
-		
+                request.getParameter("matchSourceNumbers"), typeId,
+                request.getParameter("url")  );
+
 		if (test.equals(ResponseCode.BAD_ID)) {
 			return RestResponse.failure("Unable to find that Remote Provider Type.");
 		} else if (test.equals(ResponseCode.NO_APPS)) {

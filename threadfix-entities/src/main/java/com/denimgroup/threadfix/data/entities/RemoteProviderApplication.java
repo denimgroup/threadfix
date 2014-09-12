@@ -27,8 +27,14 @@ package com.denimgroup.threadfix.data.entities;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import java.util.Calendar;
 
@@ -44,11 +50,13 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String nativeId;
+    private String nativeName;
 	
 	private RemoteProviderType remoteProviderType;
-	
+
 	private Application application;
 	private ApplicationChannel applicationChannel;
+    private RealtimeMetaDataScan realtimeMetaDataScan;
 	
 	private Calendar lastImportTime;
 
@@ -101,5 +109,24 @@ public class RemoteProviderApplication extends AuditableEntity  {
 	public void setApplicationChannel(ApplicationChannel applicationChannel) {
 		this.applicationChannel = applicationChannel;
 	}
-	
+
+    @OneToOne(mappedBy = "remoteProviderApplication")
+    @JsonView(AllViews.TableRow.class)
+    public RealtimeMetaDataScan getRealtimeMetaDataScan() {
+        return realtimeMetaDataScan;
+    }
+
+    public void setRealtimeMetaDataScan(RealtimeMetaDataScan realtimeMetaDataScan) {
+        this.realtimeMetaDataScan = realtimeMetaDataScan;
+    }
+
+    @Column(length = NATIVE_ID_LENGTH)
+    @JsonView(AllViews.TableRow.class)
+    public String getNativeName() {
+        return nativeName;
+    }
+
+    public void setNativeName(String nativeName) {
+        this.nativeName = nativeName;
+    }
 }

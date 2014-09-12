@@ -48,7 +48,8 @@ public enum ScannerType {
 	QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS", "QualysGuard WAS"),
 	SENTINEL("whitehat", "WhiteHat Sentinel", "WhiteHat Sentinel"),
 	VERACODE("veracode", "Veracode", "Veracode"),
-	MANUAL("manual", "Manual", "Manual");
+	MANUAL("manual", "Manual", "Manual"),
+    FORTIFY_SSC_REALTIME("Fortify SSC Realtime","Fortify SSC Realtime","Fortify SSC Realtime");
 
 	private String fullName;
 	private String shortName;

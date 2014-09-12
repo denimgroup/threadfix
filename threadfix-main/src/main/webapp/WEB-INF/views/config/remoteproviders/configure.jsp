@@ -36,6 +36,15 @@
                         <span class="errors" ng-show="form.apiKey.$dirty && form.apiKey.$error.maxlength">Over 60 characters limit!</span>
                     </td>
                 </tr>
+                <tr ng-show="object.isFortifyRealtime">
+                    <td class="no-color">URL</td>
+                    <td class="no-color inputValue">
+                    <input focus-on="focusInput" ng-model="object.url" id="fortifyUrlInput" type="url" name="url" size="50" maxlength="225" style="width:280px"/>
+                    </td>
+                    <td>
+                        <span class="errors" ng-show="object.isFortifyRealtime && form.url.$dirty && form.url.$error.required">URL is required.</span>
+                    </td>
+                </tr>
                 <tr ng-show="object.isQualys">
                     <td class="no-color">Region</td>
                     <td class="no-color inputValue">

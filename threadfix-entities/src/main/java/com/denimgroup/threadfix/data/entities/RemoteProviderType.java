@@ -28,8 +28,13 @@ import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class RemoteProviderType extends BaseEntity  {
     public static final String SENTINEL        = ScannerType.SENTINEL.getFullName();
     public static final String VERACODE        = ScannerType.VERACODE.getFullName();
     public static final String QUALYSGUARD_WAS = ScannerType.QUALYSGUARD_WAS.getFullName();
+    public static final String FORTIFY_SSC_REALTIME = ScannerType.FORTIFY_SSC_REALTIME.getFullName();
 
     public static final int NAME_LENGTH    = 60;
     public static final int API_KEY_LENGTH = 1024;
@@ -78,6 +84,7 @@ public class RemoteProviderType extends BaseEntity  {
     private String password;
     @Size(max = 100, message = "{errors.maxlength} " + 100 + ".")
     private String apiKey;
+    private String url;
 
     private List<RemoteProviderApplication> remoteProviderApplications;
     private List<RemoteProviderApplication> filteredApplications;
@@ -249,6 +256,12 @@ public class RemoteProviderType extends BaseEntity  {
 		return name != null && name.equals(QUALYSGUARD_WAS);
 	}
 
+    @Transient
+    @JsonView(AllViews.TableRow.class)
+    public boolean getIsFortifyRealtime() {
+        return name != null && name.equals(FORTIFY_SSC_REALTIME);
+    }
+
 	@Transient
     @JsonView(AllViews.TableRow.class)
 	public boolean getIsWhiteHat() {
@@ -275,4 +288,15 @@ public class RemoteProviderType extends BaseEntity  {
     public boolean getMatchSourceNumbersNullSafe() {
         return matchSourceNumbers != null && matchSourceNumbers;
     }
+
+    @JsonView(AllViews.TableRow.class)
+    @Column(nullable = true)
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }

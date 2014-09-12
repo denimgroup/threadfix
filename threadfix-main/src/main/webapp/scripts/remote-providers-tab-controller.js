@@ -79,6 +79,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                         provider.username = undefined;
                         provider.apiKey = undefined;
                         provider.password = undefined;
+                        provider.url= undefined;
                         provider.remoteProviderApplications = undefined;
                         provider.successMessage = undefined;
                         provider.errorMessage = undefined;

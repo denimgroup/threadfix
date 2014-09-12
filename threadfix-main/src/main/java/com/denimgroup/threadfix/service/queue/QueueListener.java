@@ -23,16 +23,38 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.JobStatus;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.ScanQueueTask;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.*;
+import com.denimgroup.threadfix.service.ApplicationChannelService;
+import com.denimgroup.threadfix.service.ApplicationService;
+import com.denimgroup.threadfix.service.DefectService;
+import com.denimgroup.threadfix.service.JobStatusService;
+import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
+import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import javax.annotation.Nullable;
+
+import com.denimgroup.threadfix.service.ScanMergeService;
+import com.denimgroup.threadfix.service.ScanQueueService;
+import com.denimgroup.threadfix.service.VulnerabilityFilterService;
+import com.denimgroup.threadfix.service.VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jms.*;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 import java.util.List;
 import java.util.Map;
 
@@ -218,7 +240,7 @@ public class QueueListener implements MessageListener {
 				continue;
 			}
 			remoteProviderTypeService.decryptCredentials(remoteProviderApplication.getRemoteProviderType());
-			remoteProviderTypeService.importScansForApplications(remoteProviderApplication.getId());
+			remoteProviderTypeService.importScansForApplications(remoteProviderApplication.getRemoteProviderType().getId());
 		}
 
         queueSender.updateAllCachedStatistics();
