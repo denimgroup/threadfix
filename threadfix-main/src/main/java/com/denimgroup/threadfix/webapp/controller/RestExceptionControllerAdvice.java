@@ -86,8 +86,6 @@ public class RestExceptionControllerAdvice {
         }
     }
 
-
-
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = Exception.class)
     public ModelAndView resolveException(Exception ex) {
