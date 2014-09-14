@@ -80,7 +80,7 @@ public class RestExceptionControllerAdvice {
 
         if(ex.getRootCause().getClass().equals(PacketTooBigException.class)){
             return failure("Scan is too large to be handled by your MySQL Server. You can remediate this " +
-                    "by increasing the max_allowed_packet' size for your MySQL Server instance.");
+                    "by increasing the 'max_allowed_packet' size for your MySQL Server instance.");
         }  else {
             return failure(ex.getRootCause().getMessage());
         }
