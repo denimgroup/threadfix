@@ -42,6 +42,7 @@ import org.quartz.SchedulerFactory;
 import org.quartz.CronTrigger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -68,6 +69,7 @@ public class ScheduledDefectTrackerUpdater {
     public static Scheduler getScheduler() {
         if (scheduler == null) {
             SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+
             try {
                 scheduler = schedulerFactory.getScheduler();
             } catch (SchedulerException ex) {
@@ -76,6 +78,20 @@ public class ScheduledDefectTrackerUpdater {
         }
         return scheduler;
     }
+
+    @PreDestroy
+    public void destroy() {
+        if (scheduler != null) {
+            log.info("Shutting down scheduler.");
+            try {
+                scheduler.shutdown();
+                log.info("Successfully shut down scheduler.");
+            } catch (SchedulerException e) {
+                log.error("Received SchedulerException while shutting down the scheduler: ", e);
+            }
+        }
+    }
+
     @PostConstruct
     public void run() {
         if (scheduler == null) {
