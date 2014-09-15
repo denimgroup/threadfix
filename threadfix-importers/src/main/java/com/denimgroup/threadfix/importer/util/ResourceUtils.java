@@ -29,12 +29,15 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 public class ResourceUtils {
 
@@ -53,60 +56,80 @@ public class ResourceUtils {
 
     @Nonnull
     public static BufferedReader getResourceAsBufferedReader(String fileName) {
+        InputStream resourceAsStream = getResourceAsStream(fileName);
+
+        if (resourceAsStream == null) {
+            throw new IllegalArgumentException("Invalid argument (" + fileName +
+                    ") encountered: getResourceAsStream returned null.");
+        }
+
+        return new BufferedReader(new InputStreamReader(resourceAsStream));
+    }
+
+    /**
+     * This name is long on purpose because it does a very specific thing
+     * @param directoryName
+     * @return
+     */
+    @Nonnull
+    public static Iterable<String> getFileNamesInResourceDirectoryFromInsideThisJar(String directoryName) {
         try {
-            return new BufferedReader(new FileReader(getResourceAsFile(fileName)));
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("Invalid file passed to getResourceAsBufferedReader: " + fileName);
+            return getResourceListing(ResourceUtils.class, directoryName);
+        } catch (URISyntaxException | IOException e) {
+            throw new IllegalStateException("Scanner plugin configuration was invalid. Please modify and try again.", e);
         }
     }
 
-    @Nonnull
-    public static File getResourceAsFile(String fileName) {
-        URL url  = getResourceAsUrl(fileName);
+    /**
+     * List directory contents for a resource folder. Not recursive.
+     * This is basically a brute-force implementation.
+     * Works for regular files and also JARs.
+     *
+     * @param clazz Any java class that lives in the same place as the resources you want.
+     * @param path Should end with "/", but not start with one.
+     * @return Just the name of each member item, not the full paths.
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    private static Set<String> getResourceListing(Class clazz, String path) throws URISyntaxException, IOException {
+        URL dirURL = clazz.getClassLoader().getResource(path);
+        if (dirURL != null && dirURL.getProtocol().equals("file")) {
+        /* A file path: easy enough */
+            String[] fileList = new File(dirURL.toURI()).list();
+            Set<String> strings = set();
 
-        if (url != null) {
-            URI fileString;
-            try {
-                fileString = url.toURI();
-            } catch (URISyntaxException e) {
-                throw new IllegalArgumentException("Invalid URL received from getResourceAsFile: " + url);
+            for (String string : fileList) {
+                strings.add(path + "/" + string);
             }
 
-            File file = new File(fileString);
-
-            if (file.exists()) {
-                return file;
-            } else {
-                throw new IllegalArgumentException("The file at " + fileString + " didn't exist.");
-            }
-        } else {
-            throw new IllegalArgumentException("Got null URL for path " + fileName);
-        }
-    }
-
-    @Nonnull
-    public static Iterable<File> getFilesFromResourceFolder(String fileName) {
-        List<File> fileList = list();
-
-        File file = getResourceAsFile(fileName);
-
-        assert file.exists();
-
-        if (!file.isDirectory()) {
-            throw new IllegalArgumentException("This method requires a valid resources folder as input.");
+            return strings;
         }
 
-        File[] files = file.listFiles();
+        if (dirURL == null) {
+        /*
+         * In case of a jar file, we can't actually find a directory.
+         * Have to assume the same jar as clazz.
+         */
+            String me = clazz.getName().replace(".", "/") + ".class";
+            dirURL = clazz.getClassLoader().getResource(me);
+        }
 
-        if (files != null && files.length > 0) {
-            for (File childFile : files) {
-                if (!childFile.getName().startsWith(".")) {
-                    fileList.add(childFile);
+        if (dirURL != null && dirURL.getProtocol().equals("jar")) {
+            /* A JAR path */
+            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
+            JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+            Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+            Set<String> result = set(); //avoid duplicates in case it is a subdirectory
+            while(entries.hasMoreElements()) {
+                String name = entries.nextElement().getName();
+                if (name.startsWith(path) && !name.endsWith("/")) { //filter according to the path
+                    result.add(name);
                 }
             }
+            return result;
         }
 
-        return fileList;
+        throw new UnsupportedOperationException("Cannot list files for URL "+dirURL);
     }
 
 
