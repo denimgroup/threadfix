@@ -101,7 +101,6 @@
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
 						    </li>
 					    </security:authorize>
-
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
                             <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
@@ -131,8 +130,10 @@
                                     <a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
                                 </li>
 							</security:authorize>
-
 						</security:authorize>
+                        <li class="normalLinks">
+                            <a id="viewAboutPageLink" href="<spring:url value="/about" htmlEscape="true"/>">About</a>
+                        </li>
 					</ul>
 				   </div>
 				</td>

@@ -117,14 +117,14 @@
 	</table>
 	
 	<script>
-	$('.disableSubmitOnEnter').keypress(function(e){
-	    if ( e.which == 13 ) return false;
-	});
-	$('.refillElementOnEnter').keypress(function(e) {
-		if (e.which == 13) {
-			refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>', '<c:out value="${ loginUrl }"/>');
-			return false;
-		}
-	});
+        $('.disableSubmitOnEnter').keypress(function(e){
+            if ( e.which == 13 ) return false;
+        });
+        $('.refillElementOnEnter').keypress(function(e) {
+            if (e.which == 13) {
+                refillElementDropDownPage('#toReplace', '<c:out value="${ tableUrl }"/>', '<c:out value="${ loginUrl }"/>');
+                return false;
+            }
+        });
 	</script>
 </body>

@@ -2,9 +2,9 @@
 
 <head>
 	<title>Manage Users</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-permissions-config-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/permission-modal-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/user-permissions-config-controller.js"/>
+	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+	<cbs:cachebustscript src="/scripts/permission-modal-controller.js"/>
 </head>
 
 <body id="config" ng-controller="UserPermissionsConfigController" ng-init="userId = <c:out value="${ user.id }"/>">

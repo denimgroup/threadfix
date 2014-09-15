@@ -76,7 +76,8 @@ public enum ScannerType {
 		ScannerType type = null;
 		for (ScannerType t: values()) {
 			if (keyword.equalsIgnoreCase(t.getShortName()) 
-					|| keyword.equalsIgnoreCase(t.getFullName())) {
+					|| keyword.equalsIgnoreCase(t.getFullName())
+                    || keyword.equalsIgnoreCase(t.getDbName())) {
 				type = t;
 				break;
 			}

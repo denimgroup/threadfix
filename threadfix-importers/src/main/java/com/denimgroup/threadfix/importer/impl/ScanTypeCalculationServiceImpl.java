@@ -111,7 +111,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		String result = null;
 		try (ZipFile zipFile = new ZipFile(fileName)) {
 			if (zipFile.getEntry("audit.fvdl") != null) {
-				result = ScannerType.FORTIFY.getFullName();
+				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
 				result = ScannerType.SKIPFISH.getFullName();
 			}
@@ -144,6 +144,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	static {
 		addToMap(ScannerType.APPSCAN_DYNAMIC.getFullName(), "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
 		addToMap(ScannerType.ARACHNI.getFullName(), "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
+		addToMap(ScannerType.ARACHNI.getFullName(), "report", "version", "options");
 		addToMap(ScannerType.BURPSUITE.getFullName(), "issues", "issue", "serialNumber", "type", "name", "host", "path");
 		addToMap(ScannerType.NETSPARKER.getFullName(), "netsparker");
 		addToMap(ScannerType.CAT_NET.getFullName(), "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");

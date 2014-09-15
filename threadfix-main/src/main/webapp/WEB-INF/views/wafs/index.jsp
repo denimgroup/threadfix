@@ -2,8 +2,8 @@
 
 <head>
 	<title>WAFs</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/wafs-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+    <cbs:cachebustscript src="/scripts/wafs-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="wafs" ng-controller="WafsPageController">

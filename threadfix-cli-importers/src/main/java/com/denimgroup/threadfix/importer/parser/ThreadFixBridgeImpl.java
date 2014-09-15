@@ -124,7 +124,7 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
 
         ApplicationChannel channel = new ApplicationChannel();
         channel.setChannelType(new ChannelType());
-        channel.getChannelType().setName(type.getFullName());
+        channel.getChannelType().setName(type.getDbName());
 
         ChannelImporter importer = factory.getChannelImporter(channel);
 

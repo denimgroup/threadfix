@@ -2,7 +2,7 @@
 
 <head>
 	<title>Scan History</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-history-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/scan-history-controller.js"/>
 </head>
 
 <body id="scans">

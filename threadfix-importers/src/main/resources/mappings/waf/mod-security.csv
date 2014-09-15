@@ -1,0 +1,8 @@
+9/12/2014 11:45:00
+type.name
+mod_security
+type.directives
+deny
+drop
+pass
+allow

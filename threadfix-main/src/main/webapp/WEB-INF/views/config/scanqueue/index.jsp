@@ -2,7 +2,7 @@
 
 <head>
 	<title>Scan Agent Tasks</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-agent-tasks-index-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/scan-agent-tasks-index-controller.js"/>
 </head>
 
 <body ng-controller="ScanAgentTasksIndexController">

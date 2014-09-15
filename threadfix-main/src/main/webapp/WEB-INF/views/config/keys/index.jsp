@@ -2,7 +2,7 @@
 
 <head>
 	<title>API Keys</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/api-keys-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/api-keys-controller.js"/>
 </head>
 
 <body>

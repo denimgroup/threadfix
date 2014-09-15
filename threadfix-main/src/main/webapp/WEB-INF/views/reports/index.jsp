@@ -2,9 +2,9 @@
 
 <head>
 	<title>Analytics</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/report-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+    <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
 </head>
 
 <body id="reports">

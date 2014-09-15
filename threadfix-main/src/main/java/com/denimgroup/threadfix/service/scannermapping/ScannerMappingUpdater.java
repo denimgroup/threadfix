@@ -43,7 +43,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class ScannerMappingUpdater {
 
-    private static final SanitizedLogger log = new SanitizedLogger(ScannerMappingUpdater.class);
+    private static final SanitizedLogger LOG = new SanitizedLogger(ScannerMappingUpdater.class);
 
     @Autowired
     private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
@@ -53,10 +53,19 @@ public class ScannerMappingUpdater {
     @PostConstruct
     public void update() {
 
-        log.info("Checking if scanner mapping update is required");
-        if (scannerMappingsUpdaterService.checkPluginJar().canUpdate &&
-                genericVulnerabilityService.loadAll() != null && genericVulnerabilityService.loadAll().size()>0) {
+        LOG.info("Checking if scanner mapping update is required");
+        boolean canUpdate = scannerMappingsUpdaterService.checkPluginJar().canUpdate;
+        boolean hasGenericVulns =
+                genericVulnerabilityService.loadAll() != null &&
+                genericVulnerabilityService.loadAll().size() > 0;
+
+        if (canUpdate && hasGenericVulns) {
+            LOG.info("Updating mappings.");
             scannerMappingsUpdaterService.updateMappings();
+        } else if (!canUpdate) {
+            LOG.info("Scanner mappings are up-to-date, continuing");
+        } else {
+            LOG.info("No generic vulnerabilities found, skipping updates for now.");
         }
 
     }

@@ -34,14 +34,35 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class DateUtils {
-	
-	protected static final SanitizedLogger log = new SanitizedLogger(DateUtils.class);
-	
-	private DateUtils() {}
 
-	// return the parsed date object, or the null if parsing fails.
+    protected static final SanitizedLogger  log       = new SanitizedLogger(DateUtils.class);
+    private static final   SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss'Z'", Locale.US);
+
+    private DateUtils() {
+    }
+
+    /**
+     * This method parses strings using the date format "yyyy-MM-DD'T'HH:mm:ss'Z'" which is ISO 8601
+     * @param dateString
+     * @return
+     */
     @Nullable
-	public static Calendar getCalendarFromString(@Nullable String formatString, @Nullable String dateString) {
+    public static Calendar getCalendarFromUTCString(@Nullable String dateString) {
+
+        if (dateString != null && !dateString.trim().equals("")) {
+            try {
+                return getCalendarFromString(utcFormat, dateString);
+            } catch (IllegalArgumentException e) {
+                log.error("An invalid date string was passed to the SimpleDateFormat constructor: " + dateString);
+            }
+        }
+
+        return null;
+    }
+
+    // return the parsed date object, or the null if parsing fails.
+    @Nullable
+    public static Calendar getCalendarFromString(@Nullable String formatString, @Nullable String dateString) {
 
         if (formatString != null && !formatString.trim().equals("")) {
             try {
@@ -52,7 +73,7 @@ public class DateUtils {
         }
 
         return null;
-	}
+    }
 
     /**
      * This method allows caching of the SimpleDateFormat to avoid unnecessary object creation
@@ -110,6 +131,20 @@ public class DateUtils {
         } else {
             return null;
         }
+    }
+
+    public static Calendar getLatestCalendar(Calendar... calendars) {
+        Calendar latest = null;
+
+        for (Calendar calendar : calendars) {
+            if (calendar != null) {
+                if (latest == null || calendar.after(latest)) {
+                    latest = calendar;
+                }
+            }
+        }
+
+        return latest;
     }
 	
 }

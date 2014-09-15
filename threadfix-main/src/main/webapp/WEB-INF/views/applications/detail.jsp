@@ -3,21 +3,21 @@
 <head>
 	<title><c:out value="${ application.name }"/></title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/dyn-form.css"/>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/add-defect-tracker-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-detail-page-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/application-page-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/defect-submission-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-table-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scheduled-scan-tab-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-table-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/document-form-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-agent-tasks-tab-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/bulk-operations-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scan-unmapped-finding-table-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/add-defect-tracker-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/application-detail-page-controller.js"/>
+	<cbs:cachebustscript src="/scripts/application-page-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/defect-submission-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
+	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
+	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
+	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-table-controller.js"/>
+	<cbs:cachebustscript src="/scripts/document-form-controller.js"/>
+	<cbs:cachebustscript src="/scripts/scan-agent-tasks-tab-controller.js"/>
+	<cbs:cachebustscript src="/scripts/bulk-operations-controller.js"/>
+	<cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
 </head>
 
 <body ng-controller="ApplicationDetailPageController"

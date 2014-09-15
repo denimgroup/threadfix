@@ -84,7 +84,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
 
     $scope.switchTo = function(name) {
         $rootScope.$broadcast('modalSwitch', name);
-    }
+    };
 
     $scope.cancel = function () {
         timeoutService.cancel();
