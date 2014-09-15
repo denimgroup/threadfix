@@ -7,5 +7,5 @@ public class ClangScanTest {
     //cwe name, severity, path, parameter
     public final static String[][] clangResults = new String [][] {
             //TODO stuff here
-    }
+    };
 }
