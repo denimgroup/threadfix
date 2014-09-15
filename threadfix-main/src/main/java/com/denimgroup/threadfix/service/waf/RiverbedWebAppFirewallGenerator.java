@@ -50,6 +50,8 @@ import com.google.gson.JsonObject;
  * 
  */
 public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator {	
+       public static String RULE_PROVIDER_NAME = "threadfix"; 
+       public static String RULE_PROVIDER_VERSION = "20140915";
 	
         protected static final Map<String, String> VULNERABILITY_CLASS_MAPPING = new HashMap<String,String>(){
             {
@@ -87,7 +89,7 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
 	}
 
         public static String getStart(List<WafRule> rules) {
-                return "{\"provider\":\"threadfix\",\"version\":\"20140216\",\"protection_rules\":[\n";
+                return "{\"provider\":\"" + RULE_PROVIDER_NAME + "\",\"version\":\""+ RULE_PROVIDER_VERSION +"\",\"rules\":[\n";
         }
 
         public static String getEnd(List<WafRule> rules) {
