@@ -22,7 +22,9 @@ import java.util.Map;
  */
 @ScanImporter(ScannerType.CLANG)
 public class ClangChannelImporter extends AbstractChannelImporter {
-    public ClangChannelImporter(){super(ScannerType.CLANG);}
+    public ClangChannelImporter() {
+        super(ScannerType.CLANG);
+    }
 
     @Override
     @Transactional
