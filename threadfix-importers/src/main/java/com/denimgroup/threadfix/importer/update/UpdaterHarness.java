@@ -30,6 +30,9 @@ import java.io.*;
 import java.util.Calendar;
 
 /**
+ *
+ * This class takes in Updaters and runs them against files that have timestampes after the date given to the constructor.
+ *
  * Created by mac on 9/12/14.
  */
 final class UpdaterHarness {
@@ -51,16 +54,23 @@ final class UpdaterHarness {
     }
 
     private Calendar processFilesInternal(Updater updater, boolean doUpdates) {
-        Iterable<File> defectTrackersFiles = ResourceUtils.getFilesFromResourceFolder(updater.getFolder());
+        Iterable<String> mappingsFiles =
+                ResourceUtils.getFileNamesInResourceDirectoryFromInsideThisJar(updater.getFolder());
 
         Calendar latestUpdateDate = lastUpdatedTime;
 
-        for (File defectTrackersFile : defectTrackersFiles) {
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(defectTrackersFile))) {
+        for (String mappingsFile : mappingsFiles) {
+
+            String withStartingSlash = mappingsFile;
+            if (!mappingsFile.startsWith("/")) {
+                withStartingSlash = "/" + mappingsFile;
+            }
+
+            try (BufferedReader bufferedReader = ResourceUtils.getResourceAsBufferedReader(withStartingSlash)) {
                 Calendar fileDate = UpdaterUtils.getCalendarFromFirstLine(bufferedReader);
 
                 if (doUpdates && (lastUpdatedTime == null || fileDate.after(lastUpdatedTime))) {
-                    updater.doUpdate(defectTrackersFile.getName(), bufferedReader);
+                    updater.doUpdate(mappingsFile, bufferedReader);
                 }
 
                 if (latestUpdateDate == null || fileDate.after(latestUpdateDate)) {
@@ -68,13 +78,13 @@ final class UpdaterHarness {
                 }
 
             } catch (FileNotFoundException e) {
-                LOG.error("Received FileNotFoundException for file " + defectTrackersFile.getName());
+                LOG.error("Received FileNotFoundException for file " + mappingsFile);
                 throw new IllegalStateException(
-                        "Can't continue without mappings file " + defectTrackersFile.getName(), e);
+                        "Can't continue without mappings file " + mappingsFile, e);
             } catch (IOException e) {
-                LOG.error("Received IOException for file " + defectTrackersFile.getName());
+                LOG.error("Received IOException for file " + mappingsFile);
                 throw new IllegalStateException(
-                        "Can't continue without mappings file " + defectTrackersFile.getName(), e);
+                        "Can't continue without mappings file " + mappingsFile, e);
             }
         }
 
