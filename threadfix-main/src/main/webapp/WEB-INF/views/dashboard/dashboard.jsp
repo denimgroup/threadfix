@@ -35,6 +35,7 @@
 	</c:if>
 
     <div ng-controller="DashboardController" class="container-fluid">
+
     <c:if test="${ not empty teams }">
         <security:authorize ifAnyGranted="ROLE_READ_ACCESS, ROLE_CAN_GENERATE_REPORTS">
 

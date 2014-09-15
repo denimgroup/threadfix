@@ -85,6 +85,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         } else if (originalName.endsWith("json")){
             //probably brakeman
             returnString = ScannerType.BRAKEMAN.getFullName();
+        } else if (originalName.endsWith(".html")) {
+            //probably clang
+            returnString = ScannerType.CLANG.getFullName();
         } else {
             returnString = figureOutXml(fileName);
         }
@@ -162,6 +165,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		addToMap(ScannerType.DEPENDENCY_CHECK.getFullName(), "analysis");
         addToMap(ScannerType.CHECKMARX.getFullName(), "CxXMLResults");
         addToMap(ScannerType.CENZIC_HAILSTORM.getFullName(), "Assessments", "AssessmentRunData");
+        addToMap(ScannerType.PMD.getFullName(), "pmd");
+        addToMap(ScannerType.CLANG.getFullName(), "clang");
 	}
 	
 	private static void addToMap(String name, String... tags) {
