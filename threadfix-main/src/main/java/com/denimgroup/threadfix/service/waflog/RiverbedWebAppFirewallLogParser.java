@@ -33,7 +33,6 @@ import java.util.Date;
 import java.io.StringReader;
 import java.io.IOException;
 
-//import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.CSVFormat;
 
@@ -75,9 +74,9 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
 		if (entry == null || entry.isEmpty() || entry.startsWith("#")) 
 			return null;
 
-                // a csv line contains of
-                //  * [0] a timestamp: YYYYMMDD-HHMMSS
-                //  * [1] an internal session id
+                // a logline is a csv encoded line with the following columns
+                //  * [0] a timestamp: YYYYMMDD-HHMMSS in local time
+                //  * [1] an internal session id or "default"
                 //  * [2] internal cluster node id
                 //  * [3] host header
                 //  * [4] client ip
@@ -88,7 +87,7 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                 //  * [9] action
                 //  * [10] protection or detection mode
                 //  * [11] request or response
-                //  * [12] handlerName - we only care for the ThreadfixHandler here
+                //  * [12] handlerName - we only care for the THREADFIX_HANDLER_NAME here
                 //  * [13] component which reject the request
                 //  * [14] value which rejects the request
                 //  * [16] error id (use this together with the timetamp to be unique)
@@ -98,10 +97,10 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                 try 
                 {
 		    // we are using an iterator here because this
-		    // is the interface of this CSV parser // however,
-		    // we always feed only one line into this parser
-		    // so it is ok to return from this loop and never
-		    // continue
+		    // is the interface of this CSV parser 
+		    // however, we always feed only one line into
+		    // this parser so it is ok to return from this
+		    // loop and never continue
                     Iterable<CSVRecord> parser = CSVFormat.DEFAULT.parse(new StringReader(entry));
                     for (CSVRecord record : parser) {
 
@@ -126,6 +125,7 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                             return null;
                         }
 
+                        // we only care for THREADFIX_HANDLER_NAME here ... ignore all other stuff
                         if (! csvHandlerName.equals(THREADFIX_HANDLER_NAME))
                         {
                             log.debug("ignore unknwon handler: "+ csvHandlerName);
@@ -155,8 +155,9 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                         log.debug("wafRuleId " + wafRuleId);
 
                         WafRule rule = wafRuleDao.retrieveByWafAndNativeId(wafId, wafRuleId);
-                        if (rule == null)
+                        if (rule == null) {
                             return null;
+                        }
 
                         Calendar calendar = parseDate(csvTimestamp);
 
@@ -170,12 +171,14 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                         event.setWafRule(rule);
                         event.setImportTime(calendar);
                         event.setLogText(csvFreeText);
-			if (csvRulesetMode == WAF_LOG_MODE_PROTECTION)
-			{
-			    event.setAttackType("deny");
-			} else {
-			    event.setAttackType("log"); 
-			}
+
+                        event.setAttackType("deny");
+			//if (csvRulesetMode == WAF_LOG_MODE_PROTECTION)
+			//{
+			//    event.setAttackType("deny");
+			//} else {
+			//    event.setAttackType("log"); 
+			//}
                         event.setNativeId(nativeId);
                         event.setAttackerIP(csvClientIP);
 
