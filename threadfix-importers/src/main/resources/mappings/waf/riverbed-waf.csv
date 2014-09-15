@@ -1,5 +1,6 @@
-9/15/2014 10:00:00
+9/15/2014 12:00:00
 type.name
 SteelApp Web App Firewall
 type.directives
 deny
+log
