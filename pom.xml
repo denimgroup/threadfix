@@ -136,6 +136,16 @@
 
     <profiles>
         <profile>
+            <id>weekend</id>
+            <modules>
+                <module>threadfix-enterprise</module>
+                <module>threadfix-scanagent</module>
+            </modules>
+            <properties>
+                <regression.category>com.denimgroup.threadfix.WeekendTests</regression.category>
+            </properties>
+        </profile>
+        <profile>
             <id>enterprise</id>
             <modules>
                 <module>threadfix-enterprise</module>

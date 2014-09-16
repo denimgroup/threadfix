@@ -607,6 +607,16 @@
         </profile>
         <!-- Enterprise profile turns on enterprise dependency -->
         <profile>
+            <id>weekend</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.denimgroup.threadfix</groupId>
+                    <artifactId>threadfix-enterprise</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>enterprise</id>
             <dependencies>
                 <dependency>
