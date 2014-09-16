@@ -2,7 +2,7 @@
 
 <h2>Security Event Details</h2>
 
-<spring:url value="/wafs/{wafId}/rules/{wafRuleId}" var="ruleUrl">
+<spring:url value="/wafs/{wafId}/rule/{wafRuleId}" var="ruleUrl">
 	<spring:param name="wafId" value="${ securityEvent.wafRule.waf.id }"/>
 	<spring:param name="wafRuleId" value="${ securityEvent.wafRule.id }"/>
 </spring:url>
