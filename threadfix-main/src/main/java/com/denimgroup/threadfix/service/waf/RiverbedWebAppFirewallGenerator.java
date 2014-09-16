@@ -70,14 +70,14 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
                 put(GenericVulnerability.CWE_PATH_TRAVERSAL,            "GENERIC_PATH_TRAVERSAL");
                 put(GenericVulnerability.CWE_DIRECTORY_INDEXING,        "GENERIC_DIRECTORY_INDEXING");
                 // server (we can't handle this in the first implementation)
-                put(GenericVulenerability.CWE_HTTP_RESPONSE_SPLITTING,  "GENERIC_RESPONSE_SPLITTING");
-                put(GenericVulenerability.CWE_DIRECT_REQUEST,           "GENERIC_DIRECT_REQUEST");
-                put(GenericVulenerability.CWE_CROSS_SITE_REQUEST_FORGERY, "GENERIC_CSRF");
-                put(GenericVulenerability.CWE_FILE_UPLOAD,              "GENERIC_FILE_UPLOAD");
+                put(GenericVulnerability.CWE_HTTP_RESPONSE_SPLITTING,  "GENERIC_RESPONSE_SPLITTING");
+                put(GenericVulnerability.CWE_DIRECT_REQUEST,           "GENERIC_DIRECT_REQUEST");
+                put(GenericVulnerability.CWE_CROSS_SITE_REQUEST_FORGERY, "GENERIC_CSRF");
+                put(GenericVulnerability.CWE_FILE_UPLOAD,              "GENERIC_FILE_UPLOAD");
                 // response problems
-                put(GenericVulenerability.CWE_INFORMATION_EXPOSURE,     "GENERIC_INFORMATION_EXPOSURE");
-                put(GenericVulenerability.CWE_PRIVACY_VIOLATION,        "GENERIC_PRIVACY_VIOLATION");
-                put(GenericVulenerability.CWE_DEBUG_CODE,               "GENERIC_DEBUG_CODE");
+                put(GenericVulnerability.CWE_INFORMATION_EXPOSURE,     "GENERIC_INFORMATION_EXPOSURE");
+                put(GenericVulnerability.CWE_PRIVACY_VIOLATION,        "GENERIC_PRIVACY_VIOLATION");
+                put(GenericVulnerability.CWE_DEBUG_CODE,               "GENERIC_DEBUG_CODE");
             }
         };
 
