@@ -29,20 +29,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by mac on 8/26/14.
+ * Created by mac on 9/16/14.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ScanImporter {
+public @interface StartingTagSet {
 
-    public String scannerName();
-
-    public ScanFormat format() default ScanFormat.XML;
-
-    public String[] startingXMLTags() default {};
-
-    public StartingTagSet[] startingXMLTagSets() default {};
-
-    public String[] zipItems() default {};
+    public String[] value() default {};
 
 }

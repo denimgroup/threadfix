@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -52,7 +53,10 @@ import java.util.regex.Pattern;
  * @author mcollins
  *
  */
-@ScanImporter(ScannerType.BURPSUITE)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.BURPSUITE_DB_NAME,
+        startingXMLTags = { "issues", "issue", "serialNumber", "type", "name", "host", "path" }
+)
 class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";

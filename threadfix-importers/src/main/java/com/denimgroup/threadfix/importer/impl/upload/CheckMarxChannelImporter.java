@@ -27,10 +27,7 @@ package com.denimgroup.threadfix.importer.impl.upload;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
@@ -54,7 +51,10 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  *
  */
-@ScanImporter(ScannerType.CHECKMARX)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.CHECKMARX_DB_NAME,
+        startingXMLTags = { "CxXMLResults" }
+)
 class CheckMarxChannelImporter extends AbstractChannelImporter {
 
     public static final String ROOT_NODE_NAME = "CxXMLResults";

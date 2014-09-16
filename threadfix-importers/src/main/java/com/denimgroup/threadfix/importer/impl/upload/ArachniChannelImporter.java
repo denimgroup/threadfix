@@ -24,10 +24,12 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -44,10 +46,16 @@ import java.util.Map;
 import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
- * 
+ *
  * @author mcollins
  */
-@ScanImporter(ScannerType.ARACHNI)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.ARACHNI_DB_NAME,
+        startingXMLTagSets = {
+                @StartingTagSet({"arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision"}),
+                @StartingTagSet({"report", "version", "options"})
+        }
+)
 class ArachniChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = map(

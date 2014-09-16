@@ -51,7 +51,10 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-@ScanImporter(ScannerType.MANUAL)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.MANUAL_DB_NAME,
+        startingXMLTags = { "Vulnerabilities", "Vulnerability" }
+)
 class SSVLChannelImporter extends AbstractChannelImporter {
 
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";

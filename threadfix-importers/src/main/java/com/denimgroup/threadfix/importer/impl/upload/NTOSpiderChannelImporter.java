@@ -24,12 +24,14 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
+import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
@@ -41,10 +43,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  * @author mcollins
  */
-@ScanImporter(ScannerType.NTO_SPIDER)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.NTO_SPIDER_DB_NAME,
+        startingXMLTagSets = {
+                @StartingTagSet({ "VULNS", "VULNLIST" }),
+                @StartingTagSet({ "VulnSummary" })
+        }
+)
 class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
