@@ -23,36 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.denimgroup.threadfix.data.entities.SecurityEvent;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.SecurityEventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/wafs/{wafId}/rules/{ruleId}/events")
+@RequestMapping("/wafs/{wafId}/rule/{ruleId}/events")
 public class SecurityEventController {
 
-	private final SecurityEventService securityEventService;
-	
-	private final SanitizedLogger log = new SanitizedLogger(SecurityEventController.class);
-
 	@Autowired
-	public SecurityEventController(SecurityEventService securityEventService) {
-		this.securityEventService = securityEventService;
-	}
+	private SecurityEventService securityEventService;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model) {
-		model.addAttribute(securityEventService.loadAll());
-		return "organizations/index";
-	}
+	private final SanitizedLogger log = new SanitizedLogger(SecurityEventController.class);
 
 	@RequestMapping("/{eventId}")
 	public ModelAndView detail(@PathVariable("eventId") int eventId) {
