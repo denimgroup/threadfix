@@ -69,6 +69,15 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
                 // path problems
                 put(GenericVulnerability.CWE_PATH_TRAVERSAL,            "GENERIC_PATH_TRAVERSAL");
                 put(GenericVulnerability.CWE_DIRECTORY_INDEXING,        "GENERIC_DIRECTORY_INDEXING");
+                // server (we can't handle this in the first implementation)
+                put(GenericVulenerability.CWE_HTTP_RESPONSE_SPLITTING,  "GENERIC_RESPONSE_SPLITTING");
+                put(GenericVulenerability.CWE_DIRECT_REQUEST,           "GENERIC_DIRECT_REQUEST");
+                put(GenericVulenerability.CWE_CROSS_SITE_REQUEST_FORGERY, "GENERIC_CSRF");
+                put(GenericVulenerability.CWE_FILE_UPLOAD,              "GENERIC_FILE_UPLOAD");
+                // response problems
+                put(GenericVulenerability.CWE_INFORMATION_EXPOSURE,     "GENERIC_INFORMATION_EXPOSURE");
+                put(GenericVulenerability.CWE_PRIVACY_VIOLATION,        "GENERIC_PRIVACY_VIOLATION");
+                put(GenericVulenerability.CWE_DEBUG_CODE,               "GENERIC_DEBUG_CODE");
             }
         };
 
@@ -80,8 +89,10 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
 	@Override
 	public String[] getSupportedVulnerabilityTypes() {
 		return new String[] { 
-                                    GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+                                    //xss 
                                     GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
+                                    // injection
+                                    GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
                                     GenericVulnerability.CWE_EVAL_INJECTION,
                                     GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
                                     GenericVulnerability.CWE_GENERIC_INJECTION,
@@ -89,6 +100,9 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
                                     GenericVulnerability.CWE_OS_COMMAND_INJECTION,
                                     GenericVulnerability.CWE_SQL_INJECTION,
                                     GenericVulnerability.CWE_XPATH_INJECTION,
+                                    //path problems
+                                    //server
+                                    //response problems
                                 };
 	}
 
