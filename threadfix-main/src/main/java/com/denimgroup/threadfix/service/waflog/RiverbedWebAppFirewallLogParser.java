@@ -195,27 +195,24 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
 	}
 	
 	public static Calendar parseDate(String time) {
-		if (time == null)
-			return null;
-		String timeToParse = time;
-		if (time.contains("."))
-			timeToParse = time.substring(0, time.indexOf('.'));
-		
+		SimpleDateFormat formatter = new SimpleDateFormat(LOG_TIMESTAMP_FORMAT);
 		Date date = null;
 
-		SimpleDateFormat formatter = new SimpleDateFormat(LOG_TIMESTAMP_FORMAT);
+		if (time == null)
+			return null;
+
 		try {
-			date = formatter.parse(timeToParse);
+			date = formatter.parse(time);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
-		if (date == null) return null;
+		if (date == null) {
+                    return null;
+                }
 		
 		Calendar calendar = Calendar.getInstance();
-		int temp = calendar.get(Calendar.YEAR);
 		calendar.setTime(date);
-		calendar.set(Calendar.YEAR, temp);
 		
 		return calendar;
 	}
