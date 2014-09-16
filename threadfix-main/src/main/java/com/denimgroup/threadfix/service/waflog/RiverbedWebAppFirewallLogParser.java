@@ -114,7 +114,7 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                         String csvRulesetMode = record.get(10);		// P or D
                         String csvHandlerName = record.get(12);		// ThreadfixHandler
                         String csvComponentName = record.get(13);	// protection_ruleset
-                        String csvComponentValue = record.get(14);	// threadfix:100042
+                        String csvComponentValue = record.get(14);	// threadfix:100042 or 100042
                         String csvErrorId = record.get(16);		// 1234567
                         String csvFreeText = record.get(17);		// free text which describe the action
 
@@ -145,10 +145,18 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                             return null;
 
                         String wafRuleId = null;
-                        if( csvComponentName.equals(THREADFIX_HANDLER_COMPONENT) && csvComponentValue.contains(":"))
-                        {
-                            wafRuleId = csvComponentValue.split(":",2)[1];
+                        if( csvComponentName.equals(THREADFIX_HANDLER_COMPONENT)) {
+                            // allow threadfix:123456 and 123456
+                            if (csvComponentValue.contains(":"))
+                            {
+                                wafRuleId = csvComponentValue.split(":",2)[1];
+                            }
+                            else
+                            {
+                                wafRuleId = csvComponentValue;
+                            }
                         } else {
+                            log.debug("ignore unknown component: " + csvComponentName);
                             return null;
                         }
 
@@ -156,6 +164,7 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
 
                         WafRule rule = wafRuleDao.retrieveByWafAndNativeId(wafId, wafRuleId);
                         if (rule == null) {
+                            log.debug("wafRule not found");
                             return null;
                         }
 
