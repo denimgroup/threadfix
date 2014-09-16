@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.LogParserService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -224,6 +223,12 @@ public class WafRestController extends RestController {
 			log.warn("Invalid WAF type requested.");
 			return failure(NOT_FOUND_WAF);
 		}
+
+        Waf existingWaf = wafService.loadWaf(name);
+
+        if (existingWaf != null) {
+            return failure("ThreadFix already has a WAF with the name " + name);
+        }
 		
 		if (!name.trim().isEmpty() && name.length() < Waf.NAME_LENGTH) {
 			
