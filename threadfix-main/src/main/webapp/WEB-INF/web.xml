@@ -291,9 +291,4 @@
 		<error-code>404</error-code>
 		<location>/404.jsp</location>
 	</error-page>
-<<<<<<< HEAD
-
 </web-app>
-=======
-</web-app>
->>>>>>> upstream/2.1final

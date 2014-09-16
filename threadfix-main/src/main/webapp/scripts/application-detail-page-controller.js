@@ -41,10 +41,4 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
         $scope.successMessage = message;
     });
 
-    $scope.showtabs = function(){
-        element.click(function(e){
-            e.preventDefault();
-            $(element).tab('show');
-        })
-    };
 });

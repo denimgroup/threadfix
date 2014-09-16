@@ -609,19 +609,19 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                     .on("click", function(d){return $scope.viewScan(d.scanId)})
                     .style("fill", function(d){
                         if(d.criticalO > 0){
-                            return "red";
+                            return "#F7280C";
                         }
                         else if(d.highO > 0){
-                            return "orange";
+                            return "#F27421";
                         }
                         else if(d.medO > 0){
-                            return "yellow";
+                            return "#EFD20A";
                         }
                         else if(d.lowO > 0){
-                            return "green";
+                            return "#458A37";
                         }
                         else if(d.infoO){
-                            return "blue";
+                            return "#014B6E";
                         }
                         else
                             return "lightgreen";
