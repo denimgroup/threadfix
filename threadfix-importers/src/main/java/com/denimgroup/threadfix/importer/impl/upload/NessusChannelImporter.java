@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.importer.impl.upload;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
@@ -52,7 +53,7 @@ import java.util.regex.Pattern;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.NESSUS)
+@ScanImporter(scannerName = ScannerDatabaseNames.NESSUS_DB_NAME, startingXMLTags = {"NessusClientData_v2"})
 class NessusChannelImporter extends AbstractChannelImporter {
 	
 	private static final String SIMPLE_HTTP_REGEX = "(http[^\n]*)";

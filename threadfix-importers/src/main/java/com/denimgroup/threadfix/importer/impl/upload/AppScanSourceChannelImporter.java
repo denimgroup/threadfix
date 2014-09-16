@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.importer.impl.upload;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
@@ -46,7 +43,10 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.APPSCAN_SOURCE)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.APPSCAN_SOURCE_DB_NAME,
+        startingXMLTags = { "AssessmentRun", "AssessmentStats" }
+)
 class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
 	private static final Map<String, String> REGEX_MAP = new HashMap<>();

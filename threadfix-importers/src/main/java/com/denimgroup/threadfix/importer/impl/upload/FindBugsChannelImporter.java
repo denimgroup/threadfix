@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.importer.impl.upload;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
@@ -43,7 +40,9 @@ import java.util.*;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.FINDBUGS)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.FINDBUGS_DB_NAME,
+        startingXMLTags = { "BugCollection", "Project", "BugInstance", "Class" })
 class FindBugsChannelImporter extends AbstractChannelImporter {
 
 	public FindBugsChannelImporter() {

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
@@ -50,7 +51,11 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 /**
  * Parses the SCA Fortify fpr output file.
  */
-@ScanImporter(ScannerType.FORTIFY)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.FORTIFY_DB_NAME,
+        format = ScanFormat.ZIP,
+        zipItems = "audit.fvdl"
+)
 class FortifyChannelImporter extends AbstractChannelImporter {
 
 	// TODO run through more files and determine whether this method is still valuable
