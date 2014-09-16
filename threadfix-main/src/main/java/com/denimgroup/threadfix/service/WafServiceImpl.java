@@ -61,7 +61,7 @@ public class WafServiceImpl implements WafService {
 
     @Override
     public List<Waf> loadAll() {
-        return wafDao.retrieveAll();
+        return wafDao.retrieveAllActive();
     }
 
     @Override
@@ -90,8 +90,10 @@ public class WafServiceImpl implements WafService {
         if (waf != null) {
             log.info("Deleting WAF with ID " + wafId);
 
-            if (waf.getWafRules() != null) {
-                for (WafRule rule : waf.getWafRules()) {
+            List<WafRule> wafRules = waf.getWafRules();
+
+            if (wafRules != null) {
+                for (WafRule rule : wafRules) {
                     wafRuleDao.delete(rule);
                 }
             }
