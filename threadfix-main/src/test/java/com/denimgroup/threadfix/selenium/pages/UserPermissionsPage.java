@@ -42,13 +42,19 @@ public class UserPermissionsPage extends BasePage {
     /*------------------------------------ Action Methods ------------------------------------*/
 
     public UserPermissionsPage clickAddPermissionsLink() {
+        sleep(1000);
         driver.findElementById("addPermissionButton").click();
         waitForElement(driver.findElementById("orgSelect"));
         return new UserPermissionsPage(driver);
     }
 
     public UserPermissionsPage setTeam(String team) {
-        new Select(driver.findElement(By.id("orgSelect"))).selectByVisibleText(team);
+        try {
+            new Select(driver.findElement(By.id("orgSelect"))).selectByVisibleText(team);
+        } catch (NoSuchElementException e) {
+            this.takeScreenShot();
+            throw new RuntimeException("Please set API_KEY in run configuration.", e);
+        }
         return this;
     }
 
