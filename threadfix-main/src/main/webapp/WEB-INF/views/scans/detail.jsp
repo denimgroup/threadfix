@@ -63,7 +63,9 @@
 						</tr>
 						<tr>
 							<td>Duplicate Results</td>
-							<td class="inputValue" id="duplicateResults"><c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults }"/></td>
+							<td class="inputValue" id="duplicateResults">
+                                <c:out value="${ scan.numberRepeatResults + scan.totalNumberSkippedResults }"/>
+                            </td>
 						</tr>
 						<tr>
 							<td style="font-weight:bold">Total Findings</td>

@@ -11,7 +11,9 @@
         <span class="errors" ng-show="mappedForm.pageMappedInput.$dirty && mappedForm.pageMappedInput.$error.number">Not a valid number</span>
     </div>
 
-	<table class="table tf-colors" id="1">
+    <div ng-show="loading" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
+
+    <table class="table tf-colors" id="1">
 		<thead>
 			<tr>
 				<th class="first">Severity</th>
@@ -23,8 +25,6 @@
 			</tr>
 		</thead>
 		<tbody>
-
-        <div ng-show="loading" class="spinner-div"><span class="spinner dark"></span>Loading</div><br>
 
         <tr ng-hide="findingList || loading" class="bodyRow">
             <td colspan="6" style="text-align: center;"> No Findings were mapped to vulnerabilities.</td>
