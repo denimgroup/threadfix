@@ -56,14 +56,19 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
         protected static final Map<String, String> VULNERABILITY_CLASS_MAPPING = new HashMap<String,String>(){
             {
                 // XSS
-                put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING, "GENERIC_CROSS_SITE_SCRIPTING");
+                put(GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,      "GENERIC_CROSS_SITE_SCRIPTING");
                 // injections
-                put(GenericVulnerability.CWE_SQL_INJECTION, "GENERIC_SQL_INJECTION");
-                put(GenericVulnerability.CWE_LDAP_INJECTION, "GENERIC_LDAP_INJECTION");
-                put(GenericVulnerability.CWE_OS_COMMAND_INJECTION, "GENERIC_COMMAND_INJECTION");
+                put(GenericVulnerability.CWE_BLIND_XPATH_INJECTION,     "GENERIC_BLIND_XPATH_INJECTION");
+                put(GenericVulnerability.CWE_EVAL_INJECTION,            "GENERIC_EVAL_INJECTION");
+                put(GenericVulnerability.CWE_FORMAT_STRING_INJECTION,   "GENERIC_FORMAT_STRING_INJECTION");
+                put(GenericVulnerability.CWE_GENERIC_INJECTION,         "GENERIC_INJECTION");
+                put(GenericVulnerability.CWE_LDAP_INJECTION,            "GENERIC_LDAP_INJECTION");
+                put(GenericVulnerability.CWE_OS_COMMAND_INJECTION,      "GENERIC_COMMAND_INJECTION");
+                put(GenericVulnerability.CWE_SQL_INJECTION,             "GENERIC_SQL_INJECTION");
+                put(GenericVulnerability.CWE_XPATH_INJECTION,           "GENERIC_XPATH_INJECTION");
                 // path problems
-                put(GenericVulnerability.CWE_PATH_TRAVERSAL, "GENERIC_PATH_TRAVERSAL");
-                put(GenericVulnerability.CWE_DIRECTORY_INDEXING, "GENERIC_DIRECTORY_INDEXING");
+                put(GenericVulnerability.CWE_PATH_TRAVERSAL,            "GENERIC_PATH_TRAVERSAL");
+                put(GenericVulnerability.CWE_DIRECTORY_INDEXING,        "GENERIC_DIRECTORY_INDEXING");
             }
         };
 
@@ -75,16 +80,15 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
 	@Override
 	public String[] getSupportedVulnerabilityTypes() {
 		return new String[] { 
-                                GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
-				GenericVulnerability.CWE_SQL_INJECTION, 
-				//GenericVulnerability.CWE_DIRECT_REQUEST,
-				GenericVulnerability.CWE_PATH_TRAVERSAL,
-				//GenericVulnerability.CWE_XPATH_INJECTION,
-				GenericVulnerability.CWE_DIRECTORY_INDEXING,
-				GenericVulnerability.CWE_LDAP_INJECTION,
-				GenericVulnerability.CWE_OS_COMMAND_INJECTION,
-				//GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
-				//GenericVulnerability.CWE_EVAL_INJECTION  
+                                    GenericVulnerability.CWE_BLIND_XPATH_INJECTION,
+                                    GenericVulnerability.CWE_CROSS_SITE_SCRIPTING,
+                                    GenericVulnerability.CWE_EVAL_INJECTION,
+                                    GenericVulnerability.CWE_FORMAT_STRING_INJECTION,
+                                    GenericVulnerability.CWE_GENERIC_INJECTION,
+                                    GenericVulnerability.CWE_LDAP_INJECTION,
+                                    GenericVulnerability.CWE_OS_COMMAND_INJECTION,
+                                    GenericVulnerability.CWE_SQL_INJECTION,
+                                    GenericVulnerability.CWE_XPATH_INJECTION,
                                 };
 	}
 
