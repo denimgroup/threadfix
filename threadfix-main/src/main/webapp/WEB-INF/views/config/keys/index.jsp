@@ -37,7 +37,7 @@
                     <td colspan="4" style="text-align:center;">No API Keys found.</td>
                 </tr>
                 <tr ng-repeat="key in keys">
-                    <td id="key{{ key.note }}" style="max-width:550px;word-wrap: break-word;">{{ key.apiKey }}</td>
+                    <td id="key{{ key.note }}" style="max-width:550px;">{{ key.apiKey }}</td>
                     <td id="note{{ key.note }}" style="max-width:300px;word-wrap: break-word;">{{ key.note }}</td>
                     <td class="centered">
                         <button class="btn" id="editKeyModal{{ key.note }}" ng-click="openEditModal(key)">Edit / Delete</button>
