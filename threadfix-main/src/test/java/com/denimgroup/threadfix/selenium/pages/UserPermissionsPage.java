@@ -50,11 +50,19 @@ public class UserPermissionsPage extends BasePage {
 
     public UserPermissionsPage setTeam(String team) {
         try {
-            new Select(driver.findElement(By.id("orgSelect"))).selectByVisibleText(team);
+            new Select(driver.findElementById("orgSelect")).selectByVisibleText(team);
         } catch (NoSuchElementException e) {
-            this.takeScreenShot();
-            throw new RuntimeException("Please set API_KEY in run configuration.", e);
+            driver.findElementByLinkText("Close").click();
+            this.refreshPage();
+            sleep(2000);
+            this.clickAddPermissionsLink();
+            this.setTeamNoCatch(team);
         }
+        return this;
+    }
+
+    public UserPermissionsPage setTeamNoCatch(String teamName) {
+        new Select(driver.findElementById("orgSelect")).selectByVisibleText(teamName);
         return this;
     }
 
