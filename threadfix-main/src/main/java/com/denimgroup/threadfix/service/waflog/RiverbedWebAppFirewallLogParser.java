@@ -104,6 +104,7 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                     Iterable<CSVRecord> parser = CSVFormat.DEFAULT.parse(new StringReader(entry));
                     for (CSVRecord record : parser) {
 
+                        // We access elements 0 .. 17 later, so this has to have at least 18 elements
                         if (record.size() < 18)
                         {
                             log.error("can't parse logline: " +  entry);
@@ -128,7 +129,7 @@ public class RiverbedWebAppFirewallLogParser extends WafLogParser {
                         // we only care for THREADFIX_HANDLER_NAME here ... ignore all other stuff
                         if (! csvHandlerName.equals(THREADFIX_HANDLER_NAME))
                         {
-                            log.debug("ignore unknwon handler: "+ csvHandlerName);
+                            log.debug("ignore unknown handler: "+ csvHandlerName);
                             return null;
                         }
 
