@@ -24,7 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -123,5 +123,37 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
+    }
+
+    @Test
+    public void checkDeletedVulnerability() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName , ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab();
+
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
+
+        FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = findingDetailPage.clickViewVulnerability()
+                .clickToggleMoreInfoButton();
+
+        AnalyticsPage analyticsPage = vulnerabilityDetailPage.clickCloseVulnerabilityButton()
+                .clickAnalyticsLink()
+                .clickVulnerabilitySearchTab();
+
+        analyticsPage.expandTeamApplicationFilter()
+                .addApplicationFilter(appName);
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
 }

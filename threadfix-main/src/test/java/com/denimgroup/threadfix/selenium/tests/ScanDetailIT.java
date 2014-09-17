@@ -62,7 +62,7 @@ public class ScanDetailIT extends BaseIT {
     }
 
     @Test
-    public void showHideStatisticAvailable() {
+    public void testShowHideStatisticsDetail() {
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -77,6 +77,23 @@ public class ScanDetailIT extends BaseIT {
         scanDetailPage.toggleStatistics();
 
         assertFalse("Statistics were show", scanDetailPage.areStatisticsDisplayed());
+    }
+
+    @Test
+    public void testShowHideStatisticsToggle() {
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab();
+
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
+
+        assertTrue("Show Statistics Button wasn't displayed", scanDetailPage.isHideStatisticsButtonDisplay("Show Statistics"));
+
+        scanDetailPage.toggleStatistics();
+
+        assertTrue("Hide Statistics Button wasn't displayed", scanDetailPage.isHideStatisticsButtonDisplay("Hide Statistics"));
     }
 
     @Test

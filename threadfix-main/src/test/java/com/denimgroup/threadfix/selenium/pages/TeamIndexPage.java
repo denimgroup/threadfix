@@ -56,7 +56,7 @@ public class TeamIndexPage extends BasePage {
 
     public TeamIndexPage addNewTeam(String teamName) {
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementById("teamName"+teamName));
+        waitForElement(driver.findElementById("teamName" + teamName));
         sleep(1000);
         return new TeamIndexPage(driver);
     }
@@ -144,12 +144,12 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
-    public TeamIndexPage clickCloseAddAppModal(){
+    public TeamIndexPage clickCloseAddAppModal() {
         driver.findElementByLinkText("Close").click();
         return new TeamIndexPage(driver);
     }
 
-    public TeamIndexPage addNewApplication(String teamName, String appName,String url, String criticality) {
+    public TeamIndexPage addNewApplication(String teamName, String appName, String url, String criticality) {
         clickAddNewApplication(teamName);
         setApplicationName(appName);
         setApplicationUrl(url);
@@ -166,11 +166,13 @@ public class TeamIndexPage extends BasePage {
         setRepositoryPassword(password);
         return this;
     }
+
     public TeamIndexPage setSourceCodeFolder(String path) {
         expandSourceCodeFields();
         setRepositoryPath(path);
         return this;
     }
+
     public TeamIndexPage setRemoteSourceCodeURL(String url) {
         expandSourceCodeFields();
         repositoryURL(url);
@@ -253,7 +255,7 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementById("applicationUrlInputInvalidUrlError").getText();
     }
 
-    public String successAlert(){
+    public String successAlert() {
         waitForElement(driver.findElementByClassName("alert-success"));
         return driver.findElementByClassName("alert-success").getText().trim();
     }
@@ -276,14 +278,14 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText()
                 .contains("Successfully added team " + teamName);
     }
-	
-	public boolean isAddTeamBtnPresent(){
-		return driver.findElementById("addTeamModalButton").isDisplayed();	
-	}
-	
-	public boolean isAddTeamBtnClickable() {
+
+    public boolean isAddTeamBtnPresent() {
+        return driver.findElementById("addTeamModalButton").isDisplayed();
+    }
+
+    public boolean isAddTeamBtnClickable() {
         return isClickable("addTeamModalButton");
-	}
+    }
 
     public boolean isAddApplicationButtonClickable() {
         return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
@@ -298,23 +300,23 @@ public class TeamIndexPage extends BasePage {
     }
 
 
-	public boolean isExpandAllBtnPresent() {
+    public boolean isExpandAllBtnPresent() {
         WebDriverWait wait = new WebDriverWait(driver, 60);
         wait.until(ExpectedConditions.elementToBeClickable(By.id("expandAllButton")));
-		return driver.findElementById("expandAllButton").isDisplayed();	
-	}
-	
-	public boolean isExpandAllBtnClickable(){
+        return driver.findElementById("expandAllButton").isDisplayed();
+    }
+
+    public boolean isExpandAllBtnClickable() {
         return isClickable("expandAllButton");
-	}
-	
-	public boolean isCollapseAllBtnPresent(){
-		return driver.findElementById("collapseAllButton").isDisplayed();	
-	}
-	
-	public boolean isCollapseAllBtnClickable(){
+    }
+
+    public boolean isCollapseAllBtnPresent() {
+        return driver.findElementById("collapseAllButton").isDisplayed();
+    }
+
+    public boolean isCollapseAllBtnClickable() {
         return isClickable("collapseAllButton");
-	}
+    }
 
     public boolean isGraphDisplayed(String teamName) {
         return driver.findElementById("teamGraph" + teamName).isDisplayed();
@@ -332,7 +334,11 @@ public class TeamIndexPage extends BasePage {
         return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText();
     }
 
-    public boolean isUploadScanButtonAvailabe() {
+    public boolean isUploadButtonPresent(String teamName, String appName) {
+        return driver.findElementsById("uploadScanModalLink" + teamName + "-" + appName).size() != 0;
+    }
+
+    public boolean isUploadScanButtonDisplay() {
         return driver.findElementByLinkText("Upload Scan").isDisplayed();
     }
 

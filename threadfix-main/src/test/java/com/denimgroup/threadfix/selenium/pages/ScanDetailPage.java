@@ -83,6 +83,10 @@ public class ScanDetailPage extends BasePage {
         return driver.findElementById("statisticsDiv").isDisplayed();
     }
 
+    public boolean isHideStatisticsButtonDisplay(String expected) {
+        return driver.findElementById("statisticButton").getText().trim().equals(expected);
+    }
+
     public boolean isDuplicatedResultsCorrect(String expectedCount) {
         return driver.findElementById("duplicateResults").getText().trim().equals(expectedCount);
     }

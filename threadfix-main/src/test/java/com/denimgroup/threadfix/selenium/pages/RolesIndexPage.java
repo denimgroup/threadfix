@@ -114,6 +114,16 @@ public class RolesIndexPage extends BasePage {
         sleep(1000);
         return this;
     }
+
+    public RolesIndexPage toggleSpecificPermission(boolean status, String elementID) {
+        if(status) {
+            driver.findElementById( elementID + "True").click();
+        }else {
+            driver.findElementById(elementID + "False").click();
+        }
+        sleep(1000);
+        return this;
+    }
 	
 	public RolesIndexPage clickCloseModal(){
         waitForElement(driver.findElementByClassName("modal-footer").findElement(By.className("btn")));

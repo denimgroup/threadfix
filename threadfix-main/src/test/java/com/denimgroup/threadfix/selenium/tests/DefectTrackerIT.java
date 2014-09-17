@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -44,6 +45,7 @@ public class DefectTrackerIT extends BaseIT {
     private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
     private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
     private static final String BUGZILLAPROJECTNAME = "For ThreadFix";
+    private static final String HPQC_URL = System.getProperty("HPQC_URL");
     private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
     private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
     private static final String TFS_URL = System.getProperty("TFS_URL");
@@ -428,5 +430,40 @@ public class DefectTrackerIT extends BaseIT {
 
         assertFalse("The defectTracker was still present after attempted deletion.",
                 defectTrackerIndexPage.isElementPresent("defectTackerName" + defectTrackerName));
+    }
+
+//TODO after HP quality Center machine comes up
+    @Ignore
+    @Test
+    public void editDefectTrackerFromJiraToHP() {
+        String originalDefectTrackerName = getRandomString(8);
+        String editedDefectTrackerName = getRandomString(8);
+        String originalDefectTrackerType = "Jira";
+        String editedDefectTrackerType = "HP Quality Center";
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
+
+        defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setName(originalDefectTrackerName)
+                .setType(originalDefectTrackerType)
+                .setURL(JIRA_URL)
+                .clickSaveDefectTracker();
+
+        defectTrackerIndexPage.refreshPage();
+
+        //Edit previously created defect tracker
+        defectTrackerIndexPage = defectTrackerIndexPage.clickEditLink(originalDefectTrackerName)
+                .setName(editedDefectTrackerName)
+                .setType(editedDefectTrackerType)
+                .setURL(HPQC_URL)
+                .clickSaveDefectTracker();
+
+        assertTrue("Edit did not change the name.",
+                defectTrackerIndexPage.isNamePresent(editedDefectTrackerName));
+        assertTrue("Edit did not change the type.",
+                defectTrackerIndexPage.isTypeCorrect(editedDefectTrackerType, editedDefectTrackerName));
+        assertTrue("Edit did not change url.",
+                defectTrackerIndexPage.isUrlCorrect(HPQC_URL, editedDefectTrackerName));
     }
 }

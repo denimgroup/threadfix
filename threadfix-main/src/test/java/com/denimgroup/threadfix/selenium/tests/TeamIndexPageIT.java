@@ -102,7 +102,7 @@ public class TeamIndexPageIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonAvailabe());
+        assertTrue("Upload Scan Button is not Available", teamIndexPage.isUploadScanButtonDisplay());
     }
 
     @Test
@@ -135,6 +135,26 @@ public class TeamIndexPageIT extends BaseIT {
                 .uploadScanButton(teamName,appName)
                 .uploadNewScan(scanFile, teamName, appName);
 
-        assertTrue("Scan wasn't successfully uploaded", teamIndexPage.successAlert().contains("Successfully uploaded scan."));
+        assertTrue("Scan wasn't successfully uploaded",
+                teamIndexPage.successAlert().contains("Successfully uploaded scan."));
+    }
+
+    @Test
+    public void testIsNamePreventScanUpload() {
+        String teamName1 = getRandomString(6) + "2.0";
+
+        DatabaseUtils.createTeam(teamName1);
+        DatabaseUtils.createApplication(teamName1, appName);
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName1)
+                .uploadScanButton(teamName1, appName)
+                .uploadNewScan(newScan, teamName1, appName);
+
+        assertTrue("The scan wasn't uploaded",
+                teamIndexPage.applicationVulnerabilitiesFiltered(teamName1, appName, "Total", "45"));
     }
 }

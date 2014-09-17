@@ -90,6 +90,11 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage clickCloseVulnerabilityButton() {
+        driver.findElementById("closeVulnerabilityLink").click();
+        return new AnalyticsPage(driver);
+    }
+
     /* _____________________ Set Methods _____________________ */
 
     /* _____________________ Get Methods _____________________ */
@@ -117,4 +122,6 @@ public class AnalyticsPage extends BasePage {
         Select reportSelection = new Select(driver.findElementById("reportSelect"));
         return reportSelection.getFirstSelectedOption().getText().equals(report);
     }
+
+
 }

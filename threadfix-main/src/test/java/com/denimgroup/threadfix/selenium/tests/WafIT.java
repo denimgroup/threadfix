@@ -321,4 +321,25 @@ public class WafIT extends BaseIT {
         String pageText6 = wafRulesPage.tryGetText(By.id("wafrule"));
 		assertTrue("Waf rule not generated", pageText6.contains("SecRule"));
 	}
+
+    @Test
+    public void testWafNameOnModalHeader() {
+        String originalWaf = "testEditWaf" + getRandomString(3);
+        String emptyString = "";
+        String type = "Snort";
+
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickWafsHeaderLink()
+                .clickAddWafLink()
+                .createNewWaf(originalWaf, type)
+                .clickModalSubmit();
+
+        wafIndexPage.clickEditWaf(originalWaf);
+
+        assertTrue("Waf Modal Header wasn't showed Correct name", wafIndexPage.isModalHeadrDisplayCorrect("Edit WAF ", originalWaf));
+
+        wafIndexPage.editWaf(originalWaf, emptyString, type);
+
+        assertTrue("Waf Modal Header wasn't showed Correct name", wafIndexPage.isModalHeadrDisplayCorrect("Edit WAF", emptyString));
+    }
 }

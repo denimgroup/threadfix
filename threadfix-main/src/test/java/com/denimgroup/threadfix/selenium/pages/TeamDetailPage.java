@@ -57,6 +57,12 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public  TeamDetailPage clickActionButtonWithoutEditButton() {
+        driver.findElementById("actionButton").click();
+        waitForElement(driver.findElementById("editfiltersButton1"));
+        return new TeamDetailPage(driver);
+    }
+
     public TeamDetailPage clickEditDeleteButton() {
         driver.findElementById("teamModalButton").click();
         return new TeamDetailPage(driver);
@@ -580,5 +586,9 @@ public class TeamDetailPage extends BasePage {
 
     public boolean isNumberOfInfoCorrect(String expectedNumber, int row) {
         return driver.findElementById("appInfoVulns" + row).getText().trim().equals(expectedNumber);
+    }
+
+    public boolean isTeamNamePresent(String teamName) {
+        return driver.findElementById("name").isDisplayed();
     }
 }

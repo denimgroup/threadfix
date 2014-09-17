@@ -174,4 +174,8 @@ public class FilterPage extends BasePage {
     public boolean isVulnerabilityTypeFound() {
         return driver.findElementsById("genericVulnerabilityNameError").size() == 0;
     }
+
+    public boolean isAccessDenied() {
+        return driver.findElementById("main-content").getText().contains("Access Denied");
+    }
 }

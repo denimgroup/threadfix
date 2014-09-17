@@ -103,12 +103,18 @@ public class UserIndexPage extends BasePage {
         return this;
     }
 	
-	public UserIndexPage clickAddNewUserBtn(){
+	public UserIndexPage clickAddNewUserBtn() {
         waitForElement(driver.findElementById("submit"));
 		driver.findElementById("submit").click();
 		sleep(5000);
 		return new UserIndexPage(driver);
 	}
+
+    public LoginPage clickLogOut() {
+        clickUserTab();
+        driver.findElementById("logoutLink").click();
+        return new LoginPage(driver);
+    }
 	
 	public UserIndexPage clickAddNewUserBtnInvalid(){
 		sleep(500);

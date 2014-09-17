@@ -28,16 +28,21 @@ import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.apache.bcel.generic.DUP;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
+import javax.validation.constraints.AssertFalse;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 @Category(EnterpriseTests.class)
 public class UserPermissionsEntIT extends BaseIT{
+
+    private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
+    private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
+    private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
 
     @Test
     public void navigationTest() {
@@ -377,5 +382,383 @@ public class UserPermissionsEntIT extends BaseIT{
                 .toggleAllPermissions(true)
                 .setPermissionValue(deniedPermission,false)
                 .clickModalSubmit();
+    }
+
+    @Test
+    public void checkViewErrorLogPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canViewErrorLogs")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+       assertFalse("View Error Log wasn't gone", dashboardPage.isElementPresent("viewLogsLink"));
+    }
+
+    @Test
+    public void checkUploadScanPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canUploadScans")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        TeamIndexPage teamIndexPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("Upload Button is Available", teamIndexPage.isUploadButtonPresent(teamName, appName));
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(appName)
+                .clickActionButton();
+
+        assertFalse("Upload Link is Available", applicationDetailPage.isElementPresent("uploadScanModalLink"));
+    }
+
+    @Test
+    public void checkSubmitDefectsPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
+        String defectTrackerType = "Bugzilla";
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canSubmitDefects")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, "TestPassword")
+                .clickDefectTrackersLink()
+                .clickAddDefectTrackerButton()
+                .setName(newDefectTrackerName)
+                .setURL(BUGZILLA_URL)
+                .setType(defectTrackerType)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName)
+                .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, "QA Testing")
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Submit Defect is Present", applicationDetailPage.isElementPresent("submitDefectButton"));
+    }
+
+    @Test
+    public void checkManageVulnerabilityFilters() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageVulnFilters")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        FilterPage applicationFilterPage = loginPage.login(userName, "TestPassword")
+                .clickManageFiltersLink();
+
+        assertTrue("Access Denied Page is not showing", applicationFilterPage.isAccessDenied());
+    }
+
+    @Test
+    public void checkModifyVulnerabilitiesPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canModifyVulnerabilities")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName)
+                .clickVulnerabilitiesActionButton();
+
+        assertFalse("Close Vulnerabilities Link is available",
+                applicationDetailPage.isElementPresent("closeVulnsButton"));
+
+        assertFalse("Mark as False Positive Link is available",
+                applicationDetailPage.isElementPresent("markFalsePositivesButton"));
+
+        FindingDetailPage findingDetailPage = applicationDetailPage.clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
+
+        assertFalse("Merge With Other Findings Button is available",
+                findingDetailPage.isButtonPresent("Merge with Other Findings"));
+
+        findingDetailPage.clickViewVulnerability()
+                .clickToggleMoreInfoButton();
+
+        assertFalse("Close Vulnerability button is available",
+                findingDetailPage.isElementPresent("closeVulnerabilityLink"));
+        assertFalse("Merge With Other Findings Button is available",
+                findingDetailPage.isElementPresent("markFalsePositiveLink"));
+        assertFalse("Add File Button is present",
+                findingDetailPage.isElementPresent("uploadDocVulnModalLink"));
+        assertFalse("Merge With Other Findings Button is available",
+                findingDetailPage.isButtonPresent("Add Comment"));
+    }
+
+    @Test
+    public void checkManageWAFsPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageWafs")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Waf Link is Present", dashboardPage.isElementPresent("wafsLink"));
+    }
+
+    @Test
+    public void checkManageUsersPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canManageUsers")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("manageUsersLink"));
+    }
+
+    @Test
+    public void checkManageTeamsPermission() {
+        String teamName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageTeams")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        TeamDetailPage teamDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName)
+                .clickActionButtonWithoutEditButton();
+
+        assertFalse("Team Edit/Delete Button is available", teamDetailPage.isElementPresent("teamModalButton"));
+    }
+
+    @Test
+    public void checkManageRoles() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canManageRoles")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("manageRolesLink"));
+    }
+
+    @Test
+    public void checkManageSystemSettingsPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canManageSystemSettings")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("configureDefaultsLink"));
     }
 }

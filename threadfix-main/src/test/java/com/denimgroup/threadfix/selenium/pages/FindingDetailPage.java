@@ -55,4 +55,9 @@ public class FindingDetailPage extends BasePage {
     public boolean isScannerVulnerabilityTextPresent() {
         return driver.findElementById("scannerVulnerabilityType").isDisplayed();
     }
+
+    public boolean isButtonPresent(String linkName) {
+        return driver.findElementsByLinkText(linkName).size() != 0;
+    }
+
 }

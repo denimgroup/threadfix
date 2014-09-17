@@ -128,4 +128,7 @@ public class WafIndexPage extends BasePage {
         return presence;
     }
 
+    public boolean isModalHeadrDisplayCorrect(String message, String wafName) {
+        return driver.findElementById("myModalLabel").getText().contains(message + wafName);
+    }
 }
