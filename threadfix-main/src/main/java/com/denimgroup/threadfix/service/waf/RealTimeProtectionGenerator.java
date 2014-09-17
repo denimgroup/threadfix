@@ -420,7 +420,8 @@ public abstract class RealTimeProtectionGenerator {
 	
 	public static boolean hasStartAndEnd(String type) {
 		return type.equals(WafType.BIG_IP_ASM) || 
-			   type.equals(WafType.IMPERVA_SECURE_SPHERE);
+			   type.equals(WafType.IMPERVA_SECURE_SPHERE) ||
+			   type.equals(WafType.RIVERBED_WEB_APP_FIREWALL);
 	}
 	
 	public static String getStart(String type, List<WafRule> rules) {
@@ -428,6 +429,8 @@ public abstract class RealTimeProtectionGenerator {
 			return BigIPASMGenerator.getStart(rules);
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.getStart(rules);
+		} else if (type.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
+			return RiverbedWebAppFirewallGenerator.getStart(rules);
 		} else {
 			return null;
 		}
@@ -438,6 +441,8 @@ public abstract class RealTimeProtectionGenerator {
 			return BigIPASMGenerator.getEnd(rules);
 		} else if (type.equals(WafType.IMPERVA_SECURE_SPHERE)) {
 			return ImpervaSecureSphereGenerator.getEnd(rules);
+		} else if (type.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
+			return RiverbedWebAppFirewallGenerator.getEnd(rules);
 		} else {
 			return null;
 		}

@@ -83,6 +83,8 @@ public class RealTimeProtectionGeneratorFactory {
 			return new ImpervaSecureSphereGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else if (wafName.equals(WafType.DENY_ALL_RWEB)) {
 			return new DenyAllRWebGenerator(wafRuleDao, wafRuleDirectiveDao);
+		} else if (wafName.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
+			return new RiverbedWebAppFirewallGenerator(wafRuleDao, wafRuleDirectiveDao);
 		} else {
 			log.warn("Invalid WAF type name '"
 					+ wafName

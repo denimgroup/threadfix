@@ -111,7 +111,7 @@ public class WafsUpdater implements Updater {
         if (maybeType == null) {
             WafType type = new WafType();
             type.setName(trimmedLine);
-            type.setInitialId(10000);
+            type.setInitialId(100000);
             type.setWafRuleDirectives(listOf(WafRuleDirective.class));
             wafTypeDao.saveOrUpdate(type);
             return type;
