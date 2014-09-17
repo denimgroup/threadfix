@@ -32,10 +32,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.validation.constraints.AssertFalse;
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
 public class UserPermissionsEntIT extends BaseIT{
@@ -587,7 +585,7 @@ public class UserPermissionsEntIT extends BaseIT{
                 .clickViewFinding();
 
         assertFalse("Merge With Other Findings Button is available",
-                findingDetailPage.isButtonPresent("Merge with Other Findings"));
+                findingDetailPage.isLinkPresent("Merge with Other Findings"));
 
         findingDetailPage.clickViewVulnerability()
                 .clickToggleMoreInfoButton();
@@ -599,11 +597,20 @@ public class UserPermissionsEntIT extends BaseIT{
         assertFalse("Add File Button is present",
                 findingDetailPage.isElementPresent("uploadDocVulnModalLink"));
         assertFalse("Merge With Other Findings Button is available",
-                findingDetailPage.isButtonPresent("Add Comment"));
+                findingDetailPage.isLinkPresent("Add Comment"));
     }
 
     @Test
     public void checkManageWAFsPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String wafName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.createWaf(wafName, "Snort" );
+
         String roleName = getRandomString(8);
         String userName = getRandomString(8);
 
@@ -626,11 +633,39 @@ public class UserPermissionsEntIT extends BaseIT{
 
         LoginPage loginPage = userIndexPage.clickLogOut();
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
 
-        dashboardPage.clickConfigTab();
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom();
+        }
 
-        assertFalse("Waf Link is Present", dashboardPage.isElementPresent("wafsLink"));
+        assertTrue("Creating WAf is still Present", applicationDetailPage.getWafError());
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickCloseWafButton()
+                .clickEditDeleteBtn()
+                .clickSetWaf()
+                .addWaf(wafName)
+                .saveWafAdd()
+                .clickWafNameLink();
+
+        wafIndexPage.clickGenerateWafRulesButton();
+
+        assertTrue("Generating WAf Rules wasn't applied",
+                wafIndexPage.isDownloadWafRulesDisplay());
+
+        wafIndexPage.clickConfigTab();
+
+        assertFalse("Waf Link is Present", applicationDetailPage.isElementPresent("wafsLink"));
     }
 
     @Test
@@ -760,5 +795,241 @@ public class UserPermissionsEntIT extends BaseIT{
         dashboardPage.clickConfigTab();
 
         assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("configureDefaultsLink"));
+    }
+
+    @Test
+    public void checkManageScanAgentsPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageScanAgents")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName);
+
+        assertFalse("Scan Agent Tab is Available", applicationDetailPage.isLinkPresent("0 Scan Agent Tasks"));
+        assertFalse("Scheduled Scans Tab Available", applicationDetailPage.isLinkPresent("0 Scheduled Scans"));
+
+        applicationDetailPage.clickConfigTab();
+
+        assertFalse("Scan  Agent Tasks Link is Available", applicationDetailPage.isElementPresent("scanQueueLink"));
+    }
+
+    @Test
+    public void checkManageRemoteProvidersPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canManageRemoteProviders")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Remote Providers Link is Present", rolesIndexPage.isElementPresent("remoteProvidersLink"));
+    }
+
+    //Todo after having Id for Create Defect Tracker button
+    @Ignore
+    @Test
+    public void checkDefectTrackerPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+        String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
+        String defectTrackerType = "Bugzilla";
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageDefectTrackers")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName)
+                .clickEditDeleteBtn()
+                .clickAddDefectTrackerButton()
+                .setNameInput(newDefectTrackerName)
+                .setUrlInput(BUGZILLA_URL)
+                .clickUpdateApplicationButton();
+    }
+
+    @Test
+    public void checkManageApplicationsPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageApplications")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName)
+                .clickActionButton();
+
+        assertFalse("Edit/Delete Button wasn't gone",
+                applicationDetailPage.isElementPresent("editApplicationModalButton"));
+        assertFalse("Edit Vulnerability Filter still available",
+                applicationDetailPage.isElementPresent("editVulnerabilityFiltersButton"));
+    }
+
+    @Test
+    public void checkManageAPIKeysPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canManageApiKeys")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        dashboardPage.clickConfigTab();
+
+        assertFalse("Manage Remote Providers Link is Present", rolesIndexPage.isElementPresent("apiKeysLink"));
+    }
+
+    //Todo after Test Manage WAf
+    @Ignore
+    @Test
+    public void checkGenerateWAFRulesPermission() {
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        String wafName = "testDeleteWaf" + getRandomString(3);
+        String wafType = "mod_security";
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canGenerateWafRules")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        WafIndexPage wafIndexPage = loginPage.login(userName, "TestPassword")
+                .clickWafsHeaderLink()
+                .clickAddWafLink()
+                .createNewWaf(wafName, wafType)
+                .clickModalSubmit();
+
+        wafIndexPage.clickDeleteWaf(wafName);
+
+        assertTrue("The Waf Failed Message is not present",
+                wafIndexPage.isErrorPresent("Failed to delete a WAF with application mappings."));
+
+        //assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isDownloadWafRulesDisplay(wafName));
+
     }
 }

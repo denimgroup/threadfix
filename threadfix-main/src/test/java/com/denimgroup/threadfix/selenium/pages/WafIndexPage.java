@@ -55,6 +55,13 @@ public class WafIndexPage extends BasePage {
 		return new WafIndexPage(driver);
 	}
 
+    public WafIndexPage clickGenerateWafRulesButton() {
+        sleep(2000);
+        driver.findElementById("generateWafRulesButton").click();
+        waitForElement(driver.findElementByLinkText("Download Waf Rules"));
+        return new WafIndexPage(driver);
+    }
+
 	public WafIndexPage createNewWaf(String name,String type){
 		setWafName(name);
 		setWafType(type);
@@ -123,6 +130,10 @@ public class WafIndexPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText().contains(wafName);
     }
 
+    public boolean isErrorPresent(String message) {
+        return driver.findElementByClassName("alert-error").getText().contains(message);
+    }
+
     public boolean isWafPresent(String name){
         boolean presence = driver.findElementsById("wafName" + name).size() == 1;
         return presence;
@@ -130,5 +141,9 @@ public class WafIndexPage extends BasePage {
 
     public boolean isModalHeadrDisplayCorrect(String message, String wafName) {
         return driver.findElementById("myModalLabel").getText().contains(message + wafName);
+    }
+
+    public boolean isDownloadWafRulesDisplay() {
+        return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
     }
 }

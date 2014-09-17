@@ -128,7 +128,7 @@ public abstract class BasePage {
         sleep(2000);
 		driver.findElementById("tabConfigAnchor").click();
 		sleep(2000);
-        waitForElement(driver.findElementById("updateChannelVulnLink"));
+        waitForElement(driver.findElementById("configurationHeader"));
 	}
 	
 	public void clickUserTab(){
@@ -220,6 +220,9 @@ public abstract class BasePage {
 		}
 	}
 
+    public boolean isLinkPresent(String linkName) {
+        return driver.findElementsByLinkText(linkName).size() != 0;
+    }
 
     public String getH2Tag() {
 		return driver.findElementByTagName("h2").getText();

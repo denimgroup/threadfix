@@ -105,6 +105,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public WafIndexPage clickWafNameLink() {
+        driver.findElementById("wafNameText").click();
+        return new WafIndexPage(driver);
+    }
+
     public ApplicationDetailPage clickActionButton() {
         waitForElement(driver.findElementById("actionButton1"));
         sleep(3000);
@@ -286,7 +291,8 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickCreateWAfButtom() {
         sleep(1000);
         driver.findElementById("submit").click();
-        waitForElement(driver.findElementById("addWafButton"));
+       // waitForElement(driver.findElementById("addWafButton"));
+        sleep(2000);
         return new ApplicationDetailPage(driver);
     }
 
@@ -311,6 +317,11 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setUrlInput(String url) {
         driver.findElementById("urlInput").clear();
         driver.findElementById("urlInput").sendKeys(url);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickCloseWafButton() {
+        driver.findElementById("closeModalButton").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -1165,5 +1176,9 @@ public class ApplicationDetailPage extends BasePage {
     public boolean checkNumberOfUnmappedCorrect(int expectedNumberOfFindings) {
         List<WebElement> bodyRows = driver.findElementById("1").findElements(By.className("bodyRow"));
         return bodyRows.size() == expectedNumberOfFindings;
+    }
+
+    public boolean getWafError() {
+        return driver.findElementById("errorSpan").getText().contains("Failure. HTTP status was 401");
     }
 }
