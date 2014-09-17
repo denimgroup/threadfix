@@ -21,8 +21,11 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl;
+package com.denimgroup.threadfix.importer.loader;
 
+import com.denimgroup.threadfix.annotations.ScanFormat;
+import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -40,12 +43,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.zip.ZipFile;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -56,6 +56,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 	private final SanitizedLogger log = new SanitizedLogger(ScanTypeCalculationService.class);
 
     public static final String TEMP_FILE_NAME = "tempFile";
+
+    private boolean initialized = false;
 
     @Autowired
 	private ApplicationDao applicationDao;
@@ -78,6 +80,11 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
     // package access is for testing
     // the two arguments are needed to reconcile MultipartFile / File difference
     String getScannerType(String originalName, String fileName) {
+
+        if (!initialized) {
+            initializeMappingsFromAnnotations();
+        }
+
         String returnString = null;
 
         if (ScanUtils.isZip(fileName)) {
@@ -103,8 +110,44 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
         return type;
     }
-	
-	// We currently only have zip files for skipfish and fortify
+
+    private static final Set<Entry<String, String[]>> map = new HashSet<>();
+    private static void addToMap(String name, String... tags) {
+        map.add(new SimpleEntry<>(name, tags));
+    }
+
+    private void initializeMappingsFromAnnotations() {
+
+        Map<ScanImporter, Class<?>> typeMap = ScannerTypeLoader.getMap();
+
+        for (Entry<ScanImporter, Class<?>> entry : typeMap.entrySet()) {
+            ScanImporter annotation = entry.getKey();
+
+            if (annotation.format() == ScanFormat.XML) {
+                boolean addedEntry = false;
+
+                if (annotation.startingXMLTags().length != 0) {
+                    addToMap(annotation.scannerName(), annotation.startingXMLTags());
+                    addedEntry = true;
+
+                } else if (annotation.startingXMLTagSets().length != 0) {
+                    for (StartingTagSet startingTagSet : annotation.startingXMLTagSets()) {
+                        if (startingTagSet.value().length != 0) {
+                            addToMap(annotation.scannerName(), startingTagSet.value());
+                            addedEntry = true;
+                        }
+                    }
+                }
+
+                assert addedEntry : "Failed to add an XML entry for scanner " + annotation.scannerName();
+
+            }
+        }
+
+        initialized = true;
+    }
+
+    // We currently only have zip files for skipfish and fortify
 	// if we support a few more it would be worth a more modular style
 	private String figureOutZip(String fileName) {
 		
@@ -139,36 +182,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 		
 		return null;
 	}
-	
-	private static final Set<Entry<String, String[]>> map = new HashSet<>();
-	static {
-		addToMap(ScannerType.APPSCAN_DYNAMIC.getFullName(), "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues");
-		addToMap(ScannerType.ARACHNI.getFullName(), "arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision");
-		addToMap(ScannerType.ARACHNI.getFullName(), "report", "version", "options");
-		addToMap(ScannerType.BURPSUITE.getFullName(), "issues", "issue", "serialNumber", "type", "name", "host", "path");
-		addToMap(ScannerType.NETSPARKER.getFullName(), "netsparker");
-		addToMap(ScannerType.CAT_NET.getFullName(), "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime");
-		addToMap(ScannerType.W3AF.getFullName(), "w3afrun");
-		addToMap(ScannerType.NESSUS.getFullName(), "NessusClientData_v2");
-		addToMap(ScannerType.WEBINSPECT.getFullName(), "Sessions", "Session", "URL", "Scheme", "Host", "Port");
-		addToMap(ScannerType.ACUNETIX_WVS.getFullName(),  "ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime");
-		addToMap(ScannerType.FINDBUGS.getFullName(), "BugCollection", "Project", "BugInstance", "Class");
-		addToMap(ScannerType.APPSCAN_SOURCE.getFullName(), "AssessmentRun", "AssessmentStats" );
-		addToMap(ScannerType.MANUAL.getFullName(), "Vulnerabilities", "Vulnerability");
-		addToMap(ScannerType.NTO_SPIDER.getFullName(), "VULNS", "VULNLIST");
-		addToMap(ScannerType.NTO_SPIDER.getFullName(), "VulnSummary");
-		addToMap(ScannerType.APPSCAN_ENTERPRISE.getFullName(), "report", "control", "row");
-		addToMap(ScannerType.ZAPROXY.getFullName(), "report", "alertitem");
-		addToMap(ScannerType.ZAPROXY.getFullName(), "OWASPZAPReport", "site", "alerts");
-		addToMap(ScannerType.DEPENDENCY_CHECK.getFullName(), "analysis");
-        addToMap(ScannerType.CHECKMARX.getFullName(), "CxXMLResults");
-        addToMap(ScannerType.CENZIC_HAILSTORM.getFullName(), "Assessments", "AssessmentRunData");
-	}
-	
-	private static void addToMap(String name, String... tags) {
-		map.add(new SimpleEntry<>(name, tags));
-	}
-	
+
 	private String getType(List<String> scanTags) {
 		
 		for (Entry<String, String[]> entry : map) {

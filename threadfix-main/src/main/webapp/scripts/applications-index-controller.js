@@ -80,12 +80,13 @@ myAppModule.controller('ApplicationsIndexController',
                 success(function(data, status, headers, config) {
 
                     // TODO figure out Jasper better, it's a terrible way to access the report images.
-                    var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
+                    var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0.*" style="height: 250px" alt=""\/>)/);
                     if (matches !== null && matches[1] !== null) {
 
                         var imageTagHtml = matches[1];
 
-                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' alt=""/>';
+                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 32)
+                            + '?time=' + new Date().getTime() +  '" style="height: 250px" alt=""/>';
 
                         team.report = imageTagHtml;
                     }

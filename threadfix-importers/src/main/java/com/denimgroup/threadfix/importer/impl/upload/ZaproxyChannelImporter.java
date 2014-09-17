@@ -25,12 +25,10 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
@@ -46,10 +44,17 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * 
+ *
+ *
  * @author mcollins
  */
-@ScanImporter(ScannerType.ZAPROXY)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.ZAPROXY_DB_NAME,
+        startingXMLTagSets = {
+                @StartingTagSet({"report", "alertitem"}),
+                @StartingTagSet({"OWASPZAPReport", "site", "alerts"})
+        }
+)
 class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";

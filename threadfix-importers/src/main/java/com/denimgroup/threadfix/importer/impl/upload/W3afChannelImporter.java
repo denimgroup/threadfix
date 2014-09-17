@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -50,7 +51,7 @@ import java.util.Map;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.W3AF)
+@ScanImporter(scannerName = ScannerDatabaseNames.W3AF_DB_NAME, startingXMLTags = { "w3afrun" })
 class W3afChannelImporter extends AbstractChannelImporter {
 
     public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";

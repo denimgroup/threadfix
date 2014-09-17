@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
@@ -51,7 +52,11 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  * 
  */
-@ScanImporter(ScannerType.SKIPFISH)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.SKIPFISH_DB_NAME,
+        format = ScanFormat.ZIP,
+        zipItems = "issue_index.js"
+)
 class SkipfishChannelImporter extends AbstractChannelImporter {
 
 	private String folderName;
