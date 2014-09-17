@@ -168,6 +168,8 @@ public class ApplicationsController {
 
         Application application = applicationService.loadApplication(appId);
 
+        applicationService.decryptRepositoryCredentials(application);
+
         // manual Finding form
         map.put("manualSeverities", findingService.getManualSeverities());
         map.put("recentPathList", findingService.getRecentDynamicPaths(appId));
@@ -251,7 +253,7 @@ public class ApplicationsController {
 				application.getDefectTracker().getDefectTrackerType() == null) {
 			return null;
 		}
-		
+
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
