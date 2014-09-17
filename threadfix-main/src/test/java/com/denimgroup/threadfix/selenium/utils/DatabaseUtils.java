@@ -57,6 +57,12 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
+    public static void createWaf(String wafName, String type) {
+        RestResponse<Waf> response = CLIENT.createWaf(wafName, type);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
     public static void createApplication(String teamName, String appName) {
 
         RestResponse<Organization> response = CLIENT.searchForTeamByName(teamName);

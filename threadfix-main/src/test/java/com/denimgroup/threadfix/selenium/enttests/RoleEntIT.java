@@ -278,23 +278,4 @@ public class RoleEntIT extends BaseIT {
 
 		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
-
-    @Test
-    public void protectedPermissionsRemovalTest() {
-        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickEditLink("Administrator");
-
-        for (String permission : Role.ALL_PERMISSIONS) {
-            if (!permission.equals("enterprise")) {
-                assertTrue("Admin role did not have all permissions.", rolesIndexPage.getPermissionValue(permission));
-            }
-        }
-
-        rolesIndexPage.toggleAllPermissions(false)
-                .clickSaveRoleInvalid();
-
-        assertTrue("Protected permission was not protected correctly.",
-                rolesIndexPage.getEditRoleError().contains("You cannot remove the Manage Users privilege from this role."));
-    }
 }
