@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -236,6 +237,19 @@ public class ApplicationsController {
         model.addAttribute("periodTypes", ScheduledPeriodType.values());
         model.addAttribute("scheduledDays", DayInWeek.values());
     }
+
+    private void addAdditionalScannerInfoField(List<DynamicFormField> formFields){
+        DynamicFormField additionalScannerInfoField = new DynamicFormField();
+        additionalScannerInfoField.setName("AdditionalScannerInfo");
+        additionalScannerInfoField.setLabel("Additional Scanner Info");
+        additionalScannerInfoField.setRequired(false);
+        additionalScannerInfoField.setType("checkbox");
+        additionalScannerInfoField.setActive(true);
+        additionalScannerInfoField.setEditable(true);
+        additionalScannerInfoField.setSupportsMultivalue(false);
+
+        formFields.add(additionalScannerInfoField);
+    }
 	
 	// TODO move this to a different spot so as to be less annoying
 	private Map<String, Object> addDefectModelAttributes(int appId, int orgId) {
@@ -272,6 +286,8 @@ public class ApplicationsController {
                 map.put(ERROR_MSG, dt.getLastError());
                 return map;
             }
+            //adding additional scanner info checkbox
+            addAdditionalScannerInfoField(data.getEditableFields());
 		}
 
 		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());

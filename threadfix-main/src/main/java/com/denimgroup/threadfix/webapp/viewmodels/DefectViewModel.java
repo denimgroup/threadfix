@@ -40,6 +40,7 @@ public class DefectViewModel {
 	private String severity;
 	private String priority;
 	private String status;
+    private Boolean additionalScannerInfo;
     private Map<String, Object> fieldsMap;
     private String fieldsMapStr;
 		
@@ -137,5 +138,13 @@ public class DefectViewModel {
 
     public void setFieldsMapStr(String fieldsMapStr) {
         this.fieldsMapStr = fieldsMapStr;
+    }
+
+    public Boolean getAdditionalScannerInfo(){
+        return additionalScannerInfo;
+    }
+
+    public void setAdditionalScannerInfo(Boolean additionalScannerInfo) {
+        this.additionalScannerInfo = additionalScannerInfo;
     }
 }

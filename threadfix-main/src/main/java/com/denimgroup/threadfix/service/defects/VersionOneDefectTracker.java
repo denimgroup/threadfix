@@ -69,7 +69,12 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             LOG.warn("No defect information found. Returning without doing anything.");
             return null;
         }
-        metadata.setPreamble(String.valueOf(fieldsMap.get("Description")));
+
+        if(fieldsMap.get("Description") != null) {
+            String preamble = metadata.getPreamble();
+            metadata.setPreamble(preamble + "\n" + String.valueOf(fieldsMap.get("Description")));
+        }
+
         String description = makeDescription(vulnerabilities, metadata);
         description = description.replaceAll("\n", "<br>");
 
