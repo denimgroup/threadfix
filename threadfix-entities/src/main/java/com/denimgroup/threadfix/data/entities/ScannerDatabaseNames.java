@@ -54,6 +54,7 @@ public final class ScannerDatabaseNames {
         QUALYSGUARD_WAS_DB_NAME = "QualysGuard WAS",
         SENTINEL_DB_NAME = "WhiteHat Sentinel",
         VERACODE_DB_NAME = "Veracode",
+        SSVL_DB_NAME = "SSVL",
         MANUAL_DB_NAME = "Manual";
 
 }
