@@ -1,7 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
 myAppModule.controller('ApplicationsIndexController',
-    function($scope, $log, $modal, $upload, $window, $rootScope, tfEncoder, threadfixAPIService) {
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService) {
 
     // Initialize
     $scope.initialized = false;
@@ -195,7 +195,11 @@ myAppModule.controller('ApplicationsIndexController',
 
             team.applications.sort(nameCompare);
 
-            team.expanded = true;
+            team.expanded = false;
+
+            $timeout(function() {
+                team.expanded = true;
+            }, 200);
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
