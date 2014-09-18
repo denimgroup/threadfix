@@ -256,6 +256,37 @@ public class ThreadFixRestClientIT {
     }
 
     @Test
+    public void creationValidation() {
+        String wafName = TestUtils.getName();
+        DatabaseUtils.createWaf(wafName, "mod_security");
+
+        RestResponse<Waf> wafRestResponse = getClient().createWaf(wafName, "mod_security");
+        assertTrue("Rest response was incorrect.",
+                wafRestResponse.message.equals("ThreadFix already has a WAF with the name " + wafName));
+
+        wafRestResponse = getClient().createWaf("","mod_security");
+        assertFalse("Waf with no name was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+
+        wafRestResponse = getClient().createWaf("   \t\t\t", "mod_security");
+        assertFalse("Waf with whitespace name was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+
+        wafRestResponse = getClient().createWaf(TestUtils.getRandomString(51), "mod_security");
+        assertFalse("Waf with name over 50 characters was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+
+        wafRestResponse = getClient().createWaf(TestUtils.getName(), "");
+        assertFalse("Waf with no type was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+
+        wafRestResponse = getClient().createWaf(TestUtils.getName(), "WRONG");
+        assertFalse("Waf with incorrect type was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+
+        wafRestResponse = getClient().createWaf(TestUtils.getName(), null);
+        assertFalse("Waf with null type was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+
+        wafRestResponse = getClient().createWaf(null, "mod_security");
+        assertFalse("Waf with null name was created. Rest response: " + wafRestResponse.message, wafRestResponse.success);
+    }
+
+    @Test
     public void testSearchForWafByName() {
         String name = TestUtils.getName();
 

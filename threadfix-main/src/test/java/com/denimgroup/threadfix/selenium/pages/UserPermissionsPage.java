@@ -138,13 +138,11 @@ public class UserPermissionsPage extends BasePage {
         int firstTeamValue;
         int secondTeamValue;
 
-        Select teamSelector = new Select(driver.findElementById("orgSelect"));
+        this.setTeam(firstTeam);
+        firstTeamValue = Integer.parseInt(new Select(driver.findElementById("orgSelect")).getFirstSelectedOption().getAttribute("value"));
 
-        teamSelector.selectByVisibleText(firstTeam);
-        firstTeamValue = Integer.parseInt(teamSelector.getFirstSelectedOption().getAttribute("value"));
-
-        teamSelector.selectByVisibleText(secondTeam);
-        secondTeamValue = Integer.parseInt(teamSelector.getFirstSelectedOption().getAttribute("value"));
+        this.setTeam(secondTeam);
+        secondTeamValue = Integer.parseInt(new Select(driver.findElementById("orgSelect")).getFirstSelectedOption().getAttribute("value"));
 
         return secondTeamValue > firstTeamValue;
     }

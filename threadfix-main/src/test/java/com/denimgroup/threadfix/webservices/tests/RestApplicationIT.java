@@ -67,12 +67,13 @@ public class RestApplicationIT extends BaseRestIT {
 		String getTeamUrl = BASE_URL + "/teams/1?apiKey=" + GOOD_API_KEY;
 
 		// Bad key
-		assertTrue(httpPost(
-				creationUrl,
-				new String[] { "apiKey", "name", "url" },
-				new String[] { BAD_API_KEY, getRandomString(20),
-						"http://normal.url.com" }).equals(
-				RestController.API_KEY_NOT_FOUND_ERROR));
+        String response = httpPost(creationUrl,
+                new String[] { "apiKey", "name", "url" },
+                new String[] { BAD_API_KEY,
+                getRandomString(20),
+                "http://normal.url.com" });
+
+        assertTrue(response.equals(RestController.API_KEY_NOT_FOUND_ERROR));
 
 		if (httpGet(getTeamUrl)
 				.equals(TeamRestController.LOOKUP_FAILED)) {
@@ -86,7 +87,7 @@ public class RestApplicationIT extends BaseRestIT {
 		}
 
 		// test name param
-		String response = httpPost(creationUrl, new String[] { "apiKey",
+		response = httpPost(creationUrl, new String[] { "apiKey",
 				"name", "url" }, new String[] { GOOD_API_KEY,
 				getRandomString(2000), "http://normal.url.com" });
 		assertTrue(response.equals(ApplicationRestController.CREATION_FAILED));

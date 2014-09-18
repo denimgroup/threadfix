@@ -77,7 +77,7 @@ public class AnalyticsPage extends BasePage {
         driver.findElementById("teamNameTypeahead").clear();
         driver.findElementById("teamNameTypeahead").sendKeys(teamName);
         driver.findElementById("teamNameTypeahead").sendKeys(Keys.RETURN);
-        sleep(2000);
+        waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }
 
@@ -86,7 +86,7 @@ public class AnalyticsPage extends BasePage {
         driver.findElementById("applicationNameTypeahead").clear();
         driver.findElementById("applicationNameTypeahead").sendKeys(appName);
         driver.findElementById("applicationNameTypeahead").sendKeys(Keys.RETURN);
-        sleep(2000);
+        waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }
 
