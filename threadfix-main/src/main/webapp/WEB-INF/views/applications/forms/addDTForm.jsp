@@ -18,7 +18,7 @@
                     </select>
                 </td>
                 <td>
-                    <button ng-click="switchTo('createDefectTracker')" class="btn">
+                    <button id="createDefectTrackerButton" ng-click="switchTo('createDefectTracker')" class="btn">
                         Create Defect Tracker
                     </button>
                 </td>
