@@ -1181,4 +1181,12 @@ public class ApplicationDetailPage extends BasePage {
     public boolean getWafError() {
         return driver.findElementById("errorSpan").getText().contains("Failure. HTTP status was 401");
     }
+
+    public boolean isLeftReportLinkPresent() {
+        return driver.findElementsById("leftTileReport").size() != 0;
+    }
+
+    public boolean isRightReportLinkPresent() {
+        return driver.findElementsById("rightTileReport").size() != 0;
+    }
 }

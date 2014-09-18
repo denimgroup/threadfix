@@ -108,4 +108,12 @@ public class DashboardPage extends BasePage{
     public boolean isLoggedin(){
         return driver.findElementsById("main-content").size() != 0;
     }
+
+    public boolean isLeftReportLinkPresent() {
+        return driver.findElementsById("leftTileReport").size() != 0;
+    }
+
+    public boolean isRightReportLinkPresent() {
+        return driver.findElementsById("rightTileReport").size() != 0;
+    }
 }

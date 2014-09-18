@@ -509,6 +509,12 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageVulnerabilityFilters() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName,appName);
+
         String roleName = getRandomString(8);
         String userName = getRandomString(8);
 
@@ -533,6 +539,14 @@ public class UserPermissionsEntIT extends BaseIT{
 
         FilterPage applicationFilterPage = loginPage.login(userName, "TestPassword")
                 .clickManageFiltersLink();
+
+        assertTrue("Access Denied Page is not showing", applicationFilterPage.isAccessDenied());
+
+         applicationFilterPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName)
+                .clickActionButton()
+                .clickEditVulnerabilityFilters();
 
         assertTrue("Access Denied Page is not showing", applicationFilterPage.isAccessDenied());
     }
@@ -910,10 +924,21 @@ public class UserPermissionsEntIT extends BaseIT{
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
                 .clickEditDeleteBtn()
-                .clickAddDefectTrackerButton()
+                .clickAddDefectTrackerButton();
+/*
                 .setNameInput(newDefectTrackerName)
                 .setUrlInput(BUGZILLA_URL)
                 .clickUpdateApplicationButton();
+
+        if (applicationDetailPage.isDefectTrackerAddPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom();
+        }
+        */
     }
 
     @Test
@@ -986,18 +1011,23 @@ public class UserPermissionsEntIT extends BaseIT{
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Remote Providers Link is Present", rolesIndexPage.isElementPresent("apiKeysLink"));
+        assertFalse("API keys Link is Present", dashboardPage.isElementPresent("apiKeysLink"));
     }
 
-    //Todo after Test Manage WAf
-    @Ignore
     @Test
     public void checkGenerateWAFRulesPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+
         String roleName = getRandomString(8);
         String userName = getRandomString(8);
 
         String wafName = "testDeleteWaf" + getRandomString(3);
-        String wafType = "mod_security";
 
         RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
                 .clickManageRolesLink()
@@ -1018,18 +1048,74 @@ public class UserPermissionsEntIT extends BaseIT{
 
         LoginPage loginPage = userIndexPage.clickLogOut();
 
-        WafIndexPage wafIndexPage = loginPage.login(userName, "TestPassword")
-                .clickWafsHeaderLink()
-                .clickAddWafLink()
-                .createNewWaf(wafName, wafType)
-                .clickModalSubmit();
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
 
-        wafIndexPage.clickDeleteWaf(wafName);
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom();
+        }
 
-        assertTrue("The Waf Failed Message is not present",
-                wafIndexPage.isErrorPresent("Failed to delete a WAF with application mappings."));
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafNameLink();
 
-        //assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isDownloadWafRulesDisplay(wafName));
+        assertFalse("The waf was still present after attempted deletion.",
+                wafIndexPage.isGenerateWafRulesButtonPresent());
+    }
 
+    @Test
+    public void checkGenerateReportsPermission() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false, "canGenerateReports")
+                .clickSaveRole();
+
+        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+
+        assertFalse("Left Report is still Present", dashboardPage.isLeftReportLinkPresent());
+        assertFalse("Right Report is still Present", dashboardPage.isRightReportLinkPresent());
+
+        TeamIndexPage teamIndexPage = dashboardPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertFalse("The Chart still available",teamIndexPage.isGraphDisplayed(teamName));
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName);
+
+        assertFalse("Left Report is still Present", applicationDetailPage.isLeftReportLinkPresent());
+        assertFalse("Right Report is still Present", applicationDetailPage.isRightReportLinkPresent());
+
+        assertFalse("Analytics Tab is still available", applicationDetailPage.isElementPresent("tab-reports"));
     }
 }

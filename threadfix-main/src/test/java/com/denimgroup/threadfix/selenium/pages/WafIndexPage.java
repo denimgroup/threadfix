@@ -146,4 +146,8 @@ public class WafIndexPage extends BasePage {
     public boolean isDownloadWafRulesDisplay() {
         return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
     }
+
+    public boolean isGenerateWafRulesButtonPresent() {
+        return driver.findElementsById("generateWafRulesButton").size() !=0;
+    }
 }
