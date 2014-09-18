@@ -227,6 +227,7 @@ public class TeamDetailPage extends BasePage {
         driver.findElementById("showApplicationInput1").click();
         driver.findElementById("applicationNameTypeahead1").sendKeys(application);
         driver.findElementById("applicationNameTypeahead1").sendKeys(Keys.RETURN);
+        waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
 
