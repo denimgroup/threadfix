@@ -80,6 +80,19 @@ public class DefectsController {
 			return RestResponse.failure("You must select at least one vulnerability.");
 		}
 
+        Map<String,Object> fieldsMap = defectViewModel.getFieldsMap();
+        Object asi = fieldsMap.get("AdditionalScannerInfo");
+
+        if (asi != null) {
+            if ((Boolean) asi){
+                defectViewModel.setAdditionalScannerInfo(true);
+            }
+        } else {
+            if(defectViewModel.getAdditionalScannerInfo() == null){
+                defectViewModel.setAdditionalScannerInfo(false);
+            }
+        }
+
 		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(defectViewModel.getVulnerabilityIds());
 		Map<String,Object> map = defectService.createDefect(vulnerabilities, defectViewModel.getSummary(),
 				defectViewModel.getPreamble(), 
@@ -88,7 +101,8 @@ public class DefectsController {
 				defectViewModel.getSeverity(), 
 				defectViewModel.getPriority(), 
 				defectViewModel.getStatus(),
-                defectViewModel.getFieldsMap());
+                defectViewModel.getFieldsMap(),
+                defectViewModel.getAdditionalScannerInfo());
         Defect newDefect = null;
         if (map.get(DefectService.DEFECT) instanceof Defect)
             newDefect = (Defect)map.get(DefectService.DEFECT);
