@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
@@ -43,8 +44,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.zip.ZipFile;
 
@@ -176,11 +177,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			ScanUtils.readSAXInput(collector, "Done.", stream);
 			
 			return getType(collector.tags);
-		} catch (IOException e) {
-			log.error("Encountered IOException. Returning null.", e);
+		} catch (IOException | RestIOException e) {
+			log.error("Encountered IOException. Rethrowing.");
+            throw new RestIOException(e, "Unable to determine scan type.");
 		}
-		
-		return null;
 	}
 
 	private String getType(List<String> scanTags) {
