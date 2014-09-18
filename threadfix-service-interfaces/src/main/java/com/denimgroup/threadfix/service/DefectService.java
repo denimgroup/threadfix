@@ -71,7 +71,8 @@ public interface DefectService {
 	 * @return
 	 */
     Map<String, Object> createDefect(List<Vulnerability> vulns, String summary, String preamble,
-			String component, String version, String severity, String priority, String status, Map<String, Object> fieldsMap);
+			String component, String version, String severity, String priority, String status, Map<String,
+            Object> fieldsMap, Boolean additionalScannerInfo);
 
 	/**
 	 * Get the error message associated with the submission of the list of Vulnerabilities.

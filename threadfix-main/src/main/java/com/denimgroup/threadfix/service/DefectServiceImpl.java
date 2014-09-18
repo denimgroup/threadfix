@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
@@ -80,11 +81,26 @@ public class DefectServiceImpl implements DefectService {
 		defectDao.saveOrUpdate(defect);
 	}
 
+    private String getAdditionalScannerInfo(List<Vulnerability> allVulns) {
+
+        for (Vulnerability vuln : allVulns) {
+            for (Finding finding: vuln.getFindings()){
+                String scannerDetail = finding.getScannerDetail();
+                if(scannerDetail != null && !scannerDetail.equals("")){
+                    return scannerDetail;
+                }
+            }
+        }
+
+        return "";
+    }
+
 	@Override
 	@Transactional(readOnly = false)
-	public Map<String, Object> createDefect(List<Vulnerability> allVulns, String summary,
-			String preamble, String component, String version,
-			String severity, String priority, String status, Map<String, Object> fieldsMap) {
+	public Map<String, Object> createDefect(List<Vulnerability> allVulns,
+            String summary, String preamble, String component, String version,
+			String severity, String priority, String status, Map<String,
+            Object> fieldsMap, Boolean additionalScannerInfo) {
 		if (allVulns == null || allVulns.size() == 0 || allVulns.get(0) == null ||
 				allVulns.get(0).getApplication() == null) {
 			log.warn("Null input, exiting.");
@@ -119,7 +135,18 @@ public class DefectServiceImpl implements DefectService {
 
 		if (editedPreamble == null || editedPreamble.equals("")) {
 			if (vuln.getGenericVulnerability() != null && vuln.getSurfaceLocation() != null) {
-				editedPreamble = createMessage(vuln);
+
+                if(additionalScannerInfo){
+                    String additionalScannerInfoStr = getAdditionalScannerInfo(allVulns);
+
+                    if(additionalScannerInfoStr == null || additionalScannerInfoStr.equals("")){
+                        editedPreamble = createMessage(vuln);
+                    } else  {
+                        editedPreamble = createMessageWithScannerInfo(vuln, additionalScannerInfoStr);
+                    }
+                } else {
+                    editedPreamble = createMessage(vuln);
+                }
 			} else {
 				editedPreamble = "No editedPreamble could be parsed.";
 			}
@@ -199,6 +226,18 @@ public class DefectServiceImpl implements DefectService {
         map.put(ERROR, dt.getLastError());
 		return map;
 	}
+
+    private String createMessageWithScannerInfo(Vulnerability vuln, String scannerInfo) {
+
+        String message = scannerInfo;
+
+        if (vuln.getGenericVulnerability() != null && vuln.getSurfaceLocation() != null) {
+            message += "\n" + vuln.getGenericVulnerability().getName() + " at "
+                    + vuln.getSurfaceLocation().getPath();
+        }
+
+        return message;
+    }
 
 	private String createMessage(Vulnerability vuln) {
 		if (vuln.getGenericVulnerability() != null && vuln.getSurfaceLocation() != null) {
