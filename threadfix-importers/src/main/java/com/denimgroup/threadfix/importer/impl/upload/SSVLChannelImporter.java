@@ -52,7 +52,7 @@ import java.util.Map;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @ScanImporter(
-        scannerName = ScannerDatabaseNames.MANUAL_DB_NAME,
+        scannerName = ScannerDatabaseNames.SSVL_DB_NAME,
         startingXMLTags = { "Vulnerabilities", "Vulnerability" }
 )
 class SSVLChannelImporter extends AbstractChannelImporter {
@@ -234,13 +234,12 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	
 	public class SSVLChannelSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
-		private boolean hasDate = false;
 		private boolean hasVulnerabilitiesTag = false;
 		
 	    private void setTestStatus() {
 	    	if (!(hasVulnerabilitiesTag && hasFindings)) {
 				testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-			} else if (hasDate) {
+			} else if (testDate != null) {
 				testStatus = checkTestDate();
 			}
 	    	
