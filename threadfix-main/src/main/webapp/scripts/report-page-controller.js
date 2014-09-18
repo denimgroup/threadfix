@@ -9,6 +9,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.base = window.location.pathname;
 
     $scope.trendingActive = false;
+    $scope.comparisonActive = false;
 
     $scope.tabs = [
         {
@@ -134,6 +135,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.updateOptions = function(tab) {
         $scope.trendingActive = false;
         $scope.vulnSearch = false;
+        $scope.comparisonActive = false;
         $scope.options = tab.options;
         $scope.reportId = tab.options[0].id;
 
@@ -280,6 +282,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
         $scope.trendingActive = false;
+        $scope.comparisonActive = false;
         $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
     }
@@ -287,11 +290,24 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadTrending = function() {
 
         $scope.trendingActive = true;
+        $scope.comparisonActive = false;
         $scope.vulnSearch = false;
         $scope.tabs.forEach(function(tab) {
             tab.active = false;
         });
         $scope.$broadcast('loadTrendingReport');
+
+    }
+
+    $scope.loadComparison = function() {
+
+        $scope.trendingActive = false;
+        $scope.comparisonActive = true;
+        $scope.vulnSearch = false;
+        $scope.tabs.forEach(function(tab) {
+            tab.active = false;
+        });
+        $scope.$broadcast('loadComparisonReport');
 
     }
 

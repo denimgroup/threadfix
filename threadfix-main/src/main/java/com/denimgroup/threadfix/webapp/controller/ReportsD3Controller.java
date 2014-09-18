@@ -69,12 +69,21 @@ public class ReportsD3Controller {
 	private ReportsService reportsService;
 
 	@RequestMapping(value="/trendingScans", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Map<String, Object>> processSubmit(@ModelAttribute ReportParameters reportParameters,
+	public @ResponseBody RestResponse<Map<String, Object>> processTrendingScans(@ModelAttribute ReportParameters reportParameters,
                                                                                HttpServletRequest request) throws IOException {
         log.info("Generating trending scans report");
         return RestResponse.success(reportsService.generateTrendingReport(reportParameters,
                 request));
 		
 	}
+
+    @RequestMapping(value="/scansComparison", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Map<String, Object>> processScanComparison(@ModelAttribute ReportParameters reportParameters,
+                                                                         HttpServletRequest request) throws IOException {
+        log.info("Generating scans comparison report");
+        return RestResponse.success(reportsService.generateTrendingReport(reportParameters,
+                request));
+
+    }
 
 }

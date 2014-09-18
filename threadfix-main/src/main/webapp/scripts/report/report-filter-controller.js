@@ -103,6 +103,42 @@ module.controller('ReportFilterController', function($scope, $rootScope, $window
         }
     });
 
+    $scope.$on('loadComparisonReport', function() {
+
+        $scope.noData = false;
+
+        if (!$scope.allAppsSummary) {
+            $scope.loading = true;
+            $http.post(tfEncoder.encode("/reports/scansComparison"), $scope.getReportParameters()).
+                success(function(data, status, headers, config) {
+
+                    $scope.loading = false;
+
+                    $scope.trendingScansData = data.object.trendingScans;
+                    $scope.resetFilters();
+                    $scope.allScans = data.object.scanList;
+
+                    if ($scope.allScans) {
+                        $scope.allScans.sort(function (a, b) {
+                            return a.importTime - b.importTime;
+                        });
+                        $scope.refreshScans();
+
+                    } else {
+                        $scope.noData = true;
+                    };
+
+                }).
+                error(function(data, status, headers, config) {
+
+                    $scope.loading = false;
+                });
+        } else {
+
+        }
+    });
+
+
     $scope.refreshScans = function(){
         $scope.loading = true;
         filterByTeamAndApp();

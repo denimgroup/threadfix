@@ -1,10 +1,18 @@
 <div ng-controller="ReportFilterController">
 
-    <div ng-show="trendingActive" class="vuln-tree">
+    <div ng-show="trendingActive || comparisonActive" class="vuln-tree">
         <span class="spinner-div">
             <span id="loadingSpinner" ng-if="loading" class="spinner dark"></span>
         </span>
-        <d3-trending data="trendingScansData" label="title"></d3-trending>
+        <div ng-show="trendingActive">
+            <d3-trending data="trendingScansData" label="title"></d3-trending>
+        </div>
+        <div ng-show="comparisonActive">
+            <table id="scanComparison">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
     <div class="filter-controls">

@@ -26,13 +26,16 @@
             <tab heading="TrendingD3" ng-click="loadTrending()" active="trendingActive">
                 <%@ include file="trending.jsp" %>
             </tab>
+            <tab heading="ComparisonD3" ng-click="loadComparison()" active="comparisonActive">
+                <%--<%@ include file="trending.jsp" %>--%>
+            </tab>
             <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled" ng-click="updateOptions(tab)"></tab>
             <tab heading="Vulnerability Search" ng-click="loadVulnSearch()" active="showVulnTab">
                 <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
             </tab>
         </tabset>
 
-        <span ng-show="teams && !vulnSearch && !trendingActive">
+        <span ng-show="teams && !vulnSearch && !trendingActive && !comparisonActive">
             <select ng-change="loadReport()" style="margin-bottom: 0" class="reportTypeSelect" id="reportSelect" ng-model="reportId">
                 <option ng-selected="reportId === option.id" ng-repeat="option in options" value="{{ option.id }}">
                     {{ option.name }}
@@ -62,7 +65,7 @@
         </span>
         <span style="float:right" ng-show="loading" class="spinner dark"></span>
 
-        <div ng-hide="vulnSearch || trendingActive" style="margin-top: 10px" id="successDiv">
+        <div ng-hide="vulnSearch || trendingActive || comparisonActive" style="margin-top: 10px" id="successDiv">
             <c:if test="${ not hasVulnerabilities }">
                 <div class="alert alert-danger" style="margin-top:10px">
                     <button class="close" data-dismiss="alert" type="button">&times;</button>
