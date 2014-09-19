@@ -89,6 +89,13 @@ public class DefectTrackerIndexPage extends BasePage {
         return new DefectTrackerIndexPage(driver);
     }
 
+    public DefectTrackerSchedulePage clickScheduleUpdateTab() {
+            String linkText = driver.findElementById("scheduledUpdateTab").getAttribute("heading");
+            driver.findElementByLinkText(linkText).click();
+            waitForElement(driver.findElementById("addUpdateQueueLink"));
+            return new DefectTrackerSchedulePage(driver);
+    }
+
 	public String getNameRequiredErrorsText() {
 		return driver.findElementById("nameRequiredError").getText();
 	}
@@ -122,5 +129,11 @@ public class DefectTrackerIndexPage extends BasePage {
 
     public boolean isTypeCorrect(String type, String name) {
         return driver.findElementById("defectTrackerType" + name).getText().contains(type);
+    }
+
+    public boolean isCreateNewTrackerButtonPresent() {
+        return driver.findElementById("addNewDTButton").isDisplayed();
+
+
     }
 }

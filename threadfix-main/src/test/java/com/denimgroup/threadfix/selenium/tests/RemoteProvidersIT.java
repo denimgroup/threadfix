@@ -540,8 +540,6 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersSchedulePage.isNewImportButtonDisplayed());
     }
 
-    //TODO when issue 524 is fixed finish test.
-    @Ignore
     @Test
     public void scheduledDailyImportCreationTest() {
         String teamName = getRandomString(8);
@@ -556,10 +554,133 @@ public class RemoteProvidersIT extends BaseIT {
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
                 .setFrequency("Daily")
+                .setHour(3)
+                .setMinute(45)
+                .setPeriodOfDay("PM")
+                .clickModalSubmit();
+
+        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_3_45_PM"));
+    }
+
+    @Test
+    public void scheduledWeeklyImportCreationTest() {
+
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Weekly")
+                .setHour(4)
+                .setMinute(30)
+                .setPeriodOfDay("AM")
+                .setDay("Sunday")
+                .clickModalSubmit();
+
+        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_4_30_AM"));
+    }
+
+    @Test
+    public void checkSameDailyScheduleConflict() {
+        String frequency = "Daily";
+        int hour = 9;
+        int minutes = 30;
+        String periodOfDay = "AM";
+
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency(frequency)
+                .setHour(hour)
+                .setMinute(minutes)
+                .setPeriodOfDay(periodOfDay)
+                .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_9_30_AM"));
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency(frequency)
+                .setHour(hour)
+                .setMinute(minutes)
+                .setPeriodOfDay(periodOfDay)
+                .clickAddScheduledUpdated();
+
+        assertTrue("Same Schedule was Created",
+                remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));
+    }
+
+    @Test
+    public void checkSameWeeklyScheduleConflict() {
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Weekly")
                 .setHour(8)
                 .setMinute(30)
                 .setPeriodOfDay("PM")
-                .clickModalSubmit();
+                .setDay("Sunday")
+                .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created",
+                remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Weekly")
+                .setHour(8)
+                .setMinute(30)
+                .setPeriodOfDay("PM")
+                .setDay("Sunday")
+                .clickAddScheduledUpdated();
+
+        assertTrue("Same Schedule was Created",
+                remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));
     }
 
+    @Test
+    public void DeleteDailyRemoteProviderScheduling() {
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Daily")
+                .setHour(7)
+                .setMinute(15)
+                .setPeriodOfDay("PM")
+                .clickModalSubmit();
+
+        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_7_15_PM"));
+
+        remoteProvidersSchedulePage.clickDeleteDefectTrackerButton("_7_15_PM");
+
+        assertFalse("The Schedule wasn't Deleted",
+                remoteProvidersSchedulePage.isDeleteButtonPresent("_7_15_PM"));
+    }
+
+    @Test
+    public void DeleteweeklyRemoteProviderScheduling() {
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Weekly")
+                .setHour(11)
+                .setMinute(30)
+                .setPeriodOfDay("AM")
+                .setDay("Sunday")
+                .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created",
+                remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_11_30_AM"));
+
+        remoteProvidersSchedulePage.clickDeleteDefectTrackerButton("Sunday_11_30_AM");
+
+        assertFalse("The Schedule wasn't Deleted",
+                remoteProvidersSchedulePage.isDeleteButtonPresent("Sunday_11_30_AM"));
+    }
 }

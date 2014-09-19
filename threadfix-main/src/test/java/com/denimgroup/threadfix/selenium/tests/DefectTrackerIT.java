@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
+import com.denimgroup.threadfix.selenium.pages.DefectTrackerSchedulePage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -465,5 +466,154 @@ public class DefectTrackerIT extends BaseIT {
                 defectTrackerIndexPage.isTypeCorrect(editedDefectTrackerType, editedDefectTrackerName));
         assertTrue("Edit did not change url.",
                 defectTrackerIndexPage.isUrlCorrect(HPQC_URL, editedDefectTrackerName));
+    }
+
+    /*------------------------------ Scheduling ------------------------------*/
+
+    @Test
+    public void checkDefectTrackerPage() {
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink();
+
+        assertTrue("Defect Tracker page wasn't showed", defectTrackerIndexPage.isCreateNewTrackerButtonPresent());
+    }
+
+    @Test
+    public void defectTrackerDailyScheduling() {
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
+
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency("Daily")
+                .setHour(1)
+                .setMinute(15)
+                .setPeriodOfDay("PM")
+                .clickModalSubmit();
+
+        assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_1_15_PM"));
+    }
+
+    @Test
+    public void defectTrackerWeeklyScheduling() {
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
+
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency("Weekly")
+                .setHour(8)
+                .setMinute(15)
+                .setPeriodOfDay("PM")
+                .setDay("Sunday")
+                .clickModalSubmit();
+
+        assertTrue("New Schedule wasn't Created",
+                defectTrackerSchedulePage.isNewSchedulePresent("Sunday_8_15_PM"));
+    }
+
+    @Test
+    public void checkSameDailyScheduleConflict() {
+        String frequency = "Daily";
+        int hour = 9;
+        int minutes = 30;
+        String periodOfDay = "AM";
+
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
+
+            defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                    .setFrequency(frequency)
+                    .setHour(hour)
+                    .setMinute(minutes)
+                    .setPeriodOfDay(periodOfDay)
+                    .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_9_30_AM"));
+
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency(frequency)
+                .setHour(hour)
+                .setMinute(minutes)
+                .setPeriodOfDay(periodOfDay)
+                .clickAddScheduledUpdated();
+
+        assertTrue("Same Schedule was Created",
+                defectTrackerSchedulePage.isErrorPresent("Another defect tracker update is scheduled at that time/frequency"));
+    }
+
+    @Test
+    public void checkSameWeeklyScheduleConflict() {
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
+
+            defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                    .setFrequency("Weekly")
+                    .setHour(8)
+                    .setMinute(30)
+                    .setPeriodOfDay("PM")
+                    .setDay("Sunday")
+                    .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created",
+                defectTrackerSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
+
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency("Weekly")
+                .setHour(8)
+                .setMinute(30)
+                .setPeriodOfDay("PM")
+                .setDay("Sunday")
+                .clickAddScheduledUpdated();
+
+        assertTrue("Same Schedule was Created",
+                defectTrackerSchedulePage.isErrorPresent("Another defect tracker update is scheduled at that time/frequency"));
+    }
+
+    @Test
+    public void DeleteDailyDefectTrackerScheduling() {
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
+
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency("Daily")
+                .setHour(7)
+                .setMinute(15)
+                .setPeriodOfDay("PM")
+                .clickModalSubmit();
+
+        assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_7_15_PM"));
+
+        defectTrackerSchedulePage.clickDeleteDefectTrackerButton("_7_15_PM");
+
+        assertFalse("The Schedule wasn't Deleted",
+                defectTrackerSchedulePage.isDeleteButtonPresent("_7_15_PM"));
+    }
+
+    @Test
+    public void DeleteweeklyDefectTrackerScheduling() {
+
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
+
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency("Weekly")
+                .setHour(11)
+                .setMinute(30)
+                .setPeriodOfDay("AM")
+                .setDay("Sunday")
+                .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created",
+                defectTrackerSchedulePage.isNewSchedulePresent("Sunday_11_30_AM"));
+
+        defectTrackerSchedulePage.clickDeleteDefectTrackerButton("Sunday_11_30_AM");
+
+        assertFalse("The Schedule wasn't Deleted",
+                defectTrackerSchedulePage.isDeleteButtonPresent("Sunday_11_30_AM"));
     }
 }

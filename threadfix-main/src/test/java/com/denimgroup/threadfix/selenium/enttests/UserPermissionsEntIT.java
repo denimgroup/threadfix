@@ -663,9 +663,9 @@ public class UserPermissionsEntIT extends BaseIT{
                     .clickCreateWAfButtom();
         }
 
-        assertTrue("Creating WAf is still Present", applicationDetailPage.getWafError());
+        assertTrue("Creating WAf is still Present", applicationDetailPage.applicationErrorMessage());
 
-        WafIndexPage wafIndexPage = applicationDetailPage.clickCloseWafButton()
+        WafIndexPage wafIndexPage = applicationDetailPage.clickCloseModalButton()
                 .clickEditDeleteBtn()
                 .clickSetWaf()
                 .addWaf(wafName)
@@ -883,62 +883,6 @@ public class UserPermissionsEntIT extends BaseIT{
         dashboardPage.clickConfigTab();
 
         assertFalse("Manage Remote Providers Link is Present", rolesIndexPage.isElementPresent("remoteProvidersLink"));
-    }
-
-    //Todo after having Id for Create Defect Tracker button
-    @Ignore
-    @Test
-    public void checkDefectTrackerPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
-        String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
-        String defectTrackerType = "Bugzilla";
-
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageDefectTrackers")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickApplicationName(appName)
-                .clickEditDeleteBtn()
-                .clickAddDefectTrackerButton();
-/*
-                .setNameInput(newDefectTrackerName)
-                .setUrlInput(BUGZILLA_URL)
-                .clickUpdateApplicationButton();
-
-        if (applicationDetailPage.isDefectTrackerAddPresent()) {
-            applicationDetailPage.clickCreateNewWaf()
-                    .setWafName(wafName)
-                    .clickCreateWAfButtom();
-        } else {
-            applicationDetailPage.setWafName(wafName)
-                    .clickCreateWAfButtom();
-        }
-        */
     }
 
     @Test

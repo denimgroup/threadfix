@@ -71,9 +71,34 @@ public class RemoteProvidersSchedulePage extends BasePage{
         return this;
     }
 
+    public RemoteProvidersSchedulePage clickAddScheduledUpdated() {
+        driver.findElementById("submit").click();
+        return this;
+    }
+
+    public DefectTrackerSchedulePage clickDeleteDefectTrackerButton(String expectedId) {
+        driver.findElementById("scheduledImportDeleteButton" + expectedId).click();
+        handleAlert();
+        return new DefectTrackerSchedulePage(driver);
+    }
+
+
     /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isNewImportButtonDisplayed() {
         return driver.findElementById("addImportQueueLink").isDisplayed();
     }
+
+    public boolean isNewSchedulePresent(String expectedTime) {
+        return driver.findElementById("scheduledImportDay" + expectedTime).isDisplayed();
+    }
+
+    public boolean isErrorPresent(String errorMessage) {
+        return driver.findElementByClassName("errors").getText().trim().contains(errorMessage);
+    }
+
+    public boolean isDeleteButtonPresent(String elementId) {
+        return driver.findElementsById("scheduledImportDeleteButton" + elementId).size() !=0;
+    }
+
 }

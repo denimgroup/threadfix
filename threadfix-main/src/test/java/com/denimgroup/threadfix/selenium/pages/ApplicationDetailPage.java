@@ -320,7 +320,7 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickCloseWafButton() {
+    public ApplicationDetailPage clickCloseModalButton() {
         driver.findElementById("closeModalButton").click();
         return new ApplicationDetailPage(driver);
     }
@@ -573,6 +573,11 @@ public class ApplicationDetailPage extends BasePage {
     public VulnerabilityDetailPage clickViewMoreVulnerabilityLink(String vulnerability) {
         driver.findElementById("viewMoreLink" + vulnerability).click();
         return new VulnerabilityDetailPage(driver);
+    }
+
+    public AnalyticsPage clickViewMoreVulnerabilityTrending(){
+        driver.findElementById("leftViewMore").click();
+        return new AnalyticsPage(driver);
     }
 
     public ApplicationDetailPage checkVulnerabilitiesByCategory(String category) {
@@ -854,6 +859,11 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage uploadScan(String file) {
         driver.findElementById("scanFileInput").sendKeys(file);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickCreatDefectTracker() {
+        driver.findElementById("createDefectTrackerButton").click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -1178,7 +1188,7 @@ public class ApplicationDetailPage extends BasePage {
         return bodyRows.size() == expectedNumberOfFindings;
     }
 
-    public boolean getWafError() {
+    public boolean applicationErrorMessage() {
         return driver.findElementById("errorSpan").getText().contains("Failure. HTTP status was 401");
     }
 
@@ -1188,5 +1198,13 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isRightReportLinkPresent() {
         return driver.findElementsById("rightTileReport").size() != 0;
+    }
+
+    public boolean isCreateDefectTrackerDisplay() {
+        return driver.findElementById("createDefectTrackerButton").isDisplayed();
+    }
+
+    public boolean isDefectTrackerNameLinkDisplay() {
+        return driver.findElementById("linkDT").isDisplayed();
     }
 }

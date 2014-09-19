@@ -156,4 +156,26 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
+
+    @Test
+    public void checkAnalyticsPage() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickViewMoreVulnerabilityTrending();
+
+        assertTrue("Export CSV Button is Not Available", analyticsPage.isExportCsvButtonAvailable());
+
+        analyticsPage.clickVulnerabilitySearchTab();
+
+        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isCollapseAllButtonDisplay());
+    }
 }

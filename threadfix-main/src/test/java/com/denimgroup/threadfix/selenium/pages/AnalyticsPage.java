@@ -129,5 +129,11 @@ public class AnalyticsPage extends BasePage {
         return reportSelection.getFirstSelectedOption().getText().equals(report);
     }
 
+    public boolean isExportCsvButtonAvailable(){
+        return driver.findElementById("csvLink").isDisplayed();
+    }
 
+    public boolean isCollapseAllButtonDisplay() {
+        return driver.findElementById("toggleVulnTree").isDisplayed();
+    }
 }
