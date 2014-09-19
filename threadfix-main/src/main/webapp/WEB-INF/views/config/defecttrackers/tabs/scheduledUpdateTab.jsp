@@ -34,13 +34,12 @@
                 <td id="noScheduledUpdatesFoundMessage" colspan="5" style="text-align:center;">No Scheduled Updates found.</td>
             </tr>
             <tr class="bodyRow" ng-repeat="scheduledUpdate in scheduledUpdates">
-                <td id="scheduledUpdateId{{ $index }}"> {{ scheduledUpdate.id }} </td>
-                <td id="scheduledUpdateDay{{ $index }}"> {{ scheduledUpdate.day }} &nbsp; {{ scheduledUpdate.hour }}:{{ scheduledUpdate.extraMinute }}{{ scheduledUpdate.minute }}
-                    &nbsp; {{ scheduledUpdate.period }} </td>
-                <td id="scheduledUpdateFrequency{{ $index }}"> {{ scheduledUpdate.frequency }} </td>
+                <td id="scheduledUpdateId{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.id }} </td>
+                <td id="scheduledUpdateDay{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.timeString }} </td>
+                <td id="scheduledUpdateFrequency{{ scheduledUpdate.timeStringId }}"> {{ scheduledUpdate.frequency }} </td>
                 <c:if test="${ canManageDefectTrackers }">
                     <td class="centered">
-                        <a  id="scheduledUpdateDeleteButton{{ $index }}" class="btn btn-danger" ng-click="deleteScheduledUpdate(scheduledUpdate)">Delete</a>
+                        <a  id="scheduledUpdateDeleteButton{{ scheduledUpdate.timeStringId }}" class="btn btn-danger" ng-click="deleteScheduledUpdate(scheduledUpdate)">Delete</a>
                     </td>
                 </c:if>
             </tr>
