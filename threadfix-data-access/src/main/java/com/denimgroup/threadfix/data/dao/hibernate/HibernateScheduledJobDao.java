@@ -66,7 +66,7 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
             query.setString("day", scheduledJob.getDay());
 
         } else if (scheduledJob.getFrequency() != null) {
-            queryStr = "select count(*) from " + tableName + " scheduledJob" +
+            queryStr = "select count(*) from " + tableName + " scheduledJob " +
                     "where scheduledJob.frequency=:frequency and scheduledJob.period=:period " +
                     "and scheduledJob.hour=:hour and scheduledJob.minute=:minute";
 
