@@ -15,8 +15,9 @@
     <h2>Edit User <c:out value="${ user.name }"/> Permissions</h2>
 
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jspf" %>
 
-	<a id="addPermissionButton" class="btn" ng-click="openAddPermissionsModal()">
+	<a id="addPermissionButton" class="btn" ng-click="openAddPermissionsModal()" ng-disabled="noTeams">
 		Add Permissions
 	</a>
 

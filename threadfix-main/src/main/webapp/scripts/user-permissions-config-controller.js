@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller("UserPermissionsConfigController", function($scope, $http, $modal, $log, tfEncoder){
+module.controller("UserPermissionsConfigController", function($scope, $http, $modal, $log, tfEncoder, threadfixAPIService){
 
     $scope.keys = [];
 
@@ -37,6 +37,26 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
             });
+
+        threadfixAPIService.getTeams().
+            success(function(data, status, headers, config) {
+                $scope.initialized = true;
+
+                if (data.success) {
+
+                    if (data.object.teams.length == 0) {
+                        $scope.noTeams = true;
+                        $scope.errorMessage = "Cannot add permissions with no teams.";
+                    } else {
+                        $scope.noTeams = false;
+                    }
+                } else {
+                    $scope.output = "Failure. Message was : " + data.message;
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+            });
     };
 
     // TODO move to service
@@ -45,49 +65,54 @@ module.controller("UserPermissionsConfigController", function($scope, $http, $mo
     });
 
     $scope.openAddPermissionsModal = function() {
-        var modalInstance = $modal.open({
-            templateUrl: 'permissionForm.html',
-            controller: 'PermissionModalController',
-            resolve: {
-                url: function() {
-                    return tfEncoder.encode("/configuration/users/" + $scope.userId + "/access/new");
-                },
-                object: function() {
-                    return {
-                        team: defaultTeam,
-                        allApps: true,
-                        application: {
-                            id: 0
-                        }, role: {
-                            id: 0
-                        }
-                    };
-                },
-                buttonText: function() {
-                    return "Save Map";
-                },
-                config: function() {
-                    return {
-                        teams: $scope.teams,
-                        roles: $scope.roles
-                    };
-                },
-                headerText: function() {
-                    return "Add Permissions Mapping";
+
+        if(!$scope.noTeams) {
+            var modalInstance = $modal.open({
+                templateUrl: 'permissionForm.html',
+                controller: 'PermissionModalController',
+                resolve: {
+                    url: function () {
+                        return tfEncoder.encode("/configuration/users/" + $scope.userId + "/access/new");
+                    },
+                    object: function () {
+                        return {
+                            team: defaultTeam,
+                            allApps: true,
+                            application: {
+                                id: 0
+                            }, role: {
+                                id: 0
+                            }
+                        };
+                    },
+                    buttonText: function () {
+                        return "Save Map";
+                    },
+                    config: function () {
+                        return {
+                            teams: $scope.teams,
+                            roles: $scope.roles
+                        };
+                    },
+                    headerText: function () {
+                        return "Add Permissions Mapping";
+                    }
                 }
-            }
-        });
+            });
 
-        modalInstance.result.then(function (permissions) {
+            modalInstance.result.then(function (permissions) {
 
-            refreshTable();
+                refreshTable();
 
-            $scope.successMessage = "Successfully added permissions.";
+                $scope.successMessage = "Successfully added permissions.";
 
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    }
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+        }
+
+    };
 
     var doLookups = function(perms) {
 
