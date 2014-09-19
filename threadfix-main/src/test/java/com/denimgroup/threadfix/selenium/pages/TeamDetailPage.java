@@ -532,8 +532,14 @@ public class TeamDetailPage extends BasePage {
         return driver.findElementsById("expand" + level).size() != 0;
     }
 
+    //TODO get rid of extra code when debugging is done.
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        return expected.equals(driver.findElementById("totalBadge" + level).getText());
+        if (expected.equals(driver.findElementById("totalBadge" + level).getText())) {
+            return true;
+        } else {
+            this.takeScreenShot();
+            return false;
+        }
     }
 
     public boolean areAllVulnerabilitiesHidden() {

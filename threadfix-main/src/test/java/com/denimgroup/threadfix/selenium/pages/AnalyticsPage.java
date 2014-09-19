@@ -110,8 +110,14 @@ public class AnalyticsPage extends BasePage {
     }
 
     /* _____________________ Boolean Methods _____________________ */
+    //TODO Get rid of extra code when test has been debugged.
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
+        if (expected.equals(driver.findElementById("totalBadge" + level).getText().trim())) {
+            return true;
+        } else {
+            this.takeScreenShot();
+            return false;
+        }
     }
 
     public boolean areAllVulnerabilitiesHidden() {
