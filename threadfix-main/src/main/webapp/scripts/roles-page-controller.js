@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('RolesPageController', function($scope, $http, $modal, $log, tfEncoder, threadfixAPIService){
+module.controller('RolesPageController', function($scope, $http, $modal, $log, tfEncoder){
 
     var nameCompare = function(a,b) {
         return a.displayName.localeCompare(b.displayName);
@@ -24,82 +24,64 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                 $scope.initialized = true;
                 $scope.errorMessage = "Failed to retrieve role list. HTTP status was " + status;
             });
-
-        threadfixAPIService.getTeams().
-            success(function(data, status, headers, config) {
-                $scope.initialized = true;
-
-                if (data.success) {
-                    $scope.noTeams = (data.object.teams.length == 0);
-                    $scope.errorMessage = "Cannot create roles with no teams.";
-                } else {
-                    $scope.output = "Failure. Message was : " + data.message;
-                }
-            }).
-            error(function(data, status, headers, config) {
-                $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-            });
     });
 
     $scope.openNewRoleModal = function() {
-
-        if(!$scope.noTeams) {
-            var modalInstance = $modal.open({
-                templateUrl: 'newRoleModal.html',
-                controller: 'RoleEditModalController',
-                resolve: {
-                    url: function() {
-                        return tfEncoder.encode("/configuration/roles/new");
-                    },
-                    object: function () {
-                        return {
-                             "canGenerateReports": "false",
-                             "canGenerateWafRules": "false",
-                             "canManageApiKeys": "false",
-                             "canManageApplications": "false",
-                             "canManageDefectTrackers": "false",
-                             "canManageRemoteProviders": "false",
-                             "canManageScanAgents": "false",
-                             "canManageSystemSettings": "false",
-                             "canManageRoles": "false",
-                             "canManageTeams": "false",
-    //                         "canViewJobStatuses": "false",
-                             "canViewErrorLogs": "false",
-                             "canUploadScans": "false",
-                             "canSubmitDefects": "false",
-                             "canModifyVulnerabilities": "false",
-                             "canManageVulnFilters": "false",
-                             "canManageWafs": "false",
-                             "canManageUsers": "false"
-                        };
-                    },
-                    config: function() {
-                        return {
-                            //wafTypeList: $scope.wafTypes
-                        }
-                    },
-                    buttonText: function() {
-                        return "Create Role";
+        var modalInstance = $modal.open({
+            templateUrl: 'newRoleModal.html',
+            controller: 'RoleEditModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode("/configuration/roles/new");
+                },
+                object: function () {
+                    return {
+                         "canGenerateReports": "false",
+                         "canGenerateWafRules": "false",
+                         "canManageApiKeys": "false",
+                         "canManageApplications": "false",
+                         "canManageDefectTrackers": "false",
+                         "canManageRemoteProviders": "false",
+                         "canManageScanAgents": "false",
+                         "canManageSystemSettings": "false",
+                         "canManageRoles": "false",
+                         "canManageTeams": "false",
+//                         "canViewJobStatuses": "false",
+                         "canViewErrorLogs": "false",
+                         "canUploadScans": "false",
+                         "canSubmitDefects": "false",
+                         "canModifyVulnerabilities": "false",
+                         "canManageVulnFilters": "false",
+                         "canManageWafs": "false",
+                         "canManageUsers": "false"
+                    };
+                },
+                config: function() {
+                    return {
+                        //wafTypeList: $scope.wafTypes
                     }
+                },
+                buttonText: function() {
+                    return "Create Role";
                 }
-            });
+            }
+        });
 
-            $scope.currentModal = modalInstance;
+        $scope.currentModal = modalInstance;
 
-            modalInstance.result.then(function (role) {
-                if (!$scope.roles) {
-                    $scope.roles = [ role ];
-                } else {
-                    $scope.roles.push(role);
+        modalInstance.result.then(function (role) {
+            if (!$scope.roles) {
+                $scope.roles = [ role ];
+            } else {
+                $scope.roles.push(role);
 
-                    $scope.roles.sort(nameCompare);
-                }
+                $scope.roles.sort(nameCompare);
+            }
 
-                $scope.successMessage = "Successfully created role " + role.displayName;
-            }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-            });
-        }
+            $scope.successMessage = "Successfully created role " + role.displayName;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
     };
 
     var addKeys = function(role) {
