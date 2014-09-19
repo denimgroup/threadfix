@@ -296,7 +296,7 @@ public class ApplicationsController {
             if (editableFields != null) {
                 addAdditionalScannerInfoField(editableFields);
 
-                //set Order field in Version One dynamic form to uneditable
+                //remove Order field in Version One dynamic form
                 if (dt.getClass().equals(VersionOneDefectTracker.class)) {
                     for(DynamicFormField field : editableFields) {
                         if(field.getName().equals("Order")) {
