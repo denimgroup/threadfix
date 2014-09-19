@@ -53,13 +53,15 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.listFrom;
-import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -239,7 +241,7 @@ public class ApplicationsController {
         model.addAttribute("scheduledDays", DayInWeek.values());
     }
 
-    private void addAdditionalScannerInfoField(List<DynamicFormField> formFields){
+    private void addAdditionalScannerInfoField(@Nonnull List<DynamicFormField> formFields){
         DynamicFormField additionalScannerInfoField = new DynamicFormField();
         additionalScannerInfoField.setName("AdditionalScannerInfo");
         additionalScannerInfoField.setLabel("Additional Scanner Info");
@@ -287,8 +289,12 @@ public class ApplicationsController {
                 map.put(ERROR_MSG, dt.getLastError());
                 return map;
             }
-            //adding additional scanner info checkbox
-            addAdditionalScannerInfoField(data.getEditableFields());
+
+            // adding additional scanner info checkbox, checking for null dynamicformfields
+            List<DynamicFormField> editableFields = data.getEditableFields();
+            if (editableFields != null) {
+                addAdditionalScannerInfoField(editableFields);
+            }
 		}
 
 		map.put("defectTrackerName", application.getDefectTracker().getDefectTrackerType().getName());
