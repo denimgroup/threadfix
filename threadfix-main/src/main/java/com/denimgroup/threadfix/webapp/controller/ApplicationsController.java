@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
@@ -294,6 +295,15 @@ public class ApplicationsController {
             List<DynamicFormField> editableFields = data.getEditableFields();
             if (editableFields != null) {
                 addAdditionalScannerInfoField(editableFields);
+
+                //remove Order field in Version One dynamic form
+                if (dt.getClass().equals(VersionOneDefectTracker.class)) {
+                    for(DynamicFormField field : editableFields) {
+                        if(field.getName().equals("Order")) {
+                            editableFields.remove(field);
+                        }
+                    }
+                }
             }
 		}
 
