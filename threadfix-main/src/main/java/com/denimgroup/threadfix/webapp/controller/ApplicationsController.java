@@ -295,13 +295,13 @@ public class ApplicationsController {
             List<DynamicFormField> editableFields = data.getEditableFields();
             if (editableFields != null) {
                 addAdditionalScannerInfoField(editableFields);
-            }
 
-            //set Order field in Version One dynamic form to uneditable
-            if (dt.getClass().equals(VersionOneDefectTracker.class)) {
-                for(DynamicFormField field : editableFields) {
-                    if(field.getName().equals("Order")) {
-                        field.setRequired(true);
+                //set Order field in Version One dynamic form to uneditable
+                if (dt.getClass().equals(VersionOneDefectTracker.class)) {
+                    for(DynamicFormField field : editableFields) {
+                        if(field.getName().equals("Order")) {
+                            editableFields.remove(field);
+                        }
                     }
                 }
             }
