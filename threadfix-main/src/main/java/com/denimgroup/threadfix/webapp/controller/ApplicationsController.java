@@ -127,6 +127,7 @@ public class ApplicationsController {
         PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 				Permission.CAN_UPLOAD_SCANS,
 				Permission.CAN_MODIFY_VULNERABILITIES,
+				Permission.CAN_MANAGE_VULN_FILTERS,
 				Permission.CAN_SUBMIT_DEFECTS,
 //				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
