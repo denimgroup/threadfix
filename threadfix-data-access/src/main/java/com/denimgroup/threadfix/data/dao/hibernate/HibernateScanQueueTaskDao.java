@@ -53,7 +53,7 @@ public class HibernateScanQueueTaskDao
 
     @Override
     protected Order getOrder() {
-        return Order.asc("createdDate");
+        return Order.desc("createdDate");
     }
 
     @SuppressWarnings("unchecked")

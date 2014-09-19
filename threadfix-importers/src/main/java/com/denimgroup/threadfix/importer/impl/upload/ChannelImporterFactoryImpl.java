@@ -70,6 +70,8 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
         ChannelImporter importer;
 
         try {
+            assert channelImporterClass != null : "Got null class for key " + scannerName;
+
             Constructor<?>[] constructors = channelImporterClass.getConstructors();
 
             assert constructors.length == 1 : "Got " + constructors.length + " constructors.";
