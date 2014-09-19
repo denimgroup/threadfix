@@ -13,7 +13,7 @@
                 <%--<c:if test="${ canManageApplications }">--%>
                     <%--<th class="centered last"></th>--%>
                 <%--</c:if>--%>
-                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
                     <th class="centered last"></th>
                 </security:authorize>
             </tr>
@@ -38,7 +38,7 @@
                         <%--<a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>--%>
                     <%--</td>--%>
                 <%--</c:if>--%>
-                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_APPLICATIONS">
+                <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
                     <td class="centered">
                         <a id="deleteButton{{ $index }}" class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
                     </td>

@@ -82,10 +82,10 @@ myAppModule.controller('ScheduledRemoteProviderImportTabController', function ($
     var addExtraZero = function (listOfImports) {
         listOfImports.forEach(function(sImport) {
             if (sImport.minute === '0' || sImport.minute === 0) {
-                sImport.extraMinute = 0;
+                sImport.extraMinute = '0';
             }
 
-            sImport.timeString = (sImport.day || '') + ' ' + sImport.hour + ':' + sImport.extraMinute + sImport.minute + ' ' + sImport.period;
+            sImport.timeString = (sImport.day || '') + ' ' + sImport.hour + ':' + (sImport.extraMinute || '') + sImport.minute + ' ' + sImport.period;
             sImport.timeStringId = sImport.timeString.replace(/ /g, '_').replace(/:/g, '_');
         });
     };
