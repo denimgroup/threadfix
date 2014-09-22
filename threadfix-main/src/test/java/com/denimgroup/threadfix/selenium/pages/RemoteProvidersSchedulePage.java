@@ -73,7 +73,7 @@ public class RemoteProvidersSchedulePage extends BasePage{
 
     public RemoteProvidersSchedulePage clickAddScheduledUpdated() {
         driver.findElementById("submit").click();
-        return this;
+        return new RemoteProvidersSchedulePage(driver);
     }
 
     public DefectTrackerSchedulePage clickDeleteDefectTrackerButton(String expectedId) {
