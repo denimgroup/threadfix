@@ -8,13 +8,14 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
 
     $scope.refresh = function() {
 
-    }
+    };
 
     $scope.deleteScan = function(scan) {
 
-        scan.deleting = true;
-
         if (confirm('Are you sure you want to delete this scan?')) {
+
+            scan.deleting = true;
+
             $http.post(tfEncoder.encode(currentUrl + '/scans/' + scan.id + '/delete')).
                 success(function(data, status, headers, config) {
 
