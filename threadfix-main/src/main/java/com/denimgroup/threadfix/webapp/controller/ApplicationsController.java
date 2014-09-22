@@ -293,15 +293,21 @@ public class ApplicationsController {
 
             // adding additional scanner info checkbox, checking for null dynamicformfields
             List<DynamicFormField> editableFields = data.getEditableFields();
+
             if (editableFields != null) {
                 addAdditionalScannerInfoField(editableFields);
 
                 //remove Order field in Version One dynamic form
                 if (dt.getClass().equals(VersionOneDefectTracker.class)) {
-                    for(DynamicFormField field : editableFields) {
-                        if(field.getName().equals("Order")) {
-                            editableFields.remove(field);
+                    DynamicFormField orderField = null;
+                    for (DynamicFormField field : editableFields) {
+                        if (field.getName().equals("Order")) {
+                            orderField = field;
                         }
+                    }
+
+                    if (orderField != null) {
+                        editableFields.remove(orderField);
                     }
                 }
             }
