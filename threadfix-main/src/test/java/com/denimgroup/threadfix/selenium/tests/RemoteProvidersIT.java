@@ -683,4 +683,33 @@ public class RemoteProvidersIT extends BaseIT {
         assertFalse("The Schedule wasn't Deleted",
                 remoteProvidersSchedulePage.isDeleteButtonPresent("Sunday_11_30_AM"));
     }
+
+    @Test
+    public void checkSuccessMessageLocation() {
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
+
+        remoteProvidersSchedulePage.clickScheduleNewImportButton()
+                .setFrequency("Weekly")
+                .setHour(11)
+                .setMinute(30)
+                .setPeriodOfDay("AM")
+                .setDay("Sunday")
+                .clickAddScheduledUpdated();
+
+        assertTrue("New Schedule wasn't Created",
+                remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_11_30_AM"));
+
+        remoteProvidersSchedulePage.clickDeleteDefectTrackerButton("Sunday_11_30_AM");
+
+        assertFalse("The Schedule wasn't Deleted",
+                remoteProvidersSchedulePage.isDeleteButtonPresent("Sunday_11_30_AM"));
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = remoteProvidersSchedulePage.clickRemoteProvidersTab();
+
+        assertFalse("success message is present",
+                remoteProvidersIndexPage.isSuccessMessagePresent("Weekly Scheduled Remote Provider Import successfully deleted."));
+
+    }
 }

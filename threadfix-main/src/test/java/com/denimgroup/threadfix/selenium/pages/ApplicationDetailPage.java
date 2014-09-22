@@ -545,6 +545,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickTeamSelector() {
+        driver.findElementById("organizationId").click();
+        return new ApplicationDetailPage(driver);
+    }
+
     public String specificVulnerabilityCount(String level) {
         List<WebElement> headers = driver.findElementsByClassName("vulnSectionHeader");
 
@@ -1214,5 +1219,18 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public boolean isDetailLinkDisply() { return driver.findElementById("viewApplicationModalButton").isDisplayed();}
+
+    public boolean compareOrderOfSelector(String firstTeam, String secondTeam) {
+        int firstTeamValue;
+        int secondTeamValue;
+
+        this.setTeam(firstTeam);
+        firstTeamValue = Integer.parseInt(new Select(driver.findElementById("organizationId")).getFirstSelectedOption().getAttribute("value"));
+
+        this.setTeam(secondTeam);
+        secondTeamValue = Integer.parseInt(new Select(driver.findElementById("organizationId")).getFirstSelectedOption().getAttribute("value"));
+
+        return secondTeamValue > firstTeamValue;
+    }
 
 }

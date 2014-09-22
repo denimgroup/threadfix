@@ -291,6 +291,11 @@ public class RemoteProvidersIndexPage extends BasePage {
         return driver.findElementById("remoteProvidersTab").isDisplayed();
     }
 
+    public boolean isSuccessMessagePresent(String expectedMessage) {
+        return driver.findElementByClassName("alert-success").getText()
+                .contains(expectedMessage);
+    }
+
     /*-------------------------------- Helper Methods --------------------------------*/
 
     public void waitForErrorMessage() {

@@ -419,4 +419,35 @@ public class WafIT extends BaseIT {
 
         assertTrue("Security Event Detail Give Error", wafSecurityEventDetailsPage.isLogsNumberPresent());
     }
+
+    @Test
+    public void checkDeletedWaf() {
+        String wafName1 = "testWaf" + getRandomString(3);
+        String wafName2 = "testDeleteWaf" + getRandomString(3);
+        String wafType = "Snort";
+
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickWafsHeaderLink();
+
+        wafIndexPage.clickAddWafLink()
+                .setWafName(wafName1)
+                .setWafType(wafType)
+                .clickModalSubmit();
+
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName1));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName1));
+
+        wafIndexPage = wafIndexPage.clickAddWafLink()
+                .setWafName(wafName2)
+                .setWafType(wafType)
+                .clickModalSubmit();
+
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName2));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName2));
+
+        wafIndexPage.clickDeleteWaf(wafName1)
+                .refreshPage();
+
+        assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(wafName1));
+    }
 }

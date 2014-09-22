@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -1112,6 +1113,7 @@ public class ApplicationIT extends BaseIT {
                 .clickActionButton()
                 .clickUploadScan()
                 .uploadScan(newScan);
+
         assertTrue("Scan didn't Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
     }
 
@@ -1174,6 +1176,81 @@ public class ApplicationIT extends BaseIT {
                 .clickUnmappedFindings("20 Unmapped Findings");
 
         assertTrue("Unmapped findings displayed does not match scan.", applicationDetailPage.checkNumberOfUnmappedCorrect(21));
+    }
+
+    @Test
+    public void uploadArachniScan() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName,appName);
+
+        String newScan = ScanContents.SCAN_FILE_MAP.get("Arachni");
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton()
+                .clickUploadScan()
+                .uploadScan(newScan);
+
+        assertTrue("Scan didn't Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
+    }
+
+    @Test
+    public void AlphabetizeSortTeamByEditApplication() {
+        String firstTeamName = "A" + getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(firstTeamName);
+        DatabaseUtils.createApplication(firstTeamName, appName);
+
+        String secondTeamName = "Z" + getRandomString(8);
+
+        DatabaseUtils.createTeam(secondTeamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(firstTeamName)
+                .clickViewAppLink(appName, firstTeamName)
+                .clickEditDeleteBtn()
+                .clickTeamSelector();
+
+        assertTrue("The Teams wasn't not sorted",
+                applicationDetailPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+    }
+
+    //TODO wait till the bug for schdeuling fix
+    @Ignore
+    @Test
+    public void checkDateRangeFilterSaving() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        String filterName = "testFilter";
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .expandDateRange()
+                .enterStartDate("03-September-2014")
+                .clickVulnerabilitiesTab(45);
+
+
+        assertTrue("The Vulnerabilities still available", applicationDetailPage.areAllVulnerabilitiesHidden());
+
+        applicationDetailPage.expandSavedFilters()
+                .addSavedFilter(filterName)
+                .clickLoadFilters()
+                .loadSavedFilter(filterName);
+
+        assertTrue("The Vulnerabilities still available", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
 
     public void sleep(int num) {

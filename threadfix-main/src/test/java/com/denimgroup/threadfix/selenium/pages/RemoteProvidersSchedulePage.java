@@ -82,7 +82,6 @@ public class RemoteProvidersSchedulePage extends BasePage{
         return new DefectTrackerSchedulePage(driver);
     }
 
-
     /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isNewImportButtonDisplayed() {
@@ -100,5 +99,4 @@ public class RemoteProvidersSchedulePage extends BasePage{
     public boolean isDeleteButtonPresent(String elementId) {
         return driver.findElementsById("scheduledImportDeleteButton" + elementId).size() !=0;
     }
-
 }
