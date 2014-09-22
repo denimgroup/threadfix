@@ -1,0 +1,7 @@
+9/22/2014 2:14:00
+type.info,,
+QualysGuard WAS
+type.vulnerabilities,,
+Syntax error occurred,150022,200
+Possible Clickjacking vulnerability,150081,693
+Slow HTTP POST vulnerability,150085,400
