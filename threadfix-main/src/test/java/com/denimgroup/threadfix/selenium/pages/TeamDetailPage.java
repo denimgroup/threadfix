@@ -30,9 +30,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
-import javax.naming.directory.NoSuchAttributeException;
-import java.util.NoSuchElementException;
-
 public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage(WebDriver webdriver) {
@@ -238,10 +235,10 @@ public class TeamDetailPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
-    public TeamDetailPage addVulnerabilityTypeFilter(String vulnerabilityType) {
+    public TeamDetailPage addVulnerabilityTypeFilter(String vulnerabilityType, String defultVulnerability) {
         driver.findElementById("showTypeInput").click();
         driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
-        driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
+        driver.findElementByLinkText(defultVulnerability).click();
         waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }

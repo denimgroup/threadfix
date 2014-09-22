@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.WafIndexPage;
-import com.denimgroup.threadfix.selenium.pages.WafRulesPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -341,5 +338,85 @@ public class WafIT extends BaseIT {
         wafIndexPage.editWaf(originalWaf, emptyString, type);
 
         assertTrue("Waf Modal Header wasn't showed Correct name", wafIndexPage.isModalHeadrDisplayCorrect("Edit WAF", emptyString));
+    }
+
+    @Test
+    public void CreateWafWithTheSameNameOfPrevious() {
+        String wafName = "testCreateSnortWaf" + getRandomString(3);
+        String newWafName = "testCreateSnortWaf" + getRandomString(3);
+        String type = "Snort";
+
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickWafsHeaderLink();
+
+        wafIndexPage.clickAddWafLink()
+                .createNewWaf(wafName, type)
+                .clickModalSubmit();
+
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(wafName));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
+
+        wafIndexPage.clickDeleteWaf(wafName);
+
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(wafName));
+
+        wafIndexPage.clickAddWafLink()
+                .createNewWaf(newWafName, type)
+                .clickModalSubmit();
+
+        assertTrue("The waf was not present in the table.", wafIndexPage.isWafPresent(newWafName));
+        assertTrue("The success alert is not present. ", wafIndexPage.isSuccessPresent(newWafName));
+    }
+
+    @Test
+    public void checkWafLogFileLink() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+        String wafName = getRandomString(8);
+        String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink();
+
+        WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName)
+                .clickGenerateWafRulesButton();
+
+        wafRulesPage.refreshPage();
+
+        wafRulesPage.setLogFile(logFile);
+
+        WafLogPage wafLogPage = wafRulesPage.clickUploadLogFile();
+
+        wafLogPage.clickContinue();
+
+        wafIndexPage.clickRules(wafName);
+
+        WafSecurityEventDetailsPage wafSecurityEventDetailsPage = wafRulesPage.clickViewDetails()
+                .clickLogLink()
+                .clickVulnerabilityLink();
+
+
+        assertTrue("Security Event Detail Give Error", wafSecurityEventDetailsPage.isLogsNumberPresent());
     }
 }

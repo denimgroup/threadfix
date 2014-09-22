@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import com.denimgroup.threadfix.data.entities.WafRule;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -62,6 +61,7 @@ public class WafRulesPage extends BasePage {
     }
 
     public WafRulesPage setLogFile(String file) {
+        waitForElement(driver.findElementById("fileInput"));
         driver.findElementById("fileInput").sendKeys(file);
         return new WafRulesPage(driver);
     }
@@ -75,6 +75,11 @@ public class WafRulesPage extends BasePage {
     public WafRulesPage clickViewDetails() {
         driver.findElementByLinkText("View Details").click();
         return new WafRulesPage(driver);
+    }
+
+    public WafRulesDetailPage clickLogLink() {
+        driver.findElementByLinkText("100000 - fired 52 times").click();
+        return new WafRulesDetailPage(driver);
     }
 
     public TeamIndexPage clickDownloadWafRulesButton() {

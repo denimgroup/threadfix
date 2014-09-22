@@ -308,6 +308,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage setWafType(String type){
+        new Select(driver.findElementById("typeSelect")).selectByVisibleText(type);
+        return this;
+    }
+
     public ApplicationDetailPage setNameInput(String appName2) {
         driver.findElementById("nameInput").clear();
         driver.findElementById("nameInput").sendKeys(appName2);
@@ -1207,4 +1212,7 @@ public class ApplicationDetailPage extends BasePage {
     public boolean isDefectTrackerNameLinkDisplay() {
         return driver.findElementById("linkDT").isDisplayed();
     }
+
+    public boolean isDetailLinkDisply() { return driver.findElementById("viewApplicationModalButton").isDisplayed();}
+
 }

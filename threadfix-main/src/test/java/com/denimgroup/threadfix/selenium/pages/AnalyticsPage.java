@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -76,7 +75,7 @@ public class AnalyticsPage extends BasePage {
         driver.findElementById("showTeamInput").click();
         driver.findElementById("teamNameTypeahead").clear();
         driver.findElementById("teamNameTypeahead").sendKeys(teamName);
-        driver.findElementById("teamNameTypeahead").sendKeys(Keys.RETURN);
+        driver.findElementByLinkText(teamName).click();
         waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }
@@ -85,7 +84,7 @@ public class AnalyticsPage extends BasePage {
         driver.findElementById("showApplicationInput").click();
         driver.findElementById("applicationNameTypeahead").clear();
         driver.findElementById("applicationNameTypeahead").sendKeys(appName);
-        driver.findElementById("applicationNameTypeahead").sendKeys(Keys.RETURN);
+        driver.findElementByLinkText(appName).click();
         waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }

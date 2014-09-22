@@ -514,6 +514,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName,appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String roleName = getRandomString(8);
         String userName = getRandomString(8);
@@ -545,10 +546,10 @@ public class UserPermissionsEntIT extends BaseIT{
          applicationFilterPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
-                .clickActionButton()
-                .clickEditVulnerabilityFilters();
+                .clickActionButton();
 
-        assertTrue("Access Denied Page is not showing", applicationFilterPage.isAccessDenied());
+        assertFalse("Close Vulnerability button is available",
+                applicationFilterPage.isElementPresent("editVulnerabilityFiltersButton"));
     }
 
     @Test
@@ -923,8 +924,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertFalse("Edit/Delete Button wasn't gone",
                 applicationDetailPage.isElementPresent("editApplicationModalButton"));
-        assertFalse("Edit Vulnerability Filter still available",
-                applicationDetailPage.isElementPresent("editVulnerabilityFiltersButton"));
+        assertTrue("Detail Link wasn't created", applicationDetailPage.isDetailLinkDisply());
     }
 
     @Test
