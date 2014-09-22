@@ -24,22 +24,20 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/jasperimage")
@@ -59,7 +57,9 @@ public class ReportImageController {
 			HttpServletResponse response) {
 		
 		InputStream imageStream = null;
-		
+
+        response.setHeader("Content-Type", "image/png");
+
 		if (request.getSession().getAttribute(mapKey) != null) {
 			Object value = request.getSession().getAttribute(mapKey);
 			if (value instanceof Map<?,?>) {
