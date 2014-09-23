@@ -641,7 +641,7 @@ public class RemoteProvidersIT extends BaseIT {
     }
 
     @Test
-    public void DeleteDailyRemoteProviderScheduling() {
+    public void deleteDailyRemoteProviderScheduling() {
         RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
@@ -662,7 +662,7 @@ public class RemoteProvidersIT extends BaseIT {
     }
 
     @Test
-    public void DeleteweeklyRemoteProviderScheduling() {
+    public void deleteWeeklyRemoteProviderScheduling() {
         RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();

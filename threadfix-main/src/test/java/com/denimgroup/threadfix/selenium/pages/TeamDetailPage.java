@@ -130,7 +130,7 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage clickVulnerabilitiesTab(String number) {
         driver.findElementByLinkText(number + " Vulnerabilities").click();
-        waitForElement(driver.findElementByClassName("filter-controls"));
+        waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
 
@@ -223,7 +223,7 @@ public class TeamDetailPage extends BasePage {
     public TeamDetailPage addApplicationFilter(String application) {
         driver.findElementById("showApplicationInput1").click();
         driver.findElementById("applicationNameTypeahead1").sendKeys(application);
-        driver.findElementById("applicationNameTypeahead1").sendKeys(Keys.RETURN);
+        driver.findElementById("applicationNameTypeahead1").sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
@@ -245,14 +245,14 @@ public class TeamDetailPage extends BasePage {
 
     public TeamDetailPage setPathFilter(String path) {
         driver.findElementById("pathInput").sendKeys(path);
-        driver.findElementById("pathInput").sendKeys(Keys.RETURN);
+        driver.findElementById("pathInput").sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
 
     public TeamDetailPage setParameterFilter(String parameter) {
         driver.findElementById("parameterFilterInput").sendKeys(parameter);
-        driver.findElementById("parameterFilterInput").sendKeys(Keys.RETURN);
+        driver.findElementById("parameterFilterInput").sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
@@ -303,7 +303,7 @@ public class TeamDetailPage extends BasePage {
     public TeamDetailPage addScannerFilter(String scanner) {
         driver.findElementById("showScannerInput").click();
         driver.findElementById("scannerTypeahead").sendKeys(scanner);
-        driver.findElementById("scannerTypeahead").sendKeys(Keys.RETURN);
+        driver.findElementById("scannerTypeahead").sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new TeamDetailPage(driver);
     }
