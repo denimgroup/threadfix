@@ -630,6 +630,16 @@
             </build>
         </profile>
         <profile>
+            <id>reg</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>deployTomcat</id>
             <build>
                 <plugins>
