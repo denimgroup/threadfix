@@ -39,16 +39,13 @@
                 <tr ng-show="object.isQualys">
                     <td align="left" class="no-color">Platform</td>
                     <td align="left" class="no-color inputValue">
-                        <select ng-model="object.platform" id="platformNameSelect" name="platform" ng-required="object.hasPlatform">
+                        <select ng-model="object.platform" id="platformNameSelect" name="platform">
                             <option ng-repeat="qualysPlatform in config.qualysPlatforms"
                                     ng-selected="object.platform === qualysPlatform"
                                     value="{{ qualysPlatform }}">
                                 {{ qualysPlatform }}
                             </option>
                         </select>
-                    </td>
-                    <td>
-                        <span class="errors" ng-show="object.hasPlatform && form.platform.$dirty && form.platform.$error.required">Platform is required.</span>
                     </td>
                 </tr>
                 <tr ng-if="object.isWhiteHat">

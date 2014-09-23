@@ -63,8 +63,6 @@ public class RemoteProviderType extends BaseEntity  {
 
     private String platform;
 
-    private Boolean hasPlatform;
-
     private boolean encrypted = false;
 
     @Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
@@ -225,16 +223,6 @@ public class RemoteProviderType extends BaseEntity  {
 	public void setPlatform(String platform) {
 		this.platform = platform;
 	}
-
-    @Column(nullable = true)
-    @JsonView(AllViews.TableRow.class)
-    public Boolean getHasPlatform() {
-        return hasPlatform != null && hasPlatform;
-    }
-
-    public void setHasPlatform(Boolean hasPlatform) {
-        this.hasPlatform = hasPlatform;
-    }
 
     // These have clunky names to make Hibernate happy.
     @JsonView(AllViews.TableRow.class)
