@@ -1222,7 +1222,7 @@ public class ApplicationIT extends BaseIT {
                 applicationDetailPage.compareOrderOfSelector(firstTeamName, secondTeamName));
     }
 
-    //TODO wait till the bug for schdeuling fix
+    //TODO wait till the bug for Scheduling to fix
     @Ignore
     @Test
     public void checkDateRangeFilterSaving() {
@@ -1251,6 +1251,26 @@ public class ApplicationIT extends BaseIT {
                 .loadSavedFilter(filterName);
 
         assertTrue("The Vulnerabilities still available", applicationDetailPage.areAllVulnerabilitiesHidden());
+    }
+
+    @Test
+    public void checkDependencyScanInformation() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName,  ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .expandVulnerabilityByType("High119");
+
+        assertTrue("CVE link wasn't showed" , applicationDetailPage.isCveLinkDisplay("0"));
+        assertTrue("Component wasn't showed", applicationDetailPage.isCveComponentDisplay("0"));
+        assertTrue("Description wasn't showed", applicationDetailPage.isCveDescriptionInputPresent("0"));
     }
 
     public void sleep(int num) {

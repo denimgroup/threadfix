@@ -158,7 +158,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("Source URL is not present", ap.isURLDynamicSearchPresent());
         assertTrue("Parameter input is not present.", ap.isParameterPresent());
         assertTrue("Severity is not present.", ap.isSeverityPresent());
-        assertTrue("Description Input is not present.", ap.isDescriptionInputPresent());
+        assertTrue("Description Input is not present.", ap.isCveDescriptionInputPresent());
         assertTrue("Submit button is not present.", ap.isSubmitManualFindingPresent());
         assertTrue("Submit button is not clickable.", ap.isSubmitManualFindingClickable());
         assertTrue("Cancel button is not present.", ap.isManualFindingCloseButtonPresent());

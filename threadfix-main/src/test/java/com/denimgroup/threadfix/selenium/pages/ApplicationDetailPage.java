@@ -1069,7 +1069,7 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("severityInput").isDisplayed();
     }
 
-    public boolean isDescriptionInputPresent() {
+    public boolean isCveDescriptionInputPresent() {
         return driver.findElementById("descriptionInput").isDisplayed();
     }
 
@@ -1231,6 +1231,18 @@ public class ApplicationDetailPage extends BasePage {
         secondTeamValue = Integer.parseInt(new Select(driver.findElementById("organizationId")).getFirstSelectedOption().getAttribute("value"));
 
         return secondTeamValue > firstTeamValue;
+    }
+
+    public boolean isCveLinkDisplay(String expectedNumber) {
+        return driver.findElementById("linkCve" + expectedNumber).isDisplayed();
+    }
+
+    public boolean isCveComponentDisplay(String expectedNumber) {
+        return driver.findElementById("cveComponent" + expectedNumber).isDisplayed();
+    }
+
+    public boolean isCveDescriptionInputPresent(String expectedNumber) {
+        return driver.findElementById("cveDescription" + expectedNumber).isDisplayed();
     }
 
 }
