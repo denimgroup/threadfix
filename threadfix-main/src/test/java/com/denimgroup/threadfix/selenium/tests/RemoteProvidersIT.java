@@ -557,7 +557,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .setHour(3)
                 .setMinute(45)
                 .setPeriodOfDay("PM")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_3_45_PM"));
     }
@@ -575,7 +575,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .setMinute(30)
                 .setPeriodOfDay("AM")
                 .setDay("Sunday")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_4_30_AM"));
     }
@@ -651,7 +651,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .setHour(7)
                 .setMinute(15)
                 .setPeriodOfDay("PM")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_7_15_PM"));
 

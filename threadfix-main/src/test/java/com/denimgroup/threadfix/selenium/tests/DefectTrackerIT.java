@@ -489,7 +489,7 @@ public class DefectTrackerIT extends BaseIT {
                 .setHour(1)
                 .setMinute(15)
                 .setPeriodOfDay("PM")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_1_15_PM"));
     }
@@ -506,7 +506,7 @@ public class DefectTrackerIT extends BaseIT {
                 .setMinute(15)
                 .setPeriodOfDay("PM")
                 .setDay("Sunday")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created",
                 defectTrackerSchedulePage.isNewSchedulePresent("Sunday_8_15_PM"));
@@ -583,7 +583,7 @@ public class DefectTrackerIT extends BaseIT {
                 .setHour(7)
                 .setMinute(15)
                 .setPeriodOfDay("PM")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_7_15_PM"));
 
