@@ -268,7 +268,17 @@ public class QualysRemoteProvider extends RemoteProvider {
 	}
 
     private static String getBaseUrl(RemoteProviderType type) {
-        return QualysPlatform.getPlatform(type.getPlatform()).getUrl();
+
+        QualysPlatform qp;
+        String platform = type.getPlatform();
+
+        if (platform == null || platform.isEmpty()) {
+            qp = type.getIsEuropean() ? QualysPlatform.EU : QualysPlatform.US_1;
+        } else {
+            qp = QualysPlatform.getPlatform(platform);
+        }
+
+        return qp.getUrl();
     }
 	
 	public static String getScansForAppUrl(RemoteProviderType type) {

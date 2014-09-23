@@ -58,9 +58,12 @@ public class RemoteProviderType extends BaseEntity  {
 
     private Boolean matchSourceNumbers = false;
 
+    // TODO normalize this if it becomes more than a one-off thing (RP Region table or similar)
+    private boolean isEuropean = false;
+
     private String platform;
 
-    private boolean hasPlatform;
+    private Boolean hasPlatform;
 
     private boolean encrypted = false;
 
@@ -214,7 +217,6 @@ public class RemoteProviderType extends BaseEntity  {
 		this.encrypted = encrypted;
 	}
 
-	// These have clunky names to make Hibernate happy.
     @JsonView(AllViews.TableRow.class)
 	public String getPlatform() {
 		return platform;
@@ -224,14 +226,24 @@ public class RemoteProviderType extends BaseEntity  {
 		this.platform = platform;
 	}
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @JsonView(AllViews.TableRow.class)
-    public boolean getHasPlatform() {
-        return hasPlatform;
+    public Boolean getHasPlatform() {
+        return hasPlatform != null && hasPlatform;
     }
 
-    public void setHasPlatform(boolean hasPlatform) {
+    public void setHasPlatform(Boolean hasPlatform) {
         this.hasPlatform = hasPlatform;
+    }
+
+    // These have clunky names to make Hibernate happy.
+    @JsonView(AllViews.TableRow.class)
+    public boolean getIsEuropean() {
+        return isEuropean;
+    }
+
+    public void setIsEuropean(boolean isEuropean) {
+        this.isEuropean = isEuropean;
     }
 
     @JsonView(AllViews.TableRow.class)

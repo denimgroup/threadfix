@@ -32,9 +32,9 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  */
 
 public enum QualysPlatform {
-    US_PLATFORM_1("US Platform 1", "https://qualysapi.qualys.com"),
-    US_PLATFORM_2("US Platform 2", "https://qualysapi.qg2.apps.qualys.com"),
-    EU_PLATFORM("EU Platform", "https://qualysapi.qualys.eu");
+    US_1("US Platform 1", "https://qualysapi.qualys.com"),
+    US_2("US Platform 2", "https://qualysapi.qg2.apps.qualys.com"),
+    EU("EU Platform", "https://qualysapi.qualys.eu");
 
     private String platformName;
     private String url;
