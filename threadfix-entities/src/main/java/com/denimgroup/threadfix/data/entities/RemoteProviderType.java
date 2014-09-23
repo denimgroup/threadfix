@@ -60,6 +60,8 @@ public class RemoteProviderType extends BaseEntity  {
 
     private String platform;
 
+    private boolean hasPlatform;
+
     private boolean encrypted = false;
 
     @Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
@@ -221,6 +223,16 @@ public class RemoteProviderType extends BaseEntity  {
 	public void setPlatform(String platform) {
 		this.platform = platform;
 	}
+
+    @Column(nullable = false)
+    @JsonView(AllViews.TableRow.class)
+    public boolean getHasPlatform() {
+        return hasPlatform;
+    }
+
+    public void setHasPlatform(boolean hasPlatform) {
+        this.hasPlatform = hasPlatform;
+    }
 
     @JsonView(AllViews.TableRow.class)
     @Column(nullable = true)
