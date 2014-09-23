@@ -120,7 +120,7 @@ public class FilterIT extends BaseIT {
         assertTrue("The filter was not implemented correctly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Medium", "0"));
         assertTrue("The filter was not implemented correctly.",
-                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info","0"));
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "0"));
         assertTrue("The severity filter was not set properly.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, severity, "2"));
 
@@ -181,19 +181,10 @@ public class FilterIT extends BaseIT {
         assertTrue("Info vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "10"));
 
-        teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
-                .clickActionButton()
-                .clickEditTeamFilters()
-                .enableSeverityFilters()
-                .hideMedium()
-                .saveFilterChanges();
-
-        applicationFilterPage = teamFilterPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
+        applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickActionButton()
                 .clickEditVulnerabilityFilters()
-                .enableSeverityFilters()
                 .showCritical()
                 .hideInfo()
                 .saveFilterChanges();
@@ -210,33 +201,6 @@ public class FilterIT extends BaseIT {
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Low", "4"));
         assertTrue("Info vulnerability count was not correct.",
                 teamIndexPage.teamVulnerabilitiesFiltered(teamName, "Info", "0"));
-    }
-
-    public void clearGlobalFilter() {
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-
-        try {
-            FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
-                    .deleteFilter()
-                    .closeSuccessNotification();
-            teamIndexPage = globalFilterPage.clickOrganizationHeaderLink();
-        } catch (NoSuchElementException e) {
-            System.out.println("There was not a global vulnerability filter set.");
-        }
-
-        FilterPage globalFilterPage = teamIndexPage.clickManageFiltersLink()
-                .enableSeverityFilters()
-                .showCritical()
-                .showHigh()
-                .showMedium()
-                .showLow()
-                .showInfo()
-                .disableSeverityFilters()
-                .saveFilterChanges()
-                .waitForChanges();
-
-        loginPage = globalFilterPage.logout();
     }
 }
 

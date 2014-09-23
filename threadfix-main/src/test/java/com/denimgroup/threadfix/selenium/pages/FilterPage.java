@@ -84,6 +84,7 @@ public class FilterPage extends BasePage {
         if (driver.findElementById("enabledBox").getAttribute("checked") == null) {
             driver.findElementById("enabledBox").click();
         }
+        sleep(1000);
         return new FilterPage(driver);
     }
 
