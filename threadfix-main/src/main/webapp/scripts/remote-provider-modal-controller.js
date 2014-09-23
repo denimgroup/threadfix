@@ -1,6 +1,6 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
-myAppModule.controller('RemoteProviderModalController', function ($scope, $modalInstance, $http, threadFixModalService, type, url) {
+myAppModule.controller('RemoteProviderModalController', function ($scope, $modalInstance, $http, threadFixModalService, type, url, config) {
 
     $scope.object = type;
 
@@ -10,6 +10,8 @@ myAppModule.controller('RemoteProviderModalController', function ($scope, $modal
     $scope.buttonText = "Save";
 
     $scope.loading = false;
+
+    $scope.config = config;
 
     $scope.setMatchSourceNumbers = function(shouldMatchSourceNumbers) {
         $scope.object.matchSourceNumbers = shouldMatchSourceNumbers;
