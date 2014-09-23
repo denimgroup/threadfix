@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
@@ -51,7 +52,8 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 	private String username = null;
 	private String password = null;
-	
+    private String platform = null;
+
 	private static final Map<String, String> SEVERITIES_MAP = new HashMap<>();
 	static {
 		SEVERITIES_MAP.put("150000", "5");
@@ -264,27 +266,31 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		return scanIds;
 	}
+
+    private static String getBaseUrl(RemoteProviderType type) {
+
+        QualysPlatform qp;
+        String platform = type.getPlatform();
+
+        if (platform == null || platform.isEmpty()) {
+            qp = type.getIsEuropean() ? QualysPlatform.EU : QualysPlatform.US_1;
+        } else {
+            qp = QualysPlatform.getPlatform(platform);
+        }
+
+        return qp.getUrl();
+    }
 	
 	public static String getScansForAppUrl(RemoteProviderType type) {
-		return "https://qualysapi.qualys." + 
-				getLocation(type.getIsEuropean()) + 
-				"/qps/rest/3.0/search/was/wasscan";
+		return getBaseUrl(type) + "/qps/rest/3.0/search/was/wasscan";
 	}
 
     public static String getScanUrl(RemoteProviderType type) {
-		return "https://qualysapi.qualys." + 
-				getLocation(type.getIsEuropean()) + 
-				"/qps/rest/3.0/download/was/wasscan/";
+		return getBaseUrl(type) + "/qps/rest/3.0/download/was/wasscan/";
 	}
 
     public static String getAppsUrl(RemoteProviderType type) {
-		return "https://qualysapi.qualys." + 
-				getLocation(type.getIsEuropean()) + 
-				"/qps/rest/3.0/search/was/webapp";
-	}
-	
-	private static String getLocation(boolean isEuropean) {
-		return isEuropean ? "eu" : "com";
+		return getBaseUrl(type) + "/qps/rest/3.0/search/was/webapp";
 	}
 	
 	// PARSER CLASSES
