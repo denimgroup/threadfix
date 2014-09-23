@@ -444,10 +444,13 @@ angular.module('dynform', [])
                 onChange(scope);
               });                    
             };
-          
-          ctrl.$render = function () {
-            element[0].files = this.$viewValue;
-          };
+
+          if (ctrl) { // empty ctrl throws error in IE
+            ctrl.$render = function () {
+                element[0].files = this.$viewValue;
+            };
+          }
+
           element.bind('change', updateModel);
         }
         else if (attrs.type === 'range') {
