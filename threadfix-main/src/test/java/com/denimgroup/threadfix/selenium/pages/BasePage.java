@@ -436,6 +436,15 @@ public abstract class BasePage {
 		alert.accept();
 		sleep(2000);
 	}
+
+    protected void dissMissAlert() {
+        sleep(3000);
+        WebDriverWait wait = new WebDriverWait(driver,10);
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert = driver.switchTo().alert();
+        alert.dismiss();
+        sleep(2000);
+    }
 	
 	public void waitForElement(WebElement e){
 		WebDriverWait wait = new WebDriverWait(driver,30);

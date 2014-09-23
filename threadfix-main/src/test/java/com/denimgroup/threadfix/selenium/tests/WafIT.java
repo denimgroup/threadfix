@@ -450,4 +450,53 @@ public class WafIT extends BaseIT {
 
         assertFalse("The waf was still present after attempted deletion.", wafIndexPage.isTextPresentInWafTableBody(wafName1));
     }
+
+    @Test
+    public void DeleteAssignWafToApplication() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String wafName = getRandomString(8);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom();
+        }
+
+        assertTrue("Waf wasn't created", applicationDetailPage.checkWafName().contains(wafName));
+
+        applicationDetailPage.clickModalSubmit();
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink()
+                .clickDeleteWaf(wafName);
+
+        assertTrue("Waf Deleted successfully", wafIndexPage.isErrorPresent("Failed to delete a WAF with application mappings."));
+
+        applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf()
+                .addWaf("None")
+                .clickUpdateApplicationButton();
+
+        wafIndexPage = applicationDetailPage.clickWafsHeaderLink()
+                .clickDeleteWaf(wafName);
+
+        assertTrue("Waf wasn't deleted successfully", wafIndexPage.isSuccessPresent(wafName));
+    }
 }

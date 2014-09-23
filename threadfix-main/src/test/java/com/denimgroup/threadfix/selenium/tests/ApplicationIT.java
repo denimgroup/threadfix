@@ -1273,6 +1273,27 @@ public class ApplicationIT extends BaseIT {
         assertTrue("Description wasn't showed", applicationDetailPage.isCveDescriptionInputPresent("0"));
     }
 
+    @Test
+    public void cancelDeleteScanAlert() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab()
+                .cancelDeleteScanTaskButton();
+
+        applicationDetailPage.clickDeleteScanButton();
+
+        assertTrue("Delete Button is still available", applicationDetailPage.isScanDeleted());
+    }
+
     public void sleep(int num) {
 		try {
 			Thread.sleep(num);
