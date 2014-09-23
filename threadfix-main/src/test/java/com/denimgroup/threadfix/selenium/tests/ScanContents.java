@@ -49,7 +49,7 @@ public class ScanContents extends BaseIT {
 		SCAN_FILE_MAP.put("Acunetix WVS", getScanFilePath("Dynamic","Acunetix","testaspnet.xml"));
 		SCAN_FILE_MAP.put("Burp Suite", getScanFilePath("Dynamic","Burp","burp-demo-site.xml"));
 		SCAN_FILE_MAP.put("IBM Rational AppScan Source Edition", null);
-        SCAN_FILE_MAP.put("DependencyCheck",getScanFilePath("Static","DependencyCheck","dependency-check-report.xml"));
+        SCAN_FILE_MAP.put("DependencyCheck",getScanFilePath("Static","dependencycheck","dependency-check-report.xml"));
 
         SCAN_FILE_MAP.put("Unmapped Scan", getScanFilePath("UnmappedFindings", "results", "unmapped.xml"));
         SCAN_FILE_MAP.put("Too Long File Name",getScanFilePath("Toolong", "newfile",
