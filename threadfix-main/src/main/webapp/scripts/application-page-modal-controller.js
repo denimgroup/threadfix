@@ -188,7 +188,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showCreateWafModal = function() {
         var modalInstance = $modal.open({
@@ -229,7 +229,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     // Defect Tracker methods
     $scope.showAddDefectTrackerModal = function(newDt) {
@@ -280,7 +280,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showCreateDefectTrackerModal = function() {
         var modalInstance = $modal.open({

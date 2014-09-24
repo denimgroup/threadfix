@@ -178,7 +178,7 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
     @Override
     public List<Defect> getDefectList() {
 
-        List<String> defectNumberList = getAttributes(getUrlWithRest() +
+        List<String> defectNumberList = getAttributeNumber(getUrlWithRest() +
                 "Defect?where=Scope.Name='" + getUrlEncodedProjectName() + "'&sel=Number", null);
 
         List<Defect> defectList = list();
@@ -190,7 +190,6 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         }
 
         return defectList;
-
     }
 
     @Override
@@ -270,9 +269,9 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             String relatedAsset = attr.getRelatedItemType();
             if (relatedAsset != null && !relatedAsset.isEmpty()) {
                 if (relatedAsset.equals("Timebox")) {
-                    options = getAttributes(getUrlWithRest() + relatedAsset + "?where=Schedule.ScheduledScopes.Name='" +  urlEncode(getProjectName()) + "'", attr);
+                    options = getAttributeName(getUrlWithRest() + relatedAsset + "?where=Schedule.ScheduledScopes.Name='" + urlEncode(getProjectName()) + "'", attr);
                 } else {
-                    options = getAttributes(getUrlWithRest() + relatedAsset + "?" + getWhereQuery("Scope.Name"), attr);
+                    options = getAttributeName(getUrlWithRest() + relatedAsset + "?" + getWhereQuery("Scope.Name"), attr);
                 }
                 for (String v: options)
                     optionMap.put(v, v);
@@ -447,14 +446,32 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
      * @param url
      * @return
      */
-    private List<String> getAttributes(String url, AttributeDefinition attr) {
+    private List<String> getAttributeName(String url, AttributeDefinition attr) {
+        return getAttributes(url, attr, "Name");
+    }
+
+    /**
+     * Get attribute list of asset in given url
+     * @param url
+     * @return
+     */
+    private List<String> getAttributeNumber(String url, AttributeDefinition attr) {
+        return getAttributes(url, attr, "Number");
+    }
+
+    /**
+     * Get attribute list of asset in given url
+     * @param url
+     * @return
+     */
+    private List<String> getAttributes(String url, AttributeDefinition attr, String fieldName) {
         List<String> attributes = new ArrayList<>();
         List<Assets.Asset> assetList = getAssets(url);
         if (attr != null)
             attr.setAssetList(assetList);
         for (Assets.Asset asset : assetList) {
             if (asset != null && asset.getAttributes() != null) {
-                Assets.Asset.Attribute attribute = asset.getAttributeByName("Name");
+                Assets.Asset.Attribute attribute = asset.getAttributeByName(fieldName);
                 if (attribute != null) {
                     attributes.addAll(attribute.getValues());
                     attributes.addAll(attribute.getMixed());
@@ -652,14 +669,19 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         log.info("Updating status for defect " + defect.getNativeId());
 
-        List<String> result = getAttributes(getUrlWithRest() + "Defect?where=Number='" +
-                urlEncode(defect.getNativeId()) + "'&sel=Status.Name", null);
+        String nativeId = urlEncode(defect.getNativeId());
+        List<String> result = getAttributeName(getUrlWithRest() + "Defect?where=Number='" +
+                nativeId + "'&sel=Status.Name", null);
+
         if (!result.isEmpty()) {
             log.info("Current status for defect " +
-                    urlEncode(defect.getNativeId()) + " is " + result.get(0));
+                    nativeId + " is " + result.get(0));
             defect.setStatus(result.get(0));
             return result.get(0);
+        } else {
+            LOG.info("Current status for defect " + nativeId + " wasn't set, setting to 'Default'");
+            defect.setStatus("Default");
+            return "Default";
         }
-        return null;
     }
 }
