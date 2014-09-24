@@ -102,11 +102,13 @@ public class AnalyticsPage extends BasePage {
     /* _____________________ Set Methods _____________________ */
 
     /* _____________________ Get Methods _____________________ */
+
     public int getFilterDivHeight() {
         return driver.findElement(By.className("filter-controls")).getSize().getHeight();
     }
 
     /* _____________________ Helper Methods _____________________ */
+
     public void waitForResultsToLoad() {
         while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
             sleep(1000);
@@ -114,14 +116,9 @@ public class AnalyticsPage extends BasePage {
     }
 
     /* _____________________ Boolean Methods _____________________ */
-    //TODO Get rid of extra code when test has been debugged.
+
     public boolean isVulnerabilityCountCorrect(String level, String expected) {
-        if (expected.equals(driver.findElementById("totalBadge" + level).getText().trim())) {
-            return true;
-        } else {
-            this.takeScreenShot();
-            return false;
-        }
+        return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
     public boolean areAllVulnerabilitiesHidden() {

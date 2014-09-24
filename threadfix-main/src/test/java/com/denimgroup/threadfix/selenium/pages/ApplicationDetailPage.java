@@ -368,7 +368,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage cancelDeleteScanTaskButton() {
         driver.findElementByLinkText("Delete Scan").click();
-        dissMissAlert();
+        dismissAlert();
         return new ApplicationDetailPage(driver);
     }
 
