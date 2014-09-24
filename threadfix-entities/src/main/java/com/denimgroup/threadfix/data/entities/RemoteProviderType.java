@@ -61,6 +61,8 @@ public class RemoteProviderType extends BaseEntity  {
     // TODO normalize this if it becomes more than a one-off thing (RP Region table or similar)
     private boolean isEuropean = false;
 
+    private String platform;
+
     private boolean encrypted = false;
 
     @Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
@@ -213,15 +215,24 @@ public class RemoteProviderType extends BaseEntity  {
 		this.encrypted = encrypted;
 	}
 
-	// These have clunky names to make Hibernate happy.
     @JsonView(AllViews.TableRow.class)
-	public boolean getIsEuropean() {
-		return isEuropean;
+	public String getPlatform() {
+		return platform;
 	}
 
-	public void setIsEuropean(boolean isEuropean) {
-		this.isEuropean = isEuropean;
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
+
+    // These have clunky names to make Hibernate happy.
+    @JsonView(AllViews.TableRow.class)
+    public boolean getIsEuropean() {
+        return isEuropean;
+    }
+
+    public void setIsEuropean(boolean isEuropean) {
+        this.isEuropean = isEuropean;
+    }
 
     @JsonView(AllViews.TableRow.class)
     @Column(nullable = true)

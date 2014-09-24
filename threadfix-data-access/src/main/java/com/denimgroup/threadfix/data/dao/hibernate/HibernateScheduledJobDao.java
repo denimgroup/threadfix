@@ -52,26 +52,26 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
     }
 
     @Override
-    public boolean checkSameDate(S scheduledJob) {
+    public boolean checkSameDate(S scheduledJob, String tableName) {
 
         Query query = null;
+        String queryStr;
 
         if (scheduledJob.getDay() != null){
-            query = sessionFactory.getCurrentSession().createQuery(
-                    "select count(*) from " + getClassReference() + " scheduledJob " +
-                            "where scheduledJob.day=:day and scheduledJob.period=:period " +
-                            "and scheduledJob.hour=:hour and scheduledJob.minute=:minute");
+            queryStr = "select count(*) from " + tableName + " scheduledJob " +
+                    "where scheduledJob.day=:day and scheduledJob.period=:period " +
+                    "and scheduledJob.hour=:hour and scheduledJob.minute=:minute";
 
+            query = sessionFactory.getCurrentSession().createQuery(queryStr);
             query.setString("day", scheduledJob.getDay());
 
         } else if (scheduledJob.getFrequency() != null) {
-            query = sessionFactory.getCurrentSession().createQuery(
-                    "select count(*) from "+  getClassReference() + " scheduledJob" +
-                            "where scheduledJob.frequency=:frequency and scheduledJob.period=:period " +
-                            "and scheduledJob.hour=:hour and scheduledJob.minute=:minute");
+            queryStr = "select count(*) from " + tableName + " scheduledJob " +
+                    "where scheduledJob.frequency=:frequency and scheduledJob.period=:period " +
+                    "and scheduledJob.hour=:hour and scheduledJob.minute=:minute";
 
+            query = sessionFactory.getCurrentSession().createQuery(queryStr);
             query.setString("frequency", scheduledJob.getFrequency());
-
         }
 
         if(query != null) {

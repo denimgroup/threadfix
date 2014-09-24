@@ -186,6 +186,7 @@ public abstract class AbstractDefectTracker {
 			stringBuilder.append("General information\n");
 			stringBuilder.append(preamble);
 			stringBuilder.append('\n');
+			stringBuilder.append('\n');
 		}
 
 		int vulnIndex = 0;

@@ -75,7 +75,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 // TODO improve error handling and pass something back to the users
                 $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
             });
-    }
+    };
 
     // Handle the complex modal interactions on the edit application modal
     $scope.$on('modalSwitch', function(event, name) {
@@ -160,7 +160,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                     return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit/wafAjax");
                 },
                 object: function () {
-                    var id = null;
+                    var id = 0;
                     if ($scope.config.application.waf) {
                         id = $scope.config.application.waf.id;
                     }
@@ -188,7 +188,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showCreateWafModal = function() {
         var modalInstance = $modal.open({
@@ -229,7 +229,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     // Defect Tracker methods
     $scope.showAddDefectTrackerModal = function(newDt) {
@@ -280,7 +280,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.showCreateDefectTrackerModal = function() {
         var modalInstance = $modal.open({

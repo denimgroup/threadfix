@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.properties.PropertiesManager;
 import com.denimgroup.threadfix.remote.response.ResponseParser;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -92,6 +93,11 @@ public class HttpRestUtils {
                 LOGGER.warn("Request for '" + completeUrl + "' status was " + status + ", not 200 as expected.");
 			}
 
+            if (status == 302) {
+                Header location = filePost.getResponseHeader("Location");
+                printRedirectInformation(location);
+            }
+
             response = ResponseParser.getRestResponse(filePost.getResponseBodyAsStream(), status, targetClass);
 
         } catch (IOException e1) {
@@ -136,6 +142,11 @@ public class HttpRestUtils {
                 LOGGER.warn("Request for '" + urlString + "' status was " + responseCode + ", not 200 as expected.");
 			}
 
+            if (responseCode == 302) {
+                Header location = post.getResponseHeader("Location");
+                printRedirectInformation(location);
+            }
+
             response = ResponseParser.getRestResponse(post.getResponseBodyAsStream(), responseCode, targetClass);
 
 		} catch (IOException e1) {
@@ -147,6 +158,23 @@ public class HttpRestUtils {
 
         return response;
 	}
+
+    private void printRedirectInformation(Header location) {
+        LOGGER.warn("Location header for 302 response was: " + location);
+
+        if (location != null && location.getValue() != null) {
+            String target = location.getValue();
+
+            if (target.contains("login.jsp")) {
+                // this might be a ThreadFix server
+
+                target = target.substring(0, target.indexOf("login.jsp")) + "rest";
+
+                LOGGER.info("Based on the Location header, the correct URL should be: " + target);
+                LOGGER.info("Set it with -s url " + target);
+            }
+        }
+    }
 
     @Nonnull
     public <T> RestResponse<T> httpGet(@Nonnull String path, @Nonnull Class<T> targetClass) {
@@ -177,6 +205,11 @@ public class HttpRestUtils {
 			if (status != 200) {
                 LOGGER.error("Status was not 200. It was " + status);
 			}
+
+            if (status == 302) {
+                Header location = get.getResponseHeader("Location");
+                printRedirectInformation(location);
+            }
 
             response = ResponseParser.getRestResponse(get.getResponseBodyAsStream(), status, targetClass);
 

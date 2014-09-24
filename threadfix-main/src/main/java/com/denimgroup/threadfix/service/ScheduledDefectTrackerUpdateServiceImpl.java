@@ -57,4 +57,11 @@ public class ScheduledDefectTrackerUpdateServiceImpl extends ScheduledJobService
     protected ScheduledJobDao<ScheduledDefectTrackerUpdate> getScheduledJobDao() {
         return scheduledDefectTrackerUpdateDao;
     }
+
+    @Override
+    public void validateSameDate(ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate, BindingResult result) {
+        if (getScheduledJobDao().checkSameDate(scheduledDefectTrackerUpdate, "ScheduledDefectTrackerUpdate")) {
+            result.rejectValue("dateError", null, null, "Another defect tracker update is scheduled at that time/frequency");
+        }
+    }
 }

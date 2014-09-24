@@ -91,7 +91,7 @@ public interface RemoteProviderTypeService {
 	 * @param remoteProviderType
 	 */
 	ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
-			int typeId);
+                                    String platform, int typeId);
 	
 	/**
 	 * Deletes all apps and username / password / API key

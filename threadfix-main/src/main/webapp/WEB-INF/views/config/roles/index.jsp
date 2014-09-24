@@ -22,7 +22,7 @@
     <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 	
 	<a id="createRoleModalLink" class="btn" ng-click="openNewRoleModal()">Create New Role</a>
-	
+
 	<div id="tableDiv">
 		<%@ include file="/WEB-INF/views/config/roles/rolesTable.jsp" %>
 	</div>

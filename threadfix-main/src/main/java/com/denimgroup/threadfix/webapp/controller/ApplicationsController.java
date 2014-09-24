@@ -33,6 +33,8 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
+import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -52,13 +54,15 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.listFrom;
-import static com.denimgroup.threadfix.CollectionUtils.setFrom;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -126,6 +130,7 @@ public class ApplicationsController {
         PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS,
 				Permission.CAN_UPLOAD_SCANS,
 				Permission.CAN_MODIFY_VULNERABILITIES,
+				Permission.CAN_MANAGE_VULN_FILTERS,
 				Permission.CAN_SUBMIT_DEFECTS,
 //				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
@@ -167,6 +172,8 @@ public class ApplicationsController {
         Map<String, Object> map = new HashMap<>();
 
         Application application = applicationService.loadApplication(appId);
+
+        applicationService.decryptRepositoryCredentials(application);
 
         // manual Finding form
         map.put("manualSeverities", findingService.getManualSeverities());
@@ -234,6 +241,19 @@ public class ApplicationsController {
         model.addAttribute("periodTypes", ScheduledPeriodType.values());
         model.addAttribute("scheduledDays", DayInWeek.values());
     }
+
+    private void addAdditionalScannerInfoField(@Nonnull List<DynamicFormField> formFields){
+        DynamicFormField additionalScannerInfoField = new DynamicFormField();
+        additionalScannerInfoField.setName("AdditionalScannerInfo");
+        additionalScannerInfoField.setLabel("Additional Scanner Info");
+        additionalScannerInfoField.setRequired(false);
+        additionalScannerInfoField.setType("checkbox");
+        additionalScannerInfoField.setActive(true);
+        additionalScannerInfoField.setEditable(true);
+        additionalScannerInfoField.setSupportsMultivalue(false);
+
+        formFields.add(additionalScannerInfoField);
+    }
 	
 	// TODO move this to a different spot so as to be less annoying
 	private Map<String, Object> addDefectModelAttributes(int appId, int orgId) {
@@ -251,7 +271,7 @@ public class ApplicationsController {
 				application.getDefectTracker().getDefectTrackerType() == null) {
 			return null;
 		}
-		
+
 		applicationService.decryptCredentials(application);
 
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
@@ -269,6 +289,27 @@ public class ApplicationsController {
             if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
                 map.put(ERROR_MSG, dt.getLastError());
                 return map;
+            }
+
+            // adding additional scanner info checkbox, checking for null dynamicformfields
+            List<DynamicFormField> editableFields = data.getEditableFields();
+
+            if (editableFields != null) {
+                addAdditionalScannerInfoField(editableFields);
+
+                //remove Order field in Version One dynamic form
+                if (dt.getClass().equals(VersionOneDefectTracker.class)) {
+                    DynamicFormField orderField = null;
+                    for (DynamicFormField field : editableFields) {
+                        if (field.getName().equals("Order")) {
+                            orderField = field;
+                        }
+                    }
+
+                    if (orderField != null) {
+                        editableFields.remove(orderField);
+                    }
+                }
             }
 		}
 

@@ -115,7 +115,8 @@ public class QueueListener implements MessageListener {
 								map.getString("summary"), map.getString("preamble"),
 								map.getString("component"), map.getString("version"),
 								map.getString("severity"), map.getString("priority"),
-								map.getString("status"), map.getInt("jobStatusId"));
+								map.getString("status"), map.getInt("jobStatusId"),
+                                map.getBoolean("additionalScannerInfo"));
 						break;
 						
 					case QueueConstants.IMPORT_REMOTE_PROVIDER_SCANS_REQUEST:
@@ -230,7 +231,7 @@ public class QueueListener implements MessageListener {
 	 */
 	private void processSubmitDefect(Object vulnerabilityIds, String summary, String preamble,
 			String component, String version, String severity, String priority,
-			String status, Integer jobStatusId) {
+			String status, Integer jobStatusId, Boolean additionalScannerInfo) {
 
 		jobStatusService.updateJobStatus(jobStatusId, "Submitting defect.");
 		
@@ -245,7 +246,7 @@ public class QueueListener implements MessageListener {
 
 		Vulnerability vuln = vulnerabilities.get(0);
 		Map<String, Object> map = defectService.createDefect(vulnerabilities, summary,
-				preamble, component, version, severity, priority, status, null);
+				preamble, component, version, severity, priority, status, null, additionalScannerInfo);
 
         Defect defect = null;
         if (map.get(DefectService.DEFECT) instanceof Defect)
