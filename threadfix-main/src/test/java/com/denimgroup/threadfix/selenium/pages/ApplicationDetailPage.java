@@ -874,6 +874,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage uploadScan(String file) {
         driver.findElementById("scanFileInput").sendKeys(file);
+        waitForResultsToLoad();
         return new ApplicationDetailPage(driver);
     }
 
