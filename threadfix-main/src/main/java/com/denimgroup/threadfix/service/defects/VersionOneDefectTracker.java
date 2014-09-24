@@ -670,8 +670,8 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
         log.info("Updating status for defect " + defect.getNativeId());
 
         String nativeId = urlEncode(defect.getNativeId());
-        List<String> result = getAttributeName(getUrlWithRest() + "Defect?where=Number='" +
-                nativeId + "'&sel=Status.Name", null);
+        List<String> result = getAttributes(getUrlWithRest() + "Defect?where=Number='" +
+                nativeId + "'&sel=Status.Name", null, "Status.Name");
 
         if (!result.isEmpty()) {
             log.info("Current status for defect " +
