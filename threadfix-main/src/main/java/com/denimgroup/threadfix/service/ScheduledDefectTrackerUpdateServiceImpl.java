@@ -24,13 +24,10 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.dao.ScheduledDefectTrackerUpdateDao;
-
+import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.ScheduledDefectTrackerUpdate;
-import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +57,7 @@ public class ScheduledDefectTrackerUpdateServiceImpl extends ScheduledJobService
 
     @Override
     public void validateSameDate(ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate, BindingResult result) {
-        if (getScheduledJobDao().checkSameDate(scheduledDefectTrackerUpdate, "ScheduledDefectTrackerUpdate")) {
+        if (getScheduledJobDao().checkSameDate(scheduledDefectTrackerUpdate)) {
             result.rejectValue("dateError", null, null, "Another defect tracker update is scheduled at that time/frequency");
         }
     }

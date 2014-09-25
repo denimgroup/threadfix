@@ -126,7 +126,7 @@
             <tr ng-show="sourceCodeDisplay">
                 <td>Source Code Password</td>
                 <td>
-                    <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" name="repositoryPassword"/>
+                    <input autocomplete="off" type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" name="repositoryPassword"/>
                 </td>
                 <td>
                     <span id="sourcePasswordLengthError" class="errors" ng-show="form.repositoryPassword.$dirty && form.repositoryPassword.$error.maxlength">Maximum length is 250.</span>

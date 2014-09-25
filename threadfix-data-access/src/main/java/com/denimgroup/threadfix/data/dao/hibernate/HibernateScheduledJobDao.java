@@ -27,10 +27,8 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.ScheduledJob;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -51,14 +49,15 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
         sessionFactory.getCurrentSession().delete(scheduledJob);
     }
 
+    // TODO USE CRITERIA!!!
     @Override
-    public boolean checkSameDate(S scheduledJob, String tableName) {
+    public boolean checkSameDate(S scheduledJob) {
 
         Query query = null;
         String queryStr;
 
         if (scheduledJob.getDay() != null){
-            queryStr = "select count(*) from " + tableName + " scheduledJob " +
+            queryStr = "select count(*) from :class scheduledJob " +
                     "where scheduledJob.day=:day and scheduledJob.period=:period " +
                     "and scheduledJob.hour=:hour and scheduledJob.minute=:minute";
 
@@ -66,7 +65,7 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
             query.setString("day", scheduledJob.getDay());
 
         } else if (scheduledJob.getFrequency() != null) {
-            queryStr = "select count(*) from " + tableName + " scheduledJob " +
+            queryStr = "select count(*) from :class scheduledJob " +
                     "where scheduledJob.frequency=:frequency and scheduledJob.period=:period " +
                     "and scheduledJob.hour=:hour and scheduledJob.minute=:minute";
 
@@ -74,15 +73,15 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
             query.setString("frequency", scheduledJob.getFrequency());
         }
 
-        if(query != null) {
+        if (query != null) {
             query.setInteger("hour", scheduledJob.getHour());
             query.setInteger("minute", scheduledJob.getMinute());
             query.setString("period", scheduledJob.getPeriod());
+            query.setString("class", getClass().getSimpleName());
 
             Long count = (Long)query.uniqueResult();
 
             return (count > 0);
-
         }  else {
             return false;
         }
