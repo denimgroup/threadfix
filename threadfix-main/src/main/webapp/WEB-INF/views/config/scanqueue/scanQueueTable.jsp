@@ -10,9 +10,6 @@
                 <th>Created Time</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <%--<c:if test="${ canManageApplications }">--%>
-                    <%--<th class="centered last"></th>--%>
-                <%--</c:if>--%>
                 <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
                     <th class="centered last"></th>
                 </security:authorize>
@@ -33,11 +30,6 @@
                 <td id="createTime{{ $index }}">{{ task.createTime | date:'MMM d, y h:mm:ss a' }}</td>
                 <td id="startTime{{ $index }}">{{ task.startTime | date:'MMM d, y h:mm:ss a' }}</td>
                 <td id="endTime{{ $index }}">{{ task.endTime | date:'MMM d, y h:mm:ss a' }}</td>
-                <%--<c:if test="${ canManageApplications }">--%>
-                    <%--<td class="centered">--%>
-                        <%--<a class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>--%>
-                    <%--</td>--%>
-                <%--</c:if>--%>
                 <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SCAN_AGENTS">
                     <td class="centered">
                         <a id="deleteButton{{ $index }}" class="btn btn-danger" ng-click="deleteScanAgentTask(task)">Delete</a>
