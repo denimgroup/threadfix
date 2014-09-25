@@ -59,7 +59,7 @@ public class ScheduledRemoteProviderImportServiceImpl extends ScheduledJobServic
 
     @Override
     public void validateSameDate(ScheduledRemoteProviderImport scheduledRemoteProviderImport, BindingResult result) {
-        if (getScheduledJobDao().checkSameDate(scheduledRemoteProviderImport, "ScheduledRemoteProviderImport")) {
+        if (getScheduledJobDao().checkSameDate(scheduledRemoteProviderImport)) {
             result.rejectValue("dateError", null, null, "Another remote provider import is scheduled at that time/frequency");
         }
     }
