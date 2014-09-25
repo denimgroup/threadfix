@@ -874,7 +874,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public ApplicationDetailPage uploadScan(String file) {
         driver.findElementById("scanFileInput").sendKeys(file);
-        waitForResultsToLoad();
+        waitForElement(driver.findElementById("toggleVulnTree"));
         return new ApplicationDetailPage(driver);
     }
 
