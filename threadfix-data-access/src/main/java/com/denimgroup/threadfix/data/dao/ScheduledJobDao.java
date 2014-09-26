@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.ScheduledJob;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by zabdisubhan on 8/15/14.
  */
@@ -33,6 +35,6 @@ public interface ScheduledJobDao<S extends ScheduledJob> extends GenericObjectDa
 
     public void delete(S scheduledJob);
 
-    public boolean checkSameDate(S scheduledJob);
+    public boolean checkSameDate(@Nonnull S scheduledJob);
 
 }
