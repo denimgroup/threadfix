@@ -57,6 +57,9 @@ public class ScheduledDefectTrackerUpdateServiceImpl extends ScheduledJobService
 
     @Override
     public void validateSameDate(ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate, BindingResult result) {
+        assert scheduledDefectTrackerUpdate != null :
+                "ScheduledDefectTrackerUpdate was null, this shouldn't have happened.";
+
         if (getScheduledJobDao().checkSameDate(scheduledDefectTrackerUpdate)) {
             result.rejectValue("dateError", null, null, "Another defect tracker update is scheduled at that time/frequency");
         }

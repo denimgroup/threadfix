@@ -26,12 +26,14 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.ScheduledDefectTrackerUpdate;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by zabdisubhan on 8/27/14.
  */
 
 public interface ScheduledDefectTrackerUpdateDao extends ScheduledJobDao<ScheduledDefectTrackerUpdate> {
 
-    public boolean checkSameDate(ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate);
+    public boolean checkSameDate(@Nonnull ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate);
 
 }
