@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
@@ -31,21 +32,15 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
-import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 /**
  * TODO use POST data to pre-filter web requests
@@ -203,15 +198,13 @@ public class QualysRemoteProvider extends RemoteProvider {
 			QualysWASSAXParser scanParser = new QualysWASSAXParser();
 			Scan resultScan = parseSAXInput(scanParser);
 
-            List<Finding> findings = resultScan.getFindings();
-            String qids = "";
+            Set<String> qidSet = set();
 
-            for (Finding finding : findings) {
-                String code = finding.getChannelVulnerability().getCode();
-                if(!qids.contains(finding.getChannelVulnerability().getCode())){
-                    qids += code + ",";
-                }
+            for (Finding finding : resultScan) {
+                qidSet.add(finding.getChannelVulnerability().getCode());
             }
+
+            String qids = CollectionUtils.join(",", qidSet);
 
             String[] parameters = {
                     QualysScanDetailParam.ACTION.getParam(),
@@ -220,7 +213,6 @@ public class QualysRemoteProvider extends RemoteProvider {
             };
 
             String[] values = {"list", qids, "All"};
-
             String[] headerNames = {"X-Requested-With", "Content-Type"};
             String[] headerVals = {"Curl", "application/x-www-form-urlencoded"};
 
