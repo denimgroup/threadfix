@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectService;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -39,13 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -78,25 +74,21 @@ public class EditDefectTrackerController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<DefectTracker> processSubmitAjax(@PathVariable("defectTrackerId") int defectTrackerId,
-			@Valid @ModelAttribute DefectTracker defectTracker, BindingResult result,
-			SessionStatus status, Model model, HttpServletRequest request) {
+	public @ResponseBody RestResponse<DefectTracker> processSubmitAjax(
+            @PathVariable("defectTrackerId") int defectTrackerId,
+			@Valid @ModelAttribute DefectTracker defectTracker,
+            BindingResult result) {
 
-        if (defectTracker != null) {
-            defectTracker.setId(defectTrackerId);
-        }
         if (result.hasErrors()) {
             return FormRestResponse.failure("Found some errors.",result);
         }
 
-		DefectTracker databaseDefectTracker;
-		
-		if (defectTracker == null || defectTracker.getName() == null || 
+		if (defectTracker == null || defectTracker.getName() == null ||
 				defectTracker.getName().trim().equals("") && !result.hasFieldErrors("name")) {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		} else {
-			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
-			if (databaseDefectTracker != null && !databaseDefectTracker.getId().equals(defectTracker.getId())) {
+            DefectTracker sameNameTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
+			if (sameNameTracker != null && !sameNameTracker.getId().equals(defectTracker.getId())) {
 				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
 				if (!result.hasFieldErrors("url")) {
@@ -112,7 +104,7 @@ public class EditDefectTrackerController {
 		if (result.hasErrors()) {
             return FormRestResponse.failure("Found some errors.",result);
 		} else {
-			databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
+            DefectTracker databaseDefectTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
 			if (databaseDefectTracker != null && databaseDefectTracker.getDefectTrackerType() != null &&
 					defectTracker != null && defectTracker.getDefectTrackerType() != null &&
 					defectTracker.getDefectTrackerType().getId() != null &&
@@ -122,16 +114,21 @@ public class EditDefectTrackerController {
 			}
 
             defectTracker.getDefectTrackerType().setName(
-                    defectTrackerService.loadDefectTrackerType(defectTracker.getDefectTrackerType().getId()).getName());
+                    defectTrackerService.loadDefectTrackerType(
+                            defectTracker.getDefectTrackerType().getId()).getName());
 
-			defectTrackerService.storeDefectTracker(defectTracker);
+            DefectTracker oldTracker = defectTrackerService.loadDefectTracker(defectTrackerId);
+            oldTracker.setName(defectTracker.getName());
+            oldTracker.setUrl(defectTracker.getUrl());
+            oldTracker.setDefectTrackerType(defectTracker.getDefectTrackerType());
+
+			defectTrackerService.storeDefectTracker(oldTracker);
 			
 			String user = SecurityContextHolder.getContext().getAuthentication().getName();
-			if (defectTracker != null) {
-				log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
-			}
-			
-            return RestResponse.success(defectTracker);
+
+            log.debug("The DefectTracker " + defectTracker.getName() + " (id=" + defectTracker.getId() + ") has been edited by user " + user);
+
+            return RestResponse.success(oldTracker);
 		}
 	}
 }
