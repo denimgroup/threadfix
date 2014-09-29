@@ -31,12 +31,18 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
+import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -197,28 +203,38 @@ public class QualysRemoteProvider extends RemoteProvider {
 			QualysWASSAXParser scanParser = new QualysWASSAXParser();
 			Scan resultScan = parseSAXInput(scanParser);
 
-            for(Finding finding : resultScan.getFindings()) {
-                String qid = finding.getChannelVulnerability().getCode();
+            List<Finding> findings = resultScan.getFindings();
+            String qids = "";
 
-                String[] parameters = new String[]{
-                        QualysScanDetailParam.ACTION.getParam(),
-                        QualysScanDetailParam.IDS.getParam(),
-                        QualysScanDetailParam.DETAILS.getParam()};
-
-                String[] values = new String[]{"list", qid, "All"};
-
-                response = utils.postUrl(getScanDetailsUrl(remoteProviderApplication.getRemoteProviderType()), parameters, values, username, password);
-                if (response.isValid()) {
-                    inputStream = response.getInputStream();
-                } else {
-                    LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeId() + ". Got response code " + response.getStatus());
-                    return null;
+            for (Finding finding : findings) {
+                String code = finding.getChannelVulnerability().getCode();
+                if(!qids.contains(finding.getChannelVulnerability().getCode())){
+                    qids += code + ",";
                 }
-
-                QualysWASSAXDetailsParser scanDetailsParser = new QualysWASSAXDetailsParser();
-                parseQualysSAXInput(scanDetailsParser, finding);
             }
 
+            String[] parameters = new String[]{
+                    QualysScanDetailParam.ACTION.getParam(),
+                    QualysScanDetailParam.IDS.getParam(),
+                    QualysScanDetailParam.DETAILS.getParam()};
+
+            String[] values = new String[]{"list", qids, "All"};
+
+            String[] headerNames = new String[]{"X-Requested-With", "Content-Type"};
+            String[] headerVals = new String[]{"Curl", "application/x-www-form-urlencoded"};
+
+            response = utils.postUrl(getScanDetailsUrl(remoteProviderApplication.getRemoteProviderType()), parameters, values, username, password, headerNames, headerVals);
+            if (response.isValid()) {
+                inputStream = response.getInputStream();
+            } else {
+                LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeId() + ". Got response code " + response.getStatus());
+                return null;
+            }
+
+            LOG.info("Retrieved additional scanner details for QID: " + qids);
+
+            QualysWASSAXDetailsParser scanDetailsParser = new QualysWASSAXDetailsParser();
+            parseQualysSAXInput(scanDetailsParser);
 
 			if (resultScan != null) {
 				LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
@@ -342,15 +358,12 @@ public class QualysRemoteProvider extends RemoteProvider {
     // PARSE FUNCTION
 
     @Nonnull
-    private void parseQualysSAXInput(DefaultHandler handler, Finding finding) {
+    private void parseQualysSAXInput(DefaultHandler handler) {
         log.debug("Starting Qualys SAX Parsing.");
 
         if (inputStream == null) {
             throw new IllegalStateException("InputStream was null. Can't parse SAX input. This is probably a coding error.");
         }
-
-        List<Finding> findings = list();
-        findings.add(finding);
 
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
@@ -566,7 +579,9 @@ public class QualysRemoteProvider extends RemoteProvider {
         private Boolean getDiagnosis        = false;
         private Boolean getConsequence      = false;
         private Boolean getSolution         = false;
+        private Boolean getQid              = false;
 
+        private String currentQid           = null;
         private String currentDiagnosis     = null;
         private String currentConsequence   = null;
         private String currentSolution      = null;
@@ -584,6 +599,9 @@ public class QualysRemoteProvider extends RemoteProvider {
             } else if (qName.equalsIgnoreCase("consequence")) {
                 getConsequence = true;
 
+            }  else if (qName.equalsIgnoreCase("qid")) {
+                getQid = true;
+
             } else if (qName.equalsIgnoreCase("solution")) {
                 getSolution = true;
 
@@ -593,7 +611,10 @@ public class QualysRemoteProvider extends RemoteProvider {
                 findingMap.put(FindingKey.DETAIL,           currentDetail);
 
                 for(Finding finding : saxFindingList) {
-                    addFindingDetail(finding, findingMap);
+                    if(finding.getChannelVulnerability().getCode().equals(currentQid)
+                            && finding.getScannerDetail() == null && finding.getScannerRecommendation() == null){
+                        addFindingDetail(finding, findingMap);
+                    }
                 }
             }
         }
@@ -605,6 +626,9 @@ public class QualysRemoteProvider extends RemoteProvider {
             } else if (getConsequence) {
                 currentConsequence = getBuilderText();
                 getConsequence = false;
+            } else if (getQid) {
+                currentQid = getBuilderText();
+                getQid = false;
             } else if (getSolution) {
                 currentSolution = getBuilderText();
                 getSolution = false;
@@ -612,7 +636,7 @@ public class QualysRemoteProvider extends RemoteProvider {
         }
 
         public void characters (char ch[], int start, int length) {
-            if (getDiagnosis || getConsequence || getSolution) {
+            if (getDiagnosis || getConsequence || getSolution || getQid) {
                 addTextToBuilder(ch, start, length);
             }
         }
