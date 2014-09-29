@@ -1224,6 +1224,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("linkDT").isDisplayed();
     }
 
+    public boolean isDefectTrackerNameCorrect(String defectTrackerName) {
+        return driver.findElementById("linkDT").getText().trim().equals(defectTrackerName);
+    }
+
     public boolean isDetailLinkDisply() { return driver.findElementById("viewApplicationModalButton").isDisplayed();}
 
     public boolean compareOrderOfSelector(String firstTeam, String secondTeam) {

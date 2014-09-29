@@ -25,13 +25,9 @@
 package com.denimgroup.threadfix.selenium.pages;
 
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-
-import java.util.List;
 
 public class UserPermissionsPage extends BasePage {
 
@@ -93,6 +89,10 @@ public class UserPermissionsPage extends BasePage {
         return this;
     }
 
+    public String errorAlert() {
+        return driver.findElementByClassName("alert-error").getText();
+    }
+
     /*------------------------------------ Boolean Methods ------------------------------------*/
 
     public boolean isUserNamePresent(String userName) {
@@ -145,6 +145,10 @@ public class UserPermissionsPage extends BasePage {
         secondTeamValue = Integer.parseInt(new Select(driver.findElementById("orgSelect")).getFirstSelectedOption().getAttribute("value"));
 
         return secondTeamValue > firstTeamValue;
+    }
+
+    public boolean isAddPermissionClickable() {
+        return driver.findElementsByCssSelector("#btn.disabled").isEmpty();
     }
 
 }

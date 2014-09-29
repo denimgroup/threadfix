@@ -25,11 +25,9 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.pages.VulnerabilityDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -67,6 +65,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 9 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "44"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "44"));
     }
 
     @Test
@@ -103,6 +108,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should be 10 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "45"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "45"));
     }
 
     @Test
@@ -120,6 +132,14 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 5 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "40"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "40"));
+
     }
 
     @Test
@@ -156,6 +176,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should be 10 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "45"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "45"));
     }
 
     @Test
@@ -173,6 +200,12 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 9 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "44"));
+        assertTrue("The total number is not showing correctly", teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "44"));
     }
 
     @Test
@@ -209,6 +242,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 10 vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "45"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "45"));
     }
 
     @Test
@@ -226,6 +266,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 5 critical vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "5"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "40"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "40"));
     }
 
     @Test
@@ -262,6 +309,13 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         assertTrue("There should only be 10 vulnerabilities shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+
+        TeamIndexPage teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        assertTrue("The total number is not showing correctly", teamIndexPage.isTeamTotalNumberCorrect(teamName, "45"));
+        assertTrue("The total number is not showing correctly",
+                teamIndexPage.isApplicationTotalNumberCorrect(teamName,appName, "45"));
     }
 
     @Test

@@ -53,6 +53,10 @@ public class ScanAgentTasksPage extends BasePage{
         return new ScanAgentTasksPage(driver);
     }
 
+    public String successAlert() {
+        return driver.findElementByClassName("alert-success").getText().trim();
+    }
+
     /*________________ Boolean Functions ________________*/
     public boolean isScanAgentTaskPresent(String date) {
         int rowCnt = driver.findElementsByClassName("bodyRow").size();

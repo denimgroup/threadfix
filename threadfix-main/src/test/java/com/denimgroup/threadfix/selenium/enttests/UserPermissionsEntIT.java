@@ -1062,4 +1062,68 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertFalse("Analytics Tab is still available", applicationDetailPage.isElementPresent("tab-reports"));
     }
+
+    @Test
+    public void testPermissionWithNoTeam() {
+        DashboardPage dashboardPage = loginPage.login("user", "password");
+
+        if (dashboardPage.isViewMoreLinkPresent()) {
+
+            UserPermissionsPage userPermissionsPage = dashboardPage.clickManageUsersLink()
+                    .clickEditPermissions("user");
+            assertTrue("user Permission wasn't available", userPermissionsPage.isAddPermissionClickable());
+        } else {
+            UserPermissionsPage userPermissionsPage1 = dashboardPage.clickManageUsersLink()
+                    .clickEditPermissions("user");
+
+            assertTrue("Add Permission Button is Clickable", userPermissionsPage1.isAddPermissionClickable());
+            assertTrue("There is no Error Message Available",
+                    userPermissionsPage1.errorAlert().contains("Cannot add permissions with no teams."));
+        }
+    }
+
+    @Test
+    public void testManageApplicationPermissionScanAgent() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String roleName = getRandomString(8);
+        String userName = getRandomString(8);
+
+        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
+                .clickManageRolesLink()
+                .clickCreateRole()
+                .setRoleName(roleName)
+                .toggleAllPermissions(true)
+                .toggleSpecificPermission(false,"canManageApplications")
+                .clickSaveRole();
+
+        ApplicationDetailPage applicationDetailPage = rolesIndexPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScanAgentTasksTab(0)
+                .clickAddNewScanTask()
+                .submitScanQueue();
+
+        UserIndexPage userIndexPage = applicationDetailPage.clickManageUsersLink()
+                .clickAddUserLink()
+                .setName(userName)
+                .setPassword("TestPassword")
+                .setConfirmPassword("TestPassword")
+                .toggleGlobalAccess()
+                .chooseRoleForGlobalAccess(roleName)
+                .clickAddNewUserBtn();
+
+        LoginPage loginPage = userIndexPage.clickLogOut();
+
+        ScanAgentTasksPage scanAgentTasksPage = loginPage.login(userName, "TestPassword")
+                .clickScanAgentTasksLink()
+                .clickDeleteScan(0);
+
+        assertTrue("Scan wasn't deleted", scanAgentTasksPage.successAlert()
+                .contains("One time OWASP Zed Attack Proxy Scan has been deleted from Scan Agent queue"));
+    }
 }

@@ -63,6 +63,11 @@ public class DashboardPage extends BasePage{
             return false;
         }
     }
+
+    public boolean isAlertErrorDisplay() {
+        return driver.findElementsByClassName("alert-error").size() !=0;
+    }
+
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
         waitForElement(driver.findElementById("csvLink"));
@@ -104,6 +109,10 @@ public class DashboardPage extends BasePage{
 	public int getNumComments(){
 		return driver.findElementsByClassName("bodyRow").size()-getNumUploads();
 	}
+
+    public boolean isViewMoreLinkPresent() {
+        return driver.findElementsById("leftViewMore").size() !=0 ;
+    }
 
     public boolean isLoggedin(){
         return driver.findElementsById("main-content").size() != 0;

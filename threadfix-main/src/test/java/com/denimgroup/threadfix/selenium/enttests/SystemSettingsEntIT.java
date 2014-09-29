@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -146,7 +146,6 @@ public class SystemSettingsEntIT extends BaseIT{
                 loginPage.isLoginErrorPresent());
     }
 
-    //TODO Fix this when issue 43 is closed on satgit2
     @Test
     public void testDefaultLDAPRole() {
         SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
@@ -182,6 +181,32 @@ public class SystemSettingsEntIT extends BaseIT{
         dashboardPage = systemSettingsPage.logout()
                 .login(LDAP_USERNAME, LDAP_USERPASSWORD);
 
-        //assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertDisplayed());
+        assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertErrorDisplay());
+    }
+
+    @Test
+    public void testReadAccessLDAPRole() {
+        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+                .clickSystemSettingsLink()
+                .expandLDAPSettings()
+                .setLDAPSearchBase(LDAP_SEARCHBASE)
+                .setLDAPUserDN(LDAP_USERDN)
+                .setLDAPPassword(LDAP_PASSWORD)
+                .setLDAPUrl(LDAP_URL)
+                .clickSaveChanges();
+
+        systemSettingsPage = systemSettingsPage.expandDefaultLDAPRole()
+                .setRole("Read Access")
+                .clickSaveChanges();
+
+        assertTrue("Save validation alert was not present." ,systemSettingsPage.isSaveSuccessful());
+
+        TeamIndexPage teamIndexPage = systemSettingsPage.logout()
+                .login(LDAP_USERNAME, LDAP_USERPASSWORD)
+                .clickTeamsTab();
+
+        assertTrue("The error Log wasn't showed", teamIndexPage.errorAlert().
+                contains("You don't have permission to access any ThreadFix applications or to create one for yourself." +
+                        " Contact your administrator to get help."));
     }
 }

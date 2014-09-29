@@ -104,6 +104,11 @@ public abstract class BasePage {
         waitForElement(driver.findElementById("expandAllButton"));
         return new TeamIndexPage(driver);
 	}
+
+    public TeamIndexPage clickTeamsTab() {
+        driver.findElementById("orgHeader").click();
+        return new TeamIndexPage(driver);
+    }
 	
 	public ScanIndexPage clickScansHeaderLink(){
 		driver.findElementById("scansHeader").click();

@@ -260,6 +260,10 @@ public class TeamIndexPage extends BasePage {
         return driver.findElementByClassName("alert-success").getText().trim();
     }
 
+    public String errorAlert() {
+        return driver.findElementByClassName("alert-error").getText().trim();
+    }
+
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
     public boolean isAppPresent(String teamName, String appName) {
@@ -345,5 +349,14 @@ public class TeamIndexPage extends BasePage {
     public boolean isScanUploadedAlready(String teamName, String appName) {
         return driver.findElementByXPath("//span[text()='Scan file has already been uploaded.']").isDisplayed();
     }
+
+    public boolean isTeamTotalNumberCorrect(String teamName, String expectednumber) {
+        return driver.findElementById("numTotalVulns" + teamName).getText().trim().equals(expectednumber);
+    }
+
+    public boolean isApplicationTotalNumberCorrect(String teamName, String appName, String expectecNumber) {
+        return driver.findElementById("numTotalVulns" + teamName + "-" + appName).getText().trim().equals(expectecNumber);
+    }
+
 }
 

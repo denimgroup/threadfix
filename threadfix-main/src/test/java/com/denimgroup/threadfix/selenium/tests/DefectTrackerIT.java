@@ -468,6 +468,49 @@ public class DefectTrackerIT extends BaseIT {
                 defectTrackerIndexPage.isUrlCorrect(HPQUALITYCENTER_URL, editedDefectTrackerName));
     }
 
+    @Test
+    public void checkDefectTrackerPresentAfterEditing() {
+        String teamName = getRandomString(8);
+        String appName = getRandomString(8);
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        String defectTrackerName = getRandomString(8);
+        String replacementName = getRandomString(8);
+        String defectTrackerType = "Bugzilla";
+
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+                .clickDefectTrackersLink()
+                .clickAddDefectTrackerButton()
+                .setName(defectTrackerName)
+                .setURL(BUGZILLA_URL)
+                .setType(defectTrackerType)
+                .clickSaveDefectTracker();
+
+        ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName)
+                .addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, "QA Testing");
+
+        assertTrue("Defect tracker wasn't attached correctly",
+                applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
+
+        defectTrackerIndexPage.clickDefectTrackersLink()
+                .clickEditLink(defectTrackerName)
+                .setName(replacementName)
+                .clickSaveDefectTracker();
+
+        applicationDetailPage.clickOrganizationHeaderLink()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        assertTrue("Defect tracker name wasn't attached correctly",
+                applicationDetailPage.clickEditDeleteBtn().isDefectTrackerNameCorrect(replacementName));
+    }
+
     /*------------------------------ Scheduling ------------------------------*/
 
     @Test
