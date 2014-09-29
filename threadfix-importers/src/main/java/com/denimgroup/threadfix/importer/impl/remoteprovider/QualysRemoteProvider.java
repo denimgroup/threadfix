@@ -178,7 +178,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 			QualysWASSAXParser scanParser = new QualysWASSAXParser();
 			Scan resultScan = parseSAXInput(scanParser);
-			
+
 			if (resultScan != null) {
 				LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
 				resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
@@ -292,7 +292,7 @@ public class QualysRemoteProvider extends RemoteProvider {
     public static String getAppsUrl(RemoteProviderType type) {
 		return getBaseUrl(type) + "/qps/rest/3.0/search/was/webapp";
 	}
-	
+
 	// PARSER CLASSES
 
 	private class QualysAppsParser extends HandlerWithBuilder {
@@ -311,12 +311,12 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    public void endElement(String uri, String name, String qName) {
 	    	if (getName) {
 	    		String tempNameString = getBuilderText();
-	    		
+
 	    		RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
 	    		remoteProviderApplication.setNativeId(tempNameString);
 	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
 	    		list.add(remoteProviderApplication);
-	    		
+
 	    		getName = false;
 	    	}
 	    }
@@ -327,7 +327,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    	}
 	    }
 	}
-	
+
 	private class QualysScansForAppParser extends HandlerWithBuilder {
 		
 		public List<Map<String,String>> list = list();
@@ -405,12 +405,16 @@ public class QualysRemoteProvider extends RemoteProvider {
 		private Boolean getUri                = false;
 		private Boolean getParameter          = false;
 		private Boolean getChannelVulnName    = false;
-	
+		private Boolean getAttackDetail       = false;
+
 		private String currentChannelVulnCode = null;
 		private String currentPath            = null;
 		private String currentParameter       = null;
 		private String currentSeverityCode    = null;
-					    
+		private String currentAttackDetail    = null;
+
+        private Map<FindingKey, String> findingMap = new HashMap<>();
+
 	    public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
@@ -424,27 +428,41 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    ////////////////////////////////////////////////////////////////////
 	    
 	    public void startElement (String uri, String name,
-				      String qName, Attributes atts)
-	    {
-	    	if ("launchedDate".equals(qName)) {
-	    		getDate = true;
-	    	} else if ("uri".equals(qName)) {
-	    		getUri = true;
-	    	} else if ("qid".equals(qName)) {
-	    		getChannelVulnName = true;
-	    	} else if ("param".equals(qName)) {
-	    		getParameter = true;
-	    	} else if ("instances".equals(qName)) {
-	    		currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
-	    		
-	    		Finding finding = constructFinding(currentPath, currentParameter, 
-	    				currentChannelVulnCode, currentSeverityCode);
-	    		add(finding);
-	    	
-	    		currentParameter       = null;
-	    		currentPath            = null;
-	    		getParameter           = false;
-	    	}
+				      String qName, Attributes atts) {
+
+            switch(qName) {
+                case "launchedDate":
+                    getDate = true;
+                    break;
+                case "uri":
+                    getUri = true;
+                    break;
+                case "qid":
+                    getChannelVulnName = true;
+                    break;
+                case "param":
+                    getParameter = true;
+                    break;
+                case "payload":
+                    getAttackDetail = true;
+                    break;
+                case "instances":
+                    currentSeverityCode = SEVERITIES_MAP.get(currentChannelVulnCode);
+
+                    findingMap.put(FindingKey.PATH,             currentPath);
+                    findingMap.put(FindingKey.PARAMETER,        currentParameter);
+                    findingMap.put(FindingKey.VULN_CODE,        currentChannelVulnCode);
+                    findingMap.put(FindingKey.SEVERITY_CODE,    currentSeverityCode);
+                    findingMap.put(FindingKey.VALUE,            currentAttackDetail);
+
+                    Finding finding = constructFinding(findingMap);
+                    add(finding);
+
+                    currentParameter       = null;
+                    currentPath            = null;
+                    getParameter           = false;
+                    break;
+            }
 	    }
 	    
 	    public void endElement(String uri, String name, String qName) {
@@ -455,20 +473,24 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    			date = DateUtils.getCalendarFromUTCString(tempDateString);
 	    		}
 	    		getDate = false;
-	    	} else if (getUri) {
-	    		currentPath = getBuilderText();
-	    		getUri = false;
-	    	} else if (getChannelVulnName) {
-	    		currentChannelVulnCode = getBuilderText();
-	    		getChannelVulnName = false;
-	    	} else if (getParameter) {
-	    		currentParameter = getBuilderText();
-	    		getParameter = false;
-	    	}
+
+            } else if (getUri) {
+                currentPath = getBuilderText();
+                getUri = false;
+            } else if (getChannelVulnName) {
+                currentChannelVulnCode = getBuilderText();
+                getChannelVulnName = false;
+            } else if (getParameter) {
+                currentParameter = getBuilderText();
+                getParameter = false;
+            } else if (getAttackDetail) {
+                currentAttackDetail = getBuilderText();
+                getAttackDetail = false;
+            }
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || getUri || getChannelVulnName || getParameter) {
+	    	if (getDate || getUri || getChannelVulnName || getParameter || getAttackDetail) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
