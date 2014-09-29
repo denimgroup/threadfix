@@ -76,4 +76,200 @@ threadfixModule.factory('reportExporter', function() {
     return reportExporter;
 });
 
+threadfixModule.factory('d3Service', function() {
+
+    var d3Service = {};
+
+    d3Service.getColorScale = function(d3, range) {
+        return d3.scale.ordinal()
+            .range(range);
+    }
+
+    d3Service.getScaleOrdinalRangeBand = function(d3, range, scale) {
+        return d3.scale.ordinal()
+            .rangeRoundBands(range, scale);
+    }
+
+    d3Service.getScaleLinearRange = function(d3, range) {
+        return d3.scale.linear()
+            .rangeRound(range);
+    }
+
+    d3Service.getAxis = function(d3, scale, orient) {
+        return  d3.svg.axis()
+            .scale(scale)
+            .tickSize(3)
+            .orient(orient);
+    };
+
+    d3Service.getAxisFormat = function(d3, scale, orient, format) {
+        return  d3Service.getAxis(d3, scale, orient)
+            .tickFormat(format);
+    };
+
+    d3Service.getSvg = function(d3, elementId, w, h) {
+        return d3.select(elementId).append("svg")
+            .attr("width", w)
+            .attr("height", h);
+    }
+
+    d3Service.getExistingSvg = function(d3, elementId, w, h) {
+        var svgs = d3.select(elementId).selectAll("svg");
+        if (svgs.length>0 && svgs[0].length>0)
+            return svgs;
+        return d3.select(elementId).append("svg")
+            .attr("width", w)
+            .attr("height", h);
+    }
+
+    d3Service.getTip = function(d3, clazz, offset) {
+        return d3.tip()
+            .attr('class', clazz)
+            .offset(offset);
+    }
+
+    return d3Service;
+
+});
+
+threadfixModule.factory('reportConstants', function() {
+
+    var reportConstants = {};
+
+    reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
+    reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
+
+    return reportConstants;
+
+});
+
+threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, threadFixModalService) {
+
+    var reportUtilities = {};
+    var drawingDuration = 500;
+
+    reportUtilities.drawTitle = function(svg, w, teams, apps, title, y) {
+        svg.append("g")
+            .append("text")
+            .attr("x", w/2)
+            .attr("y", y)
+            .attr("class", "header")
+            .text(title)
+        var i = 0;
+        if (teams) {
+            i++;
+            svg.append("g")
+                .append("text")
+                .attr("x", w/2)
+                .attr("y", y + 20)
+                .attr("class", "title")
+                .text("Team: " + teams)
+        }
+        if (apps) {
+            svg.append("g")
+                .append("text")
+                .attr("x", w/2)
+                .attr("y", y + 20 + i*15)
+                .attr("class", "title")
+                .text("Application: " + apps)
+        }
+    }
+
+    reportUtilities.drawTable = function(d3, tableData, divId) {
+
+        var table = d3.select("#" + divId).select("table").attr("class", "table"),
+            thead = d3.select("#" + divId).select("thead"),
+            tbody = d3.select("#" + divId).select("tbody");
+
+        thead.selectAll('*').remove();
+        tbody.selectAll('*').remove();
+
+
+        thead.selectAll("th")
+            .data(d3.keys(tableData[0]))
+            .enter().append("th").text(function(d){return d});
+
+        // First create the table rows
+        var tr = tbody.selectAll("tr")
+            .data(tableData).enter().append("tr");
+
+        // Now create the table cells
+        var td = tr.selectAll("td")
+            .data(function(d){return d3.values(d)})
+            .enter().append("td")
+            .text(function(d) {return d});
+    }
+
+    reportUtilities.drawVerticalBarsChart = function(svg, data, x, y, tip, label) {
+
+        var col = svg.selectAll(".title")
+            .data(data)
+            .enter().append("g")
+            .attr("class", "g")
+            .attr("transform", function(d) { return "translate(" + x(d.title) + ",0)"; });
+
+        var drawTime = -1;
+        var colDuration = drawingDuration/data.length;
+        col.selectAll("rect")
+            .data(function(d) { return d.vulns; })
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("width", 0)
+            .attr("y", function(d) { return y(d.y1); })
+            .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+            .style("fill", function(d) { return d.fillColor; })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+            .on('click', function(d) {
+                tip.hide();
+                threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, label), label.teamId || label.appId);
+            })
+            .transition()
+            .attr("width", x.rangeBand())
+            .duration(colDuration)
+            .delay(function(d) {
+                if (d.y0 === 0)
+                    drawTime++;
+                return colDuration*drawTime; }) ;
+    }
+
+    reportUtilities.drawHorizonBarsChart = function(svg, data, x, y, tip, label) {
+
+        var col = svg.selectAll(".title")
+            .data(data)
+            .enter().append("g")
+            .attr("class", "g")
+            .attr("transform", function(d) { return "translate(0," + y(d.title) + ")"; });
+
+        var drawTime = -1;
+        var rowDuration = drawingDuration/data.length;
+
+        col.selectAll("rect")
+            .data(function(d) { return d.vulns; })
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("height", 0)
+            .attr("x", function(d) { return x(d.y0); })
+            .attr("width", function(d) { return x(d.y1) - x(d.y0); })
+            .style("fill", function(d) { return d.fillColor; })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+            .on('click', function(d) {
+                tip.hide();
+                threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d, label), label.teamId || label.appId);
+            })
+            .transition()
+            .attr("height", y.rangeBand())
+            .duration(rowDuration)
+            .delay(function(d) {
+                if (d.y0 === 0)
+                    drawTime++;
+                return rowDuration*drawTime; })
+        ;
+    }
+
+    return reportUtilities;
+
+});
+
 

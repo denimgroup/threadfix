@@ -60,6 +60,8 @@ public interface ReportsService {
 
     Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request);
 
+    Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request);
+
     Map<String, Object> scannerComparisonByVulnerability(Model model,
 			ReportParameters reportParameters);
 

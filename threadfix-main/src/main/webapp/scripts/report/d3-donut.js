@@ -107,14 +107,15 @@ angular.module('threadfix')
             svg.call(tip);
 
             var slices = svg.append("g")
-                .attr("class", "slices")
+                .attr("class", "slices");
 
             slices.selectAll(".innerSlice").data(_data).enter().append("path").attr("class", "innerSlice")
                 .style("fill", function(d) { return d3.hsl(d.data.fillColor).darker(0.7); })
                 .attr("d",function(d){ return pieInner(d, rx+0.5,ry+0.5, h, ir);})
                 .each(function(d){this._current=d;})
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+            ;
 
             slices.selectAll(".topSlice").data(_data).enter().append("path").attr("class", "topSlice")
                 .style("fill", function(d) { return d.data.fillColor; })
@@ -122,22 +123,22 @@ angular.module('threadfix')
                 .attr("d",function(d){ return pieTop(d, rx, ry, ir);})
                 .each(function(d){this._current=d;})
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+            ;
 
             slices.selectAll(".outerSlice").data(_data).enter().append("path").attr("class", "outerSlice")
                 .style("fill", function(d) { return d3.hsl(d.data.fillColor).darker(0.7); })
                 .attr("d",function(d){ return pieOuter(d, rx-.5,ry-.5, h);})
                 .each(function(d){this._current=d;})
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+            ;
         }
 
-        Donut.draw2D=function(id, data, height/*height*/, width/*width*/){
-
-            var radius = Math.min(width, height) / 2;
+        Donut.draw2D=function(id, data, height/*height*/, width/*width*/, rs/*radius*/, isNavigate, updateTree){
 
             var arc = d3.svg.arc()
-                .outerRadius(radius - 10)
+                .outerRadius(rs - 10)
                 .innerRadius(0);
 
             var _data = d3.layout.pie().sort(null).value(function(d) {return d.value;})(data);
@@ -148,6 +149,8 @@ angular.module('threadfix')
                 .attr("height", height)
                 .append("g")
                 .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            svg.selectAll('*').remove();
 
             /* ------- TIP -------*/
             var tip = d3.tip()
@@ -173,7 +176,11 @@ angular.module('threadfix')
                 .on('mouseout', tip.hide)
                 .on('click', function(d) {
                     tip.hide();
-                    threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, {}), false);
+                    if (isNavigate)
+                        threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, {}), false);
+                    else {
+                        updateTree({severity:d.data.severity});
+                    }
                 })
                 .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
                 .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })

@@ -5,9 +5,13 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3-trending-scans.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-trending-scans.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-point-in-time.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-filter-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-services.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/trending-report-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/snapshot-report-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/comparison-report-controller.js"></script>
 </head>
 
 <body id="reports">
@@ -26,16 +30,18 @@
             <tab heading="TrendingD3" ng-click="loadTrending()" active="trendingActive">
                 <%@ include file="trending.jsp" %>
             </tab>
-            <tab heading="ComparisonD3" ng-click="loadComparison()" active="comparisonActive">
-                <%--<%@ include file="trending.jsp" %>--%>
+            <tab heading="SnapshotD3" ng-click="loadSnapshot()" active="snapshotActive">
+                <%@ include file="snapshot.jsp" %>
             </tab>
+            <%--<tab heading="ComparisonD3" ng-click="loadComparison()" active="comparisonActive">--%>
+            <%--</tab>--%>
             <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled" ng-click="updateOptions(tab)"></tab>
             <tab heading="Vulnerability Search" ng-click="loadVulnSearch()" active="showVulnTab">
                 <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
             </tab>
         </tabset>
 
-        <span ng-show="teams && !vulnSearch && !trendingActive && !comparisonActive">
+        <span ng-show="teams && !vulnSearch && !trendingActive && !comparisonActive && !snapshotActive">
             <select ng-change="loadReport()" style="margin-bottom: 0" class="reportTypeSelect" id="reportSelect" ng-model="reportId">
                 <option ng-selected="reportId === option.id" ng-repeat="option in options" value="{{ option.id }}">
                     {{ option.name }}
@@ -65,7 +71,7 @@
         </span>
         <span style="float:right" ng-show="loading" class="spinner dark"></span>
 
-        <div ng-hide="vulnSearch || trendingActive || comparisonActive" style="margin-top: 10px" id="successDiv">
+        <div ng-hide="vulnSearch || trendingActive || comparisonActive || snapshotActive" style="margin-top: 10px" id="successDiv">
             <c:if test="${ not hasVulnerabilities }">
                 <div class="alert alert-danger" style="margin-top:10px">
                     <button class="close" data-dismiss="alert" type="button">&times;</button>

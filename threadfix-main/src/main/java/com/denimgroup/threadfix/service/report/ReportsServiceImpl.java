@@ -204,6 +204,18 @@ public class ReportsServiceImpl implements ReportsService {
         return map;
     }
 
+    @Override
+    public Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request) {
+        List<Integer> applicationIdList = getApplicationIdList(parameters);
+        if (applicationIdList.isEmpty()) {
+            log.info("no applications found.");
+            return newMap();
+        }
+        Map<String, Object> map = newMap();
+        map.put("vulnList", vulnerabilityDao.retrieveMapByApplicationIdList(applicationIdList));
+        return map;
+    }
+
     @SuppressWarnings("resource")
     private ReportCheckResultBean getReport(String path, ReportFormat reportFormat, String format,
                                             Map<String, Object> parameters, List<Integer> applicationIdList,

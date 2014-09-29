@@ -275,8 +275,8 @@ var d3ThreadfixModule = angular.module('threadfix');
 //    }]);
 
 // Trending scans report
-d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
-    function(d3, reportExporter) {
+d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilities', 'd3Service',
+    function(d3, reportExporter, reportUtilities, d3Service) {
         return {
             restrict: 'EA',
             scope: {
@@ -290,7 +290,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                     h = svgHeight - m[0] - m[2];
 
                 var
-                    symbols,
+                    stackedData,
+                    _data,
                     circles,
                     duration = 1000;
 
@@ -342,15 +343,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                 scope.render = function (reportData) {
                     if (!reportData)
                         return;
-                    var _data = angular.copy(reportData);
-                    update(_data);
-                }
-
-                function update(data) {
+                    _data = angular.copy(reportData);
 
                     svg.selectAll('*').remove();
-                    drawTitle();
-                    if (data.length === 0) {
+
+                    reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
+
+                    if (_data.length === 0) {
                         svg.append("g")
                             .append("text")
                             .attr("x", w/2)
@@ -360,7 +359,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                         return;
                     }
 
-                    var colorDomain = d3.keys(data[0]).filter(function(key){return key !== "importTime";});
+                    var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime";});
 
                     if (colorDomain.length === 0) {
                         svg.append("g")
@@ -373,34 +372,44 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                     }
 
                     color.domain(colorDomain);
-
-                    symbols = processData(data);
-
-                    symbols.forEach(function(s) {
-                        s.maxNoOfVulns = d3.max(s.values, function(d) { return d.noOfVulns; });
-                    });
-
-                    // Sort by maximum price, descending.
-                    symbols.sort(function(a, b) { return b.maxNoOfVulns - a.maxNoOfVulns; });
-
                     svg.selectAll('*').remove();
-                    svg.selectAll("g")
-                        .data(symbols)
-                        .enter().append("g")
-                        .attr("class", "symbol");
 
                     drawReport();
+
                 }
 
                 function drawReport(){
 
-                    var xMin = d3.min(symbols, function(d) { return d.values[0].date; });
-                    var xMax = d3.max(symbols, function(d) { return d.values[d.values.length - 1].date; });
+                    stackedData = prepareStackedData(_data);
+                    stackedData.forEach(function(s) {
+                        s.maxNoOfVulns = d3.max(s.values, function(d) { return d.noOfVulns; });
+                    });
+
+                    // Sort by maximum price, descending.
+                    stackedData.sort(function(a, b) { return b.maxNoOfVulns - a.maxNoOfVulns; });
+
+                    var stack = d3.layout.stack()
+                        .values(function(d) { return d.values; })
+                        .x(function(d) { return d.date; })
+                        .y(function(d) { return d.noOfVulns; })
+                        .out(function(d, y0, y) { d.noOfVulns0 = y0; })
+                        .order("reverse");
+
+                    stack(stackedData);
+
+
+                    svg.selectAll("g")
+                        .data(stackedData)
+                        .enter().append("g")
+                        .attr("class", "symbol");
+
+                    var xMin = d3.min(stackedData, function(d) { return d.values[0].date; });
+                    var xMax = d3.max(stackedData, function(d) { return d.values[d.values.length - 1].date; });
 
                     // Compute the minimum and maximum date across scans.
                     x.domain([xMin, xMax]);
 
-                    y.domain([0, d3.max(symbols.map(function(d) { return d.maxNoOfVulns; }))]);
+                    y.domain([0, d3.max(stackedData[0].values.map(function(d) { return d.noOfVulns + d.noOfVulns0; }))]);
 
                     var diffMonths = monthDiff(new Date(xMin), new Date(xMax)),
                         intervalMonths = Math.round(diffMonths/6);
@@ -411,7 +420,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                     var g = svg.selectAll(".symbol");
 
                     svg.call(tip);
-                    drawTitle();
+                    reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
 
                     // Add the x-axis.
                     svg.append("g")
@@ -433,7 +442,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                         .style("display", "none");
 
                     circles = focus.selectAll('circle')
-                        .data(symbols)
+                        .data(stackedData)
                         .enter()
                         .append('circle')
                         .attr('class', 'circle')
@@ -441,21 +450,12 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                         .attr('fill', 'none')
                         .attr('stroke', function (d) { return color(d.key); });
 
-
-                    var stack = d3.layout.stack()
-                        .values(function(d) { return d.values; })
-                        .x(function(d) { return d.date; })
-                        .y(function(d) { return d.noOfVulns; })
-                        .out(function(d, y0, y) { d.noOfVulns0 = y0; })
-                        .order("reverse");
-
-                    stack(symbols);
+                    line
+                        .y(function(d) { return y(d.noOfVulns0); });
 
                     area
-                        .y0(h)
-                        .y1(function(d) { return y(d.noOfVulns); });
-                    line
-                        .y(function(d) { return y(d.noOfVulns); });
+                        .y0(function(d) { return y(d.noOfVulns0); })
+                        .y1(function(d) { return y(d.noOfVulns0 + d.noOfVulns); });
 
                     g.each(function(d) {
                         var e = d3.select(this);
@@ -469,8 +469,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                             .duration(duration)
                             .style("fill", color(d.key))
                             .style("fill-opacity", .5)
-                            .attr("d", area(d.values))
-                        ;
+                            .attr("d", area(d.values));
 
                         e.append("path")
                             .attr("class", "line")
@@ -487,13 +486,14 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                             .duration(duration)
                             .attr('fill', color(d.key))
                             .text(d.key)
-                            .attr("transform", function() { d = d.values[d.values.length - 1]; return "translate(" + (w) + "," + y(d.noOfVulns) + ")"; });
+                            .attr("transform", function() { d = d.values[d.values.length - 1]; return "translate(" + (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0) + ")"; });
                     });
 
                     g
                         .on("mouseover", function() { focus.style("display", null); })
                         .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
+
                 }
 
                 d3.select("#exportCSVButton").on('click', function(){
@@ -503,42 +503,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                             "TrendingScans" + teamsName + appsName);
                 });
 
-                function monthDiff(d1, d2) {
-                    var months;
-                    months = (d2.getFullYear() - d1.getFullYear()) * 12;
-                    months -= d1.getMonth() + 1;
-                    months += d2.getMonth();
-                    return months <= 0 ? 0 : months;
-                };
-
-                function drawTitle(){
-                    svg.append("g")
-                        .append("text")
-                        .attr("x", w/2)
-                        .attr("y", -30)
-                        .attr("class", "header")
-                        .text("Trending Report")
-                    var i = 0;
-                    if (scope.label.teams) {
-                        i++;
-                        svg.append("g")
-                            .append("text")
-                            .attr("x", w/2)
-                            .attr("y", -10)
-                            .attr("class", "title")
-                            .text("Team: " + scope.label.teams)
-                    }
-                    if (scope.label.apps) {
-                        svg.append("g")
-                            .append("text")
-                            .attr("x", w/2)
-                            .attr("y", -10 + i*15)
-                            .attr("class", "title")
-                            .text("Application: " + scope.label.apps)
-                    }
-                };
-
-                function processData(data) {
+                function prepareStackedData(data) {
                     return color.domain().map(function(name){
                         var values = [];
                         data.forEach(function(d){
@@ -570,7 +535,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
 
                         time = d.values[i].date;
                         tips.push("<strong>" + d.key + ":</strong> <span style='color:red'>" + d.values[i].noOfVulns + "</span>")
-                        return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns) + ')';
+                        return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
                     });
 
                     tip.html(function(){
@@ -584,6 +549,14 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter',
                         return tipContent;
                     });
                     tip.show();
+                };
+
+                function monthDiff(d1, d2) {
+                    var months;
+                    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+                    months -= d1.getMonth() + 1;
+                    months += d2.getMonth();
+                    return months <= 0 ? 0 : months;
                 };
 
             }

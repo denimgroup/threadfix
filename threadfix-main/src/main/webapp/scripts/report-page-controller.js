@@ -10,6 +10,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.trendingActive = false;
     $scope.comparisonActive = false;
+    $scope.snapshotActive = false;
 
     $scope.tabs = [
         {
@@ -134,6 +135,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.updateOptions = function(tab) {
         $scope.trendingActive = false;
+        $scope.snapshotActive = false;
         $scope.vulnSearch = false;
         $scope.comparisonActive = false;
         $scope.options = tab.options;
@@ -282,6 +284,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
         $scope.trendingActive = false;
+        $scope.snapshotActive = false;
         $scope.comparisonActive = false;
         $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
@@ -290,6 +293,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadTrending = function() {
 
         $scope.trendingActive = true;
+        $scope.snapshotActive = false;
         $scope.comparisonActive = false;
         $scope.vulnSearch = false;
         $scope.tabs.forEach(function(tab) {
@@ -302,12 +306,26 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadComparison = function() {
 
         $scope.trendingActive = false;
-        $scope.comparisonActive = true;
+        $scope.snapshotActive = true;
+        $scope.comparisonActive = false;
         $scope.vulnSearch = false;
         $scope.tabs.forEach(function(tab) {
             tab.active = false;
         });
         $scope.$broadcast('loadComparisonReport');
+
+    }
+
+    $scope.loadSnapshot = function() {
+
+        $scope.trendingActive = false;
+        $scope.snapshotActive = true;
+        $scope.comparisonActive = false;
+        $scope.vulnSearch = false;
+        $scope.tabs.forEach(function(tab) {
+            tab.active = false;
+        });
+        $scope.$broadcast('loadSnapshotReport');
 
     }
 

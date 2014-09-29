@@ -61,7 +61,7 @@ threadfixModule.factory('threadfixAPIService', function($location, $http, tfEnco
     return threadfixAPIService;
 });
 
-threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncoder, $log, vulnSearchParameterService) {
+threadfixModule.factory('threadFixModalService', function($http, $modal, tfEncoder, $log) {
 
     var threadFixModalService = {};
 
@@ -194,20 +194,27 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         parameters.channelTypes = parameters.scanners;
 
+        if (!parameters.channelTypes)
+            parameters.channelTypes = [];
         parameters.channelTypes.forEach(function(filteredScanner) {
             filteredScanner.id = undefined;
         });
+        if (!$scope.scanners)
+            $scope.scanners = [];
         $scope.scanners.forEach(function(scanner) {
-            parameters.channelTypes.forEach(function(filteredScanner) {
-                if (scanner.name === filteredScanner.name) {
-                    filteredScanner.id = scanner.id;
-                }
-            });
+            if (parameters.channelTypes)
+                parameters.channelTypes.forEach(function(filteredScanner) {
+                    if (scanner.name === filteredScanner.name) {
+                        filteredScanner.id = scanner.id;
+                    }
+                });
         });
 
         var numberRegex = /^([0-9]+)$/;
         var autocompleteRegex = /.* ([0-9]+)\)$/;
 
+        if (!parameters.genericVulnerabilities)
+            parameters.genericVulnerabilities = [];
         parameters.genericVulnerabilities.forEach(function(genericVulnerability) {
             if (numberRegex.test(genericVulnerability.name)) {
                 genericVulnerability.id = numberRegex;
