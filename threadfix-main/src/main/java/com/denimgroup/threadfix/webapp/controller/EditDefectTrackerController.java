@@ -88,7 +88,7 @@ public class EditDefectTrackerController {
 			result.rejectValue("name", null, null, "This field cannot be blank");
 		} else {
             DefectTracker sameNameTracker = defectTrackerService.loadDefectTracker(defectTracker.getName().trim());
-			if (sameNameTracker != null && !sameNameTracker.getId().equals(defectTracker.getId())) {
+			if (sameNameTracker != null && !sameNameTracker.getId().equals(defectTrackerId)) {
 				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
 			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
 				if (!result.hasFieldErrors("url")) {
