@@ -175,6 +175,37 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
         }
     }
 
+    reportUtilities.createTeamAppNames = function($scope) {
+        var teams;
+        var apps;
+        if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0) {
+            teams = "All";
+            apps = "All";
+        }
+        else {
+            if ($scope.parameters.teams.length > 0) {
+                teams = $scope.parameters.teams[0].name;
+            }
+            var i;
+            for (i=1; i<$scope.parameters.teams.length; i++) {
+                teams += ", " + $scope.parameters.teams[i].name;
+            }
+
+            if ($scope.parameters.applications.length > 0) {
+                apps = $scope.parameters.applications[0].name;
+            }
+            for (i=1; i<$scope.parameters.applications.length; i++) {
+                apps += ", " + $scope.parameters.applications[i].name;
+            }
+        }
+
+        $scope.title = {
+            teams: teams,
+            apps: apps
+
+        };
+    }
+
     reportUtilities.drawTable = function(d3, tableData, divId) {
 
         var table = d3.select("#" + divId).select("table").attr("class", "table"),

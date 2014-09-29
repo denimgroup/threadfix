@@ -44,11 +44,16 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                     d3donut.draw2D(id, getData(), pieDim.h, pieDim.w, 100, false, scope.updateTree);
 
                     var tableData = [];
-                    tableData.push(data.Critical);
-                    tableData.push(data.High);
-                    tableData.push(data.Medium);
-                    tableData.push(data.Low);
-                    tableData.push(data.Info);
+                    if (data.Critical)
+                        tableData.push(data.Critical);
+                    if (data.High)
+                        tableData.push(data.High);
+                    if (data.Medium)
+                        tableData.push(data.Medium);
+                    if (data.Low)
+                        tableData.push(data.Low);
+                    if (data.Info)
+                        tableData.push(data.Info);
 
                     var legend = svg.selectAll(".legend")
                         .data(tableData)
@@ -84,8 +89,12 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         .text(function(d) { return "Average Age: " + d.Avg_Age; });
 
                     function getData(){
-                        return color.domain().map(function(vulnType) {
-                            return {tip:vulnType, value:data[vulnType]['Count'], fillColor:color(vulnType), severity: vulnType};});
+                        var _data = [];
+                        color.domain().map(function(vulnType) {
+                            if (data[vulnType])
+                                _data.push({tip:vulnType, value:data[vulnType]['Count'], fillColor:color(vulnType), severity: vulnType});
+                        });
+                        return _data;
                     }
                 };
                 ;

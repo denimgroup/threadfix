@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder) {
+module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
@@ -94,34 +94,9 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     };
 
     var updateDisplayData = function(){
-        var teams;
-        var apps;
-        if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0) {
-            teams = "All";
-            apps = "All";
-        }
-        else {
-            if ($scope.parameters.teams.length > 0) {
-                teams = $scope.parameters.teams[0].name;
-            }
-            var i;
-            for (i=1; i<$scope.parameters.teams.length; i++) {
-                teams += ", " + $scope.parameters.teams[i].name;
-            }
 
-            if ($scope.parameters.applications.length > 0) {
-                apps = $scope.parameters.applications[0].name;
-            }
-            for (i=1; i<$scope.parameters.applications.length; i++) {
-                apps += ", " + $scope.parameters.applications[i].name;
-            }
-        }
+        reportUtilities.createTeamAppNames($scope);
 
-        $scope.title = {
-            teams: teams,
-            apps: apps
-
-        };
         $scope.trendingScansData = [];
         $scope.totalVulnsByChannelMap = {};
         $scope.infoVulnsByChannelMap = {};

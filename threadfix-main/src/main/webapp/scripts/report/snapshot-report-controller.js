@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer) {
+module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer, reportUtilities) {
 
     $scope.parameters = {};
     $scope.noData = false;
@@ -12,7 +12,13 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             applications: [],
             scanners: [],
             genericVulnerabilities: [],
-            severities: {},
+            severities: {
+                info: false,
+                low: true,
+                medium: true,
+                high: true,
+                critical: true
+            },
             numberVulnerabilities: 10,
             showOpen: true,
             showClosed: false,
@@ -66,6 +72,13 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     });
 
+    $scope.$on('updateDisplayData', function(event, parameters) {
+        if (!$scope.$parent.snapshotActive)
+            return;
+        $scope.parameters = angular.copy(parameters);
+        $scope.pointInTimeData = filterDataDisplayBySeverity();
+
+    });
     $scope.updateTree = function (severity) {
         $scope.hideTitle = false;
         $scope.parameters.severities = {
@@ -246,41 +259,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     };
 
     var updateDisplayData = function(){
-        var teams;
-        var apps;
-        if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0) {
-            teams = "All";
-            apps = "All";
-        }
-        else {
-            if ($scope.parameters.teams.length > 0) {
-                teams = $scope.parameters.teams[0].name;
-            }
-            var i;
-            for (i=1; i<$scope.parameters.teams.length; i++) {
-                teams += ", " + $scope.parameters.teams[i].name;
-            }
-
-            if ($scope.parameters.applications.length > 0) {
-                apps = $scope.parameters.applications[0].name;
-            }
-            for (i=1; i<$scope.parameters.applications.length; i++) {
-                apps += ", " + $scope.parameters.applications[i].name;
-            }
-        }
-
-        $scope.title = {
-            teams: teams,
-            apps: apps
-
-        };
-        $scope.pointInTimeData = processData();
+        reportUtilities.createTeamAppNames($scope);
+        processData();
+        $scope.pointInTimeData = filterDataDisplayBySeverity();
 
     };
 
     var processData = function() {
 
-        var data = {
+        $scope.data = {
             Critical: {
                 Severity: 'Critical',
                 Count: 0,
@@ -322,40 +309,72 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.filterVulns.forEach(function(vuln){
             if ("High" === vuln.severity) {
-                data.High.Count += 1;
+                $scope.data.High.Count += 1;
                 highAgeSum += getDates(vuln.importTime);
             } else if ("Medium" === vuln.severity) {
-                data.Medium.Count += 1;
+                $scope.data.Medium.Count += 1;
                 mediumAgeSum += getDates(vuln.importTime);
             } else if ("Critical" === vuln.severity) {
-                data.Critical.Count += 1;
+                $scope.data.Critical.Count += 1;
                 criticalAgeSum += getDates(vuln.importTime);
             } else if ("Low" === vuln.severity) {
-                data.Low.Count += 1;
+                $scope.data.Low.Count += 1;
                 lowAgeSum += getDates(vuln.importTime);
             } else if ("Info" === vuln.severity) {
-                data.Info.Count += 1;
+                $scope.data.Info.Count += 1;
                 infoAgeSum += getDates(vuln.importTime);
             }
         });
-        totalCount = data.High.Count + data.Medium.Count + data.Critical.Count + data.Low.Count + data.Info.Count;
+
+        totalCount = $scope.data.High.Count + $scope.data.Medium.Count + $scope.data.Critical.Count + $scope.data.Low.Count + $scope.data.Info.Count;
 
         if (totalCount !== 0) {
-            data.Critical.Percentage = getPercent(data.Critical.Count/totalCount);
-            data.High.Percentage = getPercent(data.High.Count/totalCount);
-            data.Medium.Percentage = getPercent(data.Medium.Count/totalCount);
-            data.Low.Percentage = getPercent(data.Low.Count/totalCount);
-            data.Info.Percentage = getPercent(data.Info.Count/totalCount);
+            $scope.data.Critical.Percentage = getPercent($scope.data.Critical.Count/totalCount);
+            $scope.data.High.Percentage = getPercent($scope.data.High.Count/totalCount);
+            $scope.data.Medium.Percentage = getPercent($scope.data.Medium.Count/totalCount);
+            $scope.data.Low.Percentage = getPercent($scope.data.Low.Count/totalCount);
+            $scope.data.Info.Percentage = getPercent($scope.data.Info.Count/totalCount);
         }
 
-        data.High.Avg_Age = (data.High.Count !== 0) ? Math.round(highAgeSum/data.High.Count) : 0;
-        data.Critical.Avg_Age = (data.Critical.Count !== 0) ? Math.round(criticalAgeSum/data.Critical.Count) : 0;
-        data.Medium.Avg_Age = (data.Medium.Count !== 0) ? Math.round(mediumAgeSum/data.Medium.Count) : 0;
-        data.Low.Avg_Age = (data.Low.Count !== 0) ? Math.round(lowAgeSum/data.Low.Count) : 0;
-        data.Info.Avg_Age = (data.Info.Count !== 0) ? Math.round(infoAgeSum/data.Info.Count) : 0;
+        $scope.data.High.Avg_Age = ($scope.data.High.Count !== 0) ? Math.round(highAgeSum/$scope.data.High.Count) : 0;
+        $scope.data.Critical.Avg_Age = ($scope.data.Critical.Count !== 0) ? Math.round(criticalAgeSum/$scope.data.Critical.Count) : 0;
+        $scope.data.Medium.Avg_Age = ($scope.data.Medium.Count !== 0) ? Math.round(mediumAgeSum/$scope.data.Medium.Count) : 0;
+        $scope.data.Low.Avg_Age = ($scope.data.Low.Count !== 0) ? Math.round(lowAgeSum/$scope.data.Low.Count) : 0;
+        $scope.data.Info.Avg_Age = ($scope.data.Info.Count !== 0) ? Math.round(infoAgeSum/$scope.data.Info.Count) : 0;
 
-        return data;
     };
+
+    var filterDataDisplayBySeverity = function() {
+        var criticalCount = $scope.parameters.severities.critical ? $scope.data.Critical.Count : 0;
+        var highCount = $scope.parameters.severities.high ? $scope.data.High.Count : 0;
+        var mediumCount = $scope.parameters.severities.medium ? $scope.data.Medium.Count : 0;
+        var lowCount = $scope.parameters.severities.low ? $scope.data.Low.Count : 0;
+        var infoCount = $scope.parameters.severities.info ? $scope.data.Info.Count : 0;
+
+        var totalCount = criticalCount + highCount + mediumCount + lowCount + infoCount;
+
+        if (totalCount !== 0) {
+            $scope.data.Critical.Percentage = getPercent($scope.data.Critical.Count/totalCount);
+            $scope.data.High.Percentage = getPercent($scope.data.High.Count/totalCount);
+            $scope.data.Medium.Percentage = getPercent($scope.data.Medium.Count/totalCount);
+            $scope.data.Low.Percentage = getPercent($scope.data.Low.Count/totalCount);
+            $scope.data.Info.Percentage = getPercent($scope.data.Info.Count/totalCount);
+        }
+
+        var _data = {};
+        if ($scope.parameters.severities.critical)
+            _data.Critical = $scope.data.Critical;
+        if ($scope.parameters.severities.high)
+            _data.High = $scope.data.High;
+        if ($scope.parameters.severities.medium)
+            _data.Medium = $scope.data.Medium;
+        if ($scope.parameters.severities.low)
+            _data.Low = $scope.data.Low;
+        if ($scope.parameters.severities.info)
+            _data.Info = $scope.data.Info;
+
+        return _data;
+    }
 
     var getDates = function(importTime) {
         return Math.round(((new Date()).getTime() - importTime) / (1000 * 3600 * 24));

@@ -55,14 +55,14 @@
     </div>
 
     <!-- Field Controls: Severity, Status -->
-    <div class="accordion-group" ng-show="showFullControls">
+    <div class="accordion-group">
         <div class="accordion-heading" ng-click="showDetailsControls = !showDetailsControls">
             <span id="showFieldControls" class="icon" ng-class="{ 'icon-minus': showDetailsControls, 'icon-plus': !showDetailsControls }"></span> Field Controls
         </div>
         <div class="filter-group-body" ng-show="showDetailsControls">
 
             <div class="accordion-inner">
-                Severity (In Total)
+                Severity
                 <br>
                 <div>
                     <input id="showInfo" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.severities.info"/>Info<br>
@@ -73,8 +73,8 @@
                 </div>
             </div>
 
-            <div class="accordion-inner">
-                Status (Each Scan)
+            <div class="accordion-inner" ng-show="showFullControls">
+                Status
                 <br>
                 <div>
                     <%--<input id="showOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOpen"/>Open<br>--%>
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div class="accordion-inner">
+            <div class="accordion-inner" ng-show="showFullControls">
                 Other
                 <br>
                 <div>
