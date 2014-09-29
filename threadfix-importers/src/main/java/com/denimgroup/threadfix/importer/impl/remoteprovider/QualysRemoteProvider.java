@@ -606,6 +606,7 @@ public class QualysRemoteProvider extends RemoteProvider {
                 for(Finding finding : saxFindingList) {
                     if(finding.getChannelVulnerability().getCode().equals(currentQid)
                             && finding.getScannerDetail() == null && finding.getScannerRecommendation() == null){
+                        findingMap.put(FindingKey.VALUE, finding.getAttackString());
                         addFindingDetail(finding, findingMap);
                     }
                 }
