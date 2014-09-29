@@ -122,7 +122,7 @@ public class CollectionUtils {
      * @return "" for empty list, otherwise arg1 + separator + arg2 + separator + ...
      */
     @Nonnull
-    public static <T> String join(String separator, List<T> args) {
+    public static <T> String join(String separator, Iterable<T> args) {
         StringBuilder builder = new StringBuilder();
 
         for (T project : args) {
