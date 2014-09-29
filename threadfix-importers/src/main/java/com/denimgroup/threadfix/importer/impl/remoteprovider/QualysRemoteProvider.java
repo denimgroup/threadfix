@@ -30,8 +30,10 @@ import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProvide
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -144,6 +146,22 @@ public class QualysRemoteProvider extends RemoteProvider {
 		super(ScannerType.QUALYSGUARD_WAS);
 	}
 
+    private enum QualysScanDetailParam {
+        ACTION("action"),
+        DETAILS("details"),
+        IDS("ids");
+
+        private String param;
+
+        QualysScanDetailParam(String param) {
+            this.param = param;
+        }
+
+        public String getParam() {
+            return this.param;
+        }
+    }
+
 	@Override
 	public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
 		if (remoteProviderApplication == null || 
@@ -163,7 +181,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		}
 		
 		List<Scan> scanList = list();
-		
+
 		for (String scanId : scanIds) {
             HttpResponse response = utils.getUrl(
                     getScanUrl(remoteProviderApplication.getRemoteProviderType()) + scanId, username, password);
@@ -178,6 +196,29 @@ public class QualysRemoteProvider extends RemoteProvider {
 	
 			QualysWASSAXParser scanParser = new QualysWASSAXParser();
 			Scan resultScan = parseSAXInput(scanParser);
+
+            for(Finding finding : resultScan.getFindings()) {
+                String qid = finding.getChannelVulnerability().getCode();
+
+                String[] parameters = new String[]{
+                        QualysScanDetailParam.ACTION.getParam(),
+                        QualysScanDetailParam.IDS.getParam(),
+                        QualysScanDetailParam.DETAILS.getParam()};
+
+                String[] values = new String[]{"list", qid, "All"};
+
+                response = utils.postUrl(getScanDetailsUrl(remoteProviderApplication.getRemoteProviderType()), parameters, values, username, password);
+                if (response.isValid()) {
+                    inputStream = response.getInputStream();
+                } else {
+                    LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeId() + ". Got response code " + response.getStatus());
+                    return null;
+                }
+
+                QualysWASSAXDetailsParser scanDetailsParser = new QualysWASSAXDetailsParser();
+                parseQualysSAXInput(scanDetailsParser, finding);
+            }
+
 
 			if (resultScan != null) {
 				LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
@@ -292,6 +333,31 @@ public class QualysRemoteProvider extends RemoteProvider {
     public static String getAppsUrl(RemoteProviderType type) {
 		return getBaseUrl(type) + "/qps/rest/3.0/search/was/webapp";
 	}
+
+    public static String getScanDetailsUrl(RemoteProviderType type) {
+        return getBaseUrl(type) + "/api/2.0/fo/knowledge_base/vuln/";
+    }
+
+
+    // PARSE FUNCTION
+
+    @Nonnull
+    private void parseQualysSAXInput(DefaultHandler handler, Finding finding) {
+        log.debug("Starting Qualys SAX Parsing.");
+
+        if (inputStream == null) {
+            throw new IllegalStateException("InputStream was null. Can't parse SAX input. This is probably a coding error.");
+        }
+
+        List<Finding> findings = list();
+        findings.add(finding);
+
+        ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
+
+        if (shouldDeleteAfterParsing) {
+            deleteScanFile();
+        }
+    }
 
 	// PARSER CLASSES
 
@@ -495,4 +561,60 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    	}
 	    }
 	}
+
+    private class QualysWASSAXDetailsParser extends HandlerWithBuilder {
+        private Boolean getDiagnosis        = false;
+        private Boolean getConsequence      = false;
+        private Boolean getSolution         = false;
+
+        private String currentDiagnosis     = null;
+        private String currentConsequence   = null;
+        private String currentSolution      = null;
+
+        private Map<FindingKey, String> findingMap = new HashMap<>();
+
+        ////////////////////////////////////////////////////////////////////
+        // Event handlers.
+        ////////////////////////////////////////////////////////////////////
+
+        public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
+            if (qName.equalsIgnoreCase("diagnosis")) {
+                getDiagnosis = true;
+
+            } else if (qName.equalsIgnoreCase("consequence")) {
+                getConsequence = true;
+
+            } else if (qName.equalsIgnoreCase("solution")) {
+                getSolution = true;
+
+            } else if (qName.equalsIgnoreCase("discovery")) {
+                String currentDetail = currentDiagnosis + currentConsequence;
+                findingMap.put(FindingKey.RECOMMENDATION,   currentSolution);
+                findingMap.put(FindingKey.DETAIL,           currentDetail);
+
+                for(Finding finding : saxFindingList) {
+                    addFindingDetail(finding, findingMap);
+                }
+            }
+        }
+
+        public void endElement(String uri, String name, String qName) {
+            if (getDiagnosis) {
+                currentDiagnosis = getBuilderText();
+                getDiagnosis = false;
+            } else if (getConsequence) {
+                currentConsequence = getBuilderText();
+                getConsequence = false;
+            } else if (getSolution) {
+                currentSolution = getBuilderText();
+                getSolution = false;
+            }
+        }
+
+        public void characters (char ch[], int start, int length) {
+            if (getDiagnosis || getConsequence || getSolution) {
+                addTextToBuilder(ch, start, length);
+            }
+        }
+    }
 }
