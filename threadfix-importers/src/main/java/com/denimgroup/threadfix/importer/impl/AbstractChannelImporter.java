@@ -114,6 +114,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         this.channelTypeCode = channelTypeName.getDbName();
     }
 
+    public AbstractChannelImporter(@Nonnull String channelTypeName) {
+        this.channelTypeCode = channelTypeName;
+    }
+
     protected ChannelType getChannelType() {
         if (channelType == null) {
             if (channelTypeDao == null) {
