@@ -213,15 +213,16 @@ public class QualysRemoteProvider extends RemoteProvider {
                 }
             }
 
-            String[] parameters = new String[]{
+            String[] parameters = {
                     QualysScanDetailParam.ACTION.getParam(),
                     QualysScanDetailParam.IDS.getParam(),
-                    QualysScanDetailParam.DETAILS.getParam()};
+                    QualysScanDetailParam.DETAILS.getParam()
+            };
 
-            String[] values = new String[]{"list", qids, "All"};
+            String[] values = {"list", qids, "All"};
 
-            String[] headerNames = new String[]{"X-Requested-With", "Content-Type"};
-            String[] headerVals = new String[]{"Curl", "application/x-www-form-urlencoded"};
+            String[] headerNames = {"X-Requested-With", "Content-Type"};
+            String[] headerVals = {"Curl", "application/x-www-form-urlencoded"};
 
             response = utils.postUrl(getScanDetailsUrl(remoteProviderApplication.getRemoteProviderType()), parameters, values, username, password, headerNames, headerVals);
             if (response.isValid()) {
