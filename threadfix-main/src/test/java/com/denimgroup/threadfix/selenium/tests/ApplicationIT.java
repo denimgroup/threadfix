@@ -388,10 +388,8 @@ public class ApplicationIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink();
-
-        WafIndexPage wafIndexPage = teamIndexPage.clickWafsHeaderLink()
+        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+                .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .setWafName(wafName1)
                 .setWafType(type1)
@@ -407,21 +405,23 @@ public class ApplicationIT extends BaseIT {
                 .clickEditDeleteBtn()
                 .clickAddWaf()
                 .addWaf(wafName1)
-                .saveWafAdd()
-                .clickUpdateApplicationButton();
+                .saveWafAdd();
 
-        TeamIndexPage ti = applicationDetailPage.clickOrganizationHeaderLink();
+        assertTrue("Waf wasn't added correctly",applicationDetailPage.checkWafName().contains(wafName1));
 
-        ApplicationDetailPage apt = ti.expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickEditDeleteBtn()
-                .clickAddWaf()
-                .addWaf(wafName2)
-                .saveWafAdd()
-                .clickUpdateApplicationButton()
-                .clickEditDeleteBtn();
+        applicationDetailPage.clickUpdateApplicationButton();
 
-        assertTrue("Did not properly save changing of Wafs.", apt.getWafText().contains(wafName2));
+        assertTrue("Successful Message wasn't present",
+                applicationDetailPage.getAlert().contains("Successfully edited application " + appName));
+
+        applicationDetailPage.clickEditDeleteBtn()
+              .clickAddWaf()
+              .addWaf(wafName2)
+              .saveWafAdd()
+              .clickUpdateApplicationButton()
+              .clickEditDeleteBtn();
+
+        assertTrue("Did not properly save changing of Wafs.", applicationDetailPage.getWafText().contains(wafName2));
 	}
 
 	@Test
