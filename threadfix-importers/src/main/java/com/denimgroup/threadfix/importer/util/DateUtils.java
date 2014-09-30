@@ -36,7 +36,7 @@ import java.util.Locale;
 public class DateUtils {
 
     protected static final SanitizedLogger  log       = new SanitizedLogger(DateUtils.class);
-    private static final   SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss'Z'", Locale.US);
+    private static final   SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
     private DateUtils() {
     }
