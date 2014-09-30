@@ -34,13 +34,13 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.*;
+import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * TODO use POST data to pre-filter web requests
@@ -219,23 +219,18 @@ public class QualysRemoteProvider extends RemoteProvider {
             response = utils.postUrl(getScanDetailsUrl(remoteProviderApplication.getRemoteProviderType()), parameters, values, username, password, headerNames, headerVals);
             if (response.isValid()) {
                 inputStream = response.getInputStream();
+
+                parseQualysSAXInput();
             } else {
                 LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeId() + ". Got response code " + response.getStatus());
-                return null;
             }
 
+            LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
+
+            resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
+            scanList.add(resultScan);
+
             LOG.info("Retrieved additional scanner details for QID: " + qids);
-
-            QualysWASSAXDetailsParser scanDetailsParser = new QualysWASSAXDetailsParser();
-            parseQualysSAXInput(scanDetailsParser);
-
-			if (resultScan != null) {
-				LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
-				resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
-				scanList.add(resultScan);
-			} else {
-				LOG.warn("The Qualys scan import for scan ID " + scanId + " failed!!");
-			}
 		}
 		
 		return scanList;
@@ -351,14 +346,15 @@ public class QualysRemoteProvider extends RemoteProvider {
     // PARSE FUNCTION
 
     @Nonnull
-    private void parseQualysSAXInput(DefaultHandler handler) {
+    private void parseQualysSAXInput() {
         log.debug("Starting Qualys SAX Parsing.");
 
         if (inputStream == null) {
             throw new IllegalStateException("InputStream was null. Can't parse SAX input. This is probably a coding error.");
         }
 
-        ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
+        // we don't need the state from the details parser so we can just pass the new object in
+        ScanUtils.readSAXInput(new QualysWASSAXDetailsParser(), "Done Parsing.", inputStream);
 
         if (shouldDeleteAfterParsing) {
             deleteScanFile();
