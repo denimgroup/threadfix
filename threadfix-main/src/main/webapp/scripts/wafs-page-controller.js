@@ -83,8 +83,10 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
                     return tfEncoder.encode("/wafs/" + waf.id + "/edit");
                 },
                 object: function() {
-                    var wafCopy = angular.copy(waf);
-                    return wafCopy;
+                    return {
+                        name: waf.name,
+                        wafType: waf.wafType
+                    };
                 },
                 buttonText: function() {
                     return "Save Edits";
