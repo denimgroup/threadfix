@@ -72,7 +72,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openEditModal = function(waf) {
         var modalInstance = $modal.open({
