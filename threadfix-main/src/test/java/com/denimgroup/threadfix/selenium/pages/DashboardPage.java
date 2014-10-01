@@ -34,39 +34,8 @@ public class DashboardPage extends BasePage{
 	public DashboardPage(WebDriver webdriver) {
 		super(webdriver);
 	}
-	
-	public boolean is6MonthGraphNoDataFound() {
-        return "No data found".equals(driver.findElementById("leftTileReport")
-                .findElement(By.className("report-image")).getText().trim());
-	}
-	
-	public boolean isTop10GraphNoDataFound() {
-        return "No data found".equals(driver.findElementById("rightTileReport")
-                .findElement(By.className("report-image")).getText().trim());
-    }
 
-    public boolean isRecentUploadsNoScanFound() {
-        return "No scans found.".equals(driver.findElementById("wafTableBody")
-                .findElement(By.className("thick-left")).getText().trim());
-    }
-
-    public boolean isCommentDisplayed() {
-        return driver.findElementById("viewMoreLink1").isDisplayed();
-    }
-
-    public boolean isAlertDisplayed() {
-        try {
-            return driver.findElementByClassName("alert-error").getText()
-                    .contains("You don't have permission to access any ThreadFix applications or to create one for yourself.");
-        } catch (NoSuchElementException e) {
-            System.err.println("Alert was not displayed." + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean isAlertErrorDisplay() {
-        return driver.findElementsByClassName("alert-error").size() !=0;
-    }
+    /*---------------------------- Action Methods ----------------------------*/
 
 	public AnalyticsPage clickLeftViewMore(){
 		driver.findElementById("leftViewMore").click();
@@ -110,8 +79,39 @@ public class DashboardPage extends BasePage{
 		return driver.findElementsByClassName("bodyRow").size()-getNumUploads();
 	}
 
+    /*---------------------------- Boolean Methods ----------------------------*/
+
     public boolean isViewMoreLinkPresent() {
-        return driver.findElementsById("leftViewMore").size() !=0 ;
+        return driver.findElementsById("leftViewMore").size() != 0;
+    }
+
+    public boolean is6MonthGraphNoDataFound() {
+        return "No data found".equals(driver.findElementById("leftTileReport")
+                .findElement(By.className("report-image")).getText().trim());
+    }
+
+    public boolean isTop10GraphNoDataFound() {
+        return "No data found".equals(driver.findElementById("rightTileReport")
+                .findElement(By.className("report-image")).getText().trim());
+    }
+
+    public boolean isRecentUploadsNoScanFound() {
+        return "No scans found.".equals(driver.findElementById("wafTableBody")
+                .findElement(By.className("thick-left")).getText().trim());
+    }
+
+    public boolean isCommentDisplayed() {
+        return driver.findElementById("viewMoreLink1").isDisplayed();
+    }
+
+    public boolean isAlertDisplayed() {
+        try {
+            return driver.findElementByClassName("alert-error").getText()
+                    .contains("You don't have permission to access any ThreadFix applications or to create one for yourself.");
+        } catch (NoSuchElementException e) {
+            System.err.println("Alert was not displayed." + e.getMessage());
+            return false;
+        }
     }
 
     public boolean isLoggedin(){

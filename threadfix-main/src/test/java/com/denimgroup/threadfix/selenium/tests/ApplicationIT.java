@@ -1179,27 +1179,6 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void uploadArachniScan() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName,appName);
-
-        String newScan = ScanContents.SCAN_FILE_MAP.get("Arachni");
-
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickActionButton()
-                .clickUploadScan()
-                .uploadScan(newScan);
-
-        assertTrue("Scan didn't Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
-    }
-
-    @Test
     public void AlphabetizeSortTeamByEditApplication() {
         String firstTeamName = "A" + getRandomString(8);
         String appName = getRandomString(8);

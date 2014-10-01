@@ -181,7 +181,7 @@ public class SystemSettingsEntIT extends BaseIT{
         dashboardPage = systemSettingsPage.logout()
                 .login(LDAP_USERNAME, LDAP_USERPASSWORD);
 
-        assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertErrorDisplay());
+        assertFalse("Alert was shown on dashboard page and should not have been.", dashboardPage.isAlertDisplayed());
     }
 
     @Test

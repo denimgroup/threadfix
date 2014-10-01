@@ -89,4 +89,7 @@ public abstract class BaseIT {
 		return RandomStringUtils.random(length,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
 	}
 
+    protected String getName() {
+        return getRandomString(12);
+    }
 }
