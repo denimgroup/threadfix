@@ -293,7 +293,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     stackedData,
                     _data,
                     circles,
-                    duration = 1000;
+                    duration = 500;
 
                 var x = d3.time.scale().range([0, w]),
                     y = d3.scale.linear().range([h, 0]);

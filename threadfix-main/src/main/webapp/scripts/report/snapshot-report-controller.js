@@ -6,6 +6,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.noData = false;
     $scope.hideTitle = true;
 
+    $scope.snapshotOptions = [
+        { name: "Point in Time", id: 2 },
+        { name: "Progress By Vulnerability", id: 3 },
+        { name: "Portfolio Report", id: 8 },
+        { name: "Most Vulnerable Applications", id: 10 }
+    ];
+
+    $scope.reportId = '2';
+
     $scope.resetFilters = function() {
         $scope.parameters = {
             teams: [],
@@ -13,7 +22,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             scanners: [],
             genericVulnerabilities: [],
             severities: {
-                info: false,
+                info: true,
                 low: true,
                 medium: true,
                 high: true,
@@ -50,6 +59,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     $scope.allVulns = data.object.vulnList;
 
                     if ($scope.allVulns) {
+
+                        // Point In Time is default report for Snapshot
+                        $scope.allPointInTimeVulns = $scope.allVulns.filter(function(vuln){
+                            return vuln.active;
+                        });
                        refresh();
 
                     } else {
@@ -60,7 +74,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     $scope.loading = false;
                 });
         } else {
-
+            // do nothing
         }
     });
 
@@ -76,8 +90,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         if (!$scope.$parent.snapshotActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        $scope.pointInTimeData = filterDataDisplayBySeverity();
-
+        if ($scope.reportId === '2') {
+            filterPointInTimeDisplayBySeverity();
+            $scope.needToUpdateProgress = true;
+        } else if ($scope.reportId === '3') {
+            filterByTeamAndApp($scope.allCWEvulns);
+            filterByTypeDataBySeverity($scope.filterVulns);
+            processByTypeData($scope.filterVulns);
+            $scope.needToUpdatePointInTime = true;
+        }
     });
     $scope.updateTree = function (severity) {
         $scope.hideTitle = false;
@@ -91,6 +112,109 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         vulnSearchParameterService.updateParameters($scope, $scope.parameters);
 
         refreshVulnTree($scope.parameters);
+
+    }
+
+    $scope.loadReport = function() {
+        if ($scope.reportId === '3') {
+            if (!$scope.allCWEvulns) {
+                $scope.allCWEvulns = $scope.allVulns.filter(function (vuln) {
+                    if (!vuln.genericVulnName || vuln.isFalsePositive || vuln.hidden)
+                        return false;
+                    else
+                        return true;
+                });
+
+                if (!$scope.allCWEvulns) {
+                    $scope.noData = true;
+                } else {
+                    filterByTeamAndApp($scope.allCWEvulns);
+                    filterByTypeDataBySeverity($scope.filterVulns);
+                    processByTypeData($scope.filterVulns);
+                }
+            } else if ($scope.needToUpdateProgress) {
+                filterByTeamAndApp($scope.allCWEvulns);
+                filterByTypeDataBySeverity($scope.filterVulns);
+                processByTypeData($scope.filterVulns);
+                $scope.needToUpdateProgress = false;
+            }
+        } else if ($scope.reportId === '2') {
+                if (!$scope.allPointInTimeVulns) {
+                    $scope.noData = true;
+                } else if ($scope.needToUpdatePointInTime) {
+                    filterByTeamAndApp($scope.allPointInTimeVulns);
+                    processPointInTimeData();
+                    filterPointInTimeDisplayBySeverity();
+                    $scope.needToUpdatePointInTime = false;
+                }
+        }
+
+    }
+
+    var processByTypeData = function(allCWEvulns) {
+        $scope.progressByTypeData = [];
+        var statsMap = {};
+        var now = (new Date()).getTime();
+
+        allCWEvulns.forEach(function(vuln){
+            var key = vuln.genericVulnName;
+            if (!statsMap[key]) {
+                statsMap[key] = {
+                    numOpen : 0,
+                    numClosed : 0,
+                    totalAgeOpen : 0,
+                    totalTimeToClose : 0
+                }
+            }
+
+            if (vuln.active) {
+                statsMap[key]["numOpen"] = statsMap[key]["numOpen"] + 1;
+                statsMap[key]["totalAgeOpen"] = statsMap[key]["totalAgeOpen"] + getDates(now, vuln.importTime);
+            } else {
+                statsMap[key]["numClosed"] = statsMap[key]["numClosed"] + 1;
+                statsMap[key]["totalTimeToClose"] = statsMap[key]["totalTimeToClose"] + getDates(vuln.closeTime, vuln.importTime);
+            }
+        });
+
+//        var keys = getKeys(statsMap);
+        var keys = Object.keys(statsMap);
+        keys.forEach(function(key){
+            var mapEntry = statsMap[key];
+            var genericVulnEntry = {
+                total : mapEntry["numOpen"] + mapEntry["numClosed"],
+                description : key
+            };
+
+            genericVulnEntry.percentClosed = (genericVulnEntry.total === 0) ? 100 : getPercentNumber(mapEntry["numClosed"]/genericVulnEntry.total);
+            genericVulnEntry.averageAgeOpen = (mapEntry["numOpen"] === 0) ? 0 : Math.round(mapEntry["totalAgeOpen"]/mapEntry["numOpen"]);
+            genericVulnEntry.averageTimeToClose = (mapEntry["numClosed"] === 0) ? 0 : Math.round(mapEntry["totalTimeToClose"]/mapEntry["numClosed"]);
+
+            $scope.progressByTypeData.push(genericVulnEntry);
+
+        })
+
+        // Sorting by Total is default
+        $scope.$parent.setSortNumber($scope.progressByTypeData, "total");
+
+    };
+
+    var filterByTypeDataBySeverity = function(allVulns) {
+
+        $scope.filterVulns = allVulns.filter(function(vuln){
+            if ("Critical" === vuln.severity) {
+                return $scope.parameters.severities.critical;
+            } else if ("High" === vuln.severity) {
+                return $scope.parameters.severities.high;
+            } else if ("Medium" === vuln.severity) {
+                return $scope.parameters.severities.medium;
+            } else if ("Low" === vuln.severity) {
+                return $scope.parameters.severities.low;
+            } else if ("Info" === vuln.severity) {
+                return $scope.parameters.severities.info;
+            }
+
+            return false;
+        });
 
     }
 
@@ -248,7 +372,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var refresh = function(){
         $scope.loading = true;
-        filterByTeamAndApp();
+
+        if ($scope.reportId === '2') {
+            filterByTeamAndApp($scope.allPointInTimeVulns);
+            $scope.needToUpdateProgress = true;
+        } else if ($scope.reportId === '3') {
+            filterByTeamAndApp($scope.allCWEvulns);
+            $scope.needToUpdatePointInTime = true;
+        }
+
         if ($scope.filterVulns.length === 0) {
             $scope.noData = true;
         } else {
@@ -260,12 +392,17 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var updateDisplayData = function(){
         reportUtilities.createTeamAppNames($scope);
-        processData();
-        $scope.pointInTimeData = filterDataDisplayBySeverity();
+        if ($scope.reportId === '2') {
+            processPointInTimeData();
+            filterPointInTimeDisplayBySeverity();
+        } else if ($scope.reportId === '3') {
+            filterByTypeDataBySeverity($scope.filterVulns);
+            processByTypeData($scope.filterVulns);
+        }
 
     };
 
-    var processData = function() {
+    var processPointInTimeData = function() {
 
         $scope.data = {
             Critical: {
@@ -307,22 +444,24 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             infoAgeSum = 0,
             totalCount;
 
+        var now = (new Date()).getTime();
+
         $scope.filterVulns.forEach(function(vuln){
             if ("High" === vuln.severity) {
                 $scope.data.High.Count += 1;
-                highAgeSum += getDates(vuln.importTime);
+                highAgeSum += getDates(now, vuln.importTime);
             } else if ("Medium" === vuln.severity) {
                 $scope.data.Medium.Count += 1;
-                mediumAgeSum += getDates(vuln.importTime);
+                mediumAgeSum += getDates(now, vuln.importTime);
             } else if ("Critical" === vuln.severity) {
                 $scope.data.Critical.Count += 1;
-                criticalAgeSum += getDates(vuln.importTime);
+                criticalAgeSum += getDates(now, vuln.importTime);
             } else if ("Low" === vuln.severity) {
                 $scope.data.Low.Count += 1;
-                lowAgeSum += getDates(vuln.importTime);
+                lowAgeSum += getDates(now, vuln.importTime);
             } else if ("Info" === vuln.severity) {
                 $scope.data.Info.Count += 1;
-                infoAgeSum += getDates(vuln.importTime);
+                infoAgeSum += getDates(now, vuln.importTime);
             }
         });
 
@@ -344,7 +483,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     };
 
-    var filterDataDisplayBySeverity = function() {
+    var filterPointInTimeDisplayBySeverity = function() {
         var criticalCount = $scope.parameters.severities.critical ? $scope.data.Critical.Count : 0;
         var highCount = $scope.parameters.severities.high ? $scope.data.High.Count : 0;
         var mediumCount = $scope.parameters.severities.medium ? $scope.data.Medium.Count : 0;
@@ -361,32 +500,35 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.data.Info.Percentage = getPercent($scope.data.Info.Count/totalCount);
         }
 
-        var _data = {};
+        $scope.pointInTimeData = {};
         if ($scope.parameters.severities.critical)
-            _data.Critical = $scope.data.Critical;
+            $scope.pointInTimeData.Critical = $scope.data.Critical;
         if ($scope.parameters.severities.high)
-            _data.High = $scope.data.High;
+            $scope.pointInTimeData.High = $scope.data.High;
         if ($scope.parameters.severities.medium)
-            _data.Medium = $scope.data.Medium;
+            $scope.pointInTimeData.Medium = $scope.data.Medium;
         if ($scope.parameters.severities.low)
-            _data.Low = $scope.data.Low;
+            $scope.pointInTimeData.Low = $scope.data.Low;
         if ($scope.parameters.severities.info)
-            _data.Info = $scope.data.Info;
+            $scope.pointInTimeData.Info = $scope.data.Info;
 
-        return _data;
     }
 
-    var getDates = function(importTime) {
-        return Math.round(((new Date()).getTime() - importTime) / (1000 * 3600 * 24));
+    var getDates = function(firstTime, secondTime) {
+        return Math.round((firstTime - secondTime) / (1000 * 3600 * 24));
     };
 
     var getPercent = function(rate) {
-        return Math.round(1000 * rate)/10 + "%";
+        return getPercentNumber(rate) + "%";
     }
 
-    var filterByTeamAndApp = function() {
+    var getPercentNumber = function(rate) {
+        return Math.round(1000 * rate)/10;
+    }
 
-        $scope.filterVulns = $scope.allVulns.filter(function(vuln){
+    var filterByTeamAndApp = function(vulnList) {
+
+        $scope.filterVulns = vulnList.filter(function(vuln){
 
             if ($scope.parameters.teams.length === 0
                 && $scope.parameters.applications.length === 0)
@@ -419,5 +561,45 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     var beginsWith = function(str, prefix) {
         return str.indexOf(prefix) == 0;
     };
+
+    var getKeys = function(object) {
+        var prototypeOfObject = Object.prototype;
+        var owns = Function.prototype.call.bind(prototypeOfObject.hasOwnProperty);
+        var hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+            dontEnums = [
+                "toString",
+                "toLocaleString",
+                "valueOf",
+                "hasOwnProperty",
+                "isPrototypeOf",
+                "propertyIsEnumerable",
+                "constructor"
+            ],
+            dontEnumsLength = dontEnums.length;
+
+        if (
+            (typeof object != "object" && typeof object != "function") ||
+            object === null
+            ) {
+            throw new TypeError("Object.keys called on a non-object");
+        }
+
+        var keys = [];
+        for (var name in object) {
+            if (owns(object, name)) {
+                keys.push(name);
+            }
+        }
+
+        if (hasDontEnumBug) {
+            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
+                var dontEnum = dontEnums[i];
+                if (owns(object, dontEnum)) {
+                    keys.push(dontEnum);
+                }
+            }
+        }
+        return keys;
+    }
 
 });

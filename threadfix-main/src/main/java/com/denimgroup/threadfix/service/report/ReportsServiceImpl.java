@@ -206,12 +206,12 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request) {
+        Map<String, Object> map = newMap();
         List<Integer> applicationIdList = getApplicationIdList(parameters);
         if (applicationIdList.isEmpty()) {
-            log.info("no applications found.");
-            return newMap();
+            log.info("No applications found.");
+            return map;
         }
-        Map<String, Object> map = newMap();
         map.put("vulnList", vulnerabilityDao.retrieveMapByApplicationIdList(applicationIdList));
         return map;
     }
