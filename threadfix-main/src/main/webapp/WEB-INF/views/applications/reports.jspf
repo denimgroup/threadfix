@@ -6,8 +6,8 @@
                     <a id="leftViewMore" ng-href="{{ urlRoot }}/reports/9{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="leftTileReport">
-                    <d3-vbars ng-show="XMonthSummaryData" data="XMonthSummaryData" label = "label"></d3-vbars>
-                    <div ng-hide="empty || XMonthSummaryData || leftReportFailed" class="team-report-wrapper report-image">
+                    <d3-trending ng-show="trendingData" data="trendingData" width="422" height="250" margin="margin"></d3-trending>
+                    <div ng-hide="empty || trendingData || leftReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
                     <div ng-show="leftReportFailed" class="team-report-wrapper report-image">

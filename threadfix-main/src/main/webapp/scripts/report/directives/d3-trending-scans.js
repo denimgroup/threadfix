@@ -281,11 +281,15 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
             restrict: 'EA',
             scope: {
                 data: '=',
-                label: '='
+                label: '=',
+                width: '@',
+                height: '@',
+                margin: '='
             },
             link: function(scope, ele, attrs) {
-                var svgWidth = 670, svgHeight = 612,
-                    m = [70, 70, 100, 70],
+                var svgWidth = scope.width,
+                    svgHeight = scope.height,
+                    m = scope.margin,
                     w = svgWidth - m[1] - m[3],
                     h = svgHeight - m[0] - m[2];
 
@@ -347,7 +351,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     svg.selectAll('*').remove();
 
-                    reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
+                    if (scope.label)
+                        reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
 
                     if (_data.length === 0) {
                         svg.append("g")
@@ -420,7 +425,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var g = svg.selectAll(".symbol");
 
                     svg.call(tip);
-                    reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
+
+                    if (scope.label)
+                        reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
 
                     // Add the x-axis.
                     svg.append("g")

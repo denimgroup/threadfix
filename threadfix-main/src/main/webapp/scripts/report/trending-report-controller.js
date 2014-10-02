@@ -5,6 +5,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     $scope.parameters = {};
     $scope.filterScans = [];
     $scope.noData = false;
+    $scope.margin = [70, 70, 100, 70];
 
     $scope.resetFilters = function() {
         $scope.parameters = {
@@ -78,7 +79,6 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         updateDisplayData();
 
     });
-
 
      var refreshScans = function(){
         $scope.loading = true;

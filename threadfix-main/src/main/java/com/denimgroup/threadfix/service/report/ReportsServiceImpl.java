@@ -154,8 +154,9 @@ public class ReportsServiceImpl implements ReportsService {
             report = getTopVulnsReportD3(applicationIdList, vulnIds);
         }
 
-        if (parameters.getReportFormat() == ReportFormat.SIX_MONTH_SUMMARY) {
-            report = getXMonthReportD3(applicationIdList, 6, parameters);
+        if (parameters.getReportFormat() == ReportFormat.TRENDING) {
+            JasperScanReport reportExporter = new JasperScanReport(applicationIdList, scanDao);
+            report = new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
         }
 
         if (report == null || report.getReportList() == null || report.getReportList().size()==0)
@@ -167,39 +168,20 @@ public class ReportsServiceImpl implements ReportsService {
     @Override
     public Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request) {
 
+        Map<String, Object> map = newMap();
+
         List<Integer> applicationIdList = getApplicationIdList(parameters);
         if (applicationIdList == null || applicationIdList.isEmpty()) {
-            return newMap();
+            log.info("Unable to fill Report - no applications were found.");
+            return map;
         }
 
-        ReportCheckResultBean report;
-
-        List<List<Scan>> scanList = new ArrayList<>();
-        boolean containsVulns = false;
-        for (Integer id : applicationIdList) {
-            scanList.add(applicationDao.retrieveById(id).getScans());
-        }
-        for(List<Scan> scan : scanList){
-            if (!scan.isEmpty()){
-                containsVulns = true;
-                break;
-            }
-        }
-        if (scanList.isEmpty() || !containsVulns ) {
+        List<Scan> scanList = scanDao.retrieveByApplicationIdList(applicationIdList);
+        if (scanList == null || scanList.isEmpty()) {
             log.info("Unable to fill Report - no scans were found.");
-            return newMap();
-        } else {
-            JasperScanReport reportExporter = new JasperScanReport(applicationIdList, scanDao);
-            report = new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
+            return map;
         }
-
-        if (report == null || report.getReportList() == null || report.getReportList().size()==0)
-            return newMap();
-
-
-        Map<String, Object> map = newMap();
-        map.put("trendingScans", report.getReportList());
-        map.put("scanList", scanDao.retrieveByApplicationIdList(applicationIdList));
+        map.put("scanList", scanList);
 
         return map;
     }
@@ -463,28 +445,6 @@ public class ReportsServiceImpl implements ReportsService {
             return null;
 		}
 	}
-
-    private ReportCheckResultBean getXMonthReportD3(List<Integer> applicationIdList, int numMonths, ReportParameters parameters) {
-        List<List<Scan>> scanList = new ArrayList<>();
-        boolean containsVulns = false;
-        for (Integer id : applicationIdList) {
-            scanList.add(applicationDao.retrieveById(id).getScans());
-        }
-        for(List<Scan> scan : scanList){
-            if (!scan.isEmpty()){
-                containsVulns = true;
-                break;
-            }
-        }
-        if (scanList.isEmpty() || !containsVulns ) {
-            log.info("Unable to fill Report - no scans were found.");
-            return null;
-        } else {
-            XMonthSummaryReport reportExporter = new XMonthSummaryReport(scanList, scanDao, numMonths, parameters);
-            return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
-        }
-    }
-
 
     private ReportCheckResultBean getTopAppsReportD3(List<Integer> applicationIdList) {
 

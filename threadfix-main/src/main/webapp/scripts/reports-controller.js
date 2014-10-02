@@ -4,6 +4,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
 
     // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
+    $scope.margin = [20, 70, 20, 60];
 
     if (!$scope.empty) {
         $scope.loadingLeft = true;
@@ -18,9 +19,9 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
 
-                $scope.XMonthSummaryData = data.object;
+                $scope.trendingData = data.object;
 
-                if (!$scope.XMonthSummaryData) {
+                if (!$scope.trendingData) {
                     $scope.empty = true;
                 }
 

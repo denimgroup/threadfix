@@ -27,6 +27,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/init-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/directives.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-dashboards.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-trending-scans.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/d3-donut.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-services.js"></script>

@@ -5,7 +5,6 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-trending-scans.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-point-in-time.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-filter-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-services.js"></script>

@@ -93,15 +93,13 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<List<Map<String, Object>>> leftReport(Model model, HttpServletRequest request) {
-		model.addAttribute("showEmptyBox", true);
-        ReportCheckResultBean report = report(request, ReportFormat.SIX_MONTH_SUMMARY);
+	public @ResponseBody RestResponse<List<Map<String, Object>>> leftReport(HttpServletRequest request) {
+        ReportCheckResultBean report = report(request, ReportFormat.TRENDING);
         return RestResponse.success(report.getReportList());
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(Model model, HttpServletRequest request) {
-		model.addAttribute("showEmptyBox", true);
+	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {
 		if (request.getParameter("appId") != null) {
 			return RestResponse.success(report(request, ReportFormat.TOP_TEN_VULNS).getReportList());
 		} else {
