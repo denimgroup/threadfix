@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
@@ -40,8 +39,8 @@ public class DashboardPageIT extends BaseIT {
 
     @Before
     public void initialize() {
-        teamName = getRandomString(8);
-        appName = getRandomString(8);
+        teamName = getName();
+        appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

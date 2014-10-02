@@ -116,6 +116,7 @@ public class DefectTrackerIndexPage extends BasePage {
     /*----------------------------------- Boolean Methods -----------------------------------*/
 
 	public boolean isTextPresentInDefectTrackerTableBody(String newDefectTrackerName) {
+        waitForElement(driver.findElementById("addNewDTButton"));
 		return driver.findElementById("defectTrackerTableBody").getText().contains(newDefectTrackerName);
 	}
 

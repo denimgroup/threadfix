@@ -57,9 +57,9 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void teamFilterTest() {
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName1 = getRandomString(8);
+        String teamName1 = getName();
+        String teamName2 = getName();
+        String appName1 = getName();
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createTeam(teamName2);
@@ -91,10 +91,10 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void applicationFilterTest() {
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName1 = getRandomString(8);
-        String appName2 = getRandomString(8);
+        String teamName1 = getName();
+        String teamName2 = getName();
+        String appName1 = getName();
+        String appName2 = getName();
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createTeam(teamName2);
@@ -127,8 +127,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void checkDeletedVulnerability() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -159,8 +159,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void checkAnalyticsPage() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

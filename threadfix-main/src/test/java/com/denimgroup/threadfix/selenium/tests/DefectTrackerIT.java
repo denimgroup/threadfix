@@ -87,7 +87,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
 	public void createDefectTrackerTest() {
-		String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
+		String newDefectTrackerName = getName();
 		String defectTrackerType = "Bugzilla";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
@@ -108,7 +108,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void deleteDefectTrackerTest() {
-        String newDefectTrackerName = "testDeleteDefectTracker"+ getRandomString(3);
+        String newDefectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
@@ -183,8 +183,8 @@ public class DefectTrackerIT extends BaseIT {
 
 	@Test
 	public void editDefectTrackerTest() {
-		String originalDefectTrackerName = getRandomString(8);
-		String editedDefectTrackerName = getRandomString(8);
+		String originalDefectTrackerName = getName();
+		String editedDefectTrackerName = getName();
 		String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "Bugzilla";
 
@@ -219,8 +219,8 @@ public class DefectTrackerIT extends BaseIT {
         String emptyString = "";
         String whiteSpaceString = "           ";
 
-		String newDefectTrackerName = getRandomString(8);
-		String defectTrackerNameDuplicateTest = getRandomString(8);
+		String newDefectTrackerName = getName();
+		String defectTrackerNameDuplicateTest = getName();
 
 		String defectTrackerType = "Bugzilla";
         String longInput = getRandomString(55);
@@ -276,8 +276,8 @@ public class DefectTrackerIT extends BaseIT {
 
 	@Test
 	public void jiraEdit() {
-		String defectTrackerName = getRandomString(8);
-        String replacementName = getRandomString(8);
+		String defectTrackerName = getName();
+        String replacementName = getName();
 		String defectTrackerType = "Jira";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
@@ -301,8 +301,8 @@ public class DefectTrackerIT extends BaseIT {
 
 	@Test
 	public void bugzillaEdit() {
-		String defectTrackerName = getRandomString(8);
-        String replacementName = getRandomString(8);
+		String defectTrackerName = getName();
+        String replacementName = getName();
 		String defectTrackerType = "Bugzilla";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
@@ -316,7 +316,8 @@ public class DefectTrackerIT extends BaseIT {
 
         driver.navigate().refresh();
 
-        assertTrue("DefectTracker Page did not create correctly.", defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
+        assertTrue("DefectTracker Page did not create correctly.",
+                defectTrackerIndexPage.isTextPresentInDefectTrackerTableBody(defectTrackerName));
 
 		defectTrackerIndexPage.clickEditLink(defectTrackerName)
                 .setName(replacementName)
@@ -328,12 +329,12 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void switchDefectTrackersTest() {
-        String defectTracker1 = "testSwitchDefectTracker1" + getRandomString(3);
-        String defectTracker2 = "testSwitchDefectTracker2" + getRandomString(3);
+        String defectTracker1 = getName();
+        String defectTracker2 = getName();
         String defectTrackerType = "Bugzilla";
 
-        String teamName = "bugzillaAAttachTestTeam" + getRandomString(3);
-        String appName = "bugzillaAttachTestApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -374,10 +375,10 @@ public class DefectTrackerIT extends BaseIT {
 
 	@Test
 	public void attachBugzillaTrackerTest() {
-		String defectTrackerName = "attachAppBugzilla" + getRandomString(3);
+		String defectTrackerName = getName();
 		String defectTrackerType = "Bugzilla";
-		String teamName = "bugzillaAttachTestTeam" + getRandomString(3);
-		String appName = "bugzillaAttachTestApp" + getRandomString(3);
+		String teamName = getName();
+		String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -402,10 +403,10 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void deleteAttachedBugzillaTrackerTest() {
-        String defectTrackerName = getRandomString(8);
+        String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -437,8 +438,8 @@ public class DefectTrackerIT extends BaseIT {
     @Ignore
     @Test
     public void editDefectTrackerFromJiraToHP() {
-        String originalDefectTrackerName = getRandomString(8);
-        String editedDefectTrackerName = getRandomString(8);
+        String originalDefectTrackerName = getName();
+        String editedDefectTrackerName = getName();
         String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "HP Quality Center";
 
@@ -470,14 +471,14 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void checkDefectTrackerPresentAfterEditing() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        String defectTrackerName = getRandomString(8);
-        String replacementName = getRandomString(8);
+        String defectTrackerName = getName();
+        String replacementName = getName();
         String defectTrackerType = "Bugzilla";
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")

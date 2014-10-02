@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 public class TeamIndexPageIT extends BaseIT {
 
     private DashboardPage dashboardPage;
-    private String teamName = getRandomString(8);
-    private String appName = getRandomString(8);
+    private String teamName = getName();
+    private String appName = getName();
 
     @Test
     public void testTeamIndexHeaderNavigation() {

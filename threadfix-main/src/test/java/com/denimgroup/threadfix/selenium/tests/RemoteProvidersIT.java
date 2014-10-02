@@ -176,8 +176,8 @@ public class RemoteProvidersIT extends BaseIT {
     @Ignore
     @Test
     public void editQualysMapping() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -201,8 +201,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void editVeracodeMapping() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -226,8 +226,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void editWhiteHatMapping() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -251,8 +251,8 @@ public class RemoteProvidersIT extends BaseIT {
     //TODO Update when new ids are added
     @Test
     public void importWhiteHatScan() {
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -280,8 +280,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void importVeracodeScan() {
-        String teamName = "importVeracodeTeam" + getRandomString(3);
-        String appName = "importVeracodeApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -310,8 +310,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testVulnerabilityCountAfterImport() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -357,8 +357,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testDeletedApplicationOnList() {
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -389,8 +389,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testDeletedTeamOnList() {
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -422,8 +422,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void checkNumberUnderSeverity() {
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -461,8 +461,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testTeamExistAfterDeleted() {
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -492,8 +492,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testApplicationExistAfterDeleted(){
-        String teamName = "importWhiteHatTeam" + getRandomString(3);
-        String appName = "importWhiteHatApp" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -526,8 +526,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledImportNavigationTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -542,8 +542,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledDailyImportCreationTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -40,7 +39,7 @@ public class LoginPageIT extends BaseIT {
 	
 	@Test
 	public void usernameFieldInputTest(){
-		String username = "user"+ getRandomString(4);
+		String username = getName();
 		
 		loginPage = loginPage.setUsername(username);
 		
@@ -54,7 +53,7 @@ public class LoginPageIT extends BaseIT {
 	
 	@Test
 	public void passwordFieldInputTest(){
-		String password = "password"+ getRandomString(4);
+		String password = getName();
 		
 		loginPage = loginPage.setPassword(password);
 		

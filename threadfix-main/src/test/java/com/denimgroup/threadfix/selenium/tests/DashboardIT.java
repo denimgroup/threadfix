@@ -33,8 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import javax.xml.crypto.Data;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -45,8 +43,8 @@ public class DashboardIT extends BaseIT {
 
     @Before
     public void initialize() {
-        teamName = getRandomString(8);
-        appName = getRandomString(8);
+        teamName = getName();
+        appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

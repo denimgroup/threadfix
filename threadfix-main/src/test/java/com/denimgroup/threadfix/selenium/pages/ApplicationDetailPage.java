@@ -925,7 +925,7 @@ public class ApplicationDetailPage extends BasePage {
         return false;
     }
 
-    public String remoteProvidersScansUploaded() {
+    public String alertError() {
         return driver.findElementByClassName("alert-error").getText();
     }
 

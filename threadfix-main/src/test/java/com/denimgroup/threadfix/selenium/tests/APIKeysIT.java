@@ -83,7 +83,7 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void markRestrictedTest() {
-        String note = getRandomString(5);
+        String note = getName();
         //Create API Key
         apiIndexPage = apiIndexPage.clickNewLink()
                 .setNote(note)
@@ -112,7 +112,7 @@ public class APIKeysIT extends BaseIT {
 
 	@Test
 	public void longAPIKeyNoteDisplayTest(){
-		String shortNote = getRandomString(8);
+		String shortNote = getName();
 		String longNoteA = getRandomString(2056);
         String longNoteB = getRandomString(254);
 		int width, newWidth;

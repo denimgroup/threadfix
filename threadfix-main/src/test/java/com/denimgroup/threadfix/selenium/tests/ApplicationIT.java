@@ -78,8 +78,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testCreateBasicAppFromTeamDetailPage() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String url = "http://testurl.com";
         String criticality = "Low";
 
@@ -426,9 +426,9 @@ public class ApplicationIT extends BaseIT {
 
 	@Test
 	public void sameAppNameMultipleTeams(){
-		String appName = getRandomString(8);
-		String teamName1 = getRandomString(8);
-		String teamName2 = getRandomString(8);
+		String appName = getName();
+		String teamName1 = getName();
+		String teamName2 = getName();
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createApplication(teamName1, appName);
@@ -491,8 +491,8 @@ public class ApplicationIT extends BaseIT {
     /*___________________________ Manual Findings ___________________________*/
     @Test
     public void testAddDynamicManualFinding() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
@@ -529,8 +529,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditDynamicManualFinding() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String originalCwe = "Improper Validation of Certificate Expiration";
         String editedCwe = "Improper Resolution of Path Equivalence";
         String originalParameter = "testParameter";
@@ -581,8 +581,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testAddStaticManualFinding() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
@@ -620,8 +620,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditStaticManualFinding() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String originalCwe = "Improper Validation of Certificate Expiration";
         String editedCwe = "Improper Resolution of Path Equivalence";
         String originalParameter = "testParameter";
@@ -726,8 +726,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void deleteApplicationTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -750,8 +750,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void remoteSourceCodeTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
 
@@ -783,8 +783,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void editSourceCodeTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
 
@@ -826,8 +826,8 @@ public class ApplicationIT extends BaseIT {
     @Test
     public void localSourceCodeTest() {
 
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
 
@@ -849,8 +849,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void createAppSourceCodeValidate() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
 
@@ -870,8 +870,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void editApplicationSourceCodeValidation() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
 
@@ -898,13 +898,13 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void createApplicationNewWaf() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        String wafName = getRandomString(8);
+        String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -932,11 +932,11 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void switchWafOnApplications() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String type = "Snort";
-        String wafName1 = getRandomString(8);
-        String wafName2 = getRandomString(8);
+        String wafName1 = getName();
+        String wafName2 = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -977,7 +977,7 @@ public class ApplicationIT extends BaseIT {
     @Test
     public void removeWaf() {
         String type = "Snort";
-        String wafName1 = getRandomString(8);
+        String wafName1 = getName();
 
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
                 .clickWafsHeaderLink()
@@ -992,9 +992,9 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void generateWafRules() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String wafName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
+        String wafName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -1029,9 +1029,9 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadLogFile() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String wafName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
+        String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
         DatabaseUtils.createTeam(teamName);
@@ -1078,8 +1078,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void checkunmappedFindingsLink() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -1098,8 +1098,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadNewScan() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName,appName);
@@ -1119,8 +1119,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadSameScanTwiceOnApplicationPage() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -1141,12 +1141,12 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uniqueIDTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
 
-        String uniqueId = getRandomString(8);
+        String uniqueId = getName();
 
         TeamIndexPage teamIndexPage = loginPage.login("user","password")
                 .clickOrganizationHeaderLink()
@@ -1162,8 +1162,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void unmappedFindingScanTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -1180,13 +1180,13 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void AlphabetizeSortTeamByEditApplication() {
-        String firstTeamName = "A" + getRandomString(8);
-        String appName = getRandomString(8);
+        String firstTeamName = "A" + getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(firstTeamName);
         DatabaseUtils.createApplication(firstTeamName, appName);
 
-        String secondTeamName = "Z" + getRandomString(8);
+        String secondTeamName = "Z" + getName();
 
         DatabaseUtils.createTeam(secondTeamName);
 
@@ -1205,8 +1205,8 @@ public class ApplicationIT extends BaseIT {
     @Ignore
     @Test
     public void checkDateRangeFilterSaving() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -1234,8 +1234,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void checkDependencyScanInformation() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -1254,8 +1254,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void cancelDeleteScanAlert() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

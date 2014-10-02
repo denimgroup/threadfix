@@ -42,8 +42,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Before
     public void initialize() {
-        teamName = getRandomString(8);
-        appName = getRandomString(8);
+        teamName = getName();
+        appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -363,8 +363,8 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void vulnerabilityPaginationTestingAvailable() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
