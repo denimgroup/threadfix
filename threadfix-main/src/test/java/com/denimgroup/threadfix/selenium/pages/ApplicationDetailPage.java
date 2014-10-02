@@ -94,8 +94,8 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage addWaf(String wafName) {
-        Select s = new Select(driver.findElementById("wafSelect"));
-        s.selectByVisibleText(wafName);
+        Select select = new Select(driver.findElementById("wafSelect"));
+        select.selectByVisibleText(wafName);
         sleep(4000);
         return this;
     }

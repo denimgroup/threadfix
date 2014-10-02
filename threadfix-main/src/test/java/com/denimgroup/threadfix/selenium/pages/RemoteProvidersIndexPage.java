@@ -163,14 +163,14 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage selectTeamMapping(String teamName){
-		WebElement a = driver.findElementById("orgSelect1");
-		new Select(a).selectByVisibleText(teamName);
+		WebElement webElement = driver.findElementById("orgSelect1");
+		new Select(webElement).selectByVisibleText(teamName);
 		return this;
 	}
 
 	public RemoteProvidersIndexPage selectAppMapping(String appName){
-		WebElement a = driver.findElementById("appSelect1");
-		new Select(a).selectByVisibleText(appName);
+		WebElement webElement = driver.findElementById("appSelect1");
+		new Select(webElement).selectByVisibleText(appName);
 		return this;
 	}
 
