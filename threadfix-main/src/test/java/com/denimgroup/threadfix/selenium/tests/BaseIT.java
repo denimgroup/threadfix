@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -91,5 +92,17 @@ public abstract class BaseIT {
 
     protected String getName() {
         return getRandomString(12);
+    }
+
+    protected String createTeam() {
+        String teamName = getName();
+        DatabaseUtils.createTeam(teamName);
+        return teamName;
+    }
+
+    protected String createApplication(String teamName) {
+        String appName = getName();
+        DatabaseUtils.createApplication(teamName, appName);
+        return appName;
     }
 }

@@ -40,11 +40,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     public void expandCollapseTest() {
         int filtersExpandedSize;
         int filtersCollapsedSize;
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -65,11 +63,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void clearFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String parameter = "username";
@@ -106,13 +102,11 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Saved Filters */
     @Test
     public void testSavedFilterFieldValidation() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
         String tooLong = getRandomString(26);
         String goodLength = getRandomString(25);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -134,12 +128,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void duplicateNameSavedFilterTest() {
-        String teamName = getName();
-        String appName = getName();
-        String filterName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String filterName = getRandomString(8);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -157,11 +148,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void savedFiltersTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
@@ -204,11 +193,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Scanner and Merged */
     @Test
     public void mergedFindingsFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
@@ -230,11 +217,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void scannerFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
@@ -261,11 +246,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Field Controls */
     @Test
     public void vulnerabilityTypeFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation";
@@ -287,11 +270,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void pathFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String path = "/demo/EvalInjection2.php";
@@ -317,11 +298,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void parameterFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String parameter = "username";
@@ -348,11 +327,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void severityFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -380,11 +357,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO check for open/closed/false positives and what not
     @Test
     public void statusFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -402,11 +377,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Aging */
     @Test
     public void agingFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
@@ -463,11 +436,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     @Ignore
     @Test
     public void dateFilterTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
