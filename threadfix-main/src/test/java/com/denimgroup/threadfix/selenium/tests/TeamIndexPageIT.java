@@ -13,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 public class TeamIndexPageIT extends BaseIT {
 
     private DashboardPage dashboardPage;
-    private String teamName = getName();
-    private String appName = getName();
+    private String teamName = createTeam();
+    private String appName = createApplication(teamName);
 
     @Test
     public void testTeamIndexHeaderNavigation() {
@@ -82,9 +82,8 @@ public class TeamIndexPageIT extends BaseIT {
     }
 
     public TeamIndexPage setupDatabase() {
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
+        
         dashboardPage = loginPage.login("user", "password");
 
         dashboardPage.clickOrganizationHeaderLink();
@@ -94,8 +93,6 @@ public class TeamIndexPageIT extends BaseIT {
 
     @Test
     public void isUploadScanButtonAvailableAfterUploading() {
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName,appName);
         DatabaseUtils.uploadScan(teamName, appName,ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
 
         TeamIndexPage teamIndexPage = loginPage.login("user","password")
@@ -107,8 +104,6 @@ public class TeamIndexPageIT extends BaseIT {
 
     @Test
     public void testuploadSameScanTwice() {
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
@@ -125,8 +120,6 @@ public class TeamIndexPageIT extends BaseIT {
 
     @Test
     public void testUploadFileWithLongName() {
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName,appName);
         String scanFile = ScanContents.SCAN_FILE_MAP.get("Too Long File Name");
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")

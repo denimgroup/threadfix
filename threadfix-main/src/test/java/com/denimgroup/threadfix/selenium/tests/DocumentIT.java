@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -45,13 +44,10 @@ public class DocumentIT extends BaseIT {
 	
 	@Test
 	public void testUploadScans() throws MalformedURLException {
-		String teamName = getName();
-		String appName = getName();
+		String teamName = createTeam();
+		String appName = createApplication(teamName);
         File appScanFile;
         int docCnt  = 0;
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();

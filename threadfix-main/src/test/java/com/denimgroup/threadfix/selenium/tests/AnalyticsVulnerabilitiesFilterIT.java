@@ -57,13 +57,10 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void teamFilterTest() {
-        String teamName1 = getName();
-        String teamName2 = getName();
-        String appName1 = getName();
+        String teamName1 = createTeam();
+        String teamName2 = createTeam();
+        String appName1 = createApplication(teamName1);
 
-        DatabaseUtils.createTeam(teamName1);
-        DatabaseUtils.createTeam(teamName2);
-        DatabaseUtils.createApplication(teamName1, appName1);
         DatabaseUtils.uploadScan(teamName1, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         AnalyticsPage analyticsPage = loginPage.login("user", "password")
@@ -91,15 +88,11 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void applicationFilterTest() {
-        String teamName1 = getName();
-        String teamName2 = getName();
-        String appName1 = getName();
-        String appName2 = getName();
+        String teamName1 = createTeam();
+        String teamName2 = createTeam();
+        String appName1 = createApplication(teamName1);
+        String appName2 = createApplication(teamName2);
 
-        DatabaseUtils.createTeam(teamName1);
-        DatabaseUtils.createTeam(teamName2);
-        DatabaseUtils.createApplication(teamName1, appName1);
-        DatabaseUtils.createApplication(teamName2, appName2);
         DatabaseUtils.uploadScan(teamName1, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         AnalyticsPage analyticsPage = loginPage.login("user", "password")
@@ -127,11 +120,9 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void checkDeletedVulnerability() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName , ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -159,11 +150,9 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void checkAnalyticsPage() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         AnalyticsPage analyticsPage = loginPage.login("user", "password")

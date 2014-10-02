@@ -169,8 +169,7 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void viewMoreTest() {
-        String teamName = getName();
-        DatabaseUtils.createTeam(teamName);
+        String teamName = createTeam();
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
@@ -181,12 +180,10 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void teamGraphsTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String file = ScanContents.getScanFilePath();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, file);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
@@ -199,11 +196,8 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void expandAndCollapseSingleTeamTest() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
@@ -218,15 +212,10 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void expandAndCollapseAllTeamsTest(){
-        String teamName1 = getName();
-        String teamName2 = getName();
-        String appName1 = getName();
-        String appName2 = getName();
-
-        DatabaseUtils.createTeam(teamName1);
-        DatabaseUtils.createApplication(teamName1, appName1);
-        DatabaseUtils.createTeam(teamName2);
-        DatabaseUtils.createApplication(teamName2, appName2);
+        String teamName1 = createTeam();
+        String teamName2 = createTeam();
+        String appName1 = createApplication(teamName1);
+        String appName2 = createApplication(teamName2);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 
@@ -242,9 +231,7 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void deleteTeamTest() {
-        String teamName = getName();
-
-        DatabaseUtils.createTeam(teamName);
+        String teamName = createTeam();
 
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()

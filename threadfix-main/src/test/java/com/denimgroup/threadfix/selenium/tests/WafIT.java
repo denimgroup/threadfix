@@ -256,11 +256,9 @@ public class WafIT extends BaseIT {
 
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
-		String teamName = getName();
-		String appName = getName();
+		String teamName = createTeam();
+		String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath());
 
 		String wafName = getName();
@@ -371,13 +369,11 @@ public class WafIT extends BaseIT {
 
     @Test
     public void checkWafLogFileLink() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -454,11 +450,8 @@ public class WafIT extends BaseIT {
 
     @Test
     public void DeleteAssignWafToApplication() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         String wafName = getName();
 

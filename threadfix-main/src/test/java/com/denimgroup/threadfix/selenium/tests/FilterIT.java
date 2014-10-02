@@ -40,17 +40,14 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void applicationFiltersTest() {
-        String teamName = getName();
-        String appName1 = getName();
-        String appName2 = getName();
+        String teamName = createTeam();
+        String appName1 = createApplication(teamName);
+        String appName2 = createApplication(teamName);
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName1);
-        DatabaseUtils.createApplication(teamName, appName2);
         DatabaseUtils.uploadScan(teamName, appName1, file);
         DatabaseUtils.uploadScan(teamName, appName2, file);
 
@@ -87,15 +84,13 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void teamFiltersTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
         String severity = "High";
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, file);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
@@ -133,12 +128,10 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void editFiltersTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String file = ScanContents.getScanFilePath();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, file);
 
         // Set teamName to show 'Medium' vulnerabilities

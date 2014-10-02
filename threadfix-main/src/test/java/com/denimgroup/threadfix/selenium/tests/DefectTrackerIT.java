@@ -333,11 +333,8 @@ public class DefectTrackerIT extends BaseIT {
         String defectTracker2 = getName();
         String defectTrackerType = "Bugzilla";
 
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user","password")
                 .clickDefectTrackersLink();
@@ -405,11 +402,8 @@ public class DefectTrackerIT extends BaseIT {
     public void deleteAttachedBugzillaTrackerTest() {
         String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
                 .clickDefectTrackersLink();
@@ -471,11 +465,8 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void checkDefectTrackerPresentAfterEditing() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         String defectTrackerName = getName();
         String replacementName = getName();

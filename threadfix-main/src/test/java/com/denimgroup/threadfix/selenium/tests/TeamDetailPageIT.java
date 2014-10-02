@@ -17,12 +17,10 @@ public class TeamDetailPageIT extends BaseIT {
 
     @Before
     public void initialize() {
-        teamName = getName();
-        appName = getName();
+        teamName = createTeam();
+        appName = createApplication(teamName);
         file = ScanContents.getScanFilePath();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, file);
     }
 

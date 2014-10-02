@@ -39,11 +39,9 @@ public class DashboardPageIT extends BaseIT {
 
     @Before
     public void initialize() {
-        teamName = getName();
-        appName = getName();
+       teamName = createTeam();
+       appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
     }
 

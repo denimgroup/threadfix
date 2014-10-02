@@ -526,12 +526,6 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledImportNavigationTest() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
         RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
@@ -542,12 +536,6 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledDailyImportCreationTest() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
         RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
@@ -564,7 +552,6 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledWeeklyImportCreationTest() {
-
         RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();

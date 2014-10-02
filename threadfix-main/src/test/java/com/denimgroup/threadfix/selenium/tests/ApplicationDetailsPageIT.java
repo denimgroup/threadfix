@@ -79,10 +79,10 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testBreadCrumbNavigation() {
-        ApplicationDetailPage ap = initialize();
+        ApplicationDetailPage applicationDetailPage = initialize();
         sleep(1000);
-        assertTrue("BreadCrumb Application is not present", ap.isBreadcrumbPresent());
-        assertTrue("BreadCrumb Application is not present", ap.isApplicationBreadcrumbPresent());
+        assertTrue("BreadCrumb Application is not present", applicationDetailPage.isBreadcrumbPresent());
+        assertTrue("BreadCrumb Application is not present", applicationDetailPage.isApplicationBreadcrumbPresent());
     }
 
     @Test
@@ -93,79 +93,79 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testActionButton() {
-        ApplicationDetailPage ap = initialize();
-        assertTrue("Action Button is not present", ap.isActionButtonPresent());
-        assertTrue("Action Button is not Clickable", ap.isActionButtonClickable());
+        ApplicationDetailPage applicationDetailPage = initialize();
+        assertTrue("Action Button is not present", applicationDetailPage.isActionButtonPresent());
+        assertTrue("Action Button is not Clickable", applicationDetailPage.isActionButtonClickable());
     }
 
     @Test
     public void testActionButtonContents() {
-        ApplicationDetailPage ap =  initialize();
+        ApplicationDetailPage applicationDetailPage =  initialize();
         sleep(3000);
-        ap.clickActionButton();
+        applicationDetailPage.clickActionButton();
         sleep(1000);
-        assertTrue("Edit Delete button is not present", ap.isEditDeletePresent());
-        assertTrue("Edit De;ete button is not clickable", ap.isEditDeleteClickable());
-        assertTrue("Edit Vuln button is not present", ap.isEditVulnFiltersPresent());
-        assertTrue("Edit Vuln buton is not clickable", ap.isEditVulnFiltersClickable());
-        assertTrue("Scan Upload button is not present", ap.isUploadScanPresent());
-        assertTrue("Scan Upload button is not clickable", ap.isUploadScanClickable());
-        assertTrue("Add Manual finding button is not present", ap.isAddManualFindingsPresent());
-        assertTrue("Add Manual finding button is not clickable", ap.isAddManualFindingsClickable());
+        assertTrue("Edit Delete button is not present", applicationDetailPage.isEditDeletePresent());
+        assertTrue("Edit De;ete button is not clickable", applicationDetailPage.isEditDeleteClickable());
+        assertTrue("Edit Vuln button is not present", applicationDetailPage.isEditVulnFiltersPresent());
+        assertTrue("Edit Vuln buton is not clickable", applicationDetailPage.isEditVulnFiltersClickable());
+        assertTrue("Scan Upload button is not present", applicationDetailPage.isUploadScanPresent());
+        assertTrue("Scan Upload button is not clickable", applicationDetailPage.isUploadScanClickable());
+        assertTrue("Add Manual finding button is not present", applicationDetailPage.isAddManualFindingsPresent());
+        assertTrue("Add Manual finding button is not clickable", applicationDetailPage.isAddManualFindingsClickable());
     }
 
     @Test
     public void testActionButtonEditDeleteButton() {
-        ApplicationDetailPage ap = initialize();
+        ApplicationDetailPage applicationDetailPage = initialize();
         sleep(2000);
-        ap.clickEditDeleteBtn();
-        ap.clickSourceInfo();
-        assertTrue("Delete Button is not present", ap.isDeleteButtonPresent());
-        assertTrue("Delete Button is not clickable", ap.isDeletebuttonClickable());
-        assertTrue("App Name Input is not present.", ap.isNameInputPresent());
-        assertTrue("URL input is not Present.", ap.isURLInputPresent());
-        assertTrue("Unique ID is not present.", ap.isUniqueIDPresent());
-        assertTrue("Team Selection is not present.", ap.isTeamSelectionPresent());
-        assertTrue("Critical Selection is not present.", ap.isCritcalityPresent());
-        assertTrue("Application Type is not present.", ap.isAppTypePresent());
-        assertTrue("Source Code URL is not present.", ap.isSourceURLPresent());
-        assertTrue("Source Code Folder is not present.", ap.isSourceFolderPresent());
-        assertTrue("Defect Tracker add button is not present.", ap.isDefectTrackerAddPresent());
-        assertTrue("Defect Tracker add button is not clickable.", ap.isDefectTrackerAddClickable());
-        assertTrue("Waf add button is not present.", ap.isWAFAddButtonPresent());
-        assertTrue("Waf add button is not clickable.", ap.isWAFAddButtonClickable());
+        applicationDetailPage.clickEditDeleteBtn();
+        applicationDetailPage.clickSourceInfo();
+        assertTrue("Delete Button is not present", applicationDetailPage.isDeleteButtonPresent());
+        assertTrue("Delete Button is not clickable", applicationDetailPage.isDeletebuttonClickable());
+        assertTrue("App Name Input is not present.", applicationDetailPage.isNameInputPresent());
+        assertTrue("URL input is not Present.", applicationDetailPage.isURLInputPresent());
+        assertTrue("Unique ID is not present.", applicationDetailPage.isUniqueIDPresent());
+        assertTrue("Team Selection is not present.", applicationDetailPage.isTeamSelectionPresent());
+        assertTrue("Critical Selection is not present.", applicationDetailPage.isCritcalityPresent());
+        assertTrue("Application Type is not present.", applicationDetailPage.isAppTypePresent());
+        assertTrue("Source Code URL is not present.", applicationDetailPage.isSourceURLPresent());
+        assertTrue("Source Code Folder is not present.", applicationDetailPage.isSourceFolderPresent());
+        assertTrue("Defect Tracker add button is not present.", applicationDetailPage.isDefectTrackerAddPresent());
+        assertTrue("Defect Tracker add button is not clickable.", applicationDetailPage.isDefectTrackerAddClickable());
+        assertTrue("Waf add button is not present.", applicationDetailPage.isWAFAddButtonPresent());
+        assertTrue("Waf add button is not clickable.", applicationDetailPage.isWAFAddButtonClickable());
     }
 
     @Test
     public void testActionButtonEditVulnFilter() {
-        ApplicationDetailPage ap = initialize();
+        ApplicationDetailPage applicationDetailPage = initialize();
         sleep(3000);
-        ap.clickActionButton();
+        applicationDetailPage.clickActionButton();
         sleep(2000);
-        FilterPage filterPage = ap.clickEditVulnerabilityFilters();
+        FilterPage filterPage = applicationDetailPage.clickEditVulnerabilityFilters();
         sleep(1000);
         assertTrue("Did not navigate to FilterPage.", filterPage.isElementVisible("createNewKeyModalButton"));
     }
 
     @Test
     public void testActionButtonAddManualFinding() {
-        ApplicationDetailPage ap = initialize();
-        ap.clickActionButton()
+        ApplicationDetailPage applicationDetailPage = initialize();
+        applicationDetailPage.clickActionButton()
                 .clickManualFindingButton();
-        assertTrue("Dynamic Radio button is not present.", ap.isDynamicRadioPresent());
-        assertTrue("Static Radio button is not present.", ap.isStaticRadioPresent());
-        assertTrue("CWE input is not present", ap.isCWEInputPresent());
-        assertTrue("Source URL is not present", ap.isURLDynamicSearchPresent());
-        assertTrue("Parameter input is not present.", ap.isParameterPresent());
-        assertTrue("Severity is not present.", ap.isSeverityPresent());
-        assertTrue("Description Input is not present.", ap.isCveDescriptionInputPresent());
-        assertTrue("Submit button is not present.", ap.isSubmitManualFindingPresent());
-        assertTrue("Submit button is not clickable.", ap.isSubmitManualFindingClickable());
-        assertTrue("Cancel button is not present.", ap.isManualFindingCloseButtonPresent());
-        assertTrue("Cancel button is not clickable.", ap.isManualFindingCloseButtonClickable());
-        ap.clickStaticRadioButton();
-        assertTrue("Line Number Input is not present.", ap.isLineNumberInputPresent());
-        assertTrue("Source File is not present.", ap.isURLStaticSearchPresent());
+        assertTrue("Dynamic Radio button is not present.", applicationDetailPage.isDynamicRadioPresent());
+        assertTrue("Static Radio button is not present.", applicationDetailPage.isStaticRadioPresent());
+        assertTrue("CWE input is not present", applicationDetailPage.isCWEInputPresent());
+        assertTrue("Source URL is not present", applicationDetailPage.isURLDynamicSearchPresent());
+        assertTrue("Parameter input is not present.", applicationDetailPage.isParameterPresent());
+        assertTrue("Severity is not present.", applicationDetailPage.isSeverityPresent());
+        assertTrue("Description Input is not present.", applicationDetailPage.isCveDescriptionInputPresent());
+        assertTrue("Submit button is not present.", applicationDetailPage.isSubmitManualFindingPresent());
+        assertTrue("Submit button is not clickable.", applicationDetailPage.isSubmitManualFindingClickable());
+        assertTrue("Cancel button is not present.", applicationDetailPage.isManualFindingCloseButtonPresent());
+        assertTrue("Cancel button is not clickable.", applicationDetailPage.isManualFindingCloseButtonClickable());
+        applicationDetailPage.clickStaticRadioButton();
+        assertTrue("Line Number Input is not present.", applicationDetailPage.isLineNumberInputPresent());
+        assertTrue("Source File is not present.", applicationDetailPage.isURLStaticSearchPresent());
     }
 
     @Test
