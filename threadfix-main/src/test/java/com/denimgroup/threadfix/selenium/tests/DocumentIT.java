@@ -45,8 +45,8 @@ public class DocumentIT extends BaseIT {
 	
 	@Test
 	public void testUploadScans() throws MalformedURLException {
-		String teamName = "uploadDocTeam" + getRandomString(3);
-		String appName = "uploadDocApp" + getRandomString(3);
+		String teamName = getName();
+		String appName = getName();
         File appScanFile;
         int docCnt  = 0;
 

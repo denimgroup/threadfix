@@ -27,8 +27,6 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import com.microsoft.tfs.core.clients.registration.Database;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -40,7 +38,7 @@ public class TeamIT extends BaseIT {
 
 	@Test
 	public void createTeamTest(){
-		String teamName = "testCreateOrganization" + getRandomString(3);
+		String teamName = getName();
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(teamName));
@@ -92,8 +90,8 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void editTeamTest(){
-        String newTeamName = "testEditTeam" + getRandomString(4);
-        String editedTeamName = "testEditTeam" + getRandomString(4);
+        String newTeamName = getName();
+        String editedTeamName = getName();
         DatabaseUtils.createTeam(newTeamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
@@ -112,9 +110,9 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void editTeamWithApplicationTest() {
-        String originalTeamName = getRandomString(8);
-        String editedTeamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String originalTeamName = getName();
+        String editedTeamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(originalTeamName);
         DatabaseUtils.createApplication(originalTeamName, appName);
@@ -132,8 +130,8 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void editTeamValidation(){
-        String orgName = "testEditOrgBound" + getRandomString(3);
-        String orgNameDuplicateTest = "testEditOrgBound2" + getRandomString(3);
+        String orgName = getName();
+        String orgNameDuplicateTest = getName();
 
         String emptyInputError = "Name is required.";
 
@@ -171,7 +169,7 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void viewMoreTest() {
-        String teamName = "testViewMore" + getRandomString(3);
+        String teamName = getName();
         DatabaseUtils.createTeam(teamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink();
@@ -183,8 +181,8 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void teamGraphsTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String file = ScanContents.getScanFilePath();
 
         DatabaseUtils.createTeam(teamName);
@@ -201,8 +199,8 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void expandAndCollapseSingleTeamTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -220,10 +218,10 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void expandAndCollapseAllTeamsTest(){
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName1 = getRandomString(3);
-        String appName2 = getRandomString(3);
+        String teamName1 = getName();
+        String teamName2 = getName();
+        String appName1 = getName();
+        String appName2 = getName();
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createApplication(teamName1, appName1);
@@ -244,7 +242,7 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void deleteTeamTest() {
-        String teamName = getRandomString(8);
+        String teamName = getName();
 
         DatabaseUtils.createTeam(teamName);
 

@@ -27,12 +27,9 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserPermissionsPage;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -42,7 +39,7 @@ public class UserIT extends BaseIT {
 
 	@Test
 	public void testCreateUser() {
-		String userName = "testCreateUser" + getRandomString(3);
+		String userName = getName();
         String password = "testCreateUser";
 		UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink();
@@ -58,10 +55,10 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testCreateTwoUsers() {
-        String userName = "testCreateUser" + getRandomString(3);
+        String userName = getName();
         String password = "testCreateUser";
 
-        String secondUserName = "testCreateUser" + getRandomString(3);
+        String secondUserName = getName();
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -124,7 +121,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testCreateDuplicateUser(){
-        String userName = "testDuplicateUser" + getRandomString(3);
+        String userName = getName();
         String password = getRandomString(15);
         // Create a user
         UserIndexPage userIndexPage = loginPage.login("user", "password")
@@ -161,8 +158,8 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserName() {
-        String userName = getRandomString(8);
-        String editedUserName = getRandomString(8);
+        String userName = getName();
+        String editedUserName = getName();
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
@@ -196,7 +193,7 @@ public class UserIT extends BaseIT {
 
 	@Test
 	public void testEditPassword() {
-		String userName = getRandomString(8);
+		String userName = getName();
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
@@ -266,8 +263,8 @@ public class UserIT extends BaseIT {
 
 	@Test
 	public void testEditUserFieldValidation() {
-		String baseUserName = "testEditUser" + getRandomString(3);
-		String userNameDuplicateTest = "duplicate-user" + getRandomString(3);
+		String baseUserName = getName();
+		String userNameDuplicateTest = getName();
 
 		// Set up the two User objects for the test
 
@@ -309,8 +306,8 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationWhiteSpace (){
-        String userName = "userName"+ getRandomString(5);
-        String passWord = "passWord"+ getRandomString(5);
+        String userName = getName();
+        String passWord = getName();
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -334,7 +331,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationPasswordMatching(){
-        String userName = "userName"+ getRandomString(5);
+        String userName = getName();
 
         UserIndexPage userIndexPage = loginPage.login("user", "password").clickManageUsersLink();
 		// Test non-matching passwords
@@ -368,8 +365,8 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationUnique(){
-        String userName = "userName"+ getRandomString(5);
-        String passWord = "passWord"+ getRandomString(5);
+        String userName = getName();
+        String passWord = getName();
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -402,7 +399,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testDeleteUser(){
-        String userName = "testDeleteUser" + getRandomString(3);
+        String userName = getName();
         String password = "testDeleteUser";
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink();

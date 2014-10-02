@@ -40,8 +40,8 @@ public class ScanDetailIT extends BaseIT {
 
     @Before
     public void initialize() {
-        teamName = getRandomString(8);
-        appName = getRandomString(8);
+        teamName = getName();
+        appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

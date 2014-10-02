@@ -17,8 +17,8 @@ public class TeamDetailPageIT extends BaseIT {
 
     @Before
     public void initialize() {
-        teamName = getRandomString(8);
-        appName = getRandomString(8);
+        teamName = getName();
+        appName = getName();
         file = ScanContents.getScanFilePath();
 
         DatabaseUtils.createTeam(teamName);

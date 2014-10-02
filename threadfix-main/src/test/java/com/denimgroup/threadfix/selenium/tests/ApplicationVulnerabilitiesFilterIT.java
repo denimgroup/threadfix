@@ -40,8 +40,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     public void expandCollapseTest() {
         int filtersExpandedSize;
         int filtersCollapsedSize;
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -65,8 +65,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void clearFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -106,8 +106,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Saved Filters */
     @Test
     public void testSavedFilterFieldValidation() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String tooLong = getRandomString(26);
         String goodLength = getRandomString(25);
 
@@ -134,9 +134,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void duplicateNameSavedFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String filterName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
+        String filterName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -157,8 +157,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void savedFiltersTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -204,8 +204,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Scanner and Merged */
     @Test
     public void mergedFindingsFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -230,8 +230,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void scannerFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -261,8 +261,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Field Controls */
     @Test
     public void vulnerabilityTypeFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -287,8 +287,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void pathFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -317,8 +317,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void parameterFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -348,8 +348,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void severityFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -380,8 +380,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO check for open/closed/false positives and what not
     @Test
     public void statusFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -402,8 +402,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Aging */
     @Test
     public void agingFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -463,8 +463,8 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     @Ignore
     @Test
     public void dateFilterTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);

@@ -14,8 +14,8 @@ import static org.junit.Assert.assertTrue;
 public class ApplicationDetailsPageIT extends BaseIT {
 
     private  DashboardPage dashboardPage;
-    private  String teamName = getRandomString(8);
-    private  String appName = getRandomString(8);
+    private  String teamName = getName();
+    private  String appName = getName();
 
     /*
     *   This test class is designed to test top layer functionality

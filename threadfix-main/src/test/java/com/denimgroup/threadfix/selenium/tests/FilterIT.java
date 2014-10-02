@@ -29,11 +29,8 @@ import com.denimgroup.threadfix.selenium.pages.FilterPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -43,9 +40,9 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void applicationFiltersTest() {
-        String teamName = getRandomString(8);
-        String appName1 = getRandomString(8);
-        String appName2 = getRandomString(8);
+        String teamName = getName();
+        String appName1 = getName();
+        String appName2 = getName();
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
@@ -90,8 +87,8 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void teamFiltersTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String file = ScanContents.getScanFilePath();
 
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
@@ -136,8 +133,8 @@ public class FilterIT extends BaseIT {
 
     @Test
     public void editFiltersTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
         String file = ScanContents.getScanFilePath();
 
         DatabaseUtils.createTeam(teamName);

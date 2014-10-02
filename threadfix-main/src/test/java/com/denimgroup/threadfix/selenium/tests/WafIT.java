@@ -41,7 +41,7 @@ public class WafIT extends BaseIT {
 	
 	@Test
 	public void testCreateWaf(){
-		String newWafName = "testCreateWaf" + getRandomString(3);
+		String newWafName = getName();
 		String type = "mod_security";
 		
 		WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -58,7 +58,7 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testDeleteWaf() {
-        String wafName = "testDeleteWaf" + getRandomString(3);
+        String wafName = getName();
         String wafType = "mod_security";
 
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -76,7 +76,7 @@ public class WafIT extends BaseIT {
 	
 	@Test
 	public void testCreateWafSnort(){
-		String newWafName = "testCreateSnortWaf" + getRandomString(3);
+		String newWafName = getName();
 		String type = "Snort";
 		
 		WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -92,7 +92,7 @@ public class WafIT extends BaseIT {
 	
 	@Test
 	public void testCreateWafImperva(){
-		String newWafName = "testCreateImpervaWaf" + getRandomString(3);
+		String newWafName = getName();
 		String type = "Imperva SecureSphere";
 		
 		WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -108,7 +108,7 @@ public class WafIT extends BaseIT {
 
 	@Test
 	public void testCreateWafBigIp(){
-		String newWafName = "testCreateBigIpWaf" + getRandomString(3);
+		String newWafName = getName();
 		String type = "BIG-IP ASM";
 		
 		WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -124,7 +124,7 @@ public class WafIT extends BaseIT {
 
 	@Test
 	public void testCreateWafDenyAllrWeb(){
-		String newWafName = "testCreateDenyAllrWebWaf" + getRandomString(5);
+		String newWafName = getName();
 		String type = "DenyAll rWeb";
 		
 		WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -166,7 +166,7 @@ public class WafIT extends BaseIT {
 
 	@Test
 	public void testEditWaf(){
-		String originalWaf = "testEditWaf" + getRandomString(3);
+		String originalWaf = getName();
 		String editedWaf = originalWaf + "-edited";
 		
 		String type1 = "mod_security";
@@ -179,8 +179,9 @@ public class WafIT extends BaseIT {
                 .createNewWaf(originalWaf, type1)
                 .clickModalSubmit();
 
-		wafIndexPage = wafIndexPage.clickWafsHeaderLink()
-                .clickEditWaf(originalWaf)
+        wafIndexPage.refreshPage();
+
+		wafIndexPage.clickEditWaf(originalWaf)
                 .editWaf(originalWaf, editedWaf, type2)
                 .clickModalSubmit()
                 .clickWafsHeaderLink();
@@ -191,8 +192,8 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testEditWafFieldValidation(){
-        String wafName = "testEditWafFieldValidation" + getRandomString(3);
-        String wafNameDuplicateTest = "testEditWafFieldValidation-Duplicate" + getRandomString(3);
+        String wafName = getName();
+        String wafNameDuplicateTest = getName();
 
         String type1 = "mod_security";
         String type2 = "Snort";
@@ -255,14 +256,14 @@ public class WafIT extends BaseIT {
 
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
-		String teamName = "attachModSecTeam" + getRandomString(3);
-		String appName = "attachModSecApp" + getRandomString(3);
+		String teamName = getName();
+		String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath());
 
-		String wafName = "testCreateModSecWaf" + getRandomString(3);
+		String wafName = getName();
 		String wafType = "mod_security";
 
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -321,7 +322,7 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testWafNameOnModalHeader() {
-        String originalWaf = "testEditWaf" + getRandomString(3);
+        String originalWaf = getName();
         String emptyString = "";
         String type = "Snort";
 
@@ -342,8 +343,8 @@ public class WafIT extends BaseIT {
 
     @Test
     public void CreateWafWithTheSameNameOfPrevious() {
-        String wafName = "testCreateSnortWaf" + getRandomString(3);
-        String newWafName = "testCreateSnortWaf" + getRandomString(3);
+        String wafName = getName();
+        String newWafName = getName();
         String type = "Snort";
 
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -370,9 +371,9 @@ public class WafIT extends BaseIT {
 
     @Test
     public void checkWafLogFileLink() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String wafName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
+        String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
         DatabaseUtils.createTeam(teamName);
@@ -422,8 +423,8 @@ public class WafIT extends BaseIT {
 
     @Test
     public void checkDeletedWaf() {
-        String wafName1 = "testWaf" + getRandomString(3);
-        String wafName2 = "testDeleteWaf" + getRandomString(3);
+        String wafName1 = getName();
+        String wafName2 = getName();
         String wafType = "Snort";
 
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
@@ -453,13 +454,13 @@ public class WafIT extends BaseIT {
 
     @Test
     public void DeleteAssignWafToApplication() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = getName();
+        String appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        String wafName = getRandomString(8);
+        String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()

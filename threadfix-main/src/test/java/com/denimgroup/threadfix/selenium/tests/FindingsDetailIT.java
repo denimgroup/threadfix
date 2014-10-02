@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import com.denimgroup.threadfix.views.AllViews;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -44,8 +43,8 @@ public class FindingsDetailIT extends BaseIT{
 
     @Before
     public void initialize() {
-        teamName = getRandomString(8);
-        appName = getRandomString(8);
+        teamName = getName();
+        appName = getName();
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
