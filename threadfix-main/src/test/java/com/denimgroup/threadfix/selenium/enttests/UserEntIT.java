@@ -54,7 +54,7 @@ public class UserEntIT extends BaseIT {
         DashboardPage dashboardPage = userIndexPage.logout()
                 .login(userName, password);
 
-        assertTrue("Alert was not shown on dashboard page.", dashboardPage.isAlertDisplayed());
+        assertTrue("Alert was not shown on dashboard page.", dashboardPage.isPermissionsAlertDisplayed());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class UserEntIT extends BaseIT {
         DashboardPage dashboardPage = userIndexPage.logout()
                 .login(userName, password);
 
-        assertFalse("Alert was shown on dashboard page", dashboardPage.isAlertDisplayed());
+        assertFalse("Alert was shown on dashboard page", dashboardPage.isPermissionsAlertDisplayed());
     }
 
 	@Test

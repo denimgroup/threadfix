@@ -104,7 +104,7 @@ public class DashboardPage extends BasePage{
         return driver.findElementById("viewMoreLink1").isDisplayed();
     }
 
-    public boolean isAlertDisplayed() {
+    public boolean isPermissionsAlertDisplayed() {
         try {
             return driver.findElementByClassName("alert-error").getText()
                     .contains("You don't have permission to access any ThreadFix applications or to create one for yourself.");
