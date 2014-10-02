@@ -41,7 +41,6 @@ public class CollectionUtils {
      * @param <T> type of items
      * @return list of items passed as arguments
      */
-    @SafeVarargs
     @Nonnull
     public static <T> List<T> list(T... args) {
         if (args.length == 0) {
@@ -81,7 +80,6 @@ public class CollectionUtils {
      * @param <T> type of set
      * @return set of items passed as arguments
      */
-    @SafeVarargs
     @Nonnull
     public static <T> Set<T> set(T... args) {
         return new HashSet<T>(Arrays.asList(args));
