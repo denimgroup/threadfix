@@ -21,6 +21,22 @@
         <maven>3</maven>
     </prerequisites>
 
+    <repositories>
+        <repository>
+            <id>lib</id>
+            <name>lib</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
@@ -139,15 +155,11 @@
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>
             <version>${esapi.version}</version>
-            <systemPath>${project.basedir}/lib/org/owasp/esapi/esapi/2.1.0-SNAPSHOT/esapi-2.1.0-SNAPSHOT.jar</systemPath>
-            <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>com.microsoft.tfs.sdk</groupId>
             <artifactId>com.microsoft.tfs.sdk</artifactId>
             <version>${tfs-library.version}</version>
-            <systemPath>${project.basedir}/lib/com/microsoft/tfs/sdk/com.microsoft.tfs.sdk/11.0.0/com.microsoft.tfs.sdk-11.0.0.jar</systemPath>
-            <scope>system</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
