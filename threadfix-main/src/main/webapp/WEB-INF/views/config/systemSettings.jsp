@@ -224,6 +224,30 @@
                 </div>
             </div>
         </c:if>
+
+        <div class="panel panel-default">
+            <div id="defaultSessionTimeoutPermissionsPanel" class="panel-heading pointer" style="width:200px" ng-click="editSessionTimeoutPermissions = !editSessionTimeoutPermissions">
+                <h3 class="panel-title">
+                    <span ng-hide="editSessionTimeoutPermissions" class="icon icon-chevron-right"></span>
+                    <span ng-show="editSessionTimeoutPermissions" class="icon icon-chevron-down"></span>
+                    Session Timeout
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editSessionTimeoutPermissions">
+                <table>
+                    <tr>
+                        <td style="width:150px" class="no-color">Session Timeout</td>
+                        <td class="no-color">
+                            <form:input id="sessionTimeout" path="sessionTimeout" placeholder="(in seconds)" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.sessionTimeout }"/>
+                        </td>
+                        <td class="no-color" style="padding-left: 5px">
+                            <form:errors path="sessionTimeout" cssClass="errors" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
 		<br/>
 		<button class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
 	</form:form>

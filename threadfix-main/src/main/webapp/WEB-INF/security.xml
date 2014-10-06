@@ -18,7 +18,8 @@
 	<security:global-method-security pre-post-annotations="enabled"/>
 	
 	<bean class="com.denimgroup.threadfix.webapp.config.CustomLogoutSuccessHandler" id="customLogoutSuccessHandler"/>
-		
+	<bean class="com.denimgroup.threadfix.webapp.config.CustomLoginSuccessHandler" id="customLoginSuccessHandler"/>
+
 	<!-- Configure Spring Security -->
 	<security:http auto-config="true">
 		<security:intercept-url pattern="/login*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
@@ -31,6 +32,7 @@
 		<security:form-login
                 login-page="/login.jsp"
                 default-target-url="/dashboard"
+                authentication-success-handler-ref="customLoginSuccessHandler"
                 always-use-default-target="true"/>
 		<security:logout success-handler-ref="customLogoutSuccessHandler"/>
 	</security:http>
