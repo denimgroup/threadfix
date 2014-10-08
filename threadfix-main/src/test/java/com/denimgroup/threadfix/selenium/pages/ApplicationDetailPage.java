@@ -678,9 +678,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandSavedFilters() {
-        sleep(2000);
+        waitForResultsToLoad();
         driver.findElementById("showSaveFilter").click();
-        sleep(2000);
+        waitForElement(driver.findElementById("filterNameInput"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -714,9 +714,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandScannerAndMerged() {
-        sleep(2000);
+        waitForResultsToLoad();
         driver.findElementById("expandScannerFilters").click();
-        sleep(2000);
+        waitForElement(driver.findElementById("set2MergedFindings"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -753,9 +753,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandFieldControls() {
-        sleep(2000);
+        waitForResultsToLoad();
         driver.findElementById("showFieldControls").click();
-        sleep(2000);
+        waitForElement(driver.findElementById("pathInput"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -794,9 +794,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandAging() {
-        sleep(2000);
+        waitForResultsToLoad();
         driver.findElementById("showDateControls").click();
-        sleep(2000);
+        waitForElement(driver.findElementById("lessThan"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -837,8 +837,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage expandDateRange() {
+        waitForResultsToLoad();
         driver.findElementById("showDateRange").click();
-        sleep(2000);
+        waitForElement(driver.findElementById("lessThan"));
         return new ApplicationDetailPage(driver);
     }
 

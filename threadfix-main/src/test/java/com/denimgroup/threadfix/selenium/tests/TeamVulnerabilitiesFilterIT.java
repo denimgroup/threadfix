@@ -39,9 +39,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
     public void testExpandCollapse() {
         int filtersExpandedControlSize;
         int filtersCollapsedControlSize;
-        String teamName = getName();
-
-        DatabaseUtils.createTeam(teamName);
+        String teamName = createTeam();
 
         TeamDetailPage teamDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()

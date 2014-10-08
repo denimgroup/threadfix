@@ -44,24 +44,22 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
+        sleep(5500);
+
         filtersCollapsedSize = applicationDetailPage.getFilterDivHeight();
         applicationDetailPage = applicationDetailPage.toggleAllFilter();
 
         filtersExpandedSize = applicationDetailPage.getFilterDivHeight();
-        applicationDetailPage.takeScreenShot();
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
         applicationDetailPage = applicationDetailPage.toggleAllFilter();
-        applicationDetailPage.takeScreenShot();
-        assertTrue("Filters were not collapsed completely.",
-                filtersCollapsedSize == applicationDetailPage.getFilterDivHeight());
+        int test = applicationDetailPage.getFilterDivHeight();
+        assertTrue("Filters were not collapsed completely.", filtersCollapsedSize == test);
     }
 
     //TODO remove screen-shot when debugging is done
