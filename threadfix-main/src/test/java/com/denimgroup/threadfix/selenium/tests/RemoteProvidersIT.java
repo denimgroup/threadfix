@@ -610,10 +610,9 @@ public class RemoteProvidersIT extends BaseIT {
                 .setMinute(30)
                 .setPeriodOfDay("PM")
                 .setDay("Sunday")
-                .clickAddScheduledUpdated();
+                .clickModalSubmit();
 
-        assertTrue("New Schedule wasn't Created",
-                remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
+        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
                 .setFrequency("Weekly")
@@ -621,7 +620,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .setMinute(30)
                 .setPeriodOfDay("PM")
                 .setDay("Sunday")
-                .clickAddScheduledUpdated();
+                .clickModalSubmitInvalid();
 
         assertTrue("Same Schedule was Created",
                 remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));

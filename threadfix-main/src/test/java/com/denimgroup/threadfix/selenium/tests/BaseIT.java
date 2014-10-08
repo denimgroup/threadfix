@@ -94,15 +94,27 @@ public abstract class BaseIT {
         return getRandomString(12);
     }
 
+    /**
+     * This method will create a team in the ThreadFix DBS
+     * @return String of the team's name that has just been created in ThreadFix
+     */
     protected String createTeam() {
         String teamName = getName();
         DatabaseUtils.createTeam(teamName);
         return teamName;
     }
 
+    /**
+     * This method will create an application in the ThreadFix DBS
+     * @param teamName non-null, and valid team name must be provided
+     * @return String of the application's name that has just been created in ThreadFix
+     */
     protected String createApplication(String teamName) {
-        String appName = getName();
-        DatabaseUtils.createApplication(teamName, appName);
-        return appName;
+        if (teamName != null) {
+            String appName = getName();
+            DatabaseUtils.createApplication(teamName, appName);
+            return appName;
+        } else
+            throw new RuntimeException("An application must be created within a team.");
     }
 }
