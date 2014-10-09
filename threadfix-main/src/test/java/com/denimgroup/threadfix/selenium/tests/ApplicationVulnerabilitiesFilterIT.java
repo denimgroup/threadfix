@@ -36,7 +36,6 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
-    //TODO remove screen-shot when debugging is done
     @Test
     public void expandCollapseTest() {
         int filtersExpandedSize;
@@ -62,7 +61,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         assertTrue("Filters were not collapsed completely.", filtersCollapsedSize == test);
     }
 
-    //TODO remove screen-shot when debugging is done
     @Test
     public void clearFilterTest() {
         String teamName = createTeam();
@@ -81,8 +79,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
                 .addParameterFilter(parameter)
                 .toggleSeverityFilter("Critical")
                 .toggleSeverityFilter("Medium");
-
-        applicationDetailPage.takeScreenShot();
 
         sleep(1000);
 
@@ -195,7 +191,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     }
 
     /* Scanner and Merged */
-    //TODO remove screen-shot when debugging is done
     @Test
     public void mergedFindingsFilterTest() {
         String teamName = createTeam();
@@ -212,8 +207,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
 
-        applicationDetailPage.takeScreenShot();
-
         assertTrue("Only 4 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
 
@@ -222,7 +215,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
 
-    //TODO remove screen-shot when debugging is done
     @Test
     public void scannerFilterTest() {
         String teamName = createTeam();
@@ -240,8 +232,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner);
-
-        applicationDetailPage.takeScreenShot();
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -364,7 +354,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
                 applicationDetailPage.isSeverityLevelShown("Info"));
     }
 
-    //TODO remove screen-shot when debugging is complete
     //TODO check for open/closed/false positives and what not
     @Test
     public void statusFilterTest() {
@@ -381,8 +370,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("Closed");
-
-        applicationDetailPage.takeScreenShot();
 
         assertTrue("No Results Found should be displayed.", applicationDetailPage.areAllVulnerabilitiesHidden());
     }
