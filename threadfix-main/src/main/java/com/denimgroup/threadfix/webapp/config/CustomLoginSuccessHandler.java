@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.webapp.config;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.service.DefaultConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -39,6 +40,7 @@ import java.io.IOException;
  */
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    @Autowired
     DefaultConfigService defaultConfigService;
 
     @Override
