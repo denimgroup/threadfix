@@ -145,7 +145,7 @@
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedTab$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/closedVulnerabilities/table$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defects$,
-        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmission$,
+        		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/defectSubmissionWithIssues$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/docsTab$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/objects$,
 		    	protected-regex ^/organizations/[0-9]+/applications/[0-9]+/scanQueueTab$,
