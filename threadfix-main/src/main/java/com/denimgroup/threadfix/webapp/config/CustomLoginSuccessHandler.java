@@ -40,10 +40,10 @@ import java.io.IOException;
  */
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private final static Integer SECONDS_IN_MIN = 60;
+
     @Autowired
     DefaultConfigService defaultConfigService;
-
-    private final static Integer SECONDS_IN_MIN = 60;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -54,7 +54,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         Integer sessionTimeout = config.getSessionTimeout();
 
-        if(sessionTimeout != null) {
+        if (sessionTimeout != null) {
             request.getSession().setMaxInactiveInterval(sessionTimeout*SECONDS_IN_MIN);
         }
 
