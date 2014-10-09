@@ -238,7 +238,7 @@
                     <tr>
                         <td style="width:150px" class="no-color">Session Timeout</td>
                         <td class="no-color">
-                            <form:input id="sessionTimeout" type="number" max="30" path="sessionTimeout" placeholder="(in minutes)" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.sessionTimeout }"/>
+                            <form:input id="sessionTimeout" type="number" max="30" min="1" path="sessionTimeout" placeholder="(in minutes)" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.sessionTimeout }"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="sessionTimeout" cssClass="errors" />
