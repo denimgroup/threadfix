@@ -21,7 +21,7 @@
         <tbody>
             <tr ng-repeat="scan in scans" class="bodyRow">
                 <td id="channelType{{ $index }}"> {{ scan.scannerName }} </td>
-                <td>
+                <td id="date{{ $index}}">
                     {{ scan.importTime | date:'shortDate' }}
                 </td>
                 <td style="text-align:center" id="numTotalVulnerabilities{{ $index }}">

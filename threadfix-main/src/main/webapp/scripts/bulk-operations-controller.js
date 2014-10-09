@@ -113,7 +113,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 },
                 configUrl: function() {
                     var app = getApplication();
-                    return tfEncoder.encode(getAppUrlBase() + "/defectSubmission");
+                    return tfEncoder.encode(getAppUrlBase() + "/defectSubmissionWithIssues");
                 },
                 object: function () {
                     return {};
