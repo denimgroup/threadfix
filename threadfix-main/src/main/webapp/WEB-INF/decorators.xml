@@ -35,6 +35,7 @@
     	<pattern>/organizations/*/applications/*/defects*</pattern>
     	<pattern>/organizations/*/applications/*/getDefectsFromDefectTracker*</pattern>
     	<pattern>/organizations/*/applications/*/defectSubmission*</pattern>
+    	<pattern>/organizations/*/applications/*/defectSubmissionWithIssues*</pattern>
     	<pattern>/organizations/*/applications/*/defectTable*</pattern>
     	<pattern>/organizations/*/applications/*/edit*</pattern>
     	<pattern>/organizations/*/applications/*/edit/wafAjax*</pattern>
