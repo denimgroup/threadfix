@@ -37,7 +37,7 @@ public class UserEntIT extends BaseIT {
 
     @Test
     public void createUserWithoutGlobalAccess() {
-        String userName = getRandomString(8);
+        String userName = getName();
         String password = getRandomString(15);
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
@@ -59,7 +59,7 @@ public class UserEntIT extends BaseIT {
 
     @Test
     public void createUserWithGlobalAccess() {
-        String userName = getRandomString(8);
+        String userName = getName();
         String password = getRandomString(15);
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")

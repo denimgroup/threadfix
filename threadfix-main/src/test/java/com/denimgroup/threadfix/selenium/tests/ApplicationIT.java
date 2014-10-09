@@ -39,8 +39,8 @@ public class ApplicationIT extends BaseIT {
 
 	@Test
 	public void testCreateBasicApplicationDisplayedTeamIndexPage() {
-		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
-		String appName = "testCreateBasicApplicationApp" + getRandomString(3);
+		String teamName = getName();
+		String appName = getName();
 		String urlText = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
@@ -57,8 +57,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testCreateBasicApplicationDisplayedApplicationDetailPage() {
-        String teamName = "TeamName" + getRandomString(3);
-        String appName = "AppName" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
         String urlText = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
@@ -67,13 +67,13 @@ public class ApplicationIT extends BaseIT {
                 .clickOrganizationHeaderLink();
 
         //Create Application
-        ApplicationDetailPage ap = teamIndexPage.expandTeamRowByName(teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, urlText, "Low")
                 .saveApplication()
                 .clickViewAppLink(appName, teamName);
 
         assertTrue("The name was not preserved correctly on Application Detail Page.",
-                ap.getNameText().contains(appName));
+                applicationDetailPage.getNameText().contains(appName));
     }
 
     @Test
@@ -156,8 +156,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testCreateBasicApplicationDuplicateValidation() {
-        String teamName = "teamName" + getRandomString(3);
-        String appName = "appName" + getRandomString(3);
+        String teamName = getName();
+        String appName = getName();
 
         String duplicateError = "That name is already taken.";
 
@@ -176,10 +176,10 @@ public class ApplicationIT extends BaseIT {
 
 	@Test
 	public void testEditBasicApplicationDisplayedApplicationDetailPage() {
-		String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
-		String appName1 = "testCreateBasicApplicationApp" + getRandomString(3);
+		String teamName = getName();
+		String appName1 = getName();
 		String urlText1 = "http://testurl.com";
-		String appName2 = "testCreateBasicApplicationApp" + getRandomString(3);
+		String appName2 = getName();
 		String urlText2 = "http://testurl.com352";
 
         DatabaseUtils.createTeam(teamName);
@@ -209,10 +209,10 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditBasicApplicationDisplayedTeamIndexPage() {
-        String teamName = "testCreateBasicApplicationTeam" + getRandomString(3);
-        String appName1 = "testCreateBasicApplicationApp" + getRandomString(3);
+        String teamName = getName();
+        String appName1 = getName();
         String urlText1 = "http://testurl.com";
-        String appName2 = "testCreateBasicApplicationApp" + getRandomString(3);
+        String appName2 = getName();
         String urlText2 = "http://testurl.com352";
 
         DatabaseUtils.createTeam(teamName);
@@ -242,7 +242,7 @@ public class ApplicationIT extends BaseIT {
 
 	@Test
 	public void testEditBasicApplicationValidation() {
-        String teamName = "testEditBasicApplicationValidationTeam" + getRandomString(3);
+        String teamName = getName();
 		String appName2 = "testApp23";
 		String appName = "testApp17";
 		String validUrlText = "http://test.com";

@@ -158,13 +158,11 @@ public class RoleEntIT extends BaseIT {
 
 	@Test
 	public void addApplicationOnlyRoleTest(){
-		String roleName = "appOnly" + getRandomString(10);
-		String userName = getRandomString(10);
+		String roleName = getName();
+		String userName = getName();
 		String password = getRandomString(15);
-		String teamName = getRandomString(10);
-		String appName = getRandomString(10);
-
-        DatabaseUtils.createTeam(teamName);
+		String teamName = createTeam();
+		String appName = getName();
 
 		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                  .clickOrganizationHeaderLink()

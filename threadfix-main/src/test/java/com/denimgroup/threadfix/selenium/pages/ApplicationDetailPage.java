@@ -194,7 +194,7 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public String getNameText() {
-        return driver.findElementById("nameText").getText();
+        return tryGetText(By.id("nameText"));
     }
 
     public String getUrlText() {

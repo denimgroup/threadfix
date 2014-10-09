@@ -36,6 +36,7 @@ public class RemoteProvidersSchedulePage extends BasePage{
 
     public RemoteProvidersSchedulePage clickScheduleNewImportButton() {
         driver.findElementById("addImportQueueLink").click();
+        waitForElement(driver.findElementById("submit"));
         return new RemoteProvidersSchedulePage(driver);
     }
 

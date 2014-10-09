@@ -598,6 +598,7 @@ public class RemoteProvidersIT extends BaseIT {
                 remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));
     }
 
+    //TODO remove extra navigation when enhancement #618 is added
     @Test
     public void checkSameWeeklyScheduleConflict() {
         RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
@@ -610,7 +611,11 @@ public class RemoteProvidersIT extends BaseIT {
                 .setMinute(30)
                 .setPeriodOfDay("PM")
                 .setDay("Sunday")
-                .clickModalSubmit();
+                .clickAddScheduledUpdated();
+
+        remoteProvidersSchedulePage = remoteProvidersSchedulePage.clickOrganizationHeaderLink()
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
 
         assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
 
@@ -620,7 +625,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .setMinute(30)
                 .setPeriodOfDay("PM")
                 .setDay("Sunday")
-                .clickModalSubmitInvalid();
+                .clickAddScheduledUpdated();
 
         assertTrue("Same Schedule was Created",
                 remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));
