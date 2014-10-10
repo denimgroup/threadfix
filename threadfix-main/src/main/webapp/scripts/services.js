@@ -522,7 +522,6 @@ threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {
     timeoutService.timeout = function() {
         timer = $timeout(function() {
             alert('It\'s been 60 seconds. Your request may have timed out.');
-            //window.location.href = tfEncoder.encode("/j_spring_security_logout");
         }, 60000);
     };
 
