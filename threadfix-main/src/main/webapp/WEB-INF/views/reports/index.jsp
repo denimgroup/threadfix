@@ -11,12 +11,14 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/trending-report-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/snapshot-report-controller.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/comparison-report-controller.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/vuln-summary-modal-controller.js"></script>
 </head>
 
 <body id="reports">
 
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
     <%@ include file="../applications/forms/vulnCommentForm.jsp"%>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
 
     <div ng-controller="ReportPageController"
          ng-init="firstReportId = '<c:out value="${ firstReport }"/>';

@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
+module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService, filterService) {
 
     $scope.parameters = {};
 
@@ -149,6 +149,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
                         $scope.savedFilters = data.object.savedFilters;
+                        $scope.savedFilters = $scope.savedFilters.filter(function(filter){
+                            var parameters = JSON.parse(filter.json);
+                            return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
+                        });
                         $scope.filterParameters = data.object.filterParameters;
                     }
                     if ($scope.filterParameters) {
@@ -331,28 +335,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.deleteCurrentFilter = function() {
-        if ($scope.selectedFilter) {
-            $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
-                success(function(data, status, headers, config) {
-                    console.log("Successfully deleted filter.");
-                    $scope.initialized = true;
-
-                    if (data.success) {
-                        $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
-                        $scope.selectedFilter = undefined;
-                        $scope.savedFilters = data.object;
-                    } else {
-                        $scope.errorMessage = "Failure. Message was : " + data.message;
-                    }
-
-                    $scope.loading = false;
-                }).
-                error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
-                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                    $scope.loading = false;
-                });
-        }
+        filterService.deleteCurrentFilter($scope, filterSavedFilters);
     };
 
     $scope.loadFilter = function(filter) {
@@ -372,53 +355,14 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.saveCurrentFilters = function() {
-        console.log("Saving filters");
-
-        if ($scope.currentFilterNameInput) {
-
-            var matches = $scope.savedFilters.filter(function(filter) {
-                return filter.name === $scope.currentFilterNameInput;
-            });
-
-            if (matches && matches.length !== 0) {
-                $scope.saveFilterErrorMessage = "A filter with that name already exists.";
-                return;
-            }
-
-            $scope.savingFilter = true;
-
-            var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
-
-            submissionObject.name = $scope.currentFilterNameInput;
-
-            $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
-                success(function(data, status, headers, config) {
-                    console.log("Successfully saved filters.");
-                    $scope.savingFilter = false;
-
-                    if (data.success) {
-                        $scope.savedFilters = data.object;
-
-                        $scope.savedFilters.forEach(function(filter) {
-                            if (filter.name === $scope.currentFilterNameInput) {
-                                $scope.selectedFilter = filter;
-                            }
-                        });
-
-                        $scope.currentFilterNameInput = '';
-                        $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
-                    } else {
-                        $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
-                    }
-
-                }).
-                error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
-                    $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
-                    $scope.savingFilter = false;
-                });
-        }
+        $scope.parameters.filterType = {isVulnSearchFilter : true};
+        filterService.saveCurrentFilters($scope, filterSavedFilters);
     };
+
+    var filterSavedFilters = function(filter){
+        var parameters = JSON.parse(filter.json);
+        return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
+    }
 
     // collapse duplicates: [arachni, arachni, appscan] => [arachni (2), appscan]
     var updateChannelNames = function(vulnerability) {

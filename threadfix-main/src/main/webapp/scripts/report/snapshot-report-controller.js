@@ -48,6 +48,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $scope.noData = false;
 
+        $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
+            var parameters = JSON.parse(filter.json);
+            return (parameters.filterType && parameters.filterType.isSnapshotFilter);
+        });
+
         if (!$scope.allVulns) {
             $scope.loading = true;
             $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
@@ -92,6 +97,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         $scope.parameters = angular.copy(parameters);
         if ($scope.reportId === '2') {
             filterPointInTimeDisplayBySeverity();
+            updateTree();
             $scope.needToUpdateProgress = true;
         } else if ($scope.reportId === '3') {
             filterByTeamAndApp($scope.allCWEvulns);
@@ -101,6 +107,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
     });
     $scope.updateTree = function (severity) {
+        var _parameters = angular.copy($scope.parameters);
         $scope.hideTitle = false;
         $scope.parameters.severities = {
             info: severity === "Info",
@@ -112,6 +119,28 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         vulnSearchParameterService.updateParameters($scope, $scope.parameters);
 
         refreshVulnTree($scope.parameters);
+
+        $scope.parameters = _parameters;
+
+    }
+
+    var updateTree = function () {
+        var _parameters = angular.copy($scope.parameters);
+        $scope.hideTitle = false;
+        vulnSearchParameterService.updateParameters($scope, $scope.parameters);
+
+        if (!$scope.title)
+            $scope.title = {};
+        $scope.title.teamsList = $scope.parameters.teams;
+        $scope.title.appsList = $scope.parameters.applications;
+//        $scope.teamsAndApps = {
+//            teams: $scope.parameters.teams,
+//            apps: $scope.parameters.applications
+//        };
+
+        refreshVulnTree($scope.parameters);
+
+        $scope.parameters = _parameters;
 
     }
 
@@ -375,6 +404,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         if ($scope.reportId === '2') {
             filterByTeamAndApp($scope.allPointInTimeVulns);
+            updateTree();
             $scope.needToUpdateProgress = true;
         } else if ($scope.reportId === '3') {
             filterByTeamAndApp($scope.allCWEvulns);

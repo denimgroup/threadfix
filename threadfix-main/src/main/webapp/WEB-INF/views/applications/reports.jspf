@@ -15,7 +15,7 @@
                             Report Failed
                         </div>
                     </div>
-                    <div ng-show="empty" class="team-report-wrapper report-image">
+                    <div ng-show="empty && !trendingData" class="team-report-wrapper report-image">
                         <div class="text">
                             No Data Found
                         </div>
@@ -37,7 +37,7 @@
                             Report Failed
                         </div>
                     </div>
-                    <div ng-show="empty" class="team-report-wrapper report-image">
+                    <div ng-show="empty && !topAppsData" class="team-report-wrapper report-image">
                         <div class="text">
                             No Data Found
                         </div>

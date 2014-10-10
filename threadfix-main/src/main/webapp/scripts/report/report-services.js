@@ -138,6 +138,13 @@ threadfixModule.factory('reportConstants', function() {
 
     reportConstants.vulnTypeColorList = ["#014B6E", "#458A37", "#EFD20A", "#F27421", "#F7280C"];
     reportConstants.vulnTypeList = ["Info", "Low", "Medium", "High", "Critical"];
+    reportConstants.vulnTypeColorMap = {
+        Info: reportConstants.vulnTypeColorList[0],
+        Low: reportConstants.vulnTypeColorList[1],
+        Medium: reportConstants.vulnTypeColorList[2],
+        High: reportConstants.vulnTypeColorList[3],
+        Critical: reportConstants.vulnTypeColorList[4]
+    };
 
     return reportConstants;
 
@@ -199,11 +206,10 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
             }
         }
 
-        $scope.title = {
-            teams: teams,
-            apps: apps
-
-        };
+        if (!$scope.title)
+            $scope.title = {};
+        $scope.title.teams = teams;
+        $scope.title.apps = apps;
     }
 
     reportUtilities.drawTable = function(d3, tableData, divId) {

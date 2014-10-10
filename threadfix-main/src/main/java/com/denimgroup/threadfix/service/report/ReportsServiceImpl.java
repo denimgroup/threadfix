@@ -78,6 +78,9 @@ public class ReportsServiceImpl implements ReportsService {
     @Autowired(required = false)
     @Nullable
     private PermissionService permissionService = null;
+    @Autowired
+    private FilterJsonBlobDao filterJsonBlobDao = null;
+
 
 	@Override
 	public ReportCheckResultBean generateReport(ReportParameters parameters,
@@ -155,7 +158,7 @@ public class ReportsServiceImpl implements ReportsService {
         }
 
         if (parameters.getReportFormat() == ReportFormat.TRENDING) {
-            JasperScanReport reportExporter = new JasperScanReport(applicationIdList, scanDao);
+            JasperScanReport reportExporter = new JasperScanReport(applicationIdList, scanDao, filterJsonBlobDao.getDefaultFilter());
             report = new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
         }
 
@@ -261,7 +264,7 @@ public class ReportsServiceImpl implements ReportsService {
 			JasperPrint jasperPrint;
 			
 			if (reportFormat == ReportFormat.TRENDING) {
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList, scanDao));
+				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JasperScanReport(applicationIdList, scanDao, null));
 			} else if (reportFormat == ReportFormat.TWELVE_MONTH_SUMMARY) {
 				jasperPrint = getXMonthReport(applicationIdList, parameters, jasperReport, 12);
 				if (jasperPrint == null) {

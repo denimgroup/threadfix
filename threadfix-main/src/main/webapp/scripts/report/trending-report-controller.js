@@ -1,33 +1,51 @@
 var module = angular.module('threadfix');
 
-module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities) {
+module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
     $scope.noData = false;
     $scope.margin = [70, 70, 100, 70];
+    $scope.savedDefaultTrendingFilter = undefined;
 
     $scope.resetFilters = function() {
-        $scope.parameters = {
-            teams: [],
-            applications: [],
-            severities: {},
-            showClosed: false,
-            showOld: false,
-            showHidden: false,
-            showTotal: true,
-            showNew: true,
-            showResurfaced: true,
-            daysOld: 'LastYear',
-            endDate: undefined,
-            startDate: undefined
-        };
+
+        if ($scope.savedDefaultTrendingFilter) {
+//            $scope.currentFilterNameInput = $scope.savedDefaultTrendingFilter.name;
+            $scope.selectedFilter = $scope.savedDefaultTrendingFilter;
+            $scope.parameters = JSON.parse($scope.savedDefaultTrendingFilter.json);
+            if ($scope.parameters.startDate)
+                $scope.parameters.startDate = new Date($scope.parameters.startDate);
+            if ($scope.parameters.endDate)
+                $scope.parameters.endDate = new Date($scope.parameters.endDate);
+        } else
+            $scope.parameters = {
+                teams: [],
+                applications: [],
+                severities: {},
+                showClosed: false,
+                showOld: false,
+                showHidden: false,
+                showTotal: true,
+                showNew: true,
+                showResurfaced: true,
+                daysOldModifier: 'LastYear',
+                endDate: undefined,
+                startDate: undefined
+            };
     };
 
 
     $scope.$on('loadTrendingReport', function() {
 
         $scope.noData = false;
+
+        $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
+            var parameters = JSON.parse(filter.json);
+            return (parameters.filterType && parameters.filterType.isTrendingFilter);
+        });
+
+        filterService.findDefaultFilter($scope);
 
         if (!$scope.allScans) {
             $scope.loading = true;
@@ -221,13 +239,13 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     var filterByTime = function() {
         var startDate;
         var endDate;
-        if ($scope.parameters.daysOld) {
+        if ($scope.parameters.daysOldModifier) {
             endDate = new Date();
-            if ($scope.parameters.daysOld === "LastYear") {
+            if ($scope.parameters.daysOldModifier === "LastYear") {
                 startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 11, 1);
-            } else if ($scope.parameters.daysOld === "LastQuarter") {
+            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
                 startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 2, 1);
-            } else if ($scope.parameters.daysOld === "Forever") {
+            } else if ($scope.parameters.daysOldModifier === "Forever") {
 
             };
         } else {

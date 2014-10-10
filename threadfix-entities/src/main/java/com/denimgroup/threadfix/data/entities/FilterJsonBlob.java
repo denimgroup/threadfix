@@ -39,6 +39,7 @@ import javax.persistence.Transient;
 public class FilterJsonBlob extends AuditableEntity {
 
     private String json, name;
+    private Boolean defaultTrending;
 
     @JsonProperty
     @JsonView(Object.class)
@@ -60,6 +61,16 @@ public class FilterJsonBlob extends AuditableEntity {
 
     public void setJson(String json) {
         this.json = json;
+    }
+
+    @JsonView(Object.class)
+    @JsonProperty
+    public boolean getDefaultTrending() {
+        return (defaultTrending == null ? false : defaultTrending);
+    }
+
+    public void setDefaultTrending(boolean defaultTrending) {
+        this.defaultTrending = defaultTrending;
     }
 
     @Transient

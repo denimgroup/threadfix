@@ -307,6 +307,8 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             criteria.parameters.teams = [];
             criteria.teams = [];
         }
+        if (label.teamsList)
+            criteria.parameters.teams.push.apply(criteria.parameters.teams, label.teamsList);
 
         if (d.appId && label.appId) {
             criteria.treeApplication = {id: d.appId};
@@ -317,6 +319,8 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             criteria.parameters.applications = [];
             criteria.searchApplications = [];
         }
+        if (label.appsList)
+            criteria.parameters.applications.push.apply(criteria.parameters.applications, label.appsList);
 
         criteria.parameters.channelTypes = [];
         criteria.parameters.scanners = [];
@@ -403,6 +407,111 @@ threadfixModule.factory('vulnTreeTransformer', function() {
     };
 
     return transformer;
+});
+
+threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, $http) {
+    var filter = {};
+
+
+    filter.saveCurrentFilters = function($scope, filterSavedFilters) {
+        console.log("Saving filters");
+
+        if ($scope.currentFilterNameInput) {
+
+            var matches = $scope.savedFilters.filter(function(filter) {
+                return filter.name === $scope.currentFilterNameInput;
+            });
+
+            if (matches && matches.length !== 0) {
+                $scope.saveFilterErrorMessage = "A filter with that name already exists.";
+                return;
+            }
+
+            $scope.savingFilter = true;
+
+            $scope.startDate = $scope.parameters.startDate;
+            $scope.endDate = $scope.parameters.endDate;
+            var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
+
+            submissionObject.name = $scope.currentFilterNameInput;
+            if ($scope.parameters.defaultTrending)
+                submissionObject.defaultTrending = true;
+
+            $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
+                success(function(data, status, headers, config) {
+                    console.log("Successfully saved filters.");
+                    $scope.savingFilter = false;
+
+                    if (data.success) {
+                        $scope.savedFilters = data.object;
+
+                        $scope.savedFilters.forEach(function(filter) {
+                            if (filter.name === $scope.currentFilterNameInput) {
+                                $scope.selectedFilter = filter;
+                            }
+                        });
+
+                        if (filterSavedFilters)
+                            $scope.savedFilters = $scope.savedFilters.filter(filterSavedFilters);
+
+                        filter.findDefaultFilter($scope);
+
+                        $scope.currentFilterNameInput = '';
+                        $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
+                    } else {
+                        $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
+                    }
+
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("Failed to save filters.");
+                    $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
+                    $scope.savingFilter = false;
+                });
+        }
+
+    };
+
+    filter.deleteCurrentFilter = function($scope, filterSavedFilters) {
+        if ($scope.selectedFilter) {
+            $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
+                success(function(data, status, headers, config) {
+                    console.log("Successfully deleted filter.");
+                    $scope.initialized = true;
+
+                    if (data.success) {
+                        $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
+                        $scope.selectedFilter = undefined;
+                        $scope.savedFilters = data.object;
+                        if ($scope.savedFilters){
+                            if (filterSavedFilters)
+                                $scope.savedFilters = $scope.savedFilters.filter(filterSavedFilters);
+                            filter.findDefaultFilter($scope);
+                        }
+                    } else {
+                        $scope.errorMessage = "Failure. Message was : " + data.message;
+                    }
+
+                    $scope.loading = false;
+                }).
+                error(function(data, status, headers, config) {
+                    console.log("Failed to save filters.");
+                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
+                    $scope.loading = false;
+                });
+        }
+    };
+
+    filter.findDefaultFilter = function($scope) {
+        $scope.savedFilters.some(function(filter){
+            if (filter.defaultTrending) {
+                $scope.savedDefaultTrendingFilter = filter;
+                return true;
+            }
+        });
+    };
+
+    return filter;
 });
 
 threadfixModule.factory('timeoutService', function(tfEncoder, $timeout) {

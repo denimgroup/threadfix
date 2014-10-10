@@ -177,7 +177,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
                     svg.append("g").attr("id",scope.label);
 
-                    d3donut.draw2D(scope.label, getData(), pieDim.h, pieDim.w, Math.min(pieDim.w, pieDim.h) / 2, true);
+                    d3donut.draw2D(scope.label, getData(), pieDim.h, pieDim.w, pieDim.w/2, pieDim.h/2, Math.min(pieDim.w, pieDim.h) / 2, true, null);
 
                     function getData(){
                         var d = data[0];

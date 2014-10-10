@@ -1,12 +1,19 @@
 var module = angular.module('threadfix');
 
-module.controller('ReportFilterController', function($scope, $rootScope) {
+module.controller('ReportFilterController', function($scope, $rootScope, filterService) {
 
     $scope.parameters = undefined;
+
+    $scope.resetFiltersIfEnabled = function() {
+        if ($scope.selectedFilter) {
+            $scope.reset();
+        }
+    };
 
     $scope.reset = function() {
         $scope.$parent.resetFilters();
         $scope.parameters = $scope.$parent.parameters;
+        $scope.selectedFilter = $scope.$parent.savedDefaultTrendingFilter ? $scope.$parent.savedDefaultTrendingFilter : undefined;
         $rootScope.$broadcast("resetParameters", $scope.parameters)
     };
 
@@ -15,7 +22,6 @@ module.controller('ReportFilterController', function($scope, $rootScope) {
             $scope.$parent.resetFilters();
             $scope.parameters = $scope.$parent.parameters;
         }
-
         $scope.showFullControls = true;
 
     });
@@ -42,6 +48,7 @@ module.controller('ReportFilterController', function($scope, $rootScope) {
 
     $scope.toggleAllFilters = function() {
         if ($scope.showTeamAndApplicationControls
+            || $scope.showSaveFilter
             || $scope.showDetailsControls
             || $scope.showDateControls
             || $scope.showDateRange) {
@@ -49,11 +56,13 @@ module.controller('ReportFilterController', function($scope, $rootScope) {
             $scope.showDetailsControls = false;
             $scope.showDateControls = false;
             $scope.showDateRange = false;
+            $scope.showSaveFilter = false;
         } else {
             $scope.showTeamAndApplicationControls = true;
             $scope.showDetailsControls = true;
             $scope.showDateControls = true;
             $scope.showDateRange = true;
+            $scope.showSaveFilter = true;
         }
     };
 
@@ -76,7 +85,7 @@ module.controller('ReportFilterController', function($scope, $rootScope) {
     };
 
     var resetAging = function() {
-        $scope.parameters.daysOld = undefined;
+        $scope.parameters.daysOldModifier = undefined;
     };
 
 
@@ -117,15 +126,59 @@ module.controller('ReportFilterController', function($scope, $rootScope) {
 
     $scope.setDaysOld = function(days) {
         resetDateRange();
-        if ($scope.parameters.daysOld === days) {
-            $scope.parameters.daysOld = undefined;
+        if ($scope.parameters.daysOldModifier === days) {
+            $scope.parameters.daysOldModifier = undefined;
         } else {
-            $scope.parameters.daysOld = days;
+            $scope.parameters.daysOldModifier = days;
 
         }
         $rootScope.$broadcast("resetParameters", $scope.parameters);
 
     };
+
+    $scope.deleteCurrentFilter = function() {
+        filterService.deleteCurrentFilter($scope, filterSavedFilters);
+    };
+
+    $scope.loadFilter = function(filter) {
+
+        $scope.selectedFilter = filter;
+        $scope.parameters = JSON.parse($scope.selectedFilter.json);
+        if (!filter.defaultTrending) {
+            $scope.parameters.defaultTrending = false;
+        }
+        if ($scope.parameters.startDate)
+            $scope.parameters.startDate = new Date($scope.parameters.startDate);
+        if ($scope.parameters.endDate)
+            $scope.parameters.endDate = new Date($scope.parameters.endDate);
+
+        $rootScope.$broadcast("resetParameters", $scope.parameters);
+        $scope.lastLoadedFilterName = $scope.selectedFilter.name;
+//        $scope.currentFilterNameInput = $scope.selectedFilter.name;
+    };
+
+    $scope.saveCurrentFilters = function() {
+        if ($scope.$parent.trendingActive)
+            $scope.parameters.filterType = {isTrendingFilter : true};
+        else if ($scope.$parent.snapshotActive)
+            $scope.parameters.filterType = {isSnapshotFilter : true};
+        filterService.saveCurrentFilters($scope, filterSavedFilters);
+
+    };
+
+    var filterSavedFilters = function(filter){
+        var parameters = JSON.parse(filter.json);
+        if (!parameters.filterType)
+            return false;
+        else {
+            if ($scope.$parent.snapshotActive)
+                return (parameters.filterType.isSnapshotFilter);
+            else if ($scope.$parent.trendingActive)
+                return (parameters.filterType.isTrendingFilter);
+            else
+                return false;
+        }
+    }
 
     var resetDateRange = function(){
         // Reset Date Range

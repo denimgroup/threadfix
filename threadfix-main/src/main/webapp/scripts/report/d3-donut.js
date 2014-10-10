@@ -135,8 +135,8 @@ angular.module('threadfix')
             ;
         }
 
-        Donut.draw2D=function(id, data, height/*height*/, width/*width*/, rs/*radius*/, isNavigate, updateTree){
-
+        Donut.draw2D=function(id, data, height/*height*/, width/*width*/, x, y, rs/*radius*/, isNavigate, label){
+//        Donut.draw2D=function(id, data, height/*height*/, width/*width*/, rs/*radius*/, isNavigate, updateTree){
             var arc = d3.svg.arc()
                 .outerRadius(rs - 10)
                 .innerRadius(0);
@@ -148,7 +148,8 @@ angular.module('threadfix')
                 .attr("width", width)
                 .attr("height", height)
                 .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                .attr("transform", "translate(" + x + "," + y + ")");
+//                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
             svg.selectAll('*').remove();
 
@@ -176,11 +177,14 @@ angular.module('threadfix')
                 .on('mouseout', tip.hide)
                 .on('click', function(d) {
                     tip.hide();
-                    if (isNavigate)
-                        threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, {}), false);
-                    else {
-                        updateTree({severity:d.data.severity});
+                    if (isNavigate){
+                        if (!label)
+                            label = {};
+                        threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, label), false);
                     }
+//                    else {
+//                        updateTree({severity:d.data.severity});
+//                    }
                 })
                 .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
                 .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })
