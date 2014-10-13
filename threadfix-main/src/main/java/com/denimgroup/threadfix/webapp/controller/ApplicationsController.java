@@ -256,7 +256,7 @@ public class ApplicationsController {
     }
 	
 	// TODO move this to a different spot so as to be less annoying
-	private Map<String, Object> addDefectModelAttributes(int appId, int orgId) {
+	private Map<String, Object> addDefectModelAttributes(int appId, int orgId, boolean addDefectIds) {
 		if (!PermissionUtils.isAuthorized(Permission.CAN_SUBMIT_DEFECTS, orgId, appId)) {
 			return null;
 		}
@@ -280,11 +280,16 @@ public class ApplicationsController {
         List<Defect> defectList = null;
         Map<String, Object> map = new HashMap<>();
 		if (dt != null) {
-            defectList = dt.getDefectList();
-            if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
-                map.put(ERROR_MSG, dt.getLastError());
-                return map;
+            if (addDefectIds) {
+                defectList = dt.getDefectList();
+                if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
+                    map.put(ERROR_MSG, dt.getLastError());
+                    return map;
+                }
+            } else {
+                defectList = list();
             }
+
 			data = dt.getProjectMetadata();
             if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
                 map.put(ERROR_MSG, dt.getLastError());
@@ -325,7 +330,21 @@ public class ApplicationsController {
             @PathVariable("orgId") int orgId,
 			@PathVariable("appId") int appId) {
 
-		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId);
+		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId, false);
+
+        if (returnMap.get(ERROR_MSG) != null) {
+            return RestResponse.failure(returnMap.get(ERROR_MSG).toString());
+        } else {
+            return RestResponse.success(returnMap);
+        }
+	}
+
+	@RequestMapping("/{appId}/defectSubmissionWithIssues")
+	public @ResponseBody RestResponse<Map<String, Object>> getDefectSubmissionWithIssues(
+            @PathVariable("orgId") int orgId,
+			@PathVariable("appId") int appId) {
+
+		Map<String, Object> returnMap = addDefectModelAttributes(appId, orgId, true);
 
         if (returnMap.get(ERROR_MSG) != null) {
             return RestResponse.failure(returnMap.get(ERROR_MSG).toString());
