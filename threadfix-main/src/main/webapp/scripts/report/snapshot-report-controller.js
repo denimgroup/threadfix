@@ -133,15 +133,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.title = {};
         $scope.title.teamsList = $scope.parameters.teams;
         $scope.title.appsList = $scope.parameters.applications;
-//        $scope.teamsAndApps = {
-//            teams: $scope.parameters.teams,
-//            apps: $scope.parameters.applications
-//        };
 
         refreshVulnTree($scope.parameters);
-
         $scope.parameters = _parameters;
-
     }
 
     $scope.loadReport = function() {
@@ -177,7 +171,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     $scope.needToUpdatePointInTime = false;
                 }
         }
-
     }
 
     var processByTypeData = function(allCWEvulns) {
@@ -219,16 +212,13 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             genericVulnEntry.averageTimeToClose = (mapEntry["numClosed"] === 0) ? 0 : Math.round(mapEntry["totalTimeToClose"]/mapEntry["numClosed"]);
 
             $scope.progressByTypeData.push(genericVulnEntry);
-
         })
 
         // Sorting by Total is default
         $scope.$parent.setSortNumber($scope.progressByTypeData, "total");
-
     };
 
     var filterByTypeDataBySeverity = function(allVulns) {
-
         $scope.filterVulns = allVulns.filter(function(vuln){
             if ("Critical" === vuln.severity) {
                 return $scope.parameters.severities.critical;
@@ -241,7 +231,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             } else if ("Info" === vuln.severity) {
                 return $scope.parameters.severities.info;
             }
-
             return false;
         });
 
@@ -249,14 +238,11 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var refreshVulnTree = function(parameters) {
         $scope.loadingTree = true;
-
         $http.post(tfEncoder.encode("/reports/tree"), parameters).
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object);
-
                     $scope.badgeWidth = 0;
-
                     if ($scope.vulnTree) {
                         $scope.vulnTree.forEach(function(treeElement) {
                             var size = 7;

@@ -36,6 +36,8 @@ import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -64,16 +66,18 @@ import static com.denimgroup.threadfix.CollectionUtils.newMap;
 public class ReportsD3Controller {
 	
 	private final SanitizedLogger log = new SanitizedLogger(ReportsD3Controller.class);
+    private static final ObjectWriter WRITER = ControllerUtils.getObjectWriter(AllViews.RestViewScanStatistic.class);
 
     @Autowired
 	private ReportsService reportsService;
 
 	@RequestMapping(value="/trendingScans", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Map<String, Object>> processTrendingScans(@ModelAttribute ReportParameters reportParameters,
+	public @ResponseBody String processTrendingScans(@ModelAttribute ReportParameters reportParameters,
                                                                                HttpServletRequest request) throws IOException {
         log.info("Generating trending scans report");
-        return RestResponse.success(reportsService.generateTrendingReport(reportParameters,
-                request));
+        String responseString = WRITER.writeValueAsString(
+                RestResponse.success(reportsService.generateTrendingReport(reportParameters, request)));
+        return responseString;
 		
 	}
 
