@@ -4,8 +4,6 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.remote.ThreadFixRestClient;
 import com.denimgroup.threadfix.remote.ThreadFixRestClientImpl;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.UserService;
-import com.denimgroup.threadfix.webapp.controller.AddUserController;
 
 import java.io.File;
 
@@ -53,6 +51,18 @@ public class DatabaseUtils {
 
     public static void createRole(String roleName, boolean allPermissions) {
         RestResponse<Role> response = CLIENT.createRole(roleName, allPermissions);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void createSpecificPermissionRole(String roleName, String permission) {
+        RestResponse<Role> response = CLIENT.createSpecificPermissionRole(roleName, permission);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void removePermission(String roleName, String permission) {
+        RestResponse<Role> response = CLIENT.removePermission(roleName, permission);
 
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }

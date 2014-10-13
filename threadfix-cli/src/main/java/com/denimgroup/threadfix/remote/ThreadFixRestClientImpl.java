@@ -284,6 +284,22 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
                 new String[] {roleName, allPermissions.toString()}, Role.class);
     }
 
+    // QA only
+    @Override
+    public RestResponse<Role> createSpecificPermissionRole(String roleName, String permission) {
+        return httpRestUtils.httpPost("/role/create/specific",
+                new String[] {"roleName", "permission"},
+                new String[] {roleName, permission}, Role.class);
+    }
+
+    //QA only
+    @Override
+    public RestResponse<Role> removePermission(String roleName, String permission) {
+        return httpRestUtils.httpPost("/role/edit",
+                new String[] {"roleName", "permission"},
+                new String[] {roleName, permission}, Role.class);
+    }
+
     public RestResponse<Finding> addDynamicFinding(String applicationId, String vulnType, String severity,
 		String nativeId, String parameter, String longDescription,
 		String fullUrl, String path) {

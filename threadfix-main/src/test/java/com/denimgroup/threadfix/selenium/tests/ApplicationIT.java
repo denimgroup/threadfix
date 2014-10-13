@@ -37,11 +37,11 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class ApplicationIT extends BaseIT {
 
-	@Test
-	public void testCreateBasicApplicationDisplayedTeamIndexPage() {
-		String teamName = getName();
-		String appName = getName();
-		String urlText = "http://testurl.com";
+    @Test
+    public void testCreateBasicApplicationDisplayedTeamIndexPage() {
+        String teamName = getName();
+        String appName = getName();
+        String urlText = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
 
@@ -49,11 +49,11 @@ public class ApplicationIT extends BaseIT {
                 .clickOrganizationHeaderLink();
 
         teamIndexPage.expandTeamRowByName(teamName)
-				.addNewApplication(teamName, appName, urlText, "Low")
-				.saveApplication();
+                .addNewApplication(teamName, appName, urlText, "Low")
+                .saveApplication();
 
         assertTrue("The application was not added properly.", teamIndexPage.isAppPresent(teamName, appName));
-	}
+    }
 
     @Test
     public void testCreateBasicApplicationDisplayedApplicationDetailPage() {
@@ -108,17 +108,17 @@ public class ApplicationIT extends BaseIT {
     }
 
     /*___________________________ Validation ___________________________*/
-	@Test 
-	public void testCreateBasicApplicationValidation() {
+    @Test
+    public void testCreateBasicApplicationValidation() {
         String teamName = "testCreateBasicApplicationValidationTeam" + getRandomString(3);
-		
-		String emptyError = "Name is required.";
+
+        String emptyError = "Name is required.";
         String notValidURl = "URL is invalid.";
         String maximumLengthError = "Maximum length is 60.";
-		
-		String emptyString = "";
+
+        String emptyString = "";
         String brokenURL = "asdckjn.com";
-		String whiteSpace = "     ";
+        String whiteSpace = "     ";
         String tooLong = getRandomString(61);
 
         DatabaseUtils.createTeam(teamName);
@@ -126,12 +126,12 @@ public class ApplicationIT extends BaseIT {
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
 
-		//Team & Application set up...hopefully to be removed later
-		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
+        //Team & Application set up...hopefully to be removed later
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, emptyString, emptyString, "Low")
                 .saveApplicationInvalid();
-		
-		assertTrue("The correct error did not appear for the name field.",
+
+        assertTrue("The correct error did not appear for the name field.",
                 teamIndexPage.getNameRequiredMessage().contains(emptyError));
 
         teamIndexPage.setApplicationName(tooLong)
@@ -139,18 +139,18 @@ public class ApplicationIT extends BaseIT {
 
         assertTrue("The correct error did not appear for the name field.",
                 teamIndexPage.getNameLengthMessage().contains(maximumLengthError));
-		
-		teamIndexPage = teamIndexPage.clickCloseAddAppModal()
+
+        teamIndexPage = teamIndexPage.clickCloseAddAppModal()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, whiteSpace, brokenURL, "Low")
                 .saveApplicationInvalid();
 
-		assertTrue("The correct error did not appear for the name field.",
+        assertTrue("The correct error did not appear for the name field.",
                 teamIndexPage.getNameRequiredMessage().contains(emptyError));
 
-		assertTrue("The correct error did not appear for the url field.", 
-				teamIndexPage.getUrlErrorMessage().contains(notValidURl));
+        assertTrue("The correct error did not appear for the url field.",
+                teamIndexPage.getUrlErrorMessage().contains(notValidURl));
 
     }
 
@@ -170,42 +170,42 @@ public class ApplicationIT extends BaseIT {
                 .addNewApplication(teamName, appName, "http://dummyurl", "Low")
                 .saveApplicationInvalid();
 
-		assertTrue("The duplicate message didn't appear correctly.", 
-				teamIndexPage.getNameTakenErrorMessage().contains(duplicateError));
-	}
+        assertTrue("The duplicate message didn't appear correctly.",
+                teamIndexPage.getNameTakenErrorMessage().contains(duplicateError));
+    }
 
-	@Test
-	public void testEditBasicApplicationDisplayedApplicationDetailPage() {
-		String teamName = getName();
-		String appName1 = getName();
-		String urlText1 = "http://testurl.com";
-		String appName2 = getName();
-		String urlText2 = "http://testurl.com352";
+    @Test
+    public void testEditBasicApplicationDisplayedApplicationDetailPage() {
+        String teamName = getName();
+        String appName1 = getName();
+        String urlText1 = "http://testurl.com";
+        String appName2 = getName();
+        String urlText2 = "http://testurl.com352";
 
         DatabaseUtils.createTeam(teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-				.addNewApplication(teamName, appName1, urlText1, "Low")
-				.saveApplication()
-				.clickViewAppLink(appName1, teamName);
+                .addNewApplication(teamName, appName1, urlText1, "Low")
+                .saveApplication()
+                .clickViewAppLink(appName1, teamName);
 
-		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
+        applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(appName2)
-				.setUrlInput(urlText2)
-				.clickUpdateApplicationButton();
+                .setUrlInput(urlText2)
+                .clickUpdateApplicationButton();
 
         applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName2, teamName);
-		
-		assertTrue("The name was not preserved correctly on Application Detail Page.",
+
+        assertTrue("The name was not preserved correctly on Application Detail Page.",
                 appName2.equals(applicationDetailPage.getNameText()));
 
         applicationDetailPage.clickEditDeleteBtn();
-	    assertTrue("The URL was not edited correctly.", applicationDetailPage.getUrlText().contains(urlText2));
-	}
+        assertTrue("The URL was not edited correctly.", applicationDetailPage.getUrlText().contains(urlText2));
+    }
 
     @Test
     public void testEditBasicApplicationDisplayedTeamIndexPage() {
@@ -237,40 +237,44 @@ public class ApplicationIT extends BaseIT {
         teamIndexPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
-        assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(teamName,appName2));
+        assertTrue("The edited application does not appear on Team Index Page.", teamIndexPage.isAppPresent(teamName, appName2));
     }
 
-	@Test
-	public void testEditBasicApplicationValidation() {
+    @Test
+    public void testEditBasicApplicationValidation() {
         String teamName = getName();
-		String appName2 = "testApp23";
-		String appName = "testApp17";
-		String validUrlText = "http://test.com";
-		String urlText = "htnotaurl.com";
-		
-		StringBuilder stringBuilder = new StringBuilder("");
-		for (int i = 0; i < Application.NAME_LENGTH + 50; i++) { stringBuilder.append('i'); }
-		String longInputName = stringBuilder.toString();
-		
-		stringBuilder = new StringBuilder("");
-		for (int i = 0; i < Application.URL_LENGTH + 50; i++) { stringBuilder.append('i'); }
-		String longInputUrl = "http://" + stringBuilder.toString();
-		
-		String emptyError = "Name is required.";
-		
-		String emptyString = "";
-		String whiteSpace = "     ";
+        String appName2 = "testApp23";
+        String appName = "testApp17";
+        String validUrlText = "http://test.com";
+        String urlText = "htnotaurl.com";
+
+        StringBuilder stringBuilder = new StringBuilder("");
+        for (int i = 0; i < Application.NAME_LENGTH + 50; i++) {
+            stringBuilder.append('i');
+        }
+        String longInputName = stringBuilder.toString();
+
+        stringBuilder = new StringBuilder("");
+        for (int i = 0; i < Application.URL_LENGTH + 50; i++) {
+            stringBuilder.append('i');
+        }
+        String longInputUrl = "http://" + stringBuilder.toString();
+
+        String emptyError = "Name is required.";
+
+        String emptyString = "";
+        String whiteSpace = "     ";
 
         DatabaseUtils.createTeam(teamName);
 
         TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink();
-		
-		//set up an organization,
-		//add an application for duplicate checking,
-		//add an application for normal testing,
-		// and Test a submission with no changes
-		teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
+
+        //set up an organization,
+        //add an application for duplicate checking,
+        //add an application for normal testing,
+        // and Test a submission with no changes
+        teamIndexPage = teamIndexPage.expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName2, validUrlText, "Low")
                 .saveApplication()
                 .clickOrganizationHeaderLink();
@@ -284,24 +288,24 @@ public class ApplicationIT extends BaseIT {
                 .clickViewAppLink(appName, teamName);
 
         sleep(2000);
-		// Test blank input
-		applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
+        // Test blank input
+        applicationDetailPage = applicationDetailPage.clickEditDeleteBtn()
                 .setNameInput(emptyString)
                 .setUrlInput(emptyString)
                 .clickUpdateApplicationButtonInvalid();
-		
-		assertTrue("The correct error did not appear for the name field.", 
-				applicationDetailPage.getNameRequiredError().equals(emptyError));
 
-		// Test URL format
-		applicationDetailPage = applicationDetailPage.clickCloseAppInvalid()
+        assertTrue("The correct error did not appear for the name field.",
+                applicationDetailPage.getNameRequiredError().equals(emptyError));
+
+        // Test URL format
+        applicationDetailPage = applicationDetailPage.clickCloseAppInvalid()
                 .clickEditDeleteBtn()
                 .setNameInput("dummyName")
                 .setUrlInput(urlText)
                 .clickUpdateApplicationButtonInvalid();
 
-		assertTrue("The correct error did not appear for the url field.",
-				applicationDetailPage.getUrlError().equals("URL is invalid."));
+        assertTrue("The correct error did not appear for the url field.",
+                applicationDetailPage.getUrlError().equals("URL is invalid."));
 
         /*  Need to Fix name lengths to work correctly
 		// Test browser field length limits
@@ -314,15 +318,15 @@ public class ApplicationIT extends BaseIT {
 		assertTrue("The length limit was incorrect for name.", 
 				applicationDetailPage.getNameText().length() == Application.NAME_LENGTH);
 	    */
-	}
+    }
 
-	@Test
-	public void testAddWafAtApplicationCreationTimeAndDelete() {
-		String wafName = "appCreateTimeWaf1";
-		String type = "Snort";
-		String teamName = "appCreateTimeWafOrg2";
-		String appName = "appCreateTimeWafName2";
-		String appUrl = "http://testurl.com";
+    @Test
+    public void testAddWafAtApplicationCreationTimeAndDelete() {
+        String wafName = "appCreateTimeWaf1";
+        String type = "Snort";
+        String teamName = "appCreateTimeWafOrg2";
+        String appName = "appCreateTimeWafName2";
+        String appUrl = "http://testurl.com";
 
         DatabaseUtils.createTeam(teamName);
 
@@ -334,7 +338,7 @@ public class ApplicationIT extends BaseIT {
                 .createNewWaf(wafName, type)
                 .clickCreateWaf();
 
-		// Add Application with WAF
+        // Add Application with WAF
         ApplicationDetailPage applicationDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, appUrl, "Low")
@@ -348,42 +352,42 @@ public class ApplicationIT extends BaseIT {
                 .clickUpdateApplicationButton();
 
 
-		// Check that it also appears on the WAF page.
+        // Check that it also appears on the WAF page.
         WafRulesPage wafDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
                 .clickWafsHeaderLink()
                 .clickRules(wafName);
-		
-		assertTrue("The WAF was not added correctly.", 
-				wafDetailPage.isTextPresentInApplicationsTableBody(appName));
-		
-		// Attempt to delete the WAF and ensure that it is a failure because the Application is still there
-		// If the page goes elsewhere, this call will fail.
-		wafIndexPage = wafDetailPage.clickOrganizationHeaderLink()
+
+        assertTrue("The WAF was not added correctly.",
+                wafDetailPage.isTextPresentInApplicationsTableBody(appName));
+
+        // Attempt to delete the WAF and ensure that it is a failure because the Application is still there
+        // If the page goes elsewhere, this call will fail.
+        wafIndexPage = wafDetailPage.clickOrganizationHeaderLink()
                 .clickWafsHeaderLink()
                 .clickDeleteWaf(wafName);
-		
-		// Delete app and org and make sure the Application doesn't appear in the WAFs table.
-		wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
+
+        // Delete app and org and make sure the Application doesn't appear in the WAFs table.
+        wafDetailPage = wafIndexPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickDeleteButton()
                 .clickWafsHeaderLink()
                 .clickRules(wafName);
-		
-		assertFalse("The Application was not removed from the WAF correctly.", 
-				wafDetailPage.isTextPresentInApplicationsTableBody(appName));
-		
-		loginPage = wafDetailPage.clickWafsHeaderLink().clickDeleteWaf(wafName).logout();
-		
-	}
 
-	@Test
-	public void testSwitchWafs() {
-		String wafName1 = "firstWaf" + getRandomString(3);
-		String wafName2 = "secondWaf" + getRandomString(3);
-		String type1 = "Snort" ;
-		String type2 = "mod_security";
-		String teamName = "testSwitchWafs" + getRandomString(3);
-		String appName = "switchWafApp" + getRandomString(3);
+        assertFalse("The Application was not removed from the WAF correctly.",
+                wafDetailPage.isTextPresentInApplicationsTableBody(appName));
+
+        loginPage = wafDetailPage.clickWafsHeaderLink().clickDeleteWaf(wafName).logout();
+
+    }
+
+    @Test
+    public void testSwitchWafs() {
+        String wafName1 = "firstWaf" + getRandomString(3);
+        String wafName2 = "secondWaf" + getRandomString(3);
+        String type1 = "Snort";
+        String type2 = "mod_security";
+        String teamName = "testSwitchWafs" + getRandomString(3);
+        String appName = "switchWafApp" + getRandomString(3);
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
@@ -407,7 +411,7 @@ public class ApplicationIT extends BaseIT {
                 .addWaf(wafName1)
                 .saveWafAdd();
 
-        assertTrue("Waf wasn't added correctly",applicationDetailPage.checkWafName().contains(wafName1));
+        assertTrue("Waf wasn't added correctly", applicationDetailPage.checkWafName().contains(wafName1));
 
         applicationDetailPage.clickUpdateApplicationButton();
 
@@ -415,20 +419,20 @@ public class ApplicationIT extends BaseIT {
                 applicationDetailPage.getAlert().contains("Successfully edited application " + appName));
 
         applicationDetailPage.clickEditDeleteBtn()
-              .clickAddWaf()
-              .addWaf(wafName2)
-              .saveWafAdd()
-              .clickUpdateApplicationButton()
-              .clickEditDeleteBtn();
+                .clickAddWaf()
+                .addWaf(wafName2)
+                .saveWafAdd()
+                .clickUpdateApplicationButton()
+                .clickEditDeleteBtn();
 
         assertTrue("Did not properly save changing of Wafs.", applicationDetailPage.getWafText().contains(wafName2));
-	}
+    }
 
-	@Test
-	public void sameAppNameMultipleTeams(){
-		String appName = getName();
-		String teamName1 = getName();
-		String teamName2 = getName();
+    @Test
+    public void sameAppNameMultipleTeams() {
+        String appName = getName();
+        String teamName1 = getName();
+        String teamName2 = getName();
 
         DatabaseUtils.createTeam(teamName1);
         DatabaseUtils.createApplication(teamName1, appName);
@@ -439,21 +443,21 @@ public class ApplicationIT extends BaseIT {
 
         //Add an app with same name to both teams
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName2)
-				.addNewApplication(teamName2, appName, "", "Low")
-				.saveApplication()
-				.expandTeamRowByName(teamName1)
-				.clickViewAppLink(appName,teamName1);
-		
-		Boolean isAppInTeam1 = applicationDetailPage.getNameText().contains(appName);
-		
-		applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName2)
-				.clickViewAppLink(appName, teamName2);
-		
-		Boolean isAppInTeam2  = applicationDetailPage.getNameText().contains(appName);
+                .addNewApplication(teamName2, appName, "", "Low")
+                .saveApplication()
+                .expandTeamRowByName(teamName1)
+                .clickViewAppLink(appName, teamName1);
 
-		assertTrue("Unable to add apps with the same name to different teams", isAppInTeam1 && isAppInTeam2);
-	}
+        Boolean isAppInTeam1 = applicationDetailPage.getNameText().contains(appName);
+
+        applicationDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName2)
+                .clickViewAppLink(appName, teamName2);
+
+        Boolean isAppInTeam2 = applicationDetailPage.getNameText().contains(appName);
+
+        assertTrue("Unable to add apps with the same name to different teams", isAppInTeam1 && isAppInTeam2);
+    }
 
     @Test
     public void switchTeamTest() {
@@ -673,14 +677,11 @@ public class ApplicationIT extends BaseIT {
     //TODO add validation test for static manual finding modal
     @Test
     public void deleteManualFindingScan() {
-        String teamName = "TeamName" + getRandomString(5);
-        String appName = "AppName" + getRandomString(5);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String CWE = "79";
         String url = "http://test.com";
         String desc = "Test Description for deleting manual finding.";
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -706,11 +707,9 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void deleteUploadedScan() {
-        String teamName = "TeamName" + getRandomString(5);
-        String appName = "AppName" + getRandomString(5);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage ap = loginPage.login("user", "password")
@@ -726,11 +725,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void deleteApplicationTest() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -750,19 +746,17 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void remoteSourceCodeTest() {
-        String teamName = getName();
+        String teamName = createTeam();
         String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
 
         String repositoryURL = "http://test.com";
         String repositoryRevision = "QA";
         String repositoryUserName = "user";
         String repositoryPassword = "password";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .addRemoteSourceCodeInformation(repositoryURL, repositoryRevision, repositoryUserName, repositoryPassword)
                 .clickModalSubmit();
 
@@ -783,10 +777,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void editSourceCodeTest() {
-        String teamName = getName();
+        String teamName = createTeam();
         String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
 
         String repositoryURL = "http://test.com";
         String repositoryRevision = "QA";
@@ -798,9 +790,9 @@ public class ApplicationIT extends BaseIT {
         String repositoryUserNameEdited = "user2";
         String repositoryPasswordEdited = "password2";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .addRemoteSourceCodeInformation(repositoryURL, repositoryRevision, repositoryUserName, repositoryPassword)
                 .clickModalSubmit();
 
@@ -811,7 +803,7 @@ public class ApplicationIT extends BaseIT {
                 .clickModalSubmit();
 
         applicationDetailPage.clickEditDeleteBtn()
-                  .expandSourceCodeFields();
+                .expandSourceCodeFields();
 
         assertTrue("Repository URL was not saved properly.",
                 applicationDetailPage.isRepositoryURLCorrect(repositoryURLEdited));
@@ -825,17 +817,14 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void localSourceCodeTest() {
-
-        String teamName = getName();
+        String teamName = createTeam();
         String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
 
         String repositoryPath = System.getProperty("sourceCodeLocation");
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .addNewApplication(teamName,appName,"http://testapp.com","High")
+                .addNewApplication(teamName, appName, "http://testapp.com", "High")
                 .setSourceCodeFolder(repositoryPath)
                 .clickModalSubmit();
 
@@ -849,16 +838,14 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void createAppSourceCodeValidate() {
-        String teamName = getName();
+        String teamName = createTeam();
         String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
 
         String repositoryURL = "htt://test.com";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .setRemoteSourceCodeURL(repositoryURL);
 
         assertTrue("The correct error did not appear for the url field.",
@@ -870,21 +857,19 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void editApplicationSourceCodeValidation() {
-        String teamName = getName();
+        String teamName = createTeam();
         String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
 
         String repositoryURL = "http://test.com";
         String repositoryURLEdited = "htp://test1.com";
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .setRemoteSourceCodeURL(repositoryURL)
                 .clickModalSubmit();
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
                 .expandSourceCodeFields()
                 .setRepositoryURLEdited(repositoryURLEdited)
@@ -898,11 +883,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void createApplicationNewWaf() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         String wafName = getName();
 
@@ -914,10 +896,10 @@ public class ApplicationIT extends BaseIT {
                 .clickSetWaf();
 
         if (applicationDetailPage.isWafPresent()) {
-                    applicationDetailPage.clickCreateNewWaf()
-                        .setWafName(wafName)
-                        .clickCreateWAfButtom()
-                        .clickModalSubmit();
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
         } else {
             applicationDetailPage.setWafName(wafName)
                     .clickCreateWAfButtom()
@@ -932,22 +914,19 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void switchWafOnApplications() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String type = "Snort";
         String wafName1 = getName();
         String wafName2 = getName();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
-                .createNewWaf(wafName1,type)
+                .createNewWaf(wafName1, type)
                 .clickCreateWaf()
                 .clickAddWafLink()
-                .createNewWaf(wafName2,type)
+                .createNewWaf(wafName2, type)
                 .clickCreateWaf();
 
         // Assign WAf to the application
@@ -982,7 +961,7 @@ public class ApplicationIT extends BaseIT {
         WafIndexPage wafIndexPage = loginPage.login("user", "password")
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
-                .createNewWaf(wafName1,type)
+                .createNewWaf(wafName1, type)
                 .clickCreateWaf()
                 .clickDeleteWaf(wafName1);
 
@@ -992,12 +971,10 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void generateWafRules() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String wafName = getName();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -1029,13 +1006,11 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadLogFile() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -1077,12 +1052,10 @@ public class ApplicationIT extends BaseIT {
     }
 
     @Test
-    public void checkunmappedFindingsLink() {
-        String teamName = getName();
-        String appName = getName();
+    public void checkUnmappedFindingsLink() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -1098,11 +1071,8 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadNewScan() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName,appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
 
@@ -1114,16 +1084,14 @@ public class ApplicationIT extends BaseIT {
                 .clickUploadScan()
                 .uploadScan(newScan);
 
-        assertTrue("Scan didn't Upload",applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Scan didn't Upload", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
     }
 
     @Test
     public void uploadSameScanTwiceOnApplicationPage() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
@@ -1141,20 +1109,18 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uniqueIDTest() {
-        String teamName = getName();
+        String teamName = createTeam();
         String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
 
         String uniqueId = getName();
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
-                .addNewApplication(teamName,appName,"http://testapp.com","Low")
+                .addNewApplication(teamName, appName, "http://testapp.com", "Low")
                 .setUniqueId(uniqueId)
                 .clickModalSubmit();
 
-        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName,teamName)
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn();
 
         assertTrue("Unique ID wasn't saved", applicationDetailPage.isUniqueIdAvailabe(uniqueId));
@@ -1162,11 +1128,9 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void unmappedFindingScanTest() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
@@ -1239,7 +1203,7 @@ public class ApplicationIT extends BaseIT {
 
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName,  ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -1247,7 +1211,7 @@ public class ApplicationIT extends BaseIT {
                 .clickViewAppLink(appName, teamName)
                 .expandVulnerabilityByType("High119");
 
-        assertTrue("CVE link wasn't showed" , applicationDetailPage.isCveLinkDisplay("0"));
+        assertTrue("CVE link wasn't showed", applicationDetailPage.isCveLinkDisplay("0"));
         assertTrue("Component wasn't showed", applicationDetailPage.isCveComponentDisplay("0"));
         assertTrue("Description wasn't showed", applicationDetailPage.isCveDescriptionInputPresent("0"));
     }
@@ -1272,12 +1236,4 @@ public class ApplicationIT extends BaseIT {
 
         assertTrue("Delete Button is still available", applicationDetailPage.isScanDeleted());
     }
-
-    public void sleep(int num) {
-		try {
-			Thread.sleep(num);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
 }

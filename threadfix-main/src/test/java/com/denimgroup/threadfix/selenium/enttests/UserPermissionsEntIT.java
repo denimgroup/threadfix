@@ -44,9 +44,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void navigationTest() {
-        String userName = getRandomString(8);
-
-        DatabaseUtils.createUser(userName);
+        String userName = createRegularUser();
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -61,14 +59,9 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void addAllPermissionsTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String userName = createRegularUser();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        String userName = getRandomString(8);
-        String password = getRandomString(15);
         String role = "Administrator";
 
         DatabaseUtils.createUser(userName, role);
@@ -87,19 +80,13 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void addAppPermissionsTest() {
-        String teamName = getRandomString(8);
-        String appName1 = getRandomString(8);
-        String appName2 = getRandomString(8);
+        String teamName = createTeam();
+        String appName1 = createApplication(teamName);
+        String appName2 = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName1);
-        DatabaseUtils.createApplication(teamName, appName2);
-
-        String userName = getRandomString(8);
+        String userName = createRegularUser();
         String appRole1 = "Administrator";
         String appRole2 = "User";
-
-        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -120,15 +107,10 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void addPermissionsFieldValidation() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        String userName = getRandomString(8);
-
-        DatabaseUtils.createUser(userName);
+        String userName = createRegularUser();
 
         String noTeamRoleError = "Failure. Message was : You must pick a Role.";
         String noApplicationRoleSelectedError = "Failure. Message was : You must select at least one application.";
@@ -153,16 +135,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void duplicatePermissionsFieldValidation() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        String userName = getRandomString(8);
+        String userName = createRegularUser();
         String teamRole = "Administrator";
-
-        DatabaseUtils.createUser(userName);
 
         String duplicateErrorMessage = "Failure. Message was : That team / role combo already exists for this user.";
 
@@ -188,19 +165,14 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void permissionUsageValidation() {
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName1 = createTeam();
+        String teamName2 = createTeam();
+        String appName = getName();
 
-        DatabaseUtils.createTeam(teamName1);
-        DatabaseUtils.createTeam(teamName2);
-
-        String userName = getRandomString(8);
+        String userName = createRegularUser();
         String password = "TestPassword";
         String role1 = "Administrator";
         String role2 = "User";
-
-        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -243,16 +215,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void deletePermissionsTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        String userName = getRandomString(8);
+        String userName = createRegularUser();
         String role = "Administrator";
-
-        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -273,18 +240,13 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void deletePermissionsValidation() {
-        String teamName1 = getRandomString(8);
-        String teamName2 = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName1 = createTeam();
+        String teamName2 = createTeam();
+        String appName = getName();
 
-        DatabaseUtils.createTeam(teamName1);
-        DatabaseUtils.createTeam(teamName2);
-
-        String userName = getRandomString(8);
+        String userName = createRegularUser();
         String password = "TestPassword";
         String role = "Administrator";
-
-        DatabaseUtils.createUser(userName);
 
         UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
                 .clickManageUsersLink()
@@ -329,21 +291,15 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void permissionsAlphabeticalOrderTest() {
-        String firstTeamName = "A" + getRandomString(8);
-        String firstAppName = getRandomString(8);
-
+        String firstTeamName = "A" + getName();
         DatabaseUtils.createTeam(firstTeamName);
-        DatabaseUtils.createApplication(firstTeamName, firstAppName);
+        String firstAppName = createApplication(firstTeamName);
 
-        String secondTeamName = "Z" + getRandomString(8);
-        String secondAppName = getRandomString(8);
-
+        String secondTeamName = "Z" + getName();
         DatabaseUtils.createTeam(secondTeamName);
-        DatabaseUtils.createApplication(secondTeamName, secondAppName);
+        String secondAppName = createApplication(secondTeamName);
 
-        String userName = getRandomString(8);
-
-        DatabaseUtils.createUser(userName);
+        String userName = createRegularUser();
 
         UserIndexPage userIndexPage = loginPage.login("user", "password")
                 .clickManageUsersLink();
@@ -358,17 +314,15 @@ public class UserPermissionsEntIT extends BaseIT{
     @Ignore
     @Test
     public void reportPermissionsTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         String userName = getRandomString(8);
         String password = getRandomString(15);
 
-        String roleName = getRandomString(8);
+        String roleName = getName();
         String deniedPermission = "canGenerateReports";
 
         //DatabaseUtils.createRole(roleName);
@@ -384,8 +338,8 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkViewErrorLogPermission() {
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = getName();
+        String userName = getName();
 
         RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
                 .clickManageRolesLink()
@@ -415,13 +369,10 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkUploadScanPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        String roleName = getRandomString(8);
+        String roleName = getName();
         String userName = getRandomString(8);
 
         RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")

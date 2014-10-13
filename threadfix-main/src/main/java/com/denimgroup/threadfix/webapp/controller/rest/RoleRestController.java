@@ -69,6 +69,7 @@ public class RoleRestController {
             role.setCanManageUsers(allPermissions);
             role.setCanManageUsers(allPermissions);
             role.setCanManageWafs(allPermissions);
+            role.setCanManageVulnFilters(allPermissions);
             role.setCanModifyVulnerabilities(allPermissions);
             role.setCanSubmitDefects(allPermissions);
             role.setCanUploadScans(allPermissions);
@@ -78,6 +79,141 @@ public class RoleRestController {
         roleService.storeRole(role);
 
         return success(role);
-
     }
+
+    @RequestMapping(value= "create/specific", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Role> permissionSpecificRole(@RequestParam String roleName,
+                                                                   @RequestParam String permission) {
+
+        Role role = new Role();
+        role.setDisplayName(roleName);
+
+        switch(permission) {
+            case "canManageUsers":
+                role.setCanManageUsers(true);
+                break;
+            case "canManageRoles":
+                role.setCanManageRoles(true);
+                break;
+            case "canManageTeams":
+                role.setCanManageTeams(true);
+                break;
+            case "canManageDefectTrackers":
+                role.setCanManageDefectTrackers(true);
+                break;
+            case "canManageVulnFilters":
+                role.setCanManageVulnFilters(true);
+                break;
+            case "canModifyVulnerabilities":
+                role.setCanModifyVulnerabilities(true);
+                break;
+            case "canUploadScans":
+                role.setCanUploadScans(true);
+                break;
+            case "canViewErrorLogs":
+                role.setCanViewErrorLogs(true);
+                break;
+            case "canSubmitDefects":
+                role.setCanSubmitDefects(true);
+                break;
+            case "canManageWafs":
+                role.setCanManageWafs(true);
+                break;
+            case "canGenerateWafRules":
+                role.setCanGenerateWafRules(true);
+                break;
+            case "canManageApiKeys":
+                role.setCanManageApiKeys(true);
+                break;
+            case "canManageRemoteProviders":
+                role.setCanManageRemoteProviders(true);
+                break;
+            case "canGenerateReports":
+                role.setCanGenerateReports(true);
+                break;
+            case "canManageApplications":
+                role.setCanManageApplications(true);
+                break;
+            case "canManageScanAgents":
+                role.setCanManageScanAgents(true);
+                break;
+            case "canManageSystemSettings":
+                role.setCanManageSystemSettings(true);
+                break;
+            default:
+                throw new RuntimeException(permission + " is not a valid permission");
+        }
+
+        roleService.storeRole(role);
+
+        return success(role);
+    }
+
+    @RequestMapping(value= "edit", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Role> removePermissionFromRole(@RequestParam String roleName,
+                                                                   @RequestParam String permission) {
+
+        Role role = roleService.loadRole(roleName);
+
+        switch(permission) {
+            case "canManageUsers":
+                role.setCanManageUsers(false);
+                break;
+            case "canManageRoles":
+                role.setCanManageRoles(false);
+                break;
+            case "canManageTeams":
+                role.setCanManageTeams(false);
+                break;
+            case "canManageDefectTrackers":
+                role.setCanManageDefectTrackers(false);
+                break;
+            case "canManageVulnFilters":
+                role.setCanManageVulnFilters(false);
+                break;
+            case "canModifyVulnerabilities":
+                role.setCanModifyVulnerabilities(false);
+                break;
+            case "canUploadScans":
+                role.setCanUploadScans(false);
+                break;
+            case "canViewErrorLogs":
+                role.setCanViewErrorLogs(false);
+                break;
+            case "canSubmitDefects":
+                role.setCanSubmitDefects(false);
+                break;
+            case "canManageWafs":
+                role.setCanManageWafs(false);
+                break;
+            case "canGenerateWafRules":
+                role.setCanGenerateWafRules(false);
+                break;
+            case "canManageApiKeys":
+                role.setCanManageApiKeys(false);
+                break;
+            case "canManageRemoteProviders":
+                role.setCanManageRemoteProviders(false);
+                break;
+            case "canGenerateReports":
+                role.setCanGenerateReports(false);
+                break;
+            case "canManageApplications":
+                role.setCanManageApplications(false);
+                break;
+            case "canManageScanAgents":
+                role.setCanManageScanAgents(false);
+                break;
+            case "canManageSystemSettings":
+                role.setCanManageSystemSettings(false);
+                break;
+            default:
+                throw new RuntimeException(permission + " is not a valid permission");
+        }
+
+        roleService.storeRole(role);
+
+        return success(role);
+    }
+
 }

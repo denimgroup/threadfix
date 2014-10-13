@@ -117,4 +117,24 @@ public abstract class BaseIT {
         } else
             throw new RuntimeException("An application must be created within a team.");
     }
+
+    /**
+     * This method will create a regular user with no role in the ThreadFix DBS
+     * @return String of the user's name that was just created in ThreadFix
+     */
+    protected String createRegularUser() {
+        String userName = getName();
+        DatabaseUtils.createUser(userName);
+        return userName;
+    }
+
+    /**
+     * This method will create an admin user with no role in the ThreadFix DBS
+     * @return String of the user's name that was just created in ThreadFix
+     */
+    protected String createAdminUser() {
+        String userName = getName();
+        DatabaseUtils.createUser(userName, "Administrator");
+        return userName;
+    }
 }

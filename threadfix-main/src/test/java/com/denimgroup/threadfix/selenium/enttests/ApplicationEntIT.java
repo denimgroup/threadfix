@@ -39,23 +39,11 @@ public class ApplicationEntIT extends BaseIT {
 
     @Test
     public void viewBasicPermissibleUsers(){
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String userName = getRandomString(8);
-        String password = getRandomString(15);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String userName = createRegularUser();
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn();
-
-        ApplicationDetailPage applicationDetailPage = userIndexPage
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName)
