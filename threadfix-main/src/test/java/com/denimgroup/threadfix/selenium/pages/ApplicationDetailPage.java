@@ -271,15 +271,32 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public ApplicationDetailPage setScheduledScanScanner(String scanner) {
-        new Select(driver.findElementById("scanner2")).selectByVisibleText(scanner);
+    public ApplicationDetailPage setScheduledScanScanner(String scanner, String appId) {
+        new Select(driver.findElementById("scanner" + appId)).selectByVisibleText(scanner);
         return this;
+    }
+
+    public String getApplicationId() {
+        String hrefText = driver.findElementById("editVulnerabilityFiltersButton").getAttribute("href");
+        return hrefText.substring(hrefText.indexOf("applications/") + 13, hrefText.indexOf("/filters"));
     }
 
     public ApplicationDetailPage clickAddWaf() {
         driver.findElementById("addWafButton").click();
         waitForElement(driver.findElementById("wafSelect"));
         return new ApplicationDetailPage(driver);
+    }
+
+    public String getScheduledScanScanner() {
+        return driver.findElementById("scheduledScanScanner0").getText();
+    }
+
+    public String getScheduledScanDay() {
+        return driver.findElementById("scheduledScanDay0").getText();
+    }
+
+    public String getScheduledScanFrequency() {
+        return driver.findElementById("scheduledScanFrequency0").getText();
     }
 
     public ApplicationDetailPage clickCreateNewWaf() {
@@ -873,6 +890,13 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public String[] getFirstScanInfo() {
+        String scannerType = driver.findElementById("channelType0").getText().trim();
+        String numVulns = driver.findElementById("numTotalVulnerabilities0").getText().trim();
+        String[] scanValues = {scannerType,numVulns};
+        return scanValues;
+    }
+
     public ApplicationDetailPage uploadScan(String file) {
         driver.findElementById("scanFileInput").sendKeys(file);
         waitForElement(driver.findElementById("toggleVulnTree"));
@@ -884,6 +908,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickDeleteScheduledScan() {
+        driver.findElementById("scheduledScanDeleteButton0").click();
+        driver.switchTo().alert().accept();
+        return new ApplicationDetailPage(driver);
+    }
     /*________________ Boolean Functions ________________*/
 
     public boolean isApplicationNamePresent() {

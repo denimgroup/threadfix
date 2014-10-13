@@ -36,7 +36,6 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class ScheduledScanEntIT extends BaseIT{
 
-    @Ignore
     @Test
     public void scheduleDailyScanTest() {
         String teamName = getRandomString(8);
@@ -54,13 +53,58 @@ public class ScheduledScanEntIT extends BaseIT{
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
-                .setScheduledScanScanner("OWASP Zed Attack Proxy")
+                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
                 .clickModalSubmit();
 
         assertTrue("Scan was not scheduled properly.", applicationDetailPage.isScheduledScanCountCorrect("1"));
     }
 
-    @Ignore
+    @Test
+    public void validDailyScanTest(){
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScheduleScanTab(0);
+
+        applicationDetailPage.clickScheduleNewScanButton()
+                .setScheduledScanFrequency("Daily")
+                .setScheduledScanTime("8", "15", "PM")
+                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
+                .clickModalSubmit();
+
+        boolean scanScanner = applicationDetailPage.getScheduledScanScanner().trim().equals("OWASP Zed Attack Proxy");
+        boolean scanDay = applicationDetailPage.getScheduledScanDay().trim().equals("8:15   PM");
+        boolean scanFrequency = applicationDetailPage.getScheduledScanFrequency().trim().equals("Daily");
+
+        assertTrue("Daily scan validation failed", scanScanner && scanDay && scanFrequency);
+    }
+
+    @Test
+    public void deleteDailyScanTest(){
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScheduleScanTab(0);
+
+        applicationDetailPage.clickScheduleNewScanButton()
+                .setScheduledScanFrequency("Daily")
+                .setScheduledScanTime("8", "15", "PM")
+                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
+                .clickModalSubmit();
+
+        applicationDetailPage.clickDeleteScheduledScan();
+
+        assertTrue("Scan was not deleted properly.", applicationDetailPage.isScheduledScanCountCorrect("0"));
+    }
+
     @Test
     public void scheduleWeeklyScanTest() {
         String teamName = getRandomString(8);
@@ -79,9 +123,57 @@ public class ScheduledScanEntIT extends BaseIT{
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
                 .setScheduledScanDay("Friday")
-                .setScheduledScanScanner("Burp Suite")
+                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
                 .clickModalSubmit();
 
         assertTrue("Scan was not scheduled properly.", applicationDetailPage.isScheduledScanCountCorrect("1"));
+    }
+
+    @Test
+    public void validWeeklyScanTest(){
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScheduleScanTab(0);
+
+        applicationDetailPage.clickScheduleNewScanButton()
+                .setScheduledScanFrequency("Weekly")
+                .setScheduledScanTime("6", "30", "AM")
+                .setScheduledScanDay("Friday")
+                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
+                .clickModalSubmit();
+
+        boolean scanScanner = applicationDetailPage.getScheduledScanScanner().trim().equals("OWASP Zed Attack Proxy");
+        boolean scanDay = applicationDetailPage.getScheduledScanDay().trim().equals("Friday   6:30   AM");
+        boolean scanFrequency = applicationDetailPage.getScheduledScanFrequency().trim().equals("Weekly");
+
+        assertTrue("Daily scan validation failed", scanScanner && scanDay && scanFrequency);
+    }
+
+    @Test
+    public void deleteWeeklyScanTest(){
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScheduleScanTab(0);
+
+        applicationDetailPage.clickScheduleNewScanButton()
+                .setScheduledScanFrequency("Weekly")
+                .setScheduledScanTime("6", "30", "AM")
+                .setScheduledScanDay("Friday")
+                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
+                .clickModalSubmit();
+
+        applicationDetailPage.clickDeleteScheduledScan();
+
+        assertTrue("Scan was not deleted properly.", applicationDetailPage.isScheduledScanCountCorrect("0"));
     }
 }
