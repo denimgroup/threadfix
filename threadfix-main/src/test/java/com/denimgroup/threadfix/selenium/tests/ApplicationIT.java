@@ -582,6 +582,74 @@ public class ApplicationIT extends BaseIT {
                 editedParameter.equals(findingDetailPage.getDetail("parameter")));
     }
 
+    @Test
+    public void testVulnExpandCollapse() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+        String appVuln = "Critical298";
+        String expandVuln = "expandVuln" + appVuln;
+        String collapseVuln = "collapseVuln" + appVuln;
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .clickStaticRadioButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(description)
+                .clickDynamicSubmit();
+
+        applicationDetailPage.expandVulnerabilityByType(appVuln).collapseVulnerabilityByType(appVuln);
+
+        assertTrue("Vulnerability did not expand twice", applicationDetailPage.isClickable(expandVuln));
+
+        applicationDetailPage.expandVulnerabilityByType(appVuln);
+
+        assertTrue("Vulnerability did not collapse twice", applicationDetailPage.isClickable(collapseVuln));
+    }
+
+    @Test
+    public void testCommentValidation() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+        String appVuln = "Critical298";
+        String longComment = getRandomString(450);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .clickStaticRadioButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(description)
+                .clickDynamicSubmit();
+
+        applicationDetailPage.expandVulnerabilityByType(appVuln)
+                .expandCommentSection(appVuln + "0")
+                .addComment(appVuln + "0")
+                .setComment("")
+                .clickDynamicSubmit();
+
+        assertTrue("Blank comment accepted as valid submission", applicationDetailPage.errorMessagePresent());
+
+        applicationDetailPage.setComment(longComment);
+
+        assertTrue(">200 character comment accepted", !applicationDetailPage.isButtonEnabled());
+    }
 
     @Test
     public void testAddStaticManualFinding() {
@@ -878,7 +946,7 @@ public class ApplicationIT extends BaseIT {
         assertTrue("The correct error did not appear for the url field.",
                 applicationDetailPage.getUrlRepositoryError().equals("URL is invalid."));
         assertFalse("Add Application Button is clickable",
-                applicationDetailPage.isApplicationSaveChangesButtonClickable());
+                applicationDetailPage.isButtonEnabled());
     }
 
     @Test

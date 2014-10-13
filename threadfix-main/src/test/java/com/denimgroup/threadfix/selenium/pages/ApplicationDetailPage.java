@@ -603,6 +603,11 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage collapseVulnerabilityByType(String type) {
+        driver.findElementById("collapseVuln" + type).click();
+        return new ApplicationDetailPage(driver);
+    }
+
     public VulnerabilityDetailPage clickViewMoreVulnerabilityLink(String vulnerability) {
         driver.findElementById("viewMoreLink" + vulnerability).click();
         return new VulnerabilityDetailPage(driver);
@@ -1236,6 +1241,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean applicationErrorMessage() {
         return driver.findElementById("errorSpan").getText().contains("Failure. HTTP status was 401");
+    }
+
+    public boolean errorMessagePresent() {
+        return !driver.findElementById("errorSpan").getText().equals("");
     }
 
     public boolean isLeftReportLinkPresent() {

@@ -356,6 +356,10 @@ public abstract class BasePage {
 	public boolean isLogsMenuLinkClickable(){
         return isClickable("viewLogsLink");
 	}
+
+    public boolean isButtonEnabled() {
+        return driver.findElementsByCssSelector("#submit.disabled").isEmpty();
+    }
 	
 	public boolean isConfigureDefaultsLinkPresent(){
 		return driver.findElementById("configureDefaultsLink").isDisplayed();
