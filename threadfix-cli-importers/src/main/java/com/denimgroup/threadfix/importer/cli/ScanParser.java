@@ -67,6 +67,26 @@ public class ScanParser {
     }
 
     @Transactional(readOnly = false) // used to be true
+    public ScanCheckResultBean testScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {
+        return testScan(new File(filePath));
+    }
+
+    @Transactional(readOnly = false) // used to be true
+    public ScanCheckResultBean testScan(@Nonnull File file) throws TypeParsingException, ScanTestingException {
+        if (!file.exists()) {
+            throw new ScanFileNotFoundException("Scan file not found: " + file.getAbsolutePath());
+        }
+
+        ScannerType scannerType = bridge.getType(file);
+
+        if (scannerType == null) {
+            throw new TypeParsingException();
+        } else {
+            return bridge.testScan(scannerType, file);
+        }
+    }
+
+    @Transactional(readOnly = false) // used to be true
     public Scan getScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {
         return getScan(new File(filePath));
     }

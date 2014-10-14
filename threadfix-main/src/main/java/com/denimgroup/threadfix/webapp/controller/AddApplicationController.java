@@ -98,8 +98,8 @@ public class AddApplicationController {
     @RequestMapping(method = RequestMethod.POST, consumes="application/x-www-form-urlencoded",
             produces="application/json")
     public @ResponseBody Object submit(@PathVariable("orgId") int orgId,
-                                                      @Valid @ModelAttribute Application application, BindingResult result,
-                                                      Model model) {
+                                       @Valid @ModelAttribute Application application, BindingResult result,
+                                      Model model) {
         if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, null)) {
             return RestResponse.failure("You don't have permissions to add a new application.");
         }
