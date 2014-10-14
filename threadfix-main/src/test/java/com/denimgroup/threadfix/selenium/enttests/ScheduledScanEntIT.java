@@ -101,6 +101,7 @@ public class ScheduledScanEntIT extends BaseIT{
                 .clickModalSubmit();
 
         applicationDetailPage.clickDeleteScheduledScan();
+        sleep(2000);
 
         assertTrue("Scan was not deleted properly.", applicationDetailPage.isScheduledScanCountCorrect("0"));
     }
@@ -169,10 +170,11 @@ public class ScheduledScanEntIT extends BaseIT{
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
                 .setScheduledScanDay("Friday")
-                .setScheduledScanScanner("OWASP Zed Attack Proxy",applicationDetailPage.getApplicationId())
+                .setScheduledScanScanner("Burp Suite",applicationDetailPage.getApplicationId())
                 .clickModalSubmit();
 
         applicationDetailPage.clickDeleteScheduledScan();
+        sleep(2000);
 
         assertTrue("Scan was not deleted properly.", applicationDetailPage.isScheduledScanCountCorrect("0"));
     }

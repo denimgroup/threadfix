@@ -606,11 +606,15 @@ public class ApplicationIT extends BaseIT {
                 .setDescription(description)
                 .clickDynamicSubmit();
 
-        applicationDetailPage.expandVulnerabilityByType(appVuln).collapseVulnerabilityByType(appVuln);
+        applicationDetailPage.expandVulnerabilityByType(appVuln);
+        sleep(2000);
+        applicationDetailPage.collapseVulnerabilityByType(appVuln);
+        sleep(2000);
 
         assertTrue("Vulnerability did not expand twice", applicationDetailPage.isClickable(expandVuln));
 
         applicationDetailPage.expandVulnerabilityByType(appVuln);
+        sleep(2000);
 
         assertTrue("Vulnerability did not collapse twice", applicationDetailPage.isClickable(collapseVuln));
     }
