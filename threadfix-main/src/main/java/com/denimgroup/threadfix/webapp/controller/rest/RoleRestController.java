@@ -150,7 +150,7 @@ public class RoleRestController {
     }
 
     @RequestMapping(value= "edit", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Role> removePermissionFromRole(@RequestParam String roleName,
+    public @ResponseBody RestResponse<Role> removePermission(@RequestParam String roleName,
                                                                    @RequestParam String permission) {
 
         Role role = roleService.loadRole(roleName);

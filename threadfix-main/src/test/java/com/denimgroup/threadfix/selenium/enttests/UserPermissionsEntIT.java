@@ -338,27 +338,10 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkViewErrorLogPermission() {
-        String roleName = getName();
-        String userName = getName();
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canViewErrorLogs");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canViewErrorLogs")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -372,27 +355,10 @@ public class UserPermissionsEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        String roleName = getName();
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canUploadScans");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canUploadScans")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         TeamIndexPage teamIndexPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -408,37 +374,18 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkSubmitDefectsPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canSubmitDefects");
 
-        String newDefectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
+        String userName = createSpecificRoleUser(roleName);
+
+        String newDefectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
-
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canSubmitDefects")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
 
         DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, "TestPassword")
                 .clickDefectTrackersLink()
@@ -460,34 +407,15 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageVulnerabilityFilters() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName,appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageVulnFilters");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageVulnFilters")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         FilterPage applicationFilterPage = loginPage.login(userName, "TestPassword")
                 .clickManageFiltersLink();
@@ -505,34 +433,15 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkModifyVulnerabilitiesPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canModifyVulnerabilities");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canModifyVulnerabilities")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -568,36 +477,17 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageWAFsPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String wafName = getRandomString(8);
+        String wafName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.createWaf(wafName, "Snort" );
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageWafs");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageWafs")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -636,62 +526,26 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageUsersPermission() {
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageUsers");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canManageUsers")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("manageUsersLink"));
+        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("manageUsersLink"));
     }
 
     @Test
     public void checkManageTeamsPermission() {
-        String teamName = getRandomString(8);
+        String teamName = createTeam();
 
-        DatabaseUtils.createTeam(teamName);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageTeams");
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
-
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageTeams")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         TeamDetailPage teamDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -703,95 +557,41 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageRoles() {
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageRoles");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canManageRoles")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("manageRolesLink"));
+        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("manageRolesLink"));
     }
 
     @Test
     public void checkManageSystemSettingsPermission() {
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageSystemSettings");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canManageSystemSettings")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Users Link is Present", rolesIndexPage.isElementPresent("configureDefaultsLink"));
+        assertFalse("Manage Users Link is Present", dashboardPage.isElementPresent("configureDefaultsLink"));
     }
 
     @Test
     public void checkManageScanAgentsPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageScanAgents");
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
-
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageScanAgents")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -808,64 +608,27 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageRemoteProvidersPermission() {
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageRemoteProviders");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canManageRemoteProviders")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
         dashboardPage.clickConfigTab();
 
-        assertFalse("Manage Remote Providers Link is Present", rolesIndexPage.isElementPresent("remoteProvidersLink"));
+        assertFalse("Manage Remote Providers Link is Present", dashboardPage.isElementPresent("remoteProvidersLink"));
     }
 
     @Test
     public void checkManageApplicationsPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageApplications");
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
-
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageApplications")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -880,27 +643,10 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageAPIKeysPermission() {
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageApiKeys");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canManageApiKeys")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -911,37 +657,17 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkGenerateWAFRulesPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canGenerateWafRules");
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String userName = createSpecificRoleUser(roleName);
 
-        String wafName = "testDeleteWaf" + getRandomString(3);
-
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canGenerateWafRules")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -967,34 +693,15 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkGenerateReportsPermission() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canGenerateReports");
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false, "canGenerateReports")
-                .clickSaveRole();
-
-        UserIndexPage userIndexPage = rolesIndexPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        String userName = createSpecificRoleUser(roleName);
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -1035,40 +742,23 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void testManageApplicationPermissionScanAgent() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String roleName = createRole();
+        DatabaseUtils.removePermission(roleName, "canManageApplications");
 
-        String roleName = getRandomString(8);
-        String userName = getRandomString(8);
+        String userName = createSpecificRoleUser(roleName);
 
-        RolesIndexPage rolesIndexPage = this.loginPage.login("user", "password")
-                .clickManageRolesLink()
-                .clickCreateRole()
-                .setRoleName(roleName)
-                .toggleAllPermissions(true)
-                .toggleSpecificPermission(false,"canManageApplications")
-                .clickSaveRole();
-
-        ApplicationDetailPage applicationDetailPage = rolesIndexPage.clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickScanAgentTasksTab(0)
                 .clickAddNewScanTask()
                 .submitScanQueue();
 
-        UserIndexPage userIndexPage = applicationDetailPage.clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickAddNewUserBtn();
-
-        LoginPage loginPage = userIndexPage.clickLogOut();
+        LoginPage loginPage = applicationDetailPage.logout();
 
         ScanAgentTasksPage scanAgentTasksPage = loginPage.login(userName, "TestPassword")
                 .clickScanAgentTasksLink()

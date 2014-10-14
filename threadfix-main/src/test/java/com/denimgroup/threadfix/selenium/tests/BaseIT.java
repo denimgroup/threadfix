@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.easymock.internal.RuntimeExceptionWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
@@ -136,5 +137,29 @@ public abstract class BaseIT {
         String userName = getName();
         DatabaseUtils.createUser(userName, "Administrator");
         return userName;
+    }
+
+    /**
+     * This method will create a user with the specific role that is passed as a parameter
+     * @param role non-null, and a valid role name must be provided
+     * @return String of the user's name that was just created in ThreadFix
+     */
+    protected String createSpecificRoleUser(String role) {
+        if (role != null) {
+            String userName = getName();
+            DatabaseUtils.createUser(userName, role);
+            return userName;
+        } else
+            throw new RuntimeException("A valid specific role must given to the user.");
+    }
+
+    /**
+     * This method will create a role with all permissions granted
+     * @return String of the role's name that was just created in ThreadFix
+     */
+    protected String createRole() {
+        String roleName = getName();
+        DatabaseUtils.createRole(roleName, true);
+        return roleName;
     }
 }
