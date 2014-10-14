@@ -42,6 +42,20 @@ public class UserPermissionsEntIT extends BaseIT{
     private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
     private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
 
+    private String roleName;
+    private String userName;
+
+    public void createRestrictedUser(String permission) {
+        if (permission != null) {
+            roleName = createRole();
+            DatabaseUtils.removePermission(roleName, permission);
+
+            userName = createSpecificRoleUser(roleName);
+        } else {
+            throw new RuntimeException("Permission required to create a restricted user.");
+        }
+    }
+
     @Test
     public void navigationTest() {
         String userName = createRegularUser();
@@ -338,10 +352,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkViewErrorLogPermission() {
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canViewErrorLogs");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canViewErrorLogs");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -355,10 +366,7 @@ public class UserPermissionsEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canUploadScans");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canUploadScans");
 
         TeamIndexPage teamIndexPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -379,10 +387,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canSubmitDefects");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canSubmitDefects");
 
         String newDefectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
@@ -412,10 +417,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageVulnFilters");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageVulnFilters");
 
         FilterPage applicationFilterPage = loginPage.login(userName, "TestPassword")
                 .clickManageFiltersLink();
@@ -438,10 +440,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canModifyVulnerabilities");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canModifyVulnerabilities");
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -484,10 +483,7 @@ public class UserPermissionsEntIT extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.createWaf(wafName, "Snort" );
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageWafs");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageWafs");
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -526,10 +522,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageUsersPermission() {
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageUsers");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageUsers");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -542,10 +535,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkManageTeamsPermission() {
         String teamName = createTeam();
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageTeams");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageTeams");
 
         TeamDetailPage teamDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -557,10 +547,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageRoles() {
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageRoles");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageRoles");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -571,10 +558,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageSystemSettingsPermission() {
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageSystemSettings");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageSystemSettings");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -588,10 +572,7 @@ public class UserPermissionsEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageScanAgents");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageScanAgents");
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -608,10 +589,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageRemoteProvidersPermission() {
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageRemoteProviders");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageRemoteProviders");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -625,10 +603,7 @@ public class UserPermissionsEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageApplications");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageApplications");
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
                 .clickOrganizationHeaderLink()
@@ -643,10 +618,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageAPIKeysPermission() {
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageApiKeys");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageApiKeys");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -662,10 +634,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canGenerateWafRules");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canGenerateWafRules");
 
         String wafName = getName();
 
@@ -698,10 +667,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canGenerateReports");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canGenerateReports");
 
         DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
 
@@ -745,10 +711,7 @@ public class UserPermissionsEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        String roleName = createRole();
-        DatabaseUtils.removePermission(roleName, "canManageApplications");
-
-        String userName = createSpecificRoleUser(roleName);
+        createRestrictedUser("canManageApplications");
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
