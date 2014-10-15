@@ -1,6 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $upload, $window, tfEncoder, threadfixAPIService) {
+myAppModule.controller('ApplicationsIndexController',
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService) {
 
     // Initialize
     $scope.initialized = false;
@@ -182,7 +183,11 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
             team.applications.sort(nameCompare);
 
-            team.expanded = true;
+            team.expanded = false;
+
+            $timeout(function() {
+                team.expanded = true;
+            }, 200);
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
@@ -215,27 +220,39 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
     };
 
-    $scope.onFileSelect = function(team, app, $files) {
-        var modalInstance = $modal.open({
-            templateUrl: 'uploadScanForm.html',
-            controller: 'UploadScanController',
-            resolve: {
-                url: function() {
-                    return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
-                },
-                files: function() {
-                    return $files;
-                }
-            }
-        });
+    $scope.fileModalOn = false;
 
-        modalInstance.result.then(function (updatedTeam) {
-            $log.info("Successfully uploaded scan.");
-            $scope.successMessage = "Successfully uploaded scan.";
-            updateTeam(team, updatedTeam);
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
+    $scope.onFileSelect = function(team, app, $files) {
+        if ($scope.fileModalOn) {
+            $scope.$on('files', function(event, files) {
+                $rootScope.$broadcast('files', files);
+            });
+        } else {
+            var modalInstance = $modal.open({
+                templateUrl: 'uploadScanForm.html',
+                controller: 'UploadScanController',
+                resolve: {
+                    url: function() {
+                        return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
+                    },
+                    files: function() {
+                        return $files;
+                    }
+                }
+            });
+
+            $scope.fileModalOn = true;
+
+            modalInstance.result.then(function (updatedTeam) {
+                $log.info("Successfully uploaded scan.");
+                $scope.successMessage = "Successfully uploaded scan.";
+                updateTeam(team, updatedTeam);
+                $scope.fileModalOn = false;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+                $scope.fileModalOn = false;
+            });
+        }
     };
 
     $scope.goTo = function(team) {

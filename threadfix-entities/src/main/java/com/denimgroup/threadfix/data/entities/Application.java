@@ -32,8 +32,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.errors.EncryptionException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -257,18 +255,7 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonView(AllViews.FormInfo.class)
     public String getObscuredUserName() throws IllegalAccessException {
-        String username = "";
-
-        try {
-            if (repositoryEncryptedUserName != null) {
-                username = ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
-            }
-        } catch (EncryptionException e) {
-            log.error("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
-            assert false;
-        }
-
-        return username;
+        return repositoryUserName;
     }
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })

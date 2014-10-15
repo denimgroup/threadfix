@@ -34,13 +34,12 @@
                 <td id="noScheduledImportsFoundMessage" colspan="5" style="text-align:center;">No Scheduled Imports found.</td>
             </tr>
             <tr class="bodyRow" ng-repeat="scheduledImport in scheduledImports">
-                <td id="scheduledImportId{{ $index }}"> {{ scheduledImport.id }} </td>
-                <td id="scheduledImportDay{{ $index }}"> {{ scheduledImport.day }} &nbsp; {{ scheduledImport.hour }}:{{ scheduledImport.extraMinute }}{{ scheduledImport.minute }}
-                    &nbsp; {{ scheduledImport.period }} </td>
-                <td id="scheduledImportFrequency{{ $index }}"> {{ scheduledImport.frequency }} </td>
+                <td id="scheduledImportId{{ scheduledImport.timeStringId }}"> {{ scheduledImport.id }} </td>
+                <td id="scheduledImportDay{{ scheduledImport.timeStringId }}"> {{ scheduledImport.timeString }} </td>
+                <td id="scheduledImportFrequency{{ scheduledImport.timeStringId }}"> {{ scheduledImport.frequency }} </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td class="centered">
-                        <a  id="scheduledImportDeleteButton{{ $index }}" class="btn btn-danger" ng-click="deleteScheduledImport(scheduledImport)">Delete</a>
+                        <a  id="scheduledImportDeleteButton{{ scheduledImport.timeStringId }}" class="btn btn-danger" ng-click="deleteScheduledImport(scheduledImport)">Delete</a>
                     </td>
                 </c:if>
             </tr>

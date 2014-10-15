@@ -76,4 +76,9 @@ public class WhiteHatMockHttpUtils implements RemoteProviderHttpUtils {
     public HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password) {
         return null;
     }
+
+    @Override
+    public HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password, String[] headerNames, String[] headerVals) {
+        return null;
+    }
 }

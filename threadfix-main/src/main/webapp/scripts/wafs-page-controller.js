@@ -72,7 +72,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.openEditModal = function(waf) {
         var modalInstance = $modal.open({
@@ -83,8 +83,10 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
                     return tfEncoder.encode("/wafs/" + waf.id + "/edit");
                 },
                 object: function() {
-                    var wafCopy = angular.copy(waf);
-                    return wafCopy;
+                    return {
+                        name: waf.name,
+                        wafType: waf.wafType
+                    };
                 },
                 buttonText: function() {
                     return "Save Edits";

@@ -1,0 +1,13 @@
+8/6/2014 11:45:00
+type.info,,
+Burp Suite,,
+type.vulnerabilities,,
+Remote file inclusion,1051136,94
+X-Forwarded-For dependent response,4194576,807
+XML entity expansion,4196096,776
+Long redirection response,4196352,601
+Cookie without HttpOnly flag set,5244416,312
+Base64-encoded data in parameter,7340544,20
+SSL certificate,16777472,298
+Extension-generated issue,134217728,16
+DOM-based open redirection,5243152,601

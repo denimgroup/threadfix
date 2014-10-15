@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.importer.util;
 
+import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.exception.RestInvalidScanFormatException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -56,7 +58,10 @@ public final class ScanUtils {
 			readSAXInput(new DefaultHandler(), inputStream);
             return false;
 		} catch (SAXException | IOException e) {
-			STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
+            STATIC_LOGGER.warn("Trying to read XML returned the error " + e.getMessage(), e);
+        } catch (RestIOException e) {
+            STATIC_LOGGER.warn("Invalid XML. Rethrowing as RestInvalidFormatException");
+            throw new RestInvalidScanFormatException(e, "Invalid scan format.");
 		} finally {
 			closeInputStream(inputStream);
 		}
@@ -73,11 +78,11 @@ public final class ScanUtils {
 			readSAXInput(handler, stream);
 		} catch (IOException e) {
             STATIC_LOGGER.error("Encountered IOException while trying to read the SAX input.");
-            throw new IllegalStateException("Encountered IOException while trying to read data. Can't continue.", e);
+            throw new RestIOException(e, "Encountered IOException while trying to read data. Can't continue.");
 		} catch (SAXException e) {
 			if (!e.getMessage().equals(completionCode)) {
                 STATIC_LOGGER.error("Encountered SAXException while trying to read the SAX input.");
-                throw new IllegalStateException("Encountered SAXException while trying to read data. Can't continue.", e);
+                throw new RestIOException(e, "Encountered SAXException while trying to read data. Can't continue.");
             }
 		} finally {
 			closeInputStream(stream);

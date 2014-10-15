@@ -1,11 +1,9 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +18,10 @@ import java.util.Map;
 /**
  * Created by mhatzenbuehler on 8/4/2014.
  */
-@ScanImporter(ScannerType.CLANG)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.CLANG_DB_NAME,
+        format = ScanFormat.ZIP
+)
 public class ClangChannelImporter extends AbstractChannelImporter {
     public ClangChannelImporter() {
         super(ScannerType.CLANG);

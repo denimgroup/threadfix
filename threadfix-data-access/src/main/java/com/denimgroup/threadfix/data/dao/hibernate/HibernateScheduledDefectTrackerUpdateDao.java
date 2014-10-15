@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.ScheduledDefectTrackerUpdateDao;
 import com.denimgroup.threadfix.data.entities.ScheduledDefectTrackerUpdate;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -48,40 +47,4 @@ public class HibernateScheduledDefectTrackerUpdateDao extends HibernateScheduled
         return ScheduledDefectTrackerUpdate.class;
     }
 
-    @Override
-    public boolean checkSameDate(ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate) {
-
-        Query query = null;
-
-        if (scheduledDefectTrackerUpdate.getDay() != null){
-            query = sessionFactory.getCurrentSession().createQuery(
-                    "select count(*) from ScheduledDefectTrackerUpdate scheduledImport " +
-                            "where scheduledImport.day=:day and scheduledImport.period=:period " +
-                            "and scheduledImport.hour=:hour and scheduledImport.minute=:minute");
-
-            query.setString("day", scheduledDefectTrackerUpdate.getDay());
-
-        } else if (scheduledDefectTrackerUpdate.getFrequency() != null) {
-            query = sessionFactory.getCurrentSession().createQuery(
-                    "select count(*) from ScheduledDefectTrackerUpdate scheduledImport " +
-                            "where scheduledImport.frequency=:frequency and scheduledImport.period=:period " +
-                            "and scheduledImport.hour=:hour and scheduledImport.minute=:minute");
-
-            query.setString("frequency", scheduledDefectTrackerUpdate.getFrequency());
-
-        }
-
-        if(query != null) {
-            query.setInteger("hour", scheduledDefectTrackerUpdate.getHour());
-            query.setInteger("minute", scheduledDefectTrackerUpdate.getMinute());
-            query.setString("period", scheduledDefectTrackerUpdate.getPeriod());
-
-            Long count = (Long)query.uniqueResult();
-
-            return (count > 0);
-
-        }  else {
-            return false;
-        }
-    }
 }

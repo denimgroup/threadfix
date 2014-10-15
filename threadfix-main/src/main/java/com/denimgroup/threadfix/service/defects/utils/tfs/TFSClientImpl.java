@@ -123,7 +123,7 @@ public class TFSClientImpl extends SpringBeanAutowiringSupport implements TFSCli
         if (folderName != null && names != null) {
             try {
 
-                URL url = ResourceUtils.getUrl(folderName);
+                URL url = ResourceUtils.getResourceAsUrl(folderName);
 
                 if (url != null) {
                     String base = url.toURI().getPath()

@@ -2,16 +2,16 @@
 
 <head>
 	<title>Analytics</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report-page-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/vuln-search-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/generic-modal-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/directives/d3-point-in-time.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-filter-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/report-services.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/trending-report-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/snapshot-report-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/comparison-report-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/vuln-summary-modal-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/report/directives/d3-point-in-time.js"/>
+    <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/report-services.js"/>
+    <cbs:cachebustscript src="/scripts/report/trending-report-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/snapshot-report-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/comparison-report-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+    <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
 </head>
 
 <body id="reports">

@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -69,7 +70,7 @@ public class RemoteProvidersController {
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
         dataBinder.setAllowedFields("apiKey", "username",
-                "password", "application.id", "application.organization.id", "isEuropean");
+                "password", "application.id", "application.organization.id", "platform");
     }
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -211,19 +212,22 @@ public class RemoteProvidersController {
 				request.getParameter("username"),
 				request.getParameter("password"),
 				request.getParameter("apiKey"),
-                request.getParameter("matchSourceNumbers"), typeId);
-		
+                request.getParameter("matchSourceNumbers"),
+                request.getParameter("platform"),
+                typeId);
+
 		if (test.equals(ResponseCode.BAD_ID)) {
 			return RestResponse.failure("Unable to find that Remote Provider Type.");
 		} else if (test.equals(ResponseCode.NO_APPS)) {
-			
+
 			String error = "We were unable to retrieve a list of applications using these credentials." +
 					" Please ensure that the credentials are valid and that there are applications " +
 					"available in the account.";
             log.error(error);
 			return RestResponse.failure(error);
 		} else if (test.equals(ResponseCode.SUCCESS)) {
-			return ControllerUtils.writeSuccessObjectWithView(remoteProviderTypeService.load(typeId), AllViews.TableRow.class);
+            RemoteProviderType type = remoteProviderTypeService.load(typeId);
+			return ControllerUtils.writeSuccessObjectWithView(type, AllViews.TableRow.class);
 		} else {
             log.warn("Response code was not success but we're still returning success. This shouldn't happen.");
             return RestResponse.failure("Response was " + test);
@@ -252,6 +256,7 @@ public class RemoteProvidersController {
         Map<String, Object> map = new HashMap<>();
 
         map.put("remoteProviders", remoteProviderTypeService.loadAll());
+        map.put("qualysPlatforms", QualysPlatform.getPlatforms());
         map.put("teams", organizationService.loadAllActive());
         map.put("scheduledImports", scheduledRemoteProviderImportService.loadAll());
 

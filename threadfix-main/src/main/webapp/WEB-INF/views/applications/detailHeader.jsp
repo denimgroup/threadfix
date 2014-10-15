@@ -24,18 +24,22 @@
             </button>
             <ul class="dropdown-menu">
 
-                <c:if test="${canManageApplications }">
+                <c:if test="${ canManageApplications }">
                     <li><a class="pointer" id="editApplicationModalButton" ng-click="showEditModal()">Edit / Delete</a></li>
                 </c:if>
 
-                <c:if test="${canManageApplications }">
+                <c:if test="${ canManageVulnFilters }">
                     <spring:url value="/organizations/{orgId}/applications/{appId}/filters" var="vulnFiltersUrl">
                         <spring:param name="orgId" value="${ application.organization.id }"/>
                         <spring:param name="appId" value="${ application.id }"/>
                     </spring:url>
-                    <li><a id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">Edit Vulnerability Filters</a></li>
+                    <li>
+                        <a id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">
+                            Edit Vulnerability Filters
+                        </a>
+                    </li>
                 </c:if>
-                <c:if test="${!canManageApplications }">
+                <c:if test="${ !canManageApplications }">
                     <li><a id="viewApplicationModalButton" ng-click="viewApplicationDetail()">Details	</a></li>
                 </c:if>
                 <c:if test="${ canManageUsers && isEnterprise}">

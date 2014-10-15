@@ -28,10 +28,11 @@
                 </td>
                 <td ng-style="badgeWidth">
                     <span id="totalBadge{{ category.name }}" ng-style="badgeWidth" class="badge" ng-class="{
-                                            'badge-important': category.intValue === 5,
-                                            'badge-warning': category.intValue === 4,
-                                            'badge-success': category.intValue === 3,
-                                            'badge-info': category.intValue === 2
+                                            'badge-critical': category.intValue === 5,
+                                            'badge-high': category.intValue === 4,
+                                            'badge-medium': category.intValue === 3,
+                                            'badge-low': category.intValue === 2,
+                                            'badge-info': category.intValue === 1
                                             }">
                         {{ category.total }}
                     </span>
@@ -45,10 +46,11 @@
                 </td>
                 <td>
                     <span id="totalBadge{{ category.name }}{{ element.genericVulnerability.displayId }}" ng-style="badgeWidth" class="badge" ng-class="{
-                                    'badge-important': element.intValue === 5,
-                                    'badge-warning': element.intValue === 4,
-                                    'badge-success': element.intValue === 3,
-                                    'badge-info': element.intValue === 2
+                                        'badge-critical': category.intValue === 5,
+                                        'badge-high': category.intValue === 4,
+                                        'badge-medium': category.intValue === 3,
+                                        'badge-low': category.intValue === 2,
+                                        'badge-info': category.intValue === 1
                                     }">
                         {{ element.numResults }}
                     </span>

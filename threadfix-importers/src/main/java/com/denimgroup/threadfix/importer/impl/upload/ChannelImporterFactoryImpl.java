@@ -26,21 +26,16 @@ package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
+import com.denimgroup.threadfix.importer.loader.ScannerTypeLoader;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
@@ -75,6 +70,8 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
         ChannelImporter importer;
 
         try {
+            assert channelImporterClass != null : "Got null class for key " + scannerName;
+
             Constructor<?>[] constructors = channelImporterClass.getConstructors();
 
             assert constructors.length == 1 : "Got " + constructors.length + " constructors.";
@@ -99,39 +96,12 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
     }
 
     private void init() {
+        Map<ScanImporter, Class<?>> map = ScannerTypeLoader.getMap();
 
-        ClassPathScanningCandidateComponentProvider provider =
-                new ClassPathScanningCandidateComponentProvider(false);
-
-        provider.addIncludeFilter(new AnnotationTypeFilter(ScanImporter.class));
-
-        ClassLoader classLoader = ChannelImporterFactoryImpl.class.getClassLoader();
-        provider.setResourceLoader(new PathMatchingResourcePatternResolver(classLoader));
-
-        Set<BeanDefinition> candidateComponents = provider.findCandidateComponents("com.denimgroup.threadfix.importer.impl.upload");
-
-        for (BeanDefinition candidateComponent : candidateComponents) {
-            candidateComponent.getBeanClassName();
-            try {
-
-                Class<?> scannerClass = Class.forName(candidateComponent.getBeanClassName());
-
-                ScannerType scannerType = scannerClass.getAnnotation(ScanImporter.class).value();
-
-                assert scannerType != null : "Unable to get scanner type from annotation, something is wrong.";
-
-                LOG.info("Successfully loaded " + scannerClass + " from classpath.");
-
-                classMap.put(scannerType.getDbName(), scannerClass);
-
-            } catch (ClassNotFoundException e) {
-                LOG.error("Class " + candidateComponent + " wasn't loadable even though we found it with " +
-                        "ClassPathScanningCandidateComponentProvider. Something is wrong.");
-                throw new IllegalStateException(e);
-            }
+        for (Map.Entry<ScanImporter, Class<?>> entry : map.entrySet()) {
+            classMap.put(entry.getKey().scannerName(), entry.getValue());
         }
 
         initialized = true;
     }
-
 }

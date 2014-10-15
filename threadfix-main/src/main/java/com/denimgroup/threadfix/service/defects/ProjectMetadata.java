@@ -25,9 +25,8 @@ package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 
+import javax.annotation.Nullable;
 import java.util.List;
-
-import static com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.Fields.Field;
 
 public class ProjectMetadata {
 
@@ -92,6 +91,7 @@ public class ProjectMetadata {
 		this.priorities = priorities;
 	}
 
+    @Nullable
     public List<DynamicFormField> getEditableFields() {
         return editableFields;
     }

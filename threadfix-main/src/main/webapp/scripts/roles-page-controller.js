@@ -1,4 +1,4 @@
-var module = angular.module('threadfix')
+var module = angular.module('threadfix');
 
 module.controller('RolesPageController', function($scope, $http, $modal, $log, tfEncoder){
 
@@ -27,7 +27,6 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
     });
 
     $scope.openNewRoleModal = function() {
-
         var modalInstance = $modal.open({
             templateUrl: 'newRoleModal.html',
             controller: 'RoleEditModalController',
@@ -160,7 +159,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.goToRole = function(role) {
         window.location.href = tfEncoder.encode("/configuration/roles/" + role.id);

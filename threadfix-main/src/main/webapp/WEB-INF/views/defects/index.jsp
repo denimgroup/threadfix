@@ -2,14 +2,13 @@
 
 <head>
 	<title>Defect Submission</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-pagination.js"></script>
+<cbs:cachebustscript src="/scripts/remote-pagination.js"/>
 	<spring:url value="defectTable" var="tableUrl" />
 	<script type="text/javascript">
-	window.onload = function()
-    {
-		//toggleFilters(false, '#toReplace', '${ tableUrl }');
-		clearFilters('#toReplace', '${ tableUrl }');
-    };
+        window.onload = function() {
+            //toggleFilters(false, '#toReplace', '${ tableUrl }');
+            clearFilters('#toReplace', '${ tableUrl }');
+        };
     </script>
 </head>
 

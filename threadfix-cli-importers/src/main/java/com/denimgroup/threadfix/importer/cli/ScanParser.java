@@ -37,8 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class ScanParser {
@@ -55,11 +53,7 @@ public class ScanParser {
     private void checkForUpdate() {
         if (needsUpdating) {
             try {
-                List<String[]> lists = mappingsUpdaterService.updateChannelVulnerabilities();
-                System.out.println("Updated mappings.");
-                for (String[] items : lists) {
-                    System.out.println(Arrays.asList(items));
-                }
+                mappingsUpdaterService.updateMappings();
                 needsUpdating = false;
             } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException
                 throw new IllegalStateException("Encountered error while updating channel vulns. Fix it.", e);
@@ -88,6 +82,25 @@ public class ScanParser {
         }
     }
 
+    @Transactional(readOnly = false) // used to be true
+    public ScanCheckResultBean testScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {
+        return testScan(new File(filePath));
+    }
+
+    @Transactional(readOnly = false) // used to be true
+    public ScanCheckResultBean testScan(@Nonnull File file) throws TypeParsingException, ScanTestingException {
+        if (!file.exists()) {
+            throw new ScanFileNotFoundException("Scan file not found: " + file.getAbsolutePath());
+        }
+
+        ScannerType scannerType = bridge.getType(file);
+
+        if (scannerType == null) {
+            throw new TypeParsingException();
+        } else {
+            return bridge.testScan(scannerType, file);
+        }
+    }
 
     @Transactional(readOnly = false) // used to be true
     public Scan getScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {

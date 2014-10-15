@@ -2,11 +2,10 @@
 
 <head>
 	<title>Applications</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/applications-index-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/upload-scan-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/report/vuln-summary-modal-controller.js"></script>
-
+	<cbs:cachebustscript src="/scripts/applications-index-controller.js"/>
+	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+    <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 
 <body id="apps">

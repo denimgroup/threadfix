@@ -28,6 +28,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                     $scope.providers = data.object.remoteProviders;
                     $scope.teams = data.object.teams;
                     $scope.scheduledImports = data.object.scheduledImports;
+                    $scope.qualysPlatforms = data.object.qualysPlatforms;
 
                     $scope.defectTrackerTypes = data.object.defectTrackerTypes;
 
@@ -165,7 +166,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 },
                 config: function() {
                     return {
-                        trackerTypes: $scope.defectTrackerTypes
+                        qualysPlatforms: $scope.qualysPlatforms
                     };
                 },
                 buttonText: function() {

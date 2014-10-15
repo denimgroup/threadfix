@@ -24,10 +24,12 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -37,32 +39,41 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
+
 /**
- * 
+ *
  * @author mcollins
  */
-@ScanImporter(ScannerType.ARACHNI)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.ARACHNI_DB_NAME,
+        startingXMLTagSets = {
+                @StartingTagSet({"arachni_report", "title", "generated_on", "report_false_positives", "system", "version", "revision"}),
+                @StartingTagSet({"report", "version", "options"})
+        }
+)
 class ArachniChannelImporter extends AbstractChannelImporter {
 	
-	private static Map<String, FindingKey> tagMap = new HashMap<>();
-	static {
-		tagMap.put("name", FindingKey.VULN_CODE);
-		tagMap.put("severity", FindingKey.SEVERITY_CODE);
-		tagMap.put("variable", FindingKey.PARAMETER);
-		tagMap.put("var", FindingKey.PARAMETER);
-		tagMap.put("url", FindingKey.PATH);
-		tagMap.put("injected",   FindingKey.VALUE);
-		tagMap.put("request", 	    FindingKey.REQUEST);
-		tagMap.put("html",	    FindingKey.RESPONSE);
-		tagMap.put("description", FindingKey.DETAIL);
-		tagMap.put("remedy_guidance", FindingKey.RECOMMENDATION);
-		tagMap.put("rawfinding", FindingKey.RAWFINDING);
-        tagMap.put("cwe", FindingKey.CWE);
-	}
+	private static Map<String, FindingKey> tagMap = map(
+		"name", FindingKey.VULN_CODE,
+		"severity", FindingKey.SEVERITY_CODE,
+		"variable", FindingKey.PARAMETER,
+		"var", FindingKey.PARAMETER,
+		"url", FindingKey.PATH,
+		"injected", FindingKey.VALUE,
+		"request", FindingKey.REQUEST,
+		"html", FindingKey.RESPONSE,
+		"description", FindingKey.DETAIL,
+		"remedy_guidance", FindingKey.RECOMMENDATION,
+		"rawfinding", FindingKey.RAWFINDING,
+        "cwe", FindingKey.CWE,
+        "severity", FindingKey.SEVERITY_CODE
+    );
 	
 	private StringBuffer currentRawFinding = new StringBuffer();
 	String requestMethod = null;
@@ -136,162 +147,200 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 
 	}
 
-	public ArachniChannelImporter() {
-		super(ScannerType.ARACHNI);
-	}
+    public static final String FORMAT_STRING = "yyyy-MM-DD'T'kk:mm:ssX";
 
-	@Override
-	public Scan parseInput() {
-		return parseSAXInput(new ArachniSAXParser());
-	}
-	
-	public class ArachniSAXParser extends HandlerWithBuilder {
-		
-		private boolean getDate   = false;
-		private boolean inFinding = false;
-		private boolean inRequest = false; //for accumulating request headers
-		
-		private FindingKey itemKey = null;
-	
-		private Map<FindingKey, String> findingMap = null;
-					    
-	    public void add(Finding finding) {
-			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
-	    		finding.setIsStatic(false);
-	    		saxFindingList.add(finding);
-    		}
-	    }
+    public ArachniChannelImporter() {
+        super(ScannerType.ARACHNI);
+    }
 
-	    ////////////////////////////////////////////////////////////////////
-	    // Event handlers.
-	    ////////////////////////////////////////////////////////////////////
-	    
-	    public void startElement (String uri, String name,
-				      String qName, Attributes atts)
-	    {
-	    	if ("finish_datetime".equals(qName)) {
-	    		getDate = true;
-	    	} else if ("issue".equals(qName)) {
-	    		findingMap = new EnumMap<>(FindingKey.class);
-	    		// set the inFinding flag to accumulate elements and character info for raw xml synthesis
-	    		inFinding = true;
-	    	} else if (inFinding && tagMap.containsKey(qName)) {
-	    		itemKey = tagMap.get(qName);
-	    		//the Arachni finding request is stored in a list of header element 'field' tags rather than the raw request itself
-	    		//so we need to rebuild it.  we start tracking 'field' elements when we hit the request element
-	    		if ("request".equals(qName)){
-	    			inRequest = true;
-	    			// this will be the first line of the request
-	    			String requestLine = findingMap.get(FindingKey.PATH); //sane default
-	    			try {//mimicry
-	    				requestLine = requestMethod + " " +  (new URL(findingMap.get(FindingKey.PATH))).getPath() + " HTTP/1.x (computed)\n";
-	    			} catch (Exception ignored){}
-	    			//store this first line
-	    			findingMap.put(FindingKey.REQUEST,requestMethod + " " + requestLine );
-	    		} else {
-	    			//ensure that we stop recording these so we don't pick up response headers
-	    			inRequest = false;
-	    		}
-	    		getBuilderText(); //resets the stringbuffer so we aren't pulling in data from unrelated elements
-	    	} else if ("method".equals(qName)){
-	    		getMethodText = true;
-	    		getBuilderText(); //empty out buffer so we get the method alone for request header rebuilding above
-	    		
-	    	} else if (inRequest && "field".equals(qName)){
-	    		//this is where we accumulate request headers.  start by forming a line from the element attributes
-	    		String header = atts.getValue("name") + ": " + atts.getValue("value") + "\n";
-	    		
-	    		if (! findingMap.containsKey(FindingKey.REQUEST)){
-	    			findingMap.put(FindingKey.REQUEST,header);  //this should never hit b/c the request line was formed above
-		    	} else {
-		    		//append the new header line to the existing string.  a stringbuffer would probably be better
-		    		findingMap.put(FindingKey.REQUEST, findingMap.get(FindingKey.REQUEST) + header);
-		    	}
-	    	}
-	    	if (inFinding){
-	    		currentRawFinding.append(makeTag(name, qName, atts));
-	    	}
-	    }
-	    
-	    public void endElement (String uri, String name, String qName)
-	    {
-	    	if (inFinding)
-	    		currentRawFinding.append("</").append(qName).append(">");
-	    	
-	    	if ("method".equals(qName)){
-	    		requestMethod = getBuilderText();
-	    		getMethodText = false;
-	    	}
-	    
-	    	if ("issue".equals(qName)) {
-	    		// TODO instead look into why this error occurs
-	    		
-	    		if (findingMap.get(FindingKey.VULN_CODE) != null && 
-	    				findingMap.get(FindingKey.VULN_CODE).equals("Cross-Site Scripting in HTML ")) {
-	    			findingMap.put(FindingKey.VULN_CODE, 
-	    					"Cross-Site Scripting in HTML &quot;script&quot; tag.");
-	    		}
-	    		
-	    		//left in place for old versions of Arachni
-	    		if (! findingMap.containsKey(FindingKey.SEVERITY_CODE) || findingMap.get(FindingKey.SEVERITY_CODE) == null)
-	    			findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
-	    		if (findingMap.get(FindingKey.SEVERITY_CODE) == null || findingMap.get(FindingKey.SEVERITY_CODE).isEmpty())
+    @Override
+    public Scan parseInput() {
+        return parseSAXInput(new ArachniSAXParser());
+    }
+
+    public class ArachniSAXParser extends HandlerWithBuilder {
+
+        private boolean getDate   = false;
+        private boolean inFinding = false;
+        private boolean inRequest = false; //for accumulating request headers
+
+        boolean gettingSeed = false;
+        String lastSeed;
+
+        private FindingKey itemKey = null;
+
+        private Map<FindingKey, String> findingMap = null;
+
+        public void add(Finding finding) {
+            if (finding != null) {
+                finding.setNativeId(getNativeId(finding));
+                finding.setIsStatic(false);
+                saxFindingList.add(finding);
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////
+        // Event handlers.
+        ////////////////////////////////////////////////////////////////////
+
+        public void startElement(String uri, String name,
+                                 String qName, Attributes atts) {
+            if ("finish_datetime".equals(qName)) {
+                getDate = true;
+            } else if ("issue".equals(qName)) {
+                findingMap = new EnumMap<>(FindingKey.class);
+                // set the inFinding flag to accumulate elements and character info for raw xml synthesis
+                inFinding = true;
+
+            } else if (inFinding && tagMap.containsKey(qName)) {
+                itemKey = tagMap.get(qName);
+                //the Arachni finding request is stored in a list of header element 'field' tags rather than the raw request itself
+                //so we need to rebuild it.  we start tracking 'field' elements when we hit the request element
+                if ("request".equals(qName)) {
+                    inRequest = true;
+                    // this will be the first line of the request
+                    String requestLine = findingMap.get(FindingKey.PATH); //sane default
+
+                    try { //mimicry
+                        requestLine = requestMethod + " " + (new URL(findingMap.get(FindingKey.PATH))).getPath() + " HTTP/1.x (computed)\n";
+                    } catch (Exception ignored) {
+                        log.error("Got exception while attempting to construct a request line: " + ignored.getMessage());
+                        log.error("Continuing.");
+                    }
+
+                    //store this first line
+                    findingMap.put(FindingKey.REQUEST, requestMethod + " " + requestLine);
+                } else {
+
+                    //ensure that we stop recording these so we don't pick up response headers
+                    inRequest = false;
+                }
+                getBuilderText(); //resets the stringbuffer so we aren't pulling in data from unrelated elements
+            } else if ("method".equals(qName)) {
+                getMethodText = true;
+                getBuilderText(); //empty out buffer so we get the method alone for request header rebuilding above
+
+            } else if ("seed".equals(qName)) {
+                lastSeed = null;
+                gettingSeed = true;
+                getBuilderText();
+
+            } else if ("input".equals(qName) &&
+                    lastSeed != null &&
+                    atts.getValue("value") != null &&
+                    atts.getValue("value").contains(lastSeed)) {
+                findingMap.put(FindingKey.PARAMETER, atts.getValue("name"));
+                lastSeed = null;
+
+            } else if (inRequest && "field".equals(qName)) {
+                //this is where we accumulate request headers.  start by forming a line from the element attributes
+                String header = atts.getValue("name") + ": " + atts.getValue("value") + "\n";
+
+                if (!findingMap.containsKey(FindingKey.REQUEST)) {
+                    findingMap.put(FindingKey.REQUEST, header);  //this should never hit b/c the request line was formed above
+                } else {
+                    //append the new header line to the existing string.  a stringbuffer would probably be better
+                    findingMap.put(FindingKey.REQUEST, findingMap.get(FindingKey.REQUEST) + header);
+                }
+            }
+            if (inFinding) {
+                currentRawFinding.append(makeTag(name, qName, atts));
+            }
+        }
+
+        public void endElement(String uri, String name, String qName) {
+            if (inFinding)
+                currentRawFinding.append("</").append(qName).append(">");
+
+            if ("method".equals(qName)) {
+                requestMethod = getBuilderText();
+                getMethodText = false;
+            }
+
+            if ("issue".equals(qName)) {
+                // TODO instead look into why this error occurs
+
+                if (findingMap.get(FindingKey.VULN_CODE) != null &&
+                        findingMap.get(FindingKey.VULN_CODE).equals("Cross-Site Scripting in HTML ")) {
+                    findingMap.put(FindingKey.VULN_CODE,
+                            "Cross-Site Scripting in HTML &quot;script&quot; tag.");
+                }
+
+                //left in place for old versions of Arachni
+
+                if (findingMap.containsKey(FindingKey.SEVERITY_CODE)) {
+                    findingMap.put(FindingKey.SEVERITY_CODE, findingMap.get(FindingKey.SEVERITY_CODE).toUpperCase());
+                }
+
+                if (!findingMap.containsKey(FindingKey.SEVERITY_CODE) || findingMap.get(FindingKey.SEVERITY_CODE) == null)
                     findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
-	    		findingMap.put(FindingKey.RAWFINDING,currentRawFinding.toString());
+                if (findingMap.get(FindingKey.SEVERITY_CODE) == null || findingMap.get(FindingKey.SEVERITY_CODE).isEmpty())
+                    findingMap.put(FindingKey.SEVERITY_CODE, severityMap.get(findingMap.get(FindingKey.VULN_CODE)));
+                findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
                 // Set CWE 16 Configuration if there no CWE in scan file
                 if (findingMap.get(FindingKey.CWE) == null || findingMap.get(FindingKey.CWE).isEmpty())
                     findingMap.put(FindingKey.CWE, "16");
-	    		Finding finding = constructFinding(findingMap);
-	    		
-	    		add(finding);
-	    		findingMap = null;
-	    		inFinding = false;
-	    		currentRawFinding.setLength(0);
-	    		
-	    	} else if (inFinding && itemKey != null) {
-	    		String currentItem = getBuilderText();
-	    		
-	    		if (currentItem != null && "RESPONSE".equals(itemKey.toString())){
-	    			//these are base64 encoded in the xml
-	    			try {
-	    				currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
-	    			} catch (Exception ignored){
-	    				//if it can't be decoded just pass as-is
-	    			}	
-	    		}
-	    		
-	    		if ("request".equals(qName)){
-	    			inRequest=false;
-	    		}
-	    		
-	    		if (currentItem != null && findingMap.get(itemKey) == null) {
-	    			findingMap.put(itemKey, currentItem);
-	    		}
-	    		itemKey = null;
-	    	} 
-	    	
-	    	if (getDate) {
-	    		String tempDateString = getBuilderText();
+                Finding finding = constructFinding(findingMap);
 
-	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			date = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
-	    		}
+                add(finding);
+                findingMap = null;
+                inFinding = false;
+                currentRawFinding.setLength(0);
+
+            } else if (inFinding && itemKey != null) {
+                String currentItem = getBuilderText();
+
+                if (currentItem != null && "RESPONSE".equals(itemKey.toString())) {
+                    //these are base64 encoded in the xml
+                    try {
+                        currentItem = new String(javax.xml.bind.DatatypeConverter.parseBase64Binary(currentItem));
+                    } catch (Exception ignored) {
+                        //if it can't be decoded just pass as-is
+                    }
+                }
+
+                if ("request".equals(qName)) {
+                    inRequest = false;
+                }
+
+                if (currentItem != null && findingMap.get(itemKey) == null) {
+                    findingMap.put(itemKey, currentItem);
+                }
+                itemKey = null;
+            } else if ("seed".equals(qName)) {
+                lastSeed = getBuilderText();
+                gettingSeed = false;
+            }
+
+            if (getDate) {
+                String tempDateString = getBuilderText();
+
+                if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+                    date = getDateFromString(tempDateString);
+                }
 	    		getDate = false;
 	    	} 
 	    }
 
 	    public void characters (char ch[], int start, int length) {
-	    	if (getDate || itemKey != null || getMethodText) {
-	    		addTextToBuilder(ch, start, length);
-	    	}	    
+	    	if (getDate || itemKey != null || getMethodText || gettingSeed) {
+                addTextToBuilder(ch, start, length);
+            }
 	    	if (inFinding){
 	    		currentRawFinding.append(ch, start, length);
 	    	}
 	    }
 	}
 
-	@Nonnull
+    Calendar getDateFromString(String tempDateString) {
+        if (tempDateString.contains("T")) {
+            return DateUtils.getCalendarFromString(FORMAT_STRING, tempDateString);
+        } else {
+            return DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
+        }
+    }
+
+    @Nonnull
     @Override
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new ArachniSAXValidator());
@@ -325,7 +374,9 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if ("arachni_report".equals(qName)) {
 	    		correctFormat = true;
-	    	}
+	    	} else if ("report".equals(qName) && atts.getValue(0) != null && atts.getValue(0).contains("Arachni")) {
+                correctFormat = true;
+            }
 	    	
 	    	if ("finish_datetime".equals(qName)) {
 	    		getDate = true;
@@ -343,7 +394,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	    		String tempDateString = getBuilderText();
 
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty()) {
-	    			testDate = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
+	    			testDate = getDateFromString(tempDateString);
 	    		}
 	    		
 	    		hasDate = testDate != null;

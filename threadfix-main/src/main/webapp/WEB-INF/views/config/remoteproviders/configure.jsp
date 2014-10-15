@@ -37,10 +37,15 @@
                     </td>
                 </tr>
                 <tr ng-show="object.isQualys">
-                    <td class="no-color">Region</td>
-                    <td class="no-color inputValue">
-                        <input ng-model="object.isEuropean" type="radio" name="isEuropean" ng-value="false"> US </input>
-                        <input ng-model="object.isEuropean" type="radio" name="isEuropean" ng-value="true"> EU </input>
+                    <td align="left" class="no-color">Platform</td>
+                    <td align="left" class="no-color inputValue">
+                        <select ng-model="object.platform" id="platformNameSelect" name="platform">
+                            <option ng-repeat="qualysPlatform in config.qualysPlatforms"
+                                    ng-selected="object.platform === qualysPlatform"
+                                    value="{{ qualysPlatform }}">
+                                {{ qualysPlatform }}
+                            </option>
+                        </select>
                     </td>
                 </tr>
                 <tr ng-if="object.isWhiteHat">

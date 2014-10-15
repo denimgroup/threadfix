@@ -6,12 +6,12 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
     var getApplication = function() {
         return $parent.treeApplication;
-    }
+    };
 
     var getAppUrlBase = function () {
         var app = getApplication();
         return "/organizations/" + app.team.id + "/applications/" + app.id;
-    }
+    };
 
     var getFilteredVulns = function() {
         var filteredVulns = [];
@@ -31,7 +31,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         });
 
         return filteredVulns;
-    }
+    };
 
     $scope.showSubmitDefectModal = function() {
 
@@ -95,7 +95,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
         filteredVulns = filteredVulns.filter(function(vuln) {
             return !vuln.defect;
-        })
+        });
 
         if (filteredVulns.length === 0) {
             alert('All of the selected vulnerabilities already have defects.');
@@ -113,7 +113,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 },
                 configUrl: function() {
                     var app = getApplication();
-                    return tfEncoder.encode(getAppUrlBase() + "/defectSubmission");
+                    return tfEncoder.encode(getAppUrlBase() + "/defectSubmissionWithIssues");
                 },
                 object: function () {
                     return {};
@@ -131,7 +131,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         modalInstance.result.then(function (returnValue) {
 
             $scope.refresh();
-            $rootScope.$broadcast('successMessage', "Successfully merged the vulnerability.");
+            $rootScope.$broadcast('successMessage', returnValue);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
@@ -164,22 +164,22 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 $scope.errorMessage = "Failed. HTTP status was " + status;
                 $scope.submitting = false;
             });
-    }
+    };
 
     $scope.closeVulnerabilities = function() {
         bulkOperation("/table/close", "closed");
-    }
+    };
 
     $scope.openVulnerabilities = function() {
         bulkOperation("/table/open", "reopened");
-    }
+    };
 
     $scope.markFalsePositives = function() {
         bulkOperation("/falsePositives/mark", "marked false positive");
-    }
+    };
 
     $scope.unmarkFalsePositives = function() {
         bulkOperation("/falsePositives/unmark", "unmarked false positive");
-    }
+    };
 
 });

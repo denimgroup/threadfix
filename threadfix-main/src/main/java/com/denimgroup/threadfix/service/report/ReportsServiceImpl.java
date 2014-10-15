@@ -304,7 +304,7 @@ public class ReportsServiceImpl implements ReportsService {
 					JRHtmlExporterParameter.IS_OUTPUT_IMAGES_TO_DIR,
 					Boolean.FALSE);
 			
-			String mapKey = getMapKey(reportFormat.getFileName(), applicationIdList);
+			String mapKey = getMapKey(reportFormat.ordinal(), applicationIdList);
 			
 			Map<Object, Object> imagesMap = new HashMap<>();
 			request.getSession().setAttribute(mapKey, imagesMap);
@@ -402,23 +402,16 @@ public class ReportsServiceImpl implements ReportsService {
 	 * 
 	 * @return a key for the images map
 	 */
-	private String getMapKey(String fileName, List<Integer> applicationIdList) {
+	private String getMapKey(int ordinal, List<Integer> applicationIdList) {
 		StringBuilder appIdString = new StringBuilder();
 
-		String shorterFileName = fileName;
-		if (fileName.indexOf('.') != -1) {
-			shorterFileName = fileName.substring(0, fileName.indexOf('.'));
-		}
+        appIdString.append(ordinal);
 
-		if (shorterFileName.length() > 10) {
-			appIdString.append(shorterFileName.substring(0, 10));
-		} else {
-			appIdString.append(shorterFileName);
-		}
+        appIdString.append(new Date().getTime());
 
 		for (Integer id : applicationIdList) {
-			appIdString.append(id);
-			if (appIdString.length() > 20) {
+            appIdString.append(id);
+			if (appIdString.length() > 30) {
 				break;
 			}
 		}

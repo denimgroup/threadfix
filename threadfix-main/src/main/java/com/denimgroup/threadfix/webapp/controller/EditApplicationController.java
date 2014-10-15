@@ -212,13 +212,13 @@ public class EditApplicationController {
             return FormRestResponse.failure("Unable to retrieve the application.", result);
 		}
 		
-		if (result.hasErrors() || waf == null) {
+		if (result.hasErrors()) {
             return FormRestResponse.failure("Unable to add the WAF. Try again.", result);
 		} else {
 		    return RestResponse.success(waf);
         }
 	}
-	
+
 	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<DefectTracker> processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,

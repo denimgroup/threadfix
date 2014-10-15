@@ -2,7 +2,7 @@
 
 <head>
 	<title><c:out value="${ waf.name }"/></title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/waf-detail-page-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/waf-detail-page-controller.js"/>
 </head>
 
 <body id="waf" ng-controller="WafDetailPageController" ng-init="loading = true; showRuleInfo = false;">
@@ -119,9 +119,9 @@
 				</c:when>
 				<c:otherwise>
 					<select id="wafDirectiveSelect" name="wafDirective" ng-model="wafDirective">
-						<option value="${ lastDirective.directive }"><c:out value="${ lastDirective.directive }"/></option>
+						<option value="<c:out value='${ lastDirective.directive }'/>"><c:out value="${ lastDirective.directive }"/></option>
 						<c:forEach var="directive" items="${ directives }">
-							<option value="${ directive.directive }"><c:out value="${ directive.directive }"/></option>
+							<option value="<c:out value='${ directive.directive }'/>"><c:out value="${ directive.directive }"/></option>
 						</c:forEach>
 					</select>
 				</c:otherwise>

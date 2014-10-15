@@ -24,8 +24,6 @@
 
 package com.denimgroup.threadfix.importer.interop;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -63,27 +61,9 @@ public interface ScannerMappingsUpdaterService {
 
     /**
      *
-     *
-     */
-    List<String[]> updateChannelVulnerabilities() throws IOException, URISyntaxException;
-
-    /**
-     *
      */
     List<String> getSupportedScanners();
 
-    /**
-     * Update generic vulnerabilities
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    List<String[]> updateGenericVulnerabilities() throws IOException, URISyntaxException;
-
-    void updateUpdatedDate();
-
     void updateMappings();
-
-    List<String> updateDefectTrackers();
 
 }

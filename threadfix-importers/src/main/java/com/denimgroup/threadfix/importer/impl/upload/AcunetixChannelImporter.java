@@ -41,11 +41,16 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.ACUNETIX_WVS_DB_NAME;
+
 /**
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.ACUNETIX_WVS)
+@ScanImporter(
+        scannerName = ACUNETIX_WVS_DB_NAME,
+        startingXMLTags = {"ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime"}
+)
 class AcunetixChannelImporter extends AbstractChannelImporter {
 	
 	public AcunetixChannelImporter() {

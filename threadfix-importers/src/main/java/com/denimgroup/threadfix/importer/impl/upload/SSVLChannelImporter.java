@@ -51,7 +51,10 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-@ScanImporter(ScannerType.MANUAL)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.SSVL_DB_NAME,
+        startingXMLTags = { "Vulnerabilities", "Vulnerability" }
+)
 class SSVLChannelImporter extends AbstractChannelImporter {
 
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
@@ -193,7 +196,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 		boolean valid = false;
 		
 		try {
-			URL schemaFile = ResourceUtils.getUrl("ssvl.xsd");
+			URL schemaFile = ResourceUtils.getResourceAsUrl("ssvl.xsd");
 
             if (schemaFile == null) {
                 throw new IllegalStateException("ssvl.xsd file not available from ClassLoader. Fix that.");
@@ -231,13 +234,12 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	
 	public class SSVLChannelSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
-		private boolean hasDate = false;
 		private boolean hasVulnerabilitiesTag = false;
 		
 	    private void setTestStatus() {
 	    	if (!(hasVulnerabilitiesTag && hasFindings)) {
 				testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-			} else if (hasDate) {
+			} else if (testDate != null) {
 				testStatus = checkTestDate();
 			}
 	    	

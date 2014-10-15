@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -50,85 +51,86 @@ import java.util.Map;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.W3AF)
+@ScanImporter(scannerName = ScannerDatabaseNames.W3AF_DB_NAME, startingXMLTags = { "w3afrun" })
 class W3afChannelImporter extends AbstractChannelImporter {
-	
-	public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
-	
-	public W3afChannelImporter() {
-		super(ScannerType.W3AF);
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.denimgroup.threadfix.service.channel.ChannelImporter#parseInput()
-	 */
-	@Override
-	public Scan parseInput() {
-		try {
-			removeTagFromInputStream("httpresponse");
-		} catch (IOException e) {
+    public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
+    private final       String dateFormatString             = "EEE MMM dd HH:mm:ss yyyy";
+
+    public W3afChannelImporter() {
+        super(ScannerType.W3AF);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.denimgroup.threadfix.service.channel.ChannelImporter#parseInput()
+     */
+    @Override
+    public Scan parseInput() {
+        try {
+            removeTagFromInputStream("httpresponse");
+        } catch (IOException e) {
             log.error("Encountered IOException while trying to remove the httpresponse tag.", e);
-		}
-		
-		return parseSAXInput(new W3afSAXParser());
-	}
-	
-	/*
-	 * This method takes the name of a tag as a parameter and then replaces the inputStream object 
-	 * with a new InputStream that does not include any of those tags.
-	 * 
-	 *  The start tag must start with the text <tagName and the end tag must be </tagName>.
-	 *  
-	 *  This method could be adapted to take out any of a list of tags and is fairly generic.
-	 * 
-	 * @param tagName
-	 * @throws IOException
-	 */
-	private void removeTagFromInputStream(String tagName) throws IOException {
-		if (inputStream == null)
-			 return;
-		
-		String startTag = "<" + tagName, endTag = "</" + tagName + ">";
-		 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-		StringBuilder contents = new StringBuilder();
-		 
-		String inputValue = reader.readLine();
-		 
-		boolean inResponseTag = false;
-		
-		while (inputValue != null) {
-			
-			if (inputValue.contains(startTag)) {
-				if (inputValue.contains(endTag)) {
-					inputValue = inputValue.substring(0,inputValue.indexOf(startTag)) +
-									inputValue.substring(inputValue.indexOf(endTag) + endTag.length());
-				} else {
-					inResponseTag = true;
-					inputValue = inputValue.substring(0,inputValue.indexOf(startTag));
-					contents.append(inputValue);
-				}
-			}
-			
-			if (inResponseTag && inputValue.contains(endTag)) {
-				inResponseTag = false;
-				inputValue = inputValue.substring(inputValue.indexOf(endTag) + endTag.length());
-			}
-			
-			if (!inResponseTag) {
-				contents.append(inputValue);
-			}
-			
-			inputValue = reader.readLine();
-		}
-		closeInputStream(inputStream);
-		inputStream = new ByteArrayInputStream(contents.toString().getBytes("UTF-8"));
-	}
+        }
 
-	public class W3afSAXParser extends HandlerWithBuilder {
+        return parseSAXInput(new W3afSAXParser());
+    }
+
+    /*
+     * This method takes the name of a tag as a parameter and then replaces the inputStream object
+     * with a new InputStream that does not include any of those tags.
+     *
+     *  The start tag must start with the text <tagName and the end tag must be </tagName>.
+     *
+     *  This method could be adapted to take out any of a list of tags and is fairly generic.
+     *
+     * @param tagName
+     * @throws IOException
+     */
+    private void removeTagFromInputStream(String tagName) throws IOException {
+        if (inputStream == null)
+            return;
+
+        String startTag = "<" + tagName, endTag = "</" + tagName + ">";
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder contents = new StringBuilder();
+
+        String inputValue = reader.readLine();
+
+        boolean inResponseTag = false;
+
+        while (inputValue != null) {
+
+            if (inputValue.contains(startTag)) {
+                if (inputValue.contains(endTag)) {
+                    inputValue = inputValue.substring(0, inputValue.indexOf(startTag)) +
+                            inputValue.substring(inputValue.indexOf(endTag) + endTag.length());
+                } else {
+                    inResponseTag = true;
+                    inputValue = inputValue.substring(0, inputValue.indexOf(startTag));
+                    contents.append(inputValue);
+                }
+            }
+
+            if (inResponseTag && inputValue.contains(endTag)) {
+                inResponseTag = false;
+                inputValue = inputValue.substring(inputValue.indexOf(endTag) + endTag.length());
+            }
+
+            if (!inResponseTag) {
+                contents.append(inputValue);
+            }
+
+            inputValue = reader.readLine();
+        }
+        closeInputStream(inputStream);
+        inputStream = new ByteArrayInputStream(contents.toString().getBytes("UTF-8"));
+    }
+
+    public class W3afSAXParser extends HandlerWithBuilder {
 
         private StringBuffer currentRawFinding = new StringBuffer();
         private Map<FindingKey, String> findingMap = new HashMap<>();
@@ -150,7 +152,7 @@ class W3afChannelImporter extends AbstractChannelImporter {
 
         public void startElement(String uri, String name, String qName, Attributes atts) {
             if ("w3afrun".equals(qName))
-                date = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
+                date = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("startstr"));
 
             if ("vulnerability".equals(qName) && atts.getValue("url") != null &&
                     !atts.getValue("url").isEmpty()) {
@@ -249,7 +251,7 @@ class W3afChannelImporter extends AbstractChannelImporter {
 
             if (!correctFormat && "w3afrun".equals(qName)) {
                 correctFormat = true;
-                testDate = DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", atts.getValue("startstr"));
+                testDate = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("startstr"));
                 hasDate = testDate != null;
             }
         }

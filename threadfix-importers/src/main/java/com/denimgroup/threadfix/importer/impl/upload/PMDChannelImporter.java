@@ -3,10 +3,7 @@ package com.denimgroup.threadfix.importer.impl.upload;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +19,10 @@ import java.util.*;
 /**
  * Created by mhatzenbuehler on 7/3/2014.
  */
-@ScanImporter(ScannerType.PMD)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.PMD_DB_NAME,
+        startingXMLTags = "pmd"
+)
 public class PMDChannelImporter extends AbstractChannelImporter {
     public PMDChannelImporter() {
         super(ScannerType.PMD);

@@ -76,7 +76,7 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         $scope.leftReportFailed = false;
         $scope.empty = false;
         loadReports();
-    }
+    };
 
     $scope.$on('scanUploaded', reload);
     $scope.$on('scanDeleted', function(event, shouldReload) {

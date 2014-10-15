@@ -277,12 +277,12 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.remove = function(collection, index) {
         collection.splice(index, 1);
         $scope.refresh();
-    }
+    };
 
     $scope.setNumberVulnerabilities = function(number) {
         $scope.parameters.numberVulnerabilities = number;
         $scope.refresh();
-    }
+    };
 
     $scope.setDaysOldModifier = function(modifier) {
         resetDateRange();
@@ -295,9 +295,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.refresh();
             }
         }
-
-
-    }
+    };
 
     $scope.setDaysOld = function(days) {
         resetDateRange();
@@ -348,6 +346,9 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         }
         if ($scope.parameters.endDate) {
             $scope.endDate = $scope.parameters.endDate;
+        }
+        if ($scope.treeApplication) {
+            $scope.parameters.teams = [];
         }
 
         $scope.refresh();
@@ -453,7 +454,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (comments) {
-            vuln.vulnerabilityComments = comments
+            vuln.vulnerabilityComments = comments;
             $log.info("Successfully added comment.");
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

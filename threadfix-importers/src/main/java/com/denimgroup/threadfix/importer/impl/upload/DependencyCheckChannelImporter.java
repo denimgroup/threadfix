@@ -41,7 +41,10 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-@ScanImporter(ScannerType.DEPENDENCY_CHECK)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.DEPENDENCY_CHECK_DB_NAME,
+        startingXMLTags = "analysis"
+)
 class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();

@@ -32,12 +32,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
-
 @Controller
 @RequestMapping("/scanplugin")
 public class ScanPluginController {
@@ -63,29 +57,11 @@ public class ScanPluginController {
 	@RequestMapping(value = "/updateChannelVuln", method = RequestMethod.GET)
 	public String doUpdate(Model model) {
 		log.info("Start updating Channel Vulnerabilities");
-		List<String[]> channelVulnUpdateResults = list();
-        List<String[]> genericVulnUpdateResults = list();
-		
-		try {
-            genericVulnUpdateResults = scannerMappingsUpdaterService.updateGenericVulnerabilities();
-            channelVulnUpdateResults = scannerMappingsUpdaterService.updateChannelVulnerabilities();
-            scannerMappingsUpdaterService.updateDefectTrackers();
-            scannerMappingsUpdaterService.updateUpdatedDate();
 
-		} catch (URISyntaxException e) {
-            String message = "There was error when reading files.";
-			model.addAttribute("errorMessage", message);
-            log.warn(message, e);
-		} catch (IOException e) {
-            String message = "There was error when updating Vulnerabilities.";
-            model.addAttribute("errorMessage", message);
-            log.warn(message, e);
-		}
+        scannerMappingsUpdaterService.updateMappings();
 		
 		model.addAttribute("successMessage", "Vulnerability mappings were successfully updated.");
 		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
-        model.addAttribute("resultList", channelVulnUpdateResults);
-        model.addAttribute("genericVulnUpdateResults", genericVulnUpdateResults);
         model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
 
 		log.info("Ended updating Vulnerabilities");

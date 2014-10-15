@@ -24,29 +24,29 @@
 
 package com.denimgroup.threadfix.service.report;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import net.sf.jasperreports.engine.JRChart;
 import net.sf.jasperreports.engine.JRChartCustomizer;
-
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
+
+import java.awt.*;
 
 public class PointInTimeChartCustomizer implements JRChartCustomizer {
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void customize(JFreeChart chart, JRChart jasperChart) {
-		
+
+        //var vulnTypeColorList = ["#014B6E  ", "#458A37  ", "#EFD20A  ", "#F27421  ", "#F7280C  "];
+
 		PiePlot plot = (PiePlot) chart.getPlot();
-		plot.setSectionPaint(4, new Color(22, 158, 255));
-		plot.setSectionPaint(3, new Color(0, 70, 120));
-		plot.setSectionPaint(2, new Color(189, 216, 77));
-		plot.setSectionPaint(1, new Color(253, 224, 94));
-		plot.setSectionPaint(0, new Color(219, 109, 29));
+		plot.setSectionPaint(4, new Color(1, 75, 110));
+		plot.setSectionPaint(3, new Color(69, 138, 55));
+		plot.setSectionPaint(2, new Color(239, 210, 10));
+		plot.setSectionPaint(1, new Color(242, 116, 33));
+		plot.setSectionPaint(0, new Color(247, 40, 12));
 		
 		PieSectionLabelGenerator generator = new StandardPieSectionLabelGenerator("{0}: {1} ({2})");
 		plot.setLabelGenerator(generator);

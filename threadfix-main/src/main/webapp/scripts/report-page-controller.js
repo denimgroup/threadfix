@@ -57,18 +57,18 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             });
 
             $scope.applications = $scope.team.applications;
-            if ($scope.applications[0].id !== -1) {
+            if ($scope.applications && $scope.applications[0].id !== -1) {
                 $scope.applications.unshift({id: -1, name: "All"});
             }
             $scope.application = $scope.applications[0];
         }
 
         loadReport();
-    }
+    };
 
     $scope.clearApplications = function() {
         $scope.applications = undefined;
-    }
+    };
 
     $scope.applications = undefined;
     $scope.options = $scope.tabs[0].options;
@@ -142,7 +142,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.reportId = tab.options[0].id;
 
         loadReport();
-    }
+    };
 
     $scope.$on('rootScopeInitialized', function() {
         threadfixAPIService.getVulnSearchParameters().
@@ -174,7 +174,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
                         if ($scope.firstAppId) {
                             $scope.applications = $scope.team.applications;
-                            if ($scope.applications[0].id !== -1) {
+                            if ($scope.applications && $scope.applications[0].id !== -1) {
                                 $scope.applications.unshift({id: -1, name: "All"});
                             }
 
@@ -183,6 +183,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                             if (!$scope.application) {
                                 $scope.application = $scope.applications[0];
                             }
+                        } else {
+                            $scope.updateApplications();
                         }
                     }
 
@@ -215,13 +217,13 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.formatId = 2;
         loadReport();
         $scope.formatId = 1;
-    }
+    };
 
     $scope.triggerPDFDownload = function() {
         $scope.formatId = 3;
         loadReport();
         $scope.formatId = 1;
-    }
+    };
 
     $scope.setSort = function(index) {
         $scope.index = index;
@@ -249,7 +251,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 return 0;
             }
         });
-    }
+    };
 
     $scope.setSortNumber = function(list, attr) {
         $scope.index = attr;
@@ -284,7 +286,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 return 0;
             }
         });
-    }
+    };
 
     var sortSeverity = function() {
         $scope.listOfLists.sort(function(a, b) {
@@ -298,7 +300,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 return 0;
             }
         });
-    }
+    };
 
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;

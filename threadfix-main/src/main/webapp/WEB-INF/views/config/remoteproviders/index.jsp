@@ -2,11 +2,11 @@
 
 <head>
 	<title>Remote Providers</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-providers-tab-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scheduled-remote-provider-import-tab-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-provider-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/remote-provider-modal-mapping-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/remote-providers-tab-controller.js"/>
+	<cbs:cachebustscript src="/scripts/scheduled-remote-provider-import-tab-controller.js"/>
+	<cbs:cachebustscript src="/scripts/remote-provider-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+    <cbs:cachebustscript src="/scripts/remote-provider-modal-mapping-controller.js"/>
 </head>
 
 <body>

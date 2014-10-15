@@ -2,9 +2,9 @@
 
 <head>
 	<title>Manage Users</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-permissions-config-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/permission-modal-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/user-permissions-config-controller.js"/>
+	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+	<cbs:cachebustscript src="/scripts/permission-modal-controller.js"/>
 </head>
 
 <body id="config" ng-controller="UserPermissionsConfigController" ng-init="userId = <c:out value="${ user.id }"/>">
@@ -15,8 +15,9 @@
     <h2>Edit User <c:out value="${ user.name }"/> Permissions</h2>
 
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jspf" %>
 
-	<a id="addPermissionButton" class="btn" ng-click="openAddPermissionsModal()">
+	<a id="addPermissionButton" class="btn" ng-click="openAddPermissionsModal()" ng-disabled="noTeams">
 		Add Permissions
 	</a>
 

@@ -44,7 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@SessionAttributes("severityFilter")
 public class SeverityFilterController {
 
     @Autowired

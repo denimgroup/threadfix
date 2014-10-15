@@ -35,6 +35,7 @@ public class FolderMappings {
         addToMap(ScannerType.PMD, "Static/PMD");
         addToMap(ScannerType.CLANG, "Static/Clang");
         addToMap(ScannerType.MANUAL, "Manual/SSVL");
+        addToMap(ScannerType.SSVL, "Manual/SSVL");
     }
 
     private static void addToMap(ScannerType type, String fileKey) {

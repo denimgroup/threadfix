@@ -1,0 +1,11 @@
+8/7/2014 11:45:00
+type.info,
+CWE differences between Version 2.5 and Version 2.6,
+type.vulnerabilities,
+359,Exposure of Private Information ('Privacy Violation')
+451,User Interface (UI) Misrepresentation of Critical Information
+923,Improper Restriction of Communication Channel to Intended Endpoints
+926,Improper Export of Android Application Components
+939,Improper Authorization in Handler for Custom URL Scheme
+940,Improper Verification of Source of a Communication Channel
+941,Incorrectly Specified Destination in a Communication Channel

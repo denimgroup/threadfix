@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.dao.WafDao;
 import com.denimgroup.threadfix.data.entities.Waf;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -51,6 +52,14 @@ public class HibernateWafDao
     @Autowired
     public HibernateWafDao(SessionFactory sessionFactory) {
         super(sessionFactory);
+    }
+
+    @Override
+    public Waf retrieveByName(String name) {
+        return (Waf) getSession().createCriteria(Waf.class)
+                .add(Restrictions.eq("name", name))
+                .add(Restrictions.eq("active", true))
+                .uniqueResult();
     }
 
     @Override

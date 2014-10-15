@@ -65,11 +65,12 @@ public class FilterJsonBlob extends AuditableEntity {
 
     @JsonView(Object.class)
     @JsonProperty
-    public boolean getDefaultTrending() {
-        return (defaultTrending == null ? false : defaultTrending);
+    @Column(nullable = true)
+    public Boolean getDefaultTrending() {
+        return defaultTrending == null ? false : defaultTrending;
     }
 
-    public void setDefaultTrending(boolean defaultTrending) {
+    public void setDefaultTrending(Boolean defaultTrending) {
         this.defaultTrending = defaultTrending;
     }
 
