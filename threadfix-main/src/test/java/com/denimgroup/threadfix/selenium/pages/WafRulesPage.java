@@ -60,6 +60,20 @@ public class WafRulesPage extends BasePage {
         return new WafRulesPage(driver);
     }
 
+    public boolean checkFiredWafNav(String wafCode) {
+        driver.findElementByPartialLinkText(wafCode).click();
+        return driver.findElementByCssSelector("h3").getAttribute("innerHTML").contains(wafCode);
+    }
+
+    public boolean clickDownloadWafRulesEnabled() {
+        return driver.findElementByLinkText("Download Waf Rules").isDisplayed();
+    }
+
+    public WafIndexPage clickCancelButton() {
+        driver.findElementByLinkText("Cancel").click();
+        return new WafIndexPage(driver);
+    }
+
     public WafRulesPage setLogFile(String file) {
         waitForElement(driver.findElementById("fileInput"));
         driver.findElementById("fileInput").sendKeys(file);
@@ -107,6 +121,11 @@ public class WafRulesPage extends BasePage {
         } else {
             return null;
         }
+    }
+
+    public ApplicationDetailPage clickAppName(String appName) {
+        driver.findElementByLinkText(appName).click();
+        return new ApplicationDetailPage(driver);
     }
 
     public WafIndexPage clickDeleteButton() {

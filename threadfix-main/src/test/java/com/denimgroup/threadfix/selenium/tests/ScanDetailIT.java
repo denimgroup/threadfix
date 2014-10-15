@@ -152,7 +152,7 @@ public class ScanDetailIT extends BaseIT {
 
         String appNameTest = applicationDetailPage2.getNameText();
 
-        assertTrue("Application name does not match", appName != appNameTest);
+        assertTrue("Application name does not match", appName.equals(appNameTest));
     }
 
     @Test

@@ -1308,4 +1308,49 @@ public class ApplicationIT extends BaseIT {
 
         assertTrue("Delete Button is still available", applicationDetailPage.isScanDeleted());
     }
+
+    //TODO Waiting for id's on manual finding form
+    @Ignore
+    @Test
+    public void testManualFindingValidation() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String cwe = "Improper Validation of Certificate Expiration";
+        String parameter = "Test Parameter";
+        String description = "Test Description.";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickActionButton()
+                .clickManualFindingButton()
+                .setCWE(cwe)
+                .setParameter(parameter)
+                .setDescription(description);
+        sleep(2000);
+
+        assertTrue("Manual Finding cannot be submitted", applicationDetailPage.isButtonEnabled());
+
+        applicationDetailPage.setCWE("");
+        sleep(2000);
+
+        assertTrue("Submitted blank CWE", !applicationDetailPage.isButtonEnabled());
+
+        applicationDetailPage.setCWE("asdfashrhhr");
+        sleep(2000);
+
+        assertTrue("Submitted invalid CWE", applicationDetailPage.isCweErrorPresent());
+
+        applicationDetailPage.setCWE(cwe).setParameter("");
+        sleep(2000);
+
+        assertTrue("Submitted blank parameter", !applicationDetailPage.isButtonEnabled());
+
+        applicationDetailPage.setParameter(parameter).setDescription("");
+        sleep(2000);
+
+        assertTrue("Submitted blank description", !applicationDetailPage.isButtonEnabled());
+    }
 }

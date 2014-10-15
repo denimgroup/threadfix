@@ -232,4 +232,23 @@ public class ApplicationDetailsPageIT extends BaseIT {
         boolean bothMatch = (vulnsMatch && typeMatch);
         assertTrue("Scan does not link correctly", bothMatch);
     }
+
+    @Test
+    public void createDefectTrackerEditDeleteModal() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String name = "test" + getRandomString(4);
+        String url = "http://10.2.10.171/bugzilla";
+        String type = "Bugzilla";
+        String username = "mcollins@denimgroup.com";
+        String password = "bugzilla";
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickApplicationName(appName);
+
+        applicationDetailPage.createDefectTracker(name,url,type,username,password);
+
+        assertTrue("Defect Tracker not added correctly", applicationDetailPage.isDefectTrackerAttached());
+    }
 }
