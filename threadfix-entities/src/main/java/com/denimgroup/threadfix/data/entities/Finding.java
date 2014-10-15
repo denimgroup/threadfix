@@ -33,6 +33,8 @@ import javax.validation.constraints.Size;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.*;
+
 @Entity
 @Table(name = "Finding")
 public class Finding extends AuditableEntity implements FindingLike {
@@ -52,6 +54,7 @@ public class Finding extends AuditableEntity implements FindingLike {
     // TODO figure out the appropriate place for this
     public static final int NUMBER_ITEM_PER_PAGE = 100;
 
+    private static final String SENTINEL_VULN_URL = "https://sentinel.whitehatsec.com/api/vuln/";
 
     private Vulnerability vulnerability;
 
@@ -116,6 +119,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
+
+    private String scannerVulnUrl = null;
 
 	@Override
 	@ManyToOne
@@ -451,6 +456,24 @@ public class Finding extends AuditableEntity implements FindingLike {
     private String getSeverity() {
         return getChannelSeverity() == null ? null :
                 getChannelSeverity().getName();
+    }
+
+
+    @Transient
+    public String getScannerVulnUrl() {
+        String url = null;
+
+        String scannerName = getScannerName();
+
+        if (scannerName != null) {
+
+            if (scannerName.equals(ScannerDatabaseNames.SENTINEL_DB_NAME)) {
+                url = SENTINEL_VULN_URL + getDisplayId();
+            }
+        }
+
+        return url;
+
     }
 
     @Override
