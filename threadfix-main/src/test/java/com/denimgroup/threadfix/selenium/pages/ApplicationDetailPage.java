@@ -618,6 +618,11 @@ public class ApplicationDetailPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage clickViewMoreTopVulnerabilities(){
+        driver.findElementById("rightViewMore").click();
+        return new AnalyticsPage(driver);
+    }
+
     public ApplicationDetailPage checkVulnerabilitiesByCategory(String category) {
         driver.findElementById("checkCategory" + category).click();
         return new ApplicationDetailPage(driver);
@@ -646,6 +651,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean vulnsFilteredOpen(int count) {
         return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
+    }
+
+    public boolean isCweErrorPresent() {
+        return !driver.findElementByClassName("errors ng-binding").getAttribute("innerHTML").equals("");
     }
 
     public FilterPage clickEditVulnerabilityFilters() {

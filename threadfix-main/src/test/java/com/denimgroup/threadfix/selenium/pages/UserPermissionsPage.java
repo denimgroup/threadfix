@@ -89,6 +89,11 @@ public class UserPermissionsPage extends BasePage {
         return this;
     }
 
+    public UserPermissionsPage editSpecificPermissions(String teamName, String appName, String role) {
+        driver.findElementById("editAppMap" + teamName + appName + role).click();
+        return new UserPermissionsPage(driver);
+    }
+
     public String errorAlert() {
         return driver.findElementByClassName("alert-error").getText();
     }

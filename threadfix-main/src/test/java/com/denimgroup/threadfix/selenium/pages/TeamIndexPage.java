@@ -331,11 +331,11 @@ public class TeamIndexPage extends BasePage {
     }
 
     public boolean applicationVulnerabilitiesFiltered(String teamName, String appName, String level, String expected) {
-        return getApplicationSpecificVulnerability(teamName, appName, level).equals(expected);
+        return getApplicationSpecificVulnerabilityCount(teamName, appName, level).equals(expected);
     }
 
-    public String getApplicationSpecificVulnerability(String teamName, String appName, String level) {
-        return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText();
+    public String getApplicationSpecificVulnerabilityCount(String teamName, String appName, String level) {
+        return driver.findElement(By.id("num" + level + "Vulns" + teamName + "-" + appName)).getText().trim();
     }
 
     public boolean isUploadButtonPresent(String teamName, String appName) {

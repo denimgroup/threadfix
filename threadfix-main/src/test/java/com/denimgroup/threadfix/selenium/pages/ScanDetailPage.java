@@ -71,6 +71,16 @@ public class ScanDetailPage extends BasePage {
         return new ScanDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickApplicationNav() {
+        driver.findElementByPartialLinkText("Application:").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public TeamDetailPage clickTeamNav() {
+        driver.findElementByPartialLinkText("Team:").click();
+        return new TeamDetailPage(driver);
+    }
+
     public boolean isViewFindingPresent() {
         return driver.findElementById("mappedVulnType").isDisplayed();
     }

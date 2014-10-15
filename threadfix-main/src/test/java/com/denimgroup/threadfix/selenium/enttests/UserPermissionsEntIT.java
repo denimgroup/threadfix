@@ -93,33 +93,6 @@ public class UserPermissionsEntIT extends BaseIT{
     }
 
     @Test
-    public void addAppPermissionsTest() {
-        String teamName = createTeam();
-        String appName1 = createApplication(teamName);
-        String appName2 = createApplication(teamName);
-
-        String userName = createRegularUser();
-        String appRole1 = "Administrator";
-        String appRole2 = "User";
-
-        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
-                .clickManageUsersLink()
-                .clickEditPermissions(userName)
-                .clickAddPermissionsLink()
-                .setTeam(teamName)
-                .toggleAllApps()
-                .setApplicationRole(appName1, appRole1)
-                .setApplicationRole(appName2, appRole2)
-                .clickModalSubmit();
-
-        assertTrue("Permissions were not added properly for the first application.",
-                userPermissionsPage.isPermissionPresent(teamName, appName1, appRole1));
-
-        assertTrue("Permissions were not added properly for the second application",
-                userPermissionsPage.isPermissionPresent(teamName, appName2, appRole2));
-    }
-
-    @Test
     public void addPermissionsFieldValidation() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
@@ -729,5 +702,68 @@ public class UserPermissionsEntIT extends BaseIT{
 
         assertTrue("Scan wasn't deleted", scanAgentTasksPage.successAlert()
                 .contains("One time OWASP Zed Attack Proxy Scan has been deleted from Scan Agent queue"));
+    }
+
+    @Test
+    public void testUserPermissionsNavigation() {
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions("user");
+
+        assertTrue("Edit Permissions button didn't navigate correclty", userPermissionsPage.isUserNamePresent("user"));
+    }
+
+    @Test
+    public void testAddAppPermissions() {
+        String teamName1 = createTeam();
+        String appName1 = createApplication(teamName1);
+        String teamName2 = createTeam();
+        String appName2 = createApplication(teamName2);
+
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions("user")
+                .clickAddPermissionsLink()
+                .setTeam(teamName1)
+                .toggleAllApps()
+                .setApplicationRole(appName1,"User")
+                .clickModalSubmit();
+
+        boolean checkPermissions1 = userPermissionsPage.isPermissionPresent(teamName1,appName1,"User");
+
+        assertTrue("Failed to add permissions separate from Global permissions", checkPermissions1);
+
+        userPermissionsPage.clickAddPermissionsLink()
+                .setTeam(teamName2)
+                .toggleAllApps()
+                .setApplicationRole(appName2,"User")
+                .clickModalSubmit();
+
+        boolean checkPermissions2 = userPermissionsPage.isPermissionPresent(teamName2,appName2,"User");
+
+        assertTrue("Failed to add more permissions", checkPermissions2);
+    }
+
+    @Test
+    public void testEditPermissions() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String role1 = "User";
+        String role2 = "Administrator";
+
+        UserPermissionsPage userPermissionsPage = loginPage.login("user", "password")
+                .clickManageUsersLink()
+                .clickEditPermissions("user")
+                .clickAddPermissionsLink()
+                .setTeam(teamName)
+                .toggleAllApps()
+                .setApplicationRole(appName,role1)
+                .clickModalSubmit();
+
+        userPermissionsPage.editSpecificPermissions(teamName,appName,role1)
+                .setApplicationRole(appName,role2)
+                .clickModalSubmit();
+
+        assertTrue("Could not edit permissions", userPermissionsPage.isPermissionPresent(teamName,appName,role2));
     }
 }

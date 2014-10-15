@@ -345,7 +345,7 @@ public class RemoteProvidersIT extends BaseIT {
                 .expandTeamRowByName(teamName);
 
         assertFalse("The vulnerability count was not updated.",
-                teamIndexPage.getApplicationSpecificVulnerability(teamName, appName, "Total").equals("0"));
+                teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total").equals("0"));
 
         remoteProvidersIndexPage = applicationDetailPage.clickRemoteProvidersLink();
 

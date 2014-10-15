@@ -1,9 +1,7 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.FilterPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -187,5 +185,51 @@ public class ApplicationDetailsPageIT extends BaseIT {
                 .clickViewAppLink(appName, teamName);
 
         return new ApplicationDetailPage(driver);
+    }
+
+    @Test
+    public void testViewMoreNavigation() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        AnalyticsPage analyticsPage1 = applicationDetailPage1.clickViewMoreVulnerabilityTrending();
+
+        assertTrue("View More Vulnerability Trending failed", analyticsPage1.isReportCorrect("Vulnerability Trending"));
+
+        ApplicationDetailPage applicationDetailPage2 = analyticsPage1.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        AnalyticsPage analyticsPage2 = applicationDetailPage2.clickViewMoreTopVulnerabilities();
+
+        assertTrue("View More Top 10 failed", analyticsPage2.isReportCorrect("Most Vulnerable Applications"));
+    }
+
+    @Test
+    public void testScanLinkNav() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName);
+
+        ApplicationDetailPage applicationDetailPage = teamIndexPage.clickApplicationName(appName)
+                .clickScansTab();
+        String[] scanValues = applicationDetailPage.getFirstScanInfo();
+
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
+        String scanHeader = scanDetailPage.getScanHeader().toLowerCase();
+        boolean vulnsMatch= scanDetailPage.toggleStatistics().isTotalVulnerabilitiesCorrect(scanValues[1]);
+        boolean typeMatch = scanHeader.contains(scanValues[0].toLowerCase());
+        boolean bothMatch = (vulnsMatch && typeMatch);
+        assertTrue("Scan does not link correctly", bothMatch);
     }
 }

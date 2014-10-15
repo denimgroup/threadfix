@@ -1,8 +1,8 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -149,5 +149,47 @@ public class TeamIndexPageIT extends BaseIT {
 
         assertTrue("The scan wasn't uploaded",
                 teamIndexPage.applicationVulnerabilitiesFiltered(teamName1, appName, "Total", "45"));
+    }
+
+    @Test
+    public void testUpdateOldScan() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"), teamName, appName);
+
+        int numOldVulns = Integer.parseInt(teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total"));
+
+        teamIndexPage.uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName);
+
+        int numNewVulns = Integer.parseInt(teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total"));
+
+        assertTrue("Update old scan failed", numNewVulns > numOldVulns);
+    }
+
+    @Test
+    public void testReplaceNewScanWithOld() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName);
+
+        int numOriginalVulns = Integer.parseInt(teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total"));
+
+        teamIndexPage.uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"), teamName, appName);
+
+        int numUpdatedVulns = Integer.parseInt(teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total"));
+
+        assertTrue("Old scan replaced newer scan", numOriginalVulns == numUpdatedVulns);
     }
 }

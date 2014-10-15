@@ -133,4 +133,44 @@ public class ScanDetailIT extends BaseIT {
         assertTrue("Resurfaced Vulnerabilities result is incorrect", scanDetailPage.isResurfacedVulnerabilitiesCorrect("0"));
         assertTrue("Closed Vulnerabilities result is incorrect", scanDetailPage.isClosedVulnerabilitiesCorrect("0"));
     }
+
+    @Test
+    public void testApplicationLinkNav() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName)
+                .clickApplicationName(appName);
+
+        ScanDetailPage scanDetailPage = applicationDetailPage1.clickScansTab().clickViewScan();
+
+        ApplicationDetailPage applicationDetailPage2 = scanDetailPage.clickApplicationNav();
+
+        String appNameTest = applicationDetailPage2.getNameText();
+
+        assertTrue("Application name does not match", appName != appNameTest);
+    }
+
+    @Test
+    public void testTeamLinkNav() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .uploadScanButton(teamName, appName)
+                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName)
+                .clickApplicationName(appName);
+
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
+
+        TeamDetailPage teamDetailPage = scanDetailPage.clickTeamNav();
+
+        assertTrue("Team name does not match", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
+    }
 }
