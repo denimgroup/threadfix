@@ -567,6 +567,7 @@ public class RemoteProvidersIT extends BaseIT {
         assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("Sunday_4_30_AM"));
     }
 
+    //TODO remove extra navigation when enhancement #618 is added
     @Test
     public void checkSameDailyScheduleConflict() {
         String frequency = "Daily";
@@ -584,6 +585,10 @@ public class RemoteProvidersIT extends BaseIT {
                 .setMinute(minutes)
                 .setPeriodOfDay(periodOfDay)
                 .clickAddScheduledUpdated();
+
+        remoteProvidersSchedulePage = remoteProvidersSchedulePage.clickOrganizationHeaderLink()
+                .clickRemoteProvidersLink()
+                .clickScheduleTab();
 
         assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_9_30_AM"));
 
