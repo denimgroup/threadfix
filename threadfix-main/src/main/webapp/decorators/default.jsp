@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/d3.css"/>
 
         <cbs:cachebustscript src="/scripts/angular-file-upload-shim.min.js"/>
 
@@ -27,6 +28,12 @@
         <cbs:cachebustscript src="/scripts/wrapper-controller.js"/>
         <cbs:cachebustscript src="/scripts/init-controller.js"/>
         <cbs:cachebustscript src="/scripts/directives.js"/>
+
+        <cbs:cachebustscript src="/scripts/report/directives/d3-dashboards.js"/>
+        <cbs:cachebustscript src="/scripts/report/directives/d3-trending-scans.js"/>
+        <cbs:cachebustscript src="/scripts/report/d3.js"/>
+        <cbs:cachebustscript src="/scripts/report/d3-donut.js"/>
+        <cbs:cachebustscript src="/scripts/report/report-services.js"/>
 
         <!--[if lt IE 7]>
             <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>

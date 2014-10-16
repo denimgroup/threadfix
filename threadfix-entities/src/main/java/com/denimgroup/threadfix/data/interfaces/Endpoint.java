@@ -40,8 +40,12 @@ public interface Endpoint extends Comparable<Endpoint> {
     @Nonnull
 	String getFilePath();
 
+    enum PrintFormat {
+        DYNAMIC, STATIC, LINT
+    }
+
     @Nonnull
-	String getCSVLine();
+	String getCSVLine(PrintFormat... formats);
 	
 	int getStartingLineNumber();
 	

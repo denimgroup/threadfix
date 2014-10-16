@@ -38,13 +38,9 @@ public final class ControllerUtils {
 	private static final String SUCCESS_MESSAGE = "successMessage";
 	private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ACTIVE_TAB = "application_page_active_tab";
-    public static final String ACTIVE_VULN_TAB = "active_vuln_tab";
-    public static final String SCAN_TAB = "scan_tab";
-    public static final String FILE_TAB = "file_tab";
-    public static final String SCAN_AGENT_TASK_TAB = "scan_agent_task_tab";
-    public static final String SCHEDULED_SCAN_TAB = "scheduled_scan_tab";
     public static final String CLOSED_VULN_TAB = "closed_vuln_tab";
     public static final String FALSE_POSITIVE_TAB = "false_positive_tab";
+    public static final String FILTER_PARAMETER = "filter_paramter";
 
 	private ControllerUtils() {
 		// Nobody can instantiate this class

@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.FilterJsonBlobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ import java.util.List;
 @RequestMapping("/reports/filter/")
 public class JsonFilterBlobController {
 
+    private static final SanitizedLogger LOG = new SanitizedLogger(JsonFilterBlobController.class);
+
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
 
@@ -44,6 +47,11 @@ public class JsonFilterBlobController {
         if (filterJsonBlobService.nameExists(filterJsonBlob.getName())) {
             return RestResponse.failure("A filter with that name already exists.");
         } else {
+            if (filterJsonBlob.getDefaultTrending()) {
+                // Update the old default trending to non-default trending filter
+                int filtersNo = filterJsonBlobService.updateDefaultTrendingFilter();
+                LOG.info("Number of FilterJsonBlob objects updated to non-default trending report: " + String.valueOf(filtersNo));
+            }
             filterJsonBlobService.saveOrUpdate(filterJsonBlob);
             return RestResponse.success(filterJsonBlobService.loadAllActive());
         }

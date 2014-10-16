@@ -10,3 +10,4 @@ Cookie without HttpOnly flag set,5244416,312
 Base64-encoded data in parameter,7340544,20
 SSL certificate,16777472,298
 Extension-generated issue,134217728,16
+DOM-based open redirection,5243152,601

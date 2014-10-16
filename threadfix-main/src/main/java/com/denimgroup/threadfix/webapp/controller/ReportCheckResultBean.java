@@ -26,29 +26,58 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class ReportCheckResultBean {
-	private StringBuffer report = null;
-	private byte[] reportBytes = null;
-	private ReportCheckResult reportCheckResult = null;
-	
-	public ReportCheckResultBean(ReportCheckResult reportCheckResult) {
-		this.reportCheckResult = reportCheckResult;
-	}
-	
-	public ReportCheckResultBean(ReportCheckResult reportCheckResult, 
-			StringBuffer report, byte[] reportBytes) {
-		this.report = report;
-		this.reportCheckResult = reportCheckResult;
-		this.reportBytes = reportBytes;
-	}
-	
-	public byte[] getReportBytes() { return reportBytes; }
-	public StringBuffer getReport() { return report; }
-	public ReportCheckResult getReportCheckResult() { return reportCheckResult; }
-	
-	@Override
-	public String toString() {
-		return "Report Check: { status: " + reportCheckResult.toString() + 
-				", report: " + (report == null && reportBytes == null ? " empty }" : " not empty }");
-	}
+    private StringBuffer              report            = null;
+    private byte[]                    reportBytes       = null;
+    private ReportCheckResult         reportCheckResult = null;
+    private List<Map<String, Object>> reportList        = null;
+
+    public ReportCheckResultBean(ReportCheckResult reportCheckResult) {
+        this.reportCheckResult = reportCheckResult;
+    }
+
+    public ReportCheckResultBean(ReportCheckResult reportCheckResult,
+                                 StringBuffer report, byte[] reportBytes) {
+        this.report = report;
+        this.reportCheckResult = reportCheckResult;
+        this.reportBytes = reportBytes;
+    }
+
+    public ReportCheckResultBean(ReportCheckResult reportCheckResult,
+                                 StringBuffer report, byte[] reportBytes, List<Map<String, Object>> reportList) {
+        this.report = report;
+        this.reportCheckResult = reportCheckResult;
+        this.reportBytes = reportBytes;
+        this.reportList = reportList;
+    }
+
+    public byte[] getReportBytes() {
+        return reportBytes;
+    }
+
+    public StringBuffer getReport() {
+        return report;
+    }
+
+    public ReportCheckResult getReportCheckResult() {
+        return reportCheckResult;
+    }
+
+    public List<Map<String, Object>> getReportList() {
+        return reportList;
+    }
+
+    public void setReportList(List<Map<String, Object>> reportList) {
+        this.reportList = reportList;
+    }
+
+    @Override
+    public String toString() {
+        return "Report Check: { status: " + reportCheckResult.toString() +
+                ", report: " + (report == null && reportBytes == null ? " empty }" : " not empty }");
+    }
 }

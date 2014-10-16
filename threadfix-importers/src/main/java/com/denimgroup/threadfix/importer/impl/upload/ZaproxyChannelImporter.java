@@ -60,6 +60,8 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";
 
     private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
+
+    // It looks like ZAP pulls from system language / region settings so this may not work everywhere
     private final String dateFormatString = "EEE, dd MMM yyyy kk:mm:ss";
     private String formatString;
 
@@ -334,13 +336,16 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 				log.debug("Attempting to get scan date from text '" + tempDateString + "'");
 
 				String anchorString = "Report generated at ";
-				if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
-					tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-					testDate = DateUtils.getCalendarFromString(dateFormatString, tempDateString);
+				if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+                    if (tempDateString.contains(anchorString)) {
+                        int beginIndex = tempDateString.indexOf(anchorString) + anchorString.length();
+                        tempDateString = tempDateString.substring(beginIndex, tempDateString.length() - 2);
+                    }
+                    testDate = DateUtils.getCalendarFromString(dateFormatString, tempDateString);
 
-					if (testDate != null) {
-						hasDate = true;
-					}
+                    if (testDate != null) {
+                        hasDate = true;
+                    }
 				} else {
 	    			log.debug("Date string appears to be empty or does not contain expected text: '" + anchorString + "'");
 	    		}

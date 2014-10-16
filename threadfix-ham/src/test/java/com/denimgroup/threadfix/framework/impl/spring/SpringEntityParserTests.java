@@ -23,15 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
+import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.TestConstants;
+import static org.junit.Assert.assertTrue;
 
 public class SpringEntityParserTests {
 	
@@ -45,7 +45,7 @@ public class SpringEntityParserTests {
 	@Test
 	public void testBasicFieldEquivalence() {
 		assertTrue("These should have been equal.",
-				new BeanField("String", "address").equals(new BeanField("String", "address"))
+				new ModelField("String", "address").equals(new ModelField("String", "address"))
 				);
 	}
 	
@@ -63,15 +63,15 @@ public class SpringEntityParserTests {
 	
 	@Test
 	public void testOwnerFields() {
-		Set<BeanField> fieldMappings = parser.getFieldMappings();
+		Set<ModelField> fieldMappings = parser.getFieldMappings();
 		
 		assertTrue("Model missed the address field.",
-				fieldMappings.contains(new BeanField("String", "getAddress")));
+				fieldMappings.contains(new ModelField("String", "getAddress")));
 		assertTrue("Model missed the city field.",
-				fieldMappings.contains(new BeanField("String", "getCity")));
+				fieldMappings.contains(new ModelField("String", "getCity")));
 		assertTrue("Model missed the telephone field.",
-				fieldMappings.contains(new BeanField("String", "getTelephone")));
+				fieldMappings.contains(new ModelField("String", "getTelephone")));
 		assertTrue("Model missed the pet field.",
-				fieldMappings.contains(new BeanField("Pet", "getPet")));
+				fieldMappings.contains(new ModelField("Pet", "getPet")));
 	}
 }

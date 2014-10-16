@@ -1,12 +1,16 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService) {
+myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService, vulnSearchParameterService) {
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
     };
 
     $scope.base = window.location.pathname;
+
+    $scope.trendingActive = false;
+    $scope.comparisonActive = false;
+    $scope.snapshotActive = false;
 
     $scope.tabs = [
         {
@@ -15,8 +19,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             options: [
                 { name: "Trending Scans", id: 1 },
                 { name: "Monthly Progress", id: 7 },
-                { name: "Vulnerability Trending", id: 9 },
-                { name: "Most Vulnerable Applications", id: 10 }
+                { name: "Vulnerability Trending", id: 9 }
             ]
         },
         {
@@ -25,6 +28,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                 { name: "Point in Time", id: 2 },
                 { name: "Progress By Vulnerability", id: 3 },
                 { name: "Portfolio Report", id: 8 },
+                { name: "Most Vulnerable Applications", id: 10 },
                 { name: "Vulnerability List", id: 11 }
             ]
         },
@@ -130,7 +134,10 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     $scope.loadReport = function() { loadReport(); }
 
     $scope.updateOptions = function(tab) {
+        $scope.trendingActive = false;
+        $scope.snapshotActive = false;
         $scope.vulnSearch = false;
+        $scope.comparisonActive = false;
         $scope.options = tab.options;
         $scope.reportId = tab.options[0].id;
 
@@ -146,6 +153,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.genericVulnerabilities = data.object.vulnTypes;
                     $scope.savedFilters = data.object.savedFilters;
                     $scope.searchApplications = data.object.applications;
+                    $scope.filterParameters = data.object.filterParameters;
 
                     $scope.teams.sort(nameCompare)
 
@@ -155,9 +163,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.team = $scope.teams[0];
                     $scope.application = {id: -1, name: "All"};
                     $scope.applications = undefined;
-
-                    //teamId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
-                    //appId = $scope.firstTeamId ? parseInt($scope.firstTeamId) : -1;
 
                     if ($scope.firstTeamId) {
                         $scope.teamId = parseInt($scope.firstTeamId);
@@ -191,7 +196,13 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                         $scope.reportId = 1;
                     }
 
-                    loadReport();
+                    if ($scope.filterParameters) {
+                        $scope.vulnSearch = true;
+                        $scope.loading = false;
+                        $scope.$broadcast('loadVulnerabilitySearchTable');
+                    } else {
+                        loadReport();
+                    }
 
                 } else {
                     $scope.output = "Failure. Message was : " + data.message;
@@ -242,6 +253,25 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         });
     };
 
+    $scope.setSortNumber = function(list, attr) {
+        $scope.index = attr;
+        $scope.reverse = !$scope.reverse;
+
+        list.sort(function(a, b) {
+            return ($scope.reverse ? b[attr] - a[attr] : a[attr] - b[attr]);
+        });
+
+    }
+
+    $scope.setSortText = function(list, attr) {
+        $scope.index = attr;
+        $scope.reverse = !$scope.reverse;
+
+        list.sort(function(a, b) {
+            return ($scope.reverse ? b[attr].localeCompare(a[attr]) : a[attr].localeCompare(b[attr]));
+        });
+    }
+
     var sortID = function() {
         $scope.listOfLists.sort(function(a, b) {
             var intA = Number(a[0]);
@@ -274,7 +304,49 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.loadVulnSearch = function() {
         $scope.vulnSearch = true;
+        $scope.trendingActive = false;
+        $scope.snapshotActive = false;
+        $scope.comparisonActive = false;
+        $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
+    }
+
+    $scope.loadTrending = function() {
+
+        $scope.trendingActive = true;
+        $scope.snapshotActive = false;
+        $scope.comparisonActive = false;
+        $scope.vulnSearch = false;
+        $scope.tabs.forEach(function(tab) {
+            tab.active = false;
+        });
+        $scope.$broadcast('loadTrendingReport');
+
+    }
+
+    $scope.loadComparison = function() {
+
+        $scope.trendingActive = false;
+        $scope.snapshotActive = true;
+        $scope.comparisonActive = false;
+        $scope.vulnSearch = false;
+        $scope.tabs.forEach(function(tab) {
+            tab.active = false;
+        });
+        $scope.$broadcast('loadComparisonReport');
+
+    }
+
+    $scope.loadSnapshot = function() {
+
+        $scope.trendingActive = false;
+        $scope.snapshotActive = true;
+        $scope.comparisonActive = false;
+        $scope.vulnSearch = false;
+        $scope.tabs.forEach(function(tab) {
+            tab.active = false;
+        });
+        $scope.$broadcast('loadSnapshotReport');
 
     }
 

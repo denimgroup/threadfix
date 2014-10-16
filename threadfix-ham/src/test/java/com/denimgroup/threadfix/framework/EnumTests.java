@@ -23,13 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework;
 
-import static org.junit.Assert.assertTrue;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
-import javax.annotation.Nonnull;
 import org.junit.Test;
+
+import javax.annotation.Nonnull;
+
+import static org.junit.Assert.assertTrue;
 
 public class EnumTests {
 	
@@ -41,7 +42,12 @@ public class EnumTests {
 	@Test
 	public void testFrameworkType() {
 		for (FrameworkType frameworkType : FrameworkType.values()) {
-			assertTrue("Enum lookup is broken", FrameworkType.getFrameworkType(upperAndUnderscore(frameworkType.getDisplayName())) == frameworkType);
+            String lookupString = frameworkType == FrameworkType.DOT_NET_MVC ?
+                "DOT_NET_MVC":
+                upperAndUnderscore(frameworkType.getDisplayName());
+
+			assertTrue("Enum lookup is broken",
+                    FrameworkType.getFrameworkType(lookupString) == frameworkType);
 		}
 	}
 	

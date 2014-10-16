@@ -26,7 +26,13 @@ package com.denimgroup.threadfix.framework.engine.framework;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
+import com.denimgroup.threadfix.framework.impl.dotNet.DotNetFrameworkChecker;
+import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsFrameworkChecker;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -36,7 +42,16 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 
 // TODO make this more generic
 public class FrameworkCalculator {
-	
+
+    static {
+        ConsoleAppender console = new ConsoleAppender(); //create appender
+        String pattern = "%d [%p|%c|%C{1}] %m%n";
+        console.setLayout(new PatternLayout(pattern));
+        console.setThreshold(Level.FATAL);
+        console.activateOptions();
+        Logger.getRootLogger().addAppender(console);
+    }
+
 	private FrameworkCalculator(){}
 	
 	private static final SanitizedLogger log = new SanitizedLogger("FrameworkCalculator");
@@ -50,12 +65,19 @@ public class FrameworkCalculator {
         // TODO incorporate python code
         // TODO add .NET code
         register(new JavaAndJspFrameworkChecker());
+        register(new DotNetFrameworkChecker());
+        register(new WebFormsFrameworkChecker());
     }
 
     public static void register(FrameworkChecker checker) {
         INSTANCE.frameworkCheckers.add(checker);
     }
-	
+
+    @Nonnull
+    public static FrameworkType getType(@Nonnull String rootFileString) {
+        return getType(new File(rootFileString));
+    }
+
 	@Nonnull
     public static FrameworkType getType(@Nonnull File rootFile) {
 		log.info("Attempting to guess Framework Type from source tree.");
@@ -72,7 +94,9 @@ public class FrameworkCalculator {
                     break;
                 }
             }
-		}
+		} else {
+            log.warn("Invalid directory passed to FrameworkCalculator.getType(File): " + rootFile);
+        }
 		
 		log.info("Source tree framework type detection returned: " + frameworkType.getDisplayName());
 		
