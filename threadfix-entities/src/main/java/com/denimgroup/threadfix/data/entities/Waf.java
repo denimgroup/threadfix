@@ -24,6 +24,8 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -31,6 +33,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Entity
 @Table(name = "Waf")
@@ -98,10 +102,27 @@ public class Waf extends AuditableEntity {
 	}
 
 	@OneToMany(mappedBy = "waf")
-    @JsonView(AllViews.RestViewWaf2_1.class)
+    @JsonIgnore
 	public List<Application> getApplications() {
-		return applicationList;
+        return applicationList;
 	}
+
+    @JsonView(AllViews.RestViewWaf2_1.class)
+    @Transient
+    @JsonProperty("applications")
+    public List<Application> getActiveApplications() {
+        List<Application> list = list();
+
+        if (applicationList != null) {
+            for (Application application : applicationList) {
+                if (application.isActive()) {
+                    list.add(application);
+                }
+            }
+        }
+
+        return list;
+    }
 
 	public void setApplications(List<Application> applicationList) {
 		this.applicationList = applicationList;

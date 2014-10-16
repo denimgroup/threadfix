@@ -140,10 +140,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 				
 		}
 
+        application.setWaf(null);
+
         // Delete WafRules attached with application
         deleteWafRules(application);
 
-		
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
