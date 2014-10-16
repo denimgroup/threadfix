@@ -10,6 +10,9 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class ApplicationDetailsPageIT extends BaseIT {
+    private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
+    private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
+    private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
 
     private  DashboardPage dashboardPage;
     private  String teamName = getName();
@@ -237,17 +240,26 @@ public class ApplicationDetailsPageIT extends BaseIT {
     public void createDefectTrackerEditDeleteModal() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
-        String name = "test" + getRandomString(4);
-        String url = "http://10.2.10.171/bugzilla";
-        String type = "Bugzilla";
-        String username = "mcollins@denimgroup.com";
-        String password = "bugzilla";
 
         ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName);
 
-        applicationDetailPage.createDefectTracker(name,url,type,username,password);
+        applicationDetailPage.clickEditDeleteBtn()
+            .clickAddDefectTrackerButton();
+
+        if (applicationDetailPage.getModalTitle().contains("Add")) {
+            applicationDetailPage.clickCreateNewDefectTracker();
+        }
+
+        applicationDetailPage.setDefectTrackerName(getName())
+            .setUrlInput(BUGZILLA_URL)
+            .setDefectTrackerType("Bugzilla")
+            .clickCreateDefectTracker()
+            .setUsername(BUGZILLA_USERNAME)
+            .setPassword(BUGZILLA_PASSWORD)
+            .clickGetProductNames()
+            .clickUpdateApplicationButton();
 
         assertTrue("Defect Tracker not added correctly", applicationDetailPage.isDefectTrackerAttached());
     }

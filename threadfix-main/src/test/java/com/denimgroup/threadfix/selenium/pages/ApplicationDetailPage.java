@@ -339,7 +339,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setUrlInput(String url) {
         driver.findElementById("urlInput").clear();
         driver.findElementById("urlInput").sendKeys(url);
-        return new ApplicationDetailPage(driver);
+        return this;
     }
 
     public ApplicationDetailPage clickCloseModalButton() {
@@ -358,6 +358,12 @@ public class ApplicationDetailPage extends BasePage {
         sleep(1000);
         driver.findElementById("submit").click();
         sleep(1000);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickAttachWaf() {
+        driver.findElementById("submit").click();
+        waitForElement(driver.findElementById("addWafButton"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -917,8 +923,14 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage clickCreatDefectTracker() {
+    public ApplicationDetailPage clickCreateNewDefectTracker() {
         driver.findElementById("createDefectTrackerButton").click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickCreateDefectTracker() {
+        driver.findElementById("submit").click();
+        waitForElement(driver.findElementById("username"));
         return new ApplicationDetailPage(driver);
     }
 
@@ -934,47 +946,18 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public ApplicationDetailPage setDefectTrackerURL(String url) {
-        driver.findElementById("urlInput").clear();
-        driver.findElementById("urlInput").sendKeys(url);
-        return new ApplicationDetailPage(driver);
-    }
-
     public ApplicationDetailPage setDefectTrackerType(String type) {
         driver.findElementById("defectTrackerTypeSelect").sendKeys(type);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setDefectTrackerUsername(String username) {
-        driver.findElementById("username").sendKeys(username);
-        return new ApplicationDetailPage(driver);
-    }
-
-    public ApplicationDetailPage setDefectTrackerPassword(String password) {
-        driver.findElementById("password").sendKeys(password);
-        return new ApplicationDetailPage(driver);
+        return this;
     }
 
     public String getModalTitle() {
         return driver.findElementById("myModalLabel").getText();
     }
 
-    public ApplicationDetailPage createDefectTracker(String name, String url, String type, String username, String password) {
-        clickEditDeleteBtn();
-        clickAddDefectTrackerButton();
-        String modalLabel = getModalTitle();
-        if (modalLabel.contains("Add")) {
-            driver.findElementById("createDefectTrackerButton").click();
-        }
-        setDefectTrackerName(name);
-        setDefectTrackerURL(url);
-        setDefectTrackerType(type);
-        driver.findElementById("submit").click();
-        setDefectTrackerUsername(username);
-        setDefectTrackerPassword(password);
+    public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
-        sleep(3000);
-        driver.findElementById("submit").click();
+        waitForElement(driver.findElementById("productNameSelect"));
         return new ApplicationDetailPage(driver);
     }
 

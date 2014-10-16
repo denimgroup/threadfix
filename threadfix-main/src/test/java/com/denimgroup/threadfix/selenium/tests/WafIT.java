@@ -498,7 +498,7 @@ public class WafIT extends BaseIT {
     public void testApplicationNameNav() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
-        String wafName = "test" + getRandomString(4);
+        String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
@@ -524,26 +524,24 @@ public class WafIT extends BaseIT {
     public void testDownloadWafRules() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
-        String wafName = "test" + getRandomString(4);
+        String wafName = getName();
 
-        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+        DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
+        DatabaseUtils.createWaf(wafName,"Snort");
+
+        WafRulesPage wafRulesPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .uploadScanButton(teamName, appName)
-                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"), teamName, appName)
-                .clickViewAppLink(appName, teamName);
+                .clickApplicationName(appName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName)
+                .clickAttachWaf()
+                .clickUpdateApplicationButton()
+                .clickWafsHeaderLink()
+                .clickRules(wafName)
+                .clickGenerateWafRulesButton();
 
-        WafIndexPage wafIndexPage = applicationDetailPage1.clickEditDeleteBtn()
-                .clickSetWaf()
-                .clickCreateNewWaf()
-                .setWafName(wafName)
-                .clickDynamicSubmit()
-                .clickModalSubmit()
-                .clickWafsHeaderLink();
-
-        WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName);
-
-        wafRulesPage.clickGenerateWafRulesButton();
         assertTrue("Download Waf Rules not working", wafRulesPage.clickDownloadWafRulesEnabled());
     }
 
@@ -551,60 +549,57 @@ public class WafIT extends BaseIT {
     public void testCancelButton() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
-        String wafName = "test" + getRandomString(4);
+        String wafName = getName();
 
-        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+        DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
+        DatabaseUtils.createWaf(wafName,"Snort");
+
+        WafRulesPage wafRulesPage = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .uploadScanButton(teamName, appName)
-                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"), teamName, appName)
-                .clickViewAppLink(appName, teamName);
-
-        WafIndexPage wafIndexPage1 = applicationDetailPage1.clickEditDeleteBtn()
-                .clickSetWaf()
-                .clickCreateNewWaf()
-                .setWafName(wafName)
-                .clickDynamicSubmit()
-                .clickModalSubmit()
-                .clickWafsHeaderLink();
-
-        WafRulesPage wafRulesPage = wafIndexPage1.clickRules(wafName);
-
-        WafIndexPage wafIndexPage2 = wafRulesPage.clickGenerateWafRulesButton()
+                .clickApplicationName(appName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName)
+                .clickAttachWaf()
+                .clickUpdateApplicationButton()
                 .clickWafsHeaderLink()
+                .clickRules(wafName)
+                .clickGenerateWafRulesButton();
+
+        WafIndexPage wafIndexPage = wafRulesPage.clickWafsHeaderLink()
                 .clickRules(wafName)
                 .clickCancelButton();
 
-        assertTrue("Cancel link did not work", wafIndexPage2.isWafPresent(wafName));
+        assertTrue("Cancel link did not work", wafIndexPage.isWafPresent(wafName));
     }
 
     @Test
     public void testFiredWafNav() {
         String teamName = createTeam();
         String appName = createApplication(teamName);
-        String wafName = "test" + getRandomString(4);
+        String wafName = getName();
 
-        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+        DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
+        DatabaseUtils.createWaf(wafName,"Snort");
+
+        WafRulesPage wafRulesPage1 = loginPage.login("user", "password")
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .uploadScanButton(teamName, appName)
-                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"), teamName, appName)
-                .clickViewAppLink(appName, teamName);
-
-        WafIndexPage wafIndexPage1 = applicationDetailPage1.clickEditDeleteBtn()
-                .clickSetWaf()
-                .clickCreateNewWaf()
-                .setWafName(wafName)
-                .clickDynamicSubmit()
-                .clickModalSubmit()
-                .clickWafsHeaderLink();
-
-        WafRulesPage wafRulesPage = wafIndexPage1.clickRules(wafName);
-
-        wafRulesPage.clickGenerateWafRulesButton()
+                .clickApplicationName(appName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName)
+                .clickAttachWaf()
+                .clickUpdateApplicationButton()
                 .clickWafsHeaderLink()
-                .clickRules(wafName).clickViewDetails();
+                .clickRules(wafName)
+                .clickGenerateWafRulesButton();
 
-        assertTrue("Fired Waf Navigation failed", wafRulesPage.checkFiredWafNav("100000"));
+        WafRulesPage wafRulesPage2 = wafRulesPage1.clickWafsHeaderLink()
+                .clickRules(wafName)
+                .clickViewDetails();
+
+        assertTrue("Fired Waf Navigation failed", wafRulesPage2.checkFiredWafNav("100000"));
     }
 }

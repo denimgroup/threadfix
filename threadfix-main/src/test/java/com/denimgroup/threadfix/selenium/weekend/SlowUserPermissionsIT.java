@@ -110,7 +110,7 @@ public class SlowUserPermissionsIT extends BaseIT{
                 .clickAddDefectTrackerButton();
 
         if (applicationDetailPage.isCreateDefectTrackerDisplay()) {
-            applicationDetailPage.clickCreatDefectTracker()
+            applicationDetailPage.clickCreateNewDefectTracker()
                     .setNameInput(defectTrackerName)
                     .setUrlInput(BUGZILLA_URL)
                     .clickUpdateApplicationButton();
