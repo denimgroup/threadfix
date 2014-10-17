@@ -25,8 +25,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.*;
-import com.denimgroup.threadfix.selenium.tests.BaseIT;
-import com.denimgroup.threadfix.selenium.tests.ScanContents;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -36,25 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
-public class UserPermissionsEntIT extends BaseIT{
-
-    private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
-    private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
-    private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
-
-    private String roleName;
-    private String userName;
-
-    public void createRestrictedUser(String permission) {
-        if (permission != null) {
-            roleName = createRole();
-            DatabaseUtils.removePermission(roleName, permission);
-
-            userName = createSpecificRoleUser(roleName);
-        } else {
-            throw new RuntimeException("Permission required to create a restricted user.");
-        }
-    }
+public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void navigationTest() {
@@ -295,16 +276,13 @@ public class UserPermissionsEntIT extends BaseIT{
                 .clickAddPermissionsLink()
                 .expandTeamName();
 
-        assertTrue("The applications are sorted",userPermissionsPage.compareOrderOfSelector(firstTeamName, secondTeamName));
+        assertTrue("The applications are sorted", userPermissionsPage.compareOrderOfSelector(firstTeamName, secondTeamName));
     }
 
     @Ignore
     @Test
     public void reportPermissionsTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         String userName = getRandomString(8);
         String password = getRandomString(15);
@@ -327,7 +305,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkViewErrorLogPermission() {
         createRestrictedUser("canViewErrorLogs");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         dashboardPage.clickConfigTab();
 
@@ -336,12 +314,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkUploadScanPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         createRestrictedUser("canUploadScans");
 
-        TeamIndexPage teamIndexPage = loginPage.login(userName, "TestPassword")
+        TeamIndexPage teamIndexPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
@@ -355,17 +332,14 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkSubmitDefectsPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canSubmitDefects");
 
         String newDefectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, "TestPassword")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login(userName, testPassword)
                 .clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
                 .setName(newDefectTrackerName)
@@ -377,7 +351,7 @@ public class UserPermissionsEntIT extends BaseIT{
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
-                .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, "QA Testing")
+                .addDefectTracker(newDefectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME)
                 .clickVulnerabilitiesActionButton();
 
         assertFalse("Submit Defect is Present", applicationDetailPage.isElementPresent("submitDefectButton"));
@@ -385,14 +359,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageVulnerabilityFilters() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canManageVulnFilters");
 
-        FilterPage applicationFilterPage = loginPage.login(userName, "TestPassword")
+        FilterPage applicationFilterPage = loginPage.login(userName, testPassword)
                 .clickManageFiltersLink();
 
         assertTrue("Access Denied Page is not showing", applicationFilterPage.isAccessDenied());
@@ -408,14 +379,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkModifyVulnerabilitiesPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canModifyVulnerabilities");
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
@@ -449,16 +417,14 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageWAFsPermission() {
-        String wafName = getName();
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
 
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        String wafName = getName();
         DatabaseUtils.createWaf(wafName, "Snort" );
 
         createRestrictedUser("canManageWafs");
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -497,7 +463,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkManageUsersPermission() {
         createRestrictedUser("canManageUsers");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         dashboardPage.clickConfigTab();
 
@@ -510,7 +476,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         createRestrictedUser("canManageTeams");
 
-        TeamDetailPage teamDetailPage = loginPage.login(userName, "TestPassword")
+        TeamDetailPage teamDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickActionButtonWithoutEditButton();
@@ -522,7 +488,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkManageRoles() {
         createRestrictedUser("canManageRoles");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         dashboardPage.clickConfigTab();
 
@@ -533,7 +499,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkManageSystemSettingsPermission() {
         createRestrictedUser("canManageSystemSettings");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         dashboardPage.clickConfigTab();
 
@@ -542,12 +508,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkManageScanAgentsPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         createRestrictedUser("canManageScanAgents");
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName);
@@ -564,7 +529,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkManageRemoteProvidersPermission() {
         createRestrictedUser("canManageRemoteProviders");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         dashboardPage.clickConfigTab();
 
@@ -578,7 +543,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         createRestrictedUser("canManageApplications");
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
@@ -593,7 +558,7 @@ public class UserPermissionsEntIT extends BaseIT{
     public void checkManageAPIKeysPermission() {
         createRestrictedUser("canManageApiKeys");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         dashboardPage.clickConfigTab();
 
@@ -602,16 +567,13 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkGenerateWAFRulesPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canGenerateWafRules");
 
         String wafName = getName();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, "TestPassword")
+        ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -635,14 +597,11 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void checkGenerateReportsPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         createRestrictedUser("canGenerateReports");
 
-        DashboardPage dashboardPage = loginPage.login(userName, "TestPassword");
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
 
         assertFalse("Left Report is still Present", dashboardPage.isLeftReportLinkPresent());
         assertFalse("Right Report is still Present", dashboardPage.isRightReportLinkPresent());
@@ -681,8 +640,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void testManageApplicationPermissionScanAgent() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         createRestrictedUser("canManageApplications");
 
@@ -696,7 +654,7 @@ public class UserPermissionsEntIT extends BaseIT{
 
         LoginPage loginPage = applicationDetailPage.logout();
 
-        ScanAgentTasksPage scanAgentTasksPage = loginPage.login(userName, "TestPassword")
+        ScanAgentTasksPage scanAgentTasksPage = loginPage.login(userName, testPassword)
                 .clickScanAgentTasksLink()
                 .clickDeleteScan(0);
 
@@ -746,8 +704,8 @@ public class UserPermissionsEntIT extends BaseIT{
 
     @Test
     public void testEditPermissions() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
+
         String role1 = "User";
         String role2 = "Administrator";
 
@@ -764,6 +722,6 @@ public class UserPermissionsEntIT extends BaseIT{
                 .setApplicationRole(appName,role2)
                 .clickModalSubmit();
 
-        assertTrue("Could not edit permissions", userPermissionsPage.isPermissionPresent(teamName,appName,role2));
+        assertTrue("Could not edit permissions", userPermissionsPage.isPermissionPresent(teamName, appName, role2));
     }
 }

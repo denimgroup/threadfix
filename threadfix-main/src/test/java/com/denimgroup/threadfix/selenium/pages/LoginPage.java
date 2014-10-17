@@ -64,7 +64,7 @@ public class LoginPage extends BasePage {
 	}
 
     public DashboardPage defaultLogin() {
-        return defaultLogin();
+        return login("user", "password");
     }
 	
     public DashboardPage login(String user, String password) {

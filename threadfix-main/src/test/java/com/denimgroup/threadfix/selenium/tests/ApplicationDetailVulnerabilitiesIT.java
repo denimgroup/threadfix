@@ -36,25 +36,21 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 @Category(CommunityTests.class)
-public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
-    private String teamName;
-    private String appName;
+public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
+    private ApplicationDetailPage applicationDetailPage;
 
     @Before
     public void initialize() {
-        teamName = createTeam();
-        appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
 
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
     }
 
     @Test
     public void markSingleVulnerabilityClosedTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -74,11 +70,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void reopenSingleVulnerabilityTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -117,11 +108,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markMultipleVulnerabilitiesClosedTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -142,11 +128,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void reopenMultipleVulnerabilitiesTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -185,11 +166,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markSingleVulnerabilityFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -208,11 +184,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void unMarkSingleVulnerabilityFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilityByType("Critical790")
                 .clickVulnerabilitiesActionButton()
@@ -251,11 +222,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markMultipleVulnerabilitiesFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -275,11 +241,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void unMarkMultipleVulnerabilitiesFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .checkVulnerabilitiesByCategory("Critical79")
                 .clickVulnerabilitiesActionButton()
@@ -320,11 +281,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
     public void viewMoreLinkTest() {
         String comment = "This is a test.";
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
                 .addComment("Critical790")
@@ -340,11 +296,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
     @Test
     public void addCommentToVulnerabilityTest() {
         String comment = "This is a test.";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
@@ -366,8 +317,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
+        applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
@@ -378,11 +328,6 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void vulnerabilityPaginationTestingunavailable() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage.expandVulnerabilityByType("Critical79");
 
         assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("Critical79"));

@@ -33,7 +33,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
+public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void expandCollapseTest() {
@@ -57,18 +57,15 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void teamFilterTest() {
-        String teamName1 = createTeam();
+        initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
-        String appName1 = createApplication(teamName1);
-
-        DatabaseUtils.uploadScan(teamName1, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
         analyticsPage.expandTeamApplicationFilter()
-                .addTeamFilter(teamName1);
+                .addTeamFilter(teamName);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -88,19 +85,16 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void applicationFilterTest() {
-        String teamName1 = createTeam();
+        initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
-        String appName1 = createApplication(teamName1);
         String appName2 = createApplication(teamName2);
-
-        DatabaseUtils.uploadScan(teamName1, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
         analyticsPage.expandTeamApplicationFilter()
-                .addApplicationFilter(appName1);
+                .addApplicationFilter(appName);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -120,10 +114,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void checkDeletedVulnerability() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName , ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -150,10 +141,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void checkAnalyticsPage() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()

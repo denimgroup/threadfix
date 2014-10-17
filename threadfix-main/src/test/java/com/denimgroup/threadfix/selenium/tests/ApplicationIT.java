@@ -35,14 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class ApplicationIT extends BaseIT {
-    private String teamName;
-    private String appName;
-
-    public void initialize() {
-        teamName = createTeam();
-        appName = createApplication(teamName);
-    }
+public class ApplicationIT extends BaseDataTest {
 
     @Test
     public void testCreateBasicApplicationDisplayedTeamIndexPage() {
@@ -173,7 +166,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditBasicApplicationDisplayedApplicationDetailPage() {
-        initialize();
+        initializeTeamAndApp();
         String appNameEdited = getName();
         String urlText2 = "http://testurl.com352";
 
@@ -199,7 +192,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditBasicApplicationDisplayedTeamIndexPage() {
-        initialize();
+        initializeTeamAndApp();
         String appNameEdited = getName();
         String urlText2 = "http://testurl.com352";
 
@@ -302,7 +295,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void sameAppNameMultipleTeams() {
-        initialize();
+        initializeTeamAndApp();
         String teamName2 = createTeam();
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
@@ -328,7 +321,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void switchTeamTest() {
-        initialize();
+        initializeTeamAndApp();
         String teamName2 = createTeam();
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
@@ -356,7 +349,7 @@ public class ApplicationIT extends BaseIT {
     /*___________________________ Manual Findings ___________________________*/
     @Test
     public void testAddDynamicManualFinding() {
-        initialize();
+        initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
@@ -390,7 +383,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditDynamicManualFinding() {
-        initialize();
+        initializeTeamAndApp();
         String originalCwe = "Improper Validation of Certificate Expiration";
         String editedCwe = "Improper Resolution of Path Equivalence";
         String originalParameter = "testParameter";
@@ -437,7 +430,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testVulnExpandCollapse() {
-        initialize();
+        initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
@@ -473,7 +466,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testCommentValidation() {
-        initialize();
+        initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
@@ -508,7 +501,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testAddStaticManualFinding() {
-        initialize();
+        initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";
@@ -543,7 +536,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void testEditStaticManualFinding() {
-        initialize();
+        initializeTeamAndApp();
         String originalCwe = "Improper Validation of Certificate Expiration";
         String editedCwe = "Improper Resolution of Path Equivalence";
         String originalParameter = "testParameter";
@@ -592,7 +585,7 @@ public class ApplicationIT extends BaseIT {
     //TODO add validation test for static manual finding modal
     @Test
     public void deleteManualFindingScan() {
-        initialize();
+        initializeTeamAndApp();
         String CWE = "79";
         String url = "http://test.com";
         String desc = "Test Description for deleting manual finding.";
@@ -621,7 +614,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void deleteUploadedScan() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
@@ -638,7 +631,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void deleteApplicationTest() {
-        initialize();
+        initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -795,7 +788,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void checkUnmappedFindingsLink() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
 
@@ -812,7 +805,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadNewScan() {
-        initialize();
+        initializeTeamAndApp();
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
 
@@ -829,7 +822,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void uploadSameScanTwiceOnApplicationPage() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
@@ -867,7 +860,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void unmappedFindingScanTest() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Unmapped Scan"));
 
@@ -907,7 +900,7 @@ public class ApplicationIT extends BaseIT {
     @Ignore
     @Test
     public void checkDateRangeFilterSaving() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
@@ -933,7 +926,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void checkDependencyScanInformation() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("DependencyCheck"));
 
@@ -950,7 +943,7 @@ public class ApplicationIT extends BaseIT {
 
     @Test
     public void cancelDeleteScanAlert() {
-        initialize();
+        initializeTeamAndApp();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 

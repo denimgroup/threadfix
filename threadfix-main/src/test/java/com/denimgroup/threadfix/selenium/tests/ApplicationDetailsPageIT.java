@@ -9,15 +9,9 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class ApplicationDetailsPageIT extends BaseIT {
-    private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
-    private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
-    private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
+public class ApplicationDetailsPageIT extends BaseDataTest {
 
     private  DashboardPage dashboardPage;
-    private  String teamName = getName();
-    private  String appName = getName();
-
     /*
     *   This test class is designed to test top layer functionality
     *   of Application Detail Page
@@ -177,9 +171,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
     }
 
     public ApplicationDetailPage initialize() {
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         dashboardPage = loginPage.defaultLogin();
 
@@ -192,8 +184,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void testViewMoreNavigation() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -213,10 +204,10 @@ public class ApplicationDetailsPageIT extends BaseIT {
         assertTrue("View More Top 10 failed", analyticsPage2.isReportCorrect("Most Vulnerable Applications"));
     }
 
+    //TODO look at this test
     @Test
     public void testScanLinkNav() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -238,8 +229,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
 
     @Test
     public void createDefectTrackerEditDeleteModal() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
