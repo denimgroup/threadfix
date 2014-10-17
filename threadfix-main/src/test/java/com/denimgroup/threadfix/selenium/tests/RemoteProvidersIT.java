@@ -41,6 +41,7 @@ public class RemoteProvidersIT extends BaseIT {
 	private static String VERACODE_PASSWORD = System.getProperty("VERACODE_PASSWORD");
 	private static String QUALYS_USER = System.getProperty("QUALYS_USER");
 	private static String QUALYS_PASS = System.getProperty("QUALYS_PASS");
+    private static String QUALYS_PLATFORM = System.getProperty("QUALYS_PLATFORM");
 
     static {
         if (SENTINEL_API_KEY == null) {
@@ -72,8 +73,6 @@ public class RemoteProvidersIT extends BaseIT {
 		assertTrue("Remote Provider Page not found", remoteProvidersIndexPage.isTabPresent());
 	}
 
-    //TODO Add back when Qualys credentials are fixed
-    @Ignore
     @Test
     public void configureQualysTest() {
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
@@ -306,6 +305,41 @@ public class RemoteProvidersIT extends BaseIT {
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+    }
+
+    @Test
+    public void importQualysGuardScan() {
+        String teamName = getName();
+        String appName = getName();
+
+        DatabaseUtils.createTeam(teamName);
+        DatabaseUtils.createApplication(teamName, appName);
+
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
+                .clickRemoteProvidersLink()
+                .clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .setQualysPlatform(QUALYS_PLATFORM)
+                .clickModalSubmitInvalid();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
+
+        remoteProvidersIndexPage.clickEditMappingQualysButton(1)
+                .selectTeamMapping(teamName)
+                .selectAppMapping(appName)
+                .clickUpdateMappings();
+
+        remoteProvidersIndexPage.clickQualysGuardImportScan(1)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
+
+        assertTrue("Qualys Guard configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
     }
 
     @Test

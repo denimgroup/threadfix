@@ -57,7 +57,7 @@ public class LoginIT extends BaseIT {
 	
 	@Test
 	public void validLoginLogout(){
-		DashboardPage dashboardPage = loginPage.login("user","password");
+		DashboardPage dashboardPage = loginPage.defaultLogin();
 		assertTrue("Correct user was not logged in",dashboardPage.isLoggedInUser("user"));
 		loginPage = dashboardPage.logout();
 		assertTrue("User was not logged out",loginPage.isLoggedOut());

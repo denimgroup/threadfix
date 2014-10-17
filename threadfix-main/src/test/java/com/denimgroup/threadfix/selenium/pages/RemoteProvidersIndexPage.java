@@ -105,6 +105,11 @@ public class RemoteProvidersIndexPage extends BasePage {
 		driver.findElementById("passwordInput").sendKeys(password);
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public RemoteProvidersIndexPage setQualysPlatform(String platform) {
+        driver.findElementById("platformNameSelect").sendKeys(platform);
+        return this;
+    }
 	
 	public RemoteProvidersIndexPage setQualysUS(){
 		driver.findElementById("isEuropean1").click();
@@ -183,6 +188,15 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage clickQualysGuardImportScan(int appRow) {
+        String elementToClick = "provider3import" + appRow;
+        waitForElement(driver.findElementById(elementToClick));
+        if (!tryClick(By.id(elementToClick))) {
+            throw new ElementNotVisibleException(elementToClick);
+        }
+        return new ApplicationDetailPage(driver);
+    }
+
     public TeamDetailPage clickTeamLink(String teamName) {
         driver.findElementByLinkText(teamName).click();
         return new TeamDetailPage(driver);
@@ -237,6 +251,12 @@ public class RemoteProvidersIndexPage extends BasePage {
 		handleAlert();
 		return new RemoteProvidersIndexPage(driver);
 	}
+
+    public RemoteProvidersIndexPage clearQualysGuard(){
+        driver.findElementById("clearConfig3").click();
+        handleAlert();
+        return new RemoteProvidersIndexPage(driver);
+    }
 
     public RemoteProvidersIndexPage clearPreviousWhiteHat() {
         if (driver.findElementById("clearConfig1").isDisplayed()) {

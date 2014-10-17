@@ -95,7 +95,7 @@ public class TeamIndexPageIT extends BaseIT {
     public void isUploadScanButtonAvailableAfterUploading() {
         DatabaseUtils.uploadScan(teamName, appName,ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
 
-        TeamIndexPage teamIndexPage = loginPage.login("user","password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
 
@@ -116,20 +116,6 @@ public class TeamIndexPageIT extends BaseIT {
                 .uploadNewScan(newScan, teamName, appName);
 
         assertTrue("The first scan hasn't uploaded yet", teamIndexPage.isScanUploadedAlready(teamName, appName));
-    }
-
-    @Test
-    public void testUploadFileWithLongName() {
-        String scanFile = ScanContents.SCAN_FILE_MAP.get("Too Long File Name");
-
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .uploadScanButton(teamName,appName)
-                .uploadNewScan(scanFile, teamName, appName);
-
-        assertTrue("Scan wasn't successfully uploaded",
-                teamIndexPage.successAlert().contains("Successfully uploaded scan."));
     }
 
     @Test

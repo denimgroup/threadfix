@@ -99,7 +99,7 @@ public class UserIndexPage extends BasePage {
     }
 
     public UserIndexPage chooseRoleForGlobalAccess(String role) {
-        new Select(driver.findElementById("roleSelect")).selectByVisibleText(role);
+        driver.findElementById("roleSelect").sendKeys(role);
         return this;
     }
 	

@@ -75,7 +75,8 @@ public class UserEntIT extends BaseIT {
 
         assertTrue("Global Access was not selected as it should have been.", userIndexPage.isGlobalAccessSelected());
 
-        DashboardPage dashboardPage = userIndexPage.logout()
+        DashboardPage dashboardPage = userIndexPage.clickAddNewUserBtn()
+                .logout()
                 .login(userName, password);
 
         assertFalse("Alert was shown on dashboard page", dashboardPage.isPermissionsAlertDisplayed());

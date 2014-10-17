@@ -89,6 +89,12 @@ public class DefectTrackerIndexPage extends BasePage {
         return new DefectTrackerIndexPage(driver);
     }
 
+    public DefectTrackerIndexPage clickSaveDefectTrackerErrorExpected() {
+        driver.findElementById("submit").click();
+        waitForElement(driver.findElementById("nameServerError"));
+        return new DefectTrackerIndexPage(driver);
+    }
+
     public DefectTrackerSchedulePage clickScheduleUpdateTab() {
             String linkText = driver.findElementById("scheduledUpdateTab").getAttribute("heading");
             driver.findElementByLinkText(linkText).click();
