@@ -61,7 +61,7 @@ public class SlowFilterIT extends BaseIT{
             DatabaseUtils.createApplication(teamName2, appName2);
             DatabaseUtils.uploadScan(teamName2, appName2, file);
 
-            FilterPage globalFilterPage = loginPage.login("user", "password")
+            FilterPage globalFilterPage = loginPage.defaultLogin()
                     .clickManageFiltersLink()
                     .clickCreateNewFilter()
                     .addVulnerabilityFilter(vulnerabilityType, severity)
@@ -118,7 +118,7 @@ public class SlowFilterIT extends BaseIT{
             DatabaseUtils.uploadScan(teamName, appName, file);
 
             // Set global severity filter for vulnerabilityType1 and hide 'Medium', 'Low', 'Info' vulnerabilities
-            FilterPage globalFilterPage = loginPage.login("user", "password")
+            FilterPage globalFilterPage = loginPage.defaultLogin()
                     .clickManageFiltersLink()
                     .clickCreateNewFilter()
                     .addVulnerabilityFilter(vulnerabilityType, severity)
@@ -183,7 +183,7 @@ public class SlowFilterIT extends BaseIT{
     }
 
     public void clearGlobalFilter() {
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
         try {

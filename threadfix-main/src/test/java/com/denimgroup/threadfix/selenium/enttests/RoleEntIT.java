@@ -42,7 +42,7 @@ public class RoleEntIT extends BaseIT {
 	public void createRoleTest() {
         String roleName = getRandomString(8);
 
-		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
 				.clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(roleName)
@@ -56,7 +56,7 @@ public class RoleEntIT extends BaseIT {
     public void deleteRoleTest() {
         String roleName = getRandomString(8);
 
-        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+        RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
                 .clickCreateRole()
                 .setRoleName(roleName)
@@ -75,7 +75,7 @@ public class RoleEntIT extends BaseIT {
 		String originalRoleName = getRandomString(8);
 		String editedRoleName = getRandomString(8);
 
-		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
 				.clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(originalRoleName)
@@ -102,7 +102,7 @@ public class RoleEntIT extends BaseIT {
         String whiteSpaceName = "     ";
 
         // Test whitespace
-        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+        RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
                 .clickCreateRole()
                 .setRoleName(whiteSpaceName)
@@ -118,7 +118,7 @@ public class RoleEntIT extends BaseIT {
         String whiteSpaceName = "     ";
         String emptyStringName = "";
 
-        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+        RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
                 .clickCreateRole()
                 .setRoleName(roleName)
@@ -142,7 +142,7 @@ public class RoleEntIT extends BaseIT {
         String roleName2 = "testNameDuplication";
 
 		// Test duplicates
-		RolesIndexPage rolesIndexPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+		RolesIndexPage rolesIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
                 .clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(roleName1)
@@ -164,7 +164,7 @@ public class RoleEntIT extends BaseIT {
 		String teamName = createTeam();
 		String appName = getName();
 
-		TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+		TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                  .clickOrganizationHeaderLink()
                  .clickManageRolesLink()
                  .clickCreateRole()
@@ -200,7 +200,7 @@ public class RoleEntIT extends BaseIT {
 	public void setPermissionsTest() {
 		String roleName = getRandomString(10);
 		
-		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
 				.clickManageRolesLink()
 				.clickCreateRole()
 				.setRoleName(roleName);
@@ -249,7 +249,7 @@ public class RoleEntIT extends BaseIT {
 		String roleName = getRandomString(10);
         String tempUser = getRandomString(8);
 
-		RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink();
 		
 		rolesIndexPage = rolesIndexPage.clickCreateRole()

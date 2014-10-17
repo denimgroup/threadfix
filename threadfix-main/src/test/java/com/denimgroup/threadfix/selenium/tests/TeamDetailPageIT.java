@@ -26,7 +26,7 @@ public class TeamDetailPageIT extends BaseIT {
 
 	@Test
 	public void actionButtonTest(){
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password").
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin().
                 clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickActionButton();
@@ -39,7 +39,7 @@ public class TeamDetailPageIT extends BaseIT {
 	
 	@Test
 	public void editDeleteModalTest(){
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickEditOrganizationLink();
@@ -56,7 +56,7 @@ public class TeamDetailPageIT extends BaseIT {
 	
 	@Test
 	public void chartTest(){
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 		sleep(5000); 
@@ -70,7 +70,7 @@ public class TeamDetailPageIT extends BaseIT {
 	
 	@Test
 	public void addApplicationButtonTest(){
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
@@ -81,7 +81,7 @@ public class TeamDetailPageIT extends BaseIT {
 
 	@Test
 	public void applicationDetailLink(){
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
@@ -91,7 +91,7 @@ public class TeamDetailPageIT extends BaseIT {
 
     @Test
     public void testChangesToTeamName() {
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickEditOrganizationLink()

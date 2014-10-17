@@ -976,7 +976,7 @@ public class ApplicationIT extends BaseIT {
         String parameter = "Test Parameter";
         String description = "Test Description.";
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);

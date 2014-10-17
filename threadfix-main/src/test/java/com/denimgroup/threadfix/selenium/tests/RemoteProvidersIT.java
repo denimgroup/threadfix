@@ -67,7 +67,7 @@ public class RemoteProvidersIT extends BaseIT {
 
 	@Test
 	public void navigationTest() {
-		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
 									.clickRemoteProvidersLink();
 		
 		assertTrue("Remote Provider Page not found", remoteProvidersIndexPage.isTabPresent());
@@ -75,7 +75,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void configureQualysTest() {
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
@@ -93,7 +93,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void invalidQualysTest(){
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername("No Such User")
@@ -108,7 +108,7 @@ public class RemoteProvidersIT extends BaseIT {
 
 	@Test
 	public void configureWhiteHatTest() {
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -125,7 +125,7 @@ public class RemoteProvidersIT extends BaseIT {
 
 	@Test
 	public void invalidWhiteHatTest(){
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clearPreviousWhiteHat()
                 .clickConfigureWhiteHat()
@@ -140,7 +140,7 @@ public class RemoteProvidersIT extends BaseIT {
 
 	@Test
 	public void configureVeracodeTest() {
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
@@ -158,7 +158,7 @@ public class RemoteProvidersIT extends BaseIT {
 	
 	@Test
 	public void invalidVeracodeTest(){
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername("No Such User")
@@ -181,7 +181,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureQualys()
                 .setQualysUsername(QUALYS_USER)
@@ -206,7 +206,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
@@ -231,7 +231,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -256,7 +256,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -285,7 +285,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
@@ -351,7 +351,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password").clickRemoteProvidersLink();
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin().clickRemoteProvidersLink();
         remoteProvidersIndexPage.clickConfigureWhiteHat();
         remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
         remoteProvidersIndexPage.saveWhiteHat();
@@ -397,7 +397,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -429,7 +429,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
@@ -462,7 +462,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -501,7 +501,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -532,7 +532,7 @@ public class RemoteProvidersIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.login("user", "password")
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
@@ -560,7 +560,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledImportNavigationTest() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -570,7 +570,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledDailyImportCreationTest() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -586,7 +586,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void scheduledWeeklyImportCreationTest() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -609,7 +609,7 @@ public class RemoteProvidersIT extends BaseIT {
         int minutes = 30;
         String periodOfDay = "AM";
 
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -640,7 +640,7 @@ public class RemoteProvidersIT extends BaseIT {
     //TODO remove extra navigation when enhancement #618 is added
     @Test
     public void checkSameWeeklyScheduleConflict() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -672,7 +672,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void deleteDailyRemoteProviderScheduling() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -693,7 +693,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void deleteWeeklyRemoteProviderScheduling() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
@@ -716,7 +716,7 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void checkSuccessMessageLocation() {
-        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.login("user", "password")
+        RemoteProvidersSchedulePage remoteProvidersSchedulePage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 

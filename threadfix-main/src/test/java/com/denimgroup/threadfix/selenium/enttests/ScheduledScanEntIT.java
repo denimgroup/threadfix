@@ -44,7 +44,7 @@ public class ScheduledScanEntIT extends BaseIT{
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -64,7 +64,7 @@ public class ScheduledScanEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -88,7 +88,7 @@ public class ScheduledScanEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -114,7 +114,7 @@ public class ScheduledScanEntIT extends BaseIT{
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -135,7 +135,7 @@ public class ScheduledScanEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -160,7 +160,7 @@ public class ScheduledScanEntIT extends BaseIT{
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)

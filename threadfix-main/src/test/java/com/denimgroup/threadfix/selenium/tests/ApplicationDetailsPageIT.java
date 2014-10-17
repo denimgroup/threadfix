@@ -181,7 +181,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
         DatabaseUtils.createApplication(teamName, appName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        dashboardPage = loginPage.login("user", "password");
+        dashboardPage = loginPage.defaultLogin();
 
         dashboardPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -195,7 +195,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -218,7 +218,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)
@@ -241,7 +241,7 @@ public class ApplicationDetailsPageIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName);
 

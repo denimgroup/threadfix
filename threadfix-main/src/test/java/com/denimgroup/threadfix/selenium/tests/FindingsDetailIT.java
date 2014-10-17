@@ -51,7 +51,7 @@ public class FindingsDetailIT extends BaseIT{
 
     @Test
     public void vulnerabilityNavigationTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -68,7 +68,7 @@ public class FindingsDetailIT extends BaseIT{
 
     @Test
     public void checkMergeWithOtherFindingsButton() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -85,7 +85,7 @@ public class FindingsDetailIT extends BaseIT{
 
     @Test
     public void mergeSameVariableOrLocation() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)

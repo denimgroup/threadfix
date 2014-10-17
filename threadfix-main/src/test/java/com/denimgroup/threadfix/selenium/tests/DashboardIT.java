@@ -51,7 +51,7 @@ public class DashboardIT extends BaseIT {
 
 	@Test
 	public void dashboardGraphsDisplayTest(){
-        DashboardPage dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.defaultLogin();
 
 		assertFalse("6 month vulnerability graph is not displayed", dashboardPage.is6MonthGraphNoDataFound());
 		assertFalse("Top 10 vulnerabilities graph is not displayed", dashboardPage.isTop10GraphNoDataFound());
@@ -61,7 +61,7 @@ public class DashboardIT extends BaseIT {
     public void leftGraphViewMoreLinkTest() {
         String report = "Vulnerability Trending";
 
-        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickLeftViewMore();
 
         assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect(report));
@@ -71,7 +71,7 @@ public class DashboardIT extends BaseIT {
     public void rightGraphViewMoreLinkTest() {
         String report = "Most Vulnerable Applications";
 
-        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickRightViewMore();
 
         assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect(report));
@@ -79,7 +79,7 @@ public class DashboardIT extends BaseIT {
 
     @Test
     public void dashboardRecentUploadsDisplayTest(){
-        DashboardPage dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.defaultLogin();
 
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
     }
@@ -88,7 +88,7 @@ public class DashboardIT extends BaseIT {
     public void dashboardRecentCommentsDisplayTest() {
         String commentText = "Test comment.";
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)

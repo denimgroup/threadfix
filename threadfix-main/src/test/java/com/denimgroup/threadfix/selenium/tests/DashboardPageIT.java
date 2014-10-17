@@ -47,7 +47,7 @@ public class DashboardPageIT extends BaseIT {
 
     @Test
     public void testTeamIndexHeaderNavigation() {
-        DashboardPage dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.defaultLogin();
 
         assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
@@ -67,7 +67,7 @@ public class DashboardPageIT extends BaseIT {
 
     @Test
     public void testTeamIndexTabUserNavigation() {
-        DashboardPage dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.defaultLogin();
 
         dashboardPage.clickUserTab();
         assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
@@ -79,7 +79,7 @@ public class DashboardPageIT extends BaseIT {
 
     @Test
     public void testTeamIndexConfigTabNavigation() {
-        DashboardPage dashboardPage = loginPage.login("user", "password");
+        DashboardPage dashboardPage = loginPage.defaultLogin();
 
         dashboardPage.clickConfigTab();
         assertTrue("Configuration tab is not dropped down", dashboardPage.isConfigDropDownPresent());

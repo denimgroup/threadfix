@@ -44,7 +44,7 @@ public class TeamEntIT extends BaseIT {
         String password = getRandomString(15);
         DatabaseUtils.createTeam(teamName);
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)

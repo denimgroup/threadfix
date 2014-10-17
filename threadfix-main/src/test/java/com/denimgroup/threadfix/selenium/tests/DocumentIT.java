@@ -49,7 +49,7 @@ public class DocumentIT extends BaseIT {
         File appScanFile;
         int docCnt  = 0;
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
         ApplicationDetailPage applicationDetailPage = teamIndexPage.expandTeamRowByName(teamName)

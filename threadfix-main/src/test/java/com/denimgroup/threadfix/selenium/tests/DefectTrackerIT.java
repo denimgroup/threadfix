@@ -189,7 +189,7 @@ public class DefectTrackerIT extends BaseIT {
 		String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -381,7 +381,7 @@ public class DefectTrackerIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -406,7 +406,7 @@ public class DefectTrackerIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -438,7 +438,7 @@ public class DefectTrackerIT extends BaseIT {
         String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "HP Quality Center";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
@@ -473,7 +473,7 @@ public class DefectTrackerIT extends BaseIT {
         String replacementName = getName();
         String defectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
@@ -508,7 +508,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void checkDefectTrackerPage() {
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink();
 
         assertTrue("Defect Tracker page wasn't showed", defectTrackerIndexPage.isCreateNewTrackerButtonPresent());
@@ -516,7 +516,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void defectTrackerDailyScheduling() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
@@ -532,7 +532,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void defectTrackerWeeklyScheduling() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
@@ -555,7 +555,7 @@ public class DefectTrackerIT extends BaseIT {
         int minutes = 30;
         String periodOfDay = "AM";
 
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
@@ -581,7 +581,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void checkSameWeeklyScheduleConflict() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
@@ -610,7 +610,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void DeleteDailyDefectTrackerScheduling() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
@@ -632,7 +632,7 @@ public class DefectTrackerIT extends BaseIT {
     @Test
     public void DeleteweeklyDefectTrackerScheduling() {
 
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.login("user", "password")
+        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 

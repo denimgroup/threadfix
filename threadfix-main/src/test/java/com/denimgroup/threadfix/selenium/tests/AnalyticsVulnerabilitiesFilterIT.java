@@ -40,7 +40,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
         int filtersExpandedSize;
         int filtersCollapsedSize;
 
-        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
@@ -63,7 +63,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName1, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
@@ -95,7 +95,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName1, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
@@ -125,7 +125,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName , ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -155,7 +155,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        AnalyticsPage analyticsPage = loginPage.login("user", "password")
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)

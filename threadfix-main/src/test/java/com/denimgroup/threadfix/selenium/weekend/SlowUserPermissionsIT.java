@@ -44,7 +44,7 @@ public class SlowUserPermissionsIT extends BaseIT{
 
     @Test
     public void protectedPermissionsRemovalTest() {
-        RolesIndexPage rolesIndexPage = loginPage.login("user", "password")
+        RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
                 .clickEditLink("Administrator");
 
@@ -76,7 +76,7 @@ public class SlowUserPermissionsIT extends BaseIT{
         String defectTrackerName = "testCreateDefectTracker"+ getRandomString(3);
         String defectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.login("user", "password")
+        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
                 .clickDefectTrackersLink()
                 .clickAddDefectTrackerButton()
                 .setName(defectTrackerName)

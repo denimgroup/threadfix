@@ -84,7 +84,7 @@ public class TeamIndexPageIT extends BaseIT {
     public TeamIndexPage setupDatabase() {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
         
-        dashboardPage = loginPage.login("user", "password");
+        dashboardPage = loginPage.defaultLogin();
 
         dashboardPage.clickOrganizationHeaderLink();
 
@@ -109,7 +109,7 @@ public class TeamIndexPageIT extends BaseIT {
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
 
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)
@@ -127,7 +127,7 @@ public class TeamIndexPageIT extends BaseIT {
 
         String newScan = ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan");
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName1)
                 .uploadScanButton(teamName1, appName)
@@ -142,7 +142,7 @@ public class TeamIndexPageIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)
@@ -163,7 +163,7 @@ public class TeamIndexPageIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)

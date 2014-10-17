@@ -41,7 +41,7 @@ public class UserIT extends BaseIT {
 	public void testCreateUser() {
 		String userName = getName();
         String password = "testCreateUser";
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
+		UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink();
 
 		userIndexPage.clickAddUserLink()
@@ -60,7 +60,7 @@ public class UserIT extends BaseIT {
 
         String secondUserName = getName();
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -84,7 +84,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testUserFieldValidation() {
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink();
 
@@ -124,7 +124,7 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String password = getRandomString(15);
         // Create a user
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink();
         userIndexPage.setName(userName);
@@ -142,7 +142,7 @@ public class UserIT extends BaseIT {
         assertTrue("user: "+userName+" was not logged in.",dashboardPage.isLoggedInUser(userName));
 
         userIndexPage = dashboardPage.logout()
-                .login("user", "password")
+                .defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink();
         // Test name uniqueness check
@@ -163,7 +163,7 @@ public class UserIT extends BaseIT {
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -177,7 +177,7 @@ public class UserIT extends BaseIT {
         assertTrue("New user was not able to login.", dashboardPage.isLoggedin());
 
         userIndexPage = dashboardPage.logout()
-                .login("user", "password")
+                .defaultLogin()
                 .clickManageUsersLink()
                 .clickEditLink(userName)
                 .setName(editedUserName)
@@ -197,7 +197,7 @@ public class UserIT extends BaseIT {
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
+		UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink();
 
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
@@ -224,7 +224,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditPasswordValidation() {
-        UserChangePasswordPage changePasswordPage = loginPage.login("user", "password")
+        UserChangePasswordPage changePasswordPage = loginPage.defaultLogin()
                 .clickChangePasswordLink()
                 .setCurrentPassword(" ")
                 .setNewPassword("password1234")
@@ -268,7 +268,7 @@ public class UserIT extends BaseIT {
 
 		// Set up the two User objects for the test
 
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
+		UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(baseUserName)
@@ -309,7 +309,7 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String passWord = getName();
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -333,7 +333,7 @@ public class UserIT extends BaseIT {
     public void testEditUserValidationPasswordMatching(){
         String userName = getName();
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password").clickManageUsersLink();
+        UserIndexPage userIndexPage = loginPage.defaultLogin().clickManageUsersLink();
 		// Test non-matching passwords
 		userIndexPage = userIndexPage.clickAddUserLink()
                 .setName(userName)
@@ -348,7 +348,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationLength(){
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink();
 
 		// Test length
@@ -368,7 +368,7 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String passWord = getName();
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -392,7 +392,7 @@ public class UserIT extends BaseIT {
 
 	@Test
 	public void testNavigation() {
-		loginPage.login("user", "password")
+		loginPage.defaultLogin()
                  .clickManageUsersLink();
         assertTrue("Could not navigate to User Index Page.",driver.findElements(By.id("newUserModalLink")).size() != 0);
 		}
@@ -401,7 +401,7 @@ public class UserIT extends BaseIT {
     public void testDeleteUser(){
         String userName = getName();
         String password = "testDeleteUser";
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink();
 
         userIndexPage.clickAddUserLink()

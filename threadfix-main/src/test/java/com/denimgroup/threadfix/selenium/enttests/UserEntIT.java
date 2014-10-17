@@ -40,7 +40,7 @@ public class UserEntIT extends BaseIT {
         String userName = getName();
         String password = getRandomString(15);
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -62,7 +62,7 @@ public class UserEntIT extends BaseIT {
         String userName = getName();
         String password = getRandomString(15);
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -87,7 +87,7 @@ public class UserEntIT extends BaseIT {
 		String userName = getRandomString(8);
         String password = getRandomString(15);
 
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
+		UserIndexPage userIndexPage = loginPage.defaultLogin()
 				.clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
@@ -122,7 +122,7 @@ public class UserEntIT extends BaseIT {
 	public void editUserRoleTest(){
 		String userName = getRandomString(8);
 
-		UserIndexPage userIndexPage = loginPage.login("user", "password")
+		UserIndexPage userIndexPage = loginPage.defaultLogin()
 				.clickManageUsersLink()
 				.clickAddUserLink()
 				.setName(userName)
@@ -163,7 +163,7 @@ public class UserEntIT extends BaseIT {
       public void testDeleteLastUserRemoveLastRole(){
         String newRole = getRandomString(8);
 
-        UserIndexPage userIndexPage = loginPage.login("user", "password")
+        UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickDeleteButton("user");
 

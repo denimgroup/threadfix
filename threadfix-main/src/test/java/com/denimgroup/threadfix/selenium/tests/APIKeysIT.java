@@ -41,7 +41,7 @@ public class APIKeysIT extends BaseIT {
 	public void init() {
 		super.init();
 
-        apiIndexPage = loginPage.login("user", "password")
+        apiIndexPage = loginPage.defaultLogin()
                 .clickApiKeysLink();
 	}
 

@@ -50,7 +50,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markSingleVulnerabilityClosedTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -74,7 +74,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void reopenSingleVulnerabilityTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -117,7 +117,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markMultipleVulnerabilitiesClosedTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -142,7 +142,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void reopenMultipleVulnerabilitiesTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -185,7 +185,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markSingleVulnerabilityFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -208,7 +208,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void unMarkSingleVulnerabilityFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -251,7 +251,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void markMultipleVulnerabilitiesFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -275,7 +275,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void unMarkMultipleVulnerabilitiesFalsePositiveTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -320,7 +320,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
     public void viewMoreLinkTest() {
         String comment = "This is a test.";
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -341,7 +341,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
     public void addCommentToVulnerabilityTest() {
         String comment = "This is a test.";
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -366,7 +366,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -378,7 +378,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseIT{
 
     @Test
     public void vulnerabilityPaginationTestingunavailable() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);

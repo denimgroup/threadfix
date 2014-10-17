@@ -40,7 +40,7 @@ public class CWEUpdateIT extends BaseIT {
         String vulnerabilityType = "Improper Authorization in Handler for Custom URL Scheme";
         String severity = "High";
 
-        FilterPage globalFilterPage = loginPage.login("user", "password")
+        FilterPage globalFilterPage = loginPage.defaultLogin()
                 .clickManageFiltersLink()
                 .clickCreateNewFilter()
                 .addVulnerabilityFilter(vulnerabilityType, severity);

@@ -41,7 +41,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         int filtersCollapsedControlSize;
         String teamName = createTeam();
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab();
@@ -68,7 +68,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
         String parameter = "username";
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("45");
@@ -109,7 +109,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("0")
@@ -133,7 +133,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         String appName = createApplication(teamName);
         String filterName = getName();
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("0")
@@ -159,7 +159,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         String parameter = "username";
         String newFilter = getName();
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71");
@@ -202,7 +202,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName2, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71");
@@ -252,7 +252,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71");
@@ -278,7 +278,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
         String scanner = "IBM Rational AppScan";
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71");
@@ -308,7 +308,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation";
         String defaultVulnerabilityType = "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') (CWE 79)";
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("45");
@@ -329,7 +329,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
         String path = "/demo/EvalInjection2.php";
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("45");
@@ -352,7 +352,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
         String parameter = "username";
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("45");
@@ -375,7 +375,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("45");
@@ -404,7 +404,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("45");
@@ -426,7 +426,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71");

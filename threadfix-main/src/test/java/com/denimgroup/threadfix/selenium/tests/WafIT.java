@@ -45,7 +45,7 @@ public class WafIT extends BaseIT {
 		String newWafName = getName();
 		String type = "mod_security";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -62,7 +62,7 @@ public class WafIT extends BaseIT {
         String wafName = getName();
         String wafType = "mod_security";
 
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 
         wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -80,7 +80,7 @@ public class WafIT extends BaseIT {
 		String newWafName = getName();
 		String type = "Snort";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -96,7 +96,7 @@ public class WafIT extends BaseIT {
 		String newWafName = getName();
 		String type = "Imperva SecureSphere";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -112,7 +112,7 @@ public class WafIT extends BaseIT {
 		String newWafName = getName();
 		String type = "BIG-IP ASM";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -128,7 +128,7 @@ public class WafIT extends BaseIT {
 		String newWafName = getName();
 		String type = "DenyAll rWeb";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -144,7 +144,7 @@ public class WafIT extends BaseIT {
 		String emptyString = "";
 		String whiteSpaceString = "           ";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 		
 		wafIndexPage = wafIndexPage.clickAddWafLink();
@@ -173,7 +173,7 @@ public class WafIT extends BaseIT {
 		String type1 = "mod_security";
 		String type2 = "Snort";
 		
-		WafIndexPage wafIndexPage = loginPage.login("user", "password")
+		WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 
 		wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -206,7 +206,7 @@ public class WafIT extends BaseIT {
 
         String longInput = "aaaaaaaaaaaaaaaaaaaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
         //create dummy wafs
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 
         wafIndexPage = wafIndexPage.clickAddWafLink()
@@ -265,7 +265,7 @@ public class WafIT extends BaseIT {
 		String wafName = getName();
 		String wafType = "mod_security";
 
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
@@ -407,7 +407,7 @@ public class WafIT extends BaseIT {
         String emptyString = "";
         String type = "Snort";
 
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink()
                 .clickAddWafLink()
                 .createNewWaf(originalWaf, type)
@@ -428,7 +428,7 @@ public class WafIT extends BaseIT {
         String newWafName = getName();
         String type = "Snort";
 
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 
         wafIndexPage.clickAddWafLink()
@@ -459,7 +459,7 @@ public class WafIT extends BaseIT {
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -510,7 +510,7 @@ public class WafIT extends BaseIT {
         DatabaseUtils.createWaf(wafName, wafType);
 
         // Add Application with WAF
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -571,7 +571,7 @@ public class WafIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickEditDeleteBtn()
@@ -620,7 +620,7 @@ public class WafIT extends BaseIT {
         String wafName2 = getName();
         String wafType = "Snort";
 
-        WafIndexPage wafIndexPage = loginPage.login("user", "password")
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
                 .clickWafsHeaderLink();
 
         wafIndexPage.clickAddWafLink()
@@ -652,7 +652,7 @@ public class WafIT extends BaseIT {
 
         String wafName = getName();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -697,7 +697,7 @@ public class WafIT extends BaseIT {
         String appName = createApplication(teamName);
         String wafName = getName();
 
-        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -726,7 +726,7 @@ public class WafIT extends BaseIT {
         DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.createWaf(wafName,"Snort");
 
-        WafRulesPage wafRulesPage = loginPage.login("user", "password")
+        WafRulesPage wafRulesPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
@@ -751,7 +751,7 @@ public class WafIT extends BaseIT {
         DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.createWaf(wafName,"Snort");
 
-        WafRulesPage wafRulesPage = loginPage.login("user", "password")
+        WafRulesPage wafRulesPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)
@@ -780,7 +780,7 @@ public class WafIT extends BaseIT {
         DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.createWaf(wafName,"Snort");
 
-        WafRulesPage wafRulesPage1 = loginPage.login("user", "password")
+        WafRulesPage wafRulesPage1 = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickApplicationName(appName)

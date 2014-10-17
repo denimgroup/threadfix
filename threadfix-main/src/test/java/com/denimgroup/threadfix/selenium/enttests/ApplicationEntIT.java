@@ -43,7 +43,7 @@ public class ApplicationEntIT extends BaseIT {
         String appName = createApplication(teamName);
         String userName = createRegularUser();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName)

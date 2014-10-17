@@ -68,7 +68,7 @@ public class SystemSettingsEntIT extends BaseIT{
     public void testValidLDAPSettings() {
         String invalidUserPassword = getRandomString(15);
 
-        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
@@ -92,7 +92,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testInvalidLDAPSettings() {
-        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
@@ -111,7 +111,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testValidLDAPUserAndWipedSystemSettings() {
-        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
@@ -128,7 +128,7 @@ public class SystemSettingsEntIT extends BaseIT{
         assertTrue("Valid LDAP user was unable to login using valid LDAP settings.", dashboardPage.isLoggedin());
 
         systemSettingsPage = dashboardPage.logout()
-                .login("user", "password")
+                .defaultLogin()
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
                 .setLDAPSearchBase("")
@@ -148,7 +148,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testDefaultLDAPRole() {
-        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
@@ -169,7 +169,7 @@ public class SystemSettingsEntIT extends BaseIT{
         assertTrue("Alert was not shown on dashboard page.", dashboardPage.isPermissionsAlertDisplayed());
 
         systemSettingsPage = dashboardPage.logout()
-                .login("user", "password")
+                .defaultLogin()
                 .clickSystemSettingsLink()
                 .expandDefaultLDAPRole()
                 .toggleDefaultRoleCheckbox()
@@ -186,7 +186,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testReadAccessLDAPRole() {
-        SystemSettingsPage systemSettingsPage = loginPage.login("user", "password")
+        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
                 .clickSystemSettingsLink()
                 .expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)

@@ -48,7 +48,7 @@ public class ScanDetailIT extends BaseIT {
 
     @Test
     public void checkViewScan() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -61,7 +61,7 @@ public class ScanDetailIT extends BaseIT {
 
     @Test
     public void testShowHideStatisticsDetail() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -79,7 +79,7 @@ public class ScanDetailIT extends BaseIT {
 
     @Test
     public void testShowHideStatisticsToggle() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -96,7 +96,7 @@ public class ScanDetailIT extends BaseIT {
 
     @Test
     public void findingNavigationTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -111,7 +111,7 @@ public class ScanDetailIT extends BaseIT {
 
     @Test
     public void showStatisticResultsCorrect() {
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -139,7 +139,7 @@ public class ScanDetailIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage1 = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)
@@ -160,7 +160,7 @@ public class ScanDetailIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)

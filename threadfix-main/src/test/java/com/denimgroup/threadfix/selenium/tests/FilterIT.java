@@ -51,7 +51,7 @@ public class FilterIT extends BaseIT {
         DatabaseUtils.uploadScan(teamName, appName1, file);
         DatabaseUtils.uploadScan(teamName, appName2, file);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
         FilterPage applicationFilterPage = teamIndexPage.expandTeamRowByName(teamName)
@@ -93,7 +93,7 @@ public class FilterIT extends BaseIT {
 
         DatabaseUtils.uploadScan(teamName, appName, file);
 
-        TeamIndexPage teamIndexPage = loginPage.login("user", "password")
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink();
 
         FilterPage teamFilterPage = teamIndexPage.clickViewTeamLink(teamName)
@@ -135,7 +135,7 @@ public class FilterIT extends BaseIT {
         DatabaseUtils.uploadScan(teamName, appName, file);
 
         // Set teamName to show 'Medium' vulnerabilities
-        TeamDetailPage teamDetailPage = loginPage.login("user", "password")
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName);
 
