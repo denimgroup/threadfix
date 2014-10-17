@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -319,6 +320,88 @@ public class WafIT extends BaseIT {
 	}
 
     @Test
+    public void generateWafRules() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String wafName = getName();
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink();
+
+        WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName)
+                .clickGenerateWafRulesButton();
+
+        assertTrue("WAf Rule does not exist",
+                wafRulesPage.isDownloadWafRulesDisplay());
+    }
+
+    @Test
+    public void uploadLogFile() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String wafName = getName();
+        String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        WafIndexPage wafIndexPage = applicationDetailPage.clickWafsHeaderLink();
+
+        WafRulesPage wafRulesPage = wafIndexPage.clickRules(wafName)
+                .clickGenerateWafRulesButton();
+
+        wafRulesPage.refreshPage();
+
+        wafRulesPage.setLogFile(logFile);
+
+        WafLogPage wafLogPage = wafRulesPage.clickUploadLogFile();
+
+        wafLogPage.clickContinue();
+
+        wafIndexPage.clickRules(wafName);
+
+        wafRulesPage.clickViewDetails();
+
+        assertTrue("Logs are available", wafRulesPage.isLogsNumberPresent());
+    }
+
+    @Test
     public void testWafNameOnModalHeader() {
         String originalWaf = getName();
         String emptyString = "";
@@ -415,6 +498,120 @@ public class WafIT extends BaseIT {
 
 
         assertTrue("Security Event Detail Give Error", wafSecurityEventDetailsPage.isLogsNumberPresent());
+    }
+
+    @Test
+    public void attachWafToApplication() {
+        String wafName = getName();
+        String wafType = "Snort";
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        DatabaseUtils.createWaf(wafName, wafType);
+
+        // Add Application with WAF
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName)
+                .clickUpdateApplicationButton();
+
+        // Check that it also appears on the WAF page.
+        WafRulesPage wafDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .clickWafsHeaderLink()
+                .clickRules(wafName);
+
+        assertTrue("The WAF was not added correctly.",
+                wafDetailPage.isTextPresentInApplicationsTableBody(appName));
+    }
+
+    @Test
+    public void createNewWafInApplicationModal() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String wafName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickSetWaf();
+
+        if (applicationDetailPage.isWafPresent()) {
+            applicationDetailPage.clickCreateNewWaf()
+                    .setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        } else {
+            applicationDetailPage.setWafName(wafName)
+                    .clickCreateWAfButtom()
+                    .clickModalSubmit();
+        }
+
+        applicationDetailPage.clickEditDeleteBtn();
+
+        assertTrue("The correct error did not appear for the url field.",
+                applicationDetailPage.checkWafName().equals(wafName));
+    }
+
+    @Test
+    public void testSwitchWaf() {
+        String wafName1 = getName();
+        String wafName2 = getName();
+        String type1 = "Snort";
+        String type2 = "mod_security";
+
+        DatabaseUtils.createWaf(wafName1, type1);
+        DatabaseUtils.createWaf(wafName2, type2);
+
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login("user", "password").clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName1)
+                .saveWafAdd();
+
+        assertTrue("Waf wasn't added correctly", applicationDetailPage.checkWafName().contains(wafName1));
+
+        applicationDetailPage.clickUpdateApplicationButton();
+
+        assertTrue("Successful Message wasn't present",
+                applicationDetailPage.getAlert().contains("Successfully edited application " + appName));
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .clickAddWaf()
+                .addWaf(wafName2)
+                .saveWafAdd()
+                .clickUpdateApplicationButton()
+                .clickEditDeleteBtn();
+
+        assertTrue("Did not properly save changing of Wafs.", applicationDetailPage.getWafText().contains(wafName2));
+    }
+
+    //FIX THIS TEST
+    @Ignore
+    @Test
+    public void removeWaf() {
+        String type = "Snort";
+        String wafName1 = getName();
+
+        WafIndexPage wafIndexPage = loginPage.defaultLogin()
+                .clickWafsHeaderLink()
+                .clickAddWafLink()
+                .createNewWaf(wafName1, type)
+                .clickCreateWaf()
+                .clickDeleteWaf(wafName1);
+
+        assertFalse("The Application was not removed from the WAF correctly.",
+                wafIndexPage.isWafPresent(wafName1));
     }
 
     @Test

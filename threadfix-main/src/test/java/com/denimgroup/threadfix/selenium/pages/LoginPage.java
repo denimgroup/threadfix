@@ -62,6 +62,10 @@ public class LoginPage extends BasePage {
 	public static LoginPage open(WebDriver webdriver) {
 		return new LoginPage(webdriver);
 	}
+
+    public DashboardPage defaultLogin() {
+        return login("user", "password");
+    }
 	
     public DashboardPage login(String user, String password) {
         setUsername(user).setPassword(password);
