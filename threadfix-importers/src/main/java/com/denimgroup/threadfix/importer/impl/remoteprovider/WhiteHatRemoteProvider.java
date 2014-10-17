@@ -74,11 +74,11 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
             labelSiteIdStream = response.getInputStream();
         } else {
 			LOG.warn("Received a " + response.getStatus() + " status code from WhiteHat servers while trying " +
-                    "to get scans for " + remoteProviderApplication.getNativeId() + ", returning null.");
+                    "to get scans for " + remoteProviderApplication.getNativeName() + ", returning null.");
 			return null;
 		}
 		
-		String appName = remoteProviderApplication.getNativeId();
+		String appName = remoteProviderApplication.getNativeName();
 		
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
 		

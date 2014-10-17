@@ -79,7 +79,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
             return null;
         }
 
-		String appName = remoteProviderApplication.getNativeId();
+		String appName = remoteProviderApplication.getNativeName();
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
 		
 		List<String> buildIds = null;
