@@ -5,6 +5,7 @@ import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertTrue;
 
@@ -177,7 +178,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
         dashboardPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+                .clickViewAppLink(appName, teamName)
+                .waitForElement(driver.findElement(By.id("nameText")));
 
         return new ApplicationDetailPage(driver);
     }

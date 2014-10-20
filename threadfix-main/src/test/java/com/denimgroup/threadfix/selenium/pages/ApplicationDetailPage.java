@@ -621,11 +621,13 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreVulnerabilityTrending(){
         driver.findElementById("leftViewMore").click();
+        waitForElement(driver.findElementById("reportSelect"));
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickViewMoreTopVulnerabilities(){
         driver.findElementById("rightViewMore").click();
+        waitForElement(driver.findElementById("reportSelect"));
         return new AnalyticsPage(driver);
     }
 

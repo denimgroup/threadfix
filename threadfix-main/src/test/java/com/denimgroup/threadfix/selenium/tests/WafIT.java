@@ -184,7 +184,7 @@ public class WafIT extends BaseIT {
 
 		wafIndexPage.clickEditWaf(originalWaf)
                 .editWaf(originalWaf, editedWaf, type2)
-                .clickModalSubmit()
+                .clickSaveEditWaf(editedWaf)
                 .clickWafsHeaderLink();
 
 		assertTrue("Editing did not change the name.", wafIndexPage.isWafPresent(editedWaf));

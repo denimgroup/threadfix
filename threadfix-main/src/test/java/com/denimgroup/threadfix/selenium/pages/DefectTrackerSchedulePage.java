@@ -1,5 +1,6 @@
 package com.denimgroup.threadfix.selenium.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
@@ -49,8 +50,10 @@ public class DefectTrackerSchedulePage extends BasePage{
         return new DefectTrackerSchedulePage(driver);
     }
 
+    //TODO Refactor when issue #618 is resolved
     public DefectTrackerSchedulePage clickAddScheduledUpdated() {
         driver.findElementById("submit").click();
+        sleep(2000);
         return this;
     }
 

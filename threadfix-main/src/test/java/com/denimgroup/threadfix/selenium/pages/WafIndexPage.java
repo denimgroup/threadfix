@@ -92,6 +92,12 @@ public class WafIndexPage extends BasePage {
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new WafIndexPage(driver);
 	}
+
+    public WafIndexPage clickSaveEditWaf(String editedWaf){
+        driver.findElementById("submit").click();
+        waitForElement(driver.findElementByCssSelector("td[id*='"+ editedWaf +"']"));
+        return new WafIndexPage(driver);
+    }
 	
 	public WafIndexPage editWaf(String wafName, String newName, String type){
         waitForElement(driver.findElementById("myModalLabel"));
