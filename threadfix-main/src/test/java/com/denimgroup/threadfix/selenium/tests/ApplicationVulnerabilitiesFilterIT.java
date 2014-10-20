@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -34,19 +35,24 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
+public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
+
+    private ApplicationDetailPage applicationDetailPage;
+
+    @Before
+    public void initialNavigation() {
+        initializeTeamAndAppWithIBMScan();
+
+        applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+    }
 
     @Test
     public void expandCollapseTest() {
         int filtersExpandedSize;
         int filtersCollapsedSize;
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
 
         sleep(5500);
 
@@ -63,17 +69,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void clearFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
         String parameter = "username";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addParameterFilter(parameter)
@@ -102,17 +98,10 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Saved Filters */
     @Test
     public void testSavedFilterFieldValidation() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
         String tooLong = getRandomString(26);
         String goodLength = getRandomString(25);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .expandSavedFilters()
+        applicationDetailPage.expandSavedFilters()
                 .addInvalidNameSavedFilter(tooLong);
 
         assertTrue("The name should be too long to save.", applicationDetailPage.isSaveFilterDisabled());
@@ -128,15 +117,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void duplicateNameSavedFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
         String filterName = getRandomString(8);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .expandSavedFilters()
+        applicationDetailPage.expandSavedFilters()
                 .addSavedFilter(filterName);
 
         assertTrue("Success message not present.", applicationDetailPage.isSavedFilterSuccessMessageDisplayed());
@@ -148,20 +131,13 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void savedFiltersTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
         String parameter = "username";
-        String newFilter = getRandomString(5);
+        String newFilter = getName();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner)
@@ -193,16 +169,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Scanner and Merged */
     @Test
     public void mergedFindingsFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .toggleTwoPlus();
@@ -217,18 +186,11 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void scannerFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandScannerAndMerged()
                 .addScannerFilter(scanner);
@@ -246,17 +208,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Field Controls */
     @Test
     public void vulnerabilityTypeFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
         String vulnerabilityType = "Improper Neutralization of Input During Web Page Generation";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addVulnerabilityTypeFilter(vulnerabilityType);
@@ -270,17 +222,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void pathFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
         String path = "/demo/EvalInjection2.php";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
 
         // Get rid of these when fix is issued.
         applicationDetailPage = applicationDetailPage.expandFieldControls()
@@ -298,17 +240,7 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO get rid of the extra clicks for the info shown when fix
     @Test
     public void parameterFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
         String parameter = "username";
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
 
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .addParameterFilter(parameter);
@@ -327,16 +259,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void severityFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .toggleSeverityFilter("Critical")
                 .toggleSeverityFilter("Low");
@@ -357,16 +279,6 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     //TODO check for open/closed/false positives and what not
     @Test
     public void statusFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
         applicationDetailPage = applicationDetailPage.expandFieldControls()
                 .toggleStatusFilter("Open")
                 .toggleStatusFilter("Closed");
@@ -377,16 +289,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     /* Aging */
     @Test
     public void agingFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandAging()
                 .toggleLessThan()
@@ -436,16 +341,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseIT{
     @Ignore
     @Test
     public void dateFilterTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage = applicationDetailPage.expandDateRange()
                 .enterStartDate("14-June-2012");

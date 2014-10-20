@@ -33,22 +33,19 @@ import org.junit.experimental.categories.Category;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class DashboardPageIT extends BaseIT {
-    private String teamName;
-    private String appName;
+public class DashboardPageIT extends BaseDataTest {
+
+    private DashboardPage dashboardPage;
 
     @Before
     public void initialize() {
-       teamName = createTeam();
-       appName = createApplication(teamName);
+       initializeTeamAndAppWithIBMScan();
 
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+       dashboardPage = loginPage.defaultLogin();
     }
 
     @Test
     public void testTeamIndexHeaderNavigation() {
-        DashboardPage dashboardPage = loginPage.defaultLogin();
-
         assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
         assertTrue("Application link is not present", dashboardPage.isApplicationMenuLinkPresent());
@@ -67,8 +64,6 @@ public class DashboardPageIT extends BaseIT {
 
     @Test
     public void testTeamIndexTabUserNavigation() {
-        DashboardPage dashboardPage = loginPage.defaultLogin();
-
         dashboardPage.clickUserTab();
         assertTrue("User tab is not dropped down", dashboardPage.isUserDropDownPresent());
         assertTrue("User change password link is not present", dashboardPage.isChangePasswordLinkPresent());
@@ -79,8 +74,6 @@ public class DashboardPageIT extends BaseIT {
 
     @Test
     public void testTeamIndexConfigTabNavigation() {
-        DashboardPage dashboardPage = loginPage.defaultLogin();
-
         dashboardPage.clickConfigTab();
         assertTrue("Configuration tab is not dropped down", dashboardPage.isConfigDropDownPresent());
         assertTrue("API link is not present", dashboardPage.isApiKeysLinkPresent());

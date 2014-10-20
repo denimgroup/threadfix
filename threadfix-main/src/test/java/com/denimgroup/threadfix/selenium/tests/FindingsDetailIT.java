@@ -32,34 +32,26 @@ import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by mghanizadeh on 9/3/2014.
- */
-
 @Category(CommunityTests.class)
-public class FindingsDetailIT extends BaseIT{
-    private String teamName;
-    private String appName;
+public class FindingsDetailIT extends BaseDataTest{
+
+    private FindingDetailPage findingDetailPage;
 
     @Before
     public void initialize() {
-        teamName = createTeam();
-        appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
 
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        findingDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab()
+                .clickViewScan()
+                .clickViewFinding();
     }
 
     @Test
     public void vulnerabilityNavigationTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
-
-        FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
-
         VulnerabilityDetailPage vulnerabilityDetailPage = findingDetailPage.clickViewVulnerability();
 
         assertTrue("Vulnerability Details Page is not Available",
@@ -68,15 +60,6 @@ public class FindingsDetailIT extends BaseIT{
 
     @Test
     public void checkMergeWithOtherFindingsButton() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
-
-        FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
-
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
 
         assertTrue("Vulnerability Details Page is not Available",
@@ -85,21 +68,12 @@ public class FindingsDetailIT extends BaseIT{
 
     @Test
     public void mergeSameVariableOrLocation() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
-
-        FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
-
         MergeFindingPage mergeFindingPage = findingDetailPage.clickMergeWithOtherFindings();
 
         VulnerabilityDetailPage vulnerabilityDetailPage = mergeFindingPage.setVariableOrLocation()
                 .clickSubmitMergeButton();
 
-        vulnerabilityDetailPage.clickApplicationLink(appName);
+        ApplicationDetailPage applicationDetailPage = vulnerabilityDetailPage.clickApplicationLink(appName);
 
         assertTrue("Merge wasn't added", applicationDetailPage.isVulnerabilityCountCorrect("Critical", "9"));
     }

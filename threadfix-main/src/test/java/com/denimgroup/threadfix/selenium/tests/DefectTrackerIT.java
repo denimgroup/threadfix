@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerIndexPage;
 import com.denimgroup.threadfix.selenium.pages.DefectTrackerSchedulePage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -37,21 +38,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class DefectTrackerIT extends BaseIT {
-
-    private static final String JIRA_USERNAME = System.getProperty("JIRA_USERNAME");
-    private static final String JIRA_PASSWORD = System.getProperty("JIRA_PASSWORD");
-    private static final String JIRA_URL = System.getProperty("JIRA_URL");
-    private static final String JIRAPROJECTNAME = System.getProperty("JIRAPROJECTNAME");
-    private static final String BUGZILLA_USERNAME = System.getProperty("BUGZILLA_USERNAME");
-    private static final String BUGZILLA_PASSWORD = System.getProperty("BUGZILLA_PASSWORD");
-    private static final String BUGZILLA_URL = System.getProperty("BUGZILLA_URL");
-    private static final String BUGZILLAPROJECTNAME = "For ThreadFix";
-    private static final String HPQUALITYCENTER_URL = System.getProperty("HPQUALITYCENTER_URL");
-    private static final String TFS_USERNAME = System.getProperty("TFS_USERNAME");
-    private static final String TFS_PASSWORD = System.getProperty("TFS_PASSWORD");
-    private static final String TFS_URL = System.getProperty("TFS_URL");
-    private static final String TFS_PROJECTNAME = ("Vulnerability Manager Demo");
+public class DefectTrackerIT extends BaseDataTest {
+    private DefectTrackerIndexPage defectTrackerIndexPage;
 
     static {
         if (JIRA_USERNAME == null){
@@ -86,15 +74,19 @@ public class DefectTrackerIT extends BaseIT {
         }
     }
 
+    @Before
+    public void initialNavigation(){
+        defectTrackerIndexPage = loginPage.defaultLogin()
+                .clickDefectTrackersLink();
+
+    }
+
     @Test
 	public void createDefectTrackerTest() {
 		String newDefectTrackerName = getName();
 		String defectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
-
-		defectTrackerIndexPage.clickAddDefectTrackerButton()
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(newDefectTrackerName)
 				.setType(defectTrackerType)
                 .setURL(BUGZILLA_URL)
@@ -112,9 +104,7 @@ public class DefectTrackerIT extends BaseIT {
         String newDefectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickAddDefectTrackerButton()
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(newDefectTrackerName)
                 .setType(defectTrackerType)
                 .setURL(BUGZILLA_URL)
@@ -134,9 +124,7 @@ public class DefectTrackerIT extends BaseIT {
 		String whiteSpaceString = "           ";
 		String urlFormatString = "asdfwe";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickAddDefectTrackerButton();
+        defectTrackerIndexPage.clickAddDefectTrackerButton();
 
 		//Test empty and whitespace input
 		defectTrackerIndexPage = defectTrackerIndexPage.setName(emptyString)
@@ -166,11 +154,8 @@ public class DefectTrackerIT extends BaseIT {
         String longName = getRandomString(60);
         String longNameFormatted = longName.substring(0,49);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickAddDefectTrackerButton();
-
-        defectTrackerIndexPage.setName(longName)
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setName(longName)
                 .setURL(BUGZILLA_URL)
                 .setType("Bugzilla")
                 .clickSaveDefectTracker();
@@ -188,9 +173,6 @@ public class DefectTrackerIT extends BaseIT {
 		String editedDefectTrackerName = getName();
 		String originalDefectTrackerType = "Jira";
         String editedDefectTrackerType = "Bugzilla";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
 
 		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(originalDefectTrackerName)
@@ -226,51 +208,48 @@ public class DefectTrackerIT extends BaseIT {
 		String defectTrackerType = "Bugzilla";
         String longInput = getRandomString(55);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
-
-        defectTrackerIndexPage.clickAddDefectTrackerButton();
-        defectTrackerIndexPage.setName(defectTrackerNameDuplicateTest);
-        defectTrackerIndexPage.setType(defectTrackerType);
-        defectTrackerIndexPage.setURL(BUGZILLA_URL);
-        defectTrackerIndexPage.clickSaveDefectTracker();
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setName(defectTrackerNameDuplicateTest)
+                .setType(defectTrackerType)
+                .setURL(BUGZILLA_URL)
+                .clickSaveDefectTracker();
 
         defectTrackerIndexPage.refreshPage();
 
-		defectTrackerIndexPage.clickAddDefectTrackerButton();
-        defectTrackerIndexPage.setName(newDefectTrackerName);
-        defectTrackerIndexPage.setType(defectTrackerType);
-        defectTrackerIndexPage.setURL(BUGZILLA_URL);
-        defectTrackerIndexPage.clickSaveDefectTracker();
+		defectTrackerIndexPage.clickAddDefectTrackerButton()
+                .setName(newDefectTrackerName)
+                .setType(defectTrackerType)
+                .setURL(BUGZILLA_URL)
+                .clickSaveDefectTracker();
 
         defectTrackerIndexPage.refreshPage();
 
         defectTrackerIndexPage.clickEditLink(newDefectTrackerName);
 
 		// Test empty and whitespace input
-		defectTrackerIndexPage.setName(emptyString);
-        defectTrackerIndexPage.clickModalSubmitInvalid();
+		defectTrackerIndexPage.setName(emptyString)
+                .clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
 		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameRequiredErrorsText().contains("Name is required."));
 
-		defectTrackerIndexPage.setName(whiteSpaceString);
-        defectTrackerIndexPage.clickModalSubmitInvalid();
+		defectTrackerIndexPage.setName(whiteSpaceString)
+                .clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameRequiredError"));
 		assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameRequiredErrorsText().contains("Name is required."));
 
 		// Test browser length limit
-		defectTrackerIndexPage.setName(longInput);
-        defectTrackerIndexPage.clickModalSubmitInvalid();
+		defectTrackerIndexPage.setName(longInput)
+                .clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameCharacterLimitError"));
 
         defectTrackerIndexPage.clickModalCancel();
         defectTrackerIndexPage.refreshPage();
 
 		// Test name duplication checking
-		defectTrackerIndexPage.clickDefectTrackersLink();
-        defectTrackerIndexPage.clickEditLink(newDefectTrackerName);
-        defectTrackerIndexPage.setName(defectTrackerNameDuplicateTest);
-        defectTrackerIndexPage.clickModalSubmitInvalid();
+		defectTrackerIndexPage.clickDefectTrackersLink()
+                .clickEditLink(newDefectTrackerName)
+                .setName(defectTrackerNameDuplicateTest)
+                .clickModalSubmitInvalid();
         assertTrue("Error message was not visible.",defectTrackerIndexPage.isElementVisible("nameServerError"));
         assertTrue("The correct error text was not present",defectTrackerIndexPage.getNameDuplicateErrorsText().contains("That name is already taken."));
 	}
@@ -280,9 +259,6 @@ public class DefectTrackerIT extends BaseIT {
 		String defectTrackerName = getName();
         String replacementName = getName();
 		String defectTrackerType = "Jira";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
@@ -305,9 +281,6 @@ public class DefectTrackerIT extends BaseIT {
 		String defectTrackerName = getName();
         String replacementName = getName();
 		String defectTrackerType = "Bugzilla";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
@@ -337,8 +310,7 @@ public class DefectTrackerIT extends BaseIT {
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
+        defectTrackerIndexPage.refreshPage();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTracker1)
@@ -356,7 +328,7 @@ public class DefectTrackerIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .addDefectTracker(defectTracker1, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+                .addDefectTracker(defectTracker1, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
 
         assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
@@ -364,7 +336,7 @@ public class DefectTrackerIT extends BaseIT {
 
         applicationDetailPage = applicationDetailPage.clickModalCancel();
         sleep(500);
-        applicationDetailPage.addDefectTracker(defectTracker2, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+        applicationDetailPage.addDefectTracker(defectTracker2, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
 
         assertTrue("Defect tracker wasn't attached correctly",
                 applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
@@ -381,10 +353,9 @@ public class DefectTrackerIT extends BaseIT {
         DatabaseUtils.createTeam(teamName);
         DatabaseUtils.createApplication(teamName, appName);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
+        defectTrackerIndexPage.refreshPage();
 
-		defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
+		defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
                 .setType(defectTrackerType)
                 .setURL(BUGZILLA_URL)
@@ -393,7 +364,7 @@ public class DefectTrackerIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
 				.clickViewAppLink(appName, teamName)
-				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+				.addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
 
 		assertTrue("Defect tracker wasn't attached correctly",
 				applicationDetailPage.clickEditDeleteBtn().isDefectTrackerAttached());
@@ -403,11 +374,11 @@ public class DefectTrackerIT extends BaseIT {
     public void deleteAttachedBugzillaTrackerTest() {
         String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
+
         String teamName = createTeam();
         String appName = createApplication(teamName);
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
+        defectTrackerIndexPage.refreshPage();
 
         defectTrackerIndexPage = defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
@@ -418,7 +389,7 @@ public class DefectTrackerIT extends BaseIT {
         ApplicationDetailPage applicationDetailPage = defectTrackerIndexPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLAPROJECTNAME);
+                .addDefectTracker(defectTrackerName, BUGZILLA_USERNAME, BUGZILLA_PASSWORD, BUGZILLA_PROJECTNAME);
 
         defectTrackerIndexPage = applicationDetailPage.clickDefectTrackersLink()
                 .clickEditLink(defectTrackerName)
@@ -473,9 +444,9 @@ public class DefectTrackerIT extends BaseIT {
         String replacementName = getName();
         String defectTrackerType = "Bugzilla";
 
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickAddDefectTrackerButton()
+        defectTrackerIndexPage.refreshPage();
+
+        defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)
                 .setURL(BUGZILLA_URL)
                 .setType(defectTrackerType)
@@ -508,17 +479,12 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void checkDefectTrackerPage() {
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
-
         assertTrue("Defect Tracker page wasn't showed", defectTrackerIndexPage.isCreateNewTrackerButtonPresent());
     }
 
     @Test
     public void defectTrackerDailyScheduling() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickScheduleUpdateTab();
+        DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency("Daily")
@@ -532,9 +498,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void defectTrackerWeeklyScheduling() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickScheduleUpdateTab();
+        DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency("Weekly")
@@ -555,9 +519,7 @@ public class DefectTrackerIT extends BaseIT {
         int minutes = 30;
         String periodOfDay = "AM";
 
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickScheduleUpdateTab();
+        DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency(frequency)
@@ -585,9 +547,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void checkSameWeeklyScheduleConflict() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickScheduleUpdateTab();
+        DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
             defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                     .setFrequency("Weekly")
@@ -617,9 +577,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void DeleteDailyDefectTrackerScheduling() {
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickScheduleUpdateTab();
+        DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency("Daily")
@@ -638,10 +596,7 @@ public class DefectTrackerIT extends BaseIT {
 
     @Test
     public void DeleteweeklyDefectTrackerScheduling() {
-
-        DefectTrackerSchedulePage defectTrackerSchedulePage = loginPage.defaultLogin()
-                .clickDefectTrackersLink()
-                .clickScheduleUpdateTab();
+        DefectTrackerSchedulePage defectTrackerSchedulePage = defectTrackerIndexPage.clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency("Weekly")
@@ -664,9 +619,6 @@ public class DefectTrackerIT extends BaseIT {
     public void defectTrackerNameValidation() {
         String defectTrackerName = getName();
         String defectTrackerType = "Bugzilla";
-
-        DefectTrackerIndexPage defectTrackerIndexPage = loginPage.defaultLogin()
-                .clickDefectTrackersLink();
 
         defectTrackerIndexPage.clickAddDefectTrackerButton()
                 .setName(defectTrackerName)

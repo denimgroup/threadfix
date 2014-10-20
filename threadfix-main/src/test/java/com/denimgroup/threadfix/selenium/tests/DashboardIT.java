@@ -37,16 +37,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class DashboardIT extends BaseIT {
-    private String teamName;
-    private String appName;
+public class DashboardIT extends BaseDataTest {
 
     @Before
     public void initialize() {
-        teamName = createTeam();
-        appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
+        initializeTeamAndAppWithIBMScan();
     }
 
 	@Test
@@ -92,9 +87,9 @@ public class DashboardIT extends BaseIT {
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
-                .expandVulnerabilityByType("High79")
-                .expandCommentSection("High790")
-                .addComment("High790")
+                .expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
                 .setComment(commentText)
                 .clickModalSubmit();
 

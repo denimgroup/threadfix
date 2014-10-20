@@ -164,7 +164,7 @@ public class TeamDetailPage extends BasePage {
         driver.findElementById("deleteTeamButton").click();
         Alert alert = driver.switchTo().alert();
         alert.accept();
-        sleep(1000);
+        sleep(2000);
         return new TeamIndexPage(driver);
     }
 

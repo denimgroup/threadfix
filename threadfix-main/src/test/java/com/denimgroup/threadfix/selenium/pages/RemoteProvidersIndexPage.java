@@ -144,7 +144,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectTeamMapping(teamName);
         selectAppMapping(appName);
         clickUpdateMappings();
-        waitForElement(driver.findElementByLinkText("appName"));
+        waitForElement(driver.findElementById("provider3import" + appRow));
         return new RemoteProvidersIndexPage(driver);
     }
 
