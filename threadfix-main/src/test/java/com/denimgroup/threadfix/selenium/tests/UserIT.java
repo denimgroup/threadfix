@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.UserChangePasswordPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -37,12 +38,18 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class UserIT extends BaseIT {
 
+    private UserIndexPage userIndexPage;
+
+    @Before
+    public void initialize() {
+        userIndexPage = loginPage.defaultLogin()
+                .clickManageUsersLink();
+    }
+
 	@Test
 	public void testCreateUser() {
 		String userName = getName();
         String password = "testCreateUser";
-		UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink();
 
 		userIndexPage.clickAddUserLink()
                     .setName(userName)
@@ -60,9 +67,7 @@ public class UserIT extends BaseIT {
 
         String secondUserName = getName();
 
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink()
+        userIndexPage.clickAddUserLink()
                 .setName(userName)
                 .setPassword(password)
                 .setConfirmPassword(password)
@@ -84,15 +89,12 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testUserFieldValidation() {
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink();
+        userIndexPage.clickAddUserLink()
+                .setName("        ")
+                .setPassword("  ")
+                .setConfirmPassword("  ")
+                .clickAddNewUserBtnInvalid();
 
-        userIndexPage.setName("        ");
-        userIndexPage.setPassword("  ");
-        userIndexPage.setConfirmPassword("  ");
-
-        userIndexPage = userIndexPage.clickAddNewUserBtnInvalid();
         sleep(5000);
 
         assertTrue("Name is required error was not present.",
@@ -124,14 +126,11 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String password = getRandomString(15);
         // Create a user
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink();
-        userIndexPage.setName(userName);
-        userIndexPage.setPassword(password);
-        userIndexPage.setConfirmPassword(password);
-
-        userIndexPage = userIndexPage.clickAddNewUserBtn();
+        userIndexPage.clickAddUserLink()
+                .setName(userName)
+                .setPassword(password)
+                .setConfirmPassword(password)
+                .clickAddNewUserBtn();
 
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
         assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
@@ -163,9 +162,7 @@ public class UserIT extends BaseIT {
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink()
+        userIndexPage.clickAddUserLink()
                 .setName(userName)
                 .setPassword(password)
                 .setConfirmPassword(password)
@@ -197,9 +194,6 @@ public class UserIT extends BaseIT {
         String password = getRandomString(15);
         String editedPassword = getRandomString(15);
 
-		UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink();
-
 		assertFalse("User was already in the table.", userIndexPage.isUserNamePresent(userName));
 
         UserChangePasswordPage userChangePasswordPage = userIndexPage.clickAddUserLink()
@@ -224,8 +218,7 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditPasswordValidation() {
-        UserChangePasswordPage changePasswordPage = loginPage.defaultLogin()
-                .clickChangePasswordLink()
+        UserChangePasswordPage changePasswordPage = userIndexPage.clickChangePasswordLink()
                 .setCurrentPassword(" ")
                 .setNewPassword("password1234")
                 .setConfirmPassword("password1234")
@@ -268,9 +261,7 @@ public class UserIT extends BaseIT {
 
 		// Set up the two User objects for the test
 
-		UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink()
+		userIndexPage.clickAddUserLink()
                 .setName(baseUserName)
                 .setPassword("lengthy password 2")
                 .setConfirmPassword("lengthy password 2")
@@ -300,8 +291,6 @@ public class UserIT extends BaseIT {
                 .clickUpdateUserBtnInvalid(baseUserName);
 
 		assertTrue("Name error not present", userIndexPage.isSaveChangesButtonClickable(baseUserName));
-
-        userIndexPage.clickManageUsersLink();
     }
 
     @Test
@@ -309,9 +298,7 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String passWord = getName();
 
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink()
+        userIndexPage.clickAddUserLink()
                 .setName(userName)
                 .setPassword(passWord)
                 .setConfirmPassword(passWord)
@@ -332,10 +319,8 @@ public class UserIT extends BaseIT {
     @Test
     public void testEditUserValidationPasswordMatching(){
         String userName = getName();
-
-        UserIndexPage userIndexPage = loginPage.defaultLogin().clickManageUsersLink();
 		// Test non-matching passwords
-		userIndexPage = userIndexPage.clickAddUserLink()
+		userIndexPage.clickAddUserLink()
                 .setName(userName)
                 .setPassword("lengthy password 1")
                 .setConfirmPassword("lengthy password 2")
@@ -348,9 +333,6 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditUserValidationLength(){
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink();
-
 		// Test length
 		userIndexPage = userIndexPage.clickAddUserLink()
                 .setName("Test User")
@@ -368,9 +350,7 @@ public class UserIT extends BaseIT {
         String userName = getName();
         String passWord = getName();
 
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink()
+        userIndexPage.clickAddUserLink()
                 .setName(userName)
                 .setPassword(passWord)
                 .setConfirmPassword(passWord)
@@ -392,8 +372,6 @@ public class UserIT extends BaseIT {
 
 	@Test
 	public void testNavigation() {
-		loginPage.defaultLogin()
-                 .clickManageUsersLink();
         assertTrue("Could not navigate to User Index Page.",driver.findElements(By.id("newUserModalLink")).size() != 0);
 		}
 
@@ -401,8 +379,6 @@ public class UserIT extends BaseIT {
     public void testDeleteUser(){
         String userName = getName();
         String password = "testDeleteUser";
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink();
 
         userIndexPage.clickAddUserLink()
                 .setName(userName)

@@ -34,7 +34,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class TeamIT extends BaseIT {
+public class TeamIT extends BaseDataTest {
 
 	@Test
 	public void createTeamTest(){
@@ -180,8 +180,7 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void teamGraphsTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
         String file = ScanContents.getScanFilePath();
 
         DatabaseUtils.uploadScan(teamName, appName, file);
@@ -196,8 +195,7 @@ public class TeamIT extends BaseIT {
 
     @Test
     public void expandAndCollapseSingleTeamTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         TeamIndexPage teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
 

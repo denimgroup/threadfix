@@ -33,7 +33,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class TeamVulnerabilitiesFilterIT extends BaseIT{
+public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void testExpandCollapse() {
@@ -59,12 +59,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testClearFilter() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         String parameter = "username";
 
@@ -101,13 +96,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testSavedFilterFieldValidation() {
-        String teamName = getName();
-        String appName = getName();
+        initializeTeamAndApp();
         String tooLong = getRandomString(26);
         String goodLength = getRandomString(25);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -129,8 +120,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testDuplicateNameSavedFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
         String filterName = getName();
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
@@ -149,10 +139,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testSavedFilters() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -195,11 +182,9 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testApplicationFilter() {
-        String teamName = createTeam();
-        String appName1 = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String appName2 = createApplication(teamName);
 
-        DatabaseUtils.uploadScan(teamName, appName1, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
         DatabaseUtils.uploadScan(teamName, appName2, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
@@ -208,7 +193,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
                 .clickVulnerabilitiesTab("71");
 
         teamDetailPage.expandTeamApplication()
-                .addApplicationFilter(appName1);
+                .addApplicationFilter(appName);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -246,10 +231,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testMergedFindingsFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
@@ -270,10 +252,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testScannerFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         String scanner = "IBM Rational AppScan";
@@ -322,10 +301,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testPathFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         String path = "/demo/EvalInjection2.php";
 
@@ -345,10 +321,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testParameterFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         String parameter = "username";
 
@@ -370,10 +343,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testSeverityFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -399,10 +369,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testStatusFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -420,10 +387,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseIT{
 
     @Test
     public void testAgingFilter() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        initializeTeamAndAppWithIBMScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
         TeamDetailPage teamDetailPage = loginPage.defaultLogin()

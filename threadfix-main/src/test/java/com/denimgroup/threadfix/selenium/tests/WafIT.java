@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @Category(CommunityTests.class)
-public class WafIT extends BaseIT {
+public class WafIT extends BaseDataTest {
 	
 	@Test
 	public void testCreateWaf(){
@@ -257,10 +257,7 @@ public class WafIT extends BaseIT {
 
 	@Test
 	public void attachModSecWafToaNewApp() throws MalformedURLException {
-		String teamName = createTeam();
-		String appName = createApplication(teamName);
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath());
+		initializeTeamAndAppWithIBMScan();
 
 		String wafName = getName();
 		String wafType = "mod_security";
@@ -321,11 +318,8 @@ public class WafIT extends BaseIT {
 
     @Test
     public void generateWafRules() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String wafName = getName();
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -356,12 +350,9 @@ public class WafIT extends BaseIT {
 
     @Test
     public void uploadLogFile() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -452,12 +443,9 @@ public class WafIT extends BaseIT {
 
     @Test
     public void checkWafLogFileLink() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String wafName = getName();
         String logFile = ScanContents.SCAN_FILE_MAP.get("Snort Log");
-
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -504,8 +492,7 @@ public class WafIT extends BaseIT {
     public void attachWafToApplication() {
         String wafName = getName();
         String wafType = "Snort";
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         DatabaseUtils.createWaf(wafName, wafType);
 
@@ -530,8 +517,7 @@ public class WafIT extends BaseIT {
 
     @Test
     public void createNewWafInApplicationModal() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
         String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -568,8 +554,7 @@ public class WafIT extends BaseIT {
         DatabaseUtils.createWaf(wafName1, type1);
         DatabaseUtils.createWaf(wafName2, type2);
 
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -647,8 +632,7 @@ public class WafIT extends BaseIT {
 
     @Test
     public void DeleteAssignWafToApplication() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         String wafName = getName();
 
@@ -693,8 +677,7 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testApplicationNameNav() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
         String wafName = getName();
 
         ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
@@ -719,11 +702,9 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testDownloadWafRules() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String wafName = getName();
 
-        DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.createWaf(wafName,"Snort");
 
         WafRulesPage wafRulesPage = loginPage.defaultLogin()
@@ -744,11 +725,9 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testCancelButton() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String wafName = getName();
 
-        DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.createWaf(wafName,"Snort");
 
         WafRulesPage wafRulesPage = loginPage.defaultLogin()
@@ -773,11 +752,9 @@ public class WafIT extends BaseIT {
 
     @Test
     public void testFiredWafNav() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndAppWithIBMScan();
         String wafName = getName();
 
-        DatabaseUtils.uploadScan(teamName,appName,ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.createWaf(wafName,"Snort");
 
         WafRulesPage wafRulesPage1 = loginPage.defaultLogin()
