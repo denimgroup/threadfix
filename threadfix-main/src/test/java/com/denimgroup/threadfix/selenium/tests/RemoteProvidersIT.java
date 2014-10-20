@@ -68,7 +68,7 @@ public class RemoteProvidersIT extends BaseIT {
 	@Test
 	public void navigationTest() {
 		RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
-									.clickRemoteProvidersLink();
+                .clickRemoteProvidersLink();
 		
 		assertTrue("Remote Provider Page not found", remoteProvidersIndexPage.isTabPresent());
 	}
@@ -175,11 +175,8 @@ public class RemoteProvidersIT extends BaseIT {
     @Ignore
     @Test
     public void editQualysMapping() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -200,11 +197,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void editVeracodeMapping() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -225,11 +219,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void editWhiteHatMapping() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -250,11 +241,8 @@ public class RemoteProvidersIT extends BaseIT {
     //TODO Update when new ids are added
     @Test
     public void importWhiteHatScan() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -279,11 +267,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void importVeracodeScan() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -309,11 +294,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void importQualysGuardScan() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -344,17 +326,15 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testVulnerabilityCountAfterImport() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
 
-        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin().clickRemoteProvidersLink();
-        remoteProvidersIndexPage.clickConfigureWhiteHat();
-        remoteProvidersIndexPage.setWhiteHatAPI(SENTINEL_API_KEY);
-        remoteProvidersIndexPage.saveWhiteHat();
+        RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
+                .clickRemoteProvidersLink()
+                .clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
 
         assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(), remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel"));
         remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
@@ -391,11 +371,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testDeletedApplicationOnList() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -423,18 +400,14 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testDeletedTeamOnList() {
-        String teamName = getName();
-        String appName = getName();
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
 
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink();
-
-        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
-
-        teamDetailPage.clickDeleteButton();
+        TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
 
         assertTrue("Team Name wasn't deleted",
                 teamDetailPage.successAlert().contains("Team" +  " " + teamName + " has been deleted successfully"));
@@ -456,11 +429,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void checkNumberUnderSeverity() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -495,11 +465,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testTeamExistAfterDeleted() {
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
@@ -526,11 +493,8 @@ public class RemoteProvidersIT extends BaseIT {
 
     @Test
     public void testApplicationExistAfterDeleted(){
-        String teamName = getName();
-        String appName = getName();
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         RemoteProvidersIndexPage remoteProvidersIndexPage = loginPage.defaultLogin()
                 .clickRemoteProvidersLink()
