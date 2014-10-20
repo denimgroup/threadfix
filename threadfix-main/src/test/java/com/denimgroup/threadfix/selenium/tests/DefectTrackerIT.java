@@ -559,14 +559,18 @@ public class DefectTrackerIT extends BaseIT {
                 .clickDefectTrackersLink()
                 .clickScheduleUpdateTab();
 
-            defectTrackerSchedulePage.clickScheduleNewUpdateTab()
-                    .setFrequency(frequency)
-                    .setHour(hour)
-                    .setMinute(minutes)
-                    .setPeriodOfDay(periodOfDay)
-                    .clickAddScheduledUpdated();
+        defectTrackerSchedulePage.clickScheduleNewUpdateTab()
+                .setFrequency(frequency)
+                .setHour(hour)
+                .setMinute(minutes)
+                .setPeriodOfDay(periodOfDay)
+                .clickAddScheduledUpdated();
 
         assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("_9_30_AM"));
+
+        defectTrackerSchedulePage.clickOrganizationHeaderLink()
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency(frequency)
@@ -593,8 +597,11 @@ public class DefectTrackerIT extends BaseIT {
                     .setDay("Sunday")
                     .clickAddScheduledUpdated();
 
-        assertTrue("New Schedule wasn't Created",
-                defectTrackerSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
+        assertTrue("New Schedule wasn't Created", defectTrackerSchedulePage.isNewSchedulePresent("Sunday_8_30_PM"));
+
+        defectTrackerSchedulePage.clickOrganizationHeaderLink()
+                .clickDefectTrackersLink()
+                .clickScheduleUpdateTab();
 
         defectTrackerSchedulePage.clickScheduleNewUpdateTab()
                 .setFrequency("Weekly")
