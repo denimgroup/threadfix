@@ -440,6 +440,17 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			}
 		}
 
+        private String buildUrlReference(String siteId, String nativeId) {
+
+            String urlReference = null;
+
+            if (siteId != null && nativeId != null){
+                urlReference = ScannerType.SENTINEL.getBaseUrl() +  "?site_id=" + siteId +"&vuln_id=" + nativeId;
+            }
+
+            return urlReference;
+        }
+
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 
 	    	if ("vulnerabilities".equals(qName)) {
@@ -449,9 +460,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
 	    		map.clear();
-	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
+
+                String nativeId = atts.getValue("id");
+                String siteId = atts.getValue("site");
+
+	    		map.put(FindingKey.NATIVE_ID, nativeId);
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
 	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+	    		map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
 
                 // was in the attack_vector
 	    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
