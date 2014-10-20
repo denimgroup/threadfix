@@ -36,6 +36,7 @@ public class ApplicationDetailPage extends BasePage {
         super(webdriver);
     }
 
+    /* _____________________ Action Methods _____________________ */
     public ApplicationDetailPage clickAddDefectTrackerButton() {
         driver.findElementById("addDefectTrackerButton").click();
         sleep(1000);
@@ -172,33 +173,18 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("repositoryUsername").sendKeys(userName);
         return this;
     }
+
     public ApplicationDetailPage setRepositoryPasswordEdited(String password){
         sleep(1000);
         driver.findElementById("repositoryPassword").clear();
         driver.findElementById("repositoryPassword").sendKeys(password);
         return this;
     }
-    public String checkWafName() {
-        waitForElement(driver.findElementById("wafNameText"));
-        return driver.findElementById("wafNameText").getText();
-    }
+
     public TeamDetailPage clickDeleteLink() {
         driver.findElementById("deleteLink").click();
         handleAlert();
         return new TeamDetailPage(driver);
-    }
-
-    public String getWafText() {
-        waitForElement(driver.findElementById("wafName"));
-        return driver.findElementById("wafName").getText();
-    }
-
-    public String getNameText() {
-        return tryGetText(By.id("nameText"));
-    }
-
-    public String getUrlText() {
-        return driver.findElementById("urlInput").getAttribute("value");
     }
 
     public ApplicationDetailPage clickVulnerabilitiesTab(int numberOfVulnerabilities) {
@@ -276,27 +262,10 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public String getApplicationId() {
-        String hrefText = driver.findElementById("editVulnerabilityFiltersButton").getAttribute("href");
-        return hrefText.substring(hrefText.indexOf("applications/") + 13, hrefText.indexOf("/filters"));
-    }
-
     public ApplicationDetailPage clickAddWaf() {
         driver.findElementById("addWafButton").click();
         waitForElement(driver.findElementById("wafSelect"));
         return new ApplicationDetailPage(driver);
-    }
-
-    public String getScheduledScanScanner() {
-        return driver.findElementById("scheduledScanScanner0").getText();
-    }
-
-    public String getScheduledScanDay() {
-        return driver.findElementById("scheduledScanDay0").getText();
-    }
-
-    public String getScheduledScanFrequency() {
-        return driver.findElementById("scheduledScanFrequency0").getText();
     }
 
     public ApplicationDetailPage clickCreateNewWaf() {
@@ -308,7 +277,7 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage clickCreateWAfButtom() {
         sleep(1000);
         driver.findElementById("submit").click();
-       // waitForElement(driver.findElementById("addWafButton"));
+        // waitForElement(driver.findElementById("addWafButton"));
         sleep(2000);
         return new ApplicationDetailPage(driver);
     }
@@ -367,22 +336,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public String getNameError() {
-        return driver.findElementById("applicationNameInputNameError").getText();
-    }
-
-    public String getNameRequiredError() {
-        return driver.findElementById("applicationNameInputRequiredError").getText();
-    }
-
-    public String getUrlError() {
-        return driver.findElementById("applicationUrlInputInvalidUrlError").getText().trim();
-    }
-
-    public String getUrlRepositoryError() {
-        return driver.findElementById("sourceUrlValidError").getText().trim();
-    }
-
     public ApplicationDetailPage clickDeleteScanButton() {
         driver.findElementByLinkText("Delete Scan").click();
         handleAlert();
@@ -399,20 +352,6 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("deleteButton" + id).click();
         handleAlert();
         return new ApplicationDetailPage(driver);
-    }
-
-    public int modalNumber() {
-        String s = driver.findElementByClassName("modal").getAttribute("id");
-        Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");
-        Matcher matcher = pattern.matcher(s);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return -1;
-    }
-
-    public String getAlert() {
-        return driver.findElementByClassName("alert-success").getText();
     }
 
     public ApplicationDetailPage clickDynamicSubmit() {
@@ -443,12 +382,6 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("descriptionInput").clear();
         driver.findElementById("descriptionInput").sendKeys(Status);
         return new ApplicationDetailPage(driver);
-    }
-
-    public String selectSeverityList(String text) {
-        Select severity = new Select(driver.findElementById("severityInput"));
-        severity.selectByVisibleText(text);
-        return severity.getFirstSelectedOption().getText();
     }
 
     public ApplicationDetailPage clickCloseAppInvalid() {
@@ -492,24 +425,6 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public int scanQueueCount() {
-        WebElement scanQueueTab;
-        try {
-            scanQueueTab = driver.findElementById("scanAgentTasksTab");
-        } catch (NoSuchElementException e) {
-            return 0;
-        }
-
-        String scanText = scanQueueTab.getText().trim();
-        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
-        Matcher matcher = pattern.matcher(scanText);
-        if (matcher.find()) {
-            int temp = Integer.parseInt(matcher.group(1));
-            return temp;
-        }
-        return -1;
-    }
-
     public ApplicationDetailPage clickAddNewScanTask() {
         driver.findElementById("addScanQueueLink").click();
         waitForElement(driver.findElementById("submit"));
@@ -531,23 +446,6 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementByLinkText( count + " Files").click();
         waitForElement(driver.findElementByLinkText("Add File"));
         return new ApplicationDetailPage(driver);
-    }
-
-    public int docsCount() {
-        WebElement scanQueueTab;
-        try {
-            scanQueueTab = driver.findElementById("documentsTab");
-        } catch (NoSuchElementException e) {
-            return 0;
-        }
-
-        String scanText = scanQueueTab.getText().trim();
-        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
-        Matcher matcher = pattern.matcher(scanText);
-        if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
-        }
-        return -1;
     }
 
     public ApplicationDetailPage clickUploadDocLink() {
@@ -579,28 +477,8 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public String specificVulnerabilityCount(String level) {
-        List<WebElement> headers = driver.findElementsByClassName("vulnSectionHeader");
-
-        for (WebElement header : headers) {
-            if (header.getText().contains(level)) {
-                String count = header.getText();
-                count = count.substring(count.length() - 2, count.length() - 1);
-                return count;
-            }
-        }
-        return "0";
-    }
-
     public ApplicationDetailPage expandCriticalVulns() {
         driver.findElementById("expandCritical").click();
-        return new ApplicationDetailPage(driver);
-    }
-
-    //Application Detail Page default is now to have the top level expanded
-    @Deprecated
-    public ApplicationDetailPage expandResultsByLevel(String level) {
-        driver.findElementById("expand" + level).click();
         return new ApplicationDetailPage(driver);
     }
 
@@ -657,14 +535,6 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public boolean vulnsFilteredOpen(int count) {
-        return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
-    }
-
-    public boolean isCweErrorPresent() {
-        return !driver.findElementByClassName("errors ng-binding").getAttribute("innerHTML").equals("");
-    }
-
     public FilterPage clickEditVulnerabilityFilters() {
         waitForElement(driver.findElementById("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
@@ -692,10 +562,6 @@ public class ApplicationDetailPage extends BasePage {
         waitForElement(driver.findElementByLinkText("Source Code Information"));
         driver.findElementByLinkText("Source Code Information").click();
         return new ApplicationDetailPage(driver);
-    }
-
-    public int getFilterDivHeight() {
-        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
     }
 
     public ApplicationDetailPage toggleAllFilter() {
@@ -803,7 +669,7 @@ public class ApplicationDetailPage extends BasePage {
         driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(vulnerabilityType);
         driver.findElementById("vulnerabilityTypeTypeahead").sendKeys(Keys.RETURN);
         waitForResultsToLoad();
-       return new ApplicationDetailPage(driver);
+        return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage addPathFilter(String path) {
@@ -892,31 +758,14 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    public void waitForResultsToLoad() {
-        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
-            sleep(1000);
-        }
-    }
-
     public ApplicationDetailPage sleepForResults() {
         sleep(1500);
         return new ApplicationDetailPage(driver);
     }
 
-    public String getScannerDate(int row) {
-        return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
-    }
-
     public ApplicationDetailPage clickUploadScan() {
         driver.findElementById("uploadScanModalLink").click();
         return new ApplicationDetailPage(driver);
-    }
-
-    public String[] getFirstScanInfo() {
-        String scannerType = driver.findElementById("channelType0").getText().trim();
-        String numVulns = driver.findElementById("numTotalVulnerabilities0").getText().trim();
-        String[] scanValues = {scannerType,numVulns};
-        return scanValues;
     }
 
     public ApplicationDetailPage uploadScan(String file) {
@@ -953,17 +802,163 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
-    public String getModalTitle() {
-        return driver.findElementById("myModalLabel").getText();
-    }
-
     public ApplicationDetailPage clickGetProductNames() {
         driver.findElementById("getProductNames").click();
         waitForElement(driver.findElementById("productNameSelect"));
         return new ApplicationDetailPage(driver);
     }
 
-    /*________________ Boolean Functions ________________*/
+    /* _____________________ Get Methods _____________________ */
+    public String checkWafName() {
+        waitForElement(driver.findElementById("wafNameText"));
+        return driver.findElementById("wafNameText").getText();
+    }
+
+    public String getWafText() {
+        waitForElement(driver.findElementById("wafName"));
+        return driver.findElementById("wafName").getText();
+    }
+
+    public String getNameText() {
+        return tryGetText(By.id("nameText"));
+    }
+
+    public String getUrlText() {
+        return driver.findElementById("urlInput").getAttribute("value");
+    }
+
+    public String getApplicationId() {
+        String hrefText = driver.findElementById("editVulnerabilityFiltersButton").getAttribute("href");
+        return hrefText.substring(hrefText.indexOf("applications/") + 13, hrefText.indexOf("/filters"));
+    }
+
+    public String getScheduledScanScanner() {
+        return driver.findElementById("scheduledScanScanner0").getText();
+    }
+
+    public String getScheduledScanDay() {
+        return driver.findElementById("scheduledScanDay0").getText();
+    }
+
+    public String getScheduledScanFrequency() {
+        return driver.findElementById("scheduledScanFrequency0").getText();
+    }
+
+    public String getNameError() {
+        return driver.findElementById("applicationNameInputNameError").getText();
+    }
+
+    public String getNameRequiredError() {
+        return driver.findElementById("applicationNameInputRequiredError").getText();
+    }
+
+    public String getUrlError() {
+        return driver.findElementById("applicationUrlInputInvalidUrlError").getText().trim();
+    }
+
+    public String getUrlRepositoryError() {
+        return driver.findElementById("sourceUrlValidError").getText().trim();
+    }
+
+    public int modalNumber() {
+        String s = driver.findElementByClassName("modal").getAttribute("id");
+        Pattern pattern = Pattern.compile("^\\D+([0-9]+)$");
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
+    }
+
+    public String getAlert() {
+        return driver.findElementByClassName("alert-success").getText();
+    }
+
+    public String selectSeverityList(String text) {
+        Select severity = new Select(driver.findElementById("severityInput"));
+        severity.selectByVisibleText(text);
+        return severity.getFirstSelectedOption().getText();
+    }
+
+    public int scanQueueCount() {
+        WebElement scanQueueTab;
+        try {
+            scanQueueTab = driver.findElementById("scanAgentTasksTab");
+        } catch (NoSuchElementException e) {
+            return 0;
+        }
+
+        String scanText = scanQueueTab.getText().trim();
+        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(scanText);
+        if (matcher.find()) {
+            int temp = Integer.parseInt(matcher.group(1));
+            return temp;
+        }
+        return -1;
+    }
+
+    public int docsCount() {
+        WebElement scanQueueTab;
+        try {
+            scanQueueTab = driver.findElementById("documentsTab");
+        } catch (NoSuchElementException e) {
+            return 0;
+        }
+
+        String scanText = scanQueueTab.getText().trim();
+        Pattern pattern = Pattern.compile("^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(scanText);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
+    }
+
+    public String specificVulnerabilityCount(String level) {
+        List<WebElement> headers = driver.findElementsByClassName("vulnSectionHeader");
+
+        for (WebElement header : headers) {
+            if (header.getText().contains(level)) {
+                String count = header.getText();
+                count = count.substring(count.length() - 2, count.length() - 1);
+                return count;
+            }
+        }
+        return "0";
+    }
+
+    public int getFilterDivHeight() {
+        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
+    }
+
+    public String getScannerDate(int row) {
+        return driver.findElementById("scanAgentTaskCreateTime" + row).getText().trim();
+    }
+
+    public String[] getFirstScanInfo() {
+        String scannerType = driver.findElementById("channelType0").getText().trim();
+        String numVulns = driver.findElementById("numTotalVulnerabilities0").getText().trim();
+        String[] scanValues = {scannerType,numVulns};
+        return scanValues;
+    }
+
+    public String getModalTitle() {
+        return driver.findElementById("myModalLabel").getText();
+    }
+
+    public String alertError() {
+        return driver.findElementByClassName("alert-error").getText();
+    }
+
+    /* _____________________ Boolean Methods _____________________ */
+    public boolean vulnsFilteredOpen(int count) {
+        return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
+    }
+
+    public boolean isCweErrorPresent() {
+        return !driver.findElementByClassName("errors ng-binding").getAttribute("innerHTML").equals("");
+    }
 
     public boolean isApplicationNamePresent() {
         return driver.findElementById("nameText").isDisplayed();
@@ -1003,10 +998,6 @@ public class ApplicationDetailPage extends BasePage {
             }
         }
         return false;
-    }
-
-    public String alertError() {
-        return driver.findElementByClassName("alert-error").getText();
     }
 
     public boolean isAppTypeDetect() {
@@ -1339,4 +1330,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("cveDescription" + expectedNumber).isDisplayed();
     }
 
+    /*___________________Void Methods__________________*/
+    public void waitForResultsToLoad() {
+        while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
+            sleep(1000);
+        }
+    }
 }

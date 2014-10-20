@@ -38,32 +38,28 @@ public class ScanDetailIT extends BaseDataTest {
     private String teamName;
     private String appName;
 
+    private ApplicationDetailPage applicationDetailPage;
+
     @Before
     public void initialize() {
         initializeTeamAndAppWithIBMScan();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickScansTab();
     }
 
     @Test
     public void checkViewScan() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
 
-        assertTrue("Scans Finding is not available"
-                ,scanDetailPage.isViewFindingPresent());
+        assertTrue("Scans Finding is not available", scanDetailPage.isViewFindingPresent());
     }
 
     @Test
     public void testShowHideStatisticsDetail() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
 
@@ -76,12 +72,6 @@ public class ScanDetailIT extends BaseDataTest {
 
     @Test
     public void testShowHideStatisticsToggle() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
 
         assertTrue("Show Statistics Button wasn't displayed", scanDetailPage.isHideStatisticsButtonDisplay("Show Statistics"));
@@ -93,11 +83,6 @@ public class ScanDetailIT extends BaseDataTest {
 
     @Test
     public void findingNavigationTest() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan();
 
         FindingDetailPage findingDetailPage = scanDetailPage.clickViewFinding();
@@ -108,12 +93,6 @@ public class ScanDetailIT extends BaseDataTest {
 
     @Test
     public void showStatisticResultsCorrect() {
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScansTab();
-
         ScanDetailPage scanDetailPage = applicationDetailPage.clickViewScan()
                 .toggleStatistics();
 
@@ -133,17 +112,13 @@ public class ScanDetailIT extends BaseDataTest {
 
     @Test
     public void testApplicationLinkNav() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage1 = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
+        applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)
                 .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName)
                 .clickApplicationName(appName);
 
-        ScanDetailPage scanDetailPage = applicationDetailPage1.clickScansTab().clickViewScan();
+        ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
 
         ApplicationDetailPage applicationDetailPage2 = scanDetailPage.clickApplicationNav();
 
@@ -154,11 +129,7 @@ public class ScanDetailIT extends BaseDataTest {
 
     @Test
     public void testTeamLinkNav() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
+        applicationDetailPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .uploadScanButton(teamName, appName)
                 .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName)
