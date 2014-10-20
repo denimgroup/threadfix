@@ -310,16 +310,12 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
                 applicationDetailPage.isCommentCorrect("0", comment));
     }
 
+    //TODO fix bad navigation
     @Test
     public void vulnerabilityPaginationTestingAvailable() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
-        applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
+        applicationDetailPage.refreshPage();
 
         applicationDetailPage.expandVulnerabilityByType("Low209");
 
@@ -327,7 +323,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
     }
 
     @Test
-    public void vulnerabilityPaginationTestingunavailable() {
+    public void vulnerabilityPaginationTestingUnavailable() {
         applicationDetailPage.expandVulnerabilityByType("Critical79");
 
         assertFalse("Pagination available", applicationDetailPage.isPaginationPresent("Critical79"));
