@@ -373,8 +373,7 @@ public class RemoteProvidersIT extends BaseDataTest {
 
     @Test
     public void checkNumberUnderSeverity() {
-        remoteProvidersIndexPage.clickRemoteProvidersLink()
-                .clickConfigureWhiteHat()
+        remoteProvidersIndexPage.clickConfigureWhiteHat()
                 .setWhiteHatAPI(SENTINEL_API_KEY)
                 .saveWhiteHat()
                 .mapWhiteHatToTeamAndApp(1, teamName, appName);

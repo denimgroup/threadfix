@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -35,12 +36,17 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class TeamIT extends BaseDataTest {
+    private TeamIndexPage teamIndexPage;
+
+    @Before
+    public void initialNavigation() {
+        teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
+    }
 
 	@Test
 	public void createTeamTest(){
 		String teamName = getName();
 
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
 		assertFalse("The organization was already present.", teamIndexPage.isTeamPresent(teamName));
 
         teamIndexPage = teamIndexPage.clickAddTeamButton()
@@ -59,9 +65,7 @@ public class TeamIT extends BaseDataTest {
         String emptyInputError = "Name is required.";
 
         // Test empty input
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .clickAddTeamButton()
+        teamIndexPage.clickAddTeamButton()
                 .setTeamName(emptyString)
                 .addNewTeamInvalid();
 
@@ -79,9 +83,7 @@ public class TeamIT extends BaseDataTest {
     public void createTeamNameLengthValidation() {
         String newOrgName = getRandomString(70);
 
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .clickAddTeamButton()
+        teamIndexPage.clickAddTeamButton()
                 .setTeamName(newOrgName);
 
         assertTrue("Header width was incorrect with long team name",
@@ -90,11 +92,8 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void editTeamTest(){
-        String newTeamName = getName();
+        String newTeamName = createTeam();
         String editedTeamName = getName();
-        DatabaseUtils.createTeam(newTeamName);
-
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(newTeamName)
@@ -110,16 +109,11 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void editTeamWithApplicationTest() {
-        String originalTeamName = getName();
+        String originalTeamName = createTeam();
         String editedTeamName = getName();
-        String appName = getName();
+        String appName = createApplication(teamName);
 
-        DatabaseUtils.createTeam(originalTeamName);
-        DatabaseUtils.createApplication(originalTeamName, appName);
-
-        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(originalTeamName)
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(originalTeamName)
                 .clickEditOrganizationLink()
                 .setNameInput(editedTeamName)
                 .clickModalSubmit();
@@ -130,17 +124,14 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void editTeamValidation(){
-        String orgName = getName();
-        String orgNameDuplicateTest = getName();
+        String orgName = createTeam();
+        String orgNameDuplicateTest = createTeam();
 
         String emptyInputError = "Name is required.";
 
         String longInput = getRandomString(119);
 
-        DatabaseUtils.createTeam(orgName);
-        DatabaseUtils.createTeam(orgNameDuplicateTest);
-
-        TeamDetailPage teamDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
+        TeamDetailPage teamDetailPage = teamIndexPage
                 .clickViewTeamLink(orgName);
 
         // Test edit with no changes
@@ -171,8 +162,6 @@ public class TeamIT extends BaseDataTest {
     public void viewMoreTest() {
         String teamName = createTeam();
 
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
-
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
@@ -180,14 +169,9 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void teamGraphsTest() {
-        initializeTeamAndApp();
-        String file = ScanContents.getScanFilePath();
+        initializeTeamAndAppWithIBMScan();
 
-        DatabaseUtils.uploadScan(teamName, appName, file);
-
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName);
+        teamIndexPage.expandTeamRowByName(teamName);
 
         assertTrue("The graph of the expanded team was not shown properly.",
                 teamIndexPage.isGraphDisplayed(teamName));
@@ -196,8 +180,6 @@ public class TeamIT extends BaseDataTest {
     @Test
     public void expandAndCollapseSingleTeamTest() {
         initializeTeamAndApp();
-
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
 
         teamIndexPage.expandTeamRowByName(teamName);
 
@@ -215,8 +197,6 @@ public class TeamIT extends BaseDataTest {
         String appName1 = createApplication(teamName1);
         String appName2 = createApplication(teamName2);
 
-        TeamIndexPage teamIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink();
-
         teamIndexPage = teamIndexPage.expandAllTeams();
         assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1,appName1));
         assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2,appName2));
@@ -231,9 +211,7 @@ public class TeamIT extends BaseDataTest {
     public void deleteTeamTest() {
         String teamName = createTeam();
 
-        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .clickViewTeamLink(teamName);
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         TeamIndexPage teamIndexPage = teamDetailPage.clickDeleteButton();
 
