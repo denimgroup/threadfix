@@ -84,7 +84,7 @@ public class UserEntIT extends BaseIT {
 
 	@Test
 	public void createLdapUser(){
-		String userName = getRandomString(8);
+		String userName = getName();
         String password = getRandomString(15);
 
 		UserIndexPage userIndexPage = loginPage.defaultLogin()
@@ -120,7 +120,7 @@ public class UserEntIT extends BaseIT {
 
 	@Test
 	public void editUserRoleTest(){
-		String userName = getRandomString(8);
+		String userName = getName();
 
 		UserIndexPage userIndexPage = loginPage.defaultLogin()
 				.clickManageUsersLink()
