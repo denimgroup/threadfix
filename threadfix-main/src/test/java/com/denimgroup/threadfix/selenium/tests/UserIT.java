@@ -56,6 +56,7 @@ public class UserIT extends BaseIT {
                     .setPassword(password)
                     .setConfirmPassword(password)
                     .clickAddNewUserBtn();
+
         assertTrue("User name was not present in the table.", userIndexPage.isUserNamePresent(userName));
 		assertTrue("Success message was not displayed.", userIndexPage.isSuccessDisplayed(userName));
 	}

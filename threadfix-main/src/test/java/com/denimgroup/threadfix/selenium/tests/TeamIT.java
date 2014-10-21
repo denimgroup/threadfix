@@ -109,11 +109,11 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void editTeamWithApplicationTest() {
-        String originalTeamName = createTeam();
+        String teamName = createTeam();
         String editedTeamName = getName();
         String appName = createApplication(teamName);
 
-        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(originalTeamName)
+        TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName)
                 .clickEditOrganizationLink()
                 .setNameInput(editedTeamName)
                 .clickModalSubmit();
@@ -126,6 +126,8 @@ public class TeamIT extends BaseDataTest {
     public void editTeamValidation(){
         String orgName = createTeam();
         String orgNameDuplicateTest = createTeam();
+
+        teamIndexPage.refreshPage();
 
         String emptyInputError = "Name is required.";
 
@@ -162,6 +164,8 @@ public class TeamIT extends BaseDataTest {
     public void viewMoreTest() {
         String teamName = createTeam();
 
+        teamIndexPage.refreshPage();
+
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
         assertTrue("View Team link did not work properly.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
@@ -170,6 +174,8 @@ public class TeamIT extends BaseDataTest {
     @Test
     public void teamGraphsTest() {
         initializeTeamAndAppWithIBMScan();
+
+        teamIndexPage.refreshPage();
 
         teamIndexPage.expandTeamRowByName(teamName);
 
@@ -180,6 +186,8 @@ public class TeamIT extends BaseDataTest {
     @Test
     public void expandAndCollapseSingleTeamTest() {
         initializeTeamAndApp();
+
+        teamIndexPage.refreshPage();
 
         teamIndexPage.expandTeamRowByName(teamName);
 
@@ -197,6 +205,8 @@ public class TeamIT extends BaseDataTest {
         String appName1 = createApplication(teamName1);
         String appName2 = createApplication(teamName2);
 
+        teamIndexPage.refreshPage();
+
         teamIndexPage = teamIndexPage.expandAllTeams();
         assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName1,appName1));
         assertTrue("Applications are not collapsed", teamIndexPage.isTeamsExpanded(teamName2,appName2));
@@ -210,6 +220,8 @@ public class TeamIT extends BaseDataTest {
     @Test
     public void deleteTeamTest() {
         String teamName = createTeam();
+
+        teamIndexPage.refreshPage();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName);
 
