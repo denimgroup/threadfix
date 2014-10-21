@@ -144,6 +144,7 @@ public class UserIndexPage extends BasePage {
         waitForElement(driver.findElementById("editUserModal"+userName));
 		driver.findElementById("editUserModal"+userName).click();
 		sleep(1000);
+        waitForElement(driver.findElementById("myModalLabel"));
 		return new UserIndexPage(driver);
 	}
 	

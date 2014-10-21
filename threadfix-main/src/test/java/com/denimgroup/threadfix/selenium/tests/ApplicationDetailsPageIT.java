@@ -13,14 +13,26 @@ import static org.junit.Assert.assertTrue;
 public class ApplicationDetailsPageIT extends BaseDataTest {
 
     private  DashboardPage dashboardPage;
+    private ApplicationDetailPage applicationDetailPage;
     /*
     *   This test class is designed to test top layer functionality
     *   of Application Detail Page
     */
 
+    public void initialize() {
+        initializeTeamAndAppWithIBMScan();
+
+        dashboardPage = loginPage.defaultLogin();
+
+        applicationDetailPage = dashboardPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+    }
+
     @Test
     public void testHeaderNavigation() {
         initialize();
+        dashboardPage = applicationDetailPage.clickDashboardLink();
         assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
         assertTrue("Application link is not present", dashboardPage.isApplicationMenuLinkPresent());
@@ -40,6 +52,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     @Test
     public void testTabUserNavigation() {
         initialize();
+        dashboardPage = applicationDetailPage.clickDashboardLink();
         sleep(3000);
         dashboardPage.clickUserTab();
         sleep(2000);
@@ -53,6 +66,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     @Test
     public void testConfigTabNavigation() {
         initialize();
+        dashboardPage = applicationDetailPage.clickDashboardLink();
         dashboardPage.clickConfigTab();
         assertTrue("Configuration tab is not dropped down", dashboardPage.isConfigDropDownPresent());
         assertTrue("API link is not present", dashboardPage.isApiKeysLinkPresent());
@@ -75,7 +89,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testBreadCrumbNavigation() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         sleep(1000);
         assertTrue("BreadCrumb Application is not present", applicationDetailPage.isBreadcrumbPresent());
         assertTrue("BreadCrumb Application is not present", applicationDetailPage.isApplicationBreadcrumbPresent());
@@ -83,20 +97,20 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testApplicationName() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         assertTrue("Application Name is not present", applicationDetailPage.isApplicationNamePresent());
     }
 
     @Test
     public void testActionButton() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         assertTrue("Action Button is not present", applicationDetailPage.isActionButtonPresent());
         assertTrue("Action Button is not Clickable", applicationDetailPage.isActionButtonClickable());
     }
 
     @Test
     public void testActionButtonContents() {
-        ApplicationDetailPage applicationDetailPage =  initialize();
+        initialize();
         sleep(3000);
         applicationDetailPage.clickActionButton();
         sleep(1000);
@@ -112,7 +126,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testActionButtonEditDeleteButton() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         sleep(2000);
         applicationDetailPage.clickEditDeleteBtn();
         applicationDetailPage.clickSourceInfo();
@@ -134,7 +148,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testActionButtonEditVulnFilter() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         sleep(3000);
         applicationDetailPage.clickActionButton();
         sleep(2000);
@@ -145,7 +159,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testActionButtonAddManualFinding() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         applicationDetailPage.clickActionButton()
                 .clickManualFindingButton();
         assertTrue("Dynamic Radio button is not present.", applicationDetailPage.isDynamicRadioPresent());
@@ -166,22 +180,9 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
     @Test
     public void testApplicationTypeDefect() {
-        ApplicationDetailPage applicationDetailPage = initialize();
+        initialize();
         applicationDetailPage.clickEditDeleteBtn();
         assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
-    }
-
-    public ApplicationDetailPage initialize() {
-        initializeTeamAndAppWithIBMScan();
-
-        dashboardPage = loginPage.defaultLogin();
-
-        dashboardPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .waitForElement(driver.findElement(By.id("nameText")));
-
-        return new ApplicationDetailPage(driver);
     }
 
     @Test
