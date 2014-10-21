@@ -204,7 +204,7 @@ public class UserIndexPage extends BasePage {
 	}
 	
 	public boolean isRoleSelected(String oldName,String role){
-		sleep(1000);
+		sleep(3000);
 		if(oldName == null){
 			return new Select(driver.findElementById("roleSelect")).getFirstSelectedOption().getText().contains(role);
 		}else{
@@ -213,6 +213,7 @@ public class UserIndexPage extends BasePage {
 
 	}
     public boolean isGlobalAccessSelected() {
+        sleep(3000);
         return driver.findElementById("hasGlobalGroupAccessCheckbox").isSelected();
     }
 

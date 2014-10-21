@@ -42,7 +42,7 @@ public class ScanDetailIT extends BaseDataTest {
     public void initialize() {
         initializeTeamAndAppWithIBMScan();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+        applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
@@ -109,14 +109,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void testApplicationLinkNav() {
-        applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .uploadScanButton(teamName, appName)
-                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName)
-                .clickApplicationName(appName);
-
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
+    public void testApplicationLinkNav() {ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
 
         ApplicationDetailPage applicationDetailPage2 = scanDetailPage.clickApplicationNav();
 
@@ -126,14 +119,7 @@ public class ScanDetailIT extends BaseDataTest {
     }
 
     @Test
-    public void testTeamLinkNav() {
-        applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .uploadScanButton(teamName, appName)
-                .uploadNewScan(ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"), teamName, appName)
-                .clickApplicationName(appName);
-
-        ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
+    public void testTeamLinkNav() {ScanDetailPage scanDetailPage = applicationDetailPage.clickScansTab().clickViewScan();
 
         TeamDetailPage teamDetailPage = scanDetailPage.clickTeamNav();
 

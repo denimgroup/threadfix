@@ -24,8 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
-import org.apache.commons.lang.StringUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
