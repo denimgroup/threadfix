@@ -65,7 +65,7 @@ public class RemoteProviderApplication extends AuditableEntity  {
 		this.lastImportTime = lastImportTime;
 	}
 
-	@Column(length = NATIVE_ID_LENGTH, name = "nativeName")
+	@Column(length = NATIVE_ID_LENGTH, name = "name")
     @JsonView(AllViews.TableRow.class)
 	public String getNativeId() {
 		return nativeId;
