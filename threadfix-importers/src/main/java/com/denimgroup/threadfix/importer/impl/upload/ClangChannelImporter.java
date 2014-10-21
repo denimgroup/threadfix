@@ -3,12 +3,8 @@ package com.denimgroup.threadfix.importer.impl.upload;
 import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.DataFlowElement;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -44,7 +40,6 @@ public class ClangChannelImporter extends AbstractChannelImporter {
     private static final String BUGPATH = "<!-- BUGFILE ";
     private static final String BUGLINE = "<!-- BUGLINE ";
     private static final String BUGCOLUMN = "<!-- BUGCOLUMN ";
-//    private static final String BUGPATHLENGTH = "<!-- BUGPATHLENGTH ";
 
     private static final String BUGFILE_START = "<tr><td class=\"rowname\">File:</td><td>";
     private static final String BUGFILE_END = "</td></tr>";
@@ -56,24 +51,27 @@ public class ClangChannelImporter extends AbstractChannelImporter {
     @Override
     @Transactional
     public Scan parseInput() {
-//        inputStream // has zip file contents
-
-        Scan scan = new Scan();
-
 	    zipFile = unpackZipStream();
+
+	    Scan scan = new Scan();
+
+	    scan.setImportTime( getImportTime() );
+
         Map<String, InputStream> reports = getReportFiles();
         List<Finding> findings = new ArrayList<>(reports.size());
 
 	    for (Map.Entry<String, InputStream> entry : reports.entrySet()) {
-		    findings.add(parseInput(entry.getKey(), entry.getValue()));
+		    findings.add(parseInputStream(entry.getKey(), entry.getValue()));
 	    }
 
         scan.setFindings(findings);
+
 	    deleteZipFile();
-        return scan;
+
+	    return scan;
     }
 
-	private Finding parseInput(String reportFileName, InputStream in) {
+	private Finding parseInputStream(String reportFileName, InputStream in) {
 
         List<DataFlowElement> dataFlowElements = new ArrayList<>();
         Map<FindingKey, String> findingKeyStringMap = new HashMap<>();
@@ -85,7 +83,6 @@ public class ClangChannelImporter extends AbstractChannelImporter {
         String bugFile = null;
         String bugLine = null;
         String bugColumn = null;
-//        String bugPathLength = null;
 
         String line, nonHtmlLine;
         String previousSourceLine = "";
@@ -110,26 +107,18 @@ public class ClangChannelImporter extends AbstractChannelImporter {
                     bugLine = StringUtils.substringBetween(line, BUGLINE, BUGTAIL);
                 else if (line.startsWith(BUGCOLUMN) && line.endsWith(BUGTAIL))
                     bugColumn = StringUtils.substringBetween(line, BUGCOLUMN, BUGTAIL);
-//                else if (line.startsWith(BUGPATHLENGTH) && line.endsWith(BUGTAIL))
-//                    bugPathLength = StringUtils.substringBetween(line, BUGPATHLENGTH, BUGTAIL);
                 else if (line.startsWith(BUGFILE_START) && line.endsWith(BUGFILE_END))
                     bugFile = StringUtils.substringBetween(line, BUGFILE_START, BUGFILE_END);
 
                 if (line.matches(REGEX_LINE_SOURCE)) {
-                    nonHtmlLine = line.replaceAll("<[^>]*>", "");                               // strip html
+	                nonHtmlLine = line.replaceAll("<span class='expansion'>([^<]*)</span>", "");
+                    nonHtmlLine = nonHtmlLine.replaceAll("<[^>]*>", "");                               // strip html
                     previousLineNumber = StringUtils.substringBetween(line, "id=\"LN", "\">");
                     previousSourceLine = nonHtmlLine.replaceFirst(previousLineNumber, "");
                 } else if (line.matches(REGEX_LINE_COMMENT)) {
 	                DataFlowElement element = new DataFlowElement();
-//                    numOfError++;
-//                    nonHtmlLine = line.replaceAll("<[^>]*>", "");                               // strip html
-//                    nonHtmlLine = nonHtmlLine.replace("&#x2190;","").replace("&#x2192;","");    // strip arrows
-//                    nonHtmlLine = nonHtmlLine.replaceAll("&amp;","&")                           // unescape &, <, >
-//                            .replaceAll("&gt",">").replaceAll("&lt","<");
-//                    nonHtmlLine.replaceFirst(String.valueOf(numOfError),"");
                     element.setLineText(previousSourceLine);
                     element.setSourceFileName(bugFile);
-	                element.setSequence(++dataFlowSeq);
                     if (line.contains("id=\"EndPath\"")) {
                         element.setLineNumber(Integer.parseInt(bugLine));
                         element.setColumnNumber(Integer.parseInt(bugColumn));
@@ -137,7 +126,18 @@ public class ClangChannelImporter extends AbstractChannelImporter {
                     } else {
                         element.setLineNumber(Integer.parseInt(previousLineNumber));
                     }
-                    dataFlowElements.add(element);
+	                String prevElemLineText = null;
+	                if (dataFlowSeq > 0) {
+		                prevElemLineText = dataFlowElements.get(dataFlowSeq -1).getLineText();
+	                }
+					if (prevElemLineText != null && element.getLineText().equals(prevElemLineText)) {
+						// concurrent line comments, overwrite last element
+						element.setSequence(dataFlowSeq);
+						dataFlowElements.set(dataFlowSeq-1, element);
+					} else {
+						element.setSequence(++dataFlowSeq);
+						dataFlowElements.add(element);
+					}
                 }
                 line = reader.readLine();
             }
@@ -197,7 +197,22 @@ public class ClangChannelImporter extends AbstractChannelImporter {
         return m;
     }
 
-    @Nonnull
+    private Calendar getImportTime() {
+	    InputStream indexHtml = getFileFromZip("index.html");
+	    if (indexHtml == null)
+		    return null;
+	    try {
+		    String s = IOUtils.toString(indexHtml);
+		    String sDate = StringUtils.substringBetween(s,"<tr><th>Date:</th><td>","</td></tr>");
+		    //  Mon Aug  4 13:18:00 2014
+		    return DateUtils.getCalendarFromString("EEE MMM dd HH:mm:ss yyyy", sDate);
+	    } catch (IOException e) {
+		    log.error("IOException reading inputstream index.html in getTestDate(indexHtml)",e);
+		    return null;
+	    }
+    }
+
+	@Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
 	    try {
@@ -218,10 +233,9 @@ public class ClangChannelImporter extends AbstractChannelImporter {
 
 		    testDate = getTestDate(indexHtml);
 
-		    if (testDate == null)
-			    return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN);
-		    else
-			    return new ScanCheckResultBean(ScanImportStatus.SUCCESSFUL_SCAN, testDate);
+		    ScanImportStatus scanImportStatus = checkTestDate();
+
+		    return new ScanCheckResultBean(scanImportStatus, testDate);
 
 	    } finally {
 		    deleteZipFile();
