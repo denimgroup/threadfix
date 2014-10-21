@@ -54,25 +54,25 @@ public class WhiteHatScanParsingTests {
     @Autowired
     ThreadFixBridge bridge = null;
 
-    private RemoteProviderApplication getApplication(String key, String nativeId, RemoteProviderType type) {
+    private RemoteProviderApplication getApplication(String key, String nativeName, RemoteProviderType type) {
         RemoteProviderApplication application = new RemoteProviderApplication();
-        application.setNativeId(nativeId);
+        application.setNativeName(nativeName);
         application.setRemoteProviderType(type);
         return application;
     }
 
-    public static void test(String nativeId, boolean matchNumbers, String[]... expectedFindings) {
+    public static void test(String nativeName, boolean matchNumbers, String[]... expectedFindings) {
         // @Transactional requires Spring AOP, which requires a Spring Bean. Lots of steps to get DB access
-        SpringConfiguration.getContext().getBean(WhiteHatScanParsingTests.class).testInner(nativeId, matchNumbers, expectedFindings);
+        SpringConfiguration.getContext().getBean(WhiteHatScanParsingTests.class).testInner(nativeName, matchNumbers, expectedFindings);
     }
 
     /**
      * This method will compare the String[][] of expected findings to the parsed scan contents.
-     * @param nativeId The native ID of the whitehat application
+     * @param nativeName The native ID of the whitehat application
      * @param expectedFindings an array of expected findings in { url, vuln type name } format
      */
     @Transactional(readOnly = false)
-    public void testInner(String nativeId, boolean matchNumbers, String[][] expectedFindings) {
+    public void testInner(String nativeName, boolean matchNumbers, String[][] expectedFindings) {
 
         assertTrue("Spring config is wrong. Factory was null", factory != null);
         assertTrue("Spring config is wrong. Bridge was null", bridge != null);
@@ -88,7 +88,7 @@ public class WhiteHatScanParsingTests {
 
         provider.setRemoteProviderType(type);
 
-        List<Scan> scans = provider.getScans(getApplication(WhiteHatMockHttpUtils.GOOD_API_KEY, nativeId, type));
+        List<Scan> scans = provider.getScans(getApplication(WhiteHatMockHttpUtils.GOOD_API_KEY, nativeName, type));
 
         assertFalse("Scans were null.", scans == null);
         assertFalse("Scans were empty.", scans.isEmpty());
