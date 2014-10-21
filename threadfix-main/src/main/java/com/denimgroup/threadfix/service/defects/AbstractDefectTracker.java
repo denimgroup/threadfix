@@ -233,25 +233,34 @@ public abstract class AbstractDefectTracker {
 		return stringBuilder.toString();
 	}
 
+    private boolean hasChannelName(Finding finding) {
+        return finding != null &&
+                finding.getScan() != null &&
+                finding.getScan().getApplicationChannel() != null &&
+                finding.getScan().getApplicationChannel().getChannelType() != null &&
+                finding.getScan().getApplicationChannel().getChannelType().getName() != null;
+    }
+
     protected void addUrlReferences(List<Finding> findings, StringBuilder builder) {
-        builder.append("\n\nVuln URLs:\n");
+        builder.append("\n");
 
         for(Finding finding: findings){
-            String urlReference = finding.getUrlReference();
-            if(urlReference != null){
-                builder.append(urlReference)
-                        .append("\n");
+            if (hasChannelName(finding)) {
+                String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
+                String urlReference = finding.getUrlReference();
+                if (urlReference != null) {
+                    builder.append("\n")
+                            .append(channelName)
+                            .append(" Vuln URL: ")
+                            .append(urlReference);
+                }
             }
         }
     }
 	
 	protected void addNativeIds(List<Finding> findings, StringBuilder builder) {
         for (Finding finding : findings) {
-            if (finding != null &&
-                    finding.getScan() != null &&
-                    finding.getScan().getApplicationChannel() != null &&
-                    finding.getScan().getApplicationChannel().getChannelType() != null &&
-                    finding.getScan().getApplicationChannel().getChannelType().getName() != null) {
+            if (hasChannelName(finding)) {
                 String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
                 if (ChannelType.NATIVE_ID_SCANNERS.contains(channelName)) {
                     builder.append("\n")
