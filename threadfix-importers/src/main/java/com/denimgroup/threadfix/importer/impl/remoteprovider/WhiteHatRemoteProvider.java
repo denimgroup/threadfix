@@ -267,7 +267,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			List<RemoteProviderApplication> apps = list();
 			for (String label : map.keySet()) {
 				RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-	    		remoteProviderApplication.setNativeId(label);
+	    		remoteProviderApplication.setNativeName(label);
 	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
 	    		apps.add(remoteProviderApplication);
 			}

@@ -56,7 +56,7 @@ public class WhiteHatScanParsingTests {
 
     private RemoteProviderApplication getApplication(String key, String nativeName, RemoteProviderType type) {
         RemoteProviderApplication application = new RemoteProviderApplication();
-        application.setNativeId(nativeName);
+        application.setNativeName(nativeName);
         application.setRemoteProviderType(type);
         return application;
     }

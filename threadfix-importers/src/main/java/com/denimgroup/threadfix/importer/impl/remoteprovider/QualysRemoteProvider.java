@@ -416,7 +416,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		String tempNameString = getBuilderText();
 
 	    		RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-	    		remoteProviderApplication.setNativeId(tempNameString);
+	    		remoteProviderApplication.setNativeName(tempNameString);
 	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
 	    		list.add(remoteProviderApplication);
 

@@ -60,7 +60,7 @@ public class VeracodeScanParsingTests {
 
     private RemoteProviderApplication getApplication(RemoteProviderType type, String nativeName) {
         RemoteProviderApplication application = new RemoteProviderApplication();
-        application.setNativeId(nativeName);
+        application.setNativeName(nativeName);
         application.setRemoteProviderType(type);
         application.setApplicationChannel(new ApplicationChannel());
         return application;
