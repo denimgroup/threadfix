@@ -35,8 +35,6 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class ScanDetailIT extends BaseDataTest {
-    private String teamName;
-    private String appName;
 
     private ApplicationDetailPage applicationDetailPage;
 
