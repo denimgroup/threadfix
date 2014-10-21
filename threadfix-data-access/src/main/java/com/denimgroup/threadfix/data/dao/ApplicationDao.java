@@ -77,4 +77,8 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
 
     long getUnmappedFindingCount(Integer appId);
 
+    List<Application> getTopAppsFromList(List<Integer> applicationIdList);
+
+    List<Object[]> getPointInTime(List<Integer> applicationIdList);
+
 }

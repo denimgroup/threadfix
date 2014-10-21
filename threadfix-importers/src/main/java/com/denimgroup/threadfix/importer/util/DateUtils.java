@@ -24,8 +24,9 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -79,7 +80,7 @@ public class DateUtils {
      * This method allows caching of the SimpleDateFormat to avoid unnecessary object creation
      * @return resulting Calendar, or null if parsing fails for any reason
      */
-    public static Calendar getCalendarFromString(SimpleDateFormat format, String dateString) {
+    public static Calendar getCalendarFromString(@Nonnull SimpleDateFormat format, String dateString) {
         log.debug("Attempting to parse a calendar from " + dateString + " using " + format.toPattern());
 
         Calendar result = null;

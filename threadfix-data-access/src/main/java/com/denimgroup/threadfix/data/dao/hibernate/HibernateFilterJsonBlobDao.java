@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.FilterJsonBlobDao;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,5 +42,21 @@ public class HibernateFilterJsonBlobDao extends AbstractNamedObjectDao<FilterJso
     @Override
     public Class<FilterJsonBlob> getClassReference() {
         return FilterJsonBlob.class;
+    }
+
+    @Override
+    public int updateDefaultTrendingFilter() {
+        return getSession().createQuery("update FilterJsonBlob set defaultTrending = false" +
+                " where defaultTrending = true")
+                .executeUpdate();
+    }
+
+    @Override
+    public FilterJsonBlob getDefaultFilter() {
+        return (FilterJsonBlob)sessionFactory.getCurrentSession()
+                .createCriteria(FilterJsonBlob.class)
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("defaultTrending", true))
+                .uniqueResult();
     }
 }

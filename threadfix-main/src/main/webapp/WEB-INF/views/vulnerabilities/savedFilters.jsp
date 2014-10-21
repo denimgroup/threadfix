@@ -1,5 +1,4 @@
 <!-- Saved Filters section -->
-
 <div class="saved-filters-tab" ng-show="savedFilters && savedFilters.length > 0">
 
     <div id="deleteFilterSuccessMessage" ng-show="deleteFilterSuccessMessage" class="alert alert-success">

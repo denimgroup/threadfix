@@ -42,4 +42,9 @@ public class FilterJsonBlobServiceImpl extends AbstractNamedObjectService<Filter
     public GenericNamedObjectDao<FilterJsonBlob> getDao() {
         return filterJsonBlobDao;
     }
+
+    @Override
+    public int updateDefaultTrendingFilter() {
+        return filterJsonBlobDao.updateDefaultTrendingFilter();
+    }
 }

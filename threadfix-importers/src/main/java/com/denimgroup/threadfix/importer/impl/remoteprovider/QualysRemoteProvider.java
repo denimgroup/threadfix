@@ -256,6 +256,8 @@ public class QualysRemoteProvider extends RemoteProvider {
                 inputStream = response.getInputStream();
 
                 parseQualysSAXInput();
+
+                LOG.info("Retrieved additional scanner details for QID: " + qids);
             } else {
                 LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeId() + ". Got response code " + response.getStatus());
             }
@@ -264,8 +266,6 @@ public class QualysRemoteProvider extends RemoteProvider {
 
             resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
             scanList.add(resultScan);
-
-            LOG.info("Retrieved additional scanner details for QID: " + qids);
 		}
 		
 		return scanList;

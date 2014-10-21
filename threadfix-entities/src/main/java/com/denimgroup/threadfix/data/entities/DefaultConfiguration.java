@@ -52,6 +52,8 @@ public class DefaultConfiguration extends BaseEntity {
 	
 	private Calendar lastScannerMappingsUpdate;
 
+    private Integer sessionTimeout = null;
+
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
         config.setDefaultRoleId(1);
@@ -60,6 +62,16 @@ public class DefaultConfiguration extends BaseEntity {
         config.setHasAddedScheduledDefectTrackerUpdates(false);
         return config;
     }
+
+    @Column
+    public Integer getSessionTimeout() {
+        return sessionTimeout;
+    }
+
+    public void setSessionTimeout(Integer sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
+
 
     @Column
     public Boolean getHasAddedScheduledImports() {

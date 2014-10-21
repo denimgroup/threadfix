@@ -122,11 +122,20 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
     @Override
 	public Set<Endpoint> findAllMatches(@Nonnull EndpointQuery query) {
 		Set<Endpoint> resultingSet = new HashSet<>();
-		
+
         List<Set<Endpoint>> resultSets = list();
-        
+        boolean assignedInitial = false;
+
         boolean useStatic = query.getStaticPath() != null &&
         		query.getInformationSourceType() == InformationSourceType.STATIC;
+
+        List<CodePoint> codePoints = query.getCodePoints();
+        if (codePoints != null && !codePoints.isEmpty()) {
+            resultingSet = getFromCodePoints(codePoints);
+            if (!resultingSet.isEmpty()) {
+                assignedInitial = true;
+            }
+        }
 
         if (!useStatic && query.getDynamicPath() != null) {
             String cleaned = pathCleaner.cleanDynamicPath(query.getDynamicPath());
@@ -143,8 +152,6 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         }
 
         if (resultSets.size() > 0) {
-            boolean assignedInitial = false;
-
             for (Set<Endpoint> endpoints : resultSets) {
                 if (endpoints != null) {
 
@@ -166,13 +173,15 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
             // this code will just ignore the parameter lookup for now.
             // TODO deal with false positives in a more effective manner
             if (useStatic || !parameterEndpoints.isEmpty()) {
-                resultingSet.retainAll(parameterEndpoints);
-            }
-        }
 
-        List<CodePoint> codePoints = query.getCodePoints();
-        if (resultingSet.isEmpty() && codePoints != null) {
-            resultingSet = getFromCodePoints(codePoints);
+                // doing blanket retainAll can lead to false negatives in some cases
+                for (Endpoint parameterEndpoint : parameterEndpoints) {
+                    if (resultingSet.contains(parameterEndpoint)) {
+                        resultingSet.retainAll(parameterEndpoints);
+                        break;
+                    }
+                }
+            }
         }
 
 		return resultingSet;
@@ -189,8 +198,10 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
                 String sourceFileName = codePoint.getSourceFileName();
 
                 if (sourceFileName != null) {
+                    String cleanedSourceFileName = pathCleaner.cleanStaticPath(sourceFileName);
                     for (String key : staticMap.keySet()) {
-                        if (key.endsWith(sourceFileName)) {
+                        if (key.endsWith(sourceFileName) ||
+                                (cleanedSourceFileName != null && key.endsWith(cleanedSourceFileName))) {
                             sourceFileKey = key;
                         }
                     }
@@ -218,17 +229,17 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
         if (key == null)
             return new HashSet<>();
 
-        String keyFS = key.replace("\\","/");
+        String keyForwardSlash = key.replace("\\","/");
 
         for (Map.Entry<String,Set<Endpoint>> entry: map.entrySet()) {
             String keyEntry = entry.getKey();
-            String keyEntryFS = keyEntry.replace("\\","/");
+            String keyEntryForwardSlash = keyEntry.replace("\\","/");
 
             if ((keyEntry.isEmpty() && !key.isEmpty())
                     || (key.isEmpty() && !keyEntry.isEmpty()))
                 return new HashSet<>();
 
-            if (keyEntryFS.endsWith(keyFS) || keyFS.endsWith(keyEntryFS))
+            if (keyEntryForwardSlash.endsWith(keyForwardSlash) || keyForwardSlash.endsWith(keyEntryForwardSlash))
                 return new HashSet<>(entry.getValue());
         }
 

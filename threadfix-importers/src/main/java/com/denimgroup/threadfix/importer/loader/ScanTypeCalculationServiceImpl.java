@@ -93,6 +93,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         } else if (originalName.endsWith("json")){
             //probably brakeman
             returnString = ScannerType.BRAKEMAN.getFullName();
+        } else if (originalName.endsWith(".html")) {
+            //probably clang
+            returnString = ScannerType.CLANG.getFullName();
         } else {
             returnString = figureOutXml(fileName);
         }

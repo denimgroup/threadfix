@@ -4,10 +4,12 @@
 	<title>Dashboard</title>
 	<cbs:cachebustscript src="/scripts/dashboard-controller.js"/>
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
+	<cbs:cachebustscript src="/scripts/vuln-summary-modal-controller.js"/>
 </head>
 
 <body class="dashboard">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
 
 	<h2>Dashboard</h2>
 	
@@ -32,11 +34,11 @@
 		</security:authorize>
 	</c:if>
 
+    <div ng-controller="DashboardController" class="container-fluid">
+
     <c:if test="${ not empty teams }">
         <security:authorize ifAnyGranted="ROLE_READ_ACCESS, ROLE_CAN_GENERATE_REPORTS">
 
-
-        <div ng-controller="DashboardController" class="container-fluid">
 		<%@include file="/WEB-INF/views/applications/reports.jspf"%>
 
 	    <div class="row-fluid">
@@ -162,6 +164,5 @@
 	</div>
 
         </security:authorize>
-
     </c:if>
 </body>

@@ -24,26 +24,38 @@
 
 package com.denimgroup.threadfix.framework;
 
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.data.enums.FrameworkType;
+import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
+import org.junit.Test;
 
 import java.io.File;
 
-import com.denimgroup.threadfix.data.enums.FrameworkType;
-import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
+import static org.junit.Assert.assertTrue;
 
 public class FrameworkCalculatorTests {
 	
 	@Test
 	public void bodgeitTest() {
 		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.BODGEIT_SOURCE_LOCATION));
-		assertTrue("Didn't find JSP.", type == FrameworkType.JSP);
+		assertTrue("Didn't find JSP, found " + type + ".", type == FrameworkType.JSP);
 	}
 	
 	@Test
 	public void wavsepTest() {
 		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.WAVSEP_SOURCE_LOCATION));
-		assertTrue("Didn't find JSP.", type == FrameworkType.JSP);
+		assertTrue("Didn't find JSP, found " + type + ".", type == FrameworkType.JSP);
 	}
+
+	@Test
+	public void basicDotNetTest() {
+		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.DOT_NET_SAMPLE));
+		assertTrue("Didn't find DOT_NET_MVC, found " + type + ".", type == FrameworkType.DOT_NET_MVC);
+	}
+
+	@Test
+	public void basicWebFormsTest() {
+		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.WEB_FORMS_SAMPLE));
+		assertTrue("Didn't find DOT_NET_WEB_FORMS, found " + type + ".", type == FrameworkType.DOT_NET_WEB_FORMS);
+	}
+
 }

@@ -18,6 +18,7 @@
 	<cbs:cachebustscript src="/scripts/bulk-operations-controller.js"/>
 	<cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
@@ -86,4 +87,5 @@
     <%@ include file="/WEB-INF/views/applications/forms/addScanQueueForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/viewApplicationForm.jsp" %>
     <%@ include file="../scans/createMappingModal.jsp" %>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
 </body>

@@ -55,6 +55,8 @@ public final class ScannerDatabaseNames {
         SENTINEL_DB_NAME = "WhiteHat Sentinel",
         VERACODE_DB_NAME = "Veracode",
         SSVL_DB_NAME = "SSVL",
-        MANUAL_DB_NAME = "Manual";
+        MANUAL_DB_NAME = "Manual",
+        PMD_DB_NAME = "PMD",
+        CLANG_DB_NAME = "Clang";
 
 }

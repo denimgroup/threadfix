@@ -45,6 +45,21 @@ public class JsonUtils {
         return null;
     }
 
+    @Nullable
+    public static Long getLongProperty(String jsonString, String propertyName) {
+        JSONObject object = getJSONObject(jsonString);
+
+        if (object != null) {
+            try {
+                return object.getLong(propertyName);
+            } catch (JSONException e) {
+                LOG.warn("JSON Parsing failed.", e);
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Convenience method to wrap the exception catching.
      * TODO validate to save generating an exception on invalid input

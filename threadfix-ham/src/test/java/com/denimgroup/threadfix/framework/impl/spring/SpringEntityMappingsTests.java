@@ -23,14 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import static org.junit.Assert.assertTrue;
+import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
+import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.TestConstants;
+import static org.junit.Assert.assertTrue;
 
 
 public class SpringEntityMappingsTests {
@@ -40,7 +41,7 @@ public class SpringEntityMappingsTests {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		SpringEntityMappings mappings = new SpringEntityMappings(file);
 		
-		BeanFieldSet ownerFields = mappings.getPossibleParametersForModelType("Owner");
+		ModelFieldSet ownerFields = mappings.getPossibleParametersForModelType("Owner");
 		
 		assertTrue(ownerFields != null);
 		assertTrue(ownerFields.getField("lastName").getType().equals("String"));
@@ -48,7 +49,6 @@ public class SpringEntityMappingsTests {
 		assertTrue(ownerFields.getField("address").getType().equals("String"));
 		assertTrue(ownerFields.getField("city").getType().equals("String"));
 		assertTrue(ownerFields.getField("telephone").getType().equals("String"));
-		assertTrue(ownerFields.getField("pet").getType().equals("Pet"));
 		assertTrue(ownerFields.getField("id").getType().equals("Integer"));
 	}
 	
@@ -57,13 +57,12 @@ public class SpringEntityMappingsTests {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		SpringEntityMappings mappings = new SpringEntityMappings(file);
 		
-		BeanFieldSet petFields = mappings.getPossibleParametersForModelType("Pet");
+		ModelFieldSet petFields = mappings.getPossibleParametersForModelType("Pet");
 		
 		assertTrue(petFields.getField("id").getType().equals("Integer"));
 		assertTrue(petFields.getField("name").getType().equals("String"));
 		assertTrue(petFields.getField("birthDate").getType().equals("DateTime"));
-		assertTrue(petFields.getField("owner").getType().equals("Owner"));
-		assertTrue(petFields.getField("type").getType().equals("PetType"));
+		assertTrue(petFields.getField("type.name").getType().equals("String"));
 		
 	}
 	
@@ -72,7 +71,7 @@ public class SpringEntityMappingsTests {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		SpringEntityMappings mappings = new SpringEntityMappings(file);
 		
-		BeanFieldSet vetFields = mappings.getPossibleParametersForModelType("Vet");
+		ModelFieldSet vetFields = mappings.getPossibleParametersForModelType("Vet");
 		
 		assertTrue(vetFields.getField("lastName").getType().equals("String"));
 		assertTrue(vetFields.getField("firstName").getType().equals("String"));
@@ -86,7 +85,7 @@ public class SpringEntityMappingsTests {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		SpringEntityMappings mappings = new SpringEntityMappings(file);
 		
-		BeanFieldSet typeFields = mappings.getPossibleParametersForModelType("PetType");
+		ModelFieldSet typeFields = mappings.getPossibleParametersForModelType("PetType");
 		
 		assertTrue(typeFields.getField("name").getType().equals("String"));
 	}
@@ -96,19 +95,19 @@ public class SpringEntityMappingsTests {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
 		SpringEntityMappings mappings = new SpringEntityMappings(file);
 		
-		List<BeanField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
-				new BeanField("Pet", "pet"));
-		assertTrue(fields.get(0).equals(new BeanField("Pet", "pet")));
-		assertTrue(fields.get(1).equals(new BeanField("Owner", "owner")));
-		assertTrue(fields.get(2).equals(new BeanField("String", "lastName")));
+		List<ModelField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
+				new ModelField("Pet", "pet"));
+		assertTrue(fields.get(0).equals(new ModelField("Pet", "pet")));
+		assertTrue(fields.get(1).equals(new ModelField("Owner", "owner")));
+		assertTrue(fields.get(2).equals(new ModelField("String", "lastName")));
 		
 		fields = mappings.getFieldsFromMethodCalls(".getOwner()",
-				new BeanField("Pet", "pet"));
-		assertTrue(fields.get(1).equals(new BeanField("Owner", "owner")));
+				new ModelField("Pet", "pet"));
+		assertTrue(fields.get(1).equals(new ModelField("Owner", "owner")));
 		
 		fields = mappings.getFieldsFromMethodCalls(".getLastName()",
-				new BeanField("Owner", "owner"));
-		assertTrue(fields.get(1).equals(new BeanField("String", "lastName")));
+				new ModelField("Owner", "owner"));
+		assertTrue(fields.get(1).equals(new ModelField("String", "lastName")));
 	}
 	
 	@Test
@@ -116,19 +115,19 @@ public class SpringEntityMappingsTests {
 		File file = new File(TestConstants.FAKE_FILE);
 		SpringEntityMappings mappings = new SpringEntityMappings(file);
 		
-		List<BeanField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
-				new BeanField("Pet", "pet"));
-		assertTrue(fields.get(0).equals(new BeanField("Pet", "pet")));
+		List<ModelField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
+				new ModelField("Pet", "pet"));
+		assertTrue(fields.get(0).equals(new ModelField("Pet", "pet")));
 		assertTrue(fields.size() == 1);
 		
 		fields = mappings.getFieldsFromMethodCalls(".getOwner()",
-				new BeanField("Pet", "pet"));
+				new ModelField("Pet", "pet"));
 		assertTrue(fields.size() == 1);
-		assertTrue(fields.get(0).equals(new BeanField("Pet", "pet")));
+		assertTrue(fields.get(0).equals(new ModelField("Pet", "pet")));
 		
 		fields = mappings.getFieldsFromMethodCalls(".getLastName()",
-				new BeanField("Owner", "owner"));
+				new ModelField("Owner", "owner"));
 		assertTrue(fields.size() == 1);
-		assertTrue(fields.get(0).equals(new BeanField("Owner", "owner")));
+		assertTrue(fields.get(0).equals(new ModelField("Owner", "owner")));
 	}
 }
