@@ -189,7 +189,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			log.info("Removing remote applications from the application " + application.getName() +
 					 " (id=" + application.getId() + ")");
 			for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
-				log.info("Removing remote application " + app.getNativeId() +
+				log.info("Removing remote application " + app.getNativeName() +
 						 " from application " + app.getApplication().getName());
 				app.setApplication(null);
 				app.setLastImportTime(null);

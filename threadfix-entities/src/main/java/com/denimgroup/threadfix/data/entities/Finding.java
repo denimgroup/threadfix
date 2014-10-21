@@ -47,6 +47,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public static final int SCANNER_RECOMMENDATION_LENGTH = 1048575;
 	public static final int RAW_FINDING_LENGTH = 1048575;
 	public static final int NATIVE_ID_LENGTH = 50;
+	public static final int URL_REFERENCE_LENGTH = 256;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
 
     // TODO figure out the appropriate place for this
@@ -84,6 +85,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@Size(max = RAW_FINDING_LENGTH, message = "{errors.maxlength} "
 			+ RAW_FINDING_LENGTH + ".")
 	private String rawFinding;
+
+    @Size(max = URL_REFERENCE_LENGTH, message = "{errors.maxlength} "
+            + URL_REFERENCE_LENGTH + ".")
+    private String urlReference = null;
 
 	private ChannelVulnerability channelVulnerability;
 
@@ -363,6 +368,15 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setScannerRecommendation(String scannerRecommendation) {
 		this.scannerRecommendation = scannerRecommendation;
+	}
+
+	@Column(length = URL_REFERENCE_LENGTH)
+	public String getUrlReference() {
+		return urlReference;
+	}
+
+	public void setUrlReference(String urlReference) {
+		this.urlReference = urlReference;
 	}
 
 	@Column(length = RAW_FINDING_LENGTH)

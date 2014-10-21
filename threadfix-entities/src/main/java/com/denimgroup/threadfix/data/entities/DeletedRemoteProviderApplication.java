@@ -38,6 +38,7 @@ public class DeletedRemoteProviderApplication extends AuditableEntity {
 		if (a != null) {
 			setLastImportTime(a.getLastImportTime());
 			setNativeId(a.getNativeId());
+			setNativeName(a.getNativeName());
 			setId(a.getId());
 
 			if (a.getApplicationChannel() != null) {
@@ -54,10 +55,15 @@ public class DeletedRemoteProviderApplication extends AuditableEntity {
 		}
 	}
 	
-	public static final int NATIVE_ID_LENGTH = 1024;
+	public static final int NATIVE_ID_LENGTH = 32;
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String nativeId;
+
+	public static final int NATIVE_NAME_LENGTH = 1024;
+
+	@Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
+	private String nativeName;
 	
 	private Integer remoteProviderTypeId, applicationId, applicationChannelId;
 	
@@ -72,13 +78,23 @@ public class DeletedRemoteProviderApplication extends AuditableEntity {
 		this.lastImportTime = lastImportTime;
 	}
 	
-	@Column(length = NATIVE_ID_LENGTH)
+	@Column(length = NATIVE_ID_LENGTH, name = "nativeName")
 	public String getNativeId() {
 		return nativeId;
 	}
 
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
+	}
+
+
+	@Column(length = NATIVE_NAME_LENGTH, name = "nativeId")
+	public String getNativeName() {
+		return nativeName;
+	}
+
+	public void setNativeName(String nativeName) {
+		this.nativeName = nativeName;
 	}
 
 	@Column

@@ -64,7 +64,7 @@ public class WhiteHatApplicationParsingTests {
         for (String string : appIds) {
             boolean valid = false;
             for (RemoteProviderApplication application : applications) {
-                if (string.equals(application.getNativeId())) {
+                if (string.equals(application.getNativeName())) {
                     valid = true;
                 }
             }

@@ -91,9 +91,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 						ResponseCode success = importScansForApplication(application);
 						
 						if (!success.equals(ResponseCode.SUCCESS)) {
-							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
+							log.info("No scans were imported for Remote Provider application " + application.getNativeName());
 						} else {
-							log.info("Remote Provider import was successful for application " + application.getNativeId());
+							log.info("Remote Provider import was successful for application " + application.getNativeName());
 						}
 					}
 				}

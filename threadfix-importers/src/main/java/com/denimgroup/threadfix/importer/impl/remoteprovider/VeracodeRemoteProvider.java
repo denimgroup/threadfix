@@ -79,7 +79,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
             return null;
         }
 
-		String appName = remoteProviderApplication.getNativeId();
+		String appName = remoteProviderApplication.getNativeName();
 		VeracodeApplicationIdMapParser parser = new VeracodeApplicationIdMapParser();
 		
 		List<String> buildIds = null;
@@ -188,7 +188,7 @@ public class VeracodeRemoteProvider extends RemoteProvider {
         public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
             if (qName.equals("application")) {
                 RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-                remoteProviderApplication.setNativeId(atts.getValue("app_name"));
+                remoteProviderApplication.setNativeName(atts.getValue("app_name"));
                 remoteProviderApplication.setRemoteProviderType(remoteProviderType);
                 remoteProviderApplications.add(remoteProviderApplication);
             }

@@ -56,21 +56,21 @@ public class QualysScanParsingTests {
             "http://testasp.vulnweb.com/", "http://testphp.vulnweb.com/"
     };
 
-    private RemoteProviderApplication getApplication(RemoteProviderType type, String nativeId) {
+    private RemoteProviderApplication getApplication(RemoteProviderType type, String nativeName) {
         RemoteProviderApplication application = new RemoteProviderApplication();
-        application.setNativeId(nativeId);
+        application.setNativeName(nativeName);
         application.setRemoteProviderType(type);
         application.setApplicationChannel(new ApplicationChannel());
         return application;
     }
 
-    public static void test(String nativeId) {
+    public static void test(String nativeName) {
         // @Transactional requires Spring AOP, which requires a Spring Bean. Lots of steps to get DB access
-        SpringConfiguration.getContext().getBean(QualysScanParsingTests.class).testInner(nativeId);
+        SpringConfiguration.getContext().getBean(QualysScanParsingTests.class).testInner(nativeName);
     }
 
     @Transactional(readOnly = false)
-    public void testInner(String nativeId) {
+    public void testInner(String nativeName) {
 
         assertTrue("Spring config is wrong. Factory was null", factory != null);
         assertTrue("Spring config is wrong. Bridge was null", bridge != null);
@@ -87,9 +87,9 @@ public class QualysScanParsingTests {
         provider.setRemoteProviderType(type);
         provider.setChannel(new ApplicationChannel());
 
-        List<Scan> scans = provider.getScans(getApplication(type, nativeId));
+        List<Scan> scans = provider.getScans(getApplication(type, nativeName));
 
-        assertFalse("Scans were null for application " + nativeId + ".", scans == null);
+        assertFalse("Scans were null for application " + nativeName + ".", scans == null);
         assertFalse("Scans were empty.", scans.isEmpty());
 
         // TODO make more assertions about the contents here
