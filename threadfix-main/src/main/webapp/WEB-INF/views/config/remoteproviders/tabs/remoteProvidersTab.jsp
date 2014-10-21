@@ -132,7 +132,7 @@
 
             <tr ng-repeat="app in provider.displayApps">
                 <td id="provider{{ provider.id }}appid{{ app.id }}">
-                    {{ app.nativeId }}
+                    {{ app.nativeName }}
                 </td>
                 <td id="provider{{ provider.id }}tfteamname{{ $index }}">
                     <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">

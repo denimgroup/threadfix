@@ -50,7 +50,7 @@ public enum ScannerType {
     APPSCAN_SOURCE("appscansource", "IBM Rational AppScan Source Edition", APPSCAN_SOURCE_DB_NAME),
     APPSCAN_ENTERPRISE("appscanenterprise", "IBM Rational AppScan Enterprise", APPSCAN_ENTERPRISE_DB_NAME),
     QUALYSGUARD_WAS("qualysguard", "QualysGuard WAS", QUALYSGUARD_WAS_DB_NAME),
-    SENTINEL("whitehat", "WhiteHat Sentinel", SENTINEL_DB_NAME),
+    SENTINEL("whitehat", "WhiteHat Sentinel", SENTINEL_DB_NAME, "https://source.whitehatsec.com/site_vuln_detail.html"),
     SSVL("ssvl", "SSVL", SSVL_DB_NAME),
     VERACODE("veracode", "Veracode", VERACODE_DB_NAME),
     MANUAL("manual", "Manual", MANUAL_DB_NAME);
@@ -58,6 +58,7 @@ public enum ScannerType {
 	private String fullName;
 	private String shortName;
 	private String dbName;
+	private String baseUrl;
 
 	public String getFullName() { 
 		return this.fullName; 
@@ -70,11 +71,23 @@ public enum ScannerType {
     public String getDbName() {
         return this.dbName;
     }
+    
+    public String getBaseUrl() {
+        return this.baseUrl;
+    }
+
+    private ScannerType(String shortName, String fullName, String dbName, String baseUrl) {
+        this.shortName = shortName;
+        this.fullName = fullName;
+        this.dbName = dbName;
+        this.baseUrl = baseUrl;
+    }
 
     private ScannerType(String shortName, String fullName, String dbName) {
         this.shortName = shortName;
         this.fullName = fullName;
         this.dbName = dbName;
+        this.baseUrl = "";
     }
 	
 	public static ScannerType getScannerType(String keyword) {

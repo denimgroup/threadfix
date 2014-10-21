@@ -259,7 +259,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
                 LOG.info("Retrieved additional scanner details for QID: " + qids);
             } else {
-                LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeId() + ". Got response code " + response.getStatus());
+                LOG.warn("Unable to retrieve scan details for the application " + remoteProviderApplication.getNativeName() + ". Got response code " + response.getStatus());
             }
 
             LOG.info("The Qualys scan import for scan ID " + scanId + " was successful.");
@@ -311,7 +311,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	}
 	
 	public List<String> mostRecentScanForApp(RemoteProviderApplication app) {
-		if (app == null || app.getNativeId() == null) {
+		if (app == null || app.getNativeName() == null) {
 			return null;
 		}
 
@@ -322,7 +322,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 		if (response.isValid()) {
             stream = response.getInputStream();
         } else {
-            LOG.warn("Unable to retrieve scans for the application " + app.getNativeId() + ". Got response code " + response.getStatus());
+            LOG.warn("Unable to retrieve scans for the application " + app.getNativeName() + ". Got response code " + response.getStatus());
             return null;
         }
 
@@ -333,7 +333,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 
 		// This should be replaced with the filtered code
 		for (Map<String, String> map : parser.list) {
-			if (app.getNativeId().equals(map.get("webAppName")) && map.get("date") != null) {
+			if (app.getNativeName().equals(map.get("webAppName")) && map.get("date") != null) {
                 Calendar mapDate = DateUtils.getCalendarFromUTCString(map.get("date"));
 				if (mapDate != null && (app.getLastImportTime() == null ||
                         mapDate.after(app.getLastImportTime()))) {
@@ -342,7 +342,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 			}
 		}
 		
-		LOG.info("Returning scan IDs " + scanIds + " for application " + app.getNativeId());
+		LOG.info("Returning scan IDs " + scanIds + " for application " + app.getNativeName());
 
 		return scanIds;
 	}
@@ -416,7 +416,7 @@ public class QualysRemoteProvider extends RemoteProvider {
 	    		String tempNameString = getBuilderText();
 
 	    		RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-	    		remoteProviderApplication.setNativeId(tempNameString);
+	    		remoteProviderApplication.setNativeName(tempNameString);
 	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
 	    		list.add(remoteProviderApplication);
 
