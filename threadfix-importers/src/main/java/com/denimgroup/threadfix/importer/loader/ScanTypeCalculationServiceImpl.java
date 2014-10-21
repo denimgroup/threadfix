@@ -161,7 +161,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 				result = ScannerType.FORTIFY.getDbName();
 			} else if (ZipFileUtils.getZipEntry("issue_index.js", zipFile) != null){
 				result = ScannerType.SKIPFISH.getFullName();
-			}
+			} else if (zipFile.getEntry("index.html") != null
+                    && zipFile.getEntry("scanview.css") != null) {
+                result = ScannerType.CLANG.getFullName();
+            }
 		} catch (FileNotFoundException e) {
 			log.warn("Unable to find zip file.", e);
 		} catch (IOException e) {
