@@ -36,11 +36,12 @@ public class AnalyticsPage extends BasePage {
 	}
 
     /* _____________________ Action Methods _____________________ */
+    //Deprecated
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
         return new AnalyticsPage(driver);
     }
-
+    //Deprecated
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
         return new AnalyticsPage(driver);
@@ -57,8 +58,15 @@ public class AnalyticsPage extends BasePage {
         return  new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage clickSnapshotD3Tab() {
+        driver.findElementByLinkText("SnapshotD3").click();
+        sleep(2000);
+        return  new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage toggleAllFilter() {
-        driver.findElementById("toggleAllButton").click();
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        filterDiv.findElement(By.id("toggleAllButton")).click();
         sleep(2000);
         return new AnalyticsPage(driver);
     }
@@ -69,14 +77,16 @@ public class AnalyticsPage extends BasePage {
     }
 
     public AnalyticsPage expandTeamApplicationFilter() {
-        driver.findElementById("expandTeamAndApplicationFilters").click();
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
         sleep(2000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage addTeamFilter(String teamName) {
-        WebElement teamNameSpace = driver.findElementById("teamNameTypeahead");
-        driver.findElementById("showTeamInput").click();
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        WebElement teamNameSpace = filterDiv.findElement(By.id("teamNameTypeahead"));
+        filterDiv.findElement(By.id("showTeamInput")).click();
         teamNameSpace.clear();
         teamNameSpace.sendKeys(teamName);
         teamNameSpace.sendKeys(Keys.ENTER);
@@ -85,8 +95,9 @@ public class AnalyticsPage extends BasePage {
     }
 
     public AnalyticsPage addApplicationFilter(String appName) {
-        WebElement applicationNameSpace = driver.findElementById("applicationNameTypeahead");
-        driver.findElementById("showApplicationInput").click();
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeahead"));
+        filterDiv.findElement(By.id("showApplicationInput")).click();
         applicationNameSpace.clear();
         applicationNameSpace.sendKeys(appName);
         applicationNameSpace.sendKeys(Keys.ENTER);
@@ -104,7 +115,7 @@ public class AnalyticsPage extends BasePage {
     /* _____________________ Get Methods _____________________ */
 
     public int getFilterDivHeight() {
-        return driver.findElement(By.className("filter-controls")).getSize().getHeight();
+        return driver.findElement(By.id("vulnSearchFilterDiv")).getSize().getHeight();
     }
 
     /* _____________________ Helper Methods _____________________ */

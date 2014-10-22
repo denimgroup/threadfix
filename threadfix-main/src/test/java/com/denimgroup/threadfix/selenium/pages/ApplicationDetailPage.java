@@ -499,7 +499,8 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreVulnerabilityTrending(){
         driver.findElementById("leftViewMore").click();
-        waitForElement(driver.findElementById("reportSelect"));
+        sleep(2000);
+       // waitForElement(driver.findElement(By.xpath("//*[@id='reportSelect'][2]")));
         return new AnalyticsPage(driver);
     }
 

@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -185,6 +186,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
     }
 
+    //TODO fix when unique ID is added for reportSelect
+    @Ignore
     @Test
     public void testViewMoreNavigation() {
         initializeTeamAndApp();
