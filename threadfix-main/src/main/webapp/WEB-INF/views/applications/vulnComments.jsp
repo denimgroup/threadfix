@@ -3,7 +3,9 @@
 		<tr>
 			<th>User</th>
 			<th>Date</th>
-			<th class="last">Comment</th>
+			<th>Comment</th>
+            <th>Tag</th>
+            <th ng-if="<c:out value='${canModifyVulnerabilities}'/> && canUpdateVulnComment" class="last"></th>
 		<tr>
 	</thead>
 	<tbody>
@@ -17,6 +19,24 @@
                 <div class="vuln-comment-word-wrap">
                     {{ comment.comment }}
                 </div>
+            </td>
+            <td class="left-align" >
+                <multi-select
+                        input-model="comment.tagsList"
+                        output-model="comment.tags"
+                        button-label="name"
+                        item-label="name"
+                        tick-property="selected"
+                        on-item-click="changeComment(vulnerability, comment)"
+                        max-labels="1"
+                        >
+                </multi-select>
+            </td>
+            <td ng-if="<c:out value='${canModifyVulnerabilities}'/> && canUpdateVulnComment">
+                <a class="btn btn-primary"
+                   ng-class="{ disabled : !comment.commentChanged }"
+                   ng-click="updateVulnComment(vulnerability, comment)"
+                   >Update</a>
             </td>
         </tr>
 	</tbody>

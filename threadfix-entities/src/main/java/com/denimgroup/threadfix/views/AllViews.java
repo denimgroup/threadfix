@@ -28,6 +28,8 @@ public class AllViews {
 
     public static interface RestViewScanStatistic {}
 
+    public static interface RestViewTag {}
+
     // this is just for one property really
     public static interface VulnSearchApplications {}
 

@@ -21,26 +21,21 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.service;
 
-package com.denimgroup.threadfix.data.dao;
+import com.denimgroup.threadfix.data.entities.*;
 
 import java.util.List;
-import java.util.Set;
 
-import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
+/**
+ * @author stran
+ * 
+ */
+public interface TagService {
+    List<Tag> loadAll();
+    Tag loadTag(String name);
+    Tag loadTag(int tagId);
+    void storeTag(Tag tag);
+    void deleteById(int tagId);
 
-public interface VulnerabilityCommentDao{
-
-	List<VulnerabilityComment> retrieveAllForVuln(Integer vulnId);
-	
-	void saveOrUpdate(VulnerabilityComment comment);
-
-	void delete(VulnerabilityComment comment);
-
-	List<VulnerabilityComment> retrieveRecent(int number);
-
-	List<VulnerabilityComment> retrieveRecent(int number, Set<Integer> authenticatedAppIds, Set<Integer> teamIds);
-
-    VulnerabilityComment retrieveById(int id);
-	
 }

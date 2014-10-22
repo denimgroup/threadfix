@@ -11,6 +11,7 @@
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/main.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/jquery-ui.css"/>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/d3.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/angular-multi-select.css"/>
 
         <cbs:cachebustscript src="/scripts/angular-file-upload-shim.min.js"/>
 
@@ -28,6 +29,7 @@
         <cbs:cachebustscript src="/scripts/wrapper-controller.js"/>
         <cbs:cachebustscript src="/scripts/init-controller.js"/>
         <cbs:cachebustscript src="/scripts/directives.js"/>
+        <cbs:cachebustscript src="/scripts/angular-multi-select.js"/>
 
         <cbs:cachebustscript src="/scripts/report/directives/d3-dashboards.js"/>
         <cbs:cachebustscript src="/scripts/report/directives/d3-trending-scans.js"/>

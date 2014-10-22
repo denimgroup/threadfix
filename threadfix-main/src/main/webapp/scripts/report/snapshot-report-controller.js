@@ -62,6 +62,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
                     $scope.resetFilters();
                     $scope.allVulns = data.object.vulnList;
+                    $scope.tags = data.object.tags;
 
                     if ($scope.allVulns) {
 
@@ -342,7 +343,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
                 if (data.success) {
                     element.vulns = data.object.vulns;
-                    element.vulns.forEach(updateChannelNames)
+                    element.vulns.forEach(updateChannelNames);
+                    element.vulns.forEach(function(vuln){
+                        vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
+                    });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
                     element.numberToShow = numToShow;

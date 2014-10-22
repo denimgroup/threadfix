@@ -12,6 +12,7 @@
     <cbs:cachebustscript src="/scripts/report-page-controller.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
     <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="reports">

@@ -8,6 +8,7 @@
 	<cbs:cachebustscript src="/scripts/application-page-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/defect-submission-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+    <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>

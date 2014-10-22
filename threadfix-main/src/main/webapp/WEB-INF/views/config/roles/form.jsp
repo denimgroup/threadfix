@@ -164,16 +164,26 @@
             </td>
         </tr>
         <tr>
+            <td>Manage Tags</td>
+            <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTags"
+                                                                      id="canManageTagsTrue" name="canManageTags" value="true" /></td>
+            <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTags"
+                                                                      id="canManageTagsFalse" name="canManageTags" value="false" /></td>
+            <td
+                    style="border: 0 solid black; background-color: white; padding-left: 5px">
+                <form:errors id="canManageTagsError" name="canManageTags"
+                             cssClass="errors" />
+            </td>
+        </tr>
+        <tr>
             <td>Manage Teams</td>
             <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTeams"
                                                                       id="canManageTeamsTrue" name="canManageTeams" value="true" /></td>
             <td class="inputValue" style="text-align: center;"><input type="radio"  ng-model="object.canManageTeams"
                                                                       id="canManageTeamsFalse" name="canManageTeams" value="false" /></td>
-            <td
-                    style="border: 0 solid black; background-color: white; padding-left: 5px">
-                            <form:errors id="canManageTeamsError" name="canManageTeams"
-                                cssClass="errors" />
-                        </td>
+            <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+                <form:errors id="canManageTeamsError" name="canManageTeams" cssClass="errors" />
+            </td>
         </tr>
         <tr>
             <td>Manage Users</td>

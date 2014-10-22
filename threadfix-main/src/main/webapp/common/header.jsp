@@ -96,6 +96,11 @@
                                 <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
                             </li>
                         </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
+                            <li class="normalLinks">
+                                <a id="tagsLink" href="<spring:url value="/configuration/tags" htmlEscape="true"/>">Tags</a>
+                            </li>
+                        </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 						    <li class="normalLinks">
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>

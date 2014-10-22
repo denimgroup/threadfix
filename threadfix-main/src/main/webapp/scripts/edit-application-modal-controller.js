@@ -6,7 +6,7 @@ myAppModule.value('deleteUrl', null);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder) {
+myAppModule.controller('EditApplicationModalController', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder, tagsUrl) {
 
     $scope.object = object;
 
@@ -22,23 +22,46 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
             timeoutService.timeout();
             $scope.loading = true;
 
-            threadFixModalService.post(url, $scope.object).
+            // updating application tags list
+            var jsonStr = JSON.stringify($scope.object.tags);
+            var map = {
+                jsonStr: jsonStr
+            };
+            threadFixModalService.post(tagsUrl, map).
                 success(function(data, status, headers, config) {
-                    timeoutService.cancel();
                     $scope.loading = false;
 
                     if (data.success) {
-                        $modalInstance.close(data.object);
+                        threadFixModalService.post(url, $scope.object).
+                            success(function(data, status, headers, config) {
+                                timeoutService.cancel();
+                                $scope.loading = false;
+
+                                if (data.success) {
+                                    $modalInstance.close(data.object);
+                                } else {
+                                    if (data.errorMap) {
+                                        for (var index in data.errorMap) {
+                                            if (data.errorMap.hasOwnProperty(index)) {
+                                                $scope.object[index + "_error"] = data.errorMap[index];
+                                            }
+                                        }
+                                    } else {
+                                        $scope.error = "Failure. Message was : " + data.message;
+                                    }
+                                }
+                            }).
+                            error(function(data, status, headers, config) {
+                                timeoutService.cancel();
+                                $scope.loading = false;
+                                $scope.error = "Failure. HTTP status was " + status;
+                            });
                     } else {
                         if (data.errorMap) {
                             for (var index in data.errorMap) {
                                 if (data.errorMap.hasOwnProperty(index)) {
 
-                                    if (data.errorMap[index] === 'errors.self.certificate') {
-                                        $scope.showKeytoolLink = true;
-                                    } else {
-                                        $scope.object[index + "_error"] = data.errorMap[index];
-                                    }
+                                    $scope.object[index + "_error"] = data.errorMap[index];
                                 }
                             }
                         } else {
@@ -47,7 +70,6 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
                     }
                 }).
                 error(function(data, status, headers, config) {
-                    timeoutService.cancel();
                     $scope.loading = false;
                     $scope.error = "Failure. HTTP status was " + status;
                 });
@@ -76,25 +98,5 @@ myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $roo
                 });
         }
     };
-
-    $scope.loadTagsList = function() {
-        $http.get(tfEncoder.encode('/configuration/tags/map')).
-            success(function(data) {
-                if (data.success) {
-                    if (data.object.tags.length > 0) {
-                        $scope.tags = data.object.tags;
-                        $scope.tags.sort(function(a,b) {
-                            return a.name.localeCompare(b.name);
-                        });
-                    } else $scope.tags = [];
-                } else {
-                    $log.warn("Failure. Message was : " + data.message);
-                }
-            }).
-            error(function(data, status, headers, config) {
-                $scope.tags = [];
-                $log.warn("Failed to retrieve waf list. HTTP status was " + status);
-            });
-    }
 
 });
