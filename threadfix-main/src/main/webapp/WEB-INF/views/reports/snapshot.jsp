@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <div class="filter-controls">
+    <div id="snapshotFilterDiv" class="filter-controls">
         <h3>Filters</h3>
 
         <tabset ng-init="showFilterSections = true">

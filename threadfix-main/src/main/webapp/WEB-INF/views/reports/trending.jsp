@@ -11,7 +11,7 @@
 
     </div>
 
-    <div class="filter-controls">
+    <div id="trendingFilterDiv" class="filter-controls">
         <h3>Filters</h3>
 
         <tabset ng-init="showFilterSections = true">
