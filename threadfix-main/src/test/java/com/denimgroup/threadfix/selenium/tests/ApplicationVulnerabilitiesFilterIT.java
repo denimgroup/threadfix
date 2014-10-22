@@ -85,6 +85,9 @@ public class ApplicationVulnerabilitiesFilterIT extends BaseDataTest{
 
         applicationDetailPage = applicationDetailPage.toggleClear();
 
+        //TODO Remove refresh after issue #663 is fixed in 2.2milestone2
+        applicationDetailPage.refreshPage();
+
         assertTrue("Critical vulnerabilities should be shown.",
                 applicationDetailPage.isSeverityLevelShown("Critical"));
         assertTrue("Medium vulnerabilities should be shown.",

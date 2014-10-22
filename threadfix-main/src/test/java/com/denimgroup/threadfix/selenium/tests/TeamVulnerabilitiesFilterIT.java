@@ -82,6 +82,11 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickClearFilters();
 
+        //TODO remove refresh when issue #663 is fixed in 2.2milestone2
+        teamDetailPage.refreshPage();
+
+        teamDetailPage.clickVulnerabilitiesTab("45");
+
         assertTrue("Critical vulnerabilities should be shown.",
                 teamDetailPage.isSeverityLevelShown("Critical"));
         assertTrue("Medium vulnerabilities should be shown.",
@@ -206,6 +211,11 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
 
         teamDetailPage.clickClearFilters();
 
+        //TODO remove refresh when issue #663 is fixed in 2.2milestone2
+        teamDetailPage.refreshPage();
+
+        teamDetailPage.clickVulnerabilitiesTab("71");
+
         assertTrue("Only 16 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "16"));
         assertTrue("Only 15 medium vulnerabilities should be shown.",
@@ -215,7 +225,7 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 15 info vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Info", "15"));
 
-        teamDetailPage.addApplicationFilter(appName2);
+        teamDetailPage.expandTeamApplication().addApplicationFilter(appName2);
 
         assertTrue("Only 6 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "6"));
