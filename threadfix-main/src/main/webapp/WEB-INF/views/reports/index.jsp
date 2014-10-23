@@ -28,10 +28,10 @@
         <h2>Analytics</h2>
 
         <tabset>
-            <tab heading="TrendingD3" ng-click="loadTrending()" active="trendingActive">
+            <tab heading="Trending" ng-click="loadTrending()" active="trendingActive">
                 <%@ include file="trending.jsp" %>
             </tab>
-            <tab heading="SnapshotD3" ng-click="loadSnapshot()" active="snapshotActive">
+            <tab heading="Snapshot" ng-click="loadSnapshot()" active="snapshotActive">
                 <%@ include file="snapshot.jsp" %>
             </tab>
             <%--<tab heading="ComparisonD3" ng-click="loadComparison()" active="comparisonActive">--%>
