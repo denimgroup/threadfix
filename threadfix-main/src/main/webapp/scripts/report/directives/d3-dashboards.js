@@ -29,7 +29,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0])
+                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'verticalBarTip')
                     .html(function(d) {
                         return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
@@ -134,7 +134,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0])
+                var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'horizontalBarTip')
                     .html(function(d) {
                         return "<strong>" + d.tip + ":</strong> <span style='color:red'>" + (d.y1 - d.y0) + "</span>";
                     });
