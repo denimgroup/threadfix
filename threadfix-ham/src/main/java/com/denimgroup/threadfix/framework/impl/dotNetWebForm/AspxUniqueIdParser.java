@@ -29,8 +29,10 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.Map;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
@@ -39,14 +41,25 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
 public class AspxUniqueIdParser implements EventBasedTokenizer {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(AspxUniqueIdParser.class);
-    private final AspxControlStack aspxControlStack;
+    private final AspxControlStack aspxControlStack = new AspxControlStack();;
     Set<String> parameters = set();
+    Set<String> tagsThatGenerateParameters = set(
+            "asp:BoundField", "asp:TextBox"
+    ); // TODO figure this out better
 
-    int count = 1;
+    private Map<String, AscxFile> allControlMap;
 
     @Nonnull
     public static AspxUniqueIdParser parse(@Nonnull File file) {
-        AspxUniqueIdParser parser = new AspxUniqueIdParser(file);
+        return runTokenizer(file, new AspxUniqueIdParser(file));
+    }
+
+    @Nonnull
+    public static AspxUniqueIdParser parse(@Nonnull File file, Map<String, AscxFile> controlMap) {
+        return runTokenizer(file, new AspxUniqueIdParser(file, controlMap));
+    }
+
+    private static AspxUniqueIdParser runTokenizer(File file, AspxUniqueIdParser parser) {
         EventBasedTokenizerRunner.run(file, false, parser);
         return parser;
     }
@@ -58,8 +71,15 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
         assert file.isFile() : "File was not a valid file.";
         LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
         name = file.getName();
+    }
 
-        aspxControlStack = new AspxControlStack();
+
+    AspxUniqueIdParser(File file, Map<String, AscxFile> controlMap) {
+        assert file.exists() : "File didn't exist.";
+        assert file.isFile() : "File was not a valid file.";
+        LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
+        name = file.getName();
+        this.allControlMap = controlMap;
     }
 
     @Override
@@ -67,12 +87,161 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
         return true;
     }
 
-    boolean endTag = false, print = false, needsId = false, gotIdAttribute = false;
-    String lastName = null, lastId;
-
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
+        processHead(type, stringValue);
+        processBody(type, stringValue);
+        processCustomTags(type, stringValue);
+        printDebug(type, lineNumber, stringValue);
+    }
 
+    private enum State {
+        START, LEFT_ANGLE, PERCENT, ARROBA, REGISTER, SRC, TAG_PREFIX, TAG_NAME
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //                       Parse <@% Require statements
+    //////////////////////////////////////////////////////////////////////////////////////////
+    State currentState = State.START;
+    String currentSrc, currentTagPrefix, currentTagName;
+    Map<String, AscxFile> includedControlMap = newMap();
+
+    private void processHead(int type, String stringValue) {
+        switch (currentState) {
+            case START:
+                currentState = type == '<' ? State.LEFT_ANGLE : State.START;
+                break;
+            case LEFT_ANGLE:
+                currentState = type == '%' ? State.PERCENT : State.START;
+                break;
+            case PERCENT:
+                currentState = type == '@' ? State.ARROBA : State.START;
+                break;
+            case ARROBA:
+                currentState = "Register".equals(stringValue) ? State.REGISTER : State.START;
+                break;
+            case REGISTER:
+                if (type == '>') {
+                    saveControlData();
+                    currentState = State.START;
+                } else if ("Src".equals(stringValue)) {
+                    currentState = State.SRC;
+                } else if ("TagPrefix".equals(stringValue)) {
+                    currentState = State.TAG_PREFIX;
+                } else if ("TagName".equals(stringValue)) {
+                    currentState = State.TAG_NAME;
+                }
+                break;
+
+            // TODO refactor this?? a little WET
+            case SRC:
+                if (type == '"') {
+                    currentSrc = stringValue;
+                }
+                if (type != '=') {
+                    currentState = State.REGISTER;
+                }
+                break;
+            case TAG_PREFIX:
+                if (type == '"') {
+                    currentTagPrefix = stringValue;
+                }
+                if (type != '=') {
+                    currentState = State.REGISTER;
+                }
+                break;
+            case TAG_NAME:
+                if (type == '"') {
+                    currentTagName = stringValue;
+                }
+                if (type != '=') {
+                    currentState = State.REGISTER;
+                }
+                break;
+        }
+    }
+
+    private void saveControlData() {
+        if (allControlMap != null) {
+            AscxFile ascxFile = allControlMap.get(currentTagName);
+            if (ascxFile != null) {
+                includedControlMap.put(currentTagPrefix + ":" + currentTagName, ascxFile);
+            } else {
+                LOG.error("Unable to load control " + currentTagName + ".");
+            }
+        } else {
+            LOG.error("Got data for a control but wasn't passed any control definitions.");
+        }
+
+        currentTagName = null;
+        currentSrc = null;
+        currentTagPrefix = null;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //                           Parse custom controls
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    enum ControlState {
+        START, LEFT_ANGLE, NAME, ID
+    }
+    ControlState currentControlState = ControlState.START;
+    AscxFile currentFile = null;
+    String currentControlTagName = null;
+
+    private void processCustomTags(int type, String stringValue) {
+        switch (currentControlState) {
+            case START:
+                currentControlState = type == '<' ? ControlState.LEFT_ANGLE : ControlState.START;
+                break;
+            case LEFT_ANGLE:
+                if (includedControlMap.containsKey(stringValue)) {
+                    currentFile = includedControlMap.get(stringValue);
+                    currentControlTagName = stringValue;
+                    LOG.info("Got control from file " + currentFile.name);
+                    currentControlState = ControlState.NAME;
+                } else {
+                    currentControlState = ControlState.START;
+                }
+                break;
+            case NAME:
+                // -3 is the "token" code
+                if (type == -3 && "ID".equals(stringValue)) {
+                    currentControlState = ControlState.ID;
+                }
+                break;
+            case ID:
+                if (type == '"' && stringValue != null) {
+                    addTag(currentControlTagName, stringValue);
+                    LOG.info("Expanding control with ID " + stringValue);
+
+                    boolean tempGotId = gotIdAttribute;
+                    gotIdAttribute = false; // this prevents a bug during expansion
+                    currentFile.expandIn(this);
+                    gotIdAttribute = tempGotId; // this replaces to the value it had before expansion
+
+                    removeTag(currentControlTagName, stringValue);
+
+                } else if (type != '=') {
+                    currentControlState = ControlState.START;
+                }
+                break;
+        }
+
+        if (type == '>') {
+            currentControlTagName = null;
+            currentFile = null;
+            currentControlState = ControlState.START;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //                             Debug information
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    boolean print = false;
+
+    private void printDebug(int type, int lineNumber, String stringValue) {
         if (print) {
             if (type < 0) {
                 System.out.println("type = " + type);
@@ -82,8 +251,19 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
             System.out.println("line = " + lineNumber);
             System.out.println("stringValue = " + stringValue);
             System.out.println();
+            System.out.println("currentState = " + currentState);
         }
+    }
 
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //                                 Main processing
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    boolean endTag = false, needsId = false, gotIdAttribute = false, hasAdded = false;
+    String lastName = null, lastId;
+    int lastToken = -10; // out of range for even the token codes in StreamTokenizer
+
+    private void processBody(int type, String stringValue) {
         if (stringValue != null && stringValue.startsWith("asp")) {
             if (endTag) {
                 System.out.println("Ending " + stringValue);
@@ -96,10 +276,11 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
             }
         }
 
-
-        if (gotIdAttribute && stringValue != null) {
+        if (lastName != null && gotIdAttribute && stringValue != null) {
             lastId = stringValue;
+            LOG.debug("Adding from here");
             addTag(lastName, lastId);
+            hasAdded = true;
             needsId = false;
             gotIdAttribute = false;
         }
@@ -107,21 +288,26 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
         if ("asp:Content".equals(lastName)) {
             gotIdAttribute = gotIdAttribute || (needsId && stringValue != null && stringValue.equals("ContentPlaceHolderID"));
         } else {
-            gotIdAttribute = gotIdAttribute || (needsId && stringValue != null && stringValue.contains("ID"));
+            gotIdAttribute = gotIdAttribute || (needsId && stringValue != null && stringValue.equals("ID"));
         }
 
-        if (type == '>') {
-            if (needsId) {
-                addTag(lastName, null); // TODO figure out better name generation scheme
+        if (type == '>' && lastName != null) { // we only want to do this if we're in an asp:* tag
+            if (!hasAdded && needsId) {
+                LOG.debug("Adding here");
+                addTag(lastName, null);
             }
 
-            if (endTag) { // self-closing tag
-                // do that
+            if (endTag) {
                 removeTag(lastName, lastId);
             }
+
+            lastName = null;
+            hasAdded = false;
+            gotIdAttribute = false;
         }
 
         endTag = type == '/';
+        lastToken = type;
     }
 
     private void addTag(String name, String id) {
@@ -129,26 +315,17 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
     }
 
     private void removeTag(String name, String id) {
-        aspxControlStack.removeLast();
-
-        if ("asp:BoundField".equals(name)) {
-            addParamFor(name, id);
+        if (tagsThatGenerateParameters.contains(name)) {
+            addCurrentParam();
         }
 
+        aspxControlStack.removeLast();
         lastName = null;
         lastId = null;
     }
 
-    private String autogenId() {
-        return "ctl0" + count++;
-    }
-
-    private void addParamFor(String name, String id) {
-        if (id == null) {
-            id = autogenId();
-        }
-
-        parameters.add(aspxControlStack.generateNameFor(new AspxControl(name, id)));
+    private void addCurrentParam() {
+        parameters.add(aspxControlStack.generateCurrentParamName());
         System.out.println("Parameters contains: " + parameters);
     }
 }
