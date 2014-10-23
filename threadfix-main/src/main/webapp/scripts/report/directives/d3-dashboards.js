@@ -1,8 +1,8 @@
 var d3ThreadfixModule = angular.module('threadfix');
 
 // Months Summary report
-d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities',
-    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities) {
+d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService',
+    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities, threadFixModalService, vulnSearchParameterService) {
         return {
             restrict: 'EA',
             scope: {
@@ -97,8 +97,8 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
     }]);
 
 // Top Applications Summary report
-d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities',
-    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities) {
+d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService',
+    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities, threadFixModalService, vulnSearchParameterService) {
         return {
             restrict: 'EA',
             scope: {
@@ -296,3 +296,4 @@ var topVulnMapKeyword = ["count"];
 var currentDate = new Date();
 var currentYear = currentDate.getFullYear();
 var currentMonth = currentDate.getMonth();
+var drawingDuration = 500;
