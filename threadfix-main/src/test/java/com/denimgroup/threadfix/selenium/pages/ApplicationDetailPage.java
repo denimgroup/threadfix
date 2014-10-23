@@ -954,7 +954,7 @@ public class ApplicationDetailPage extends BasePage {
 
     /* _____________________ Boolean Methods _____________________ */
     public boolean vulnsFilteredOpen(int count) {
-        return driver.findElementByLinkText( count + " Vulnerabilities").isDisplayed();
+        return driver.findElementByLinkText(count + " Vulnerabilities").isDisplayed();
     }
 
     public boolean isCweErrorPresent() {
@@ -1329,6 +1329,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isCveDescriptionInputPresent(String expectedNumber) {
         return driver.findElementById("cveDescription" + expectedNumber).isDisplayed();
+    }
+
+    public boolean isCWEBarPresent(String teamName, String appName, String vulnerability) {
+        return driver.findElementById(teamName + appName + vulnerability + "Bar").isDisplayed();
     }
 
     /*___________________Void Methods__________________*/

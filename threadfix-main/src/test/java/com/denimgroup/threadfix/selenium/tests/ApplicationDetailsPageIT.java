@@ -6,7 +6,6 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertTrue;
 
@@ -258,5 +257,41 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
             .clickUpdateApplicationButton();
 
         assertTrue("Defect Tracker not added correctly", applicationDetailPage.isDefectTrackerAttached());
+    }
+
+    @Test
+    public void top10VulnerabilitiesPresent() {
+        initialize();
+
+        assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
+        assertTrue("Bar for vulnerability CWE-79 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE79"));
+        assertTrue("Bar for vulnerability CWE-550 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE550"));
+        assertTrue("Bar for vulnerability CWE-615 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE615"));
+        assertTrue("Bar for vulnerability CWE-548 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE548"));
+        assertTrue("Bar for vulnerability CWE-200 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE200"));
+        assertTrue("Bar for vulnerability CWE-74 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE74"));
+        assertTrue("Bar for vulnerability CWE-301 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE301"));
+        assertTrue("Bar for vulnerability CWE-425 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE425"));
+        assertTrue("Bar for vulnerability CWE-89 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE89"));
+    }
+
+    @Test
+    public void top10VulnerabilitiesUpdated() {
+        initialize();
+
+        applicationDetailPage.clickActionButton()
+                .clickUploadScan()
+                .uploadScan(ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
+        assertTrue("Bar for vulnerability CWE-552 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE552"));
+        assertTrue("Bar for vulnerability CWE-79 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE79"));
+        assertTrue("Bar for vulnerability CWE-89 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE89"));
+        assertTrue("Bar for vulnerability CWE-209 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE209"));
+        assertTrue("Bar for vulnerability CWE-550 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE550"));
+        assertTrue("Bar for vulnerability CWE-615 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE615"));
+        assertTrue("Bar for vulnerability CWE-200 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE200"));
+        assertTrue("Bar for vulnerability CWE-548 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE548"));
+        assertTrue("Bar for vulnerability CWE-301 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE301"));
     }
 }
