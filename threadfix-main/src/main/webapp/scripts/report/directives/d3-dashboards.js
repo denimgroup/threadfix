@@ -231,8 +231,7 @@ d3ThreadfixModule.directive('d3Donut', ['$window', '$timeout', 'd3', 'd3donut', 
 
                     var pieDim ={w:260, h: 200};
 
-                    var svg = d3Service.getSvg(d3, ele[0], pieDim.w, pieDim.h)
-                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+                    var svg = d3Service.getSvg(d3, ele[0], pieDim.w, pieDim.h);
 
                     svg.append("g").attr("id",scope.label);
 
