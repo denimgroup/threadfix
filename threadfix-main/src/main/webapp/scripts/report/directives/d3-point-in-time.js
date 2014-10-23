@@ -30,8 +30,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         return;
 
                     color.domain(reportConstants.vulnTypeList);
-                    var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h)
-                        .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+                    var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
 
                     svg.selectAll('*').remove();
                     reportUtilities.drawTitle(svg, pieDim.w, scope.label.teams, scope.label.apps, "Point in Time Report", 30);
