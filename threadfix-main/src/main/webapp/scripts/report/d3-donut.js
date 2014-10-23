@@ -171,7 +171,10 @@ angular.module('threadfix')
                 .data(_data).enter()
                 .append("g")
                 .attr("class", "arc")
-                .attr("id", function(d){return "pointInTime" + d.data.severity})
+                .attr("id", function(d){
+                    var str = (d.data.teamName)? d.data.teamName : "pointInTime";
+                    return str + d.data.severity + "Arc";
+                })
                 .append("path")
                 .style("fill", function(d) { return d.data.fillColor; })
                 .on('mouseover', tip.show)
