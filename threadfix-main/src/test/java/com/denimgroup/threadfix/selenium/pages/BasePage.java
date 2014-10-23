@@ -27,6 +27,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -492,6 +493,19 @@ public abstract class BasePage {
         } catch (NoAlertPresentException e) {
             throw new RuntimeException("Alert was not displayed as it should have been.", e);
         }
+    }
+
+    public void clickSVGElement(String ID) {
+        WebElement d3Object = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.clickAndHold(d3Object).build().perform();
+        builder.release(d3Object).build().perform();
+    }
+
+    public void hoverOverSVGElement(String ID) {
+        WebElement d3Object = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.clickAndHold(d3Object).build().perform();
     }
 
     public boolean tryClick(By by) {
