@@ -23,40 +23,78 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 /**
  * Created by mac on 10/20/14.
  */
 class AspxControlStack {
 
-    AspxControlStack() {}
+    private static final SanitizedLogger LOG = new SanitizedLogger(AspxControlStack.class);
 
-    List<AspxControl> controls = list();
+    Map<String, Integer> idMap    = newMap(); // this helps us generate
+    List<AspxControl>    controls = list(new AspxControl("RootElement", generateIdFromCurrentStack(0)));
 
     void add(AspxControl control) {
-        controls.add(control);
+        assert control.name != null : "Control's name was null.";
 
-        System.out.println("Adding " + control.name + " with id " + control.id);
+        int startingId = control.name.contains("Field") ? 1 : 0;
+
+        AspxControl finalControl =
+                control.id == null ?
+                        new AspxControl(control.name, generateIdFromCurrentStack(startingId)) :
+                        control;
+
+        controls.add(finalControl);
+
+        LOG.debug("Adding " + control.name + " with id " + control.id + ". Base is now " + getCurrentString());
+    }
+
+    private String generateIdFromCurrentStack(int numberToStartAt) {
+        String base = getCurrentString();
+
+        if (!idMap.containsKey(base)) {
+            idMap.put(base, numberToStartAt);
+        }
+
+        Integer result = idMap.get(base);
+
+        idMap.put(base, idMap.get(base) + 1);
+
+        return result > 9 ? "ctl" + result : "ctl0" + result;
+    }
+
+    String generateCurrentParamName() {
+        return getCurrentString();
+    }
+
+    private String getCurrentString() {
+        StringBuilder builder = new StringBuilder();
+
+        if (controls != null) { // null during initialization
+            for (AspxControl aspxControl : controls) {
+                builder.append(aspxControl.id).append("$");
+            }
+        }
+
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() -1);
+        }
+
+        return builder.toString();
     }
 
     void removeLast() {
         int lastIndex = controls.size() - 1;
         AspxControl removedControl = controls.remove(lastIndex);
 
-        System.out.println("Removing " + removedControl.name + " with id " + removedControl.id);
-    }
-
-    String generateNameFor(AspxControl control) {
-        StringBuilder builder = new StringBuilder("ctl00$");
-
-        for (AspxControl aspxControl : controls) {
-            builder.append(aspxControl.id).append("$");
-        }
-
-        return builder.append(control.id).toString();
+        LOG.debug("Removing " + removedControl.name + " with id " + removedControl.id + ". Base is now " +  getCurrentString());
     }
 
 }
