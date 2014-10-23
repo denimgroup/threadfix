@@ -136,7 +136,6 @@ angular.module('threadfix')
         }
 
         Donut.draw2D=function(id, data, height/*height*/, width/*width*/, x, y, rs/*radius*/, isNavigate, label){
-//        Donut.draw2D=function(id, data, height/*height*/, width/*width*/, rs/*radius*/, isNavigate, updateTree){
             var arc = d3.svg.arc()
                 .outerRadius(rs - 10)
                 .innerRadius(0);
@@ -149,7 +148,6 @@ angular.module('threadfix')
                 .attr("height", height)
                 .append("g")
                 .attr("transform", "translate(" + x + "," + y + ")");
-//                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
             svg.selectAll('*').remove();
 
@@ -160,6 +158,12 @@ angular.module('threadfix')
                 .html(function(d) {
                     return "<strong>" + d.data.tip + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
                 });
+
+            if (_data && _data.length > 0) {
+                var tipId = ((_data[0].data.teamName)? _data[0].data.teamName : "pointInTime") + "Tip";
+                tip.attr("id", tipId);
+            }
+
             svg.call(tip);
 
             var durationEachAngle = 500/(2*Math.PI);
@@ -186,9 +190,6 @@ angular.module('threadfix')
                             label = {};
                         threadFixModalService.showVulnsModal(vulnSearchParameterService.createFilterCriteria(d.data, label), false);
                     }
-//                    else {
-//                        updateTree({severity:d.data.severity});
-//                    }
                 })
                 .transition().delay(function(d, i) { return durationEachAngle * d.startAngle; })
                 .duration(function(d){ return durationEachAngle * (d.endAngle-d.startAngle); })

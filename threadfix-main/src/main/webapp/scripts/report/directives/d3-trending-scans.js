@@ -78,6 +78,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 var tip =  d3.tip()
                     .attr('class', 'd3-tip')
+                    .attr('id', 'areaChartTip')
                     .offset([-10, 0]);
 
                 scope.$watch('data', function(newVals) {
