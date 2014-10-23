@@ -122,9 +122,10 @@ threadfixModule.factory('d3Service', function() {
             .attr("height", h);
     }
 
-    d3Service.getTip = function(d3, clazz, offset) {
+    d3Service.getTip = function(d3, clazz, offset, tipId) {
         return d3.tip()
             .attr('class', clazz)
+            .attr('id', tipId)
             .offset(offset);
     }
 
