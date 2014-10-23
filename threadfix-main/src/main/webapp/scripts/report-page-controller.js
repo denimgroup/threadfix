@@ -14,7 +14,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.tabs = [
         {
-            title: "Trending",
+            title: "Trending (Legacy)",
             active: true,
             options: [
                 { name: "Trending Scans", id: 1 },
@@ -23,7 +23,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
             ]
         },
         {
-            title: "Snapshot",
+            title: "Snapshot (Legacy)",
             options: [
                 { name: "Point in Time", id: 2 },
                 { name: "Progress By Vulnerability", id: 3 },
