@@ -68,6 +68,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         .data(tableData)
                         .enter().append("g")
                         .attr("class", "legend")
+                        .attr("id", function(d){return "legend" + d.Severity;})
                         .attr("transform", function(d, i) { return "translate(300," + (150 + i * 20) + ")"; });
 
                     legend.append("rect")
