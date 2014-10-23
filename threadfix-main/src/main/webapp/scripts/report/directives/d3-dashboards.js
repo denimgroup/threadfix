@@ -70,6 +70,7 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
                         .enter().append("rect")
+                        .attr("id", function(d){return d.graphId})
                         .attr("class", "bar")
                         .attr("width", 0)
                         .attr("y", function(d) { return y(d.y1); })
@@ -94,7 +95,6 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
             }
         }
     }]);
-
 
 // Top Applications Summary report
 d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService',
@@ -176,6 +176,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     col.selectAll("rect")
                         .data(function(d) { return d.vulns; })
                         .enter().append("rect")
+                        .attr("id", function(d){return d.graphId})
                         .attr("class", "bar")
                         .attr("height", 0)
                         .attr("x", function(d) { return x(d.y0); })
@@ -279,7 +280,8 @@ function barGraphData(d3, data, color, isLeftReport, label, reportConstants) {
                 teamName: d.teamName,
                 appId: (label && label.appId) ? label.appId : d.appId,
                 appName: d.appName,
-                severity: (topVulnsReport) ? undefined : key
+                severity: (topVulnsReport) ? undefined : key,
+                graphId: d.teamName + d.appName + ((topVulnsReport)? "CWE" + d.displayId : tip) + "Bar"
             };
         });
         d.total = d.vulns[d.vulns.length - 1].y1;

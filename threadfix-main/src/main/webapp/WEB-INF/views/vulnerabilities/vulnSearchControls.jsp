@@ -31,7 +31,7 @@
         </div>
     </c:if>
 
-    <div class="filter-controls">
+    <div id="vulnSearchFilterDiv" class="filter-controls">
         <h3>Filters</h3>
 
         <tabset ng-init="showFilterSections = true">
