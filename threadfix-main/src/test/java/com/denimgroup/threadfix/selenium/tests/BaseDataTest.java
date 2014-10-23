@@ -65,6 +65,11 @@ public abstract class BaseDataTest extends BaseIT{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
     }
 
+    protected void initializeTeamAndAppWithWebInspectScan() {
+        initializeTeamAndApp();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+    }
+
     protected void createRestrictedUser(String permission) {
         if (permission != null) {
             roleName = createRole();

@@ -495,11 +495,18 @@ public abstract class BasePage {
         }
     }
 
-    public void clickSVGElement(String ID) {
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickSVGElement(String id) {
+        return (T) clickSVGElement(id, this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T clickSVGElement(String ID, Class<T> targetClass) {
         WebElement d3Object = driver.findElementById(ID);
         Actions builder = new Actions(driver);
         builder.clickAndHold(d3Object).build().perform();
         builder.release(d3Object).build().perform();
+        return (T) this;
     }
 
     public void hoverOverSVGElement(String ID) {

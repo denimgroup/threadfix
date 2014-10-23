@@ -48,15 +48,15 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        filtersCollapsedSize = analyticsPage.getFilterDivHeight();
-        analyticsPage.toggleAllFilter();
+        filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
+        analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
 
-        filtersExpandedSize = analyticsPage.getFilterDivHeight();
+        filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        analyticsPage = analyticsPage.toggleAllFilter();
+        analyticsPage = analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
         assertFalse("Filters were not collapsed.",
-                filtersExpandedSize == analyticsPage.getFilterDivHeight());
+                filtersExpandedSize == analyticsPage.getFilterDivHeight("vulnSearchFilterDiv"));
     }
 
     @Test
@@ -68,8 +68,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter()
-                .addTeamFilter(teamName);
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addTeamFilter(teamName, "vulnSearchFilterDiv");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -80,8 +80,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        analyticsPage.clearFilter()
-                .addTeamFilter(teamName2);
+        analyticsPage.clearFilter("vulnSearchFilterDiv")
+                .addTeamFilter(teamName2, "vulnSearchFilterDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -97,8 +97,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter()
-                .addApplicationFilter(appName);
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addApplicationFilter(appName,"vulnSearchFilterDiv");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -109,8 +109,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        analyticsPage.clearFilter()
-                .addApplicationFilter(appName2);
+        analyticsPage.clearFilter("vulnSearchFilterDiv")
+                .addApplicationFilter(appName2,"vulnSearchFilterDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -137,8 +137,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter()
-                .addApplicationFilter(appName);
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addApplicationFilter(appName, "vulnSearchFilterDiv");
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
@@ -161,19 +161,4 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isCollapseAllButtonDisplay());
     }
-
-//    @Test
-//    public void checkHover() {
-//        initializeTeamAndAppWithIBMScan();
-//
-//        loginPage.defaultLogin()
-//                .clickAnalyticsLink()
-//                .clickSnapshotD3Tab();
-//
-//        WebElement d3Object = driver.findElement(By.xpath("/[@class='arc'][1]"));
-//        Actions builder = new Actions(driver);
-//        builder.click(d3Object).build().perform();
-//        driver.findElement(By.xpath("/[@class='arc'][1]")).click();
-//        sleep(60000);
-//    }
 }

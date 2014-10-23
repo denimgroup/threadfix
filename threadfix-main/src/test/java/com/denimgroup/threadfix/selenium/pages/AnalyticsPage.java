@@ -36,12 +36,12 @@ public class AnalyticsPage extends BasePage {
 	}
 
     /* _____________________ Action Methods _____________________ */
-    //Deprecated
+
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
         return new AnalyticsPage(driver);
     }
-    //Deprecated
+
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
         return new AnalyticsPage(driver);
@@ -58,33 +58,48 @@ public class AnalyticsPage extends BasePage {
         return  new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage clickSnapshotD3Tab() {
-        driver.findElementByLinkText("SnapshotD3").click();
-        sleep(2000);
-        return  new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage toggleAllFilter() {
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+    public AnalyticsPage toggleAllFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("toggleAllButton")).click();
         sleep(2000);
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage clearFilter() {
-        driver.findElementById("clearFiltersButton").click();
+    public AnalyticsPage toggleAllFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("toggleAllButtonReport")).click();
+        sleep(2000);
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage expandTeamApplicationFilter() {
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+    public AnalyticsPage clearFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("clearFiltersButton")).click();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage clearFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("clearFiltersButtonReport")).click();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandTeamApplicationFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
         sleep(2000);
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage addTeamFilter(String teamName) {
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+    public AnalyticsPage expandTeamApplicationFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")).click();
+        sleep(2000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage addTeamFilter(String teamName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
         WebElement teamNameSpace = filterDiv.findElement(By.id("teamNameTypeahead"));
         filterDiv.findElement(By.id("showTeamInput")).click();
         teamNameSpace.clear();
@@ -94,8 +109,19 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage addApplicationFilter(String appName) {
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+    public AnalyticsPage addTeamFilterReport(String teamName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement teamNameSpace = filterDiv.findElement(By.id("teamNameTypeaheadReport"));
+        filterDiv.findElement(By.id("showTeamInputReport")).click();
+        teamNameSpace.clear();
+        teamNameSpace.sendKeys(teamName);
+        teamNameSpace.sendKeys(Keys.ENTER);
+        waitForResultsToLoad();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage addApplicationFilter(String appName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
         WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeahead"));
         filterDiv.findElement(By.id("showApplicationInput")).click();
         applicationNameSpace.clear();
@@ -103,6 +129,22 @@ public class AnalyticsPage extends BasePage {
         applicationNameSpace.sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage addApplicationFilterReport(String appName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement applicationNameSpace = filterDiv.findElement(By.id("applicationNameTypeaheadReport"));
+        filterDiv.findElement(By.id("showApplicationInputReport")).click();
+        applicationNameSpace.clear();
+        applicationNameSpace.sendKeys(appName);
+        applicationNameSpace.sendKeys(Keys.ENTER);
+        waitForResultsToLoad();
+        return new AnalyticsPage(driver);
+    }
+
+    public boolean checkCorrectFilterLevel(String level) {
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        return filterDiv.findElement(By.id("show" +level)).isSelected();
     }
 
     public AnalyticsPage clickCloseVulnerabilityButton() {
@@ -114,8 +156,8 @@ public class AnalyticsPage extends BasePage {
 
     /* _____________________ Get Methods _____________________ */
 
-    public int getFilterDivHeight() {
-        return driver.findElement(By.id("vulnSearchFilterDiv")).getSize().getHeight();
+    public int getFilterDivHeight(String divId) {
+        return driver.findElement(By.id(divId)).getSize().getHeight();
     }
 
     /* _____________________ Helper Methods _____________________ */
