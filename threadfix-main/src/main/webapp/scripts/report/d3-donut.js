@@ -3,6 +3,14 @@ angular.module('threadfix')
 
         var Donut={};
 
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .attr("id", "pointInTimeTip")
+            .offset([-10, 0])
+            .html(function(d) {
+                return "<strong>" + d.data.tip + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
+            });
+
         function pieTop(d, rx, ry, ir ){
             if(d.endAngle - d.startAngle == 0 ) return "M 0 0";
             var sx = rx*Math.cos(d.startAngle),
@@ -150,19 +158,6 @@ angular.module('threadfix')
                 .attr("transform", "translate(" + x + "," + y + ")");
 
             svg.selectAll('*').remove();
-
-            /* ------- TIP -------*/
-            var tip = d3.tip()
-                .attr('class', 'd3-tip')
-                .offset([-10, 0])
-                .html(function(d) {
-                    return "<strong>" + d.data.tip + ":</strong> <span style='color:red'>" + d.value + "</span> <span>(" + getPercent(d) + ")</span>";
-                });
-
-            if (_data && _data.length > 0) {
-                var tipId = ((_data[0].data.teamName)? _data[0].data.teamName : "pointInTime") + "Tip";
-                tip.attr("id", tipId);
-            }
 
             svg.call(tip);
 
