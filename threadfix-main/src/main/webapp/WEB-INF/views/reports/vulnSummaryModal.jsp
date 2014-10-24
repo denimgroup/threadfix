@@ -6,7 +6,7 @@
             <table >
                 <tbody>
                 <tr ng-repeat="header in headers">
-                    <td style="text-align:left;" ng-style="{color: headerColor}"> <b>{{ header }} </b></td>
+                    <td id="header{{ $index }}" style="text-align:left;" ng-style="{color: headerColor}"> <b>{{ header }} </b></td>
                 </tr>
                 </tbody>
             </table>
