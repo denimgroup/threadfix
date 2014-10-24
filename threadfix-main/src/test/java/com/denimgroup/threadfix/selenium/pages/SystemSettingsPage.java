@@ -95,7 +95,22 @@ public class SystemSettingsPage extends BasePage {
         return new SystemSettingsPage(driver);
     }
 
+    /*------------------------------ Session Timeout Settings ------------------------------*/
+
+    public SystemSettingsPage expandSessionTimeoutSettings() {
+        driver.findElementById("defaultSessionTimeoutPermissionsPanel").click();
+        return new SystemSettingsPage(driver);
+    }
+
+    public SystemSettingsPage setTimeout(String timeout) {
+        driver.findElementById("sessionTimeout").clear();
+        driver.findElementById("sessionTimeout").sendKeys(timeout);
+        return new SystemSettingsPage(driver);
+    }
+
     /*------------------------------ Page Methods ------------------------------*/
+
+
 
 	public SystemSettingsPage clickSaveChanges() {
 		driver.findElementById("updateDefaultsButton").click();

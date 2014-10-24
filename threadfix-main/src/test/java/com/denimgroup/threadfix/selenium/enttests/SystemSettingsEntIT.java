@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -36,6 +37,8 @@ import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
 public class SystemSettingsEntIT extends BaseIT{
+    private SystemSettingsPage systemSettingsPage;
+
     private static final String LDAP_SEARCHBASE = System.getProperty("LDAP_SEARCHBASE");
     private static final String LDAP_USERDN = System.getProperty("LDAP_USERDN");
     private static final String LDAP_PASSWORD = System.getProperty("LDAP_PASSWORD");
@@ -64,13 +67,17 @@ public class SystemSettingsEntIT extends BaseIT{
         }
     }
 
+    @Before
+    public void initialNavigation() {
+        systemSettingsPage = loginPage.defaultLogin()
+                .clickSystemSettingsLink();
+    }
+
     @Test
     public void testValidLDAPSettings() {
         String invalidUserPassword = getRandomString(15);
 
-        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
-                .clickSystemSettingsLink()
-                .expandLDAPSettings()
+        systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
                 .setLDAPPassword(LDAP_PASSWORD)
@@ -92,9 +99,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testInvalidLDAPSettings() {
-        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
-                .clickSystemSettingsLink()
-                .expandLDAPSettings()
+        systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
                 .setLDAPPassword("Bad Password")
@@ -111,9 +116,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testValidLDAPUserAndWipedSystemSettings() {
-        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
-                .clickSystemSettingsLink()
-                .expandLDAPSettings()
+        systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
                 .setLDAPPassword(LDAP_PASSWORD)
@@ -148,9 +151,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testDefaultLDAPRole() {
-        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
-                .clickSystemSettingsLink()
-                .expandLDAPSettings()
+        systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
                 .setLDAPPassword(LDAP_PASSWORD)
@@ -186,9 +187,7 @@ public class SystemSettingsEntIT extends BaseIT{
 
     @Test
     public void testReadAccessLDAPRole() {
-        SystemSettingsPage systemSettingsPage = loginPage.defaultLogin()
-                .clickSystemSettingsLink()
-                .expandLDAPSettings()
+        systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
                 .setLDAPPassword(LDAP_PASSWORD)
@@ -208,5 +207,29 @@ public class SystemSettingsEntIT extends BaseIT{
         assertTrue("The error Log wasn't showed", teamIndexPage.errorAlert().
                 contains("You don't have permission to access any ThreadFix applications or to create one for yourself." +
                         " Contact your administrator to get help."));
+    }
+
+    @Test
+    public void testSessionTimeout() {
+        systemSettingsPage.expandSessionTimeoutSettings()
+                .setTimeout("1")
+                .clickSaveChanges();
+
+        assertTrue("Save validation alert was not present." ,systemSettingsPage.isSaveSuccessful());
+
+        systemSettingsPage.logout()
+                .defaultLogin()
+                .clickOrganizationHeaderLink();
+
+        sleep(63000);
+
+        DashboardPage dashboardPage = systemSettingsPage.clickDashboardLink();
+
+        assertFalse("Session was still valid.", dashboardPage.isLoggedin());
+
+        loginPage.defaultLogin().clickSystemSettingsLink()
+                .expandSessionTimeoutSettings()
+                .setTimeout("30")
+                .clickSaveChanges();
     }
 }
