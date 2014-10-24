@@ -512,7 +512,7 @@ public abstract class BasePage {
     public void hoverOverSVGElement(String ID) {
         WebElement d3Object = driver.findElementById(ID);
         Actions builder = new Actions(driver);
-        builder.clickAndHold(d3Object).build().perform();
+        builder.click(d3Object).build().perform();
     }
 
     public boolean tryClick(By by) {

@@ -25,8 +25,10 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -128,5 +130,70 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
         analyticsPage = analyticsPage.toggleAllFilterReport("snapshotFilterDiv");
         assertFalse("Filters were not collapsed.",
                 filtersExpandedSize == analyticsPage.getFilterDivHeight("snapshotFilterDiv"));
+    }
+
+    @Test
+    public void testTipCount() {
+        initializeTeamAndAppWithWebInspectScan();
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab();
+
+        for(int i = 0; i < 5; i++) {
+            analyticsPage.hoverOverSVGElement("pointInTime" + levels[i] + "Arc");
+            String numTip = driver.findElement(By.xpath("//*[@id='pointInTimeTip'][2]")).getText().split("\\s+")[1];
+            String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
+
+            assertTrue("Tip value at level " + levels[i] + " does not match badge", numBadge.equals(numTip));
+        }
+    }
+
+    @Test
+    public void testLegendCount() {
+        initializeTeamAndAppWithWebInspectScan();
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab();
+
+        for(int i = 0; i < 5; i++) {
+            String numLegend = driver.findElement(By.id("legend" + levels[i]))
+                    .getText().replace(levels[i],"").split("\\(")[0];
+            String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
+
+            assertTrue("Legend value at level " + levels[i] + " does not match badge", numBadge.equals(numLegend));
+        }
+    }
+
+
+    //TODO when id is added to modal total count
+    @Ignore
+    @Test
+    public void pieModalNumCheck() {
+       initializeTeamAndAppWithWebInspectScan();
+       String[] levels = {"Info","Low","Medium","High","Critical"};
+
+       AnalyticsPage analyticsPage = loginPage.defaultLogin()
+               .clickAnalyticsLink();
+
+       for(int i = 0; i < 5; i++) {
+           analyticsPage.clickSnapshotTab();
+
+           sleep(1500);
+
+           analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
+
+           String numModal = driver.findElement(By.xpath("//*[@id='reports']/div[8]/div/div/div[1]/div/table/tbody/tr/td/b"))
+                   .getText().split("\\s+")[1];
+           String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
+
+           assertTrue("Modal total at level " + levels[i] + " does not match badge",
+                   numBadge.equals(numModal));
+
+           analyticsPage.clickModalSubmit();
+       }
     }
 }

@@ -186,7 +186,6 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     //TODO fix when unique ID is added for reportSelect
-    @Ignore
     @Test
     public void testViewMoreNavigation() {
         initializeTeamAndApp();

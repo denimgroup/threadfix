@@ -54,7 +54,6 @@ public class DashboardIT extends BaseDataTest {
 	}
 
     //TODO when reportSelect is fixed
-    @Ignore
     @Test
     public void leftGraphViewMoreLinkTest() {
         String report = "Vulnerability Trending";
@@ -66,7 +65,6 @@ public class DashboardIT extends BaseDataTest {
     }
 
     //TODO when reportSelect is fixed
-    @Ignore
     @Test
     public void rightGraphViewMoreLinkTest() {
         String report = "Most Vulnerable Applications";

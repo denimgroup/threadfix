@@ -144,7 +144,6 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
     }
 
     //TODO when reportSelect is fixed
-    @Ignore
     @Test
     public void checkAnalyticsPage() {
         initializeTeamAndAppWithIBMScan();
