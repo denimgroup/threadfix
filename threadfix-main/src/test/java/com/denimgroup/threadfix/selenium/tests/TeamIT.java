@@ -174,14 +174,18 @@ public class TeamIT extends BaseDataTest {
 
     @Test
     public void teamGraphsTest() {
-        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithWebInspectScan();
 
         teamIndexPage.refreshPage();
 
-        teamIndexPage.expandTeamRowByName(teamName);
+        teamIndexPage.expandTeamRowByName(teamName)
+                .waitForPieWedge(teamName, "Critical");
 
-        assertTrue("The graph of the expanded team was not shown properly.",
-                teamIndexPage.isGraphDisplayed(teamName));
+        assertTrue("Info arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Info"));
+        assertTrue("Low arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Low"));
+        assertTrue("Medium arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Medium"));
+        assertTrue("High arc didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "High"));
+        assertTrue("Critical didn't display correctly", teamIndexPage.isGraphWedgeDisplayed(teamName, "Critical"));
     }
 
     @Test

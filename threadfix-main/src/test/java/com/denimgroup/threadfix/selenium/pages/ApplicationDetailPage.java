@@ -1341,4 +1341,8 @@ public class ApplicationDetailPage extends BasePage {
             sleep(1000);
         }
     }
+
+    public void waitForCWEBar(String teamName, String appName, String vulnerability) {
+        waitForElement(driver.findElementById(teamName + appName + vulnerability + "Bar"));
+    }
 }

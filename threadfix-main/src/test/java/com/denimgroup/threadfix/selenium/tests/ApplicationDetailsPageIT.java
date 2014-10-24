@@ -263,6 +263,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     public void top10VulnerabilitiesPresent() {
         initialize();
 
+        applicationDetailPage.waitForCWEBar(teamName, appName, "CWE89");
+
         assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
         assertTrue("Bar for vulnerability CWE-79 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE79"));
         assertTrue("Bar for vulnerability CWE-550 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE550"));
@@ -282,6 +284,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         applicationDetailPage.clickActionButton()
                 .clickUploadScan()
                 .uploadScan(ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+
+        applicationDetailPage.waitForCWEBar(teamName, appName, "CWE301");
 
         assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
         assertTrue("Bar for vulnerability CWE-552 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE552"));
