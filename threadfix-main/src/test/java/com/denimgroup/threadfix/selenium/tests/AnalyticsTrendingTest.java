@@ -24,8 +24,49 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 @Category(CommunityTests.class)
 public class AnalyticsTrendingTest extends BaseDataTest {
+
+    @Test
+    public void checkAgingFilter() {
+        initializeTeamAndApp();
+       /*
+        * The following two scans are uploaded
+        * because they have dates of October 8
+        * and October 9 which makes narrowing the
+        * scope of testing easier to narrow.
+        */
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickTrendingTab();
+
+        analyticsPage.expandTeamApplicationFilterReport("trendingFilterDiv")
+                .addTeamFilterReport(teamName, "trendingFilterDiv")
+                .addApplicationFilterReport(appName, "trendingFilterDiv");
+
+        driver.findElement(By.id("showDateControlsReport")).click();
+        driver.findElement(By.linkText("Forever")).click();
+        driver.findElement(By.id("showDateRangeReport")).click();
+//      driver.findElement(By.id("startDateInputReport")).sendKeys("05-October-2014");
+//      driver.findElement(By.id("endDateInputReport")).sendKeys("09-October-2014");
+
+        WebElement ele = driver.findElement(By.xpath("//*[@class='header']"));
+        Actions build = new Actions(driver);
+        build.moveByOffset(-250,-100).build().perform();
+        build.click().build().perform();
+
+        sleep(15000);
+    }
+
 }

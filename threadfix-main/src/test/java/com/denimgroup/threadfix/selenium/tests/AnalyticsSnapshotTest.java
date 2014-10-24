@@ -143,7 +143,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
         for(int i = 0; i < 5; i++) {
             analyticsPage.hoverOverSVGElement("pointInTime" + levels[i] + "Arc");
-            String numTip = driver.findElement(By.xpath("//*[@id='pointInTimeTip'][2]")).getText().split("\\s+")[1];
+            String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
             String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
 
             assertTrue("Tip value at level " + levels[i] + " does not match badge", numBadge.equals(numTip));
@@ -168,9 +168,6 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
         }
     }
 
-
-    //TODO when id is added to modal total count
-    @Ignore
     @Test
     public void pieModalNumCheck() {
        initializeTeamAndAppWithWebInspectScan();
@@ -186,8 +183,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
            analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
 
-           String numModal = driver.findElement(By.xpath("//*[@id='reports']/div[8]/div/div/div[1]/div/table/tbody/tr/td/b"))
-                   .getText().split("\\s+")[1];
+           String numModal = driver.findElement(By.id("header0")).getText().split("\\s+")[1].trim();
            String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
 
            assertTrue("Modal total at level " + levels[i] + " does not match badge",
