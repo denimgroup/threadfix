@@ -130,7 +130,7 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
                 break;
             case MASTER_PAGE_FILE:
                 if (type == '"') {
-                    masterPage = stringValue;
+                    masterPage = stringValue.startsWith("~/") ? stringValue.substring(2) : stringValue;
                 } else if (type != '=') {
                     currentPageState = PageState.DONE;
                 }
