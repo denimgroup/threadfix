@@ -4,7 +4,7 @@
 	<title>Dashboard</title>
 	<cbs:cachebustscript src="/scripts/dashboard-controller.js"/>
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
-	<cbs:cachebustscript src="/scripts/vuln-summary-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 
 <body class="dashboard">
