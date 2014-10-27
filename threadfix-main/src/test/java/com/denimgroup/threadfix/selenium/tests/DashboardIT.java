@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -80,6 +81,75 @@ public class DashboardIT extends BaseDataTest {
         DashboardPage dashboardPage = loginPage.defaultLogin();
 
         assertFalse("Recent Scan Uploads are not displayed.", dashboardPage.isRecentUploadsNoScanFound());
+    }
+
+    @Test
+    public void mostVulnerableApplicationTipInformation() {
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
+
+        DashboardPage dashboardPage = loginPage.defaultLogin();
+        dashboardPage.waitForElement(driver.findElement(By.id(teamName + appName + "CriticalBar")));
+
+        dashboardPage.hover(teamName + appName + "InfoBar");
+        assertTrue("The number of Info Vulnerabilities in report tip was not correct.",
+                dashboardPage.isMostVulnerableTipCorrect("Info: 218"));
+
+        dashboardPage.hover(teamName + appName + "LowBar");
+        assertTrue("The number of Low Vulnerabilities in report tip was not correct.",
+                dashboardPage.isMostVulnerableTipCorrect("Low: 137"));
+
+        dashboardPage.hover(teamName + appName + "MediumBar");
+        assertTrue("The number of Medium Vulnerabilities in report tip was not correct.",
+                dashboardPage.isMostVulnerableTipCorrect("Medium: 112"));
+
+        dashboardPage.hover(teamName + appName + "HighBar");
+        assertTrue("The number of High Vulnerabilities in report tip was not correct.",
+                dashboardPage.isMostVulnerableTipCorrect("High: 51"));
+
+        dashboardPage.hover(teamName + appName + "CriticalBar");
+        assertTrue("The number of Critical Vulnerabilities in report tip was not correct.",
+                dashboardPage.isMostVulnerableTipCorrect("Critical: 15"));
+    }
+
+    @Test
+    public void mostVulnerableApplicationTipModal() {
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
+
+        DashboardPage dashboardPage = loginPage.defaultLogin();
+        dashboardPage.waitForElement(driver.findElement(By.id(teamName + appName + "CriticalBar")));
+
+        dashboardPage.clickSVGElement(teamName + appName + "InfoBar");
+
+        assertTrue("Team name was not correct.", dashboardPage.isTeamNameCorrectInVulnerabilitySummaryModal(teamName));
+        assertTrue("Application name was not correct.", dashboardPage.isApplicationNameCorrectInVulnerabilitySummaryModal(appName));
+        assertTrue("Count was not correct.", dashboardPage.isCountCorrectInVulnerabilitySummaryModal("218"));
+    }
+
+    @Test
+    public void mostVulnerableApplicationDetailNavigation() {
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Skipfish"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Mavituna Security Netsparker"));
+
+        DashboardPage dashboardPage = loginPage.defaultLogin();
+        dashboardPage.waitForElement(driver.findElement(By.id(teamName + appName + "CriticalBar")));
+
+        dashboardPage.clickSVGElement(teamName + appName + "InfoBar");
+        AnalyticsPage analyticsPage = dashboardPage.clickDetails();
+
+        assertTrue("Info filtered results were not correct.", analyticsPage.isVulnerabilityCountCorrect("Info", "218"));
+
+        assertFalse("Low vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Low"));
+        assertFalse("Medium vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Medium"));
+        assertFalse("High vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("High"));
+        assertFalse("Critical vulnerabilities should have been filtered out.", analyticsPage.isSeverityLevelShown("Critical"));
     }
 
     @Test

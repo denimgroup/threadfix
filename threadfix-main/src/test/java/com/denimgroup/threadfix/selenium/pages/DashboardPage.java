@@ -70,6 +70,11 @@ public class DashboardPage extends BasePage{
 		driver.findElementsByLinkText("View").get(0).click();
 		return new VulnerabilityDetailPage(driver);
 	}
+
+    public AnalyticsPage clickDetails() {
+        driver.findElementById("submit").click();
+        return new AnalyticsPage(driver);
+    }
 	
 	public int getNumUploads(){
 		return driver.findElementById("wafTableBody").findElements(By.className("bodyRow")).size();
@@ -124,5 +129,21 @@ public class DashboardPage extends BasePage{
 
     public boolean isRightReportLinkPresent() {
         return driver.findElementsById("rightTileReport").size() != 0;
+    }
+
+    public boolean isMostVulnerableTipCorrect(String expected) {
+        return driver.findElementById("horizontalBarTip").getText().contains(expected);
+    }
+
+    public boolean isTeamNameCorrectInVulnerabilitySummaryModal(String teamName) {
+        return driver.findElementById("header0").getText().contains(teamName);
+    }
+
+    public boolean isApplicationNameCorrectInVulnerabilitySummaryModal(String appName) {
+        return driver.findElementById("header1").getText().contains(appName);
+    }
+
+    public boolean isCountCorrectInVulnerabilitySummaryModal(String count) {
+        return driver.findElementById("header2").getText().contains(count);
     }
 }

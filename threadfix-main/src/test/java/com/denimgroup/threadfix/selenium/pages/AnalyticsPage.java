@@ -174,6 +174,10 @@ public class AnalyticsPage extends BasePage {
         return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
+    public boolean isSeverityLevelShown(String level) {
+        return driver.findElementsById("totalBadge" + level).size() != 0;
+    }
+
     public boolean areAllVulnerabilitiesHidden() {
         return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
     }
