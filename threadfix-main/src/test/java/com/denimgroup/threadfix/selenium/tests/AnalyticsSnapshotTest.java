@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -39,6 +40,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     @Test
     public void pieD3WedgeNavigation() {
         initializeTeamAndAppWithWebInspectScan();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         String[] levels = {"Info","Low","Medium","High","Critical"};
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -112,6 +114,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
     }
+
     @Test
     public void expandCollapseTest() {
         int filtersExpandedSize;
@@ -135,6 +138,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     @Test
     public void testTipCount() {
         initializeTeamAndAppWithWebInspectScan();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         String[] levels = {"Info","Low","Medium","High","Critical"};
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -153,6 +157,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     @Test
     public void testLegendCount() {
         initializeTeamAndAppWithWebInspectScan();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         String[] levels = {"Info","Low","Medium","High","Critical"};
 
         loginPage.defaultLogin()
@@ -171,6 +176,8 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     @Test
     public void pieModalNumCheck() {
        initializeTeamAndAppWithWebInspectScan();
+       DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+
        String[] levels = {"Info","Low","Medium","High","Critical"};
 
        AnalyticsPage analyticsPage = loginPage.defaultLogin()

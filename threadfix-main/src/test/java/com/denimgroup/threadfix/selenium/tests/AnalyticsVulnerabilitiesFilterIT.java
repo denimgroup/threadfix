@@ -160,4 +160,34 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isCollapseAllButtonDisplay());
     }
+
+    @Test
+    public void checkAgingFilter() {
+        initializeTeamAndAppWithIBMScan();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickVulnerabilitySearchTab();
+
+        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
+                .addTeamFilter(teamName, "vulnSearchFilterDiv");
+
+        driver.findElement(By.id("showDateControls")).click();
+        driver.findElement(By.linkText("More Than")).click();
+        driver.findElement(By.linkText("1 Week")).click();
+
+        assertTrue("Only 10 critical vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
+        assertTrue("Only 9 medium vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Medium", "9"));
+        assertTrue("Only 21 low vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
+        assertTrue("Only 5 info vulnerabilities should be shown.",
+                analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
+
+        driver.findElement(By.linkText("Less Than")).click();
+
+        assertTrue("There should have been no results found", driver.findElement(By.id("noResultsFound"))
+                .getText().trim().equals("No results found."));
+    }
 }

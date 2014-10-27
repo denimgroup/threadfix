@@ -26,11 +26,15 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.denimgroup.threadfix.webapp.controller.SystemSettingsController;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class AnalyticsTrendingTest extends BaseDataTest {
@@ -43,6 +47,9 @@ public class AnalyticsTrendingTest extends BaseDataTest {
         * because they have dates of October 8
         * and October 9 which makes narrowing the
         * scope of testing easier to narrow.
+        * Also, this test is horrible because
+        * the Trending D3 graphic is not very
+        * test/navigation friendly.
         */
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
@@ -57,16 +64,37 @@ public class AnalyticsTrendingTest extends BaseDataTest {
 
         driver.findElement(By.id("showDateControlsReport")).click();
         driver.findElement(By.linkText("Forever")).click();
-        driver.findElement(By.id("showDateRangeReport")).click();
-//      driver.findElement(By.id("startDateInputReport")).sendKeys("05-October-2014");
-//      driver.findElement(By.id("endDateInputReport")).sendKeys("09-October-2014");
 
-        WebElement ele = driver.findElement(By.xpath("//*[@class='header']"));
         Actions build = new Actions(driver);
-        build.moveByOffset(-250,-100).build().perform();
-        build.click().build().perform();
 
-        sleep(15000);
+        build.moveByOffset(-300,-60).build().perform();
+        build.click().build().perform();
+        assertTrue("Tip does not match", driver.findElement(By.id("areaChartTip")).getText()
+                .trim().equals("Time: Oct 8 2014\nTotal: 340\nResurfaced: 0\nNew: 284"));
+
+        build.moveByOffset(-200, 0).build().perform();
+        build.click().build().perform();
+        assertTrue("Tip does not match", driver.findElement(By.id("areaChartTip")).getText()
+                .trim().equals("Time: Oct 6 2014\nTotal: 56\nResurfaced: 0\nNew: 56"));
     }
 
+    @Test
+    public void expandCollapseTest() {
+        int filtersExpandedSize;
+        int filtersCollapsedSize;
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickTrendingTab();
+
+        filtersCollapsedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
+        analyticsPage.toggleAllFilterReport("trendingFilterDiv");
+
+        filtersExpandedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
+        assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
+
+        analyticsPage = analyticsPage.toggleAllFilterReport("trendingFilterDiv");
+        assertFalse("Filters were not collapsed.",
+                filtersExpandedSize == analyticsPage.getFilterDivHeight("trendingFilterDiv"));
+    }
 }
