@@ -522,6 +522,13 @@ public abstract class BasePage {
         return (T) this;
     }
 
+    public void hover(String ID) {
+        Actions action = new Actions(driver);
+        action.moveToElement(driver.findElementById(ID), 2, 2);
+        action.perform();
+        sleep(1500);
+    }
+
     public boolean tryClick(By by) {
         int attempts = 0;
         boolean result = false;

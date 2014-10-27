@@ -809,7 +809,7 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
-    /* _____________________ Get Methods _____________________ */
+    /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(driver.findElementById("wafNameText"));
         return driver.findElementById("wafNameText").getText();
@@ -1333,6 +1333,14 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isCWEBarPresent(String teamName, String appName, String vulnerability) {
         return driver.findElementById(teamName + appName + vulnerability + "Bar").isDisplayed();
+    }
+
+    public boolean isTop10TipCorrect(String tipText) {
+        return driver.findElementById("horizontalBarTip").getText().trim().contains(tipText);
+    }
+
+    public boolean isVulnerabilitySummaryElementCorrect(String element, String expected) {
+        return driver.findElementById(element).getText().contains(expected);
     }
 
     /*___________________Void Methods__________________*/

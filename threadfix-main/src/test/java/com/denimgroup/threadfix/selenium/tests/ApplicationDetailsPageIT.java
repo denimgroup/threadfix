@@ -6,6 +6,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertTrue;
 
@@ -259,7 +260,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10VulnerabilitiesPresent() {
+    public void top10VulnerabilitiesPresentTest() {
         initialize();
 
         applicationDetailPage.waitForCWEBar(teamName, appName, "CWE89");
@@ -277,7 +278,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     }
 
     @Test
-    public void top10VulnerabilitiesUpdated() {
+    public void top10VulnerabilitiesUpdatedTest() {
         initialize();
 
         applicationDetailPage.clickActionButton()
@@ -296,5 +297,44 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         assertTrue("Bar for vulnerability CWE-200 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE200"));
         assertTrue("Bar for vulnerability CWE-548 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE548"));
         assertTrue("Bar for vulnerability CWE-301 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE301"));
+    }
+
+    @Test
+    public void top10VulnerabilitiesTipInfoTest() {
+        initialize();
+        String tipText = "Improper Input Validation (CWE 20): 10";
+        String vulnerabilityBar = teamName + appName + "CWE20Bar";
+
+        applicationDetailPage.hover(vulnerabilityBar);
+
+        assertTrue("Information in tip was not correct.", applicationDetailPage.isTop10TipCorrect(tipText));
+    }
+
+    @Test
+    public void top10VulnerabilitiesModalInfoTest() {
+        initialize();
+        String cweID = "20";
+        String cweName = "Improper Input Validation";
+        String severity = "Low";
+        String quantity = "10";
+        String vulnerabilityBar = teamName + appName + "CWE20Bar";
+
+        applicationDetailPage.clickSVGElement(vulnerabilityBar);
+
+        assertTrue("CWE ID was not correct.", applicationDetailPage.isVulnerabilitySummaryElementCorrect("cweId20", cweID));
+        assertTrue("CWE name was not correct.", applicationDetailPage.isVulnerabilitySummaryElementCorrect("cweName20", cweName));
+        assertTrue("Severity was not correct.", applicationDetailPage.isVulnerabilitySummaryElementCorrect("severity20", severity));
+        assertTrue("Quantity was not correct.", applicationDetailPage.isVulnerabilitySummaryElementCorrect("quantity20", quantity));
+    }
+
+    @Test
+    public void vulnerabilitySummaryDetailFilter() {
+        initialize();
+        String vulnerabilityBar = teamName + appName + "CWE20Bar";
+
+        applicationDetailPage.clickSVGElement(vulnerabilityBar)
+                .clickModalSubmit();
+
+        assertTrue("Only 10 low vulnerabilities should be shown.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "10"));
     }
 }
