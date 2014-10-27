@@ -103,13 +103,17 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
             restrict: 'EA',
             scope: {
                 data: '=',
-                label: '='
+                label: '=',
+                width: '@',
+                height: '@',
+                margin: '='
             }
             ,
             link: function(scope, ele) {
-                var margin = {top: 20, right: 20, bottom: 30, left: 60},
-                    width = 422 - margin.left - margin.right,
-                    height = 250 - margin.top - margin.bottom;
+
+                var margin = scope.margin,
+                    width = scope.width - margin.left - margin.right,
+                    height = scope.height - margin.top - margin.bottom;
 
                 var x = d3Service.getScaleLinearRange(d3, [0, width]);
 
@@ -150,6 +154,9 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                     if (!data || data.length < 1) return;
 
+                    if (scope.label && (scope.label.teams || scope.label.apps))
+                        reportUtilities.drawTitle(svg, scope.width, scope.label.teams, scope.label.apps, "Most Vulnerable Applications", -30);
+
                     barGraphData(d3, data, color, false, scope.label, reportConstants);
 
                     y.domain(data.map(function(d) { return d.title; }));
@@ -164,7 +171,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .attr("class", "x axis")
                         .call(yAxis);
 
-                    var col = svg.selectAll(".title")
+                    var col = svg.selectAll(".rect")
                         .data(data)
                         .enter().append("g")
                         .attr("class", "g")

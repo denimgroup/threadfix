@@ -1,6 +1,6 @@
 <div>
 
-	<h4 style="padding-top:8px">Tagged Applications</h4>
+	<h4 style="padding-top:10px">Tagged Applications</h4>
 
     <%--<div ng-form="mappedForm" class="pagination" ng-show="numApps > 100">--%>
         <%--<pagination class="no-margin" total-items="numApps / 10" max-size="5" page="page"></pagination>--%>
@@ -27,8 +27,8 @@
         </tr>
 
         <tr ng-repeat="app in appList" class="bodyRow" >
-            <td class="pointer" id="app{{ index }}"> <a ng-click="goToApp(app)">{{app.name}}</a></td>
-            <td class="pointer" id="team{{ index }}"><a ng-click="goToTeam(app)">{{app.team.name}}</a></td>
+            <td class="pointer" id="app{{ $index }}"> <a ng-click="goToApp(app)">{{app.name}}</a></td>
+            <td class="pointer" id="team{{ $index }}"><a ng-click="goToTeam(app)">{{app.team.name}}</a></td>
         </tr>
 		</tbody>
 	</table>

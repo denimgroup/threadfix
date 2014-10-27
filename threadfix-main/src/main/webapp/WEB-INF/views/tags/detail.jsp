@@ -5,7 +5,7 @@
     <cbs:cachebustscript src="/scripts/tag-detail-page-controller.js"/>
 </head>
 
-<body id="scanDetail" ng-controller="TagDetailPageController">
+<body id="tagDetail" ng-controller="TagDetailPageController">
 
 <%@ include file="/WEB-INF/views/angular-init.jspf"%>
 <ul class="breadcrumb">
@@ -20,14 +20,14 @@
             <table class="dataTable">
                 <tbody>
                 <tr>
-                    <td style="font-weight:bold">Number of Applications</td>
-                    <td class="inputValue" id="importedResults">
+                    <td>Number of Applications</td>
+                    <td class="inputValue" id="numApps">
                         <c:out value="${ numApps }"/>
                     </td>
                 </tr>
                 <tr>
-                    <td style="font-weight:bold">Number of Vulnerability Comments</td>
-                    <td class="inputValue" id="duplicateResults">
+                    <td>Number of Vulnerability Comments</td>
+                    <td class="inputValue" id="numVulnComments">
                         <c:out value="${ numVulnComments }"/>
                     </td>
                 </tr>
