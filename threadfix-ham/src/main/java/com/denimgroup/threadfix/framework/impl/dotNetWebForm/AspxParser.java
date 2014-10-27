@@ -42,6 +42,7 @@ public class AspxParser implements EventBasedTokenizer {
 
     public final List<String> ids = list();
     public final String aspName;
+    public List<String> parameters = list();
 
     @Nonnull
     public static AspxParser parse(@Nonnull File file) {

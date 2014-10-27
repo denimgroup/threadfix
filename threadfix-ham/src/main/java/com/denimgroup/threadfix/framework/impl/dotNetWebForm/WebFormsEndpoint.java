@@ -23,14 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
-import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
-import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.*;
 
 /**
  * Created by mac on 9/4/14.
@@ -55,6 +54,13 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     }
 
     private void collectParameters() {
+
+        if (!aspxCsParser.lineNumberToParametersMap.containsKey(0)) {
+            aspxCsParser.lineNumberToParametersMap.put(0, CollectionUtils.<String>set());
+        }
+
+        aspxCsParser.lineNumberToParametersMap.get(0).addAll(aspxParser.parameters);
+
         for (Map.Entry<Integer, Set<String>> entry : aspxCsParser.lineNumberToParametersMap.entrySet()) {
             for (String key : entry.getValue()) {
                 if (!map.containsKey(key)) {

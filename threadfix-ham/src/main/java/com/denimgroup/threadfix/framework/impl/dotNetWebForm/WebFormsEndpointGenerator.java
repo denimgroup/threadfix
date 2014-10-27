@@ -51,6 +51,8 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
             throw new IllegalArgumentException("Invalid directory passed to WebFormsEndpointGenerator: " + rootDirectory);
         }
 
+        Map<String, AscxFile> map = AscxFileMappingsFileParser.getMap(rootDirectory);
+
         Collection aspxFiles = FileUtils.listFiles(rootDirectory,
                 new FileExtensionFileFilter("aspx"), TrueFileFilter.INSTANCE);
 
@@ -58,7 +60,13 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
 
         for (Object aspxFile : aspxFiles) {
             if (aspxFile instanceof File) {
-                aspxParsers.add(AspxParser.parse((File) aspxFile));
+                File file = (File) aspxFile;
+
+                AspxParser aspxParser = AspxParser.parse(file);
+                AspxUniqueIdParser uniqueIdParser = AspxUniqueIdParser.parse(file, map);
+
+                aspxParser.parameters.addAll(uniqueIdParser.parameters);
+                aspxParsers.add(aspxParser);
             }
         }
 
