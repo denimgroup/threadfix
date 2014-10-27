@@ -24,11 +24,17 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
 
@@ -94,4 +100,46 @@ public class DashboardPageIT extends BaseDataTest {
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
     }
 
+    //TODO Fix when trending filter reflects team/app selections on dashboard.
+    @Test
+    public void testVulnTrendingTips() {
+        ApplicationDetailPage applicationDetailPage = dashboardPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickScansTab().clickDeleteScanButton();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+
+        AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
+                .clickTrendingTab()
+                .expandTeamApplicationFilterReport("trendingFilterDiv")
+                .addTeamFilterReport(teamName,"trendingFilterDiv");
+
+        WebElement filterDiv = driver.findElement(By.id("trendingFilterDiv"));
+
+        filterDiv.findElement(By.id("showSaveFilterReport")).click();
+        filterDiv.findElement(By.id("filterNameInputReport")).sendKeys("test");
+        filterDiv.findElement(By.id("saveFilterButtonReport")).click();
+
+        analyticsPage.clickDashboardLink();
+
+        driver.findElement(By.id("leftTileReport")).click();
+
+        Actions build = new Actions(driver);
+
+        build.moveByOffset(-50,40).build().perform();
+        build.click().build().perform();
+        sleep(5000);
+
+        build.moveByOffset(100,0).build().perform();
+        build.click().build().perform();
+        sleep(5000);
+
+        dashboardPage.clickAnalyticsLink().clickTrendingTab();
+
+        WebElement filterDiv2 = driver.findElement(By.id("trendingFilterDiv"));
+        filterDiv2.findElement(By.linkText("Load Filters")).click();
+        filterDiv2.findElement(By.id("deleteFilterButtonReport")).click();
+    }
 }

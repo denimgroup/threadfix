@@ -1,11 +1,15 @@
 package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
+import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
 
@@ -99,5 +103,34 @@ public class TeamDetailPageIT extends BaseIT {
 
         assertTrue("Team Name couldn't Edited properly",
                 teamDetailPage.successAlert().contains("Successfully edited team" + " " + teamName));
+    }
+
+    @Test
+    public void testVulnTrendingTips() {
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.clickScansTab().clickDeleteScanButton();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickOrganizationHeaderLink()
+                .clickViewTeamLink(teamName);
+
+        teamDetailPage.clickVulnerabilitiesTab("340");
+
+        Actions build = new Actions(driver);
+
+        build.moveByOffset(-50,-80).build().perform();
+        build.click().build().perform();
+        assertTrue("Tip does not match", driver.findElement(By.id("areaChartTip")).getText()
+                .trim().equals("Time: Oct 6 2014\nTotal: 56\nResurfaced: 0\nNew: 56"));
+
+        build.moveByOffset(100,0).build().perform();
+        build.click().build().perform();
+        assertTrue("Tip does not match", driver.findElement(By.id("areaChartTip")).getText()
+                .trim().equals("Time: Oct 8 2014\nTotal: 340\nResurfaced: 0\nNew: 284"));
     }
 }
