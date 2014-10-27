@@ -233,6 +233,11 @@ public class TeamIndexPage extends BasePage {
         return new TeamIndexPage(driver);
     }
 
+    public AnalyticsPage clickDetails() {
+        driver.findElementById("submit").click();
+        return new AnalyticsPage(driver);
+    }
+
 
     /*------------------------------------ Get Methods ----------------------------------------*/
 

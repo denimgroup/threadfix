@@ -13,7 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class TeamIndexPageIT extends BaseIT {
+public class TeamIndexPageIT extends BaseDataTest {
 
     private DashboardPage dashboardPage;
     private String teamName = createTeam();
@@ -180,5 +180,52 @@ public class TeamIndexPageIT extends BaseIT {
         int numUpdatedVulns = Integer.parseInt(teamIndexPage.getApplicationSpecificVulnerabilityCount(teamName, appName, "Total"));
 
         assertTrue("Old scan replaced newer scan", numOriginalVulns == numUpdatedVulns);
+    }
+
+    @Test
+    public void testTeamPieGraphNav() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        AnalyticsPage analyticsPage;
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        for(int i = 0; i < 5; i++) {
+            teamIndexPage.clickSVGElement(teamName + levels[i] + "Arc");
+
+            analyticsPage = teamIndexPage.clickDetails();
+
+            assertTrue("Navigation @ level " + levels[i] + " failed", analyticsPage.checkCorrectFilterLevel(levels[i]));
+
+            teamIndexPage = analyticsPage.clickOrganizationHeaderLink()
+                    .expandTeamRowByName(teamName);
+        }
+    }
+
+    @Test
+    public void testTeamPieGraphTips() {
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Burp Suite"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        TeamIndexPage teamIndexPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName);
+
+        for(int i = 0; i < 5; i++) {
+            teamIndexPage.hoverOverSVGElement(teamName + levels[i] + "Arc");
+            String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
+
+            assertTrue("Tip value at level " + levels[i] + " does not match badge",
+                    driver.findElement(By.id("num" + levels[i] + "Vulns" + teamName + "-" + appName))
+                            .getText().trim().equals(numTip));
+        }
     }
 }
