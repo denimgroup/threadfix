@@ -53,6 +53,8 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
 
         Map<String, AscxFile> map = AscxFileMappingsFileParser.getMap(rootDirectory);
 
+        Map<String, AspxParser> masterFileMap = MasterPageParser.getMasterFileMap(rootDirectory, map);
+
         Collection aspxFiles = FileUtils.listFiles(rootDirectory,
                 new FileExtensionFileFilter("aspx"), TrueFileFilter.INSTANCE);
 
@@ -64,6 +66,10 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
 
                 AspxParser aspxParser = AspxParser.parse(file);
                 AspxUniqueIdParser uniqueIdParser = AspxUniqueIdParser.parse(file, map);
+
+                if (masterFileMap.containsKey(uniqueIdParser.masterPage)) {
+                    aspxParser.parameters.addAll(masterFileMap.get(uniqueIdParser.masterPage).parameters);
+                }
 
                 aspxParser.parameters.addAll(uniqueIdParser.parameters);
                 aspxParsers.add(aspxParser);
