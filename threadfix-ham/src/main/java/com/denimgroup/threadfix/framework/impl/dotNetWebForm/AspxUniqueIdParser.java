@@ -47,6 +47,8 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
             "asp:BoundField", "asp:TextBox"
     ); // TODO figure this out better
 
+    String masterPage = null;
+
     private Map<String, AscxFile> allControlMap;
 
     @Nonnull
@@ -89,24 +91,67 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
-        processHead(type, stringValue);
+        processMasterPage(type, stringValue);
+        processRequires(type, stringValue);
         processBody(type, stringValue);
         processCustomTags(type, stringValue);
         printDebug(type, lineNumber, stringValue);
     }
 
-    private enum State {
-        START, LEFT_ANGLE, PERCENT, ARROBA, REGISTER, SRC, TAG_PREFIX, TAG_NAME
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //                       Parse <@% Page statements
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    private enum PageState {
+        START, LEFT_ANGLE, PERCENT, ARROBA, PAGE, MASTER_PAGE_FILE, DONE
+    }
+    PageState currentPageState = PageState.START;
+
+    private void processMasterPage(int type, String stringValue) {
+        switch (currentPageState) {
+            case START:
+                currentPageState = type == '<' ? PageState.LEFT_ANGLE : PageState.START;
+                break;
+            case LEFT_ANGLE:
+                currentPageState = type == '%' ? PageState.PERCENT : PageState.START;
+                break;
+            case PERCENT:
+                currentPageState = type == '@' ? PageState.ARROBA : PageState.START;
+                break;
+            case ARROBA:
+                currentPageState = type == -3 && "Page".equals(stringValue) ? PageState.PAGE : PageState.START;
+                break;
+            case PAGE:
+                if (type == '>') {
+                    currentPageState = PageState.DONE;
+                } else if ("MasterPageFile".equals(stringValue)) {
+                    currentPageState = PageState.MASTER_PAGE_FILE;
+                }
+                break;
+            case MASTER_PAGE_FILE:
+                if (type == '"') {
+                    masterPage = stringValue;
+                } else if (type != '=') {
+                    currentPageState = PageState.DONE;
+                }
+                break;
+            case DONE:
+                break;
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
     //                       Parse <@% Require statements
     //////////////////////////////////////////////////////////////////////////////////////////
+
+    private enum State {
+        START, LEFT_ANGLE, PERCENT, ARROBA, REGISTER, SRC, TAG_PREFIX, TAG_NAME
+    }
     State currentState = State.START;
     String currentSrc, currentTagPrefix, currentTagName;
     Map<String, AscxFile> includedControlMap = newMap();
 
-    private void processHead(int type, String stringValue) {
+    private void processRequires(int type, String stringValue) {
         switch (currentState) {
             case START:
                 currentState = type == '<' ? State.LEFT_ANGLE : State.START;

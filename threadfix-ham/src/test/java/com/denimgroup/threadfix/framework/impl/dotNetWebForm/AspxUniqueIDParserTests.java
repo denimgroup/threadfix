@@ -92,4 +92,11 @@ public class AspxUniqueIDParserTests {
         }
     }
 
+    @Test
+    public void testParseMasterPage() {
+        AspxUniqueIdParser parser = parse(getDotNetWebFormsFile("StudentsAdd.aspx"));
+
+        assert parser.masterPage.equals("~/Site.Master") : "Master page wasn't ~/Site.Master, was " + parser.masterPage;
+    }
+
 }
