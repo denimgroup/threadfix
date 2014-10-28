@@ -46,7 +46,7 @@ public class EnumTests {
                 "DOT_NET_MVC":
                 upperAndUnderscore(frameworkType.getDisplayName());
 
-			assertTrue("Enum lookup is broken",
+			assertTrue("Enum lookup is broken for " + frameworkType,
                     FrameworkType.getFrameworkType(lookupString) == frameworkType);
 		}
 	}
