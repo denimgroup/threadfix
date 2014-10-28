@@ -203,7 +203,6 @@ public class TeamIndexPageIT extends BaseDataTest {
             teamIndexPage.clickSVGElement(teamName + levels[i] + "Arc");
 
             analyticsPage = teamIndexPage.clickDetails();
-            sleep(1000);
 
             assertTrue("Navigation @ level " + levels[i] + " failed", analyticsPage.checkCorrectFilterLevel(levels[i]));
             assertTrue("Number of badge vulnerabilities at level " + levels[i] + "is incorrect",

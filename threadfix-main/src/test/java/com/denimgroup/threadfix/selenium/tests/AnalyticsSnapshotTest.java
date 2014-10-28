@@ -184,7 +184,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     public void pieModalNumCheck() {
        initializeTeamAndAppWithWebInspectScan();
        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+       DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
        String[] levels = {"Info","Low","Medium","High","Critical"};
 
@@ -206,5 +206,28 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
            analyticsPage.clickModalSubmit();
        }
+    }
+
+    @Test
+    public void pieModalCloseTest() {
+        initializeTeamAndAppWithWebInspectScan();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+
+        String[] levels = {"Info","Low","Medium","High","Critical"};
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab();
+
+        for(int i = 0; i < 5; i++) {
+            sleep(1500);
+
+            analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
+
+            driver.findElement(By.xpath("//*[@id=\"reports\"]/div[6]/div/div/div[4]/button[1]")).click();
+
+            assertTrue("Modal did not close at level " + levels[i], analyticsPage.isClickable("reportSnapshotSelect"));
+        }
     }
 }

@@ -235,6 +235,7 @@ public class TeamIndexPage extends BasePage {
 
     public AnalyticsPage clickDetails() {
         driver.findElementById("submit").click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 

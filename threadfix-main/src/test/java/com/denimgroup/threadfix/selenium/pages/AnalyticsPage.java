@@ -29,6 +29,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.ArrayList;
+
 public class AnalyticsPage extends BasePage {
 
 	public AnalyticsPage(WebDriver webdriver) {
@@ -142,11 +144,6 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public boolean checkCorrectFilterLevel(String level) {
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
-        return filterDiv.findElement(By.id("show" +level)).isSelected();
-    }
-
     public AnalyticsPage clickCloseVulnerabilityButton() {
         driver.findElementById("closeVulnerabilityLink").click();
         return new AnalyticsPage(driver);
@@ -193,5 +190,18 @@ public class AnalyticsPage extends BasePage {
 
     public boolean isCollapseAllButtonDisplay() {
         return driver.findElementById("toggleVulnTree").isDisplayed();
+    }
+
+    public boolean checkCorrectFilterLevel(String level) {
+        ArrayList<String> levels = new ArrayList<String>();
+        levels.add("Info"); levels.add("Low"); levels.add("Medium"); levels.add("High"); levels.add("Critical");
+        levels.remove(level);
+
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        return (filterDiv.findElement(By.id("show" + level)).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(0))).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(1))).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(2))).isSelected() &&
+                !filterDiv.findElement(By.id("show" + levels.get(3))).isSelected());
     }
 }
