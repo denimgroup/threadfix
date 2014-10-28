@@ -41,6 +41,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     public void pieD3WedgeNavigation() {
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
         String[] levels = {"Info","Low","Medium","High","Critical"};
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -70,6 +71,8 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
 
+        analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
+
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
@@ -98,6 +101,8 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
         analyticsPage.expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addApplicationFilterReport(appName,"snapshotFilterDiv");
+
+        analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -139,6 +144,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     public void testTipCount() {
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
         String[] levels = {"Info","Low","Medium","High","Critical"};
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
@@ -158,6 +164,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     public void testLegendCount() {
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
         String[] levels = {"Info","Low","Medium","High","Critical"};
 
         loginPage.defaultLogin()
@@ -177,6 +184,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
     public void pieModalNumCheck() {
        initializeTeamAndAppWithWebInspectScan();
        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
        String[] levels = {"Info","Low","Medium","High","Critical"};
 

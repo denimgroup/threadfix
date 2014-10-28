@@ -295,7 +295,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.mapWhiteHatToTeamAndApp(1, teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = remoteProvidersIndexPage.clickWhiteHatImportScan(1);
-        sleep(40000);
+        sleep(50000);
         assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
         driver.switchTo().alert().accept();
 

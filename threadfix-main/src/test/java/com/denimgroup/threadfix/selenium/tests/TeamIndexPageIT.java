@@ -194,6 +194,7 @@ public class TeamIndexPageIT extends BaseDataTest {
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
+        sleep(1000);
 
         for(int i = 0; i < 5; i++) {
             String numVulns = driver.findElement(By.id("num" + levels[i] + "Vulns" + teamName + "-" + appName))
@@ -202,6 +203,7 @@ public class TeamIndexPageIT extends BaseDataTest {
             teamIndexPage.clickSVGElement(teamName + levels[i] + "Arc");
 
             analyticsPage = teamIndexPage.clickDetails();
+            sleep(1000);
 
             assertTrue("Navigation @ level " + levels[i] + " failed", analyticsPage.checkCorrectFilterLevel(levels[i]));
             assertTrue("Number of badge vulnerabilities at level " + levels[i] + "is incorrect",
@@ -209,6 +211,7 @@ public class TeamIndexPageIT extends BaseDataTest {
 
             teamIndexPage = analyticsPage.clickOrganizationHeaderLink()
                     .expandTeamRowByName(teamName);
+            sleep(1000);
         }
     }
 
