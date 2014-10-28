@@ -30,6 +30,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -149,7 +150,9 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab();
+                .clickSnapshotTab()
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
         for(int i = 0; i < 5; i++) {
             analyticsPage.hoverOverSVGElement("pointInTime" + levels[i] + "Arc");
@@ -169,7 +172,9 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab();
+                .clickSnapshotTab()
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
         for(int i = 0; i < 5; i++) {
             String numLegend = driver.findElement(By.id("legend" + levels[i]))
@@ -192,7 +197,9 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
                .clickAnalyticsLink();
 
        for(int i = 0; i < 5; i++) {
-           analyticsPage.clickSnapshotTab();
+           analyticsPage.clickSnapshotTab()
+                   .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                   .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
            sleep(1500);
 
