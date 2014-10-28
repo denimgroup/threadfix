@@ -69,6 +69,9 @@ public class AspxParser implements EventBasedTokenizer {
 
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
+
+        processRequest(type, lineNumber, stringValue);
+
         switch (state) {
             case OUT_OF_TAG:
                 if (type == '<') {
@@ -92,6 +95,45 @@ public class AspxParser implements EventBasedTokenizer {
                     ids.add(stringValue);
                     state = State.IN_TAG;
                 }
+                break;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                       Method-level Request[]-style parsing
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    enum RequestState {
+        START, ANGLE, PERCENT, EQUALS, REQUEST, OPEN_SQUARE
+    }
+    RequestState requestState = RequestState.START;
+
+    private void processRequest(int type, int lineNumber, String stringValue) {
+        switch (requestState) {
+            case START:
+                requestState = type == '<' ? RequestState.ANGLE : RequestState.START;
+                break;
+            case ANGLE:
+                requestState = type == '%' ? RequestState.PERCENT : RequestState.START;
+                break;
+            case PERCENT:
+                requestState = type == '=' ? RequestState.EQUALS : RequestState.START;
+                break;
+            case EQUALS:
+                if (type == -3 && stringValue.equals("Request")) {
+                    requestState = RequestState.REQUEST;
+                } else if (type == '>') {
+                    requestState = RequestState.START;
+                }
+                break;
+            case REQUEST:
+                requestState = type == '[' ? RequestState.OPEN_SQUARE : RequestState.START;
+                break;
+            case OPEN_SQUARE:
+                if (type == '"') {
+                    parameters.add(stringValue);
+                }
+                requestState = RequestState.START;
                 break;
         }
     }

@@ -26,6 +26,9 @@ package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
+import java.io.File;
+import java.util.Set;
+
 /**
  * Created by mac on 9/4/14.
  */
@@ -45,6 +48,22 @@ public class AspxCsParserTests {
 
         assert csParser.lineNumberToParametersMap.get(20).contains("newitem") :
                 "Aspx.cs parser failed to get newitem at line 20: " + csParser;
+    }
+
+    @Test
+    public void testRequestSquareBracketStyleParameters() {
+        File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("ViewStatement.aspx.cs");
+
+        assert dotNetWebFormsFile.exists() && dotNetWebFormsFile.isFile() :
+                "ViewStatement.aspx.cs was not found. Path should have been " + dotNetWebFormsFile.getAbsolutePath();
+
+        AspxCsParser csParser = AspxCsParser.parse(dotNetWebFormsFile);
+
+        Set<String> strings = csParser.lineNumberToParametersMap.get(22);
+
+        assert strings != null : "Strings were null for line 22. Map was: " + csParser.lineNumberToParametersMap;
+        assert strings.contains("StatementID") :
+                "Aspx.cs parser failed to get StatementID at line 22: " + csParser;
     }
 
 }

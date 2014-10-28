@@ -57,6 +57,7 @@ public class TestConstants {
         WEB_FORMS_SAMPLE = WEB_FORMS_ROOT + "/Add new DropDownList option",
         WEB_FORMS_CONTOSO = WEB_FORMS_ROOT + "/ASP.NET Web Forms Application Using Entity Framework 4.0 Database First",
         WEB_FORMS_MODIFIED = WEB_FORMS_ROOT + "/webforms",
+        RISK_E_UTILITY = WEB_FORMS_ROOT + "/riskE",
         DOT_NET_ROOT = testRoot + "/ASP.NET MVC",
         DOT_NET_SAMPLE = DOT_NET_ROOT + "/ASP.NET MVC Application Using Entity Framework Code First",
 		FAKE_FILE = "",
