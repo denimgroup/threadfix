@@ -62,10 +62,6 @@ public class AspxCsParser implements EventBasedTokenizer {
         return true;
     }
 
-    enum ClassState {
-        START, GOT_PAGE, OPEN_PAREN, IN_METHOD
-
-    }
 
     enum MethodState {
         WAITING, ACTIVE, GOT_TEXT_VALUE
@@ -81,7 +77,38 @@ public class AspxCsParser implements EventBasedTokenizer {
         processBraceLevels(type);
         processClassLevel(type, lineNumber, stringValue);
         processMethodLevel(type, lineNumber, stringValue);
+        processRequest(type, lineNumber, stringValue);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                       Method-level Request[]-style parsing
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    enum RequestState {
+        START, REQUEST, OPEN_SQUARE
+    }
+    RequestState requestState = RequestState.START;
+
+    private void processRequest(int type, int lineNumber, String stringValue) {
+        switch (requestState) {
+            case START:
+                requestState = type == -3 && stringValue.equals("Request") ? RequestState.REQUEST : RequestState.START;
+                break;
+            case REQUEST:
+                requestState = type == '[' ? RequestState.OPEN_SQUARE : RequestState.START;
+                break;
+            case OPEN_SQUARE:
+                if (type == '"') {
+                    lineNumberToParametersMap.put(lineNumber, set(stringValue));
+                }
+                requestState = RequestState.START;
+                break;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                           Class-level parsing
+    ////////////////////////////////////////////////////////////////////////////////////
 
     private void processBraceLevels(int type) {
         currentCurlyLevel +=
@@ -90,6 +117,10 @@ public class AspxCsParser implements EventBasedTokenizer {
         currentParenLevel +=
                 type == '(' ?  1 :
                 type == ')' ? -1 : 0;
+    }
+
+    enum ClassState {
+        START, GOT_PAGE, OPEN_PAREN, IN_METHOD
     }
 
     String lastStringValue = null;
@@ -124,6 +155,10 @@ public class AspxCsParser implements EventBasedTokenizer {
                 break;
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                           Method-level .Text-style parsing
+    ////////////////////////////////////////////////////////////////////////////////////
 
     Set<String> currentParameters = set();
     Integer currentLineNumber = null;
