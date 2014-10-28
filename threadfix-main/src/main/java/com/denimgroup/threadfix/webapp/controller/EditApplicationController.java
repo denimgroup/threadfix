@@ -32,6 +32,9 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +45,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -66,6 +68,8 @@ public class EditApplicationController {
 	private OrganizationService organizationService;
     @Autowired
     private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private TagService tagService;
 
 	@ModelAttribute("defectTrackerList")
 	public List<DefectTracker> populateDefectTrackers() {
@@ -104,8 +108,7 @@ public class EditApplicationController {
 	public @ResponseBody String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
-			BindingResult result, SessionStatus status, Model model,
-			HttpServletRequest request) throws IOException {
+			BindingResult result, Model model) throws IOException {
 
         ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.FormInfo.class);
 
@@ -166,7 +169,7 @@ public class EditApplicationController {
 	public @ResponseBody RestResponse<Waf> processSubmitAjaxWaf(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
-			BindingResult result, SessionStatus status, Model model) {
+			BindingResult result, Model model) {
 		
 		if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
 			return RestResponse.failure("You don't have permission to set the WAF for this application.");
@@ -257,4 +260,30 @@ public class EditApplicationController {
 			return RestResponse.success(application.getDefectTracker());
 		}
 	}
+
+    @RequestMapping(value="/setTagsEndpoint", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
+                                                                                    @PathVariable("orgId") int orgId,
+                                                                                    @RequestParam("jsonStr") String jsonStr) {
+        log.info("Updating tags endpoint");
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+            return RestResponse.failure("You are not authorized to manage this application.");
+        }
+
+        try {
+            List<Tag> newTags = new Gson().fromJson(jsonStr, new TypeToken<List<Tag>>(){}.getType());
+            Application dbApplication = applicationService.loadApplication(appId);
+            if (dbApplication == null) {
+                return FormRestResponse.failure("Invalid data.");
+            }
+            dbApplication.setTags(newTags);
+            applicationService.storeApplication(dbApplication);
+
+            return RestResponse.success(dbApplication);
+
+        }    catch (JsonSyntaxException exception) {
+            log.warn("JSON Parsing failed.", exception);
+            return FormRestResponse.failure("Invalid data.");
+        }
+    }
 }

@@ -5,10 +5,12 @@
 	<cbs:cachebustscript src="/scripts/applications-index-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
+    <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 
 <body id="apps">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp"%>
 
 	<h2>Teams</h2>
 
@@ -37,6 +39,7 @@
         </div>
 
         <%@ include file="/WEB-INF/views/organizations/indexTable.jsp" %>
+
     </div>
 
 </body>

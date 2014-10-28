@@ -125,6 +125,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void deactivateApplication(Application application) {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
+        application.setTags(new ArrayList<Tag>());
 		removeRemoteApplicationLinks(application);
 		String possibleName = getNewName(application);
 		
@@ -170,7 +171,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
     }
-	
+
 	private String getNewName(Application application) {
 		if (application != null) {
 			

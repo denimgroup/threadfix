@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.data.enums;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 public enum FrameworkType {
-	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC");
+	NONE("None"), DETECT("Detect"), JSP("JSP"), SPRING_MVC("Spring MVC"), DOT_NET_MVC(".NET MVC"), DOT_NET_WEB_FORMS("ASP.NET WebForms");
 	
 	FrameworkType(String displayName) {
 		this.displayName = displayName;
@@ -38,10 +38,14 @@ public enum FrameworkType {
 	
     public static FrameworkType getFrameworkType(String input) {
 		FrameworkType type = DETECT; // default framework type
-		
-		if (input != null) {
+
+        if (input != null && (input.equals("DOT_NET_MVC") || input.equals(".NET_MVC"))) {
+            type = DOT_NET_MVC;
+        } else if (input != null) {
 			for (FrameworkType frameworkType : values()) {
-				if (frameworkType.toString().equals(input)) {
+				if (frameworkType.toString().equals(input) ||
+                        frameworkType.displayName.equals(input) ||
+                        frameworkType.displayName.replace(' ', '_').equals(input)) {
 					type = frameworkType;
 					break;
 				}

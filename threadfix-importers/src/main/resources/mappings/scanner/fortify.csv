@@ -1,6 +1,9 @@
-9/17/2014 11:45:00
+10/17/2014 11:45:00
 type.info,,
 Fortify 360
 type.vulnerabilities,,
 Value Shadowing,Value Shadowing,592
 Privacy Violation: Autocomplete,Privacy Violation: Autocomplete,522
+ASP.NET MVC Bad Practices: Controller Action Without AntiForgery Validation,ASP.NET MVC Bad Practices: Controller Action Without AntiForgery Validation,352
+ASP.NET MVC Bad Practices: Controller Action Not Restricted to POST,ASP.NET MVC Bad Practices: Controller Action Not Restricted to POST,598
+Cookie Security: HTTPOnly not Set on Application Cookie,Cookie Security: HTTPOnly not Set on Application Cookie,614

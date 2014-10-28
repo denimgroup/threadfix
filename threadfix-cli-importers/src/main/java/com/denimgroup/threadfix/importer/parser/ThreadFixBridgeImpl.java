@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.parser;
 
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
@@ -32,19 +33,24 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXParseException;
 
 import java.io.File;
 import java.lang.reflect.Field;
 
 @Service
 public class ThreadFixBridgeImpl implements ThreadFixBridge {
+
+	private static final SanitizedLogger LOG = new SanitizedLogger(ThreadFixBridgeImpl.class);
 
     @Autowired
     public ChannelImporterFactory factory;
@@ -65,7 +71,14 @@ public class ThreadFixBridgeImpl implements ThreadFixBridge {
 
         importer.setFileName(inputFile.getAbsolutePath());
 
-        return importer.checkFile();
+	    try {
+            return importer.checkFile();
+	    } catch (RestIOException e) {
+		    LOG.warn("Received exception for file " +
+				    inputFile.getAbsolutePath() +
+				    ", returning invalid format bean.", e);
+		    return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
+	    }
     }
 
     @Override

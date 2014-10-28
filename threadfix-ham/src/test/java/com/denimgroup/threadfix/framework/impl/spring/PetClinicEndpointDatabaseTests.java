@@ -23,26 +23,25 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.spring;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.InformationSourceType;
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.CodePoint;
 import com.denimgroup.threadfix.framework.engine.DefaultCodePoint;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.junit.Test;
-
-import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
+import org.junit.Test;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class PetClinicEndpointDatabaseTests {
 	
@@ -169,24 +168,20 @@ public class PetClinicEndpointDatabaseTests {
     String[][] parameterTests = new String[][] {
 			{ "/petclinic/owners/new", null, "60" },
 			{ "/petclinic/owners/new", "lastName", "67" },
-			{ "/petclinic/owners/new", "pet.type", "67" },
 			{ "/petclinic/owners/new", "city", "67" },
 			{ "/petclinic/owners/new", "firstName", "67" },
 			{ "/petclinic/owners/new", "telephone", "67" },
 			{ "/petclinic/owners/new", "pet.type.id", "67" },
 			{ "/petclinic/owners/new", "pet.name", "67" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "petId", "85" },
-			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.type", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.pet.type.id", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.city", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.pet.type.name", "92" },
-			{ "/petclinic/owners/{id}/pets/{id}/edit", "type", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.firstName", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.id", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.id", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.id", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.telephone", "92" },
-			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.pet.owner", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "name", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "type.name", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.address", "92" },
@@ -198,7 +193,6 @@ public class PetClinicEndpointDatabaseTests {
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.pet.id", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.lastName", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.type.id", "92" },
-			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.owner.pet.type", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.name", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.pet.type.name", "92" },
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "owner.telephone", "92" },
@@ -207,21 +201,17 @@ public class PetClinicEndpointDatabaseTests {
 			{ "/petclinic/owners/{id}/pets/{id}/edit", "type.id", "92" },
 			{ "/petclinic/owners/{id}/pets/new", "ownerId", "64" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.pet.birthDate", "73" },
-			{ "/petclinic/owners/{id}/pets/new", "owner.pet.type", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.city", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.lastName", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.pet.type.id", "73" },
-			{ "/petclinic/owners/{id}/pets/new", "type", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.pet.name", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.id", "73" },
-			{ "/petclinic/owners/{id}/pets/new", "owner.pet", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.pet.type.name", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.telephone", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.pet.id", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.address", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "name", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "type.name", "73" },
-			{ "/petclinic/owners/{id}/pets/new", "owner", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "owner.firstName", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "birthDate", "73" },
 			{ "/petclinic/owners/{id}/pets/new", "type.id", "73" },

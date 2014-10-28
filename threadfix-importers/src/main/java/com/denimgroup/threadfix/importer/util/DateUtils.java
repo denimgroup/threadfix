@@ -24,8 +24,9 @@
 package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,13 +37,13 @@ import java.util.Locale;
 public class DateUtils {
 
     protected static final SanitizedLogger  log       = new SanitizedLogger(DateUtils.class);
-    private static final   SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    private   static final SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
     private DateUtils() {
     }
 
     /**
-     * This method parses strings using the date format "yyyy-MM-DD'T'HH:mm:ss'Z'" which is ISO 8601
+     * This method parses strings using the date format "yyyy-MM-dd'T'HH:mm:ss'Z'" which is ISO 8601
      * @param dateString
      * @return
      */
@@ -79,7 +80,7 @@ public class DateUtils {
      * This method allows caching of the SimpleDateFormat to avoid unnecessary object creation
      * @return resulting Calendar, or null if parsing fails for any reason
      */
-    public static Calendar getCalendarFromString(SimpleDateFormat format, String dateString) {
+    public static Calendar getCalendarFromString(@Nonnull SimpleDateFormat format, String dateString) {
         log.debug("Attempting to parse a calendar from " + dateString + " using " + format.toPattern());
 
         Calendar result = null;

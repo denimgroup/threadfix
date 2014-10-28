@@ -24,26 +24,42 @@
 
 package com.denimgroup.threadfix.importer.cli;
 
+import com.denimgroup.threadfix.data.ScanCheckResultBean;
+import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.ScanImportStatus;
+import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
-import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 @Component
 public class ScanParser {
 
     @Autowired
-    ThreadFixBridge bridge;
+    ThreadFixBridge               bridge;
     @Autowired
-    ChannelTypeDao channelTypeDao;
+    ChannelTypeDao                channelTypeDao;
+    @Autowired
+    ScannerMappingsUpdaterService mappingsUpdaterService;
+
+    private boolean needsUpdating = true;
+
+    private void checkForUpdate() {
+        if (needsUpdating) {
+            try {
+                mappingsUpdaterService.updateMappings();
+                needsUpdating = false;
+            } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException
+                throw new IllegalStateException("Encountered error while updating channel vulns. Fix it.", e);
+            }
+        }
+    }
 
     /**
      *
@@ -66,6 +82,25 @@ public class ScanParser {
         }
     }
 
+    @Transactional(readOnly = false) // used to be true
+    public ScanCheckResultBean testScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {
+        return testScan(new File(filePath));
+    }
+
+    @Transactional(readOnly = false) // used to be true
+    public ScanCheckResultBean testScan(@Nonnull File file) throws TypeParsingException, ScanTestingException {
+        if (!file.exists()) {
+            throw new ScanFileNotFoundException("Scan file not found: " + file.getAbsolutePath());
+        }
+
+        ScannerType scannerType = bridge.getType(file);
+
+        if (scannerType == null) {
+            throw new TypeParsingException();
+        } else {
+            return bridge.testScan(scannerType, file);
+        }
+    }
 
     @Transactional(readOnly = false) // used to be true
     public Scan getScan(@Nonnull String filePath) throws TypeParsingException, ScanTestingException {
@@ -74,6 +109,8 @@ public class ScanParser {
 
     @Transactional(readOnly = false) // used to be true
     public Scan getScan(@Nonnull File file) throws TypeParsingException, ScanTestingException, ScanFileNotFoundException {
+
+        checkForUpdate();
 
         if (!file.exists()) {
             throw new ScanFileNotFoundException("Scan file not found: " + file.getAbsolutePath());

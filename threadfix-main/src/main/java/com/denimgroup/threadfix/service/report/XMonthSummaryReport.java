@@ -25,9 +25,10 @@
 package com.denimgroup.threadfix.service.report;
 
 import com.denimgroup.threadfix.data.dao.ScanDao;
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.ReportParameters;
 import com.denimgroup.threadfix.data.entities.Scan;
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRField;
 
 import java.text.DateFormatSymbols;
 import java.util.*;
@@ -52,17 +53,20 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  *
  */
-public class JasperXMonthSummaryReport implements JRDataSource {
+public class XMonthSummaryReport {
 	private List<List<Scan>> normalizedScans = new ArrayList<>();
 	private List<String> dateList = new ArrayList<>();
-	private int index = 0, numMonths = 0;
-	private Map<String, Object> resultsHash = new HashMap<>();
-	
+	private int numMonths = 0;
+
 	private ScanDao scanDao = null;
+
+    private Integer teamId, appId;
+    private String teamName, appName;
+
 	
 	private static final String[] months = new DateFormatSymbols().getMonths();
 	
-	public JasperXMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths) {
+	public XMonthSummaryReport(List<List<Scan>> scanLists, ScanDao scanDao, int numMonths, ReportParameters parameters) {
 		this.scanDao = scanDao;
 		
 		if (numMonths > 0 && numMonths <= 12) {
@@ -72,13 +76,35 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		}
 		
 		if (scanLists != null && scanLists.size() > 0) {
+
+            if (parameters.getOrganizationId() != -1 || parameters.getApplicationId() != -1) {
+                Scan scan = null;
+                for (List<Scan> scanList : scanLists) {
+                    if (scanList != null && scanList.size() > 0) {
+                        scan = scanList.get(0);
+                        break;
+                    }
+                }
+                if (scan != null) {
+                    if (parameters.getApplicationId() != -1) {
+                        Application application = scan.getApplication();
+                        appId = application.getId();
+                        appName = application.getName();
+                        teamId = application.getOrganization().getId();
+                        teamName = application.getOrganization().getName();
+                    } else {
+                        Organization organization = scan.getApplication().getOrganization();
+                        teamId = organization.getId();
+                        teamName = organization.getName();
+                    }
+                }
+            }
+
 			for (List<Scan> scanList : scanLists) {
 				Collections.sort(scanList, Scan.getTimeComparator());
 				normalizedScans.add(buildNormalizedScans(scanList));
 			}
 		}
-		
-		index = -1;
 	}
 
 	/////////////////////////////////////////////////////////////
@@ -274,45 +300,8 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 		}
 	}
 	
-	////////////////////////////////////////////////////////////
-	//   These methods implement the JRDataSource interface   //
-	////////////////////////////////////////////////////////////
-	
-	@Override
-	public Object getFieldValue(JRField field) {
-		if (field == null) {
-			return null;
-		}
-		String name = field.getName();
-		if (name == null) {
-			return null;
-		}
-
-		if (resultsHash.containsKey(name)) {
-			return resultsHash.get(name);
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public boolean next() {
-		if (normalizedScans != null && normalizedScans.size() > 0 &&
-				index < normalizedScans.get(0).size() - 1) {
-			if (index == -1) {
-				index = 0;
-			} else {
-				index++;
-			}
-			buildHash();
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private void buildHash() {
-		resultsHash.clear();
+	private Map<String, Object> buildHash(int index) {
+        Map<String, Object> hash = new HashMap<>();
 
 		long numCritical = 0, numHigh = 0, numMedium = 0, numLow = 0, numInfo = 0;
 		for (List<Scan> scanList: normalizedScans) {
@@ -325,15 +314,34 @@ public class JasperXMonthSummaryReport implements JRDataSource {
 			numInfo     += scan.getNumberInfoVulnerabilities();
 		}
 		
-		resultsHash.put("criticalVulns", numCritical);
-		resultsHash.put("highVulns", numHigh);
-		resultsHash.put("mediumVulns", numMedium);
-		resultsHash.put("lowVulns", numLow);
-		resultsHash.put("infoVulns", numInfo);
+        hash.put("Critical", numCritical);
+        hash.put("High", numHigh);
+        hash.put("Medium", numMedium);
+        hash.put("Low", numLow);
+        hash.put("Info", numInfo);
+
+        hash.put("appId", appId);
+        hash.put("appName", appName);
+        hash.put("teamId", teamId);
+        hash.put("teamName", teamName);
 
 		if (dateList.get(index) != null) {
-			resultsHash.put("importTime", dateList.get(index));
+            hash.put("title", dateList.get(index));
+            hash.put("time", dateList.get(index));
 		}
+
+        return hash;
 	}
-	
+
+    public List<Map<String, Object>> buildReportList() {
+        List<Map<String, Object>> resultList = null;
+        if (normalizedScans != null && normalizedScans.size() > 0) {
+            resultList = new ArrayList<>();
+            for (int i=0; i< normalizedScans.get(0).size(); i++) {
+                resultList.add(buildHash(i));
+            }
+
+        }
+        return resultList;
+    }
 }

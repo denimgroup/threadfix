@@ -1,4 +1,4 @@
-<tab id='vulnTab' heading="{{ numVulns }} Vulnerabilities">
+<tab id='vulnTab' heading="{{ numVulns }} Vulnerabilities" active="showVulnTab">
 
     <%@ include file="../../vulnerabilities/vulnSearchControls.jsp" %>
 

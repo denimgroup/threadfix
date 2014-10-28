@@ -45,14 +45,16 @@ public class FormatCheckTests {
 
                     assertTrue("Got null return bean while testing " + file, returnBean != null);
                     assertTrue("Response status wasn't success for file " + file + ", it was " +
-                            returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
+                            returnBean.getScanCheckResult(),
+                            returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
 
                     if (mostRecent == null || mostRecent.before(returnBean.getTestDate())) {
                         mostRecent = returnBean.getTestDate();
                     }
                 } catch (ScanFileUnavailableException e) {
                     e.printStackTrace();
-                    assertTrue("Response status wasn't success for file " + file + ". Encountered ScanFileUnavailableException.", false);
+                    assertTrue("Response status wasn't success for file " + file +
+                            ". Encountered ScanFileUnavailableException.", false);
                 }
             }
 
@@ -60,6 +62,37 @@ public class FormatCheckTests {
         }
 
         System.out.println(builder);
+    }
+
+    @Test
+    public void testFalsePositives() {
+        ThreadFixBridge threadFixBridge = getThreadFixBridge();
+
+        builder = new StringBuilder();
+
+        for (Map.Entry<ScannerType, Collection<String>> outerEntry : FolderMappings.getEntries()) {
+            for (Map.Entry<ScannerType, Collection<String>> innerEntry : FolderMappings.getEntries()) {
+
+                if (innerEntry.getKey() != outerEntry.getKey()) {
+
+                    for (String file : innerEntry.getValue()) {
+                        try {
+                            ScanCheckResultBean returnBean =
+                                    threadFixBridge.testScan(outerEntry.getKey(), new File(file));
+
+                            assertTrue("Got null return bean while testing " + file, returnBean != null);
+                            assertTrue("Response status was success for scanner " + outerEntry.getKey() +
+                                            " and file " + file + ".",
+                                    returnBean.getScanCheckResult() != ScanImportStatus.SUCCESSFUL_SCAN);
+
+                        } catch (ScanFileUnavailableException | IllegalStateException e) {
+                            // This happens sometimes if zip files can't be read properly
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private ThreadFixBridge getThreadFixBridge() {
@@ -102,7 +135,7 @@ public class FormatCheckTests {
 
         ThreadFixBridge threadFixBridge = getThreadFixBridge();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
             System.out.print('.');
             for (String file : FolderMappings.getValue(ScannerType.SKIPFISH)) {
                 System.out.print('-');
@@ -111,7 +144,8 @@ public class FormatCheckTests {
 
                 assertTrue("Got null return bean while testing " + file, returnBean != null);
                 assertTrue("Response status wasn't success for file " + file + ", it was " +
-                        returnBean.getScanCheckResult(), returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
+                        returnBean.getScanCheckResult(),
+                        returnBean.getScanCheckResult() == ScanImportStatus.SUCCESSFUL_SCAN);
 
                 threadFixBridge.getScan(ScannerType.SKIPFISH, new File(file));
             }

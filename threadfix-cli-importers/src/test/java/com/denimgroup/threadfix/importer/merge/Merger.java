@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.importer.merge;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.importer.ScanLocationManager;
 import com.denimgroup.threadfix.importer.cli.ScanParser;
 import com.denimgroup.threadfix.service.merge.ScanMerger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -53,10 +55,6 @@ public class Merger extends SpringBeanAutowiringSupport {
     private ApplicationDao applicationDao;
     @Autowired
     private ChannelTypeDao channelTypeDao;
-
-    public static Application getApplicationFromScans(ScannerType scannerName, String... filePaths) {
-        return getSpringBean(Merger.class).getApplicationInternal(new Application(), scannerName, filePaths);
-    }
 
     /**
      * This is public because @Transactional doesn't work for private methods. Don't call it yourself.
@@ -107,6 +105,35 @@ public class Merger extends SpringBeanAutowiringSupport {
 
     public static List<Scan> getScanListFromPaths(ScannerType scannerName, String... filePaths) {
         return getSpringBean(Merger.class).getScanListInternal(new Application(), scannerName, filePaths);
+    }
+
+    public static Application mergeFromDifferentScanners(String sourceRoot,  String... filePaths) {
+        return getSpringBean(Merger.class).mergeFromDifferentScannersInternal(sourceRoot, filePaths);
+    }
+
+    @Transactional(readOnly = true)
+    public Application mergeFromDifferentScannersInternal(String sourceRoot,  String... filePaths) {
+        assert scanMerger != null : "No Merger found, fix your Spring context.";
+        assert scanParser != null : "No Parser found, fix your Spring context.";
+
+        Application application = new Application();
+        application.setVulnerabilities(listOf(Vulnerability.class));
+        application.setChannelList(new ArrayList<ApplicationChannel>());
+        application.setRepositoryFolder(sourceRoot);
+        application.setName("MergeApplication");
+        application.setScans(new ArrayList<Scan>());
+
+        applicationDao.saveOrUpdate(application);
+
+        for (String file : filePaths) {
+            Scan resultScan = scanParser.getScan(ScanLocationManager.getRoot() + file);
+            resultScan.getApplicationChannel().setApplication(application);
+            application.getChannelList().add(resultScan.getApplicationChannel());
+            scanMerger.merge(resultScan, resultScan.getApplicationChannel());
+            application.getScans().add(resultScan);
+        }
+
+        return application;
     }
 
 }

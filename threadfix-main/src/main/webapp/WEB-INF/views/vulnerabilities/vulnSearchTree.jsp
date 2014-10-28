@@ -1,5 +1,5 @@
 <div class="vuln-tree">
-    <h3>
+    <h3 ng-hide="hideTitle">
         <span style="float:left">
             Results
         </span>

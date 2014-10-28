@@ -6,6 +6,7 @@
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 
 <body ng-controller="TeamDetailPageController"
@@ -16,6 +17,7 @@
     <%@ include file="/WEB-INF/views/applications/forms/newApplicationForm.jsp" %>
     <%@ include file="/WEB-INF/views/organizations/editTeamForm.jsp" %>
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
 
     <ul class="breadcrumb">
         <li><a href="<spring:url value="/teams"/>">Applications Index</a> <span class="divider">/</span></li>
@@ -57,12 +59,13 @@
     </div>
 
     <tabset style="margin-top:10px;">
-        <tab heading="{{ applications.length }} Applications">
+        <tab heading="{{ applications.length }} Applications" active="showAppsTab" >
             <%@ include file="applicationsTable.jsp" %>
         </tab>
-        <tab heading="{{ vulnerabilityCount }} Vulnerabilities" ng-click="clickVulnTab()">
+        <tab heading="{{ vulnerabilityCount }} Vulnerabilities" active="showVulnTab" ng-click="clickVulnTab()" >
             <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>
         </tab>
+
     </tabset>
 
 </body>

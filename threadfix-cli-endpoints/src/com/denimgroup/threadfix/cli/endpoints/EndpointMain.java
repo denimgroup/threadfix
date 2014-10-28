@@ -39,27 +39,61 @@ import java.util.List;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class EndpointMain {
-	
-	public static void main(String[] args) {
 
-        resetLoggingConfiguration();
+    enum Logging {
+        ON, OFF
+    }
 
-		if (args.length != 1) {
-			System.out.println("This program takes 1 argument, the file root.");
-			
-		} else {
-		
-			File rootFile = new File(args[0]);
-			
-			if (!rootFile.exists()) {
-				System.out.println("The root file didn't exist.");
-			} else {
-				listEndpoints(rootFile);
-			}
-		}
-	}
-	
-	private static void listEndpoints(File rootFile) {
+    static Logging              logging     = Logging.OFF;
+    static Endpoint.PrintFormat printFormat = Endpoint.PrintFormat.DYNAMIC;
+
+    public static void main(String[] args) {
+        if (checkArguments(args)) {
+            resetLoggingConfiguration();
+            listEndpoints(new File(args[0]));
+        } else {
+            printError();
+        }
+    }
+
+    private static boolean checkArguments(String[] args) {
+        if (args.length == 0) {
+            return false;
+        }
+
+        File rootFile = new File(args[0]);
+
+        if (rootFile.exists() && rootFile.isDirectory()) {
+
+            List<String> strings = list(args);
+
+            strings.remove(0);
+
+            for (String string : strings) {
+                if (string.equals("-debug")) {
+                    logging = Logging.ON;
+                } else if (string.equals("-lint")) {
+                    printFormat = Endpoint.PrintFormat.LINT;
+                } else {
+                    System.out.println("Received unsupported option " + string + ", valid arguments are -lint and -debug");
+                    return false;
+                }
+            }
+
+            return true;
+
+        } else {
+            System.out.println("Please enter a valid file path as the first parameter.");
+        }
+
+        return false;
+    }
+
+    static void printError() {
+        System.out.println("The first argument should be a valid file path to scan. Other flags supported: -lint, -debug");
+    }
+
+    private static void listEndpoints(File rootFile) {
 
         List<Endpoint> endpoints = list();
 
@@ -75,17 +109,26 @@ public class EndpointMain {
 			System.out.println("No endpoints were found.");
 		} else {
 			for (Endpoint endpoint : endpoints) {
-				System.out.println(endpoint.getCSVLine());
+				System.out.println(endpoint.getCSVLine(printFormat));
 			}
 		}
-	}
+
+        System.out.println("To enable logging include the -debug argument");
+    }
 
     private static void resetLoggingConfiguration() {
         ConsoleAppender console = new ConsoleAppender(); //create appender
         String pattern = "%d [%p|%c|%C{1}] %m%n";
         console.setLayout(new PatternLayout(pattern));
-        console.setThreshold(Level.FATAL);
+
+        if (logging == Logging.ON) {
+            console.setThreshold(Level.DEBUG);
+        } else {
+            console.setThreshold(Level.INFO);
+        }
+
         console.activateOptions();
+        Logger.getRootLogger().removeAllAppenders();
         Logger.getRootLogger().addAppender(console);
     }
 }

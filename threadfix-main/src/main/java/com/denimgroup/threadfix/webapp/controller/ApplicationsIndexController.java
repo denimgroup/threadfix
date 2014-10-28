@@ -27,11 +27,12 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.service.report.ReportsService;
-import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -39,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -73,6 +73,8 @@ public class ApplicationsIndexController {
 	private ApplicationCriticalityService applicationCriticalityService;
     @Autowired(required = false)
     private LicenseService licenseService;
+    @Autowired
+    private TagService tagService;
 
 	@RequestMapping(value = "/teams", method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -80,6 +82,7 @@ public class ApplicationsIndexController {
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
         model.addAttribute("applicationTypes", FrameworkType.values());
+        model.addAttribute("tags", tagService.loadAll());
 
         if (licenseService != null) {
             model.addAttribute("underEnterpriseLimit", licenseService.canAddApps());
@@ -111,7 +114,7 @@ public class ApplicationsIndexController {
 	}
 
 	@RequestMapping("/organizations/{orgId}/getReport")
-	public ModelAndView getReport(@PathVariable("orgId") int orgId,
+	public @ResponseBody RestResponse<List<Map<String, Object>>> getReport(@PathVariable("orgId") int orgId,
 			HttpServletRequest request, Model model) {
 		Organization organization = organizationService.loadById(orgId);
 		if (organization == null || !organization.isActive()) {
@@ -123,11 +126,8 @@ public class ApplicationsIndexController {
 			parameters.setOrganizationId(orgId);
 			parameters.setFormatId(1);
 			parameters.setReportFormat(ReportFormat.POINT_IN_TIME_GRAPH);
-			ReportCheckResultBean resultBean = reportsService.generateReport(parameters, request);
-			if (resultBean.getReportCheckResult() == ReportCheckResult.VALID) {
-				model.addAttribute("jasperReport", resultBean.getReport());
-			}
-			return new ModelAndView("reports/report");
+			ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
+			return RestResponse.success(resultBean.getReportList());
 		}
 	}
 }
