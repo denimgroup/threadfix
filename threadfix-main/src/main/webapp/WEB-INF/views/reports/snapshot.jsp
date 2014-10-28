@@ -16,7 +16,7 @@
 
             <!-- Vulnerability Progress By Type report -->
             <%@ include file="progressByVulnerability.jsp"%>
-
+            <d3-hbars ng-show="topAppsData && reportId === '10'" data="topAppsData" label = "title" width="670" height="612" margin="margin"></d3-hbars>
         </div>
     </div>
 

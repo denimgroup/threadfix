@@ -73,6 +73,8 @@ public class TeamDetailPageController {
     private UserService userService;
     @Autowired(required = false)
     private LicenseService licenseService;
+    @Autowired
+    private TagService tagService;
 
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView detail(@PathVariable("orgId") int orgId,
@@ -110,6 +112,7 @@ public class TeamDetailPageController {
             mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());
+            mav.addObject("tags", tagService.loadAll());
             mav.addObject("successMessage", ControllerUtils.getSuccessMessage(request));
             if (PermissionUtils.isAuthorized(Permission.CAN_MANAGE_USERS,orgId,null)) {
                 mav.addObject("users", userService.getPermissibleUsers(orgId, null));

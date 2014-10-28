@@ -192,6 +192,21 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             });
         }
 
+        if (parameters.tags) {
+            parameters.tags.forEach(function(filteredTag){
+                filteredTag.id = undefined;
+            });
+            if ($scope.tags) {
+                $scope.tags.forEach(function(tag){
+                    parameters.tags.forEach(function(filteredTag){
+                        if (tag.name === filteredTag.name) {
+                            filteredTag.id = tag.id;
+                        }
+                    });
+                })
+            }
+        }
+
         parameters.channelTypes = parameters.scanners;
 
         if (!parameters.channelTypes)
@@ -365,6 +380,27 @@ threadfixModule.factory('vulnSearchParameterService', function() {
         return {
             json: JSON.stringify(myParameters)
         };
+    };
+
+    updater.updateVulnCommentTags = function(dbTagsList, vuln) {
+        if (!vuln.vulnerabilityComments)
+            vuln.vulnerabilityComments = [];
+        if (!dbTagsList)
+            dbTagsList = [];
+
+        vuln.vulnerabilityComments.forEach(function(comment){
+            comment.tagsList = angular.copy(dbTagsList);
+            comment.tagsList.forEach(function(dbTag){
+                comment.tags.some(function(vulnTag){
+                    if (dbTag.id === vulnTag.id) {
+                        dbTag.selected = true;
+                        return true;
+                    }
+                })
+            })
+
+        })
+
     };
 
     return updater;

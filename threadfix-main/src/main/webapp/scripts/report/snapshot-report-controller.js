@@ -5,11 +5,12 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.parameters = {};
     $scope.noData = false;
     $scope.hideTitle = true;
+    $scope.margin = {top: 70, right: 100, bottom: 70, left: 70};
 
     $scope.snapshotOptions = [
         { name: "Point in Time", id: 2 },
         { name: "Progress By Vulnerability", id: 3 },
-        { name: "Portfolio Report", id: 8 },
+//        { name: "Portfolio Report", id: 8 },
         { name: "Most Vulnerable Applications", id: 10 }
     ];
 
@@ -40,9 +41,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             endDate: undefined,
             startDate: undefined
         };
-
     };
-
 
     $scope.$on('loadSnapshotReport', function() {
 
@@ -57,20 +56,18 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.loading = true;
             $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
                 success(function(data) {
-
                     $scope.loading = false;
-
                     $scope.resetFilters();
                     $scope.allVulns = data.object.vulnList;
+                    $scope.allApps = data.object.appList;
 
+                    $scope.tags = data.object.tags;
                     if ($scope.allVulns) {
-
                         // Point In Time is default report for Snapshot
                         $scope.allPointInTimeVulns = $scope.allVulns.filter(function(vuln){
                             return vuln.active;
                         });
-                       refresh();
-
+                        refresh();
                     } else {
                         $scope.noData = true;
                     };
@@ -88,7 +85,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             return;
         $scope.parameters = angular.copy(parameters);
         refresh();
-
     });
 
     $scope.$on('updateDisplayData', function(event, parameters) {
@@ -162,14 +158,16 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 $scope.needToUpdateProgress = false;
             }
         } else if ($scope.reportId === '2') {
-                if (!$scope.allPointInTimeVulns) {
-                    $scope.noData = true;
-                } else if ($scope.needToUpdatePointInTime) {
-                    filterByTeamAndApp($scope.allPointInTimeVulns);
-                    processPointInTimeData();
-                    filterPointInTimeDisplayBySeverity();
-                    $scope.needToUpdatePointInTime = false;
-                }
+            if (!$scope.allPointInTimeVulns) {
+                $scope.noData = true;
+            } else if ($scope.needToUpdatePointInTime) {
+                filterByTeamAndApp($scope.allPointInTimeVulns);
+                processPointInTimeData();
+                filterPointInTimeDisplayBySeverity();
+                $scope.needToUpdatePointInTime = false;
+            }
+        } else if ($scope.reportId === '10') {
+            filterApps();
         }
     }
 
@@ -233,7 +231,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
             return false;
         });
-
     }
 
     var refreshVulnTree = function(parameters) {
@@ -342,7 +339,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
                 if (data.success) {
                     element.vulns = data.object.vulns;
-                    element.vulns.forEach(updateChannelNames)
+                    element.vulns.forEach(updateChannelNames);
+                    element.vulns.forEach(function(vuln){
+                        vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
+                    });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
                     element.numberToShow = numToShow;
@@ -384,10 +384,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
     };
 
-
     var refresh = function(){
         $scope.loading = true;
-
         if ($scope.reportId === '2') {
             filterByTeamAndApp($scope.allPointInTimeVulns);
             updateTree();
@@ -395,6 +393,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         } else if ($scope.reportId === '3') {
             filterByTeamAndApp($scope.allCWEvulns);
             $scope.needToUpdatePointInTime = true;
+        } else if ($scope.reportId === '10') {
+            filterApps();
         }
 
         if ($scope.filterVulns.length === 0) {
@@ -415,11 +415,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             filterByTypeDataBySeverity($scope.filterVulns);
             processByTypeData($scope.filterVulns);
         }
-
     };
 
     var processPointInTimeData = function() {
-
         $scope.data = {
             Critical: {
                 Severity: 'Critical',
@@ -543,7 +541,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     }
 
     var filterByTeamAndApp = function(vulnList) {
-
         $scope.filterVulns = vulnList.filter(function(vuln){
 
             if ($scope.parameters.teams.length === 0
@@ -558,17 +555,39 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
 
             for (i=0; i<$scope.parameters.applications.length; i++) {
-
                 if (beginsWith($scope.parameters.applications[i].name, vuln.teamName + " / ") &&
                     endsWith($scope.parameters.applications[i].name, " / " + vuln.appName)) {
                     return true;
                 }
             }
-
             return false;
         });
-
     };
+
+    var filterApps = function() {
+
+        $scope.topAppsData = $scope.allApps.filter(function(app){
+            if ($scope.parameters.teams.length === 0
+                && $scope.parameters.applications.length === 0)
+                return true;
+
+            var i;
+            for (i=0; i<$scope.parameters.teams.length; i++) {
+                if (app.teamName === $scope.parameters.teams[i].name) {
+                    return true;
+                }
+            }
+
+            for (i=0; i<$scope.parameters.applications.length; i++) {
+                if (beginsWith($scope.parameters.applications[i].name, app.teamName + " / ") &&
+                    endsWith($scope.parameters.applications[i].name, " / " + app.appName)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    };
+
 
     var endsWith = function(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;

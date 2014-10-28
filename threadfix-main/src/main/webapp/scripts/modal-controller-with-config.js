@@ -6,7 +6,7 @@ myAppModule.value('deleteUrl', null);
 
 // TODO wrap this back into genericModalController and make config optional
 
-myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService) {
+myAppModule.controller('ModalControllerWithConfig', function ($log, $scope, $rootScope, $modalInstance, $http, threadFixModalService, object, config, url, buttonText, deleteUrl, timeoutService, tfEncoder) {
 
     $scope.object = object;
 
@@ -76,5 +76,25 @@ myAppModule.controller('ModalControllerWithConfig', function ($scope, $rootScope
                 });
         }
     };
+
+    $scope.loadTagsList = function() {
+        $http.get(tfEncoder.encode('/configuration/tags/map')).
+            success(function(data) {
+                if (data.success) {
+                    if (data.object.tags.length > 0) {
+                        $scope.tags = data.object.tags;
+                        $scope.tags.sort(function(a,b) {
+                            return a.name.localeCompare(b.name);
+                        });
+                    } else $scope.tags = [];
+                } else {
+                    $log.warn("Failure. Message was : " + data.message);
+                }
+            }).
+            error(function(data, status, headers, config) {
+                $scope.tags = [];
+                $log.warn("Failed to retrieve waf list. HTTP status was " + status);
+            });
+    }
 
 });

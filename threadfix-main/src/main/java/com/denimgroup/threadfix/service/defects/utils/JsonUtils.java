@@ -32,6 +32,12 @@ public class JsonUtils {
 
     @Nullable
     public static String getStringProperty(String jsonString, String propertyName) {
+
+        if (jsonString == null || !jsonString.contains(propertyName)) {
+            LOG.warn("JSON string doesn't contain " + propertyName);
+            return null;
+        }
+
         JSONObject object = getJSONObject(jsonString);
 
         if (object != null) {
@@ -47,6 +53,12 @@ public class JsonUtils {
 
     @Nullable
     public static Long getLongProperty(String jsonString, String propertyName) {
+
+        if (jsonString == null || !jsonString.contains(propertyName)) {
+            LOG.warn("JSON string doesn't contain " + propertyName);
+            return null;
+        }
+
         JSONObject object = getJSONObject(jsonString);
 
         if (object != null) {

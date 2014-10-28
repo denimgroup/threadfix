@@ -144,7 +144,6 @@ public class ReportsServiceImpl implements ReportsService {
         ReportCheckResultBean report = null;
 
         if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
-
             applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
             report = getTopAppsReportD3(applicationIdList);
         }
@@ -198,6 +197,10 @@ public class ReportsServiceImpl implements ReportsService {
             return map;
         }
         map.put("vulnList", vulnerabilityDao.retrieveMapByApplicationIdList(applicationIdList));
+
+        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
+        map.put("appList", getTopAppsListInfo(top20Apps));
+
         return map;
     }
 
@@ -444,25 +447,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     private ReportCheckResultBean getTopAppsReportD3(List<Integer> applicationIdList) {
 
-        List<Application> apps = applicationDao.getTopAppsFromList(applicationIdList);
-        List<Map<String, Object>> resultList = list();
-            for (Application app: apps) {
-                Map<String, Object> hash = newMap();
-                hash.put("Critical", app.getCriticalVulnCount());
-                hash.put("High", app.getHighVulnCount());
-                hash.put("Medium", app.getMediumVulnCount());
-                hash.put("Low", app.getLowVulnCount());
-                hash.put("Info", app.getInfoVulnCount());
-                hash.put("appId", app.getId());
-                hash.put("appName", app.getName());
-                hash.put("teamId", app.getOrganization().getId());
-                hash.put("teamName", app.getOrganization().getName());
-
-                hash.put("title", app.getOrganization().getName() + "/" + app.getName());
-                resultList.add(hash);
-
-
-            }
+        List<Map<String, Object>> resultList = getTopAppsListInfo(applicationIdList);
 
         if (resultList.size() == 0 ) {
             log.info("Unable to fill Report - no apps were found.");
@@ -470,6 +455,28 @@ public class ReportsServiceImpl implements ReportsService {
         } else {
             return new ReportCheckResultBean(ReportCheckResult.VALID, null, null, resultList);
         }
+    }
+
+    private List<Map<String, Object>> getTopAppsListInfo(List<Integer> applicationIdList) {
+        List<Application> apps = applicationDao.getTopAppsFromList(applicationIdList);
+        List<Map<String, Object>> resultList = list();
+        for (Application app: apps) {
+            Map<String, Object> hash = newMap();
+            hash.put("Critical", app.getCriticalVulnCount());
+            hash.put("High", app.getHighVulnCount());
+            hash.put("Medium", app.getMediumVulnCount());
+            hash.put("Low", app.getLowVulnCount());
+            hash.put("Info", app.getInfoVulnCount());
+            hash.put("appId", app.getId());
+            hash.put("appName", app.getName());
+            hash.put("teamId", app.getOrganization().getId());
+            hash.put("teamName", app.getOrganization().getName());
+
+            hash.put("title", app.getOrganization().getName() + "/" + app.getName());
+            resultList.add(hash);
+        }
+
+        return resultList;
     }
 
     private ReportCheckResultBean getPointInTimeD3(List<Integer> applicationIdList, int teamId) {

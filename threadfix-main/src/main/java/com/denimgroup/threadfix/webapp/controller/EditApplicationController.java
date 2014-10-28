@@ -32,6 +32,9 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,6 +68,8 @@ public class EditApplicationController {
 	private OrganizationService organizationService;
     @Autowired
     private VulnerabilityService vulnerabilityService;
+    @Autowired
+    private TagService tagService;
 
 	@ModelAttribute("defectTrackerList")
 	public List<DefectTracker> populateDefectTrackers() {
@@ -255,4 +260,30 @@ public class EditApplicationController {
 			return RestResponse.success(application.getDefectTracker());
 		}
 	}
+
+    @RequestMapping(value="/setTagsEndpoint", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
+                                                                                    @PathVariable("orgId") int orgId,
+                                                                                    @RequestParam("jsonStr") String jsonStr) {
+        log.info("Updating tags endpoint");
+        if (!PermissionUtils.isAuthorized(Permission.CAN_MANAGE_APPLICATIONS, orgId, appId)) {
+            return RestResponse.failure("You are not authorized to manage this application.");
+        }
+
+        try {
+            List<Tag> newTags = new Gson().fromJson(jsonStr, new TypeToken<List<Tag>>(){}.getType());
+            Application dbApplication = applicationService.loadApplication(appId);
+            if (dbApplication == null) {
+                return FormRestResponse.failure("Invalid data.");
+            }
+            dbApplication.setTags(newTags);
+            applicationService.storeApplication(dbApplication);
+
+            return RestResponse.success(dbApplication);
+
+        }    catch (JsonSyntaxException exception) {
+            log.warn("JSON Parsing failed.", exception);
+            return FormRestResponse.failure("Invalid data.");
+        }
+    }
 }

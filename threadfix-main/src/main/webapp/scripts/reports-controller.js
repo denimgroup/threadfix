@@ -4,7 +4,8 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
 
     // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
-    $scope.margin = [20, 70, 30, 60];
+    $scope.leftMargin = [20, 70, 30, 60];
+    $scope.rightMargin = {top: 20, right: 20, bottom: 30, left: 60};
 
     if (!$scope.empty) {
         $scope.loadingLeft = true;

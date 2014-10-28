@@ -113,7 +113,6 @@ public class JasperScanReport implements JRDataSource {
             hash.put("New", scan.getNumberNewVulnerabilities());
             hash.put("Resurfaced", scan.getNumberResurfacedVulnerabilities());
 
-
             // Take out from the count old vulns from other channels.
             Integer adjustedTotal = scan.getNumberTotalVulnerabilities() -
                     scan.getNumberOldVulnerabilities() +
@@ -154,20 +153,27 @@ public class JasperScanReport implements JRDataSource {
         }
 
         String severitiesJson = JsonUtils.getStringProperty(filterJsonBlob.getJson(), "severities");
-        if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "info"))) {
-            hash.put("Info", trendingAggr(infoVulnsByChannelMap, scan, scan.getNumberInfoVulnerabilities()));
-        }
-        if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "low"))) {
-            hash.put("Low", trendingAggr(lowVulnsByChannelMap, scan, scan.getNumberLowVulnerabilities()));
-        }
-        if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "medium"))) {
-            hash.put("Medium", trendingAggr(mediumVulnsByChannelMap, scan, scan.getNumberMediumVulnerabilities()));
-        }
-        if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "high"))) {
-            hash.put("High", trendingAggr(highVulnsByChannelMap, scan, scan.getNumberHighVulnerabilities()));
-        }
-        if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "critical"))) {
-            hash.put("Critical", trendingAggr(criticalVulnsByChannelMap, scan, scan.getNumberCriticalVulnerabilities()));
+        if (severitiesJson != null) {
+            if (severitiesJson.contains("info"))
+                if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "info"))) {
+                    hash.put("Info", trendingAggr(infoVulnsByChannelMap, scan, scan.getNumberInfoVulnerabilities()));
+                }
+            if (severitiesJson.contains("low"))
+                if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "low"))) {
+                    hash.put("Low", trendingAggr(lowVulnsByChannelMap, scan, scan.getNumberLowVulnerabilities()));
+                }
+            if (severitiesJson.contains("medium"))
+                if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "medium"))) {
+                    hash.put("Medium", trendingAggr(mediumVulnsByChannelMap, scan, scan.getNumberMediumVulnerabilities()));
+                }
+            if (severitiesJson.contains("high"))
+                if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "high"))) {
+                    hash.put("High", trendingAggr(highVulnsByChannelMap, scan, scan.getNumberHighVulnerabilities()));
+                }
+            if (severitiesJson.contains("critical"))
+                if ("true".equals(JsonUtils.getStringProperty(severitiesJson, "critical"))) {
+                    hash.put("Critical", trendingAggr(criticalVulnsByChannelMap, scan, scan.getNumberCriticalVulnerabilities()));
+                }
         }
     }
 
@@ -261,7 +267,6 @@ public class JasperScanReport implements JRDataSource {
     }
 
     private void filter() {
-//        List<Scan> newScanList = list();
         if (startDate == null) startIndex = 0;
         if (endDate == null) endIndex = this.scanList.size() - 1;
         for (int i = 0; i< this.scanList.size(); i++) {
@@ -275,12 +280,5 @@ public class JasperScanReport implements JRDataSource {
                 endIndex = i - 1;
             }
         }
-//        for (Scan scan: this.scanList) {
-//            if ((startDate == null || startDate <= scan.getImportTime().getTimeInMillis())
-//                    && (endDate == null || endDate >= scan.getImportTime().getTimeInMillis())) {
-//                newScanList.add(scan);
-//            }
-//        }
-//        this.scanList = newScanList;
     }
 }
