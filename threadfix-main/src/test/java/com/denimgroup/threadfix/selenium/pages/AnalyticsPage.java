@@ -179,17 +179,9 @@ public class AnalyticsPage extends BasePage {
         return driver.findElementById("noResultsFound").getText().trim().equals("No results found.");
     }
 
-    public boolean isReportCorrect(String report) {
-        Select reportSelection = new Select(driver.findElementById("reportSelect"));
-        return reportSelection.getFirstSelectedOption().getText().equals(report);
-    }
-
-    public boolean isExportCsvButtonAvailable(){
-        return driver.findElementById("csvLink").isDisplayed();
-    }
-
-    public boolean isCollapseAllButtonDisplay() {
-        return driver.findElementById("toggleVulnTree").isDisplayed();
+    public boolean isReportCorrect() {
+        WebElement filterDiv = driver.findElementById("trendingFilterDiv");
+        return filterDiv.findElement(By.id("toggleAllButtonReport")).isEnabled();
     }
 
     public boolean checkCorrectFilterLevel(String level) {

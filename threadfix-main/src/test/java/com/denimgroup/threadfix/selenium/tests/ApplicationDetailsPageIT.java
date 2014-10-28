@@ -186,7 +186,6 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         assertTrue("Application Type is not set to Detect.", applicationDetailPage.isAppTypeDetect());
     }
 
-    //TODO fix when unique ID is added for reportSelect
     @Test
     public void testViewMoreNavigation() {
         initializeTeamAndApp();
@@ -198,7 +197,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
         AnalyticsPage analyticsPage1 = applicationDetailPage1.clickViewMoreVulnerabilityTrending();
 
-        assertTrue("View More Vulnerability Trending failed", analyticsPage1.isReportCorrect("Vulnerability Trending"));
+        assertTrue("View More Vulnerability Trending failed", analyticsPage1.isReportCorrect());
 
         ApplicationDetailPage applicationDetailPage2 = analyticsPage1.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -206,7 +205,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
         AnalyticsPage analyticsPage2 = applicationDetailPage2.clickViewMoreTopVulnerabilities();
 
-        assertTrue("View More Top 10 failed", analyticsPage2.isReportCorrect("Most Vulnerable Applications"));
+        assertTrue("View More Top 10 failed", analyticsPage2.isReportCorrect());
     }
 
     //TODO look at this test

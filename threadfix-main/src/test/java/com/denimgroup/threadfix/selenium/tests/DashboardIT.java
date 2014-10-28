@@ -54,26 +54,20 @@ public class DashboardIT extends BaseDataTest {
 		assertFalse("Top 10 vulnerabilities graph is not displayed", dashboardPage.isTop10GraphNoDataFound());
 	}
 
-    //TODO when reportSelect is fixed
     @Test
     public void leftGraphViewMoreLinkTest() {
-        String report = "Vulnerability Trending";
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickLeftViewMore();
 
-        assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect(report));
+        assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect());
     }
 
-    //TODO when reportSelect is fixed
     @Test
     public void rightGraphViewMoreLinkTest() {
-        String report = "Most Vulnerable Applications";
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickRightViewMore();
 
-        assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect(report));
+        assertTrue("Incorrect report shown.", analyticsPage.isReportCorrect());
     }
 
     @Test

@@ -143,7 +143,6 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
 
-    //TODO when reportSelect is fixed
     @Test
     public void checkAnalyticsPage() {
         initializeTeamAndAppWithIBMScan();
@@ -154,11 +153,11 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickViewAppLink(appName, teamName)
                 .clickViewMoreVulnerabilityTrending();
 
-        assertTrue("Export CSV Button is Not Available", analyticsPage.isExportCsvButtonAvailable());
+        assertTrue("Incorrect Navigation", analyticsPage.isReportCorrect());
 
         analyticsPage.clickVulnerabilitySearchTab();
 
-        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isCollapseAllButtonDisplay());
+        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isElementPresent("vulnSearchFilterDiv"));
     }
 
     @Test

@@ -506,7 +506,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreTopVulnerabilities(){
         driver.findElementById("rightViewMore").click();
-        waitForElement(driver.findElementById("reportSelect"));
+        waitForElement(driver.findElementById("trendingFilterDiv"));
         return new AnalyticsPage(driver);
     }
 
