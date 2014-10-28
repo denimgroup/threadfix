@@ -28,7 +28,6 @@ public class NessusScanTest extends TransactionalTest {
 
     @Ignore // the scan format changed, it automatically parses cwe now. We need to edit this test.
     @Test
-    @Ignore // the mappings are dynamic now so this test breaks even though the integration is ok
     public void nessusScanTest() {
         ScanComparisonUtils.compare(nessusResults, ScanLocationManager.getRoot() +
                 "Dynamic/Nessus/nessus_report_TFTarget.xml");
