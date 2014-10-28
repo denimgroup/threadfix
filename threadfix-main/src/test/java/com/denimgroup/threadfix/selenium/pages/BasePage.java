@@ -506,6 +506,7 @@ public abstract class BasePage {
         Actions builder = new Actions(driver);
         builder.clickAndHold(d3Object).build().perform();
         builder.release(d3Object).build().perform();
+        waitForElement(driver.findElementById("myModalLabel"));
         return (T) this;
     }
 
