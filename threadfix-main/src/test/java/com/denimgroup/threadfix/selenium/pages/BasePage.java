@@ -215,6 +215,12 @@ public abstract class BasePage {
 		sleep(3000);
 		return new DashboardPage(driver);
 	}
+
+    public TagIndexPage clickTagsLink() {
+        clickConfigTab();
+        driver.findElementById("tagsLink").click();
+        return new TagIndexPage(driver);
+    }
 	
 	
 	/*--------------get functions--------------*/
@@ -258,9 +264,11 @@ public abstract class BasePage {
 		return driver.findElementById("scansHeader").isDisplayed();
 	}
 	
-	public boolean isScansMenuLinkClickable(){
-        return isClickable("scansHeader");
-	}
+	public boolean isScansMenuLinkClickable(){ return isClickable("scansHeader");}
+
+    public boolean isTagsPageLinkPresent() {return driver.findElementById("tagsLink").isDisplayed();}
+
+    public boolean isTagsPageLinkClickable() {return isClickable("tagsLink");}
 	
 	public boolean isReportsMenuLinkPresent(){
 		return driver.findElementById("reportsHeader").isDisplayed();

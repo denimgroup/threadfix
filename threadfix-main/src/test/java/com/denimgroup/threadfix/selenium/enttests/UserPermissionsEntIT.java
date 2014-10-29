@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -729,5 +730,16 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickModalSubmit();
 
         assertTrue("Could not edit permissions", userPermissionsPage.isPermissionPresent(teamName, appName, role2));
+    }
+
+    @Test
+    public void testManageTagsPermission() {
+        createRestrictedUser("canManageTags");
+
+        DashboardPage dashboardPage = loginPage.login(userName, testPassword);
+
+        dashboardPage.clickConfigTab();
+
+        assertTrue("Manage tags permission not added", driver.findElements(By.id("tagsLink")).isEmpty());
     }
 }

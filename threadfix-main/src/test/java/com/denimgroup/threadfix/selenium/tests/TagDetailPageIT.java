@@ -21,31 +21,20 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.selenium.pages;
+package com.denimgroup.threadfix.selenium.tests;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
-public class TagIndexPage extends BasePage{
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-    public TagIndexPage(WebDriver webDriver) {
-        super(webDriver);
-    }
+@Category(CommunityTests.class)
+public class TagDetailPageIT extends BaseDataTest {
 
-    public TagIndexPage createNewTag(String name) {
-        driver.findElementById("createTagModalButton").click();
-        driver.findElementById("tagCreateNameInput").sendKeys(name);
-        clickModalSubmit();
-        return new TagIndexPage(driver);
-    }
-
-    public TagIndexPage deleteTag(String name) {
-        driver.findElementById("editTagModalButton" + name).click();
-        driver.findElementById("deleteTagButton").click();
-        driver.switchTo().alert().accept();
-        sleep(1000);
-        return new TagIndexPage(driver);
-    }
-
-    public boolean isTagNameLinkPresent(String name) { return !driver.findElements(By.id("tagName" + name)).isEmpty(); }
 }
