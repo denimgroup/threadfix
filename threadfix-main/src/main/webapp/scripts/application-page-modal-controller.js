@@ -47,8 +47,6 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                        })
                    })
 
-                   getTagsStr();
-
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
 
                    $rootScope.$broadcast('seeMoreExtension', "/" + $scope.config.application.team.id + "/" + $scope.config.application.id);
@@ -73,17 +71,6 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
            });
     });
-
-    var getTagsStr = function(){
-        $scope.tagsStr = "";
-        if ($scope.config.applicationTags.length > 0) {
-            $scope.tagsStr = $scope.config.applicationTags[0].name;
-            var i;
-            for (i=1; i<$scope.config.applicationTags.length; i++) {
-                $scope.tagsStr += ", " + $scope.config.applicationTags[i].name;
-            }
-        }
-    }
 
     $scope.updateDefectStatus = function() {
         timeoutService.timeout();
@@ -475,9 +462,4 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
         });
     };
-
-    $scope.goToTag = function(tag) {
-        window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id +"/view");
-    }
-
 })

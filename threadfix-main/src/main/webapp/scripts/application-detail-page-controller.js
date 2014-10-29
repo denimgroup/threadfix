@@ -41,4 +41,7 @@ myAppModule.controller('ApplicationDetailPageController', function ($scope, $win
         $scope.successMessage = message;
     });
 
+    $scope.goToTag = function(tag) {
+        window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id +"/view");
+    }
 });

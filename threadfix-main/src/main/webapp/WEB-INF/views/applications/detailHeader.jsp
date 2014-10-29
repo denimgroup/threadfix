@@ -59,10 +59,12 @@
         </c:if>
     </h2>
     <c:if test="${ canManageTags }">
-        <span style="font-weight: bold;" ng-repeat="appTag in config.applicationTags"><a class="pointer" id="appTag{{ $index }}" ng-click="goToTag(appTag)">{{appTag.name}}</a>&nbsp;</span>
+        <span style="font-weight: bold;" ng-repeat="appTag in config.applicationTags">
+            <a class="pointer" id="appTag{{ $index }}" ng-click="goToTag(appTag)">{{appTag.name}}<span ng-hide="$index===config.applicationTags.length-1">,</span></a>
+        </span>
     </c:if>
     <c:if test="${ !canManageTags }">
-        <span style="font-weight: bold;" id="appTag">{{tagsStr}}</span>
+        <span style="font-weight: bold;" id="appLabelTag{{ $index }}" ng-repeat="appTag in config.applicationTags">{{appTag.name}}<span ng-hide="$index===config.applicationTags.length-1">,&nbsp;</span></span>
     </c:if>
 </div>
 
