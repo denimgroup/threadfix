@@ -13,7 +13,7 @@
 </div>
 
 <!-- Teams and Applications section -->
-<div class="accordion-group">
+<div class="accordion-group" ng-show="!complianceActive">
     <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
         <span id="expandTeamAndApplicationFiltersReport" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
     </div>
@@ -57,6 +57,33 @@
     </div>
 </div>
 
+<!-- Tags. -->
+<div class="accordion-group" ng-show="complianceActive">
+    <div class="accordion-heading" ng-click="showTagControls = !showTagControls">
+        <span id="expandTagFilters" class="icon" ng-class="{ 'icon-minus': showTagControls, 'icon-plus': !showTagControls }"></span> Tags
+    </div>
+    <div ng-show="showTagControls" class="filter-group-body">
+        <div class="accordion-inner">
+            Applications
+            <a ng-hide="showTagInput" ng-click="showTagInput = !showTagInput">
+                <span id="showTagInput" class="icon" ng-class="{ 'icon-minus': showTagInput, 'icon-plus': !showTagInput }"></span>
+            </a>
+            <br>
+            <input id="tagNameTypeahead"
+                   focus-on="showTagInput"
+                   ng-show="showTagInput"
+                   typeahead="tag.name for tag in tags | filter:$viewValue | limitTo:8"
+                   type="text"
+                   ng-model="newFilteredTag.name"
+                   typeahead-on-select="addNew(parameters.tags, newFilteredTag.name); newFilteredTag = {}; showTagInput = false"/>
+            <div ng-repeat="filteredTag in parameters.tags">
+                <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.tags, $index)"></span>
+                {{ filteredTag.name }}
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Field Controls: Severity, Status -->
 <div class="accordion-group">
     <div class="accordion-heading" ng-click="showDetailsControls = !showDetailsControls">
@@ -76,7 +103,7 @@
             </div>
         </div>
 
-        <div class="accordion-inner" ng-show="showFullControls">
+        <div class="accordion-inner" ng-show="trendingActive">
             Status
             <br>
             <div>
@@ -89,7 +116,7 @@
             </div>
         </div>
 
-        <div class="accordion-inner" ng-show="showFullControls">
+        <div class="accordion-inner" ng-show="trendingActive">
             Other
             <br>
             <div>
@@ -100,7 +127,7 @@
 </div>
 
 <!-- Aging -->
-<div class="accordion-group" ng-show="showFullControls">
+<div class="accordion-group" ng-show="trendingActive || complianceActive">
     <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
         <span id="showDateControlsReport" class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Aging
     </div>
@@ -117,7 +144,7 @@
 </div>
 
 <!-- Date Range -->
-<div class="accordion-group" ng-show="showFullControls">
+<div class="accordion-group" ng-show="trendingActive || complianceActive">
     <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
         <span id="showDateRangeReport" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
     </div>
@@ -182,7 +209,7 @@
                        ng-model="currentFilterNameInput"
                        type="text"/>
 
-                <div ng-show="showFullControls">
+                <div ng-show="trendingActive">
                     <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>Default Trending Filter<br>
                 </div>
 
@@ -208,6 +235,7 @@
         </div>
     </div>
 </div>
+
 <!-- Export buttons -->
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
     <div class="accordion-group">
@@ -217,7 +245,6 @@
     </div>
 </security:authorize>
 </div>
-
 
 <div ng-show="showSavedFilters">
     <!-- Saved Filters section -->

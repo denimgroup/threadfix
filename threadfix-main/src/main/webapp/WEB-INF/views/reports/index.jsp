@@ -7,7 +7,7 @@
     <cbs:cachebustscript src="/scripts/report/report-services.js"/>
     <cbs:cachebustscript src="/scripts/report/trending-report-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/snapshot-report-controller.js"/>
-    <cbs:cachebustscript src="/scripts/report/comparison-report-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/compliance-report-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/report-page-controller.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
@@ -34,6 +34,9 @@
             </tab>
             <tab heading="SnapshotD3" ng-click="loadSnapshot()" active="snapshotActive">
                 <%@ include file="snapshot.jsp" %>
+            </tab>
+            <tab heading="Compliance" ng-click="loadCompliance()" active="complianceActive">
+                <%@ include file="compliance.jsp" %>
             </tab>
             <%--<tab heading="ComparisonD3" ng-click="loadComparison()" active="comparisonActive">--%>
             <%--</tab>--%>
