@@ -51,7 +51,7 @@ public class FindBugsTest extends TransactionalTest {
     @Test
     public void findBugsScanTest() {
         ScanComparisonUtils.compare(findBugsResults, ScanLocationManager.getRoot() +
-                "Static\\FindBugs\\findbugs-normal.xml");
+                "Static/FindBugs/findbugs-normal.xml");
     }
 
-    }
+}
