@@ -140,6 +140,9 @@ public class RoleRestController {
             case "canManageSystemSettings":
                 role.setCanManageSystemSettings(true);
                 break;
+            case "canManageTags":
+                role.setCanManageTags(true);
+                break;
             default:
                 throw new RuntimeException(permission + " is not a valid permission");
         }
@@ -206,6 +209,9 @@ public class RoleRestController {
                 break;
             case "canManageSystemSettings":
                 role.setCanManageSystemSettings(false);
+                break;
+            case "canManageTags":
+                role.setCanManageTags(false);
                 break;
             default:
                 throw new RuntimeException(permission + " is not a valid permission");
