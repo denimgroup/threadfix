@@ -40,6 +40,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canGenerateWafRules": "false",
                          "canManageApiKeys": "false",
                          "canManageApplications": "false",
+                         "canManageGrcTools": "false",
                          "canManageDefectTrackers": "false",
                          "canManageRemoteProviders": "false",
                          "canManageScanAgents": "false",
@@ -92,6 +93,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canGenerateWafRules = role.canGenerateWafRules === true ? "true" : "false";
             role.canManageApiKeys = role.canManageApiKeys === true ? "true" : "false";
             role.canManageApplications = role.canManageApplications === true ? "true" : "false";
+            role.canManageGrcTools = role.canManageGrcTools === true ? "true" : "false";
             role.canManageDefectTrackers = role.canManageDefectTrackers === true ? "true" : "false";
             role.canManageRemoteProviders = role.canManageRemoteProviders === true ? "true" : "false";
             role.canManageScanAgents = role.canManageScanAgents === true ? "true" : "false";

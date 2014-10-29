@@ -47,7 +47,7 @@ public class Role extends AuditableEntity {
 	private static final long serialVersionUID = -1609499610449048270L;
 	
 	private Boolean canGenerateReports, canGenerateWafRules, canManageApiKeys,
-			canManageApplications, canManageDefectTrackers,
+			canManageApplications, canManageDefectTrackers, canManageGrcTools,
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
@@ -58,7 +58,7 @@ public class Role extends AuditableEntity {
     };
 
     public static final String[] ALL_PERMISSIONS = {
-            "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
+            "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers", "canManageGrcTools",
             "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
             "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings", "canManageTags"
@@ -130,6 +130,15 @@ public class Role extends AuditableEntity {
 
     public void setCanManageApplications(Boolean canManageApplications) {
         this.canManageApplications = canManageApplications;
+    }
+
+    @Column
+    public Boolean getCanManageGrcTools() {
+        return canManageGrcTools != null && canManageGrcTools;
+    }
+
+    public void setCanManageGrcTools(Boolean canManageGrcTools) {
+        this.canManageGrcTools = canManageGrcTools;
     }
 
     @Column
@@ -279,6 +288,9 @@ public class Role extends AuditableEntity {
 
 		if (getCanManageDefectTrackers())
 			permissions.add(Permission.CAN_MANAGE_DEFECT_TRACKERS);
+
+		if (getCanManageGrcTools())
+			permissions.add(Permission.CAN_MANAGE_GRC_TOOLS);
 
 		if (getCanManageRemoteProviders())
 			permissions.add(Permission.CAN_MANAGE_REMOTE_PROVIDERS);
