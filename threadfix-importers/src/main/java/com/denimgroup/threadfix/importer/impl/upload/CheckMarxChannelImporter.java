@@ -71,6 +71,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             NUMBER = "Number",
             LINE = "Line",
             FILE_NAME = "FileName",
+            URL = "DeepLink",
             CODE = "Code";
 
     // sample is                                                 17-Dec-2013 10:39
@@ -98,7 +99,8 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
 
         // These are per-Result
         String currentFileName = null,
-            findingLineNumber = null;
+            findingLineNumber = null,
+            currentUrlReference = null;
 
         // These are per-PathNode
         String lineText = null,
@@ -130,6 +132,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
 
                 finding.setEntryPointLineNumber(IntegerUtils.getPrimitive(findingLineNumber));
                 finding.setNativeId(getNativeId(finding));
+                finding.setUrlReference(currentUrlReference);
                 finding.setIsStatic(true);
                 finding.setDataFlowElements(currentDataFlowElements);
                 saxFindingList.add(finding);
@@ -138,6 +141,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             currentSequence = 1;
             currentFileName = null;
             findingLineNumber = null;
+            currentUrlReference = null;
             currentDataFlowElements = list();
             inFinding = false;
             currentRawFinding.setLength(0);
@@ -174,6 +178,7 @@ class CheckMarxChannelImporter extends AbstractChannelImporter {
             } else if (qName.equals(RESULT)) {
                 currentFileName = atts.getValue(FILE_NAME);
                 findingLineNumber = atts.getValue(LINE);
+                currentUrlReference = atts.getValue(URL);
                 inFinding = true;
                 currentRawFinding.append(currentQueryBeginTag);
 
