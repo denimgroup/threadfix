@@ -33,6 +33,7 @@ public enum ScannerType {
     BRAKEMAN("brakeman", "Brakeman", BRAKEMAN_DB_NAME),
     BURPSUITE("burp", "Burp Suite", BURPSUITE_DB_NAME),
     CLANG("clang", "Clang", CLANG_DB_NAME),
+	CPPCHECK("cppcheck", "Cppcheck", CPPCHECK_DB_NAME),
     CAT_NET("catnet", "Microsoft CAT.NET", CAT_NET_DB_NAME),
     PMD("pmd", "PMD", PMD_DB_NAME),
     CENZIC_HAILSTORM("cenzic", "Cenzic Hailstorm", CENZIC_HAILSTORM_DB_NAME),
