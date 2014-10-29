@@ -127,13 +127,13 @@ public class AspxParser implements EventBasedTokenizer {
                 }
                 break;
             case REQUEST:
-                requestState = type == '[' ? RequestState.OPEN_SQUARE : RequestState.START;
+                requestState = type == '[' ? RequestState.OPEN_SQUARE : RequestState.EQUALS;
                 break;
             case OPEN_SQUARE:
                 if (type == '"') {
                     parameters.add(stringValue);
                 }
-                requestState = RequestState.START;
+                requestState = RequestState.EQUALS;
                 break;
         }
     }

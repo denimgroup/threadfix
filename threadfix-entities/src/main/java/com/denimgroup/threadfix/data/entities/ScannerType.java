@@ -35,7 +35,7 @@ public enum ScannerType {
     CHECKMARX("checkmarx", "CheckMarx", "CheckMarx"),
 	DEPENDENCY_CHECK("dependencycheck", "Dependency Check", "Dependency Check"),
 	FINDBUGS("findbugs", "FindBugs", "FindBugs"),
-	FORTIFY("fortify", "Fortify SCA", "Fortify 360"),
+	FORTIFY("fortify", "Fortify 360", "Fortify 360"),
 	NESSUS("nessus", "Nessus", "Nessus"),
 	NTO_SPIDER("nto", "NTO Spider", "NTO Spider"),
 	NETSPARKER("netsparker", "Mavituna Security Netsparker", "Mavituna Security Netsparker"),
