@@ -232,7 +232,7 @@ public class AnalyticsSnapshotTest extends BaseDataTest{
 
             analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
 
-            driver.findElement(By.xpath("//*[@id=\"reports\"]/div[6]/div/div/div[4]/button[1]")).click();
+            driver.findElement(By.xpath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]")).click();
 
             assertTrue("Modal did not close at level " + levels[i], analyticsPage.isClickable("reportSnapshotSelect"));
         }
