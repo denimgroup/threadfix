@@ -72,10 +72,10 @@ Variable 'variable' is assigned in constructor body. Consider performing initial
 Assignment of function parameter has no effect outside the function.,uselessAssignmentArg,563
 Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?,uselessAssignmentPtrArg,563
 Return value of std::remove() ignored. Elements remain in container.,uselessCallsRemove,252
+The scope of the variable 'varname' can be reduced.,variableScope,870
 Writing 1 bytes outside buffer size.,writeOutsideBufferSize,122
 Division by zero.,zerodiv,369
 Either the condition '' is useless or there is division by zero at line 0.,zerodivcond,369
-
 type.severities,,,
 High,error,4,4
 Medium,warning,3,3
