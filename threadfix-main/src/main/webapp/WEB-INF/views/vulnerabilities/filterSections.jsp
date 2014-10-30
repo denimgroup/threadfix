@@ -91,7 +91,7 @@
     <div ng-show="showTagControls" class="filter-group-body">
 
         <div class="accordion-inner">
-            Tags
+            Applications
             <a ng-hide="showTagInput" ng-click="showTagInput = !showTagInput">
                 <span id="showTagInput" class="icon" ng-class="{ 'icon-minus': showTagInput, 'icon-plus': !showTagInput }"></span>
             </a>

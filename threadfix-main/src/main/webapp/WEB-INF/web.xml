@@ -224,7 +224,7 @@
                 protected-regex ^/wafs/[0-9]+/generateRules/[0-9]+/[a-zA-Z0-9/]*$,
                 protected-regex ^/wafs/[0-9]+/getRules$,
                 protected-regex ^/configuration/tags/map$,
-                protected-regex ^/configuration/tags/[0-9]+/appList$,
+                protected-regex ^/configuration/tags/[0-9]+/objects$,
         		protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/addComment$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/table$,
                 protected-regex ^/organizations/[0-9]+/applications/[0-9]+/vulnerabilities/[0-9]+/manual/[0-9]+/edit$,

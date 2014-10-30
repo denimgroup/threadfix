@@ -48,7 +48,6 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             $scope.loading = true;
             $http.post(tfEncoder.encode("/reports/trendingScans"), $scope.getReportParameters()).
                 success(function(data) {
-                    $scope.reportHTML = undefined;
                     $scope.loading = false;
                     $scope.resetFilters();
                     $scope.allScans = data.object.scanList;
@@ -61,6 +60,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     } else {
                         $scope.noData = true;
                     };
+                    $rootScope.$broadcast('allTrendingScans', $scope.allScans);
                 }).
                 error(function() {
                     $scope.loading = false;
