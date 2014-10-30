@@ -59,6 +59,7 @@ myAppModule.controller('RoleEditModalController',
         $scope.object.canManageScanAgents = value;
         $scope.object.canManageSystemSettings = value;
         $scope.object.canManageTeams = value;
+        $scope.object.canManageTags = value;
         $scope.object.canViewErrorLogs = value;
         $scope.object.canUploadScans = value;
         $scope.object.canSubmitDefects = value;
