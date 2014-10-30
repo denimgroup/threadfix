@@ -37,7 +37,6 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class TagDetailPageIT extends BaseDataTest {
 
-    @Ignore
     @Test
     public void testAttachTagToApp() {
         initializeTeamAndApp();
@@ -54,18 +53,16 @@ public class TagDetailPageIT extends BaseDataTest {
                 .attachTag(tagName)
                 .clickModalSubmit();
 
-        applicationDetailPage.clickConfigTab();
-
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName);
 
         assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
     }
 
-    @Ignore
     @Test
-    public void testAttachTagToComment() {
+    public void testCorrectNumberofApps() {
         initializeTeamAndApp();
+        String appName2 = createApplication(teamName);
         String tagName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
@@ -79,11 +76,70 @@ public class TagDetailPageIT extends BaseDataTest {
                 .attachTag(tagName)
                 .clickModalSubmit();
 
-        applicationDetailPage.clickConfigTab();
+        ApplicationDetailPage applicationDetailPage1 = applicationDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName2,teamName);
 
-        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink().clickTagName(tagName);
+        applicationDetailPage1.clickEditDeleteBtn()
+                .attachTag(tagName)
+                .clickModalSubmit();
 
-        assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+        TagDetailPage tagDetailPage = applicationDetailPage1.clickTagsLink()
+                .clickTagName(tagName);
+
+        assertTrue("The number of apps attached is incorrect", tagDetailPage.getNumberofAttachedApps().equals("2"));
+    }
+
+    @Test
+    public void testAttachTagToComment() {
+        initializeTeamAndAppWithIBMScan();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .attachTag(tagName)
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        assertTrue("Tag was not attached to application", applicationDetailPage.isClickable("cmtTag0"));
+    }
+
+    @Test
+    public void testCorrectNumberofComments() {
+        initializeTeamAndAppWithIBMScan();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .attachTag(tagName)
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        applicationDetailPage.expandCommentSection("Critical791")
+                .addComment("Critical791")
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName(tagName);
+
+        assertTrue("Number of attached comments is incorrect", tagDetailPage.getNumberofAttachedComments().equals("2"));
     }
 
     @Test
@@ -98,19 +154,37 @@ public class TagDetailPageIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
 
-        applicationDetailPage.expandVulnerabilityByType("High1190")
-                .expandCommentSection("High1190")
-                .addComment("High1190")
+        applicationDetailPage.clickEditDeleteBtn()
                 .attachTag(tagName)
-                .setComment(teamName + appName)
                 .clickModalSubmit();
 
-        applicationDetailPage.clickConfigTab();
+        ApplicationDetailPage applicationDetailPage1 = applicationDetailPage.clickTagsLink()
+                .clickTagName(tagName)
+                .clickAppName(appName);
 
-        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
-                .clickTagName(tagName);
+        assertTrue("Application navigation failed.", applicationDetailPage1.isApplicationNameCorrect(appName));
+    }
 
-        assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    @Test
+    public void testTeamNavigation() {
+        initializeTeamAndApp();
+        String tagName = getName();
 
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag(tagName)
+                .clickModalSubmit();
+
+        TeamDetailPage teamDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName(tagName)
+                .clickTeamName(teamName);
+
+        assertTrue("Team page navigation failed.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
     }
 }

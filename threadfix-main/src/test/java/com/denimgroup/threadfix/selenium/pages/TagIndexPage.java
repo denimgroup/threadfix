@@ -32,6 +32,8 @@ public class TagIndexPage extends BasePage{
         super(webDriver);
     }
 
+    /*------------------------------ Action Methods ------------------------------*/
+
     public TagIndexPage createNewTag(String name) {
         driver.findElementById("createTagModalButton").click();
         driver.findElementById("tagCreateNameInput").sendKeys(name);
@@ -62,6 +64,8 @@ public class TagIndexPage extends BasePage{
         waitForElement(driver.findElementByLinkText("Back to Tags Page"));
         return new TagDetailPage(driver);
     }
+
+    /*------------------------------ Boolean Methods ------------------------------*/
 
     public boolean isTagNameLinkPresent(String name) { return !driver.findElements(By.id("tagName" + name)).isEmpty(); }
 }
