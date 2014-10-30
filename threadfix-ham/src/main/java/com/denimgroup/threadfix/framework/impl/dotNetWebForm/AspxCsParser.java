@@ -53,7 +53,7 @@ public class AspxCsParser implements EventBasedTokenizer {
     }
 
     AspxCsParser(File file) {
-        LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
+        LOG.debug("Parsing mappings for " + file.getAbsolutePath());
         aspName = file.getName();
     }
 
@@ -75,8 +75,8 @@ public class AspxCsParser implements EventBasedTokenizer {
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
         processBraceLevels(type);
-        processClassLevel(type, lineNumber, stringValue);
         processMethodLevel(type, lineNumber, stringValue);
+        processClassLevel(type, lineNumber, stringValue);
         processRequest(type, lineNumber, stringValue);
     }
 
@@ -161,7 +161,9 @@ public class AspxCsParser implements EventBasedTokenizer {
     ////////////////////////////////////////////////////////////////////////////////////
 
     Set<String> currentParameters = set();
-    Integer currentLineNumber = null;
+    int currentLineNumber = -1;
+
+    boolean atStartOfStatement = false, capturedAtStartOfStatement = false;
 
     private void processMethodLevel(int type, int lineNumber, String stringValue) {
         switch (methodState) {
@@ -169,27 +171,50 @@ public class AspxCsParser implements EventBasedTokenizer {
                 // not in the method
                 break;
             case ACTIVE:
-                if (stringValue != null && stringValue.endsWith(".Text")) {
-                    currentParameters.add(stringValue.substring(0, stringValue.lastIndexOf(".Text")));
+                if (stringValue != null && passesVariableTest(stringValue)) {
+                    currentParameters.add(extractVariable(stringValue));
                     methodState = MethodState.GOT_TEXT_VALUE;
                     currentLineNumber = lineNumber;
+                    capturedAtStartOfStatement = atStartOfStatement;
                 }
                 break;
             case GOT_TEXT_VALUE:
-                if (type == '=') {
+                if (capturedAtStartOfStatement && type == '=') {
                     currentParameters.clear();
                     methodState = MethodState.ACTIVE;
-                } else if (type == ';') {
-                    assert currentLineNumber != null;
+                } else {
+                    capturedAtStartOfStatement = false;
+                }
 
+                if (currentLineNumber != lineNumber) {
                     lineNumberToParametersMap.put(currentLineNumber, currentParameters);
-                    currentLineNumber = null;
+                    currentLineNumber = -1;
                     currentParameters = set();
                     methodState = MethodState.ACTIVE;
-                } else if (stringValue != null && stringValue.endsWith(".Text")) {
-                    currentParameters.add(stringValue.substring(0, stringValue.lastIndexOf(".Text")));
+                    processMethodLevel(type, lineNumber, stringValue);
+                } else if (stringValue != null && passesVariableTest(stringValue)) {
+                    currentParameters.add(extractVariable(stringValue));
                 }
                 break;
+        }
+
+        atStartOfStatement = type == ';' || type == '{' || type == ')'; // ) is to catch braceless ifs
+    }
+
+    private boolean passesVariableTest(String token) {
+        return token.contains(".Text") || token.contains(".Value");
+    }
+
+    private String extractVariable(String token) {
+        assert passesVariableTest(token) : "Didn't pass variable test";
+
+        if (token.contains(".Text")) {
+            return token.substring(0, token.indexOf(".Text"));
+        } else if (token.contains(".Value")) {
+            return token.substring(0, token.indexOf(".Value"));
+        } else {
+            assert false : "We shouldn't have gotten here";
+            return null;
         }
     }
 

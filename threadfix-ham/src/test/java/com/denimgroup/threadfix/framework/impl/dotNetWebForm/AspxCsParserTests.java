@@ -43,14 +43,6 @@ public class AspxCsParserTests {
     }
 
     @Test
-    public void testBasicParamParsing() {
-        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile("WebForm1.aspx.cs"));
-
-        assert csParser.lineNumberToParametersMap.get(20).contains("newitem") :
-                "Aspx.cs parser failed to get newitem at line 20: " + csParser;
-    }
-
-    @Test
     public void testRequestSquareBracketStyleParameters() {
         File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("ViewStatement.aspx.cs");
 
@@ -66,4 +58,54 @@ public class AspxCsParserTests {
                 "Aspx.cs parser failed to get StatementID at line 22: " + csParser;
     }
 
+    @Test
+    public void testBasicParamParsing() {
+        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile("WebForm1.aspx.cs"));
+
+        test(csParser, 20, "newitem");
+    }
+
+    @Test
+    public void testChangePasswordParamParsing() {
+        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile("ChangePassword.aspx.cs"));
+
+        test(csParser, 23, "txtPassword1");
+        test(csParser, 23, "txtPassword2");
+    }
+
+    @Test
+    public void testForgotPasswordPage() {
+        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile("ForgotPassword.aspx.cs"));
+
+        test(csParser, 67, "txtEmail");
+        test(csParser, 62, "txtAnswer");
+        test(csParser, 28, "txtEmail");
+    }
+
+    @Test
+    public void testProductDetailsPage() {
+        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile("ProductDetails.aspx.cs"));
+
+        test(csParser, 41, "txtEmail");
+        test(csParser, 41, "txtComment");
+        test(csParser, 41, "hiddenFieldProductID");
+    }
+
+    @Test
+    public void testAddNewUserPage() {
+        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile("AddNewUser.aspx.cs"));
+
+        test(csParser, 30, "Username");
+        test(csParser, 30, "Password");
+        test(csParser, 31, "Email");
+        test(csParser, 32, "SecurityAnswer");
+    }
+
+    private void test(AspxCsParser csParser, int key, String parameter) {
+        Set<String> strings = csParser.lineNumberToParametersMap.get(key);
+        assert strings != null :
+                "Got null parameters for line " + key;
+        assert strings.contains(parameter) :
+                "Aspx.cs parser failed to get " + parameter + " at line " + key + ": " + csParser;
+    }
 }
