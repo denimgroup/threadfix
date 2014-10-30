@@ -37,15 +37,56 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class TagDetailPageIT extends BaseDataTest {
 
+    @Ignore
     @Test
     public void testAttachTagToApp() {
         initializeTeamAndApp();
+        String tagName = getName();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
 
-        applicationDetailPage.clickEditDeleteBtn().
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag(tagName)
+                .clickModalSubmit();
+
+        applicationDetailPage.clickConfigTab();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName(tagName);
+
+        assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    }
+
+    @Ignore
+    @Test
+    public void testAttachTagToComment() {
+        initializeTeamAndApp();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("High1190")
+                .expandCommentSection("High1190")
+                .addComment("High1190")
+                .attachTag(tagName)
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        applicationDetailPage.clickConfigTab();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName(tagName);
+
+        assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
     }
 }
