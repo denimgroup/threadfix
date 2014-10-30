@@ -75,6 +75,29 @@ public class TagDetailPageIT extends BaseDataTest {
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
 
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag(tagName)
+                .clickModalSubmit();
+
+        applicationDetailPage.clickConfigTab();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink().clickTagName(tagName);
+
+        assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    }
+
+    @Test
+    public void testAppNavigation() {
+        initializeTeamAndApp();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
         applicationDetailPage.expandVulnerabilityByType("High1190")
                 .expandCommentSection("High1190")
                 .addComment("High1190")
@@ -88,5 +111,6 @@ public class TagDetailPageIT extends BaseDataTest {
                 .clickTagName(tagName);
 
         assertTrue("Tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+
     }
 }
