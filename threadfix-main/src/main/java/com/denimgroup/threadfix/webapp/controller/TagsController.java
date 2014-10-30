@@ -45,9 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/configuration/tags")
@@ -167,7 +165,7 @@ public class TagsController {
         return mav;
     }
 
-    @RequestMapping(value = "/{tagId}/appList", method = RequestMethod.GET)
+    @RequestMapping(value = "/{tagId}/objects", method = RequestMethod.GET)
     public @ResponseBody String getAppList(@PathVariable("tagId") int tagId) throws IOException {
 
         Tag tag = tagService.loadTag(tagId);
@@ -180,6 +178,7 @@ public class TagsController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("appList", tag.getApplications());
         responseMap.put("numApps", tag.getApplications().size());
+        responseMap.put("commentList", tag.getVulnerabilityComments());
 
         return WRITER.writeValueAsString(RestResponse.success(responseMap));
     }

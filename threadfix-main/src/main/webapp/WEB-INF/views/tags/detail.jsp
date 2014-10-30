@@ -38,6 +38,7 @@
 
     <div>
         <%@ include file="appTable.jsp" %>
+        <%@ include file="commentTable.jsp" %>
     </div>
 </div>
 </div>
