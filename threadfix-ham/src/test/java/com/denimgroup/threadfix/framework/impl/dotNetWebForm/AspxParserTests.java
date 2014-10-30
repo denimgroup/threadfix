@@ -70,5 +70,40 @@ public class AspxParserTests {
                 "Aspx.cs parser failed to get Msg: " + parser;
     }
 
+    @Test
+    public void testChangePassword() {
+        File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("ChangePassword.aspx");
+
+        assert dotNetWebFormsFile.isFile() :
+                "ChangePassword.aspx was not a file. Path should have been " + dotNetWebFormsFile.getAbsolutePath();
+
+        AspxParser parser = AspxParser.parse(dotNetWebFormsFile);
+
+        assertVariablePresence(parser, "txtPassword1", "txtPassword2");
+    }
+
+    @Test
+    public void testProductDetails() {
+        File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("ProductDetails.aspx");
+
+        assert dotNetWebFormsFile.isFile() :
+                "ChangePassword.aspx was not a file. Path should have been " + dotNetWebFormsFile.getAbsolutePath();
+
+        AspxParser parser = AspxParser.parse(dotNetWebFormsFile);
+
+        assertVariablePresence(parser, "txtComment", "txtEmail", "hiddenFieldProductID");
+    }
+
+    private void assertVariablePresence(AspxParser parser, String... variables) {
+        List<String> strings = parser.ids;
+
+        assert strings != null : "IDs were null";
+
+        for (String variable : variables) {
+            assert strings.contains(variable) :
+                    "Aspx.cs parser failed to get " + variable + ": " + parser;
+        }
+    }
+
 
 }
