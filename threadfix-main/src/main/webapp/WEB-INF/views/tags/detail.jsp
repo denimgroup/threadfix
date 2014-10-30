@@ -41,5 +41,4 @@
         <%@ include file="commentTable.jsp" %>
     </div>
 </div>
-</div>
 </body>

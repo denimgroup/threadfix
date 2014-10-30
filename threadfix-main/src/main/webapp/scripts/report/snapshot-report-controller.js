@@ -588,7 +588,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         });
     };
 
-
     var endsWith = function(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
     };
