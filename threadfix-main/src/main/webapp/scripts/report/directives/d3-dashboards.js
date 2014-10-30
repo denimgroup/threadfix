@@ -155,7 +155,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     if (!data || data.length < 1) return;
 
                     if (scope.label && (scope.label.teams || scope.label.apps))
-                        reportUtilities.drawTitle(svg, scope.width, scope.label.teams, scope.label.apps, "Most Vulnerable Applications", -30);
+                        reportUtilities.drawTitle(svg, scope.width, scope.label, "Most Vulnerable Applications", -30);
 
                     barGraphData(d3, data, color, false, scope.label, reportConstants);
 
@@ -184,7 +184,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .data(function(d) { return d.vulns; })
                         .enter().append("rect")
                         .attr("id", function(d){return d.graphId})
-                        .attr("class", "bar")
+                        .attr("class", "bar pointer")
                         .attr("height", 0)
                         .attr("x", function(d) { return x(d.y0); })
                         .attr("width", function(d) { return x(d.y1) - x(d.y0); })

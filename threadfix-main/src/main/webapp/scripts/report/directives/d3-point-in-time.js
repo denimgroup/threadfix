@@ -33,7 +33,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                     var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
 
                     svg.selectAll('*').remove();
-                    reportUtilities.drawTitle(svg, pieDim.w, scope.label.teams, scope.label.apps, "Point in Time Report", 30);
+                    reportUtilities.drawTitle(svg, pieDim.w, scope.label, "Point in Time Report", 30);
 
                     if (Object.keys(data).length === 0) {
                         svg.append("g")
