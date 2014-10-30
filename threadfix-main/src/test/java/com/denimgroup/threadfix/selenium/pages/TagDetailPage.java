@@ -30,4 +30,6 @@ public class TagDetailPage extends BasePage{
     public TagDetailPage(WebDriver webDriver) {
         super(webDriver);
     }
+
+    public boolean isTagAttachedtoApp(String appName) { return !driver.findElementsByLinkText(appName).isEmpty(); }
 }
