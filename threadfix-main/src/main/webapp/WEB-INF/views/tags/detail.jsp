@@ -40,5 +40,4 @@
         <%@ include file="appTable.jsp" %>
     </div>
 </div>
-</div>
 </body>

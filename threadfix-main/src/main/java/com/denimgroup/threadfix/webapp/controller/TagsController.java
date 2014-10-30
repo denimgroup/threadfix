@@ -163,7 +163,6 @@ public class TagsController {
         mav.addObject("numApps", numApps);
         mav.addObject("numVulnComments", numVulnComments);
         mav.addObject(tag);
-//        mav.addObject("appNameList", tag.getAppNameList());
         return mav;
     }
 
