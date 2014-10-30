@@ -1350,6 +1350,10 @@ public class ApplicationDetailPage extends BasePage {
         return driver.findElementById("horizontalBarTip").getText().trim().contains(tipText);
     }
 
+    public boolean isTop10BarCountCorrect(int expected) {
+        return driver.findElementsByClassName("g").size() == expected;
+    }
+
     public boolean isVulnerabilitySummaryElementCorrect(String element, String expected) {
         return driver.findElementById(element).getText().contains(expected);
     }

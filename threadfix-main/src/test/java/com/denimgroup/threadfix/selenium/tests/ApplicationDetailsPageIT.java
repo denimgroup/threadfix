@@ -3,6 +3,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.microsoft.tfs.core.clients.registration.Database;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -265,15 +266,6 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
         applicationDetailPage.waitForCWEBar(teamName, appName, "CWE89");
 
         assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
-        assertTrue("Bar for vulnerability CWE-79 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE79"));
-        assertTrue("Bar for vulnerability CWE-550 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE550"));
-        assertTrue("Bar for vulnerability CWE-615 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE615"));
-        assertTrue("Bar for vulnerability CWE-548 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE548"));
-        assertTrue("Bar for vulnerability CWE-200 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE200"));
-        assertTrue("Bar for vulnerability CWE-74 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE74"));
-        assertTrue("Bar for vulnerability CWE-301 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE301"));
-        assertTrue("Bar for vulnerability CWE-425 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE425"));
-        assertTrue("Bar for vulnerability CWE-89 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE89"));
     }
 
     @Test
@@ -282,20 +274,27 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
         applicationDetailPage.clickActionButton()
                 .clickUploadScan()
-                .uploadScan(ScanContents.SCAN_FILE_MAP.get("Acunetix WVS"));
+                .uploadScan(ScanContents.getScanFilePath("Acunetix WVS"));
 
         applicationDetailPage.waitForCWEBar(teamName, appName, "CWE301");
 
         assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
         assertTrue("Bar for vulnerability CWE-552 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE552"));
-        assertTrue("Bar for vulnerability CWE-79 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE79"));
-        assertTrue("Bar for vulnerability CWE-89 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE89"));
-        assertTrue("Bar for vulnerability CWE-209 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE209"));
-        assertTrue("Bar for vulnerability CWE-550 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE550"));
-        assertTrue("Bar for vulnerability CWE-615 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE615"));
-        assertTrue("Bar for vulnerability CWE-200 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE200"));
-        assertTrue("Bar for vulnerability CWE-548 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE548"));
-        assertTrue("Bar for vulnerability CWE-301 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE301"));
+    }
+
+    @Test
+    public void top10ShowLessTest() {
+        initializeTeamAndApp();
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.getScanFilePath("Microsoft CAT.NET"));
+
+        dashboardPage = loginPage.defaultLogin();
+
+        applicationDetailPage = dashboardPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        assertTrue("The number of bars in the Top 10 report is not correct.", applicationDetailPage.isTop10BarCountCorrect(2));
     }
 
     @Test
