@@ -810,10 +810,9 @@ public class ApplicationDetailPage extends BasePage {
     }
 
     public ApplicationDetailPage attachTag(String tagName) {
-        driver.findElementById("tagSelect").click();
-        sleep(1000);
-        driver.findElementByXPath("//*[@id=\"tagSelect\"]/div/form/div[2]/div[2]").click();
-        driver.findElementById("tagSelect").click();
+        driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
+        driver.findElementById(tagName).click();
+        driver.findElementByXPath("//*[@id=\"tagSelect\"]/button").click();
         return this;
     }
 
@@ -971,6 +970,10 @@ public class ApplicationDetailPage extends BasePage {
 
     public boolean isApplicationNamePresent() {
         return driver.findElementById("nameText").isDisplayed();
+    }
+
+    public boolean isApplicationNameCorrect(String appName) {
+        return driver.findElementById("nameText").getText().equals(appName);
     }
 
     public boolean isBreadcrumbPresent() {

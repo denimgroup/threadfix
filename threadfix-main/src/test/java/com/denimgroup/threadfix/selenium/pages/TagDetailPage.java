@@ -31,5 +31,31 @@ public class TagDetailPage extends BasePage{
         super(webDriver);
     }
 
+    /*------------------------------ Action Methods ------------------------------*/
+
+    public ApplicationDetailPage clickAppName(String appName) {
+        driver.findElementByLinkText(appName).click();
+        waitForElement(driver.findElementById("nameText"));
+        return new ApplicationDetailPage(driver);
+    }
+
+    public TeamDetailPage clickTeamName(String teamName) {
+        driver.findElementByLinkText(teamName).click();
+        waitForElement(driver.findElementById("name"));
+        return new TeamDetailPage(driver);
+    }
+
+    /*------------------------------ Get Methods ------------------------------*/
+
+    public String getNumberofAttachedApps() {
+        return driver.findElementById("numApps").getText().trim();
+    }
+
+    public String getNumberofAttachedComments() {
+        return driver.findElementById("numVulnComments").getText().trim();
+    }
+
+    /*------------------------------ Boolean Methods ------------------------------*/
+
     public boolean isTagAttachedtoApp(String appName) { return !driver.findElementsByLinkText(appName).isEmpty(); }
 }

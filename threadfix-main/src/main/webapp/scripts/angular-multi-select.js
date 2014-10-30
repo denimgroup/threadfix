@@ -88,7 +88,7 @@ threadfixModule.directive( 'multiSelect' , [ '$sce', '$timeout', function ( $sce
                             '</div>' +
                         '</div>' +
                         '<div class="checkBoxContainer" style="{{setHeight();}}">' +
-                            '<div ng-repeat="item in filteredModel | filter:removeGroupEndMarker" class="multiSelectItem"' +
+                            '<div ng-repeat="item in filteredModel | filter:removeGroupEndMarker" id="{{item[itemLabel]}}" class="multiSelectItem"' +
                                 'ng-class="{selected: item[ tickProperty ], horizontal: orientationH, vertical: orientationV, multiSelectGroup:item[ groupProperty ], disabled:itemIsDisabled( item )}"' +
                                 'ng-click="syncItems( item, $event, $index );"' + 
                                 'ng-mouseleave="removeFocusStyle( tabIndex );">' + 
