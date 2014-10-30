@@ -37,4 +37,15 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class TagDetailPageIT extends BaseDataTest {
 
+    @Test
+    public void testAttachTagToApp() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn().
+    }
 }

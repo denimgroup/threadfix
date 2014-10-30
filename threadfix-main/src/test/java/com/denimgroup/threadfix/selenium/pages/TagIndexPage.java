@@ -47,5 +47,21 @@ public class TagIndexPage extends BasePage{
         return new TagIndexPage(driver);
     }
 
+    public TagIndexPage editTagName(String tagName, String newName) {
+        driver.findElementById("editTagModalButton" + tagName).click();
+        waitForElement(driver.findElementById("tagCreateNameInput"));
+        driver.findElementById("tagCreateNameInput").clear();
+        driver.findElementById("tagCreateNameInput").sendKeys(newName);
+        clickModalSubmit();
+        sleep(1000);
+        return new TagIndexPage(driver);
+    }
+
+    public TagDetailPage clickTagName(String name) {
+        driver.findElementByLinkText(name).click();
+        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        return new TagDetailPage(driver);
+    }
+
     public boolean isTagNameLinkPresent(String name) { return !driver.findElements(By.id("tagName" + name)).isEmpty(); }
 }

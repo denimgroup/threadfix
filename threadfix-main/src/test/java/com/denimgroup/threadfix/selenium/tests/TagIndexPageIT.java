@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -39,24 +40,51 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testCreateTag() {
-        String newTag = getName();
+        String tagName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(newTag);
+                .createNewTag(tagName);
 
-        assertTrue("Tag was not created properly", tagIndexPage.isTagNameLinkPresent(newTag));
+        assertTrue("Tag was not created properly", tagIndexPage.isTagNameLinkPresent(tagName));
     }
 
     @Test
     public void testDeleteTag() {
-        String newTag = getName();
+        String tagName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(newTag)
-                .deleteTag(newTag);
+                .createNewTag(tagName)
+                .deleteTag(tagName);
 
-        assertTrue("Tag was not deleted properly", !tagIndexPage.isTagNameLinkPresent(newTag));
+        assertTrue("Tag was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
+    }
+
+    @Test
+    public void testEditTag() {
+        String tagName = getName();
+        String newName = getName();
+
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .editTagName(tagName,newName);
+
+        assertTrue("Old tag name was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
+        assertTrue("New tag name was no added properly ", tagIndexPage.isTagNameLinkPresent(newName));
+    }
+
+    @Test
+    public void testTagNameNavigation() {
+        String tagName = getName();
+
+        loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickTagName(tagName);
+
+        assertTrue("Tag name did not navigate correctly",
+                driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
     }
 }
