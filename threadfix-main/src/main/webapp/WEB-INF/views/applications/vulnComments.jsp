@@ -22,7 +22,7 @@
             </td>
             <td class="left-align" >
                 <div ng-show="canUpdateVulnComment">
-                    <multi-select
+                    <multi-select id="commentTags"
                             input-model="comment.tagsList"
                             output-model="comment.tags"
                             button-label="name"
@@ -45,7 +45,7 @@
                 </div>
             </td>
             <td ng-if="<c:out value='${canModifyVulnerabilities}'/> && canUpdateVulnComment">
-                <a class="btn btn-primary"
+                <a class="btn btn-primary" id="updateBtn{{ $index }}"
                    ng-class="{ disabled : !comment.commentChanged }"
                    ng-click="updateVulnComment(vulnerability, comment)"
                    >Update</a>
