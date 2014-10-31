@@ -52,6 +52,24 @@ public class WebFormsEndpointGeneratorTests {
     }
 
     @Test
+    public void testBasicDirectoryResolution() {
+        EndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(new File(TestConstants.RISK_E_UTILITY));
+
+        List<Endpoint> endpoints = endpointGenerator.generateEndpoints();
+        assert !endpoints.isEmpty() : "Got empty endpoints for " + TestConstants.RISK_E_UTILITY;
+
+        boolean gotPage = false;
+
+        for (Endpoint endpoint : endpoints) {
+            if (endpoint.getUrlPath().equals("/AHiddenDirectory/HiddenLaunchPage.aspx")) {
+                gotPage = true;
+            }
+        }
+
+        assert gotPage : "Didn't get /AHiddenDirectory/HiddenLaunchPage.aspx";
+    }
+
+    @Test
     public void testAtLeastOneEndpointPerProject() {
         for (File file : getSampleProjects()) {
             WebFormsEndpointGenerator endpointGenerator = new WebFormsEndpointGenerator(file);

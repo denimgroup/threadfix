@@ -52,9 +52,32 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
         }
 
         Map<String, AscxFile> map = AscxFileMappingsFileParser.getMap(rootDirectory);
-
         Map<String, AspxParser> masterFileMap = MasterPageParser.getMasterFileMap(rootDirectory, map);
 
+        List<AspxParser> aspxParsers = getAspxParsers(rootDirectory, map, masterFileMap);
+        List<AspxCsParser> aspxCsParsers = getAspxCsParsers(rootDirectory);
+
+        collapseToEndpoints(aspxCsParsers, aspxParsers, rootDirectory);
+    }
+
+    private List<AspxCsParser> getAspxCsParsers(File rootDirectory) {
+        Collection aspxCsFiles = FileUtils.listFiles(rootDirectory,
+                new FileExtensionFileFilter("aspx.cs"), TrueFileFilter.INSTANCE);
+
+        List<AspxCsParser> aspxCsParsers = list();
+
+        for (Object aspxCsFile : aspxCsFiles) {
+            if (aspxCsFile instanceof File) {
+                aspxCsParsers.add(AspxCsParser.parse((File) aspxCsFile));
+            }
+        }
+
+        return aspxCsParsers;
+    }
+
+    private List<AspxParser> getAspxParsers(File rootDirectory,
+                                            Map<String, AscxFile> map,
+                                            Map<String, AspxParser> masterFileMap) {
         Collection aspxFiles = FileUtils.listFiles(rootDirectory,
                 new FileExtensionFileFilter("aspx"), TrueFileFilter.INSTANCE);
 
@@ -75,28 +98,41 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
                 aspxParsers.add(aspxParser);
             }
         }
+        return aspxParsers;
+    }
 
+    File getAspxRoot(File rootDirectory) {
         Collection aspxCsFiles = FileUtils.listFiles(rootDirectory,
-                new FileExtensionFileFilter("aspx.cs"), TrueFileFilter.INSTANCE);
+                new FileExtensionFileFilter(".config"), TrueFileFilter.INSTANCE);
 
-        List<AspxCsParser> aspxCsParsers = list();
+        int shortestPathLength = Integer.MAX_VALUE;
+        File returnFile = rootDirectory;
 
         for (Object aspxCsFile : aspxCsFiles) {
             if (aspxCsFile instanceof File) {
-                aspxCsParsers.add(AspxCsParser.parse((File) aspxCsFile));
+                File file = (File) aspxCsFile;
+                if (file.isFile() && (file.getName().equals("web.config") ||
+                                file.getName().equals("Web.config"))) {
+                    if (file.getAbsolutePath().length() < shortestPathLength) {
+                        shortestPathLength = file.getAbsolutePath().length();
+                        returnFile = file.getParentFile();
+                    }
+                }
             }
         }
 
-        collapseToEndpoints(aspxCsParsers, aspxParsers);
+        // reference comparison ok here because we're checking to see whether the reference has changed
+        assert returnFile != rootDirectory : "web.config not found.";
+        return returnFile;
     }
 
-    public WebFormsEndpointGenerator(Collection<AspxCsParser> csParsers, Collection<AspxParser> aspxParsers) {
-        collapseToEndpoints(csParsers, aspxParsers);
-    }
-
-    void collapseToEndpoints(Collection<AspxCsParser> csParsers, Collection<AspxParser> aspxParsers) {
+    void collapseToEndpoints(Collection<AspxCsParser> csParsers,
+                             Collection<AspxParser> aspxParsers,
+                             File rootDirectory) {
         Map<String, AspxParser> aspxParserMap = newMap();
         Map<String, AspxCsParser> aspxCsParserMap = newMap();
+
+        File aspxRootDirectory = getAspxRoot(rootDirectory);
 
         for (AspxCsParser csParser : csParsers) {
             aspxCsParserMap.put(csParser.aspName, csParser);
@@ -109,7 +145,7 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
         for (Map.Entry<String, AspxParser> entry : aspxParserMap.entrySet()) {
             String key = entry.getKey() + ".cs";
             if (aspxCsParserMap.containsKey(key)) {
-                endpoints.add(new WebFormsEndpoint(entry.getValue(), aspxCsParserMap.get(key)));
+                endpoints.add(new WebFormsEndpoint(aspxRootDirectory, entry.getValue(), aspxCsParserMap.get(key)));
             }
         }
     }
