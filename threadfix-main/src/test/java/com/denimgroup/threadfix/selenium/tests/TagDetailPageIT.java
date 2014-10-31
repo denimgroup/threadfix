@@ -111,7 +111,10 @@ public class TagDetailPageIT extends BaseDataTest {
                 .setComment(teamName + appName)
                 .clickModalSubmit();
 
-        assertTrue("Tag was not attached to application", applicationDetailPage.isClickable("cmtTag0"));
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName(tagName);
+
+        assertTrue("Tag was not attached to comment properly", tagDetailPage.isLinkPresent(appName));
     }
 
     @Test
