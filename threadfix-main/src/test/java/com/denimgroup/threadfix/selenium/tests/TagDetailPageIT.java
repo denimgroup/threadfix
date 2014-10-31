@@ -211,28 +211,4 @@ public class TagDetailPageIT extends BaseDataTest {
 
         assertTrue("Tag was not attached to application", tagDetailPage.isLinkPresent(appName));
     }
-
-    @Test
-    public void testCommentTagLinkNavigation() {
-        initializeTeamAndAppWithIBMScan();
-        String tagName = getName();
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.expandVulnerabilityByType("Critical79")
-                .expandCommentSection("Critical790")
-                .addComment("Critical790")
-                .attachTag(tagName)
-                .setComment(teamName + appName)
-                .clickModalSubmit();
-
-        TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
-
-        assertTrue("Tag was not attached to application", tagDetailPage.isLinkPresent(appName));
-    }
 }
