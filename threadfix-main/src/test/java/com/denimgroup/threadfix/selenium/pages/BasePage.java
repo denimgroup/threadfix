@@ -499,6 +499,7 @@ public abstract class BasePage {
             WebDriverWait wait = new WebDriverWait(driver, 120);
             wait.until(ExpectedConditions.alertIsPresent());
         } catch (TimeoutException e) {
+            takeScreenShot();
             throw new RuntimeException("Alert was not displayed as it should have been.", e);
         }
     }
