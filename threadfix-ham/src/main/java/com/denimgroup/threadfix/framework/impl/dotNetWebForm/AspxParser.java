@@ -42,6 +42,7 @@ public class AspxParser implements EventBasedTokenizer {
 
     public final List<String> ids = list();
     public final String aspName;
+    public final File file;
     public List<String> parameters = list();
 
     @Nonnull
@@ -54,6 +55,7 @@ public class AspxParser implements EventBasedTokenizer {
     AspxParser(File file) {
         LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
         aspName = file.getName();
+        this.file = file;
     }
 
     @Override

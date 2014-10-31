@@ -25,8 +25,10 @@ package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
 import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
@@ -36,12 +38,16 @@ import static com.denimgroup.threadfix.CollectionUtils.*;
  */
 public class WebFormsEndpoint extends AbstractEndpoint {
 
-    final AspxParser aspxParser;
+    private static final SanitizedLogger LOG = new SanitizedLogger(WebFormsEndpoint.class);
+
+    final AspxParser   aspxParser;
     final AspxCsParser aspxCsParser;
+    final File         aspxRoot;
+    final String       urlPath;
 
     Map<String, List<Integer>> map = newMap();
 
-    public WebFormsEndpoint(AspxParser aspxParser, AspxCsParser aspxCsParser) {
+    public WebFormsEndpoint(File aspxRoot, AspxParser aspxParser, AspxCsParser aspxCsParser) {
         if (!(aspxParser.aspName + ".cs").equals(aspxCsParser.aspName)) {
             throw new IllegalArgumentException("Invalid aspx mappings pairs passed to WebFormsEndpoint constructor: " +
                     aspxParser.aspName + " and " + aspxCsParser.aspName);
@@ -49,8 +55,28 @@ public class WebFormsEndpoint extends AbstractEndpoint {
 
         this.aspxParser = aspxParser;
         this.aspxCsParser = aspxCsParser;
+        this.aspxRoot = aspxRoot;
+
+        this.urlPath = calculateUrlPath();
 
         collectParameters();
+    }
+
+    private String calculateUrlPath() {
+        String aspxFilePath = aspxParser.file.getAbsolutePath();
+        String aspxRootPath = aspxRoot.getAbsolutePath();
+
+        if (aspxFilePath.startsWith(aspxRootPath)) {
+            return aspxFilePath.substring(aspxRootPath.length());
+        } else {
+            String error = "AspxFilePath didn't start with aspxRoot : " +
+                    aspxFilePath +
+                    " didn't start with " +
+                    aspxRootPath;
+            LOG.error(error);
+            assert false : error;
+            return aspxParser.aspName;
+        }
     }
 
     private void collectParameters() {
@@ -97,7 +123,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     public String getUrlPath() {
-        return aspxParser.aspName;
+        return urlPath;
     }
 
     @Nonnull
