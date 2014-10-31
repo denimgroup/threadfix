@@ -143,7 +143,7 @@ public class TagDetailPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testAppNavigation() {
+    public void testAppLinkNavigation() {
         initializeTeamAndApp();
         String tagName = getName();
 
@@ -166,7 +166,7 @@ public class TagDetailPageIT extends BaseDataTest {
     }
 
     @Test
-    public void testTeamNavigation() {
+    public void testTeamLinkNavigation() {
         initializeTeamAndApp();
         String tagName = getName();
 
@@ -186,5 +186,53 @@ public class TagDetailPageIT extends BaseDataTest {
                 .clickTeamName(teamName);
 
         assertTrue("Team page navigation failed.", teamDetailPage.isTeamNameDisplayedCorrectly(teamName));
+    }
+
+    @Test
+    public void testCommentTagLinkNavigation() {
+        initializeTeamAndAppWithIBMScan();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .attachTag(tagName)
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
+
+        assertTrue("Tag was not attached to application", tagDetailPage.isLinkPresent(appName));
+    }
+
+    @Test
+    public void testCommentTagLinkNavigation() {
+        initializeTeamAndAppWithIBMScan();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .attachTag(tagName)
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
+
+        assertTrue("Tag was not attached to application", tagDetailPage.isLinkPresent(appName));
     }
 }

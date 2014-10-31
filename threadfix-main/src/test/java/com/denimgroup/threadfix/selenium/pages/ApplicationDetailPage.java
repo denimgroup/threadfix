@@ -536,6 +536,12 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
+    public TagDetailPage clickTagName(String tagName) {
+        driver.findElementByLinkText(tagName).click();
+        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        return new TagDetailPage(driver);
+    }
+
     public FilterPage clickEditVulnerabilityFilters() {
         waitForElement(driver.findElementById("editVulnerabilityFiltersButton"));
         driver.findElementById("editVulnerabilityFiltersButton").click();
