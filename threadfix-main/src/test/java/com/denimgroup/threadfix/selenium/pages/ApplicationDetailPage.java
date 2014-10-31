@@ -822,6 +822,12 @@ public class ApplicationDetailPage extends BasePage {
         return this;
     }
 
+    public TagDetailPage clickTagHeader(String number) {
+        driver.findElementById("appTag" + number).click();
+        waitForElement(driver.findElementByLinkText("Back to Tags Page"));
+        return new TagDetailPage(driver);
+    }
+
     /*________________________________________ Get Methods ________________________________________*/
     public String checkWafName() {
         waitForElement(driver.findElementById("wafNameText"));

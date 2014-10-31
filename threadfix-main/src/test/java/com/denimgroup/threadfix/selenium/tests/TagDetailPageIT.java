@@ -26,10 +26,12 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -100,7 +102,7 @@ public class TagDetailPageIT extends BaseDataTest {
                 .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
+                .clickViewAppLink(appName, teamName);
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
@@ -209,6 +211,65 @@ public class TagDetailPageIT extends BaseDataTest {
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagName(tagName);
 
-        assertTrue("Tag was not attached to application", tagDetailPage.isLinkPresent(appName));
+        assertTrue("Comment tag link navigation failed", tagDetailPage.isLinkPresent(appName));
+    }
+
+    @Test
+    public void testUpdateCommentTag() {
+        initializeTeamAndAppWithIBMScan();
+        String tagName = getName();
+        String tagName2 = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .createNewTag(tagName2)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790")
+                .addComment("Critical790")
+                .attachTag(tagName)
+                .setComment(teamName + appName)
+                .clickModalSubmit();
+
+        VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage
+                .clickViewMoreVulnerabilityLink("Critical790");
+
+        vulnerabilityDetailPage.setCommentTag(tagName2);
+
+        ApplicationDetailPage applicationDetailPage1 = vulnerabilityDetailPage.clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage1.expandVulnerabilityByType("Critical79")
+                .expandCommentSection("Critical790");
+
+        assertTrue("Comment tag was not updated properly", applicationDetailPage1.isLinkPresent(tagName2));
+    }
+
+    @Test
+    public void testTagHeaderNavigation() {
+        initializeTeamAndApp();
+        String tagName = getName();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(tagName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag(tagName)
+                .clickModalSubmit();
+
+        applicationDetailPage.refreshPage();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagHeader("0");
+
+        assertTrue("Tag header link did not navigate properly", tagDetailPage.isLinkPresent(appName));
     }
 }
