@@ -51,7 +51,18 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     $scope.loading = false;
                     $scope.resetFilters();
                     $scope.allScans = data.object.scanList;
-
+                    if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
+                        $scope.parameters.teams = [$scope.$parent.team];
+                        $scope.parameters.applications = [];
+                        $scope.$broadcast("updateBackParameters", $scope.parameters);
+                    }
+                    if ($scope.$parent.applicationId !== -1) {
+                        var app = angular.copy($scope.$parent.application);
+                        app.name = $scope.$parent.team.name + " / " + app.name;
+                        $scope.parameters.applications = [app];
+                        $scope.parameters.teams = [];
+                        $scope.$broadcast("updateBackParameters", $scope.parameters);
+                    }
                     if ($scope.allScans) {
                         $scope.allScans.sort(function (a, b) {
                             return a.importTime - b.importTime;
@@ -66,6 +77,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     $scope.loading = false;
                 });
         }
+        $scope.$parent.trendingActive = true;
     });
 
     $scope.$on('resetParameters', function(event, parameters) {

@@ -97,11 +97,12 @@ module.controller('ReportFilterController', function($scope, $rootScope, filterS
     };
 
     $scope.refresh = function() {
-
         $rootScope.$broadcast("updateDisplayData", $scope.parameters);
-
     };
 
+    $scope.$on('updateBackParameters', function(event, parameters) {
+        $scope.parameters = angular.copy(parameters);
+    });
 
     $scope.addNew = function(collection, name) {
         var found = false;
