@@ -51,7 +51,7 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
-            canViewJobStatuses, enterprise;
+            canViewJobStatuses, enterprise, canManageTags;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -61,7 +61,7 @@ public class Role extends AuditableEntity {
             "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers",
             "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings"
+            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings", "canManageTags"
     };
 
     @NotEmpty(message = "{errors.required}")
@@ -249,7 +249,16 @@ public class Role extends AuditableEntity {
 		this.enterprise = enterprise;
 	}
 
-	@Transient
+    @Column
+    public Boolean getCanManageTags() {
+        return canManageTags;
+    }
+
+    public void setCanManageTags(Boolean canManageTags) {
+        this.canManageTags = canManageTags;
+    }
+
+    @Transient
 	public Set<Permission> getPermissions() {
 		Set<Permission> permissions = new HashSet<Permission>();
 	
@@ -306,6 +315,9 @@ public class Role extends AuditableEntity {
 
 		if (getEnterprise())
 			permissions.add(Permission.ENTERPRISE);
+
+        if (getCanManageTags() != null && getCanManageTags())
+            permissions.add(Permission.CAN_MANAGE_TAGS);
 
 		return permissions;
 	}

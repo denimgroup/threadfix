@@ -6,7 +6,7 @@
                     <a id="leftViewMore" ng-href="{{ urlRoot }}/reports/9{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="leftTileReport">
-                    <d3-trending ng-show="trendingData" data="trendingData" width="422" height="250" margin="margin"></d3-trending>
+                    <d3-trending ng-show="trendingData" data="trendingData" width="422" height="250" margin="leftMargin"></d3-trending>
                     <div ng-hide="empty || trendingData || leftReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
@@ -28,7 +28,7 @@
                     <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="rightTileReport">
-                    <d3-hbars ng-show="topAppsData" data="topAppsData" label = "label"></d3-hbars>
+                    <d3-hbars ng-show="topAppsData" data="topAppsData" label = "label" width="422" height="250" margin="rightMargin"></d3-hbars>
                     <div ng-hide="empty || topAppsData || rightReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>

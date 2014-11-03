@@ -74,11 +74,11 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
             labelSiteIdStream = response.getInputStream();
         } else {
 			LOG.warn("Received a " + response.getStatus() + " status code from WhiteHat servers while trying " +
-                    "to get scans for " + remoteProviderApplication.getNativeId() + ", returning null.");
+                    "to get scans for " + remoteProviderApplication.getNativeName() + ", returning null.");
 			return null;
 		}
 		
-		String appName = remoteProviderApplication.getNativeId();
+		String appName = remoteProviderApplication.getNativeName();
 		
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
 		
@@ -267,7 +267,8 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			List<RemoteProviderApplication> apps = list();
 			for (String label : map.keySet()) {
 				RemoteProviderApplication remoteProviderApplication = new RemoteProviderApplication();
-	    		remoteProviderApplication.setNativeId(label);
+	    		remoteProviderApplication.setNativeName(label);
+	    		remoteProviderApplication.setNativeId(map.get(label));
 	    		remoteProviderApplication.setRemoteProviderType(remoteProviderType);
 	    		apps.add(remoteProviderApplication);
 			}
@@ -312,7 +313,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
         private String vulnTag = null;
         private boolean inAttackVector = false;
-        private StringBuffer currentRawFinding	  = new StringBuffer();
+        private StringBuffer currentRawFinding = new StringBuffer();
 		
 		private void addFinding() {
 			Finding finding = constructFinding(map);
@@ -331,6 +332,17 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 				findingDateStatusMap.put(finding, Arrays.asList(dateStatus));
 			}
 		}
+
+        private String buildUrlReference(String siteId, String nativeId) {
+
+            String urlReference = null;
+
+            if (siteId != null && nativeId != null){
+                urlReference = ScannerType.SENTINEL.getBaseUrl() +  "?site_id=" + siteId +"&vuln_id=" + nativeId;
+            }
+
+            return urlReference;
+        }
 		
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    
@@ -341,9 +353,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
 	    		map.clear();
-	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
+
+                String nativeId = atts.getValue("id");
+                String siteId = atts.getValue("site");
+
+                map.put(FindingKey.NATIVE_ID, nativeId);
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
 	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+                map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
 	    	} else if ("attack_vector".equals(qName)) {
                 currentRawFinding.append(makeTag(name, qName , atts));
 	    		map.put(FindingKey.PATH, null);
@@ -440,6 +457,17 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			}
 		}
 
+        private String buildUrlReference(String siteId, String nativeId) {
+
+            String urlReference = null;
+
+            if (siteId != null && nativeId != null){
+                urlReference = ScannerType.SENTINEL.getBaseUrl() +  "?site_id=" + siteId +"&vuln_id=" + nativeId;
+            }
+
+            return urlReference;
+        }
+
 		public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 
 	    	if ("vulnerabilities".equals(qName)) {
@@ -449,9 +477,14 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    	else if ("vulnerability".equals(qName)) {
                 vulnTag = makeTag(name, qName, atts) + "\n";
 	    		map.clear();
-	    		map.put(FindingKey.NATIVE_ID, atts.getValue("id"));
+
+                String nativeId = atts.getValue("id");
+                String siteId = atts.getValue("site");
+
+	    		map.put(FindingKey.NATIVE_ID, nativeId);
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
 	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
+	    		map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
 
                 // was in the attack_vector
 	    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));

@@ -96,23 +96,23 @@ public class RemoteProviderApplicationServiceImpl implements
 			Set<String> appIds = new TreeSet<>();
 			if (appsForType.size() > 0) {
 				for (RemoteProviderApplication app : appsForType) {
-					if (app == null || app.getNativeId() == null) {
+					if (app == null || app.getNativeName() == null) {
 						continue;
 					}
 					
-					if (app.getNativeId().length() >= RemoteProviderApplication.NATIVE_ID_LENGTH) {
+					if (app.getNativeName().length() >= RemoteProviderApplication.NATIVE_NAME_LENGTH) {
 						log.warn("A Remote Provider application came out of the database with more than "
-									+ RemoteProviderApplication.NATIVE_ID_LENGTH
+									+ RemoteProviderApplication.NATIVE_NAME_LENGTH
 									+ " characters in it. This shouldn't be possible.");
-						appIds.add(app.getNativeId().substring(0, RemoteProviderApplication.NATIVE_ID_LENGTH-1));
+						appIds.add(app.getNativeName().substring(0, RemoteProviderApplication.NATIVE_NAME_LENGTH-1));
 					} else {
-						appIds.add(app.getNativeId());
+						appIds.add(app.getNativeName());
 					}
 				}
 			}
 			
 			for (RemoteProviderApplication app : newApps) {
-				if (app != null && !appIds.contains(app.getNativeId())) {
+				if (app != null && !appIds.contains(app.getNativeName())) {
 					app.setRemoteProviderType(remoteProviderType);
 					appsForType.add(app);
 					remoteProviderType.setRemoteProviderApplications(appsForType);
@@ -145,7 +145,7 @@ public class RemoteProviderApplicationServiceImpl implements
 					public int compare(RemoteProviderApplication f1,
 							RemoteProviderApplication f2)
 		            {
-		                return f1.getNativeId().compareTo(f2.getNativeId());
+		                return f1.getNativeName().compareTo(f2.getNativeName());
 		            }
 		        });
 		}
@@ -155,13 +155,13 @@ public class RemoteProviderApplicationServiceImpl implements
 				continue;
 			}
 			
-			if (app.getNativeId() != null &&
-					app.getNativeId().length() >= RemoteProviderApplication.NATIVE_ID_LENGTH) {
+			if (app.getNativeName() != null &&
+					app.getNativeName().length() >= RemoteProviderApplication.NATIVE_NAME_LENGTH) {
 				log.warn("A Remote Provider application was parsed that has more than "
-							+ RemoteProviderApplication.NATIVE_ID_LENGTH
+							+ RemoteProviderApplication.NATIVE_NAME_LENGTH
 							+ " characters in it. The name is being trimmed but this"
 							+ " should not prevent use of the application");
-				app.setNativeId(app.getNativeId().substring(0, RemoteProviderApplication.NATIVE_ID_LENGTH-1));
+				app.setNativeName(app.getNativeName().substring(0, RemoteProviderApplication.NATIVE_NAME_LENGTH-1));
 			}
 			
 			app.setRemoteProviderType(remoteProviderType);
@@ -178,7 +178,7 @@ public class RemoteProviderApplicationServiceImpl implements
 					" (id=" + remoteProviderType.getId() + ")");
 			for (RemoteProviderApplication app : remoteProviderType
 					.getRemoteProviderApplications()) {
-				log.info("Deleting Remote Application " + app.getNativeId() +
+				log.info("Deleting Remote Application " + app.getNativeName() +
 						" (id = " + app.getId() + ", type id=" + remoteProviderType.getId() + ")");
 				remoteProviderApplicationDao.delete(app);
 			}

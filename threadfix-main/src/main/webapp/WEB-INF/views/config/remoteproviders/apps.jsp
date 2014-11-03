@@ -40,7 +40,7 @@
 		<tbody>
 			<c:forEach var="application" varStatus="vs" items="${ remoteProviderType.remoteProviderApplications }">
 				<tr class="bodyRow">
-					<td><c:out value="${ application.nativeId }"/></td>
+					<td><c:out value="${ application.nativeName }"/></td>
 					<td>
 						<script type="text/javascript">
 							$(document).ready(function(){ 

@@ -17,6 +17,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.parameters = {
             teams: [],
             applications: [],
+            tags: [],
             scanners: [],
             genericVulnerabilities: [],
             severities: {},
@@ -43,7 +44,8 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             || $scope.showDetailsControls
             || $scope.showDateControls
             || $scope.showDateRange
-            || $scope.showTypeAndMergedControls) {
+            || $scope.showTypeAndMergedControls
+            || $scope.showTagControls) {
             $scope.showSaveAndLoadControls = false;
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
@@ -51,6 +53,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showDateRange = false;
             $scope.showTypeAndMergedControls = false;
             $scope.showSaveFilter = false;
+            $scope.showTagControls = false;
         } else {
             $scope.showSaveAndLoadControls = true;
             $scope.showTeamAndApplicationControls = true;
@@ -59,6 +62,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showDateRange = true;
             $scope.showTypeAndMergedControls = true;
             $scope.showSaveFilter = true;
+            $scope.showTagControls = true;
         }
     };
 
@@ -145,6 +149,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 .success(function(data, status, headers, config) {
                     if (data.success) {
                         $scope.teams = data.object.teams;
+                        $scope.tags = data.object.tags;
                         $scope.scanners = data.object.scanners;
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
@@ -409,7 +414,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
                 if (data.success) {
                     element.vulns = data.object.vulns;
-                    element.vulns.forEach(updateChannelNames)
+                    element.vulns.forEach(updateChannelNames);
+                    element.vulns.forEach(function(vuln){
+                        vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
+                    });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
                     element.numberToShow = numToShow;
@@ -437,13 +445,16 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.showCommentForm = function(vuln) {
         var modalInstance = $modal.open({
             templateUrl: 'vulnCommentForm.html',
-            controller: 'GenericModalController',
+            controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
                     return tfEncoder.encode($scope.getUrlBase(vuln) + "/addComment");
                 },
                 object: function () {
                     return {};
+                },
+                config: function() {
+                    return {tags: $scope.tags};
                 },
                 buttonText: function() {
                     return "Add Comment";

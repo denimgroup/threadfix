@@ -62,6 +62,8 @@ public class AddApplicationController {
 	private ApplicationCriticalityService applicationCriticalityService = null;
     @Autowired(required = false)
     private LicenseService licenseService;
+    @Autowired
+    private TagService tagService;
 
 	private final SanitizedLogger log = new SanitizedLogger(AddApplicationController.class);
 	
@@ -70,7 +72,7 @@ public class AddApplicationController {
 		dataBinder.setAllowedFields("name", "url", "defectTracker.id", "uniqueId",
                 "userName", "password", "waf.id", "projectName", "applicationCriticality.id",
                 "frameworkType", "repositoryUrl", "repositoryBranch",
-                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge");
+                "repositoryUserName", "repositoryPassword", "repositoryFolder", "skipApplicationMerge", "tags[*].id", "tags[*].name");
 	}
 
 	public AddApplicationController(){}
@@ -160,6 +162,7 @@ public class AddApplicationController {
 
             model.addAttribute("org",org);
             model.addAttribute("applicationTypes", FrameworkType.values());
+            model.addAttribute("tags", tagService.loadAll());
             model.addAttribute("canSetDefectTracker", PermissionUtils.isAuthorized(
                     Permission.CAN_MANAGE_DEFECT_TRACKERS, orgId, null));
 

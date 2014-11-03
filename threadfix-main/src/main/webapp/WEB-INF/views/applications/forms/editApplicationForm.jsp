@@ -89,6 +89,20 @@
                 </td>
             </tr>
             <tr>
+                <td class="right-align">Tag</td>
+                <td class="left-align" >
+                    <multi-select id="tagSelect"
+                            input-model="config.tags"
+                            output-model="object.tags"
+                            button-label="name"
+                            item-label="name"
+                            tick-property="selected"
+                            >
+                    </multi-select>
+                </td>
+            </tr>
+
+            <tr>
                 <td colspan="2">
                     <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>
                 </td>

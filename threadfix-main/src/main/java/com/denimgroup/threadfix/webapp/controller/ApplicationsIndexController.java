@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationCriticalityService;
 import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -72,6 +73,8 @@ public class ApplicationsIndexController {
 	private ApplicationCriticalityService applicationCriticalityService;
     @Autowired(required = false)
     private LicenseService licenseService;
+    @Autowired
+    private TagService tagService;
 
 	@RequestMapping(value = "/teams", method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
@@ -79,6 +82,7 @@ public class ApplicationsIndexController {
 		model.addAttribute("application", new Application());
 		model.addAttribute("organization", new Organization());
         model.addAttribute("applicationTypes", FrameworkType.values());
+        model.addAttribute("tags", tagService.loadAll());
 
         if (licenseService != null) {
             model.addAttribute("underEnterpriseLimit", licenseService.canAddApps());

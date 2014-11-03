@@ -98,6 +98,8 @@ public class ApplicationsController {
     private ChannelTypeService channelTypeService;
     @Autowired
     private ScanService scanService;
+    @Autowired
+    private TagService tagService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -135,12 +137,14 @@ public class ApplicationsController {
 //				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
 				Permission.CAN_MANAGE_DEFECT_TRACKERS,
-				Permission.CAN_MANAGE_USERS);
+				Permission.CAN_MANAGE_USERS,
+                Permission.CAN_MANAGE_TAGS);
 		
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 
+        model.addAttribute("tagList", application.getTags());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);
 		model.addAttribute("defectTracker", new DefectTracker());
@@ -207,6 +211,11 @@ public class ApplicationsController {
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
         map.put("teams", organizationService.loadAllActive());
+
+        // tagging
+        map.put("tags", tagService.loadAll());
+
+        map.put("applicationTags", application.getTags());
 
         return getSerializedMap(map);
     }

@@ -45,6 +45,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
                          "canManageScanAgents": "false",
                          "canManageSystemSettings": "false",
                          "canManageRoles": "false",
+                         "canManageTags": "false",
                          "canManageTeams": "false",
 //                         "canViewJobStatuses": "false",
                          "canViewErrorLogs": "false",
@@ -96,6 +97,7 @@ module.controller('RolesPageController', function($scope, $http, $modal, $log, t
             role.canManageScanAgents = role.canManageScanAgents === true ? "true" : "false";
             role.canManageSystemSettings = role.canManageSystemSettings === true ? "true" : "false";
             role.canManageRoles = role.canManageRoles === true ? "true" : "false";
+            role.canManageTags = (role.canManageTags === true)? "true" : "false";
             role.canManageTeams = role.canManageTeams === true ? "true" : "false";
             role.canViewErrorLogs = role.canViewErrorLogs === true ? "true" : "false";
             role.canUploadScans = role.canUploadScans === true ? "true" : "false";

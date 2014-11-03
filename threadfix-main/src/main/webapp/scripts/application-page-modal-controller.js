@@ -32,6 +32,20 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    if ($scope.config.teams) {
                        $scope.config.teams.sort(nameCompare);
                    }
+                   if (!$scope.config.tags)
+                       $scope.config.tags = [];
+
+                   if (!$scope.config.applicationTags)
+                       $scope.config.applicationTags = [];
+
+                   $scope.config.tags.forEach(function(dbTag){
+                       $scope.config.applicationTags.some(function(appTag){
+                           if (dbTag.id === appTag.id) {
+                               dbTag.selected = true;
+                               return true;
+                           }
+                       })
+                   })
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
 
@@ -113,11 +127,15 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         var modalInstance = $modal.open({
             templateUrl: 'editApplicationModal.html',
-            controller: 'ModalControllerWithConfig',
+            controller: 'EditApplicationModalController',
             resolve: {
                 url: function() {
                     var app = $scope.config.application;
                     return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit");
+                },
+                tagsUrl: function() {
+                    var app = $scope.config.application;
+                    return tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id + "/edit/setTagsEndpoint");
                 },
                 object: function () {
                     var appCopy = angular.copy($scope.config.application);
@@ -444,5 +462,4 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
         });
     };
-
 })

@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
+import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
 import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.report.ReportsService.ReportCheckResult;
@@ -70,6 +71,8 @@ public class ReportsD3Controller {
 
     @Autowired
 	private ReportsService reportsService;
+    @Autowired
+    private TagService tagService;
 
 	@RequestMapping(value="/trendingScans", method = RequestMethod.POST)
 	public @ResponseBody String processTrendingScans(@ModelAttribute ReportParameters reportParameters,
@@ -93,8 +96,10 @@ public class ReportsD3Controller {
     public @ResponseBody RestResponse<Map<String, Object>> processSnapShot(@ModelAttribute ReportParameters reportParameters,
                                                                                  HttpServletRequest request) throws IOException {
         log.info("Generating snapshot report");
-        return RestResponse.success(reportsService.generateSnapshotReport(reportParameters,
-                request));
+        Map<String, Object> map = reportsService.generateSnapshotReport(reportParameters,
+                request);
+        map.put("tags", tagService.loadAll());
+        return RestResponse.success(map);
 
     }
 

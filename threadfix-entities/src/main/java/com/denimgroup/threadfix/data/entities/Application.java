@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -144,6 +145,8 @@ public class Application extends AuditableEntity {
             highVulnCount = 0, criticalVulnCount = 0, totalVulnCount = 0;
 
     private Boolean skipApplicationMerge = false;
+
+    private List<Tag> tags = new ArrayList<Tag>();
 
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
@@ -750,7 +753,7 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
@@ -787,5 +790,19 @@ public class Application extends AuditableEntity {
 
     public void setSkipApplicationMerge(Boolean isSkipApplicationMerge) {
         this.skipApplicationMerge = isSkipApplicationMerge;
+    }
+
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="Application_Tag",
+            joinColumns={@JoinColumn(name="Application_Id")},
+            inverseJoinColumns={@JoinColumn(name="Tag_Id")})
+    @JsonIgnore
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

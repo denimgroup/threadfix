@@ -218,8 +218,12 @@ public abstract class AbstractDefectTracker {
                             .append("\n")
                             .append("Parameter: ")
                             .append(surfaceLocation.getParameter());
-					
-					addNativeIds(vulnerability, stringBuilder);
+
+                    List<Finding> findings = vulnerability.getFindings();
+                    if (findings != null && !findings.isEmpty()) {
+                        addUrlReferences(findings, stringBuilder);
+                        addNativeIds(findings, stringBuilder);
+                    }
 					
 					stringBuilder.append("\n\n");
 					vulnIndex++;
@@ -228,26 +232,44 @@ public abstract class AbstractDefectTracker {
 		}
 		return stringBuilder.toString();
 	}
+
+    private boolean hasChannelName(Finding finding) {
+        return finding != null &&
+                finding.getScan() != null &&
+                finding.getScan().getApplicationChannel() != null &&
+                finding.getScan().getApplicationChannel().getChannelType() != null &&
+                finding.getScan().getApplicationChannel().getChannelType().getName() != null;
+    }
+
+    protected void addUrlReferences(List<Finding> findings, StringBuilder builder) {
+        builder.append("\n");
+
+        for(Finding finding: findings){
+            if (hasChannelName(finding)) {
+                String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
+                String urlReference = finding.getUrlReference();
+                if (urlReference != null) {
+                    builder.append("\n")
+                            .append(channelName)
+                            .append(" Vuln URL: ")
+                            .append(urlReference);
+                }
+            }
+        }
+    }
 	
-	protected void addNativeIds(Vulnerability vulnerability, StringBuilder builder) {
-		List<Finding> findings = vulnerability.getFindings();
-		if (findings != null && !findings.isEmpty()) {
-			for (Finding finding : findings) {
-				if (finding != null && 
-						finding.getScan() != null && 
-						finding.getScan().getApplicationChannel() != null && 
-						finding.getScan().getApplicationChannel().getChannelType() != null &&
-						finding.getScan().getApplicationChannel().getChannelType().getName() != null) {
-					String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
-					if (ChannelType.NATIVE_ID_SCANNERS.contains(channelName)) {
-                        builder.append("\n")
-                                .append(channelName)
-                                .append(" ID: ")
-                                .append(finding.getNativeId());
-					}
-				}
-			}
-		}
+	protected void addNativeIds(List<Finding> findings, StringBuilder builder) {
+        for (Finding finding : findings) {
+            if (hasChannelName(finding)) {
+                String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
+                if (ChannelType.NATIVE_ID_SCANNERS.contains(channelName)) {
+                    builder.append("\n")
+                            .append(channelName)
+                            .append(" ID: ")
+                            .append(finding.getNativeId());
+                }
+            }
+        }
 	}
 	
 	public String getUrl() {

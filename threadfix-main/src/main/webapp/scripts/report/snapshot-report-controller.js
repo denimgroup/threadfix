@@ -5,15 +5,14 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.parameters = {};
     $scope.noData = false;
     $scope.hideTitle = true;
+    $scope.margin = {top: 70, right: 100, bottom: 70, left: 70};
 
     $scope.snapshotOptions = [
         { name: "Point in Time", id: 2 },
         { name: "Progress By Vulnerability", id: 3 },
-        { name: "Portfolio Report", id: 8 },
+//        { name: "Portfolio Report", id: 8 },
         { name: "Most Vulnerable Applications", id: 10 }
     ];
-
-    $scope.reportId = '2';
 
     $scope.resetFilters = function() {
         $scope.parameters = {
@@ -40,9 +39,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             endDate: undefined,
             startDate: undefined
         };
-
     };
-
 
     $scope.$on('loadSnapshotReport', function() {
 
@@ -55,22 +52,35 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         if (!$scope.allVulns) {
             $scope.loading = true;
+            $scope.reportId = ($scope.$parent.reportId) ? $scope.$parent.reportId : 2;
             $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
                 success(function(data) {
-
                     $scope.loading = false;
-
                     $scope.resetFilters();
                     $scope.allVulns = data.object.vulnList;
+                    $scope.allApps = data.object.appList;
+
+                    $scope.tags = data.object.tags;
+
+                    if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
+                        $scope.parameters.teams = [$scope.$parent.team];
+                        $scope.parameters.applications = [];
+                        $scope.$broadcast("updateBackParameters", $scope.parameters);
+                    }
+                    if ($scope.$parent.applicationId !== -1) {
+                        var app = angular.copy($scope.$parent.application);
+                        app.name = $scope.$parent.team.name + " / " + app.name;
+                        $scope.parameters.applications = [app];
+                        $scope.parameters.teams = [];
+                        $scope.$broadcast("updateBackParameters", $scope.parameters);
+                    }
 
                     if ($scope.allVulns) {
-
                         // Point In Time is default report for Snapshot
                         $scope.allPointInTimeVulns = $scope.allVulns.filter(function(vuln){
                             return vuln.active;
                         });
-                       refresh();
-
+                        refresh();
                     } else {
                         $scope.noData = true;
                     };
@@ -78,9 +88,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 .error(function() {
                     $scope.loading = false;
                 });
-        } else {
-            // do nothing
         }
+
+        $scope.$parent.snapshotActive = true;
+
     });
 
     $scope.$on('resetParameters', function(event, parameters) {
@@ -88,22 +99,19 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             return;
         $scope.parameters = angular.copy(parameters);
         refresh();
-
     });
 
     $scope.$on('updateDisplayData', function(event, parameters) {
         if (!$scope.$parent.snapshotActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        if ($scope.reportId === '2') {
+        if ($scope.reportId === 2) {
             filterPointInTimeDisplayBySeverity();
             updateTree();
-            $scope.needToUpdateProgress = true;
-        } else if ($scope.reportId === '3') {
+        } else if ($scope.reportId === 3) {
             filterByTeamAndApp($scope.allCWEvulns);
             filterByTypeDataBySeverity($scope.filterVulns);
             processByTypeData($scope.filterVulns);
-            $scope.needToUpdatePointInTime = true;
         }
     });
     $scope.updateTree = function (severity) {
@@ -139,7 +147,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     }
 
     $scope.loadReport = function() {
-        if ($scope.reportId === '3') {
+        $scope.reportId = parseInt($scope.reportId);
+        if ($scope.reportId === 3) {
             if (!$scope.allCWEvulns) {
                 $scope.allCWEvulns = $scope.allVulns.filter(function (vuln) {
                     if (!vuln.genericVulnName || vuln.isFalsePositive || vuln.hidden)
@@ -155,21 +164,23 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     filterByTypeDataBySeverity($scope.filterVulns);
                     processByTypeData($scope.filterVulns);
                 }
-            } else if ($scope.needToUpdateProgress) {
+            } else {
                 filterByTeamAndApp($scope.allCWEvulns);
                 filterByTypeDataBySeverity($scope.filterVulns);
                 processByTypeData($scope.filterVulns);
-                $scope.needToUpdateProgress = false;
             }
-        } else if ($scope.reportId === '2') {
-                if (!$scope.allPointInTimeVulns) {
-                    $scope.noData = true;
-                } else if ($scope.needToUpdatePointInTime) {
-                    filterByTeamAndApp($scope.allPointInTimeVulns);
-                    processPointInTimeData();
-                    filterPointInTimeDisplayBySeverity();
-                    $scope.needToUpdatePointInTime = false;
-                }
+        } else if ($scope.reportId === 2) {
+
+            if (!$scope.allPointInTimeVulns) {
+                $scope.noData = true;
+            } else {
+                filterByTeamAndApp($scope.allPointInTimeVulns);
+                updateTree();
+                processPointInTimeData();
+                filterPointInTimeDisplayBySeverity();
+            }
+        } else if ($scope.reportId === 10) {
+            filterApps();
         }
     }
 
@@ -233,7 +244,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
             return false;
         });
-
     }
 
     var refreshVulnTree = function(parameters) {
@@ -342,7 +352,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
                 if (data.success) {
                     element.vulns = data.object.vulns;
-                    element.vulns.forEach(updateChannelNames)
+                    element.vulns.forEach(updateChannelNames);
+                    element.vulns.forEach(function(vuln){
+                        vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
+                    });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
                     element.numberToShow = numToShow;
@@ -384,17 +397,16 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
     };
 
-
     var refresh = function(){
-        $scope.loading = true;
-
-        if ($scope.reportId === '2') {
+//        $scope.loading = true;
+        if ($scope.reportId === 2) {
             filterByTeamAndApp($scope.allPointInTimeVulns);
             updateTree();
-            $scope.needToUpdateProgress = true;
-        } else if ($scope.reportId === '3') {
+        } else if ($scope.reportId === 3) {
             filterByTeamAndApp($scope.allCWEvulns);
-            $scope.needToUpdatePointInTime = true;
+        } else if ($scope.reportId === 10) {
+            filterApps();
+            reportUtilities.createTeamAppNames($scope);
         }
 
         if ($scope.filterVulns.length === 0) {
@@ -403,23 +415,21 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.noData = false;
         }
         updateDisplayData();
-        $scope.loading = false;
+//        $scope.loading = false;
     };
 
     var updateDisplayData = function(){
         reportUtilities.createTeamAppNames($scope);
-        if ($scope.reportId === '2') {
+        if ($scope.reportId === 2) {
             processPointInTimeData();
             filterPointInTimeDisplayBySeverity();
-        } else if ($scope.reportId === '3') {
+        } else if ($scope.reportId === 3) {
             filterByTypeDataBySeverity($scope.filterVulns);
             processByTypeData($scope.filterVulns);
         }
-
     };
 
     var processPointInTimeData = function() {
-
         $scope.data = {
             Critical: {
                 Severity: 'Critical',
@@ -543,7 +553,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     }
 
     var filterByTeamAndApp = function(vulnList) {
-
         $scope.filterVulns = vulnList.filter(function(vuln){
 
             if ($scope.parameters.teams.length === 0
@@ -558,16 +567,37 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
 
             for (i=0; i<$scope.parameters.applications.length; i++) {
-
                 if (beginsWith($scope.parameters.applications[i].name, vuln.teamName + " / ") &&
                     endsWith($scope.parameters.applications[i].name, " / " + vuln.appName)) {
                     return true;
                 }
             }
-
             return false;
         });
+    };
 
+    var filterApps = function() {
+
+        $scope.topAppsData = $scope.allApps.filter(function(app){
+            if ($scope.parameters.teams.length === 0
+                && $scope.parameters.applications.length === 0)
+                return true;
+
+            var i;
+            for (i=0; i<$scope.parameters.teams.length; i++) {
+                if (app.teamName === $scope.parameters.teams[i].name) {
+                    return true;
+                }
+            }
+
+            for (i=0; i<$scope.parameters.applications.length; i++) {
+                if (beginsWith($scope.parameters.applications[i].name, app.teamName + " / ") &&
+                    endsWith($scope.parameters.applications[i].name, " / " + app.appName)) {
+                    return true;
+                }
+            }
+            return false;
+        });
     };
 
     var endsWith = function(str, suffix) {

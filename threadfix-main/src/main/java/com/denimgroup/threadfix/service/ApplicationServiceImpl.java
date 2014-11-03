@@ -125,6 +125,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	public void deactivateApplication(Application application) {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
+        application.setTags(new ArrayList<Tag>());
 		removeRemoteApplicationLinks(application);
 		String possibleName = getNewName(application);
 		
@@ -140,10 +141,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 				
 		}
 
+        application.setWaf(null);
+
         // Delete WafRules attached with application
         deleteWafRules(application);
 
-		
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
@@ -169,7 +171,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             }
         }
     }
-	
+
 	private String getNewName(Application application) {
 		if (application != null) {
 			
@@ -188,7 +190,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 			log.info("Removing remote applications from the application " + application.getName() +
 					 " (id=" + application.getId() + ")");
 			for (RemoteProviderApplication app : application.getRemoteProviderApplications()) {
-				log.info("Removing remote application " + app.getNativeId() +
+				log.info("Removing remote application " + app.getNativeName() +
 						 " from application " + app.getApplication().getName());
 				app.setApplication(null);
 				app.setLastImportTime(null);
