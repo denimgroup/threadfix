@@ -7,6 +7,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
     };
 
     $scope.base = window.location.pathname;
+
     $scope.formatId = 1;
 
     $scope.getReportParameters = function() {
@@ -96,7 +97,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.vulnSearch = false;
         $scope.$broadcast('loadTrendingReport');
 
-    }
+    };
 
     $scope.loadSnapshot = function() {
         $scope.trendingActive = false;
@@ -104,7 +105,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.vulnSearch = false;
         $scope.$broadcast('loadSnapshotReport');
 
-    }
+    };
 
     $scope.setSortNumber = function(list, attr) {
         $scope.index = attr;
@@ -113,7 +114,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         list.sort(function(a, b) {
             return ($scope.reverse ? b[attr] - a[attr] : a[attr] - b[attr]);
         });
-    }
+    };
 
     $scope.setSortText = function(list, attr) {
         $scope.index = attr;
@@ -122,6 +123,6 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         list.sort(function(a, b) {
             return ($scope.reverse ? b[attr].localeCompare(a[attr]) : a[attr].localeCompare(b[attr]));
         });
-    }
+    };
 
 });

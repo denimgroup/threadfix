@@ -93,11 +93,25 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Manage Defect Trackers</td>
+					<td>Manage GRC Tools</td>
 					<td class="inputValue" style="text-align: center;"><input type="radio" 
-							id="canManageDefectTrackersTrue" name="canManageDefectTrackers" ng-model="object.canManageDefectTrackers"
+							id="canManageGrcToolsTrue" name="canManageGrcTools" ng-model="object.canManageGrcTools"
 							value="true" /></td>
 					<td class="inputValue" style="text-align: center;"><input type="radio" 
+							id="canManageGrcToolsFalse" name="canManageGrcTools" ng-model="object.canManageGrcTools"
+							value="false" /></td>
+					<td
+						style="border: 0 solid black; background-color: white; padding-left: 5px">
+						<form:errors id="canManageGrcToolsError"
+							name="canManageGrcTools" cssClass="errors" />
+					</td>
+				</tr>
+				<tr>
+					<td>Manage Defect Trackers</td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"
+							id="canManageDefectTrackersTrue" name="canManageDefectTrackers" ng-model="object.canManageDefectTrackers"
+							value="true" /></td>
+					<td class="inputValue" style="text-align: center;"><input type="radio"
 							id="canManageDefectTrackersFalse" name="canManageDefectTrackers" ng-model="object.canManageDefectTrackers"
 							value="false" /></td>
 					<td

@@ -81,6 +81,11 @@
                                 <a id="defectTrackersLink" href="<spring:url value="/configuration/defecttrackers" htmlEscape="true"/>">Defect Trackers</a>
                             </li>
                         </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_GRC_TOOLS,ROLE_ENTERPRISE">
+                            <li class="normalLinks">
+                                <a id="grcToolsLink" href="<spring:url value="/configuration/grctools" htmlEscape="true"/>">GRC Tools</a>
+                            </li>
+                        </security:authorize>
                         <security:authorize ifAnyGranted="ROLE_CAN_MANAGE_REMOTE_PROVIDERS">
                             <li class="normalLinks">
                                 <a id="remoteProvidersLink" href="<spring:url value="/configuration/remoteproviders" htmlEscape="true"/>">Remote Providers</a>

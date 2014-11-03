@@ -176,7 +176,12 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .attr("transform", "translate(0," + h + ")")
                         .transition()
                         .duration(duration)
-                        .call(xAxis);
+                        .call(xAxis)
+                        .selectAll("text")
+                        .style("text-anchor", "end")
+                        .attr("transform", function(d) {
+                            return "rotate(-35)"
+                        });
 
                     // Add the y-axis.
                     svg.append("g")
@@ -205,6 +210,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .y0(function(d) { return y(d.noOfVulns0); })
                         .y1(function(d) { return y(d.noOfVulns0 + d.noOfVulns); });
 
+                    var textPosMap = {};
                     g.each(function(d) {
                         var e = d3.select(this);
                         e.selectAll(".area")
@@ -235,7 +241,14 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .text(d.key)
                             .attr("transform", function() {
                                 d = d.values[d.values.length - 1];
-                                return "translate(" + (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0) + ")";
+                                var pos = (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0);
+                                var i = 0;
+                                while (textPosMap[pos]) {
+                                    i++;
+                                    pos = (w) + "," + (y(d.noOfVulns / 2 + d.noOfVulns0)+i*10);
+                                }
+                                textPosMap[pos] = true;
+                                return "translate(" + pos + ")";
                             });
                     });
 

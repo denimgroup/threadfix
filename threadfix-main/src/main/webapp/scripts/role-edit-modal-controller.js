@@ -53,6 +53,7 @@ myAppModule.controller('RoleEditModalController',
         $scope.object.canGenerateWafRules = value;
         $scope.object.canManageApiKeys = value;
         $scope.object.canManageApplications = value;
+        $scope.object.canManageGrcTools = value;
         $scope.object.canManageDefectTrackers = value;
         $scope.object.canManageRemoteProviders = value;
         $scope.object.canManageRoles = value;
