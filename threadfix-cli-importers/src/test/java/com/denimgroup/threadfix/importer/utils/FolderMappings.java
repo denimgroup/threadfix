@@ -34,6 +34,7 @@ public class FolderMappings {
         addToMap(ScannerType.DEPENDENCY_CHECK, "Static/DependencyCheck");
         addToMap(ScannerType.PMD, "Static/PMD");
         addToMap(ScannerType.CLANG, "Static/Clang");
+	    addToMap(ScannerType.CPPCHECK, "Static/Cppcheck");
         addToMap(ScannerType.SSVL, "Manual/SSVL");
     }
 

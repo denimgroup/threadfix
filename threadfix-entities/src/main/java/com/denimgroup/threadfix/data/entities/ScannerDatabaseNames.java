@@ -57,6 +57,6 @@ public final class ScannerDatabaseNames {
         SSVL_DB_NAME = "SSVL",
         MANUAL_DB_NAME = "Manual",
         PMD_DB_NAME = "PMD",
-        CLANG_DB_NAME = "Clang";
-
+        CLANG_DB_NAME = "Clang",
+		CPPCHECK_DB_NAME = "Cppcheck";
 }
