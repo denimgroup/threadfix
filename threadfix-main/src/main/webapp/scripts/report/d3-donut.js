@@ -169,7 +169,7 @@ angular.module('threadfix')
             slices.selectAll(".arc")
                 .data(_data).enter()
                 .append("g")
-                .attr("class", "arc")
+                .attr("class", "arc pointer")
                 .attr("id", function(d){
                     var str = (d.data.teamName)? d.data.teamName : "pointInTime";
                     return str + d.data.severity + "Arc";

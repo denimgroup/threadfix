@@ -91,7 +91,7 @@
             <tr>
                 <td class="right-align">Tag</td>
                 <td class="left-align" >
-                    <multi-select
+                    <multi-select id="tagSelect"
                             input-model="config.tags"
                             output-model="object.tags"
                             button-label="name"

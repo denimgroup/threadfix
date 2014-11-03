@@ -14,8 +14,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         { name: "Most Vulnerable Applications", id: 10 }
     ];
 
-    $scope.reportId = '2';
-
     $scope.resetFilters = function() {
         $scope.parameters = {
             teams: [],
@@ -54,6 +52,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         if (!$scope.allVulns) {
             $scope.loading = true;
+            $scope.reportId = ($scope.$parent.reportId) ? $scope.$parent.reportId : 2;
             $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
                 success(function(data) {
                     $scope.loading = false;
@@ -62,6 +61,20 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     $scope.allApps = data.object.appList;
 
                     $scope.tags = data.object.tags;
+
+                    if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
+                        $scope.parameters.teams = [$scope.$parent.team];
+                        $scope.parameters.applications = [];
+                        $scope.$broadcast("updateBackParameters", $scope.parameters);
+                    }
+                    if ($scope.$parent.applicationId !== -1) {
+                        var app = angular.copy($scope.$parent.application);
+                        app.name = $scope.$parent.team.name + " / " + app.name;
+                        $scope.parameters.applications = [app];
+                        $scope.parameters.teams = [];
+                        $scope.$broadcast("updateBackParameters", $scope.parameters);
+                    }
+
                     if ($scope.allVulns) {
                         // Point In Time is default report for Snapshot
                         $scope.allPointInTimeVulns = $scope.allVulns.filter(function(vuln){
@@ -75,9 +88,10 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 .error(function() {
                     $scope.loading = false;
                 });
-        } else {
-            // do nothing
         }
+
+        $scope.$parent.snapshotActive = true;
+
     });
 
     $scope.$on('resetParameters', function(event, parameters) {
@@ -91,15 +105,13 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         if (!$scope.$parent.snapshotActive)
             return;
         $scope.parameters = angular.copy(parameters);
-        if ($scope.reportId === '2') {
+        if ($scope.reportId === 2) {
             filterPointInTimeDisplayBySeverity();
             updateTree();
-            $scope.needToUpdateProgress = true;
-        } else if ($scope.reportId === '3') {
+        } else if ($scope.reportId === 3) {
             filterByTeamAndApp($scope.allCWEvulns);
             filterByTypeDataBySeverity($scope.filterVulns);
             processByTypeData($scope.filterVulns);
-            $scope.needToUpdatePointInTime = true;
         }
     });
     $scope.updateTree = function (severity) {
@@ -135,7 +147,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     }
 
     $scope.loadReport = function() {
-        if ($scope.reportId === '3') {
+        $scope.reportId = parseInt($scope.reportId);
+        if ($scope.reportId === 3) {
             if (!$scope.allCWEvulns) {
                 $scope.allCWEvulns = $scope.allVulns.filter(function (vuln) {
                     if (!vuln.genericVulnName || vuln.isFalsePositive || vuln.hidden)
@@ -151,22 +164,22 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     filterByTypeDataBySeverity($scope.filterVulns);
                     processByTypeData($scope.filterVulns);
                 }
-            } else if ($scope.needToUpdateProgress) {
+            } else {
                 filterByTeamAndApp($scope.allCWEvulns);
                 filterByTypeDataBySeverity($scope.filterVulns);
                 processByTypeData($scope.filterVulns);
-                $scope.needToUpdateProgress = false;
             }
-        } else if ($scope.reportId === '2') {
+        } else if ($scope.reportId === 2) {
+
             if (!$scope.allPointInTimeVulns) {
                 $scope.noData = true;
-            } else if ($scope.needToUpdatePointInTime) {
+            } else {
                 filterByTeamAndApp($scope.allPointInTimeVulns);
+                updateTree();
                 processPointInTimeData();
                 filterPointInTimeDisplayBySeverity();
-                $scope.needToUpdatePointInTime = false;
             }
-        } else if ($scope.reportId === '10') {
+        } else if ($scope.reportId === 10) {
             filterApps();
         }
     }
@@ -385,16 +398,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     };
 
     var refresh = function(){
-        $scope.loading = true;
-        if ($scope.reportId === '2') {
+//        $scope.loading = true;
+        if ($scope.reportId === 2) {
             filterByTeamAndApp($scope.allPointInTimeVulns);
             updateTree();
-            $scope.needToUpdateProgress = true;
-        } else if ($scope.reportId === '3') {
+        } else if ($scope.reportId === 3) {
             filterByTeamAndApp($scope.allCWEvulns);
-            $scope.needToUpdatePointInTime = true;
-        } else if ($scope.reportId === '10') {
+        } else if ($scope.reportId === 10) {
             filterApps();
+            reportUtilities.createTeamAppNames($scope);
         }
 
         if ($scope.filterVulns.length === 0) {
@@ -403,15 +415,15 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.noData = false;
         }
         updateDisplayData();
-        $scope.loading = false;
+//        $scope.loading = false;
     };
 
     var updateDisplayData = function(){
         reportUtilities.createTeamAppNames($scope);
-        if ($scope.reportId === '2') {
+        if ($scope.reportId === 2) {
             processPointInTimeData();
             filterPointInTimeDisplayBySeverity();
-        } else if ($scope.reportId === '3') {
+        } else if ($scope.reportId === 3) {
             filterByTypeDataBySeverity($scope.filterVulns);
             processByTypeData($scope.filterVulns);
         }
@@ -587,7 +599,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             return false;
         });
     };
-
 
     var endsWith = function(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;

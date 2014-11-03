@@ -462,5 +462,4 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
         });
     };
-
 })

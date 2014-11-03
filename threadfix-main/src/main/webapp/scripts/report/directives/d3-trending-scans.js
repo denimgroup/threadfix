@@ -10,7 +10,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 label: '=',
                 width: '@',
                 height: '@',
-                margin: '='
+                margin: '=',
+                tableInfo: '='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -97,7 +98,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     svg.selectAll('*').remove();
 
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
 
                     if (_data.length === 0) {
                         svg.append("g")
@@ -123,6 +124,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     color.domain(colorDomain);
                     svg.selectAll('*').remove();
                     drawReport();
+                    drawTable();
                 }
 
                 function drawReport(){
@@ -166,7 +168,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var g = svg.selectAll(".symbol");
                     svg.call(tip);
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label.teams, scope.label.apps, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
 
                     // Add the x-axis.
                     svg.append("g")
@@ -174,7 +176,12 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .attr("transform", "translate(0," + h + ")")
                         .transition()
                         .duration(duration)
-                        .call(xAxis);
+                        .call(xAxis)
+                        .selectAll("text")
+                        .style("text-anchor", "end")
+                        .attr("transform", function(d) {
+                            return "rotate(-35)"
+                        });
 
                     // Add the y-axis.
                     svg.append("g")
@@ -203,6 +210,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .y0(function(d) { return y(d.noOfVulns0); })
                         .y1(function(d) { return y(d.noOfVulns0 + d.noOfVulns); });
 
+                    var textPosMap = {};
                     g.each(function(d) {
                         var e = d3.select(this);
                         e.selectAll(".area")
@@ -233,7 +241,14 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .text(d.key)
                             .attr("transform", function() {
                                 d = d.values[d.values.length - 1];
-                                return "translate(" + (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0) + ")";
+                                var pos = (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0);
+                                var i = 0;
+                                while (textPosMap[pos]) {
+                                    i++;
+                                    pos = (w) + "," + (y(d.noOfVulns / 2 + d.noOfVulns0)+i*10);
+                                }
+                                textPosMap[pos] = true;
+                                return "translate(" + pos + ")";
                             });
                     });
 
@@ -242,6 +257,12 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
                 }
+
+                function drawTable(){
+                    if (scope.tableInfo)
+                        reportUtilities.drawTable(d3, scope.tableInfo, "complianceTable");
+                }
+
                 d3.select("#exportCSVButton").on('click', function(){
                     var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
                     var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";

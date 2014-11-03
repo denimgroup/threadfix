@@ -51,18 +51,21 @@ module.controller('ReportFilterController', function($scope, $rootScope, filterS
             || $scope.showSaveFilter
             || $scope.showDetailsControls
             || $scope.showDateControls
-            || $scope.showDateRange) {
+            || $scope.showDateRange
+            || $scope.showTagControls) {
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
             $scope.showDateControls = false;
             $scope.showDateRange = false;
             $scope.showSaveFilter = false;
+            $scope.showTagControls = false;
         } else {
             $scope.showTeamAndApplicationControls = true;
             $scope.showDetailsControls = true;
             $scope.showDateControls = true;
             $scope.showDateRange = true;
             $scope.showSaveFilter = true;
+            $scope.showTagControls = true;
         }
     };
 
@@ -94,11 +97,12 @@ module.controller('ReportFilterController', function($scope, $rootScope, filterS
     };
 
     $scope.refresh = function() {
-
         $rootScope.$broadcast("updateDisplayData", $scope.parameters);
-
     };
 
+    $scope.$on('updateBackParameters', function(event, parameters) {
+        $scope.parameters = angular.copy(parameters);
+    });
 
     $scope.addNew = function(collection, name) {
         var found = false;
