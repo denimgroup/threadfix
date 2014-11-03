@@ -1,0 +1,85 @@
+10/28/2014 10:00:00
+type.info,,,
+Cppcheck,http://cppcheck.sourceforge.net/,1.67,XML format (version 2). Command parameter --xml-version=2
+type.vulnerabilities,,,
+Array 'array[2]' accessed at index 2 which is out of bounds.,arrayIndexOutOfBounds,129
+Array index 'index' is used before limits check.,arrayIndexThenCheck,129
+Boolean value assigned to pointer.,assignBoolToPointer,704
+Mismatching assignment and comparison comparison '' is always false.,assignIfError,569
+Assigning a pointer to an integer is not portable.,AssignmentAddressToInteger,704
+Assigning an integer to a pointer is not portable.,AssignmentIntegerToAddress,704
+Buffer is accessed out of bounds: buffer,bufferAccessOutOfBounds,125
+Returning an address value in a function with integer return type is not portable.,CastAddressToIntegerAtReturn,843
+Returning an integer in a function with pointer return type is not portable.,CastIntegerToAddressAtReturn,843
+Clarify calculation precedence for '+' and '?'.,clarifyCalculation,783
+Suspicious condition (assignment + comparison); Clarify expression with parentheses.,clarifyCondition,783
+Ineffective statement similar to '*A++;'. Did you intend to write '(*A)++;'?,clarifyStatement,783
+Expression '(X & 0x6) == 0x1' is always false.,comparisonError,570
+Comparison of two identical variables with isless(varNamevarName) evaluates always to false.,comparisonFunctionIsAlwaysTrueOrFalse,570
+C-style pointer casting,cstyleCast,227
+Dead pointer usage. Pointer 'pointer' is dead if it has been assigned '&x' at line 0.,deadpointer,416
+Deallocating a deallocated pointer: varname,deallocDealloc,415
+Memory pointed to by 'varname' is freed twice.,doubleFree,415
+Same expression on both sides of '&&'.,duplicateExpression,398
+Return value of function malloc() is not used.,ignoredReturnValue,252
+"Conversion of string literal ""Hello World"" to bool always evaluates to true.",incorrectStringBooleanError,571
+Casting between float* and double* which have an incompatible binary data representation.,invalidPointerCast,704
+%f in format string (no. 1) requires 'double' but the argument type is Unknown.,invalidPrintfArgType_float,686
+%X in format string (no. 1) requires 'unsigned int' but the argument type is Unknown.,invalidPrintfArgType_int,686
+%n in format string (no. 1) requires 'int *' but the argument type is Unknown.,invalidPrintfArgType_n,686
+%p in format string (no. 1) requires an address but the argument type is Unknown.,invalidPrintfArgType_p,686
+%s in format string (no. 1) requires 'char *' but the argument type is Unknown.,invalidPrintfArgType_s,686
+%i in format string (no. 1) requires 'int' but the argument type is Unknown.,invalidPrintfArgType_sint,686
+%u in format string (no. 1) requires 'unsigned int' but the argument type is Unknown.,invalidPrintfArgType_uint,686
+%f in format string (no. 1) requires 'float *' but the argument type is Unknown.,invalidScanfArgType_float,686
+%d in format string (no. 1) requires 'int *' but the argument type is Unknown.,invalidScanfArgType_int,686
+%s in format string (no. 1) requires a 'char *' but the argument type is Unknown.,invalidScanfArgType_s,686
+Allocation with funcName funcName doesn't release it.,leakNoVarFunctionCall,401
+Return value of allocation function funcName is not used.,leakReturnValNotUsed,252
+Memory leak: varname,memleak,401
+Common realloc mistake: 'varname' nulled but not freed upon failure,memleakOnRealloc,401
+Using 'memfunc' on class that contains a classname.,memsetClass,686
+Using memset() on class which contains a floating point number.,memsetClassFloat,686
+Using 'memfunc' on class that contains a reference.,memsetClassReference,686
+The class 'classname' does not have a constructor.,noConstructor,456
+'class class' does not have a copy constructor which is recommended since the class contains a pointer to allocated memory.,noCopyConstructor,876
+Possible null pointer dereference: pointer,nullPointer,476
+Member variable 'classname::' is not assigned a value in 'classname::operator='.,operatorEqVarError,457
+Opposite conditions in nested 'if' blocks lead to a dead code block.,oppositeInnerCondition,561
+Prefer prefix ++/-- operators for non-primitive types.,postfixOperator,871
+Possible leak in public function. The pointer 'varname' is not deallocated before it is allocated.,publicAllocationError,401
+Variable 'var' is reassigned a value before the old one has been used.,redundantAssignment,563
+Variable 'var' is reassigned a value before the old one has been used. 'break;' missing?,redundantAssignInSwitch,563
+Buffer 'var' is being written before its old content has been used.,redundantCopy,563
+Buffer 'var' is being written before its old content has been used. 'break;' missing?,redundantCopyInSwitch,563
+Resource leak: varname,resourceLeak,401
+Missing bounds check for extra iterator increment in loop.,StlMissingComparison,606
+Possible inefficient checking for 'list' emptiness.,stlSize,874
+Comparison of identical string variables.,stringCompare,571
+Switch falls through case without comment. 'break;' missing?,switchCaseFallThrough,484
+Suspicious pointer subtraction. Did you intend to write '->'?,thisSubtraction,469
+Member variable 'classname::varname' is not initialized in the constructor.,uninitMemberVar,456
+Uninitialized variable: varname,uninitvar,457
+Statements following return break continue goto or throw will never be executed.,unreachableCode,561
+Variable 'varname' is assigned a value that is never used.,unreadVariable,563
+Variable 'varname' is allocated memory that is never used.,unusedAllocatedMemory,563
+The function 'funcName' is never used.,unusedFunction,561
+Unused private function: 'classname::funcname',unusedPrivateFunction,561
+Instance of 'varname' object is destroyed immediately.,unusedScopedObject,563
+struct or union member 'structname::variable' is never used.,unusedStructMember,563
+Unused variable: varname,unusedVariable,563
+Variable 'variable' is assigned in constructor body. Consider performing initialization in initialization list.,useInitializationList,870
+Assignment of function parameter has no effect outside the function.,uselessAssignmentArg,563
+Assignment of function parameter has no effect outside the function. Did you forget dereferencing it?,uselessAssignmentPtrArg,563
+Return value of std::remove() ignored. Elements remain in container.,uselessCallsRemove,252
+The scope of the variable 'varname' can be reduced.,variableScope,870
+Writing 1 bytes outside buffer size.,writeOutsideBufferSize,122
+Division by zero.,zerodiv,369
+Either the condition '' is useless or there is division by zero at line 0.,zerodivcond,369
+type.severities,,,
+High,error,4,4
+Medium,warning,3,3
+Low,style,2,2
+Low,performance,2,2
+Low,portability,2,2
+Information,information,1,1
