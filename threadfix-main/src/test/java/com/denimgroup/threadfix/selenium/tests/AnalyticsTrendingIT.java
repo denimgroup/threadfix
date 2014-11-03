@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import com.denimgroup.threadfix.webapp.controller.SystemSettingsController;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -37,7 +36,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class AnalyticsTrendingTest extends BaseDataTest {
+public class AnalyticsTrendingIT extends BaseDataTest {
 
     @Test
     public void checkAgingFilter() {
