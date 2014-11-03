@@ -646,6 +646,14 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
         }
         return keys;
+    };
+
+    $scope.exportPNG = function(){
+        if ( $scope.exportReportId === $scope.reportId)
+            $scope.exportReportId = "" + $scope.reportId;
+        else
+            $scope.exportReportId = $scope.reportId;
     }
+
 
 });

@@ -122,6 +122,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         list.sort(function(a, b) {
             return ($scope.reverse ? b[attr].localeCompare(a[attr]) : a[attr].localeCompare(b[attr]));
         });
-    }
+    };
+
 
 });
