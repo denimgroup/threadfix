@@ -238,6 +238,8 @@ public class TagDetailPageIT extends BaseDataTest {
                 .setComment(teamName + appName)
                 .clickModalSubmit();
 
+        applicationDetailPage.waitForElement(driver.findElement(By.id("viewMoreLinkCritical790")));
+
         VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage
                 .clickViewMoreVulnerabilityLink("Critical790");
 
