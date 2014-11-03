@@ -41,11 +41,13 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
+        sleep(1500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
+        sleep(1500);
         return new AnalyticsPage(driver);
     }
 
@@ -56,7 +58,7 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
-        waitForResultsToLoad();
+        sleep(1500);
         return  new AnalyticsPage(driver);
     }
 

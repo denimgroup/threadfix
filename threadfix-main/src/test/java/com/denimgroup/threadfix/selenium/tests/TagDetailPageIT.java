@@ -250,7 +250,8 @@ public class TagDetailPageIT extends BaseDataTest {
         applicationDetailPage1.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790");
 
-        assertTrue("Comment tag was not updated properly", applicationDetailPage1.isLinkPresent(tagName2));
+        assertTrue("Comment tag was not updated properly", applicationDetailPage1.isLinkPresent(tagName2)
+                || applicationDetailPage1.isLinkPresent(tagName2 + ","));
     }
 
     @Test
