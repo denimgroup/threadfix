@@ -219,18 +219,96 @@ public class JasperScanReport implements JRDataSource {
     }
 
     public List<Map<String, Object>> buildReportList() {
-        List<Map<String, Object>> resultList = null;
-        if (scanList != null && scanList.size() > 0) {
-            resultList = new ArrayList<>();
-            for (int i=0; i< scanList.size(); i++) {
-                Map<String, Object> hash = buildHash(i);
-                if ((startIndex == null || startIndex <= i)
-                        && (endIndex == null || endIndex >= i))
-                    resultList.add(hash);
+        List<Map<String, Object>> resultList = list();
+        List<Map<String, Object>> allHash = list();
+        Map<String, Object> hashBefore = null, hashAfter = null;
+        if (startIndex != null && endIndex != null) {
+            if (scanList != null && scanList.size() > 0) {
+                resultList = new ArrayList<>();
+                for (int i = 0; i < scanList.size(); i++) {
+                    Map<String, Object> hash = buildHash(i);
+                    allHash.add(hash);
+                    if (startIndex == i + 1)
+                        hashBefore = hash;
+                    if (i == endIndex + 1)
+                        hashAfter = hash;
+                    if ((startIndex <= i)
+                            && (endIndex >= i)) {
+                        resultList.add(hash);
+                    }
+                }
             }
+            if (resultList.size() == 1 && startDate.longValue() == endDate.longValue()) {
+                endDate = Calendar.getInstance().getTimeInMillis();
+                Calendar time = scanList.get(startIndex).getImportTime();
+                startDate = (new GregorianCalendar(time.get(Calendar.YEAR), time.get(Calendar.MONTH) - 1, 1)).getTimeInMillis();
+            }
+            resultList.add(0, createStartHash(hashBefore, resultList));
+            resultList.add(createEndHash(hashAfter, resultList));
         }
         return resultList;
     }
+
+    private Map<String, Object> createStartHash(Map<String, Object> hashBefore, List<Map<String, Object>> resultList) {
+        Map<String, Object> startHash = new HashMap<>();
+        if (resultList.size()==0)
+            return startHash;
+        Map<String, Object> firstHashInList = resultList.get(0);
+
+        if (hashBefore == null) {
+            startHash.put("importTime", startDate);
+            for (String key: firstHashInList.keySet()) {
+                if (!key.equals("importTime"))
+                    startHash.put(key, 0);
+            }
+        } else {
+            long rate1 = ((Calendar)firstHashInList.get("importTime")).getTimeInMillis()-((Calendar)hashBefore.get("importTime")).getTimeInMillis();
+            long rate2 = startDate-((Calendar)hashBefore.get("importTime")).getTimeInMillis();
+            startHash.put("importTime", startDate);
+            for (String key: firstHashInList.keySet()) {
+                if (!key.equals("importTime"))
+                    if (hashBefore.get(key) instanceof Integer) {
+                        Long value = (Integer) hashBefore.get(key) + ((Integer) firstHashInList.get(key) - (Integer) hashBefore.get(key)) / rate1 * rate2;
+                        startHash.put(key, value);
+                    } else {
+                        Long value = (Long) hashBefore.get(key) + ((Long) firstHashInList.get(key) - (Long) hashBefore.get(key)) / rate1 * rate2;
+                        startHash.put(key, value);
+                    }
+            }
+        }
+        return startHash;
+    }
+
+    private Map<String, Object> createEndHash(Map<String, Object> hashAfter, List<Map<String, Object>> resultList) {
+        Map<String, Object> endHash = new HashMap<>();
+        if (resultList.size()==0)
+            return endHash;
+        Map<String, Object> lastHashInList = resultList.get(resultList.size()-1);
+
+        if (hashAfter == null) {
+            endHash.put("importTime", endDate);
+            for (String key: lastHashInList.keySet()) {
+                if (!key.equals("importTime"))
+                    endHash.put(key, lastHashInList.get(key));
+            }
+        } else {
+            long rate1 = ((Calendar) hashAfter.get("importTime")).getTimeInMillis()-((Calendar)lastHashInList.get("importTime")).getTimeInMillis();
+            long rate2 = endDate-((Calendar) hashAfter.get("importTime")).getTimeInMillis();
+            endHash.put("importTime", endDate);
+            for (String key: lastHashInList.keySet()) {
+                if (!key.equals("importTime"))
+                    if (lastHashInList.get(key) instanceof Integer) {
+                        Long value = (Integer) lastHashInList.get(key) + ((Integer) hashAfter.get(key) - (Integer) lastHashInList.get(key)) / rate1 * rate2;
+                        endHash.put(key, value);
+                    } else {
+                        Long value = (Long) lastHashInList.get(key) + ((Long) hashAfter.get(key) - (Long) lastHashInList.get(key)) / rate1 * rate2;
+                        endHash.put(key, value);
+                    }
+            }
+        }
+        return endHash;
+    }
+
 
     private void filterScanByTime(){
         int months = 0;
@@ -267,8 +345,17 @@ public class JasperScanReport implements JRDataSource {
     }
 
     private void filter() {
-        if (startDate == null) startIndex = 0;
-        if (endDate == null) endIndex = this.scanList.size() - 1;
+        if (this.scanList.size() == 0)
+            return;
+
+        if (startDate == null) {
+            startIndex = 0;
+            startDate = this.scanList.get(0).getImportTime().getTimeInMillis();
+        }
+        if (endDate == null) {
+            endIndex = this.scanList.size() - 1;
+            endDate = Calendar.getInstance().getTimeInMillis();
+        }
         for (int i = 0; i< this.scanList.size(); i++) {
             if (startIndex != null && endIndex != null)
                 break;
@@ -277,8 +364,18 @@ public class JasperScanReport implements JRDataSource {
                 startIndex = i;
             }
             if (endIndex == null && endDate < scan.getImportTime().getTimeInMillis()) {
-                endIndex = i - 1;
+                endIndex = i-1;
             }
         }
+        if (startIndex == null && endIndex != null) startIndex = 0;
+        if (startIndex != null && endIndex == null) endIndex = this.scanList.size() - 1;
+    }
+
+    public Long getStartDate() {
+        return startDate;
+    }
+
+    public Long getEndDate() {
+        return endDate;
     }
 }

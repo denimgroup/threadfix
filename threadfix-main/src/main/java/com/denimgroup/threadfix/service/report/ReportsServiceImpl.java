@@ -159,6 +159,8 @@ public class ReportsServiceImpl implements ReportsService {
         if (parameters.getReportFormat() == ReportFormat.TRENDING) {
             JasperScanReport reportExporter = new JasperScanReport(applicationIdList, scanDao, filterJsonBlobDao.getDefaultFilter());
             report = new ReportCheckResultBean(ReportCheckResult.VALID, null, null, reportExporter.buildReportList());
+            report.setEndDate(reportExporter.getEndDate());
+            report.setStartDate(reportExporter.getStartDate());
         }
 
         if (report == null || report.getReportList() == null || report.getReportList().size()==0)
