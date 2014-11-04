@@ -1,4 +1,4 @@
-8/6/2014 11:45:00
+11/3/2014 12:14:00
 type.info,,
 NTO Spider
 type.vulnerabilities,,
@@ -6,3 +6,11 @@ Web Beacon,Web Beacon,16
 Apache Struts Framework Detection,Apache Struts Framework Detection,16
 X-XSS-Protection,X-XSS-Protection,16
 X-Frame-Options,X-Frame-Options,16
+type.severities,,,
+0-Safe,0-Safe,1,1
+1-Info,1-Info,1,1
+1-Informational,1-Informational,1,1
+2-Low,2-Low,2,2
+3-Med,3-Med,3,3
+3-Medium,3-Medium,3,3
+4-High,4-High,4,4
