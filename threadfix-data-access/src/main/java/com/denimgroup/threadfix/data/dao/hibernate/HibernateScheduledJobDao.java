@@ -27,12 +27,14 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.ScheduledJob;
-
-import org.hibernate.Query;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by zabdisubhan on 8/15/14.
@@ -52,39 +54,26 @@ public abstract class HibernateScheduledJobDao<S extends ScheduledJob> extends A
     }
 
     @Override
-    public boolean checkSameDate(S scheduledJob) {
+    public boolean checkSameDate(@Nonnull S scheduledJob) {
+        if (scheduledJob.getDay() == null && scheduledJob.getFrequency() == null) {
+            throw new IllegalArgumentException("Got scheduled job without day or frequency.");
+        }
 
-        Query query = null;
+        Criteria criteria = getSession().createCriteria(getClassReference());
 
-        if (scheduledJob.getDay() != null){
-            query = sessionFactory.getCurrentSession().createQuery(
-                    "select count(*) from " + getClassReference() + " scheduledJob " +
-                            "where scheduledJob.day=:day and scheduledJob.period=:period " +
-                            "and scheduledJob.hour=:hour and scheduledJob.minute=:minute");
-
-            query.setString("day", scheduledJob.getDay());
-
+        if (scheduledJob.getDay() != null) {
+            criteria.add(Restrictions.eq("day", scheduledJob.getDay()));
         } else if (scheduledJob.getFrequency() != null) {
-            query = sessionFactory.getCurrentSession().createQuery(
-                    "select count(*) from "+  getClassReference() + " scheduledJob" +
-                            "where scheduledJob.frequency=:frequency and scheduledJob.period=:period " +
-                            "and scheduledJob.hour=:hour and scheduledJob.minute=:minute");
-
-            query.setString("frequency", scheduledJob.getFrequency());
-
+            criteria.add(Restrictions.eq("frequency", scheduledJob.getFrequency()));
         }
 
-        if(query != null) {
-            query.setInteger("hour", scheduledJob.getHour());
-            query.setInteger("minute", scheduledJob.getMinute());
-            query.setString("period", scheduledJob.getPeriod());
+        criteria.add(Restrictions.eq("hour",   scheduledJob.getHour()));
+        criteria.add(Restrictions.eq("minute", scheduledJob.getMinute()));
+        criteria.add(Restrictions.eq("period", scheduledJob.getPeriod()));
+        criteria.setProjection(Projections.rowCount());
 
-            Long count = (Long)query.uniqueResult();
+        Long count = (Long) criteria.uniqueResult();
 
-            return (count > 0);
-
-        }  else {
-            return false;
-        }
+        return (count > 0);
     }
 }

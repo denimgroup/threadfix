@@ -1,0 +1,110 @@
+10/16/2014 09:00:00
+type.info,,,
+Clang,http://clang-analyzer.llvm.org/,checker-276,NOTE HERE ON FILE INPUT TYPE
+type.vulnerabilities,,,
+API:Argument with 'nonnull' attribute passed null,API:Argument with 'nonnull' attribute passed null,628
+API:Sum of expressions causes overflow,API:Sum of expressions causes overflow,128
+API Misuse (Apple):Improper use of 'dispatch_once',API Misuse (Apple):Improper use of 'dispatch_once',227
+API Misuse (Apple):Improper use of SecKeychain API,API Misuse (Apple):Improper use of SecKeychain API,227
+API Upgrade (Apple):Use -drain instead of -release,API Upgrade (Apple):Use -drain instead of -release,227
+C String API:Anti-pattern in the argument,C String API:Anti-pattern in the argument,628
+Coding conventions (Apple):Bad return type when passing CFErrorRef*,Coding conventions (Apple):Bad return type when passing CFErrorRef*,710
+Coding conventions (Apple):Bad return type when passing NSError**,Coding conventions (Apple):Bad return type when passing NSError**,710
+Coding conventions (Apple):CFErrorRef* null dereference,Coding conventions (Apple):CFErrorRef* null dereference,476
+Coding conventions (Apple):NSError** null dereference,Coding conventions (Apple):NSError** null dereference,476
+Core Foundation/Objective-C:CFArray API,Core Foundation/Objective-C:CFArray API,129
+Core Foundation/Objective-C:Missing call to superclass,Core Foundation/Objective-C:Missing call to superclass,573
+Cplusplus:Call pure virtual function during construction or Destruction,Cplusplus:Call pure virtual function during construction or Destruction,676
+Cplusplus:Call virtual function during construction or Destruction,Cplusplus:Call virtual function during construction or Destruction,676
+Dead code:Unreachable code,Dead code:Unreachable code,561
+Dead store:Dead assignment,Dead store:Dead assignment,563
+Dead store:Dead increment,Dead store:Dead increment,563
+Dead store:Dead initialization,Dead store:Dead initialization,563
+LLVM Conventions:AST node allocates heap memory,LLVM Conventions:AST node allocates heap memory,119
+LLVM Conventions:StringRef should not be bound to temporary std::string that it outlives,LLVM Conventions:StringRef should not be bound to temporary std::string that it outlives,119
+Lock checker:Destroy invalid lock,Lock checker:Destroy invalid lock,667
+Lock checker:Double locking,Lock checker:Double locking,764
+Lock checker:Double unlocking,Lock checker:Double unlocking,765
+Lock checker:Init invalid lock,Lock checker:Init invalid lock,667
+Lock checker:Lock order reversal,Lock checker:Lock order reversal,667
+Lock checker:Use destroyed lock,Lock checker:Use destroyed lock,667
+Logic error:Array subscript is undefined,Logic error:Array subscript is undefined,457
+Logic error:Assigned value is garbage or undefined,Logic error:Assigned value is garbage or undefined,457
+Logic error:Assignment of a non-Boolean value,Logic error:Assignment of a non-Boolean value,704
+Logic error:Branch condition evaluates to a garbage value,Logic error:Branch condition evaluates to a garbage value,658
+Logic error:Called C++ object pointer is null,Logic error:Called C++ object pointer is null,465
+Logic error:Called function pointer is an uninitalized pointer value,Logic error:Called function pointer is an uninitalized pointer value,824
+Logic error:Called function pointer is null (null dereference),Logic error:Called function pointer is null (null dereference),476
+Logic error:Compare of identical expressions,Logic error:Compare of identical expressions,398
+Logic error:Dangerous pointer arithmetic,Logic error:Dangerous pointer arithmetic,468
+Logic error:Dangerous variable-length array (VLA) declaration,Logic error:Dangerous variable-length array (VLA) declaration,129
+Logic error:Dereference of null pointer,Logic error:Dereference of null pointer,476
+Logic error:Dereference of undefined pointer value,Logic error:Dereference of undefined pointer value,822
+Logic error:Division by zero,Logic error:Division by zero,369
+Logic error:Double fclose,Logic error:Double fclose,672
+Logic error:Function call with too few arguments,Logic error:Function call with too few arguments,685
+Logic error:Garbage return value,Logic error:Garbage return value,457
+Logic error:Identical branches,Logic error:Identical branches,398
+Logic error:Identical conditions,Logic error:Identical conditions,398
+Logic error:Identical expressions in conditional expression,Logic error:Identical expressions in conditional expression,398
+Logic error:Illegal whence argument,Logic error:Illegal whence argument,734
+Logic error:Nil value used as mutex for @synchronized() (no synchronization will occur),Logic error:Nil value used as mutex for @synchronized() (no synchronization will occur),667
+Logic error:NULL stream pointer,Logic error:NULL stream pointer,658
+Logic error:Out of bound memory access ,Logic error:Out of bound memory access ,126
+Logic error:Out of bound memory access (access exceeds upper limit of memory block),Logic error:Out of bound memory access (access exceeds upper limit of memory block),788
+Logic error:Out of bound memory access (accessed memory precedes memory block),Logic error:Out of bound memory access (accessed memory precedes memory block),789
+Logic error:Out of bound memory access (index is tainted),Logic error:Out of bound memory access (index is tainted),126
+Logic error:Out-of-bound access,Logic error:Out-of-bound access,129
+Logic error:Out-of-bound array access,Logic error:Out-of-bound array access,129
+Logic error:Pointer subtraction,Logic error:Pointer subtraction,469
+Logic error:Potential unintended use of sizeof() on pointer type,Logic error:Potential unintended use of sizeof() on pointer type,467
+Logic error:Property access on an uninitialized object pointer,Logic error:Property access on an uninitialized object pointer,824
+Logic error:Receiver in message expression is an uninitialized value,Logic error:Receiver in message expression is an uninitialized value,457
+Logic error:Receiver in message expression is 'nil',Logic error:Receiver in message expression is 'nil',457
+Logic error:Resource Leak,Logic error:Resource Leak,775
+Logic error:Result of operation is garbage or undefined,Logic error:Result of operation is garbage or undefined,457
+Logic error:Return of address to stack-allocated memory,Logic error:Return of address to stack-allocated memory,562
+Logic error:Return of pointer value outside of expected range,Logic error:Return of pointer value outside of expected range,466
+Logic error:Returning null reference,Logic error:Returning null reference,690
+Logic error:Stack address stored into global variable,Logic error:Stack address stored into global variable,562
+Logic error:Subscript access on an uninitialized object pointer,Logic error:Subscript access on an uninitialized object pointer,824
+Logic error:Uninitialized argument value,Logic error:Uninitialized argument value,457
+Logic error:Uninitialized value used as mutex for @synchronized,Logic error:Uninitialized value used as mutex for @synchronized,667
+Logic error:uninitialized variable captured by block,Logic error:uninitialized variable captured by block,457
+Logic error:Use fixed address,Logic error:Use fixed address,587
+Logic error:Use of identical expressions,Logic error:Use of identical expressions,398
+Memory (Core Foundation/Objective-C):Direct assignment to an instance variable backing a property; use the setter instead,Memory (Core Foundation/Objective-C):Direct assignment to an instance variable backing a property; use the setter instead,485
+Memory (Core Foundation/Objective-C):Incompatible instance method return type,Memory (Core Foundation/Objective-C):Incompatible instance method return type,119
+Memory (Core Foundation/Objective-C):Incomplete invalidation,Memory (Core Foundation/Objective-C):Incomplete invalidation,404
+Memory (Core Foundation/Objective-C):Leak,Memory (Core Foundation/Objective-C):Leak,401
+Memory (Core Foundation/Objective-C):Leak of returned object,Memory (Core Foundation/Objective-C):Leak of returned object,401
+Memory (Core Foundation/Objective-C):missing -dealloc,Memory (Core Foundation/Objective-C):missing -dealloc,401
+Memory Error:Bad deallocator,Memory Error:Bad deallocator,762
+Memory Error:Bad free,Memory Error:Bad free,762
+Memory Error:Double delete,Memory Error:Double delete,415
+Memory Error:Double free,Memory Error:Double free,415
+Memory Error:Memory leak,Memory Error:Memory leak,401
+Memory Error:Offset free,Memory Error:Offset free,762
+Memory Error:Use-after-free,Memory Error:Use-after-free,416
+Optimization:Unused instance variable,Optimization:Unused instance variable,563
+Security:Floating point variable used as loop counter,Security:Floating point variable used as loop counter,739
+Security:Insecure temporary file creation,Security:Insecure temporary file creation,377
+Security:Potential buffer overflow in call to 'getpw',Security:Potential buffer overflow in call to 'getpw',477
+Security:Potential buffer overflow in call to 'gets',Security:Potential buffer overflow in call to 'gets',242
+Security:Potential insecure implementation-specific behavior in call 'vfork',Security:Potential insecure implementation-specific behavior in call 'vfork',242
+Security:Potential insecure memory buffer bounds restriction in call 'strcat',Security:Potential insecure memory buffer bounds restriction in call 'strcat',119
+Security:Potential insecure memory buffer bounds restriction in call 'strcpy',Security:Potential insecure memory buffer bounds restriction in call 'strcpy',119
+Security:Potential insecure temporary file in call 'mktemp',Security:Potential insecure temporary file in call 'mktemp',377
+Security:'random' is not a secure random number generator,Security:'random' is not a secure random number generator,338
+Unix API:Allocator sizeof operand mismatch,Unix API:Allocator sizeof operand mismatch,131
+Unix API:Argument is not a null-terminated string.,Unix API:Argument is not a null-terminated string.,119
+Unix API:Improper arguments,Unix API:Improper arguments,628
+Unix API:Improper use of 'open',Unix API:Improper use of 'open',227
+Unix API:Improper use of 'pthread_once',Unix API:Improper use of 'pthread_once',227
+Unix API:malloc() size overflow,Unix API:malloc() size overflow,131
+Unix API:Null pointer argument in call to byte string function,Unix API:Null pointer argument in call to byte string function,119
+Unix Stream API Error:Double fclose,Unix Stream API Error:Double fclose,672
+Unix Stream API Error:Resource Leak,Unix Stream API Error:Resource Leak,775
+Untrusted Data:Use of Untrusted Data,Untrusted Data:Use of Untrusted Data,349
+type.severities,,,
+Medium,Medium,3,3

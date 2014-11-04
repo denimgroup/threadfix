@@ -26,4 +26,8 @@ package com.denimgroup.threadfix.data.dao;
 import com.denimgroup.threadfix.data.entities.FilterJsonBlob;
 
 public interface FilterJsonBlobDao extends GenericNamedObjectDao<FilterJsonBlob> {
+
+    int updateDefaultTrendingFilter();
+    FilterJsonBlob getDefaultFilter();
+
 }

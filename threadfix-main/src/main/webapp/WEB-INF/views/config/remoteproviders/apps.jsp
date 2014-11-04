@@ -6,8 +6,9 @@
 	<script type="text/javascript">
 	$(document).ready(function(){ 
 		$("#orgSelect").change(function() {
-			$("#appSelect").html('');
-			$("#appSelect").append('<option value="-1"></option>');
+            var $appSelect = $("#appSelect");
+			$appSelect.html('');
+            $appSelect.append('<option value="-1"></option>');
 			var options = '';
 			
 			<c:forEach var="organization" items="${organizationList}">
@@ -18,7 +19,7 @@
 			    }
 			</c:forEach>
 
-			$("#appSelect").append(options);
+            $appSelect.append(options);
 		});
 	});
 	</script>
@@ -26,7 +27,7 @@
 
 <body id="config">
 
-	<spring:url value="" var="emptyUrl"></spring:url>	
+	<spring:url value="" var="emptyUrl"/>
 	<form:form modelAttribute="remoteProviderType" action="${ fn:escapeXml(emptyUrl) }">
 	<table class="table table-striped">
 		<thead>
@@ -39,7 +40,7 @@
 		<tbody>
 			<c:forEach var="application" varStatus="vs" items="${ remoteProviderType.remoteProviderApplications }">
 				<tr class="bodyRow">
-					<td><c:out value="${ application.nativeId }"/></td>
+					<td><c:out value="${ application.nativeName }"/></td>
 					<td>
 						<script type="text/javascript">
 							$(document).ready(function(){ 

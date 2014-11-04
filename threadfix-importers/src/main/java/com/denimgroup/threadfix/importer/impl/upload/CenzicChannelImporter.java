@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -45,7 +46,10 @@ import java.util.Map;
  * 
  * @author stran
  */
-@ScanImporter(ScannerType.CENZIC_HAILSTORM)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.CENZIC_HAILSTORM_DB_NAME,
+        startingXMLTags = { "Assessments", "AssessmentRunData" }
+)
 class CenzicChannelImporter extends AbstractChannelImporter {
 
     private static final String EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet, Script, or Object",

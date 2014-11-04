@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.annotations;
 
-import com.denimgroup.threadfix.data.entities.ScannerType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,6 +35,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ScanImporter {
 
-    public ScannerType value();
+    public String scannerName();
+
+    public ScanFormat format() default ScanFormat.XML;
+
+    public String[] startingXMLTags() default {};
+
+    public StartingTagSet[] startingXMLTagSets() default {};
+
+    public String[] zipItems() default {};
 
 }

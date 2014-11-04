@@ -91,9 +91,7 @@ public class RolesController {
 
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    RestResponse<List<Role>> map() {
+    public @ResponseBody RestResponse<List<Role>> map() {
 
         List<Role> roles = roleService.loadAll();
 
@@ -105,9 +103,7 @@ public class RolesController {
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    RestResponse<Role> newSubmit(Model model, @Valid @ModelAttribute Role role,
+    public @ResponseBody RestResponse<Role> newSubmit(Model model, @Valid @ModelAttribute Role role,
                                  BindingResult result) {
         role.setId(null);
 

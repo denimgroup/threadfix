@@ -2,8 +2,8 @@
 
 <head>
 	<title>Manage Users</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-modal-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/user-page-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/user-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/user-page-controller.js"/>
 </head>
 
 <body id="config" ng-controller="UserPageController">

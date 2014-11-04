@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
@@ -115,7 +116,11 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
                             .append("Parameter: ")
                             .append(surfaceLocation.getParameter());
 
-                    addNativeIds(vulnerability, stringBuilder);
+                    List<Finding> findings = vulnerability.getFindings();
+                    if (findings != null && !findings.isEmpty()) {
+                        addUrlReferences(findings, stringBuilder);
+                        addNativeIds(findings, stringBuilder);
+                    }
 
                     stringBuilder.append("\n\n");
                     vulnIndex++;
@@ -139,10 +144,7 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
     private boolean isMemoType(String fieldName) {
         for (Fields.Field field: editableFieldsList) {
             if (field.getName().equals(fieldName)) {
-                if ("Memo".equals(field.getType()))
-                    return true;
-                else
-                    return false;
+                return "Memo".equals(field.getType());
             }
         }
         return false;

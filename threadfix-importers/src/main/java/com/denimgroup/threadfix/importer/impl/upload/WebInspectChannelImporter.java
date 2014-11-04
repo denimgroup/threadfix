@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
@@ -50,7 +51,9 @@ import java.util.Map;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.WEBINSPECT)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.WEBINSPECT_DB_NAME,
+        startingXMLTags = { "Sessions", "Session", "URL", "Scheme", "Host", "Port"})
 class WebInspectChannelImporter extends AbstractChannelImporter {
 	
 	private String bestPractices = "Best Practices";

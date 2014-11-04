@@ -89,6 +89,20 @@
                 </td>
             </tr>
             <tr>
+                <td class="right-align">Tag</td>
+                <td class="left-align" >
+                    <multi-select id="tagSelect"
+                            input-model="config.tags"
+                            output-model="object.tags"
+                            button-label="name"
+                            item-label="name"
+                            tick-property="selected"
+                            >
+                    </multi-select>
+                </td>
+            </tr>
+
+            <tr>
                 <td colspan="2">
                     <a class="pointer" ng-click="sourceCodeDisplay = !sourceCodeDisplay">Source Code Information</a>
                 </td>
@@ -126,7 +140,7 @@
             <tr ng-show="sourceCodeDisplay">
                 <td>Source Code Password</td>
                 <td>
-                    <input type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" name="repositoryPassword"/>
+                    <input autocomplete="off" type="password" id="repositoryPassword" ng-model="object.repositoryPassword" showPassword="true" maxlength="250" name="repositoryPassword"/>
                 </td>
                 <td>
                     <span id="sourcePasswordLengthError" class="errors" ng-show="form.repositoryPassword.$dirty && form.repositoryPassword.$error.maxlength">Maximum length is 250.</span>

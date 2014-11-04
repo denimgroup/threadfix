@@ -106,12 +106,4 @@ public abstract class ScheduledJobServiceImpl<S extends ScheduledJob> implements
             scheduledJob.setDay(null);
         }
     }
-
-    @Override
-    public void validateSameDate(S scheduledJob, BindingResult result) {
-        if (getScheduledJobDao().checkSameDate(scheduledJob)) {
-            result.rejectValue("dateError", null, null, "Another job is scheduled at that time/frequency");
-        }
-    }
-
 }

@@ -91,9 +91,9 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 						ResponseCode success = importScansForApplication(application);
 						
 						if (!success.equals(ResponseCode.SUCCESS)) {
-							log.info("No scans were imported for Remote Provider application " + application.getNativeId());
+							log.info("No scans were imported for Remote Provider application " + application.getNativeName());
 						} else {
-							log.info("Remote Provider import was successful for application " + application.getNativeId());
+							log.info("Remote Provider import was successful for application " + application.getNativeName());
 						}
 					}
 				}
@@ -287,7 +287,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	
 	@Override
 	public ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
-			int typeId) {
+                                           String platform, int typeId) {
 		
 		RemoteProviderType databaseRemoteProviderType = load(typeId);
 
@@ -311,6 +311,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			log.warn("Provider password has changed, updating applications.");
 			
 			databaseRemoteProviderType.setPassword(password);
+			databaseRemoteProviderType.setPlatform(platform);
             databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
 			remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
 			store(databaseRemoteProviderType);
@@ -327,6 +328,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			databaseRemoteProviderType.setApiKey(apiKey);
 			databaseRemoteProviderType.setUsername(username);
 			databaseRemoteProviderType.setPassword(password);
+            databaseRemoteProviderType.setPlatform(platform);
             databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
 
             List<RemoteProviderApplication> apps = remoteProviderApplicationService

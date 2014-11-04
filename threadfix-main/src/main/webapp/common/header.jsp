@@ -96,15 +96,19 @@
                                 <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
                             </li>
                         </security:authorize>
+                        <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">
+                            <li class="normalLinks">
+                                <a id="tagsLink" href="<spring:url value="/configuration/tags" htmlEscape="true"/>">Tags</a>
+                            </li>
+                        </security:authorize>
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_WAFS">
 						    <li class="normalLinks">
 						    	<a id="wafsLink" href="<spring:url value="/wafs" htmlEscape="true"/>">WAFs</a>
 						    </li>
 					    </security:authorize>
-
 						<security:authorize ifAnyGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS,ROLE_CAN_MANAGE_USERS,ROLE_CAN_MANAGE_ROLES,ROLE_CAN_VIEW_ERROR_LOGS">
 							<li class="divider" role="presentation"></li>
-                            <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
+                            <security:authorize ifAllGranted="ROLE_ENTERPRISE,ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                                 <li class="normalLinks">
                                     <a id="configureDefaultsLink" href="<spring:url value="/configuration/settings" htmlEscape="true"/>">System Settings</a>
                                 </li>
@@ -131,8 +135,10 @@
                                     <a id="viewLogsLink" href="<spring:url value="/configuration/logs" htmlEscape="true"/>">View Error Logs</a>
                                 </li>
 							</security:authorize>
-
 						</security:authorize>
+                        <li class="normalLinks">
+                            <a id="viewAboutPageLink" href="<spring:url value="/about" htmlEscape="true"/>">About</a>
+                        </li>
 					</ul>
 				   </div>
 				</td>

@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="newScheduledImport.html">
+<script type="text/ng-template" id="newScheduledUpdate.html">
 
     <div class="modal-header">
         <h4>New Scheduled Update</h4>
@@ -19,7 +19,7 @@
                 <td style="padding:5px;">Time</td>
                 <td style="padding:5px;">
                     <select name="hour" ng-model="object.hour" style="margin-bottom:0; width:52px;" id="hour">
-                        <option value="0">0</option>
+                        <option value="0">12</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>

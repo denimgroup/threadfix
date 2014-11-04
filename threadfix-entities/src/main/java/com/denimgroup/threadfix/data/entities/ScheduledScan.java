@@ -42,7 +42,8 @@ public class ScheduledScan extends ScheduledJob {
 	@JoinColumn(name = "applicationId")
 	@JsonIgnore
 	public Application getApplication() {
-		return this.application;	}
+		return this.application;
+    }
 	
 	public void setApplication(Application application) {
 		this.application = application;

@@ -83,6 +83,34 @@
     </div>
 </div>
 
+<!-- Tags. -->
+<div class="accordion-group" ng-show="!treeApplication">
+    <div class="accordion-heading" ng-click="showTagControls = !showTagControls">
+        <span id="expandTagFilters" class="icon" ng-class="{ 'icon-minus': showTagControls, 'icon-plus': !showTagControls }"></span> Tags
+    </div>
+    <div ng-show="showTagControls" class="filter-group-body">
+
+        <div class="accordion-inner">
+            Applications
+            <a ng-hide="showTagInput" ng-click="showTagInput = !showTagInput">
+                <span id="showTagInput" class="icon" ng-class="{ 'icon-minus': showTagInput, 'icon-plus': !showTagInput }"></span>
+            </a>
+            <br>
+            <input id="tagNameTypeahead"
+                   focus-on="showTagInput"
+                   ng-show="showTagInput"
+                   typeahead="tag.name for tag in tags | filter:$viewValue | limitTo:8"
+                   type="text"
+                   ng-model="newFilteredTag.name"
+                   typeahead-on-select="addNew(parameters.tags, newFilteredTag.name); newFilteredTag = {}; showTagInput = false"/>
+            <div ng-repeat="filteredTag in parameters.tags">
+                <span class="pointer icon icon-minus-sign" ng-click="remove(parameters.tags, $index)"></span>
+                {{ filteredTag.name }}
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Scanner and # Merged controls -->
 <div class="accordion-group">
     <div class="accordion-heading" ng-click="showTypeAndMergedControls = !showTypeAndMergedControls">

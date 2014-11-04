@@ -40,10 +40,14 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	// Veracode Build numbers / whatever WhiteHat has.
 	// TODO checking on this
-	public static final int NATIVE_ID_LENGTH = 1024;
+	public static final int NATIVE_ID_LENGTH = 32;
+	public static final int NATIVE_NAME_LENGTH = 1024;
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
 	private String nativeId;
+
+    @Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
+	private String nativeName;
 	
 	private RemoteProviderType remoteProviderType;
 	
@@ -60,8 +64,8 @@ public class RemoteProviderApplication extends AuditableEntity  {
 	public void setLastImportTime(Calendar lastImportTime) {
 		this.lastImportTime = lastImportTime;
 	}
-	
-	@Column(length = NATIVE_ID_LENGTH)
+
+	@Column(length = NATIVE_ID_LENGTH, name = "name")
     @JsonView(AllViews.TableRow.class)
 	public String getNativeId() {
 		return nativeId;
@@ -69,6 +73,20 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
+	}
+
+    //
+    // nativeId used to store the application name instead of the native application id.
+    // To preserve the db schema, we've reassigned the column name for nativeId to the nativeName property.
+	//
+    @Column(length = NATIVE_NAME_LENGTH, name = "nativeId")
+    @JsonView(AllViews.TableRow.class)
+	public String getNativeName() {
+		return nativeName;
+	}
+
+	public void setNativeName(String nativeName) {
+		this.nativeName = nativeName;
 	}
 
 	@ManyToOne

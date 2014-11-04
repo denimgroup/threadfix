@@ -36,11 +36,12 @@ import javax.servlet.http.HttpServletResponse;
 public class ClickjackHeaderFilter implements Filter {
 	
 	private String mode = "DENY";
-	
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
         chain.doFilter(request, response);
         res.addHeader("X-FRAME-OPTIONS", mode );		
+        res.addHeader("X-Content-Type-Options", "nosniff" );
     }
     
     public void destroy() {

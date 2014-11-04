@@ -39,9 +39,17 @@ public enum FrameworkType {
     public static FrameworkType getFrameworkType(String input) {
 		FrameworkType type = DETECT; // default framework type
 
-        if (input != null && (input.equals("DOT_NET_MVC") || input.equals(".NET_MVC"))) {
+        if (input == null) {
+            type = NONE;
+        } else if (input.equals("DOT_NET_MVC") || input.equals(".NET_MVC")) {
             type = DOT_NET_MVC;
-        } else if (input != null) {
+        } else if (
+                input.equals("DOT_NET_WEB_FORMS") ||
+                input.equals("ASP.NET_WEB_FORMS") ||
+                input.equals("ASP.NET_WEBFORMS")
+                ) {
+            type = DOT_NET_WEB_FORMS;
+        } else {
 			for (FrameworkType frameworkType : values()) {
 				if (frameworkType.toString().equals(input) ||
                         frameworkType.displayName.equals(input) ||

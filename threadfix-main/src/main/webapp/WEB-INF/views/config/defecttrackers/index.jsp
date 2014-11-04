@@ -2,9 +2,9 @@
 
 <head>
 	<title>Defect Trackers</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/scheduled-defect-tracker-update-tab-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/defect-trackers-tab-controller.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/modal-controller-with-config.js"></script>
+    <cbs:cachebustscript src="/scripts/scheduled-defect-tracker-update-tab-controller.js"/>
+    <cbs:cachebustscript src="/scripts/defect-trackers-tab-controller.js"/>
+    <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 </head>
 
 <body id="config">

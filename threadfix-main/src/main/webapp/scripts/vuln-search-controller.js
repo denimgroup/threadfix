@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
+module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService, filterService) {
 
     $scope.parameters = {};
 
@@ -9,6 +9,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.resetFiltersIfEnabled = function() {
         if ($scope.selectedFilter) {
             $scope.resetFilters();
+            $scope.refresh();
         }
     };
 
@@ -16,6 +17,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.parameters = {
             teams: [],
             applications: [],
+            tags: [],
             scanners: [],
             genericVulnerabilities: [],
             severities: {},
@@ -33,12 +35,17 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.endDate = undefined;
         $scope.selectedFilter = undefined;
         $scope.startDate = undefined;
-
-        $scope.refresh();
     };
 
     $scope.toggleAllFilters = function() {
-        if ($scope.showSaveAndLoadControls || $scope.showTeamAndApplicationControls || $scope.showSaveFilter || $scope.showDetailsControls || $scope.showDateControls || $scope.showDateRange || $scope.showTypeAndMergedControls) {
+        if ($scope.showSaveAndLoadControls
+            || $scope.showTeamAndApplicationControls
+            || $scope.showSaveFilter
+            || $scope.showDetailsControls
+            || $scope.showDateControls
+            || $scope.showDateRange
+            || $scope.showTypeAndMergedControls
+            || $scope.showTagControls) {
             $scope.showSaveAndLoadControls = false;
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
@@ -46,6 +53,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showDateRange = false;
             $scope.showTypeAndMergedControls = false;
             $scope.showSaveFilter = false;
+            $scope.showTagControls = false;
         } else {
             $scope.showSaveAndLoadControls = true;
             $scope.showTeamAndApplicationControls = true;
@@ -54,6 +62,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
             $scope.showDateRange = true;
             $scope.showTypeAndMergedControls = true;
             $scope.showSaveFilter = true;
+            $scope.showTagControls = true;
         }
     };
 
@@ -135,24 +144,67 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     });
 
     $scope.$on('loadVulnerabilitySearchTable', function(event) {
-        if (!$scope.teams) {
+        if (!$scope.$parent.filterParameters) {
             threadfixAPIService.getVulnSearchParameters()
                 .success(function(data, status, headers, config) {
                     if (data.success) {
                         $scope.teams = data.object.teams;
+                        $scope.tags = data.object.tags;
                         $scope.scanners = data.object.scanners;
                         $scope.genericVulnerabilities = data.object.vulnTypes;
                         $scope.searchApplications = data.object.applications;
                         $scope.savedFilters = data.object.savedFilters;
+                        $scope.savedFilters = $scope.savedFilters.filter(function(filter){
+                            var parameters = JSON.parse(filter.json);
+                            return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
+                        });
+                        $scope.filterParameters = data.object.filterParameters;
                     }
-                    $scope.resetFilters();
+                    if ($scope.filterParameters) {
+
+                        $scope.$parent.showVulnTab = true;
+                        $scope.$parent.showAppsTab = false;
+                        $scope.resetFilters();
+
+                        vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
+                        $scope.refresh();
+
+                    } else {
+                        $scope.resetFilters();
+                        $scope.refresh();
+                    }
                 }).
                 error(function(data, status, headers, config) {
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loadingTree = false;
                 });
         } else {
+
+            // If it was navigated from other page then display vuln search tab
+            $scope.$parent.showVulnTab = true;
+            if ($scope.$parent.tabs) {
+                $scope.$parent.tabs.forEach(function(tab){
+                    tab.active = false;
+                });
+            };
+
+            // Remove the element team of All in vuln search page
+            if ($scope.$parent.teams) {
+                var index = -1;
+                $scope.$parent.teams.forEach(function(team, i) {
+                    if (team.id == -1 && team.name == "All") {
+                        index = i;
+                    }
+                });
+                if (index > -1) {
+                    $scope.$parent.teams.splice(index, 1);
+                }
+            };
+
+            $scope.filterParameters = $scope.$parent.filterParameters;
             $scope.resetFilters();
+            vulnSearchParameterService.convertFromSpringToAngular($scope, $scope.filterParameters);
+            $scope.refresh();
         }
     });
 
@@ -230,12 +282,12 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.remove = function(collection, index) {
         collection.splice(index, 1);
         $scope.refresh();
-    }
+    };
 
     $scope.setNumberVulnerabilities = function(number) {
         $scope.parameters.numberVulnerabilities = number;
         $scope.refresh();
-    }
+    };
 
     $scope.setDaysOldModifier = function(modifier) {
         resetDateRange();
@@ -248,9 +300,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.refresh();
             }
         }
-
-
-    }
+    };
 
     $scope.setDaysOld = function(days) {
         resetDateRange();
@@ -288,28 +338,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.deleteCurrentFilter = function() {
-        if ($scope.selectedFilter) {
-            $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
-                success(function(data, status, headers, config) {
-                    console.log("Successfully deleted filter.");
-                    $scope.initialized = true;
-
-                    if (data.success) {
-                        $scope.deleteFilterSuccessMessage = "Successfully deleted filter " + $scope.selectedFilter.name;
-                        $scope.selectedFilter = undefined;
-                        $scope.savedFilters = data.object;
-                    } else {
-                        $scope.errorMessage = "Failure. Message was : " + data.message;
-                    }
-
-                    $scope.loading = false;
-                }).
-                error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
-                    $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
-                    $scope.loading = false;
-                });
-        }
+        filterService.deleteCurrentFilter($scope, filterSavedFilters);
     };
 
     $scope.loadFilter = function(filter) {
@@ -323,59 +352,23 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         if ($scope.parameters.endDate) {
             $scope.endDate = $scope.parameters.endDate;
         }
+        if ($scope.treeApplication) {
+            $scope.parameters.teams = [];
+        }
 
         $scope.refresh();
         $scope.lastLoadedFilterName = $scope.selectedFilter.name;
     };
 
     $scope.saveCurrentFilters = function() {
-        console.log("Saving filters");
-
-        if ($scope.currentFilterNameInput) {
-
-            var matches = $scope.savedFilters.filter(function(filter) {
-                return filter.name === $scope.currentFilterNameInput;
-            });
-
-            if (matches && matches.length !== 0) {
-                $scope.saveFilterErrorMessage = "A filter with that name already exists.";
-                return;
-            }
-
-            $scope.savingFilter = true;
-
-            var submissionObject = vulnSearchParameterService.serialize($scope, $scope.parameters);
-
-            submissionObject.name = $scope.currentFilterNameInput;
-
-            $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
-                success(function(data, status, headers, config) {
-                    console.log("Successfully saved filters.");
-                    $scope.savingFilter = false;
-
-                    if (data.success) {
-                        $scope.savedFilters = data.object;
-
-                        $scope.savedFilters.forEach(function(filter) {
-                            if (filter.name === $scope.currentFilterNameInput) {
-                                $scope.selectedFilter = filter;
-                            }
-                        });
-
-                        $scope.currentFilterNameInput = '';
-                        $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
-                    } else {
-                        $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
-                    }
-
-                }).
-                error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
-                    $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
-                    $scope.savingFilter = false;
-                });
-        }
+        $scope.parameters.filterType = {isVulnSearchFilter : true};
+        filterService.saveCurrentFilters($scope, filterSavedFilters);
     };
+
+    var filterSavedFilters = function(filter){
+        var parameters = JSON.parse(filter.json);
+        return (!parameters.filterType || parameters.filterType.isVulnSearchFilter);
+    }
 
     // collapse duplicates: [arachni, arachni, appscan] => [arachni (2), appscan]
     var updateChannelNames = function(vulnerability) {
@@ -421,7 +414,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
                 if (data.success) {
                     element.vulns = data.object.vulns;
-                    element.vulns.forEach(updateChannelNames)
+                    element.vulns.forEach(updateChannelNames);
+                    element.vulns.forEach(function(vuln){
+                        vulnSearchParameterService.updateVulnCommentTags($scope.tags, vuln);
+                    });
                     element.totalVulns = data.object.vulnCount;
                     element.max = Math.ceil(data.object.vulnCount/100);
                     element.numberToShow = numToShow;
@@ -449,13 +445,16 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     $scope.showCommentForm = function(vuln) {
         var modalInstance = $modal.open({
             templateUrl: 'vulnCommentForm.html',
-            controller: 'GenericModalController',
+            controller: 'ModalControllerWithConfig',
             resolve: {
                 url: function() {
                     return tfEncoder.encode($scope.getUrlBase(vuln) + "/addComment");
                 },
                 object: function () {
                     return {};
+                },
+                config: function() {
+                    return {tags: $scope.tags};
                 },
                 buttonText: function() {
                     return "Add Comment";
@@ -466,7 +465,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (comments) {
-            vuln.vulnerabilityComments = comments
+            vuln.vulnerabilityComments = comments;
             $log.info("Successfully added comment.");
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

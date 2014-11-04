@@ -92,6 +92,11 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
 
     @Override
     public HttpResponse postUrl(String url, String[] paramNames, String[] paramVals, String username, String password) {
+        return postUrl(url, paramNames, paramVals, username, password, new String[]{}, new String[]{});
+    }
+
+    @Override
+    public HttpResponse postUrl(String url, String[] paramNames, String[] paramVals, String username, String password, String[] headerNames, String[] headerVals) {
         assert url != null;
 
         PostMethod post = new PostMethod(url);
@@ -103,6 +108,10 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
 
             post.setRequestHeader("Authorization", "Basic " + encodedLogin);
+        }
+
+        for (int i = 0; i < headerNames.length; i++) {
+            post.setRequestHeader(headerNames[i], headerVals[i]);
         }
 
         try {

@@ -32,11 +32,38 @@ public class JsonUtils {
 
     @Nullable
     public static String getStringProperty(String jsonString, String propertyName) {
+
+        if (jsonString == null || !jsonString.contains(propertyName)) {
+            LOG.warn("JSON string doesn't contain " + propertyName);
+            return null;
+        }
+
         JSONObject object = getJSONObject(jsonString);
 
         if (object != null) {
             try {
                 return object.getString(propertyName);
+            } catch (JSONException e) {
+                LOG.warn("JSON Parsing failed.", e);
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static Long getLongProperty(String jsonString, String propertyName) {
+
+        if (jsonString == null || !jsonString.contains(propertyName)) {
+            LOG.warn("JSON string doesn't contain " + propertyName);
+            return null;
+        }
+
+        JSONObject object = getJSONObject(jsonString);
+
+        if (object != null) {
+            try {
+                return object.getLong(propertyName);
             } catch (JSONException e) {
                 LOG.warn("JSON Parsing failed.", e);
             }

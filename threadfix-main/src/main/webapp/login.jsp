@@ -2,14 +2,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ include file="/common/taglibs.jsp"%>
 
-
 <html lang="en">
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta http-equiv="X-FRAME-OPTIONS" content="DENY"/>
 	<title>ThreadFix</title>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/angular.min.js"></script>
-    <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/login-controller.js"></script>
+    <cbs:cachebustscript src="/scripts/angular.min.js"/>
+    <cbs:cachebustscript src="/scripts/login-controller.js"/>
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/login.css"/>
 </head>
 

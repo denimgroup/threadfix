@@ -91,11 +91,11 @@
 				</tr>
 				<tr class="odd">
 					<td class="bold" valign=top>Scanner Detail</td>
-					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE id="scannerDetail"><c:out value="${ finding.scannerDetail }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;list-style: square"><PRE id="scannerDetail"><c:out value="${ finding.scannerDetail }"/></PRE></td>
 				</tr>
 				<tr>
 					<td class="bold" valign=top>Scanner Recommendation</td>
-					<td class="inputValue" style="word-wrap: break-word;"><style>li {list-style: square}</style><PRE id="scannerRecommendation"><c:out value="${ finding.scannerRecommendation }"/></PRE></td>
+					<td class="inputValue" style="word-wrap: break-word;list-style: square"><PRE id="scannerRecommendation"><c:out value="${ finding.scannerRecommendation }"/></PRE></td>
 				</tr>				
 				<tr>
 					<td class="bold" valign=top>Attack Request</td>
@@ -111,7 +111,7 @@
 					<td class="bold">CVE ID</td>
 					<td class="inputValue" id="dependency">
 						<c:out value="${ finding.dependency.cve } "/>
-						(<a target="_blank" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=${ finding.dependency.cve }">View</a>)
+						(<a target="_blank" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=<c:out value="${ finding.dependency.cve }"/>">View</a>)
 					</td>	
 				</tr>
                 <tr>

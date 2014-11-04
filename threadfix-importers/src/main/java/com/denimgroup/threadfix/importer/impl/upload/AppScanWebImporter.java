@@ -45,7 +45,9 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * 
  * @author mcollins
  */
-@ScanImporter(ScannerType.APPSCAN_DYNAMIC)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.APPSCAN_DYNAMIC_DB_NAME,
+        startingXMLTags = { "XmlReport", "AppScanInfo", "Version", "ServicePack", "Summary", "TotalIssues" })
 class AppScanWebImporter extends AbstractChannelImporter {
 
 	public AppScanWebImporter() {

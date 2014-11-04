@@ -16,19 +16,19 @@
     <%@ include file="/WEB-INF/views/applications/forms/uploadScanForm.jsp" %>
     <%@ include file="/WEB-INF/views/organizations/newTeamForm.jsp" %>
     <thead>
-        <tr>
-            <th style="width:8px"></th>
-            <th style="width:98px;">Name</th>
-            <th class="centered fixed-team-header">Total</th>
-            <th class="centered fixed-team-header">Critical</th>
-            <th class="centered fixed-team-header">High</th>
-            <th class="centered fixed-team-header">Medium</th>
-            <th class="centered fixed-team-header">Low</th>
-            <th class="centered fixed-team-header">Info</th>
-            <th></th>
-            <th style="width:130px;"></th>
-            <th style="width:70px;"></th>
-        </tr>
+    <tr>
+        <th style="width:8px"></th>
+        <th style="width:98px;">Name</th>
+        <th class="centered fixed-team-header">Total</th>
+        <th class="centered fixed-team-header">Critical</th>
+        <th class="centered fixed-team-header">High</th>
+        <th class="centered fixed-team-header">Medium</th>
+        <th class="centered fixed-team-header">Low</th>
+        <th class="centered fixed-team-header">Info</th>
+        <th></th>
+        <th style="width:130px;"></th>
+        <th style="width:70px;"></th>
+    </tr>
     </thead>
     <tbody>
         <tr ng-repeat-start="team in teams" id="teamRow{{ team.id }}" class="pointer" data-target-div="teamInfoDiv{{ team.id }}"
@@ -62,9 +62,9 @@
             </td>
         </tr>
 
-        <tr ng-file-drop-available="dropSupported=true"
-            ng-repeat-end class="grey-background" ng-init="teamIndex=team.name">
-            <td colspan="11">
+    <tr ng-file-drop-available="dropSupported=true"
+        ng-repeat-end class="grey-background" ng-init="teamIndex=team.name">
+        <td colspan="8">
 
                 <div collapse="!team.expanded"
                          id="teamInfoDiv{{ team.id }}"
@@ -120,7 +120,27 @@
                         </table>
                     </div>
                 </div>
-            </td>
-        </tr>
+
+            </div>
+        </td>
+        <td colspan="3">
+            <div ng-show="team.applications"
+                 collapse="!team.expanded"
+                 class="collapse applicationSection"
+                 ng-class="{ expanded: team.expanded }">
+
+                <d3-donut ng-show="team.report" data="team.report" label="reportDiv{{ team.id }}"></d3-donut>
+
+                <div ng-hide="team.report || team.reportFailed" class="team-report-wrapper">
+                    <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
+                </div>
+                <div ng-show="team.reportFailed" class="team-report-wrapper">
+                    Report Failed
+                </div>
+
+            </div>
+            </div>
+        </td>
+    </tr>
     </tbody>
 </table>

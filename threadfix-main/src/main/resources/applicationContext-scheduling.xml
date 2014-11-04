@@ -43,27 +43,4 @@
 			ref="queueListener" />
 	</jms:listener-container>
 
-	<!--
-		Job Detail bean run by Quartz to start Defect Tracker synchronization
-	-->
-	<bean name="defectTrackerJob"
-		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"
-		p:targetObject-ref="queueSenderImpl" p:targetMethod="startDefectTrackerSync" />
-
-	<!-- cron based trigger for synchronization with Defect Trackers -->
-	<!-- run every morning at 2 AM -->
-	<bean id="defectTrackerCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"
-		p:jobDetail-ref="defectTrackerJob" p:cronExpression="2 0 0 * * ?" />
-
-	<!--
-		SchedulerFactoryBean to set up cron triggers for importing scans and
-		defect tracker synchronization
-	-->
-	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers">
-			<list>
-				<ref bean="defectTrackerCronTrigger" />
-			</list>
-		</property>
-	</bean>
 </beans>

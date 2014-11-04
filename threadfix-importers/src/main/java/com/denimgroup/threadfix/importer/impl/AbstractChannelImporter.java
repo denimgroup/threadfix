@@ -82,7 +82,8 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
     protected static final String FILE_CHECK_COMPLETED = "File check completed.";
 
     protected enum FindingKey {
-        VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL, RECOMMENDATION, RAWFINDING
+        VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
+        RECOMMENDATION, RAWFINDING, URL_REFERENCE
     }
 
     // A stream pointing to the scan's contents. Set with either setFile or
@@ -112,6 +113,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     public AbstractChannelImporter(@Nonnull ScannerType channelTypeName) {
         this.channelTypeCode = channelTypeName.getDbName();
+    }
+
+    public AbstractChannelImporter(@Nonnull String channelTypeName) {
+        this.channelTypeCode = channelTypeName;
     }
 
     protected ChannelType getChannelType() {
@@ -328,7 +333,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             }
         }
 
-
         if (url != null && !url.isEmpty()) {
             try {
                 location.setUrl(new URL(url));
@@ -413,6 +417,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         String detail = findingMap.get(FindingKey.DETAIL);
         String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
         String rawFinding = findingMap.get(FindingKey.RAWFINDING);
+        String urlReference = findingMap.get(FindingKey.URL_REFERENCE);
 
         if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
             parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
@@ -437,6 +442,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         if (rawFinding != null && rawFinding.length() > Finding.RAW_FINDING_LENGTH)
             rawFinding = rawFinding.substring(0,Finding.RAW_FINDING_LENGTH-20) + "\n\n[truncated]\n";
         finding.setRawFinding(rawFinding);
+
+        if (urlReference != null && urlReference.length() > Finding.URL_REFERENCE_LENGTH)
+            urlReference = urlReference.substring(0,Finding.URL_REFERENCE_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setUrlReference(urlReference);
     }
 
     protected void closeInputStream(InputStream stream) {
@@ -639,6 +648,47 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         saxFindingList = list();
 
         ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
+
+        Scan scan = new Scan();
+        scan.setFindings(saxFindingList);
+        scan.setApplicationChannel(applicationChannel);
+
+        if (date != null && date.getTime() != null) {
+            log.debug("SAX Parser found the scan date: " + date.getTime().toString());
+            scan.setImportTime(date);
+        } else {
+            log.warn("SAX Parser did not find the date.");
+        }
+
+        if (scan.getFindings() != null && scan.getFindings().size() != 0) {
+            log.debug("SAX Parsing successfully parsed " + scan.getFindings().size() +" Findings.");
+        } else {
+            log.warn("SAX Parsing did not find any Findings.");
+        }
+
+        if (shouldDeleteAfterParsing) {
+            deleteScanFile();
+        }
+
+        return scan;
+    }
+
+    /**
+     * TODO probably remove this unless default SAX parsing is insufficient for HTML
+     * @param handler
+     * @return
+     */
+    @Nonnull
+    protected Scan parseHTMLInput(DefaultHandler handler) {
+        log.debug("Starting HTML Parsing.");
+
+        if (inputStream == null) {
+            throw new IllegalStateException("InputStream was null. Can't parse HTML input. This is probably a coding error.");
+        }
+
+        saxFindingList = list();
+
+        //ScanUtils.readSAXInput(handler, "Done Parsing.", inputStream);
 
         Scan scan = new Scan();
         scan.setFindings(saxFindingList);

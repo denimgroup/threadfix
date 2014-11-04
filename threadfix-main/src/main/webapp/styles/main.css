@@ -890,6 +890,14 @@ div.box-shadow {
     display:block;
 }
 
+.vulnerabilitySection {
+    display:none;
+}
+
+.vulnerabilitySection.expanded {
+    display:block;
+}
+
 .tableReportDiv {
     float:right;
     margin-right:-20px;
@@ -1222,3 +1230,33 @@ div.remote-provider-config-modal a {
 .defect-form-row span.errors {
     padding-left: 5px;
 }
+
+/* fix rows */
+.badge-critical{
+    background-color:#F7280C
+}
+
+.badge-high {
+    background-color:#F27421
+}
+
+.badge-medium {
+    background-color:#EFD20A
+}
+
+.badge-low {
+    background-color:#458A37
+}
+
+.badge-info {
+    background-color:#014B6E
+}
+
+.hide-wrapper {
+    display:none;
+}
+
+.hide-wrapper.cancel-hide-wrapper {
+    display:inherit;
+}
+

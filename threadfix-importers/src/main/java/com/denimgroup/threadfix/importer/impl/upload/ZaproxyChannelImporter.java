@@ -25,12 +25,10 @@
 package com.denimgroup.threadfix.importer.impl.upload;
 
 import com.denimgroup.threadfix.annotations.ScanImporter;
+import com.denimgroup.threadfix.annotations.StartingTagSet;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
@@ -46,77 +44,91 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * 
+ *
+ *
  * @author mcollins
  */
-@ScanImporter(ScannerType.ZAPROXY)
+@ScanImporter(
+        scannerName = ScannerDatabaseNames.ZAPROXY_DB_NAME,
+        startingXMLTagSets = {
+                @StartingTagSet({"report", "alertitem"}),
+                @StartingTagSet({"OWASPZAPReport", "site", "alerts"})
+        }
+)
 class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";
 
-	private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
-	private static void addToSet(String[] array, String key) {
-		alternativesMap.add(new SimpleEntry<>(array,  key));
-	}
-	static {
-		addToSet(new String[] {"sql", "injection"},  SQL_INJECTION);
-		addToSet(new String[] {"sqli"},  SQL_INJECTION);
-		addToSet(new String[] {"cross", "site", "scripting"},  XSS);
-		addToSet(new String[] {"xss"},  XSS);
-	}
+    private static final Set<Entry<String[], String>> alternativesMap = new HashSet<>();
 
-	public ZaproxyChannelImporter() {
-		super(ScannerType.ZAPROXY);
-	}
+    // It looks like ZAP pulls from system language / region settings so this may not work everywhere
+    private final String dateFormatString = "EEE, dd MMM yyyy kk:mm:ss";
+    private String formatString;
 
-	@Override
-	public Scan parseInput() {
-		return parseSAXInput(new ZaproxySAXParser());
-	}
+    private static void addToSet(String[] array, String key) {
+        alternativesMap.add(new SimpleEntry<>(array, key));
+    }
 
-	private String getAlternative(String possibility) {
-		String lower = possibility.toLowerCase();
-		MAP: for (Entry<String[], String> entry : alternativesMap) {
-			for (String key : entry.getKey()) {
-				if (!lower.contains(key)) {
-					continue MAP;
-				}
-			}
-			// if we get here then the string contains all the keys
-			return entry.getValue();
-		}
-		return null;
-	}
+    static {
+        addToSet(new String[]{"sql", "injection"}, SQL_INJECTION);
+        addToSet(new String[]{"sqli"}, SQL_INJECTION);
+        addToSet(new String[]{"cross", "site", "scripting"}, XSS);
+        addToSet(new String[]{"xss"}, XSS);
+    }
 
-	public class ZaproxySAXParser extends HandlerWithBuilder {
-		private Boolean getDate               = false;
-		private Boolean getUri                = false;
-		private Boolean getParameter          = false;
-		private Boolean getChannelVulnName    = false;
-		private Boolean getSeverityName       = false;
-		private Boolean getCweId			  = false;
-        private Boolean getAttackStr = false;
-        private Boolean getDesc = false;
-        private Boolean getSolution = false;
-        private Boolean inFinding = false;
-	
-		private String currentChannelVulnCode = null;
-		private String currentPath            = null;
-		private String currentParameter       = null;
-		private String currentSeverityCode    = null;
-		private String currentCweId			  = null;
-        private String currentAttackStr = null;
-        private String currentDesc = null;
-        private String currentSolution = null;
-        private StringBuffer currentRawFinding	  = new StringBuffer();
+    public ZaproxyChannelImporter() {
+        super(ScannerType.ZAPROXY);
+    }
+
+    @Override
+    public Scan parseInput() {
+        return parseSAXInput(new ZaproxySAXParser());
+    }
+
+    private String getAlternative(String possibility) {
+        String lower = possibility.toLowerCase();
+        MAP:
+        for (Entry<String[], String> entry : alternativesMap) {
+            for (String key : entry.getKey()) {
+                if (!lower.contains(key)) {
+                    continue MAP;
+                }
+            }
+            // if we get here then the string contains all the keys
+            return entry.getValue();
+        }
+        return null;
+    }
+
+    public class ZaproxySAXParser extends HandlerWithBuilder {
+        private Boolean getDate            = false;
+        private Boolean getUri             = false;
+        private Boolean getParameter       = false;
+        private Boolean getChannelVulnName = false;
+        private Boolean getSeverityName    = false;
+        private Boolean getCweId           = false;
+        private Boolean getAttackStr       = false;
+        private Boolean getDesc            = false;
+        private Boolean getSolution        = false;
+        private Boolean inFinding          = false;
+
+        private String currentChannelVulnCode = null;
+        private String currentPath            = null;
+        private String currentParameter       = null;
+        private String currentSeverityCode    = null;
+        private String currentCweId           = null;
+        private String currentAttackStr       = null;
+        private String currentDesc            = null;
+        private String currentSolution        = null;
+        private StringBuffer currentRawFinding      = new StringBuffer();
 
         private Map<FindingKey, String> findingMap = new HashMap<>();
-		
-	    public void add(Finding finding) {
-			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
-	    		finding.setIsStatic(false);
-	    		saxFindingList.add(finding);
+
+        public void add(Finding finding) {
+            if (finding != null) {
+                finding.setNativeId(getNativeId(finding));
+                finding.setIsStatic(false);
+                saxFindingList.add(finding);
     		}
 	    }
 	    
@@ -131,7 +143,7 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    	if ("report".equals(qName)) {
 	    		getDate = true;
 	    	} else if ("OWASPZAPReport".equals(qName)) {
-	    		date = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", atts.getValue("generated"));
+	    		date = DateUtils.getCalendarFromString(dateFormatString, atts.getValue("generated"));
 	    	} else if ("uri".equals(qName)) {
 	    		getUri = true;
 	    	} else if ("alert".equals(qName)) {
@@ -224,7 +236,7 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
 	    			tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-	    			date = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
+	    			date = DateUtils.getCalendarFromString(dateFormatString, tempDateString);
 	    		}
 	    		getDate = false;
 	    	} else if (getCweId) {
@@ -301,7 +313,7 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		String anchorString = "Report generated at ";
 	    		if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
 	    			tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-	    			testDate = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
+	    			testDate = DateUtils.getCalendarFromString(dateFormatString, tempDateString);
 	    		
 	    			if (testDate != null) {
 	    				hasDate = true;
@@ -324,13 +336,16 @@ class ZaproxyChannelImporter extends AbstractChannelImporter {
 				log.debug("Attempting to get scan date from text '" + tempDateString + "'");
 
 				String anchorString = "Report generated at ";
-				if (tempDateString != null && !tempDateString.trim().isEmpty() && tempDateString.contains(anchorString)) {
-					tempDateString = tempDateString.substring(tempDateString.indexOf(anchorString) + anchorString.length(),tempDateString.length()-2);
-					testDate = DateUtils.getCalendarFromString("EEE, dd MMM yyyy kk:mm:ss", tempDateString);
+				if (tempDateString != null && !tempDateString.trim().isEmpty()) {
+                    if (tempDateString.contains(anchorString)) {
+                        int beginIndex = tempDateString.indexOf(anchorString) + anchorString.length();
+                        tempDateString = tempDateString.substring(beginIndex, tempDateString.length() - 2);
+                    }
+                    testDate = DateUtils.getCalendarFromString(dateFormatString, tempDateString);
 
-					if (testDate != null) {
-						hasDate = true;
-					}
+                    if (testDate != null) {
+                        hasDate = true;
+                    }
 				} else {
 	    			log.debug("Date string appears to be empty or does not contain expected text: '" + anchorString + "'");
 	    		}

@@ -80,6 +80,19 @@ public class DefectsController {
 			return RestResponse.failure("You must select at least one vulnerability.");
 		}
 
+        Map<String,Object> fieldsMap = defectViewModel.getFieldsMap();
+        Object asi = fieldsMap.get("AdditionalScannerInfo");
+
+        if (asi != null) {
+            if ((Boolean) asi){
+                defectViewModel.setAdditionalScannerInfo(true);
+            }
+        } else {
+            if(defectViewModel.getAdditionalScannerInfo() == null){
+                defectViewModel.setAdditionalScannerInfo(false);
+            }
+        }
+
 		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(defectViewModel.getVulnerabilityIds());
 		Map<String,Object> map = defectService.createDefect(vulnerabilities, defectViewModel.getSummary(),
 				defectViewModel.getPreamble(), 
@@ -88,7 +101,8 @@ public class DefectsController {
 				defectViewModel.getSeverity(), 
 				defectViewModel.getPriority(), 
 				defectViewModel.getStatus(),
-                defectViewModel.getFieldsMap());
+                defectViewModel.getFieldsMap(),
+                defectViewModel.getAdditionalScannerInfo());
         Defect newDefect = null;
         if (map.get(DefectService.DEFECT) instanceof Defect)
             newDefect = (Defect)map.get(DefectService.DEFECT);
@@ -132,13 +146,16 @@ public class DefectsController {
 		if (vulnerabilityIds == null || vulnerabilityIds.size() == 0) {
 			return RestResponse.failure("You must select at least one vulnerability.");
         }
-		
+
 		List<Vulnerability> vulnerabilities = vulnerabilityService.loadVulnerabilityList(vulnerabilityIds);
 
+        int size = defectViewModel.getVulnerabilityIds().size();
+        String pluralized = size == 1 ? "1 vulnerability" : size + " vulnerabilities";
+
 		if (defectService.mergeDefect(vulnerabilities, defectViewModel.getId())) {
-			return RestResponse.success("Vulnerability(s) was merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
+            return RestResponse.success("Successfully merged " + pluralized + " to Defect ID " + defectViewModel.getId());
 		} else {
-            return RestResponse.failure("Vulnerability(s) could not be merged to Defect ID " + defectViewModel.getId() + " of the tracker.");
+            return RestResponse.failure("Failed to merge " + pluralized + " to Defect ID " + defectViewModel.getId());
 		}
 	}
 }

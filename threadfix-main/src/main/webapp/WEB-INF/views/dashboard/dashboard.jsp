@@ -2,12 +2,14 @@
 
 <head>
 	<title>Dashboard</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/dashboard-controller.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/reports-controller.js"></script>
+	<cbs:cachebustscript src="/scripts/dashboard-controller.js"/>
+	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
+	<cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 
 <body class="dashboard">
     <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="/WEB-INF/views/reports/vulnSummaryModal.jsp" %>
 
 	<h2>Dashboard</h2>
 	
@@ -33,6 +35,7 @@
 	</c:if>
 
     <div ng-controller="DashboardController" class="container-fluid">
+
     <c:if test="${ not empty teams }">
         <security:authorize ifAnyGranted="ROLE_READ_ACCESS, ROLE_CAN_GENERATE_REPORTS">
 

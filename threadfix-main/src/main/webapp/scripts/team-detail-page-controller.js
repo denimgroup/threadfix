@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder) {
+myAppModule.controller('TeamDetailPageController', function ($scope, $window, $http, $modal, $log, $rootScope, tfEncoder, $timeout) {
 
     $scope.rightReportTitle = "Top 10 Vulnerable Applications";
     $scope.empty = false;
@@ -17,18 +17,18 @@ myAppModule.controller('TeamDetailPageController', function ($scope, $window, $h
 
     $scope.showAppLimitMessage = function(number) {
         alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
-    }
+    };
 
     $scope.clickVulnTab = function() {
         $rootScope.$broadcast('loadVulnerabilitySearchTable');
-    }
+    };
 
     var countVulnerabilities = function() {
         $scope.vulnerabilityCount = 0;
         $scope.applications.forEach(function(application) {
             $scope.vulnerabilityCount += application.totalVulnCount;
         });
-    }
+    };
 
     $scope.$on('rootScopeInitialized', function() {
         $scope.reportQuery = "&orgId=" + $scope.teamId;

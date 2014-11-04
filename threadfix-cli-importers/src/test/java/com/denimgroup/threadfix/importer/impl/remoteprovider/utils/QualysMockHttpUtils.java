@@ -101,4 +101,9 @@ public class QualysMockHttpUtils implements RemoteProviderHttpUtils {
 
         return HttpResponse.failure();
     }
+
+    @Override
+    public HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password, String[] headerNames, String[] headerVals) {
+        return postUrl(url, parameters, values, username, password);
+    }
 }

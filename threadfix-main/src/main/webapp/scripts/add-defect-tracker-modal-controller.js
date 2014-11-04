@@ -33,7 +33,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
                 $scope.loading = false;
                 $scope.error = "Failure. HTTP status was " + status;
             });
-    }
+    };
 
     $scope.ok = function (valid) {
 
@@ -46,7 +46,9 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
 
             $scope.object.defectTracker = {
                 id: $scope.object.defectTrackerId
-            }
+            };
+
+            $scope.object.application = { name: app.name };
 
             threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {
@@ -84,7 +86,7 @@ myAppModule.controller('AddDefectTrackerModalController', function ($scope, $htt
 
     $scope.switchTo = function(name) {
         $rootScope.$broadcast('modalSwitch', name);
-    }
+    };
 
     $scope.cancel = function () {
         timeoutService.cancel();

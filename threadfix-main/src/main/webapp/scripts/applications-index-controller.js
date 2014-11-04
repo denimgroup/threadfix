@@ -1,6 +1,7 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ApplicationsIndexController', function($scope, $log, $modal, $upload, $window, tfEncoder, threadfixAPIService) {
+myAppModule.controller('ApplicationsIndexController',
+    function($scope, $log, $modal, $upload, $window, $rootScope, $timeout, tfEncoder, threadfixAPIService) {
 
     // Initialize
     $scope.initialized = false;
@@ -78,19 +79,8 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
             threadfixAPIService.loadAppTableReport(team.id).
                 success(function(data, status, headers, config) {
 
-                    // TODO figure out Jasper better, it's a terrible way to access the report images.
-                    var matches = data.match(/(<img src=".*\/jasperimage\/.*\/img_0_0_0" style="height: 250px" alt=""\/>)/);
-                    if (matches !== null && matches[1] !== null) {
+                    team.report = data.object;
 
-                        var imageTagHtml = matches[1];
-
-                        imageTagHtml = imageTagHtml.substr(0, imageTagHtml.length - 9) + ' alt=""/>';
-
-                        team.report = imageTagHtml;
-                    }
-                    else {
-                        team.report = true;
-                    }
                 }).
                 error(function(data, status, headers, config) {
 
@@ -193,7 +183,11 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
             team.applications.sort(nameCompare);
 
-            team.expanded = true;
+            team.expanded = false;
+
+            $timeout(function() {
+                team.expanded = true;
+            }, 200);
 
             $scope.successMessage = "Successfully added application " + newApplication.name;
 
@@ -226,27 +220,39 @@ myAppModule.controller('ApplicationsIndexController', function($scope, $log, $mo
 
     };
 
-    $scope.onFileSelect = function(team, app, $files) {
-        var modalInstance = $modal.open({
-            templateUrl: 'uploadScanForm.html',
-            controller: 'UploadScanController',
-            resolve: {
-                url: function() {
-                    return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
-                },
-                files: function() {
-                    return $files;
-                }
-            }
-        });
+    $scope.fileModalOn = false;
 
-        modalInstance.result.then(function (updatedTeam) {
-            $log.info("Successfully uploaded scan.");
-            $scope.successMessage = "Successfully uploaded scan.";
-            updateTeam(team, updatedTeam);
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
+    $scope.onFileSelect = function(team, app, $files) {
+        if ($scope.fileModalOn) {
+            $scope.$on('files', function(event, files) {
+                $rootScope.$broadcast('files', files);
+            });
+        } else {
+            var modalInstance = $modal.open({
+                templateUrl: 'uploadScanForm.html',
+                controller: 'UploadScanController',
+                resolve: {
+                    url: function() {
+                        return tfEncoder.encode("/organizations/" + team.id + "/applications/" + app.id + "/upload/remote");
+                    },
+                    files: function() {
+                        return $files;
+                    }
+                }
+            });
+
+            $scope.fileModalOn = true;
+
+            modalInstance.result.then(function (updatedTeam) {
+                $log.info("Successfully uploaded scan.");
+                $scope.successMessage = "Successfully uploaded scan.";
+                updateTeam(team, updatedTeam);
+                $scope.fileModalOn = false;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+                $scope.fileModalOn = false;
+            });
+        }
     };
 
     $scope.goTo = function(team) {

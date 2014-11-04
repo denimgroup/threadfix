@@ -54,4 +54,4 @@ public class FindBugsTest extends TransactionalTest {
                 "Static/FindBugs/findbugs-normal.xml");
     }
 
-    }
+}

@@ -25,10 +25,11 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.ScheduledDefectTrackerUpdate;
+import org.springframework.validation.BindingResult;
 
 /**
  * Created by zabdisubhan on 8/14/14.
  */
 public interface ScheduledDefectTrackerUpdateService extends ScheduledJobService<ScheduledDefectTrackerUpdate> {
-
+    public void validateSameDate(ScheduledDefectTrackerUpdate scheduledDefectTrackerUpdate, BindingResult result);
 }

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -32,8 +33,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
-import org.owasp.esapi.ESAPI;
-import org.owasp.esapi.errors.EncryptionException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -147,6 +146,8 @@ public class Application extends AuditableEntity {
 
     private Boolean skipApplicationMerge = false;
 
+    private List<Tag> tags = new ArrayList<Tag>();
+
 	@Column(length = NAME_LENGTH, nullable = false)
     @JsonView(Object.class) // This means it will be included in all ObjectWriters with Views.
 	public String getName() {
@@ -257,18 +258,7 @@ public class Application extends AuditableEntity {
     @Transient
     @JsonView(AllViews.FormInfo.class)
     public String getObscuredUserName() throws IllegalAccessException {
-        String username = "";
-
-        try {
-            if (repositoryEncryptedUserName != null) {
-                username = ESAPI.encryptor().decrypt(repositoryEncryptedUserName);
-            }
-        } catch (EncryptionException e) {
-            log.error("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
-            assert false;
-        }
-
-        return username;
+        return repositoryUserName;
     }
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -763,14 +753,15 @@ public class Application extends AuditableEntity {
 
     // TODO exclude from default ObjectMapper
     @Transient
-    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class })
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class, AllViews.VulnSearchApplications.class, AllViews.RestViewTag.class })
     private Map<String, Object> getTeam() {
         Organization team = getOrganization();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", team.getId());
-        map.put("name", team.getName());
-
+        if (team != null) {
+            map.put("id", team.getId());
+            map.put("name", team.getName());
+        }
         return map;
     }
 
@@ -799,5 +790,19 @@ public class Application extends AuditableEntity {
 
     public void setSkipApplicationMerge(Boolean isSkipApplicationMerge) {
         this.skipApplicationMerge = isSkipApplicationMerge;
+    }
+
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="Application_Tag",
+            joinColumns={@JoinColumn(name="Application_Id")},
+            inverseJoinColumns={@JoinColumn(name="Tag_Id")})
+    @JsonIgnore
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

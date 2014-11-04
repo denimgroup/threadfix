@@ -2,9 +2,9 @@
 
 <head>
 	<title>Scanner Comparison By Vulnerability</title>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/confirm.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/sortable_us.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/tablefilter2.js"></script> 
+	<cbs:cachebustscript src="/scripts/confirm.js"/>
+	<cbs:cachebustscript src="/scripts/sortable_us.js"/>
+	<cbs:cachebustscript src="/scripts/tablefilter2.js"/> 
 	<style type="text/css">
 		input { width:100% }
 	</style>
