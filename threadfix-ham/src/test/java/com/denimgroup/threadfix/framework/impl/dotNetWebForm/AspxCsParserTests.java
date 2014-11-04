@@ -108,4 +108,33 @@ public class AspxCsParserTests {
         assert strings.contains(parameter) :
                 "Aspx.cs parser failed to get " + parameter + " at line " + key + ": " + csParser;
     }
+
+    @Test
+    public void testRandomAspxParsing() {
+        testAbsenceAtLines("Random.aspx.cs", 40, 42);
+    }
+
+    @Test
+    public void testProductDetailsAspxParsing() {
+        testAbsenceAtLines("ProductDetails.aspx.cs", 82);
+    }
+
+    @Test
+    public void testCatalogAspxParsing() {
+        testAbsenceAtLines("Catalog.aspx.cs", 23, 26, 27, 28, 29, 30, 31, 32);
+    }
+
+    @Test
+    public void testSkipsSystemDotText() {
+        testAbsenceAtLines("Encrypt.aspx.cs", 10, 47);
+    }
+
+    private void testAbsenceAtLines(String fileName, int... lines) {
+        AspxCsParser csParser = AspxCsParser.parse(ResourceManager.getDotNetWebFormsFile(fileName));
+
+        for (int line : lines) {
+            assert !csParser.lineNumberToParametersMap.containsKey(line) : "Got entries at " + line + ": " +
+                    csParser.lineNumberToParametersMap;
+        }
+    }
 }
