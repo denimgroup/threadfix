@@ -43,6 +43,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     final AspxCsParser aspxCsParser;
     final File         aspxRoot;
     final String       urlPath;
+    final String       filePath;
 
     Map<String, List<Integer>> map = newMap();
     private Set<String> httpMethods;
@@ -58,6 +59,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
         this.aspxRoot = aspxRoot;
 
         this.urlPath = calculateUrlPath();
+        this.filePath = calculateFilePath();
 
         collectParameters();
 
@@ -68,10 +70,21 @@ public class WebFormsEndpoint extends AbstractEndpoint {
         httpMethods = map.size() == 0 ? set("GET") : set("GET", "POST");
     }
 
+    private String calculateFilePath() {
+        String aspxFilePath = aspxCsParser.file.getAbsolutePath();
+        String aspxRootPath = aspxRoot.getAbsolutePath();
+
+        return calculateRelativePath(aspxFilePath, aspxRootPath);
+    }
+
     private String calculateUrlPath() {
         String aspxFilePath = aspxParser.file.getAbsolutePath();
         String aspxRootPath = aspxRoot.getAbsolutePath();
 
+        return calculateRelativePath(aspxFilePath, aspxRootPath);
+    }
+
+    private String calculateRelativePath(String aspxFilePath, String aspxRootPath) {
         if (aspxFilePath.startsWith(aspxRootPath)) {
             return aspxFilePath.substring(aspxRootPath.length());
         } else {
@@ -124,7 +137,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     protected List<String> getLintLine() {
-        return list();
+        return list(getCSVLine(PrintFormat.DYNAMIC));
     }
 
     @Nonnull
@@ -148,7 +161,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     public String getFilePath() {
-        return aspxCsParser.aspName;
+        return filePath;
     }
 
     @Override

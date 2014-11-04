@@ -42,6 +42,7 @@ public class AspxCsParser implements EventBasedTokenizer {
 
     public static final SanitizedLogger LOG = new SanitizedLogger(AspxParser.class);
 
+    public final File file;
     public final String aspName;
     public final Map<Integer, Set<String>> lineNumberToParametersMap = newMap();
 
@@ -55,6 +56,7 @@ public class AspxCsParser implements EventBasedTokenizer {
     AspxCsParser(File file) {
         LOG.debug("Parsing mappings for " + file.getAbsolutePath());
         aspName = file.getName();
+        this.file = file;
     }
 
     @Override
