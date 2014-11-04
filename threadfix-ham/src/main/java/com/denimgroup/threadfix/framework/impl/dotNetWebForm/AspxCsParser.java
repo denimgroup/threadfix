@@ -175,6 +175,7 @@ public class AspxCsParser implements EventBasedTokenizer {
                 if (stringValue != null && passesVariableTest(stringValue)) {
                     currentParameters.add(extractVariable(stringValue));
                     methodState = MethodState.GOT_TEXT_VALUE;
+                    numSymbols = 0;
                     currentLineNumber = lineNumber;
                     capturedAtStartOfStatement = atStartOfStatement;
                 }
@@ -183,7 +184,7 @@ public class AspxCsParser implements EventBasedTokenizer {
                 if (capturedAtStartOfStatement && type == '=') {
                     currentParameters.clear();
                     methodState = MethodState.ACTIVE;
-                } else if (numSymbols++ > 1) {
+                } else if (capturedAtStartOfStatement && numSymbols++ > 1) {
                     capturedAtStartOfStatement = false;
                 }
 
@@ -192,7 +193,6 @@ public class AspxCsParser implements EventBasedTokenizer {
                     currentLineNumber = -1;
                     currentParameters = set();
                     methodState = MethodState.ACTIVE;
-                    numSymbols = 0;
                     processMethodLevel(type, lineNumber, stringValue);
                 } else if (stringValue != null && passesVariableTest(stringValue)) {
                     currentParameters.add(extractVariable(stringValue));
@@ -200,11 +200,15 @@ public class AspxCsParser implements EventBasedTokenizer {
                 break;
         }
 
-        atStartOfStatement = type == ';' || type == '{' || type == ')'; // ) is to catch braceless ifs
+        atStartOfStatement = type == ';' ||
+                type == '{' ||
+                type == '}' ||
+                type == ')' ||
+                (type == -3 && "else".equals(stringValue)); // ) is to catch braceless ifs
     }
 
     private boolean passesVariableTest(String token) {
-        return token.contains(".Text") || token.contains(".Value");
+        return (token.contains(".Text") && !token.contains("System.Text")) || token.contains(".Value");
     }
 
     private String extractVariable(String token) {
