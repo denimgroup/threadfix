@@ -279,12 +279,10 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void viewMoreLinkTest() {
-        String comment = "This is a test.";
-
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
                 .addComment("Critical790")
-                .setComment(comment)
+                .setComment(getName())
                 .clickModalSubmit();
 
         VulnerabilityDetailPage vulnerabilityDetailPage = applicationDetailPage.clickViewMoreVulnerabilityLink("Critical790");
@@ -295,7 +293,7 @@ public class ApplicationDetailVulnerabilitiesIT extends BaseDataTest{
 
     @Test
     public void addCommentToVulnerabilityTest() {
-        String comment = "This is a test.";
+        String comment = getName();
 
         applicationDetailPage.expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")

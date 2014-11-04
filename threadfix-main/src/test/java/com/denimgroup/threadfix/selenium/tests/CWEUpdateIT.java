@@ -49,7 +49,7 @@ public class CWEUpdateIT extends BaseIT {
         assertTrue("Success message not present.", globalFilterPage.isSuccessMessagePresent());
 
         try {
-            TeamIndexPage teamIndexPage = globalFilterPage.deleteFilter()
+            globalFilterPage.deleteFilter()
                     .closeSuccessNotification()
                     .clickOrganizationHeaderLink();
         } catch (NoSuchElementException e) {

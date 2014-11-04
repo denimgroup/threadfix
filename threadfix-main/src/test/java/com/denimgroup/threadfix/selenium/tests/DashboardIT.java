@@ -148,8 +148,6 @@ public class DashboardIT extends BaseDataTest {
 
     @Test
     public void dashboardRecentCommentsDisplayTest() {
-        String commentText = "Test comment.";
-
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -157,7 +155,7 @@ public class DashboardIT extends BaseDataTest {
                 .expandVulnerabilityByType("Critical79")
                 .expandCommentSection("Critical790")
                 .addComment("Critical790")
-                .setComment(commentText)
+                .setComment(getRandomString(12))
                 .clickModalSubmit();
 
         DashboardPage dashboardPage = applicationDetailPage.clickDashboardLink();

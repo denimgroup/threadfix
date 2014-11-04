@@ -52,7 +52,7 @@ public class DashboardPageIT extends BaseDataTest {
 
     @Test
     public void testTeamIndexHeaderNavigation() {
-        assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent() );
+        assertTrue("Dashboard link is not present", dashboardPage.isDashboardMenuLinkPresent());
         assertTrue("Dashboard link is not clickable", dashboardPage.isDashboardMenuLinkClickable());
         assertTrue("Application link is not present", dashboardPage.isApplicationMenuLinkPresent());
         assertTrue("Application link is not clickable", dashboardPage.isApplicationMenuLinkClickable());
@@ -98,48 +98,5 @@ public class DashboardPageIT extends BaseDataTest {
         assertTrue("Manage Filters is not clickable", dashboardPage.isManageFiltersMenuLinkClickable());
         assertTrue("View Error Log is not present", dashboardPage.isLogsLinkPresent());
         assertTrue("View Error Log is not clickable", dashboardPage.isLogsMenuLinkClickable());
-    }
-
-    //TODO Fix when trending filter reflects team/app selections on dashboard.
-    @Test
-    public void testVulnTrendingTips() {
-        ApplicationDetailPage applicationDetailPage = dashboardPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName);
-
-        applicationDetailPage.clickScansTab().clickDeleteScanButton();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
-
-        AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
-                .clickTrendingTab()
-                .expandTeamApplicationFilterReport("trendingFilterDiv")
-                .addTeamFilterReport(teamName,"trendingFilterDiv");
-
-        WebElement filterDiv = driver.findElement(By.id("trendingFilterDiv"));
-
-        filterDiv.findElement(By.id("showSaveFilterReport")).click();
-        filterDiv.findElement(By.id("filterNameInputReport")).sendKeys("test");
-        filterDiv.findElement(By.id("saveFilterButtonReport")).click();
-
-        analyticsPage.clickDashboardLink();
-
-        driver.findElement(By.id("leftTileReport")).click();
-
-        Actions build = new Actions(driver);
-
-        build.moveByOffset(-50,40).build().perform();
-        build.click().build().perform();
-        sleep(5000);
-
-        build.moveByOffset(100,0).build().perform();
-        build.click().build().perform();
-        sleep(5000);
-
-        dashboardPage.clickAnalyticsLink().clickTrendingTab();
-
-        WebElement filterDiv2 = driver.findElement(By.id("trendingFilterDiv"));
-        filterDiv2.findElement(By.linkText("Load Filters")).click();
-        filterDiv2.findElement(By.id("deleteFilterButtonReport")).click();
     }
 }
