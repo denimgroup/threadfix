@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,9 +94,13 @@ public class DashboardController {
 	}
 	
 	@RequestMapping(value="/leftReport", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<List<Map<String, Object>>> leftReport(HttpServletRequest request) {
+	public @ResponseBody RestResponse<Map<String, Object>> leftReport(HttpServletRequest request) {
         ReportCheckResultBean report = report(request, ReportFormat.TRENDING);
-        return RestResponse.success(report.getReportList());
+        Map<String, Object> map = new HashMap<>();
+        map.put("scanList", report.getReportList());
+        map.put("startDate", report.getStartDate());
+        map.put("endDate", report.getEndDate());
+        return RestResponse.success(map);
 	}
 	
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)

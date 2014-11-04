@@ -183,7 +183,7 @@
                        type="text"/>
 
                 <div ng-show="showFullControls">
-                    <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>Default Trending Filter<br>
+                    <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>Default Trending Dashboard Field Controls And Date Range<br>
                 </div>
 
                 <br>

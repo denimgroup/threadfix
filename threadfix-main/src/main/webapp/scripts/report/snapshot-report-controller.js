@@ -223,7 +223,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             genericVulnEntry.averageTimeToClose = (mapEntry["numClosed"] === 0) ? 0 : Math.round(mapEntry["totalTimeToClose"]/mapEntry["numClosed"]);
 
             $scope.progressByTypeData.push(genericVulnEntry);
-        })
+        });
 
         // Sorting by Total is default
         $scope.$parent.setSortNumber($scope.progressByTypeData, "total");
@@ -654,6 +654,5 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         else
             $scope.exportReportId = $scope.reportId;
     }
-
 
 });
