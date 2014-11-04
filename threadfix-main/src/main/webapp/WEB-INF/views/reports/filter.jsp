@@ -210,9 +210,10 @@
 </div>
 <!-- Export buttons -->
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-    <div class="accordion-group">
+    <div class="accordion-group"  ng-show="reportId != 3">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportCSVButtonReport" class="btn">Export PNG</a>
+            <a id="exportPNGButtonReport" class="btn"
+               ng-click="exportPNG()">Export PNG</a>
         </div>
     </div>
 </security:authorize>

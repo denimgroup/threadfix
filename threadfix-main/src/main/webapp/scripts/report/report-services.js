@@ -8,11 +8,16 @@ threadfixModule.factory('reportExporter', function() {
     };
 
     reportExporter.exportPDF = function(d3, width, height, name) {
+        var svg = d3.select("svg");
+        reportExporter.exportPDFSvg(d3, svg, width, height, name);
+    }
 
-        var node = d3.select("svg")
+    reportExporter.exportPDFSvg = function(d3, svg, width, height, name) {
+        var node = svg
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .node();
+
         styles(node);
 
         var html = node.parentNode.innerHTML;

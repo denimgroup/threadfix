@@ -8,17 +8,23 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
             scope: {
                 data: '=',
                 label: '=',
-                updateTree: '&'
+                updateTree: '&',
+                exportReportId: '='
             }
             ,
             link: function(scope, ele) {
 
                 var color = d3Service.getColorScale(d3, reportConstants.vulnTypeColorList);
                 var pieDim ={w:670, h: 350};
+                var svg;
 
                 scope.$watch('data', function(newVals) {
                     scope.render(newVals);
                 }, true);
+
+                scope.$watch('exportReportId', function() {
+                    scope.export();
+                });
 
                 scope.$watch('label', function(newVals) {
                     scope.render(scope.data);
@@ -30,7 +36,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                         return;
 
                     color.domain(reportConstants.vulnTypeList);
-                    var svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
+                    svg = d3Service.getExistingSvg(d3, ele[0], pieDim.w, pieDim.h);
 
                     svg.selectAll('*').remove();
                     reportUtilities.drawTitle(svg, pieDim.w, scope.label, "Point in Time Report", 30);
@@ -104,9 +110,17 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                                 _data.push({tip:vulnType, value:data[vulnType]['Count'], fillColor:color(vulnType), severity: vulnType});
                         });
                         return _data;
+                    };
+                };
+
+                scope.export = function(){
+                    if (scope.exportReportId==2) {
+                        var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
+                        var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
+                        reportExporter.exportPDFSvg(d3, svg, pieDim.w, pieDim.h,
+                                "PointInTime" + teamsName + appsName);
                     }
                 };
-                ;
             }
         }
     }]);

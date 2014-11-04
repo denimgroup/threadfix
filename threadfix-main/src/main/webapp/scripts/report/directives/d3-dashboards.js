@@ -97,8 +97,8 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
     }]);
 
 // Top Applications Summary report
-d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService',
-    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities, threadFixModalService, vulnSearchParameterService) {
+d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service', 'reportConstants', 'reportUtilities', 'threadFixModalService', 'vulnSearchParameterService', 'reportExporter',
+    function($window, $timeout, d3, d3Service, reportConstants, reportUtilities, threadFixModalService, vulnSearchParameterService, reportExporter) {
         return {
             restrict: 'EA',
             scope: {
@@ -106,7 +106,8 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                 label: '=',
                 width: '@',
                 height: '@',
-                margin: '='
+                margin: '=',
+                exportReportId: '='
             }
             ,
             link: function(scope, ele) {
@@ -134,9 +135,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         })
                     ;
 
-                var svg = d3Service.getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                var svg = d3Service.getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom);
 
                 var tip = d3Service.getTip(d3, 'd3-tip', [-10, 0], 'horizontalBarTip')
                     .html(function(d) {
@@ -151,27 +150,35 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                 scope.render = function (reportData) {
                     var data = angular.copy(reportData);
                     svg.selectAll('*').remove();
+                    svg.append("g").attr("id","topAppChart");
+
+                    var svg1 = d3.select("#topAppChart")
+                        .append("svg")
+                        .attr("width", scope.width)
+                        .attr("height", scope.height)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                     if (!data || data.length < 1) return;
 
                     if (scope.label && (scope.label.teams || scope.label.apps))
-                        reportUtilities.drawTitle(svg, scope.width, scope.label, "Most Vulnerable Applications", -30);
+                        reportUtilities.drawTitle(svg1, scope.width, scope.label, "Most Vulnerable Applications", -30);
 
                     barGraphData(d3, data, color, false, scope.label, reportConstants);
 
                     y.domain(data.map(function(d) { return d.title; }));
                     x.domain([0, d3.max(data, function(d) { return d.total; })]);
 
-                    svg.append("g")
+                    svg1.append("g")
                         .attr("class", "y axis")
                         .attr("transform", "translate(0," + height + ")")
                         .call(xAxis);
 
-                    svg.append("g")
+                    svg1.append("g")
                         .attr("class", "x axis")
                         .call(yAxis);
 
-                    var col = svg.selectAll(".rect")
+                    var col = svg1.selectAll(".rect")
                         .data(data)
                         .enter().append("g")
                         .attr("class", "g")
@@ -205,7 +212,20 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                     ;
 
                 };
-                ;
+
+                scope.$watch('exportReportId', function() {
+                    scope.export();
+                });
+
+                scope.export = function(){
+                    if (scope.exportReportId==10) {
+                        var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
+                        var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
+                        reportExporter.exportPDFSvg(d3, svg, scope.width, scope.height,
+                                "TopVulnerableApplications" + teamsName + appsName);
+                    }
+                };
+
             }
         }
     }]);
