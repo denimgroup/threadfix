@@ -260,11 +260,24 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .text(d.key)
                             .attr("transform", function() {
                                 d = d.values[d.values.length - 1];
-                                var pos = (w) + "," + y(d.noOfVulns / 2 + d.noOfVulns0);
-                                var i = 0;
+                                var y0 = Math.round(y(d.noOfVulns / 2 + d.noOfVulns0));
+                                var pos, pos1;
+                                var i = 0, found,j;
+
+                                for (j=0;j<10;j++) {
+                                    pos1 = (w) + "," + (y0 - j);
+                                    if (textPosMap[pos1]) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found)
+                                    y0 = y0-j;
+                                pos = (w) + "," + (y0);
+
                                 while (textPosMap[pos]) {
                                     i++;
-                                    pos = (w) + "," + (y(d.noOfVulns / 2 + d.noOfVulns0)+i*10);
+                                    pos = (w) + "," + (y0+i*10);
                                 }
                                 textPosMap[pos] = true;
                                 return "translate(" + pos + ")";
