@@ -289,14 +289,14 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
     private void printDebug(int type, int lineNumber, String stringValue) {
         if (print) {
             if (type < 0) {
-                System.out.println("type = " + type);
+                LOG.debug("type = " + type);
             } else {
-                System.out.println("type = " + Character.valueOf((char) type));
+                LOG.debug("type = " + Character.valueOf((char) type));
             }
-            System.out.println("line = " + lineNumber);
-            System.out.println("stringValue = " + stringValue);
-            System.out.println();
-            System.out.println("currentState = " + currentState);
+            LOG.debug("line = " + lineNumber);
+            LOG.debug("stringValue = " + stringValue);
+            LOG.debug("");
+            LOG.debug("currentState = " + currentState);
         }
     }
 
@@ -311,10 +311,10 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
     private void processBody(int type, String stringValue) {
         if (stringValue != null && stringValue.startsWith("asp")) {
             if (endTag) {
-                System.out.println("Ending " + stringValue);
+                LOG.debug("Ending " + stringValue);
                 removeTag(lastName, lastId);
             } else {
-                System.out.println("Starting " + stringValue);
+                LOG.debug("Starting " + stringValue);
                 lastName = stringValue;
                 lastId = null;
                 needsId = true;
@@ -370,7 +370,8 @@ public class AspxUniqueIdParser implements EventBasedTokenizer {
     }
 
     private void addCurrentParam() {
-        parameters.add(aspxControlStack.generateCurrentParamName());
-        System.out.println("Parameters contains: " + parameters);
+        String newParameter = aspxControlStack.generateCurrentParamName();
+        parameters.add(newParameter);
+        LOG.debug("After adding " + newParameter + ", parameters contains: " + parameters);
     }
 }
