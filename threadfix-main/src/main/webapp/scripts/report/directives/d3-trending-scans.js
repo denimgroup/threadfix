@@ -11,7 +11,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 width: '@',
                 height: '@',
                 margin: '=',
-                tableInfo: '='
+                tableInfo: '=',
+                startDate: '=',
+                endDate: '='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -161,11 +163,22 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var xMin = d3.min(stackedData, function(d) { return d.values[0].date; });
                     var xMax = d3.max(stackedData, function(d) { return d.values[d.values.length - 1].date; });
 
+                    var startAxis = (scope.startDate) ? scope.startDate : xMin;
+                    var endAxis = (scope.endDate) ? scope.endDate : xMax;
+
+//                    //If there is only one scan for whole history
+//                    if (endAxis === startAxis) {
+//                        endAxis = (new Date()).getTime();
+//                        var startDate = new Date(startAxis);
+//                        startDate = new Date(startDate.getFullYear(),  startDate.getMonth()-1, 1);
+//                        startAxis = startDate.getTime();
+//                    }
+
                     // Compute the minimum and maximum date across scans.
-                    x.domain([xMin, xMax]);
+                    x.domain([startAxis, endAxis]);
                     y.domain([0, d3.max(stackedData[0].values.map(function(d) { return d.noOfVulns + d.noOfVulns0; }))]);
 
-                    var diffMonths = monthDiff(new Date(xMin), new Date(xMax)),
+                    var diffMonths = monthDiff(new Date(startAxis), new Date(endAxis)),
                         intervalMonths = Math.round(diffMonths/6);
                     intervalMonths = (intervalMonths===5 ? 4 : intervalMonths);
                     intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);

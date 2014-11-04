@@ -20,7 +20,9 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
 
-                $scope.trendingData = data.object;
+                $scope.trendingData = data.object.scanList;
+                $scope.trendingStartDate = data.object.startDate;
+                $scope.trendingEndDate = data.object.endDate;
 
                 if (!$scope.trendingData) {
                     $scope.empty = true;

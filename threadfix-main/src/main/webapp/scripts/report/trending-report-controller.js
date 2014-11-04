@@ -97,9 +97,16 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
      var refreshScans = function(){
         $scope.loading = true;
         filterByTeamAndApp();
+         if ($scope.filterScans.length === 0) {
+             $scope.noData = true;
+             return;
+         } else {
+             $scope.noData = false;
+         }
         filterByTime();
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
+            return;
         } else {
             $scope.noData = false;
         }
@@ -108,6 +115,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     };
 
     var updateDisplayData = function(){
+        var hashBefore, hashAfter;
         reportUtilities.createTeamAppNames($scope);
         $scope.trendingScansData = [];
         $scope.totalVulnsByChannelMap = {};
@@ -116,13 +124,86 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.mediumVulnsByChannelMap = {};
         $scope.highVulnsByChannelMap = {};
         $scope.criticalVulnsByChannelMap = {};
-        $scope.filterScans.forEach(function(scan, index){
-            var _scan = filterDisplayData(scan);
-            if ((!startIndex || startIndex <= index)
-                && (!endIndex || endIndex >= index))
-                $scope.trendingScansData.push(_scan);
-        });
+        if (startIndex && endIndex) {
+            $scope.filterScans.forEach(function(scan, index){
+                var _scan = filterDisplayData(scan);
+
+                if (startIndex == index + 1)
+                    hashBefore = _scan;
+                if (index == endIndex + 1)
+                    hashAfter = _scan;
+                if ((!startIndex || startIndex <= index)
+                    && (!endIndex || endIndex >= index))
+                    $scope.trendingScansData.push(_scan);
+
+            });
+
+
+            if ($scope.trendingScansData.length===1 && $scope.trendingStartDate == $scope.trendingEndDate) {
+                $scope.trendingEndDate = (new Date()).getTime();
+                var time = new Date($scope.trendingScansData[0].importTime);
+                $scope.trendingStartDate = (new Date(time.getFullYear(), time.getMonth() - 1, 1)).getTime();
+            }
+            $scope.trendingScansData.unshift(createStartHash(hashBefore));
+            $scope.trendingScansData.push(createEndHash(hashAfter));
+        }
     };
+
+    var createStartHash = function(hashBefore) {
+        var startHash = {};
+        if ($scope.trendingScansData.length===0)
+            return startHash;
+        var firstHashInList = $scope.trendingScansData[0];
+
+        if (!hashBefore) {
+            startHash.importTime=  $scope.trendingStartDate;
+            var keys = Object.keys(firstHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime")
+                    startHash[key] = 0;
+            });
+        } else {
+            var rate1 = (firstHashInList.importTime)-(hashBefore.importTime);
+            var rate2 = $scope.trendingStartDate-(hashBefore.importTime);
+            startHash.importTime=  $scope.trendingStartDate;
+            var keys = Object.keys(firstHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime") {
+                    var value = Math.round(hashBefore[key] + (firstHashInList[key] - hashBefore[key]) / rate1 * rate2);
+                    startHash[key] = value;
+                }
+            });
+        }
+        return startHash;
+    }
+
+    var createEndHash = function(hashAfter) {
+        var endHash = {};
+        if ($scope.trendingScansData.length===0)
+            return endHash;
+        var lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
+
+        if (!hashAfter) {
+            endHash.importTime=  $scope.trendingEndDate;
+            var keys = Object.keys(lastHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime")
+                    endHash[key] = lastHashInList[key];
+            });
+        } else {
+            var rate1 = (hashAfter.importTime)-(lastHashInList.importTime);
+            var rate2 = $scope.trendingEndDate-(hashAfter.importTime);
+            endHash.importTime=  $scope.trendingEndDate;
+            var keys = Object.keys(lastHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime") {
+                    var value = Math.round(lastHashInList[key] + (hashAfter[key] - lastHashInList[key]) / rate1 * rate2);
+                    endHash[key] = value;
+                }
+            });
+        }
+        return endHash;
+    }
 
     var filterDisplayData = function(scan) {
         var data = {};
@@ -226,37 +307,52 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     };
 
     var filterByTime = function() {
-        var startDate, endDate;
+        $scope.trendingStartDate = undefined;
+        $scope.trendingEndDate = undefined;
         startIndex = undefined; endIndex = undefined;
         if ($scope.parameters.daysOldModifier) {
-            endDate = new Date();
+            $scope.trendingEndDate = new Date();
             if ($scope.parameters.daysOldModifier === "LastYear") {
-                startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 11, 1);
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
             } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
-                startDate = new Date(endDate.getFullYear(), endDate.getMonth() - 2, 1);
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
             };
         } else {
             if ($scope.parameters.endDate) {
-                endDate = $scope.parameters.endDate;
+                $scope.trendingEndDate = $scope.parameters.endDate;
             }
             if ($scope.parameters.startDate) {
-                startDate = $scope.parameters.startDate;
+                $scope.trendingStartDate = $scope.parameters.startDate;
             }
         };
 
-        if (!startDate && !endDate)
-            return;
-        if (!startDate) startIndex = 0;
-        if (!endDate ) endIndex = $scope.filterScans.length - 1;
+//        if (!$scope.trendingStartDate && !$scope.trendingEndDate)
+//            return;
+        if (!$scope.trendingStartDate) {
+            startIndex = 0;
+            $scope.trendingStartDate = $scope.filterScans[0].importTime;
+        }
+        if (!$scope.trendingEndDate ) {
+            endIndex = $scope.filterScans.length - 1;
+            $scope.trendingEndDate = new Date();
+        }
 
         $scope.filterScans.some(function(scan, index) {
             if (startIndex && endIndex)
                 return true;
-            if (!startIndex && startDate && startDate.getTime()<=scan.importTime)
+            if (!startIndex && $scope.trendingStartDate && $scope.trendingStartDate<=scan.importTime)
                 startIndex = index;
-            if (!endIndex && endDate && endDate.getTime() < scan.importTime)
+            if (!endIndex && $scope.trendingEndDate && $scope.trendingEndDate < scan.importTime)
                 endIndex = index - 1;
-        })
+        });
+
+        if (!startIndex && endIndex) startIndex = 0;
+        if (startIndex && !endIndex) endIndex = $scope.filterScans.length - 1;
+
+//        if ($scope.trendingStartDate)
+//            $scope.trendingStartDate = $scope.trendingStartDate.getTime();
+//        if ($scope.trendingEndDate)
+//            $scope.trendingEndDate = $scope.trendingEndDate.getTime();
     };
 
     var endsWith = function(str, suffix) {

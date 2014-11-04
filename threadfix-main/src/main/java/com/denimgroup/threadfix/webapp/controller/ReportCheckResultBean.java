@@ -35,6 +35,7 @@ public class ReportCheckResultBean {
     private byte[]                    reportBytes       = null;
     private ReportCheckResult         reportCheckResult = null;
     private List<Map<String, Object>> reportList        = null;
+    private Long startDate, endDate;
 
     public ReportCheckResultBean(ReportCheckResult reportCheckResult) {
         this.reportCheckResult = reportCheckResult;
@@ -73,6 +74,22 @@ public class ReportCheckResultBean {
 
     public void setReportList(List<Map<String, Object>> reportList) {
         this.reportList = reportList;
+    }
+
+    public Long getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Long endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Long startDate) {
+        this.startDate = startDate;
     }
 
     @Override
