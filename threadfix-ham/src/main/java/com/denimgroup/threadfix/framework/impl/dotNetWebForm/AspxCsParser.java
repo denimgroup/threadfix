@@ -162,6 +162,7 @@ public class AspxCsParser implements EventBasedTokenizer {
 
     Set<String> currentParameters = set();
     int currentLineNumber = -1;
+    int numSymbols = 0;
 
     boolean atStartOfStatement = false, capturedAtStartOfStatement = false;
 
@@ -182,7 +183,7 @@ public class AspxCsParser implements EventBasedTokenizer {
                 if (capturedAtStartOfStatement && type == '=') {
                     currentParameters.clear();
                     methodState = MethodState.ACTIVE;
-                } else {
+                } else if (numSymbols++ > 1) {
                     capturedAtStartOfStatement = false;
                 }
 
@@ -191,6 +192,7 @@ public class AspxCsParser implements EventBasedTokenizer {
                     currentLineNumber = -1;
                     currentParameters = set();
                     methodState = MethodState.ACTIVE;
+                    numSymbols = 0;
                     processMethodLevel(type, lineNumber, stringValue);
                 } else if (stringValue != null && passesVariableTest(stringValue)) {
                     currentParameters.add(extractVariable(stringValue));
