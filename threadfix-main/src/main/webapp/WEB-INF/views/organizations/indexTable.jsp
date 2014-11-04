@@ -72,7 +72,7 @@
                          ng-class="{ expanded: team.expanded }">
                     <div ng-show="team.applications">
                         <div ng-if="team.report" tf-bind-html-unsafe="team.report" class="tableReportDiv" id="teamGraph{{ team.name }}"></div>
-                        <div ng-hide="team.report || team.reportFailed" class="team-report-wrapper">
+                        <div ng-hide="team.report || team.reportFailed || !loading" class="team-report-wrapper">
                             <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                         </div>
                         <div ng-show="team.reportFailed" class="team-report-wrapper">
@@ -129,9 +129,9 @@
                  class="collapse applicationSection"
                  ng-class="{ expanded: team.expanded }">
 
-                <d3-donut ng-show="team.report" data="team.report" label="reportDiv{{ team.id }}"></d3-donut>
+                <d3-donut ng-if="team.report" data="team.report" label="reportDiv{{ team.id }}"></d3-donut>
 
-                <div ng-hide="team.report || team.reportFailed" class="team-report-wrapper">
+                <div ng-hide="team.report || team.reportFailed || !loading" class="team-report-wrapper">
                     <div style="float:right" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                 </div>
                 <div ng-show="team.reportFailed" class="team-report-wrapper">
