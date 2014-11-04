@@ -73,6 +73,8 @@ public abstract class AbstractEndpoint implements Endpoint {
                 }
 
                 builder.deleteCharAt(builder.length() - 1);
+            } else {
+                return getCSVLine(PrintFormat.DYNAMIC);
             }
         }
 
