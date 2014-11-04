@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 
-import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
@@ -46,6 +45,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     final String       urlPath;
 
     Map<String, List<Integer>> map = newMap();
+    private Set<String> httpMethods;
 
     public WebFormsEndpoint(File aspxRoot, AspxParser aspxParser, AspxCsParser aspxCsParser) {
         if (!(aspxParser.aspName + ".cs").equals(aspxCsParser.aspName)) {
@@ -60,6 +60,12 @@ public class WebFormsEndpoint extends AbstractEndpoint {
         this.urlPath = calculateUrlPath();
 
         collectParameters();
+
+        setHttpMethod();
+    }
+
+    private void setHttpMethod() {
+        httpMethods = map.size() == 0 ? set("GET") : set("GET", "POST");
     }
 
     private String calculateUrlPath() {
@@ -79,14 +85,10 @@ public class WebFormsEndpoint extends AbstractEndpoint {
         }
     }
 
+    // TODO split this up
     private void collectParameters() {
 
-        if (!aspxCsParser.lineNumberToParametersMap.containsKey(0)) {
-            aspxCsParser.lineNumberToParametersMap.put(0, CollectionUtils.<String>set());
-        }
-
-        aspxCsParser.lineNumberToParametersMap.get(0).addAll(aspxParser.parameters);
-
+        // reverse map to get parameter -> line numbers map
         for (Map.Entry<Integer, Set<String>> entry : aspxCsParser.lineNumberToParametersMap.entrySet()) {
             for (String key : entry.getValue()) {
                 if (!map.containsKey(key)) {
@@ -94,6 +96,23 @@ public class WebFormsEndpoint extends AbstractEndpoint {
                 }
 
                 map.get(key).add(entry.getKey());
+            }
+        }
+
+        // add entry for aspx parser's autogen'ed parameters, but only if we don't have a corresponding value from normal parsing
+        for (String parameter : aspxParser.parameters) {
+            boolean foundNormalParameter = false;
+
+            for (String key : map.keySet()) {
+                // these are known simple parameters; no generated names.
+                if (parameter.endsWith("$" + key)) {
+                    foundNormalParameter = true;
+                    break;
+                }
+            }
+
+            if (!foundNormalParameter) {
+                map.put(parameter, list(0));
             }
         }
 
@@ -117,7 +136,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     @Nonnull
     @Override
     public Set<String> getHttpMethods() {
-        return set("GET");
+        return httpMethods;
     }
 
     @Nonnull
