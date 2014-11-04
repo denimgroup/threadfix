@@ -499,14 +499,13 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreVulnerabilityTrending(){
         driver.findElementById("leftViewMore").click();
-        sleep(2000);
-       // waitForElement(driver.findElement(By.xpath("//*[@id='reportSelect'][2]")));
+        waitForElement(driver.findElementById("trendingFilterDiv"));
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickViewMoreTopVulnerabilities(){
         driver.findElementById("rightViewMore").click();
-        waitForElement(driver.findElementById("trendingFilterDiv"));
+        waitForElement(driver.findElementById("snapshotFilterDiv"));
         return new AnalyticsPage(driver);
     }
 

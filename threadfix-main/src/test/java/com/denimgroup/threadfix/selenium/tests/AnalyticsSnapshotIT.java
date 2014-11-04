@@ -49,7 +49,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         for(int i = 0; i < 5; i++) {
             analyticsPage.clickSnapshotTab();
 
-            sleep(1500);
+            analyticsPage.waitForElement(driver.findElement(By.id("pointInTime" + levels[i] + "Arc")));
 
             analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc")
                     .clickModalSubmit();
@@ -121,17 +121,14 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
     public void expandCollapseTest() {
-        int filtersExpandedSize;
-        int filtersCollapsedSize;
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickSnapshotTab();
 
-        filtersCollapsedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
+        int filtersCollapsedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
         analyticsPage.toggleAllFilterReport("snapshotFilterDiv");
 
-        filtersExpandedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
+        int filtersExpandedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
         analyticsPage = analyticsPage.toggleAllFilterReport("snapshotFilterDiv");
@@ -199,8 +196,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                    .expandTeamApplicationFilterReport("snapshotFilterDiv")
                    .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
-           sleep(1500);
-
            analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
 
            String numModal = driver.findElement(By.id("header0")).getText().split("\\s+")[1].trim();
@@ -226,8 +221,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickSnapshotTab();
 
         for(int i = 0; i < 5; i++) {
-            sleep(1500);
-
             analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
 
             driver.findElement(By.xpath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]")).click();

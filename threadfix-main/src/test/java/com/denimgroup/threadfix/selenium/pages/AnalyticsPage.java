@@ -27,7 +27,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 
@@ -41,24 +40,22 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
-        sleep(1500);
+        WebElement filterDiv = driver.findElementById("trendingFilterDiv");
+        waitForElement(filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")));
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
-        sleep(1500);
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage clickComparisonTab() {
-        driver.findElementByLinkText("Comparison").click();
+        WebElement filterDiv = driver.findElementById("snapshotFilterDiv");
+        waitForElement(filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")));
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
-        sleep(1500);
+        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        waitForElement(filterDiv.findElement(By.id("expandTeamAndApplicationFilters")));
         return  new AnalyticsPage(driver);
     }
 
@@ -79,12 +76,14 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage clearFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButton")).click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clearFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButtonReport")).click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
@@ -143,11 +142,6 @@ public class AnalyticsPage extends BasePage {
         applicationNameSpace.sendKeys(appName);
         applicationNameSpace.sendKeys(Keys.ENTER);
         waitForResultsToLoad();
-        return new AnalyticsPage(driver);
-    }
-
-    public AnalyticsPage clickCloseVulnerabilityButton() {
-        driver.findElementById("closeVulnerabilityLink").click();
         return new AnalyticsPage(driver);
     }
 

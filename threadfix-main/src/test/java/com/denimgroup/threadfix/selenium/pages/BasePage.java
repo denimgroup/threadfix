@@ -73,7 +73,6 @@ public abstract class BasePage {
 	/*--------------click functions--------------*/
 	public LoginPage logout() {
 		clickUserTab();
-//		waitForElement(driver.findElementById("configurationHeader"));
 		sleep(2000);
 		driver.findElementById("logoutLink").click();
 		sleep(6000);
@@ -110,12 +109,6 @@ public abstract class BasePage {
         driver.findElementById("orgHeader").click();
         return new TeamIndexPage(driver);
     }
-	
-	public ScanIndexPage clickScansHeaderLink(){
-		driver.findElementById("scansHeader").click();
-		sleep(3000);
-		return new ScanIndexPage(driver);
-	}
 	
 	public WafIndexPage clickWafsHeaderLink() {
 		clickConfigTab();

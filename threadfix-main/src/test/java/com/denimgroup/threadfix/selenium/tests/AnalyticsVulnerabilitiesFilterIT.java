@@ -41,17 +41,14 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
     @Test
     public void expandCollapseTest() {
-        int filtersExpandedSize;
-        int filtersCollapsedSize;
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
+        int filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
         analyticsPage.toggleAllFilter("vulnSearchFilterDiv");
 
-        filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
+        int filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
         analyticsPage = analyticsPage.toggleAllFilter("vulnSearchFilterDiv");

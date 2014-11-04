@@ -41,15 +41,6 @@ public class AnalyticsTrendingIT extends BaseDataTest {
     @Test
     public void checkAgingFilter() {
         initializeTeamAndApp();
-       /*
-        * The following two scans are uploaded
-        * because they have dates of October 8
-        * and October 9 which makes narrowing the
-        * scope of testing easier to narrow.
-        * Also, this test is horrible because
-        * the Trending D3 graphic is not very
-        * test/navigation friendly.
-        */
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("Old ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
 
@@ -121,17 +112,14 @@ public class AnalyticsTrendingIT extends BaseDataTest {
 
     @Test
     public void expandCollapseTest() {
-        int filtersExpandedSize;
-        int filtersCollapsedSize;
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickTrendingTab();
 
-        filtersCollapsedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
+        int filtersCollapsedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
         analyticsPage.toggleAllFilterReport("trendingFilterDiv");
 
-        filtersExpandedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
+        int filtersExpandedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
         analyticsPage = analyticsPage.toggleAllFilterReport("trendingFilterDiv");

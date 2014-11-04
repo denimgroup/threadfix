@@ -45,7 +45,7 @@ public class DashboardPage extends BasePage{
 	
 	public AnalyticsPage clickRightViewMore(){
 		driver.findElementById("rightViewMore").click();
-        waitForElement(driver.findElementById("trendingFilterDiv"));
+        waitForElement(driver.findElementById("snapshotFilterDiv"));
 		return new AnalyticsPage(driver);
 	}
 	
