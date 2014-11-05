@@ -196,6 +196,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                    .expandTeamApplicationFilterReport("snapshotFilterDiv")
                    .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
+           sleep(2500);
+
            analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
 
            String numModal = driver.findElement(By.id("header0")).getText().split("\\s+")[1].trim();
@@ -221,6 +223,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickSnapshotTab();
 
         for(int i = 0; i < 5; i++) {
+            sleep(2500);
+
             analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
 
             driver.findElement(By.xpath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]")).click();

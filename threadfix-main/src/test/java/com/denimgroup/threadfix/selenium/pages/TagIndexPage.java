@@ -45,6 +45,7 @@ public class TagIndexPage extends BasePage{
         driver.findElementById("editTagModalButton" + name).click();
         driver.findElementById("deleteTagButton").click();
         driver.switchTo().alert().accept();
+        sleep(1000);
         return new TagIndexPage(driver);
     }
 
@@ -54,6 +55,7 @@ public class TagIndexPage extends BasePage{
         driver.findElementById("tagCreateNameInput").clear();
         driver.findElementById("tagCreateNameInput").sendKeys(newName);
         clickModalSubmit();
+        sleep(1000);
         return new TagIndexPage(driver);
     }
 

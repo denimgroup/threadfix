@@ -499,7 +499,7 @@ public class ApplicationDetailPage extends BasePage {
 
     public AnalyticsPage clickViewMoreVulnerabilityTrending(){
         driver.findElementById("leftViewMore").click();
-        waitForElement(driver.findElementById("trendingFilterDiv"));
+        sleep(2500);
         return new AnalyticsPage(driver);
     }
 

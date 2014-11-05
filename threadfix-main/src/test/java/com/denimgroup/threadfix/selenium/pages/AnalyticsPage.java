@@ -40,22 +40,19 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
-        WebElement filterDiv = driver.findElementById("trendingFilterDiv");
-        waitForElement(filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")));
+        sleep(2500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
-        WebElement filterDiv = driver.findElementById("snapshotFilterDiv");
-        waitForElement(filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")));
+        sleep(2500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
-        waitForElement(filterDiv.findElement(By.id("expandTeamAndApplicationFilters")));
+        sleep(2500);
         return  new AnalyticsPage(driver);
     }
 
