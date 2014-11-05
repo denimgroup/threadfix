@@ -76,10 +76,18 @@ myAppModule.controller('ApplicationsIndexController',
     var loadGraph = function(team) {
 
         if (team.report == null) {
+            team.loading = true;
             threadfixAPIService.loadAppTableReport(team.id).
                 success(function(data, status, headers, config) {
-
-                    team.report = data.object;
+                    team.loading = false;
+                    if (data.object && data.object.length>0 && data.object[0].Critical==0
+                        && data.object[0].High ==0
+                        && data.object[0].Medium == 0
+                        && data.object[0].Low == 0
+                        && data.object[0].Info ==0)
+                        team.report = undefined;
+                    else
+                        team.report = data.object;
 
                 }).
                 error(function(data, status, headers, config) {
@@ -87,6 +95,7 @@ myAppModule.controller('ApplicationsIndexController',
                     // TODO improve error handling and pass something back to the users
                     team.report = true;
                     team.reportFailed = true;
+                    team.loading = false;
                 });
         }
     };
