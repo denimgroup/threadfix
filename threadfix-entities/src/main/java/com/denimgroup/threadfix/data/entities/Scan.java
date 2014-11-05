@@ -32,6 +32,7 @@ import javax.validation.constraints.Size;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 @Entity
 @Table(name = "Scan")
@@ -509,5 +510,19 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
     @Transient
     private Integer getApplicationChannelId(){
         return (getApplicationChannel()==null ? null : getApplicationChannel().getId());
+    }
+
+    @JsonView(AllViews.RestViewScanStatistic.class)
+    @Transient
+    private List<Map> getApplicationTags(){
+        List<Map> maps = list();
+        List<Tag> tags = getApplication().getTags();
+        for (Tag tag: tags) {
+            Map<String, Object> map = newMap();
+            map.put("id", tag.getId());
+            map.put("name", tag.getName());
+            maps.add(map);
+        }
+        return maps;
     }
 }

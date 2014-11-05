@@ -34,7 +34,7 @@
 
     </div>
 
-    <div ng-show="reportId == 2">
+    <div id="vulnListDiv" ng-show="reportId == 2">
         <%@ include file="/WEB-INF/views/vulnerabilities/vulnSearchTree.jsp"%>
     </div>
 
