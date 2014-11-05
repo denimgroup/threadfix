@@ -65,6 +65,16 @@ public class EndpointDatabaseFactory {
     }
 
 	@Nullable
+    public static EndpointDatabase getDatabase(@Nonnull String rootFile) {
+        File file = new File(rootFile);
+
+        assert file.exists() : rootFile + " didn't exist.";
+        assert file.isDirectory() : rootFile + " wasn't a directory.";
+
+        return getDatabase(file);
+	}
+
+	@Nullable
     public static EndpointDatabase getDatabase(@Nonnull File rootFile) {
 		FrameworkType type = FrameworkCalculator.getType(rootFile);
 		return getDatabase(rootFile, type);

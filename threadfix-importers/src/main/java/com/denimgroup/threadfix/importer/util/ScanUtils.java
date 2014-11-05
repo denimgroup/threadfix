@@ -107,7 +107,7 @@ public final class ScanUtils {
 		// Wrapping the inputStream in a BufferedInputStream allows us to mark and reset it
 		BufferedInputStream newStream = new BufferedInputStream(stream);
 		
-		// UTF-8 contains 3 characters at the start of a file, which is a problem. = null;
+		// UTF-8 contains 3 characters at the start of a file, which is a problem.
 		// The SAX parser sees them as characters in the prolog and throws an exception.
 		// This code removes them if they are present.
 		newStream.mark(4);

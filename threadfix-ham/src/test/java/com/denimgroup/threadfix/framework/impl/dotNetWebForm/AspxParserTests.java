@@ -26,6 +26,9 @@ package com.denimgroup.threadfix.framework.impl.dotNetWebForm;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import org.junit.Test;
 
+import java.io.File;
+import java.util.List;
+
 /**
  * Created by mac on 9/4/14.
  */
@@ -49,6 +52,57 @@ public class AspxParserTests {
                 "Parser didn't find newitem: " + parser;
         assert parser.ids.contains("test") :
                 "Parser didn't find test: " + parser;
+    }
+
+    @Test
+    public void testRequestParsingInAspx() {
+        File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("Message.aspx");
+
+        assert dotNetWebFormsFile.exists() && dotNetWebFormsFile.isFile() :
+                "Message.aspx was not found. Path should have been " + dotNetWebFormsFile.getAbsolutePath();
+
+        AspxParser parser = AspxParser.parse(dotNetWebFormsFile);
+
+        List<String> strings = parser.parameters;
+
+        assert strings != null : "Parameters were null";
+        assert strings.contains("Msg") :
+                "Aspx.cs parser failed to get Msg: " + parser;
+    }
+
+    @Test
+    public void testChangePassword() {
+        File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("ChangePassword.aspx");
+
+        assert dotNetWebFormsFile.isFile() :
+                "ChangePassword.aspx was not a file. Path should have been " + dotNetWebFormsFile.getAbsolutePath();
+
+        AspxParser parser = AspxParser.parse(dotNetWebFormsFile);
+
+        assertVariablePresence(parser, "txtPassword1", "txtPassword2");
+    }
+
+    @Test
+    public void testProductDetails() {
+        File dotNetWebFormsFile = ResourceManager.getDotNetWebFormsFile("ProductDetails.aspx");
+
+        assert dotNetWebFormsFile.isFile() :
+                "ChangePassword.aspx was not a file. Path should have been " + dotNetWebFormsFile.getAbsolutePath();
+
+        AspxParser parser = AspxParser.parse(dotNetWebFormsFile);
+
+        assertVariablePresence(parser, "txtComment", "txtEmail", "hiddenFieldProductID");
+    }
+
+    private void assertVariablePresence(AspxParser parser, String... variables) {
+        List<String> strings = parser.ids;
+
+        assert strings != null : "IDs were null";
+
+        for (String variable : variables) {
+            assert strings.contains(variable) :
+                    "Aspx.cs parser failed to get " + variable + ": " + parser;
+        }
     }
 
 

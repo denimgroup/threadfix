@@ -42,6 +42,7 @@ public class AspxCsParser implements EventBasedTokenizer {
 
     public static final SanitizedLogger LOG = new SanitizedLogger(AspxParser.class);
 
+    public final File file;
     public final String aspName;
     public final Map<Integer, Set<String>> lineNumberToParametersMap = newMap();
 
@@ -53,8 +54,9 @@ public class AspxCsParser implements EventBasedTokenizer {
     }
 
     AspxCsParser(File file) {
-        LOG.debug("Parsing controller mappings for " + file.getAbsolutePath());
+        LOG.debug("Parsing mappings for " + file.getAbsolutePath());
         aspName = file.getName();
+        this.file = file;
     }
 
     @Override
@@ -62,10 +64,6 @@ public class AspxCsParser implements EventBasedTokenizer {
         return true;
     }
 
-    enum ClassState {
-        START, GOT_PAGE, OPEN_PAREN, IN_METHOD
-
-    }
 
     enum MethodState {
         WAITING, ACTIVE, GOT_TEXT_VALUE
@@ -79,9 +77,40 @@ public class AspxCsParser implements EventBasedTokenizer {
     @Override
     public void processToken(int type, int lineNumber, String stringValue) {
         processBraceLevels(type);
-        processClassLevel(type, lineNumber, stringValue);
         processMethodLevel(type, lineNumber, stringValue);
+        processClassLevel(type, lineNumber, stringValue);
+        processRequest(type, lineNumber, stringValue);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                       Method-level Request[]-style parsing
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    enum RequestState {
+        START, REQUEST, OPEN_SQUARE
+    }
+    RequestState requestState = RequestState.START;
+
+    private void processRequest(int type, int lineNumber, String stringValue) {
+        switch (requestState) {
+            case START:
+                requestState = type == -3 && stringValue.equals("Request") ? RequestState.REQUEST : RequestState.START;
+                break;
+            case REQUEST:
+                requestState = type == '[' ? RequestState.OPEN_SQUARE : RequestState.START;
+                break;
+            case OPEN_SQUARE:
+                if (type == '"') {
+                    lineNumberToParametersMap.put(lineNumber, set(stringValue));
+                }
+                requestState = RequestState.START;
+                break;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                           Class-level parsing
+    ////////////////////////////////////////////////////////////////////////////////////
 
     private void processBraceLevels(int type) {
         currentCurlyLevel +=
@@ -90,6 +119,10 @@ public class AspxCsParser implements EventBasedTokenizer {
         currentParenLevel +=
                 type == '(' ?  1 :
                 type == ')' ? -1 : 0;
+    }
+
+    enum ClassState {
+        START, GOT_PAGE, OPEN_PAREN, IN_METHOD
     }
 
     String lastStringValue = null;
@@ -125,8 +158,15 @@ public class AspxCsParser implements EventBasedTokenizer {
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //                           Method-level .Text-style parsing
+    ////////////////////////////////////////////////////////////////////////////////////
+
     Set<String> currentParameters = set();
-    Integer currentLineNumber = null;
+    int currentLineNumber = -1;
+    int numSymbols = 0;
+
+    boolean atStartOfStatement = false, capturedAtStartOfStatement = false;
 
     private void processMethodLevel(int type, int lineNumber, String stringValue) {
         switch (methodState) {
@@ -134,27 +174,55 @@ public class AspxCsParser implements EventBasedTokenizer {
                 // not in the method
                 break;
             case ACTIVE:
-                if (stringValue != null && stringValue.endsWith(".Text")) {
-                    currentParameters.add(stringValue.substring(0, stringValue.lastIndexOf(".Text")));
+                if (stringValue != null && passesVariableTest(stringValue)) {
+                    currentParameters.add(extractVariable(stringValue));
                     methodState = MethodState.GOT_TEXT_VALUE;
+                    numSymbols = 0;
                     currentLineNumber = lineNumber;
+                    capturedAtStartOfStatement = atStartOfStatement;
                 }
                 break;
             case GOT_TEXT_VALUE:
-                if (type == '=') {
+                if (capturedAtStartOfStatement && type == '=') {
                     currentParameters.clear();
                     methodState = MethodState.ACTIVE;
-                } else if (type == ';') {
-                    assert currentLineNumber != null;
+                } else if (capturedAtStartOfStatement && numSymbols++ > 1) {
+                    capturedAtStartOfStatement = false;
+                }
 
+                if (currentLineNumber != lineNumber) {
                     lineNumberToParametersMap.put(currentLineNumber, currentParameters);
-                    currentLineNumber = null;
+                    currentLineNumber = -1;
                     currentParameters = set();
                     methodState = MethodState.ACTIVE;
-                } else if (stringValue != null && stringValue.endsWith(".Text")) {
-                    currentParameters.add(stringValue.substring(0, stringValue.lastIndexOf(".Text")));
+                    processMethodLevel(type, lineNumber, stringValue);
+                } else if (stringValue != null && passesVariableTest(stringValue)) {
+                    currentParameters.add(extractVariable(stringValue));
                 }
                 break;
+        }
+
+        atStartOfStatement = type == ';' ||
+                type == '{' ||
+                type == '}' ||
+                type == ')' ||
+                (type == -3 && "else".equals(stringValue)); // ) is to catch braceless ifs
+    }
+
+    private boolean passesVariableTest(String token) {
+        return (token.contains(".Text") && !token.contains("System.Text")) || token.contains(".Value");
+    }
+
+    private String extractVariable(String token) {
+        assert passesVariableTest(token) : "Didn't pass variable test";
+
+        if (token.contains(".Text")) {
+            return token.substring(0, token.indexOf(".Text"));
+        } else if (token.contains(".Value")) {
+            return token.substring(0, token.indexOf(".Value"));
+        } else {
+            assert false : "We shouldn't have gotten here";
+            return null;
         }
     }
 
