@@ -23,11 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class RemoteProvidersIndexPage extends BasePage {
 
@@ -63,9 +62,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveQualys(){
 		driver.findElementById("submit").click();
-        sleep(6000);
+        waitForSuccessMessage();
         waitForElement(driver.findElementById("configure0"));
-        sleep(6000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
@@ -77,6 +75,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveVera(){
 		driver.findElementById("submit").click();
+        waitForSuccessMessage();
 		waitForElement(driver.findElementById("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -89,6 +88,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	public RemoteProvidersIndexPage saveWhiteHat(){
         selectWhiteHatImportStyle();
 		driver.findElementById("submit").click();
+        waitForSuccessMessage();
         waitForElement(driver.findElementById("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -320,5 +320,15 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public void waitForErrorMessage() {
         sleep(5000);
+    }
+
+    public void waitForSuccessMessage() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 60);
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.className("alert-success")));
+        } catch (TimeoutException e) {
+            takeScreenShot();
+            throw new RuntimeException("Success message was not shown as it should have been.", e);
+        }
     }
 }

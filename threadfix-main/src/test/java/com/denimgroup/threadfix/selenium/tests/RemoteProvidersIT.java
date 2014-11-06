@@ -180,11 +180,8 @@ public class RemoteProvidersIT extends BaseDataTest {
     public void editVeracodeMapping() {
         remoteProvidersIndexPage.clickConfigureVeracode()
                 .setVeraUsername(VERACODE_USER)
-                .setVeraPassword(VERACODE_PASSWORD);
-
-        sleep(30000);
-
-        remoteProvidersIndexPage.saveVera();
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera();
 
         remoteProvidersIndexPage.mapVeracodeToTeamAndApp(0, teamName, appName);
 
