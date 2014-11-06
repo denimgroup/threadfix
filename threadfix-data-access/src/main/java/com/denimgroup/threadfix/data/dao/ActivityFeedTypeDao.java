@@ -21,21 +21,16 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.data.dao;
+
+import com.denimgroup.threadfix.data.entities.ActivityFeedType;
+import com.denimgroup.threadfix.data.enums.ActivityFeedTypeName;
 
 /**
- * Created by mac on 9/12/14.
+ * Created by mac on 11/6/14.
  */
-final class UpdaterConstants {
+public interface ActivityFeedTypeDao extends GenericNamedObjectDao<ActivityFeedType> {
 
-    private UpdaterConstants() {}
-
-    public static final String
-            DEFECT_TRACKERS_FOLDER = "mappings/defect",
-            GENERIC_VULNS_FOLDER = "mappings/generic",
-            SCANNERS_FOLDER = "mappings/scanner",
-            WAFS_FOLDER = "mappings/waf",
-            EVENT_MODEL_FOLDER = "mappings/eventmodel",
-            DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
+    ActivityFeedType retrieveByName(ActivityFeedTypeName name);
 
 }

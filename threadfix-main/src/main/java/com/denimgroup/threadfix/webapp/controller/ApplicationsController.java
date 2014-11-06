@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.dao.ActivityFeedDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.enums.ActivityFeedTypeName;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -98,7 +100,7 @@ public class ApplicationsController {
     @Autowired
     private ChannelTypeService channelTypeService;
     @Autowired
-    private ScanService scanService;
+    private ActivityFeedDao activityFeedDao;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -195,6 +197,9 @@ public class ApplicationsController {
 
         // scans tab
         map.put("scans", application.getScans());
+
+        // activity feed
+        map.put("feed", activityFeedDao.retrieveByTypeAndObjectId(ActivityFeedTypeName.APPLICATION, appId));
 
         // doc tab
         map.put("documents", application.getDocuments());

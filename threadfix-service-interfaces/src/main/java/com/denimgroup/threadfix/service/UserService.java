@@ -42,6 +42,8 @@ public interface UserService {
 	 */
 	List<User> loadAllUsers();
 
+    User getCurrentUser();
+
 	/**
 	 * @param userId
 	 * @return

@@ -21,21 +21,37 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.data.entities;
+
+import javax.persistence.*;
+import java.util.List;
 
 /**
- * Created by mac on 9/12/14.
+ * Created by mac on 11/6/14.
  */
-final class UpdaterConstants {
+@Entity
+@Table(name = "ActivityType")
+public class ActivityType extends BaseEntity {
 
-    private UpdaterConstants() {}
+    private String name;
+    private List<Activity> activities;
 
-    public static final String
-            DEFECT_TRACKERS_FOLDER = "mappings/defect",
-            GENERIC_VULNS_FOLDER = "mappings/generic",
-            SCANNERS_FOLDER = "mappings/scanner",
-            WAFS_FOLDER = "mappings/waf",
-            EVENT_MODEL_FOLDER = "mappings/eventmodel",
-            DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
+    @OneToMany(mappedBy = "activityType")
+    @OrderBy("createdDate")
+    public List<Activity> getActivities() {
+        return activities;
+    }
 
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
+
+    @Column
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
