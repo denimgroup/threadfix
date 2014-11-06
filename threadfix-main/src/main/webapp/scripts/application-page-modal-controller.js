@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal, tfEncoder, timeoutService) {
 
@@ -45,7 +45,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                                return true;
                            }
                        })
-                   })
+                   });
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
 
@@ -55,7 +55,10 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                    $rootScope.$broadcast('scanAgentTasks', $scope.config.scanAgentTasks);
                    $rootScope.$broadcast('application', $scope.config.application);
                    $rootScope.$broadcast('scans', $scope.config.scans);
+                   $rootScope.$broadcast('activityFeed', $scope.config.feed);
                    $rootScope.$broadcast('documents', $scope.config.documents);
+
+                   $scope.showActivityFeedTab = true;
 
                    $rootScope.$broadcast('loadVulnerabilitySearchTable');
 
