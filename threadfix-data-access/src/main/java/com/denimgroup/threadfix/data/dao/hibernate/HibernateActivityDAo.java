@@ -21,30 +21,28 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.eventmodel.listener;
+package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ActivityService;
-import com.denimgroup.threadfix.service.eventmodel.event.ScanUploadedEvent;
+import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
+import com.denimgroup.threadfix.data.dao.ActivityDao;
+import com.denimgroup.threadfix.data.entities.Activity;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 /**
- * Created by mac on 10/31/14.
+ * Created by mac on 11/6/14.
  */
-@Service
-public class ScanUploadedLogger implements ApplicationListener<ScanUploadedEvent> {
-    private static final SanitizedLogger LOG = new SanitizedLogger(ScanUploadedLogger.class);
+@Repository
+public class HibernateActivityDao extends AbstractObjectDao<Activity> implements ActivityDao {
 
     @Autowired
-    private ActivityService activityService;
+    public HibernateActivityDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
-    public void onApplicationEvent(ScanUploadedEvent applicationEvent) {
-        String scannerType = applicationEvent.getScan().getScannerType();
-        LOG.info("Got ScanUploadedEvent for scan from " + scannerType);
-
-        activityService.createActivityForScan(applicationEvent.getScan());
+    protected Class<Activity> getClassReference() {
+        return Activity.class;
     }
 }

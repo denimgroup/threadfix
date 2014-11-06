@@ -21,30 +21,34 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.eventmodel.listener;
+package com.denimgroup.threadfix.data.dao.hibernate;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ActivityService;
-import com.denimgroup.threadfix.service.eventmodel.event.ScanUploadedEvent;
+import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
+import com.denimgroup.threadfix.data.dao.ActivityTypeDao;
+import com.denimgroup.threadfix.data.entities.ActivityType;
+import com.denimgroup.threadfix.data.enums.ActivityTypeName;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 /**
- * Created by mac on 10/31/14.
+ * Created by mac on 11/6/14.
  */
-@Service
-public class ScanUploadedLogger implements ApplicationListener<ScanUploadedEvent> {
-    private static final SanitizedLogger LOG = new SanitizedLogger(ScanUploadedLogger.class);
+@Repository
+public class HibernateActivityTypeDao extends AbstractNamedObjectDao<ActivityType> implements ActivityTypeDao {
 
     @Autowired
-    private ActivityService activityService;
+    public HibernateActivityTypeDao(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
-    public void onApplicationEvent(ScanUploadedEvent applicationEvent) {
-        String scannerType = applicationEvent.getScan().getScannerType();
-        LOG.info("Got ScanUploadedEvent for scan from " + scannerType);
+    protected Class<ActivityType> getClassReference() {
+        return ActivityType.class;
+    }
 
-        activityService.createActivityForScan(applicationEvent.getScan());
+    @Override
+    public ActivityType retrieveByName(ActivityTypeName name) {
+        return retrieveByName(name.getName());
     }
 }

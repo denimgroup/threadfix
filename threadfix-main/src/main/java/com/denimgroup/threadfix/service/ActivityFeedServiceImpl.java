@@ -21,30 +21,27 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.eventmodel.listener;
+package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ActivityService;
-import com.denimgroup.threadfix.service.eventmodel.event.ScanUploadedEvent;
+import com.denimgroup.threadfix.data.dao.ActivityFeedDao;
+import com.denimgroup.threadfix.data.dao.GenericObjectDao;
+import com.denimgroup.threadfix.data.entities.ActivityFeed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by mac on 10/31/14.
+ * Created by mac on 11/6/14.
  */
 @Service
-public class ScanUploadedLogger implements ApplicationListener<ScanUploadedEvent> {
-    private static final SanitizedLogger LOG = new SanitizedLogger(ScanUploadedLogger.class);
+public class ActivityFeedServiceImpl
+        extends AbstractGenericObjectService<ActivityFeed>
+        implements ActivityFeedService {
 
     @Autowired
-    private ActivityService activityService;
+    private ActivityFeedDao activityFeedDao;
 
     @Override
-    public void onApplicationEvent(ScanUploadedEvent applicationEvent) {
-        String scannerType = applicationEvent.getScan().getScannerType();
-        LOG.info("Got ScanUploadedEvent for scan from " + scannerType);
-
-        activityService.createActivityForScan(applicationEvent.getScan());
+    GenericObjectDao<ActivityFeed> getDao() {
+        return activityFeedDao;
     }
 }
