@@ -45,12 +45,8 @@ import com.denimgroup.threadfix.data.entities.Role;
 @Repository
 public class HibernateRoleDao implements RoleDao {
 
-	private SessionFactory sessionFactory;
-
 	@Autowired
-	public HibernateRoleDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	private SessionFactory sessionFactory;
 
 	@Override
 	@SuppressWarnings("unchecked")

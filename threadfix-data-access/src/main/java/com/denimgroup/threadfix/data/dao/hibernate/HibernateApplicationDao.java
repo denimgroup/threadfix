@@ -50,12 +50,8 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 @Repository
 public class HibernateApplicationDao implements ApplicationDao {
 
-	private SessionFactory sessionFactory;
-
 	@Autowired
-	public HibernateApplicationDao(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	private SessionFactory sessionFactory;
 
 	@Override
 	@SuppressWarnings("unchecked")
