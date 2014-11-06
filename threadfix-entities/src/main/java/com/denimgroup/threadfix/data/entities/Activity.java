@@ -125,4 +125,11 @@ public class Activity extends AuditableEntity {
     public void setActivityFeedList(List<ActivityFeed> activityFeedList) {
         this.activityFeedList = activityFeedList;
     }
+
+    @Transient
+    @JsonView(AllViews.FormInfo.class)
+    public long getDate() {
+        return getCreatedDate().getTime();
+    }
+
 }

@@ -11,6 +11,7 @@
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
+	<cbs:cachebustscript src="/scripts/activity-feed-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
     <cbs:cachebustscript src="/scripts/vuln-table-controller.js"/>
@@ -48,6 +49,7 @@
         </div>
 
         <tabset style="margin-top:10px;">
+            <%@ include file="/WEB-INF/views/applications/tabs/activityFeed.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/vulnTabTree.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/scanTab.jsp" %>
             <%@ include file="/WEB-INF/views/applications/tabs/docsTab.jsp" %>
