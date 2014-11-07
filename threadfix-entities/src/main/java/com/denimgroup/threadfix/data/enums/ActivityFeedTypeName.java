@@ -32,7 +32,8 @@ public enum ActivityFeedTypeName {
     WAF("WAF"),
     DEFECT_TRACKER("Defect Tracker"),
     REMOTE_PROVIDER("Remote Provider"),
-    USER("User");
+    USER("User"),
+    VULNERABILITY("Vulnerability");
 
     private String name;
 

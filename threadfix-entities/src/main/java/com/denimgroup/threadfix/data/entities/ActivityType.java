@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.map.annotate.JsonView;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class ActivityType extends BaseEntity {
         this.activities = activities;
     }
 
+    @JsonView(AllViews.FormInfo.class)
     @Column
     public String getName() {
         return name;

@@ -42,9 +42,9 @@ public class ScanUploadedLogger implements ApplicationListener<ScanUploadedEvent
 
     @Override
     public void onApplicationEvent(ScanUploadedEvent applicationEvent) {
-        String scannerType = applicationEvent.getScan().getScannerType();
+        String scannerType = applicationEvent.getObject().getScannerType();
         LOG.info("Got ScanUploadedEvent for scan from " + scannerType);
 
-        activityService.createActivityForScan(applicationEvent.getScan());
+        activityService.createActivityForScan(applicationEvent.getObject());
     }
 }

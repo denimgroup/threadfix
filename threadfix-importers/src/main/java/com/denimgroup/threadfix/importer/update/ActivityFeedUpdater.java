@@ -38,20 +38,20 @@ import java.io.IOException;
  * Created by mac on 11/6/14.
  */
 @Service
-class EventModelUpdater implements Updater {
+class ActivityFeedUpdater implements Updater {
 
     enum State {
         BASE, FEED_TYPE, ACTIVITY_TYPE
     }
 
-    private static final SanitizedLogger LOG = new SanitizedLogger(EventModelUpdater.class);
+    private static final SanitizedLogger LOG = new SanitizedLogger(ActivityFeedUpdater.class);
 
     State state = State.BASE;
 
     @Autowired
     private ActivityFeedTypeDao activityFeedTypeDao;
     @Autowired
-    private ActivityTypeDao activityTypeDao;
+    private ActivityTypeDao     activityTypeDao;
 
     @Override
     public void doUpdate(String fileName, BufferedReader bufferedReader) throws IOException {
@@ -60,19 +60,14 @@ class EventModelUpdater implements Updater {
         LOG.info("Starting event model updates");
 
         while ((line = bufferedReader.readLine()) != null) {
-            switch (state) {
-                case FEED_TYPE:
-                    processFeedType(line);
-                    break;
-                case ACTIVITY_TYPE:
-                    processActivityType(line);
-                    break;
-            }
-
             if (line.equals("section.activityFeedType")) {
                 state = State.FEED_TYPE;
             } else if (line.equals("section.activityType")) {
                 state = State.ACTIVITY_TYPE;
+            } else if (state == State.FEED_TYPE) {
+                processFeedType(line);
+            } else if (state == State.ACTIVITY_TYPE) {
+                processActivityType(line);
             }
         }
     }

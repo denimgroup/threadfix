@@ -24,21 +24,13 @@
 package com.denimgroup.threadfix.service.eventmodel.event;
 
 import com.denimgroup.threadfix.data.entities.Scan;
-import org.springframework.context.ApplicationEvent;
 
 /**
  * Created by mac on 10/31/14.
  */
-public class ScanUploadedEvent extends ApplicationEvent {
-
-    private Scan scan;
+public class ScanUploadedEvent extends GenericApplicationEvent<Scan> {
 
     public ScanUploadedEvent(Scan source) {
         super(source);
-        this.scan = source;
-    }
-
-    public Scan getScan() {
-        return scan;
     }
 }
