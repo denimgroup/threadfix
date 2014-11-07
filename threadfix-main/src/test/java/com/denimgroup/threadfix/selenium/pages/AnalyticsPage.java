@@ -52,7 +52,7 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
-        sleep(2500);
+        waitForElement(driver.findElementById("vulnSearchFilterDiv"));
         return  new AnalyticsPage(driver);
     }
 
@@ -87,7 +87,7 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage expandTeamApplicationFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
-        sleep(2000);
+        waitForElement(driver.findElementById("showApplicationInput"));
         return new AnalyticsPage(driver);
     }
 

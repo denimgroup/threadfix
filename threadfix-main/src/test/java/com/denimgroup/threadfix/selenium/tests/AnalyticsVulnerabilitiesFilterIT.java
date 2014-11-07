@@ -136,7 +136,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addApplicationFilter(appName, "vulnSearchFilterDiv");
-        assertTrue("Only 10 critical vulnerabilities should be shown.",
+        assertTrue("Only 9 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
 
