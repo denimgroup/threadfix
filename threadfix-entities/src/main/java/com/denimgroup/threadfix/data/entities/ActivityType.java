@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
@@ -41,6 +42,7 @@ public class ActivityType extends BaseEntity {
 
     @OneToMany(mappedBy = "activityType")
     @OrderBy("createdDate")
+    @JsonIgnore
     public List<Activity> getActivities() {
         return activities;
     }

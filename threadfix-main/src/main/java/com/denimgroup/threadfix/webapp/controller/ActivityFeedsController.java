@@ -21,43 +21,32 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.dao.ActivityDao;
-import com.denimgroup.threadfix.data.dao.ActivityFeedDao;
-import com.denimgroup.threadfix.data.dao.GenericObjectDao;
-import com.denimgroup.threadfix.data.entities.Activity;
 import com.denimgroup.threadfix.data.entities.ActivityFeed;
+import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.ActivityFeedService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
 /**
- * Created by mac on 11/6/14.
+ * Created by mac on 11/7/14.
  */
-@Service
-public class ActivityFeedServiceImpl
-        extends AbstractGenericObjectService<ActivityFeed>
-        implements ActivityFeedService {
+@Controller
+@RequestMapping("/feeds")
+public class ActivityFeedsController {
 
     @Autowired
-    private ActivityFeedDao activityFeedDao;
-    @Autowired
-    private ActivityDao activityDao;
+    private ActivityFeedService activityFeedService;
 
-    @Override
-    GenericObjectDao<ActivityFeed> getDao() {
-        return activityFeedDao;
-    }
-
-    public ActivityFeed loadMainFeed() {
-        List<Activity> activities = activityDao.retrieveAll();
-
-        ActivityFeed feed = new ActivityFeed();
-
-        feed.setActivityList(activities);
-
-        return feed;
+    // TODO permissions
+    @RequestMapping("/dashboard")
+    @ResponseBody
+    public RestResponse<ActivityFeed> getMainFeed() {
+        return success(activityFeedService.loadMainFeed());
     }
 }

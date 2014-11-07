@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ActivityDao;
 import com.denimgroup.threadfix.data.entities.Activity;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -44,5 +45,10 @@ public class HibernateActivityDao extends AbstractObjectDao<Activity> implements
     @Override
     protected Class<Activity> getClassReference() {
         return Activity.class;
+    }
+
+    @Override
+    protected Order getOrder() {
+        return Order.desc("createdDate");
     }
 }

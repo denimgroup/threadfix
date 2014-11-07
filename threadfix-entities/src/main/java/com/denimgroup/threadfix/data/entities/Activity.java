@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
@@ -117,6 +118,7 @@ public class Activity extends AuditableEntity {
         this.parentId = parentId;
     }
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "activityList")
     public List<ActivityFeed> getActivityFeedList() {
         return activityFeedList;
