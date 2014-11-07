@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Activity;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
 
 /**
  * Created by mac on 11/6/14.
@@ -32,5 +33,7 @@ import com.denimgroup.threadfix.data.entities.Scan;
 public interface ActivityService extends GenericObjectService<Activity> {
 
     Activity createActivityForScan(Scan scan);
+
+    Activity createActivityForComment(VulnerabilityComment vulnerabilityComment, Integer vulnerabilityId);
 
 }

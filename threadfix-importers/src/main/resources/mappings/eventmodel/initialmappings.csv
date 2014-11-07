@@ -1,11 +1,12 @@
-11/6/2014 12:48:00
+11/7/2014 8:55:00
 section.activityFeedType
 Application
 Team
 WAF
 Defect Tracker
 User
+Vulnerability
 Remote Provider
 section.activityType
-UploadedScan
-SubmittedComment
+Scan Upload
+Comment Submission

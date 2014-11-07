@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.*;
-import com.denimgroup.threadfix.data.entities.Activity;
-import com.denimgroup.threadfix.data.entities.ActivityFeed;
-import com.denimgroup.threadfix.data.entities.ActivityType;
-import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.ActivityFeedTypeName;
 import com.denimgroup.threadfix.data.enums.ActivityTypeName;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -59,6 +56,8 @@ public class ActivityServiceImpl
     private ActivityFeedTypeDao activityFeedTypeDao;
     @Autowired
     private UserService         userService;
+    @Autowired
+    private VulnerabilityDao vulnerabilityDao;
 
     @Override
     GenericObjectDao<Activity> getDao() {
@@ -135,6 +134,64 @@ public class ActivityServiceImpl
             activityFeedDao.saveOrUpdate(newFeed);
             return newFeed;
         }
+    }
+
+    @Override
+    public Activity createActivityForComment(VulnerabilityComment vulnerabilityComment, Integer vulnerabilityId) {
+        if (vulnerabilityComment == null) {
+            throw new IllegalArgumentException("Can't create event for null scan.");
+        }
+
+        Vulnerability vulnerability = vulnerabilityDao.retrieveById(vulnerabilityId);
+
+        Integer appId = vulnerability.getApplication().getId(),
+                teamId = vulnerability.getApplication().getOrganization().getId();
+
+        Activity activity = new Activity();
+
+        // TODO fix this probably
+//        activity.setObjectId(vulnerabilityComment.getId());
+
+        activity.setParentId(vulnerabilityId);
+
+        activity.setUser(userService.getCurrentUser());
+
+        ActivityType type = activityTypeDao.retrieveByName(ActivityTypeName.SUBMITTED_COMMENT);
+        activity.setActivityType(type);
+
+        List<ActivityFeed> activityFeeds = getFeedsForComment(teamId, appId, vulnerabilityId);
+        activity.setActivityFeedList(activityFeeds);
+
+        activity.setDetails(vulnerabilityComment.getComment());
+
+        activity.setLinkText("View Vulnerability");
+        activity.setLinkPath(getPathForVulnerability(teamId, appId, vulnerabilityId));
+
+        activityDao.saveOrUpdate(activity);
+
+        // I would prefer foreach but it throws ConcurrentModificationException for this code
+        for (int i = 0; i < activityFeeds.size(); i++) {
+            ActivityFeed feed = activityFeeds.get(i);
+            feed.getActivityList().add(activity);
+            activityFeedDao.saveOrUpdate(feed);
+        }
+
+        LOG.info("Created activity log for new scan.");
+
+        return activity;
+    }
+
+    private List<ActivityFeed> getFeedsForComment(Integer teamId, Integer appId, Integer vulnerabilityId) {
+        List<ActivityFeed> feeds = list();
+
+        feeds.add(getOrCreateFeed(ActivityFeedTypeName.TEAM, teamId));
+        feeds.add(getOrCreateFeed(ActivityFeedTypeName.APPLICATION, appId));
+        feeds.add(getOrCreateFeed(ActivityFeedTypeName.VULNERABILITY, vulnerabilityId));
+
+        return feeds;    }
+
+    private String getPathForVulnerability(Integer teamId, Integer appId, Integer vulnerabilityId) {
+        return "/organizations/" + teamId + "/applications/" + appId + "/vulnerabilities/" + vulnerabilityId;
     }
 
 }

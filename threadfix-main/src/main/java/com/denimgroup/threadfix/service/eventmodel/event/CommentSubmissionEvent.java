@@ -21,21 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.enums;
+package com.denimgroup.threadfix.service.eventmodel.event;
+
+import com.denimgroup.threadfix.data.entities.VulnerabilityComment;
 
 /**
  * Created by mac on 11/6/14.
  */
-public enum ActivityTypeName {
-    UPLOADED_SCAN("Scan Upload"), SUBMITTED_COMMENT("Comment Submission");
+public class CommentSubmissionEvent extends GenericApplicationEvent<VulnerabilityComment> {
 
-    private String name;
+    Integer vulnerabilityId;
 
-    ActivityTypeName(String name) {
-        this.name = name;
+    public CommentSubmissionEvent(VulnerabilityComment source, Integer vulnerabilityId) {
+        super(source);
+        this.vulnerabilityId = vulnerabilityId;
     }
 
-    public String getName() {
-        return name;
+    public Integer getVulnerabilityId() {
+        return vulnerabilityId;
     }
 }

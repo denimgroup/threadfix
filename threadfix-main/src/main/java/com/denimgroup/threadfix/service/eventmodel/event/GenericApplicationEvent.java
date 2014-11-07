@@ -21,21 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.enums;
+package com.denimgroup.threadfix.service.eventmodel.event;
+
+import org.springframework.context.ApplicationEvent;
 
 /**
  * Created by mac on 11/6/14.
  */
-public enum ActivityTypeName {
-    UPLOADED_SCAN("Scan Upload"), SUBMITTED_COMMENT("Comment Submission");
+public class GenericApplicationEvent<T> extends ApplicationEvent {
 
-    private String name;
+    private T field;
 
-    ActivityTypeName(String name) {
-        this.name = name;
+    public GenericApplicationEvent(T source) {
+        super(source);
+        field = source;
     }
 
-    public String getName() {
-        return name;
+    public T getObject() {
+        return field;
     }
 }

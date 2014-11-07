@@ -21,21 +21,30 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.enums;
+package com.denimgroup.threadfix.service.eventmodel.listener;
+
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ActivityService;
+import com.denimgroup.threadfix.service.eventmodel.event.CommentSubmissionEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by mac on 11/6/14.
  */
-public enum ActivityTypeName {
-    UPLOADED_SCAN("Scan Upload"), SUBMITTED_COMMENT("Comment Submission");
+@Service
+public class CommentSubmissionLogger implements ApplicationListener<CommentSubmissionEvent> {
 
-    private String name;
+    private static final SanitizedLogger LOG = new SanitizedLogger(CommentSubmissionLogger.class);
 
-    ActivityTypeName(String name) {
-        this.name = name;
-    }
+    @Autowired
+    private ActivityService activityService;
 
-    public String getName() {
-        return name;
+    @Override
+    public void onApplicationEvent(CommentSubmissionEvent commentSubmissionEvent) {
+        LOG.info("Got comment submission event.");
+
+        activityService.createActivityForComment(commentSubmissionEvent.getObject(), commentSubmissionEvent.getVulnerabilityId());
     }
 }

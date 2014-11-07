@@ -54,7 +54,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     @Autowired
     private DefectTrackerUpdater        defectTrackerUpdater;
     @Autowired
-    private EventModelUpdater           eventModelUpdater;
+    private ActivityFeedUpdater         eventModelUpdater;
     @Autowired
     WafsUpdater wafsUpdater;
 
