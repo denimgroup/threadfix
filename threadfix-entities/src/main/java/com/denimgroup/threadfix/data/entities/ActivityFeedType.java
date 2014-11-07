@@ -23,7 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import javax.persistence.*;
+import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -37,6 +44,7 @@ public class ActivityFeedType extends BaseEntity {
     private List<ActivityFeed> activityFeedList;
 
     @Column
+    @JsonView(AllViews.FormInfo.class)
     public String getName() {
         return name;
     }
@@ -46,6 +54,7 @@ public class ActivityFeedType extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "activityFeedType")
+    @JsonIgnore
     public List<ActivityFeed> getActivityFeedList() {
         return activityFeedList;
     }

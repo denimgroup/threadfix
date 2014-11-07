@@ -96,11 +96,7 @@ public class ActivityServiceImpl
         activityDao.saveOrUpdate(activity);
 
         // I would prefer foreach but it throws ConcurrentModificationException for this code
-        for (int i = 0; i < activityFeeds.size(); i++) {
-            ActivityFeed feed = activityFeeds.get(i);
-            feed.getActivityList().add(activity);
-            activityFeedDao.saveOrUpdate(feed);
-        }
+        addActivityToFeeds(activity, activityFeeds);
 
         LOG.info("Created activity log for new scan.");
 
@@ -168,17 +164,20 @@ public class ActivityServiceImpl
         activity.setLinkPath(getPathForVulnerability(teamId, appId, vulnerabilityId));
 
         activityDao.saveOrUpdate(activity);
+        addActivityToFeeds(activity, activityFeeds);
 
+        LOG.info("Created activity log for new scan.");
+
+        return activity;
+    }
+
+    private void addActivityToFeeds(Activity activity, List<ActivityFeed> activityFeeds) {
         // I would prefer foreach but it throws ConcurrentModificationException for this code
         for (int i = 0; i < activityFeeds.size(); i++) {
             ActivityFeed feed = activityFeeds.get(i);
             feed.getActivityList().add(activity);
             activityFeedDao.saveOrUpdate(feed);
         }
-
-        LOG.info("Created activity log for new scan.");
-
-        return activity;
     }
 
     private List<ActivityFeed> getFeedsForComment(Integer teamId, Integer appId, Integer vulnerabilityId) {

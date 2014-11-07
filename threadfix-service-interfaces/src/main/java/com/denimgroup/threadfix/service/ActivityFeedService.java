@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.data.entities.ActivityFeed;
  */
 public interface ActivityFeedService extends GenericObjectService<ActivityFeed> {
 
-
-
+    ActivityFeed loadMainFeed();
 
 }
