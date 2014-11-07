@@ -10,7 +10,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.snapshotOptions = [
         { name: "Point in Time", id: 2 },
         { name: "Progress By Vulnerability", id: 3 },
-//        { name: "Portfolio Report", id: 8 },
         { name: "Most Vulnerable Applications", id: 10 }
     ];
 
@@ -91,6 +90,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
 
         $scope.$parent.snapshotActive = true;
+        $scope.$parent.complianceActive = false;
 
     });
 

@@ -326,8 +326,6 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             }
         };
 
-//        if (!$scope.trendingStartDate && !$scope.trendingEndDate)
-//            return;
         if (!$scope.trendingStartDate) {
             startIndex = 0;
             $scope.trendingStartDate = $scope.filterScans[0].importTime;
@@ -348,11 +346,6 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
 
         if (!startIndex && endIndex) startIndex = 0;
         if (startIndex && !endIndex) endIndex = $scope.filterScans.length - 1;
-
-//        if ($scope.trendingStartDate)
-//            $scope.trendingStartDate = $scope.trendingStartDate.getTime();
-//        if ($scope.trendingEndDate)
-//            $scope.trendingEndDate = $scope.trendingEndDate.getTime();
     };
 
     var endsWith = function(str, suffix) {
