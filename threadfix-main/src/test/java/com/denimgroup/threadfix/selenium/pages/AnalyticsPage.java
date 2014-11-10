@@ -40,12 +40,14 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickTrendingTab() {
         driver.findElementByLinkText("Trending").click();
+        waitForElement(driver.findElementById("trendingFilterDiv"));
         sleep(2500);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clickSnapshotTab() {
         driver.findElementByLinkText("Snapshot").click();
+        waitForElement(driver.findElementById("snapshotFilterDiv"));
         sleep(2500);
         return new AnalyticsPage(driver);
     }
