@@ -38,17 +38,21 @@ public class AnalyticsPage extends BasePage {
 
     /* _____________________ Action Methods _____________________ */
 
-    public AnalyticsPage clickTrendingTab() {
+    public AnalyticsPage clickTrendingTab(Boolean usingD3) {
         driver.findElementByLinkText("Trending").click();
         waitForElement(driver.findElementById("trendingFilterDiv"));
-        sleep(2500);
+        if(usingD3){
+            sleep(1500);
+        }
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage clickSnapshotTab() {
+    public AnalyticsPage clickSnapshotTab(Boolean usingD3) {
         driver.findElementByLinkText("Snapshot").click();
         waitForElement(driver.findElementById("snapshotFilterDiv"));
-        sleep(2500);
+        if(usingD3){
+            sleep(1500);
+        }
         return new AnalyticsPage(driver);
     }
 
@@ -58,45 +62,47 @@ public class AnalyticsPage extends BasePage {
         return  new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage toggleAllFilter(String divId) {
+    public AnalyticsPage toggleAllFilter(String divId, Boolean expanding) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("toggleAllButton")).click();
-        sleep(2000);
+        if(expanding) {
+            waitForClickableElement(filterDiv.findElement(By.id("showTeamInput")));
+        }
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage toggleAllFilterReport(String divId) {
+    public AnalyticsPage toggleAllFilterReport(String divId, Boolean expanding) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("toggleAllButtonReport")).click();
-        sleep(2000);
+        if(expanding) {
+            waitForClickableElement(filterDiv.findElement(By.id("showTeamInputReport")));
+        }
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clearFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButton")).click();
-        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clearFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButtonReport")).click();
-        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage expandTeamApplicationFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTeamAndApplicationFilters")).click();
-        waitForElement(driver.findElementById("showApplicationInput"));
+        waitForElement(filterDiv.findElement(By.id("showApplicationInput")));
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage expandTeamApplicationFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")).click();
-        sleep(2000);
+        waitForElement(filterDiv.findElement(By.id("showTeamInputReport")));
         return new AnalyticsPage(driver);
     }
 

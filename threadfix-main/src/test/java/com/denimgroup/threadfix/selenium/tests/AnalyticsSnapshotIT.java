@@ -47,7 +47,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickAnalyticsLink();
 
         for(int i = 0; i < 5; i++) {
-            analyticsPage.clickSnapshotTab();
+            analyticsPage.clickSnapshotTab(true);
 
             analyticsPage.waitForElement(driver.findElement(By.id("pointInTime" + levels[i] + "Arc")));
 
@@ -65,7 +65,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab();
+                .clickSnapshotTab(false);
 
         analyticsPage.expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
@@ -96,7 +96,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab();
+                .clickSnapshotTab(false);
 
         analyticsPage.expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addApplicationFilterReport(appName,"snapshotFilterDiv");
@@ -123,15 +123,15 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     public void expandCollapseTest() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab();
+                .clickSnapshotTab(false);
 
         int filtersCollapsedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
-        analyticsPage.toggleAllFilterReport("snapshotFilterDiv");
+        analyticsPage.toggleAllFilterReport("snapshotFilterDiv", true);
 
         int filtersExpandedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        analyticsPage = analyticsPage.toggleAllFilterReport("snapshotFilterDiv");
+        analyticsPage = analyticsPage.toggleAllFilterReport("snapshotFilterDiv", false);
         assertFalse("Filters were not collapsed.",
                 filtersExpandedSize == analyticsPage.getFilterDivHeight("snapshotFilterDiv"));
     }
@@ -145,7 +145,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab()
+                .clickSnapshotTab(true)
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
@@ -167,7 +167,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab()
+                .clickSnapshotTab(false)
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
@@ -192,7 +192,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                .clickAnalyticsLink();
 
        for(int i = 0; i < 5; i++) {
-           analyticsPage.clickSnapshotTab()
+           analyticsPage.clickSnapshotTab(true)
                    .expandTeamApplicationFilterReport("snapshotFilterDiv")
                    .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
@@ -220,7 +220,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab();
+                .clickSnapshotTab(true);
 
         for(int i = 0; i < 5; i++) {
             sleep(2500);
