@@ -37,28 +37,6 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsSnapshotIT extends BaseDataTest{
 
     @Test
-    public void pieD3WedgeNavigation() {
-        initializeTeamAndAppWithWebInspectScan();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
-        String[] levels = {"Info","Low","Medium","High","Critical"};
-
-        AnalyticsPage analyticsPage = loginPage.defaultLogin()
-                .clickAnalyticsLink();
-
-        for(int i = 0; i < 5; i++) {
-            analyticsPage.clickSnapshotTab(true);
-
-            analyticsPage.waitForElement(driver.findElement(By.id("pointInTime" + levels[i] + "Arc")));
-
-            analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc")
-                    .clickModalSubmit();
-
-            assertTrue("Navigation @ level " + levels[i] + " failed", analyticsPage.checkCorrectFilterLevel(levels[i]));
-        }
-    }
-
-    @Test
     public void snapshotD3TeamFilterTest() {
         initializeTeamAndAppWithIBMScan();
         String teamName2 = createTeam();
@@ -178,36 +156,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
             assertTrue("Legend value at level " + levels[i] + " does not match badge", numBadge.equals(numLegend));
         }
-    }
-
-    @Test
-    public void pieModalNumCheck() {
-       initializeTeamAndAppWithWebInspectScan();
-       DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
-       DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
-
-       String[] levels = {"Info","Low","Medium","High","Critical"};
-
-       AnalyticsPage analyticsPage = loginPage.defaultLogin()
-               .clickAnalyticsLink();
-
-       for(int i = 0; i < 5; i++) {
-           analyticsPage.clickSnapshotTab(true)
-                   .expandTeamApplicationFilterReport("snapshotFilterDiv")
-                   .addTeamFilterReport(teamName,"snapshotFilterDiv");
-
-           sleep(2500);
-
-           analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
-
-           String numModal = driver.findElement(By.id("header0")).getText().split("\\s+")[1].trim();
-           String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
-
-           assertTrue("Modal total at level " + levels[i] + " does not match badge",
-                   numBadge.equals(numModal));
-
-           analyticsPage.clickModalSubmit();
-       }
     }
 
     @Test
