@@ -46,4 +46,14 @@ public class BurpScanTest extends TransactionalTest {
         ScanComparisonUtils.compare(burpResults, ScanLocationManager.getRoot() +
                 "Dynamic/Burp/burp-demo-site.xml");
     }
+
+    public final static String[][] sbirResults = new String [][] {
+            {XSS, "High", "/Test/WebForm1.aspx", "newitem"},
+    };
+
+    @Test
+    public void burpScanTest2() {
+        ScanComparisonUtils.compare(sbirResults, ScanLocationManager.getRoot() +
+                "SBIR/webform.xml");
+    }
 }
