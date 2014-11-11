@@ -48,8 +48,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 var svg = d3.select(ele[0]).append("svg")
                     .attr("width", w + m[1] + m[3])
-                    .attr("height", h + m[0] + m[2]);
-                var svg1;
+                    .attr("height", h + m[0] + m[2])
+                    .append("g")
+                    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
                 var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                 var fieldOrderMap = {
@@ -97,40 +98,35 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     _data = angular.copy(reportData);
 
                     svg.selectAll('*').remove();
-                    svg.append("g").attr("id","trendingScanSvg");
-                    svg1 = d3.select("#trendingScanSvg")
-                        .append("svg")
-                        .attr("width", w + m[1] + m[3])
-                        .attr("height", h + m[0] + m[2])
-                        .append("g")
-                        .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
                     if (scope.label)
-                        reportUtilities.drawTitle(svg1, w, scope.label, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
 
                     if (_data.length === 0) {
-                        svg1.append("g")
+                        svg.append("g")
                             .append("text")
                             .attr("x", w/2)
                             .attr("y", 70)
                             .attr("class", "warning")
-                            .text("No results found")
+                            .text("No results found");
+                        drawTable();
                         return;
                     }
 
                     var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime";});
                     if (colorDomain.length === 0) {
-                        svg1.append("g")
+                        svg.append("g")
                             .append("text")
                             .attr("x", w/2)
                             .attr("y", 70)
                             .attr("class", "warning")
-                            .text("Select fields to display")
+                            .text("Select fields to display");
+                        drawTable();
                         return;
                     }
 
                     color.domain(colorDomain);
-                    svg1.selectAll('*').remove();
+                    svg.selectAll('*').remove();
                     drawReport();
                     drawTable();
                 }
@@ -155,7 +151,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     stack(stackedData);
 
-                    svg1.selectAll("g")
+                    svg.selectAll("g")
                         .data(stackedData)
                         .enter().append("g")
                         .attr("class", "symbol");
@@ -165,14 +161,6 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                     var startAxis = (scope.startDate) ? scope.startDate : xMin;
                     var endAxis = (scope.endDate) ? scope.endDate : xMax;
-
-//                    //If there is only one scan for whole history
-//                    if (endAxis === startAxis) {
-//                        endAxis = (new Date()).getTime();
-//                        var startDate = new Date(startAxis);
-//                        startDate = new Date(startDate.getFullYear(),  startDate.getMonth()-1, 1);
-//                        startAxis = startDate.getTime();
-//                    }
 
                     // Compute the minimum and maximum date across scans.
                     x.domain([startAxis, endAxis]);
@@ -184,13 +172,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     intervalMonths = (intervalMonths>6 ? 12 : intervalMonths);
                     xAxis.ticks(d3.time.month, intervalMonths);
 
-                    var g = svg1.selectAll(".symbol");
-                    svg1.call(tip);
+                    var g = svg.selectAll(".symbol");
+                    svg.call(tip);
                     if (scope.label)
-                        reportUtilities.drawTitle(svg1, w, scope.label, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
 
                     // Add the x-axis.
-                    svg1.append("g")
+                    svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + h + ")")
                         .transition()
@@ -203,13 +191,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         });
 
                     // Add the y-axis.
-                    svg1.append("g")
+                    svg.append("g")
                         .attr("class", "y axis")
                         .transition()
                         .duration(duration)
                         .call(yAxis);
 
-                    var focus = svg1.append("g")
+                    var focus = svg.append("g")
                         .attr("class", "focus")
                         .style("display", "none");
 
@@ -298,7 +286,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 d3.select("#exportPNGButtonReport").on('click', function(){
                     var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
                     var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
-                    reportExporter.exportPDFSvg(d3, svg, svgWidth, svgHeight,
+                    reportExporter.exportPDF(d3, svgWidth, svgHeight,
                             "TrendingScans" + teamsName + appsName);
                 });
 

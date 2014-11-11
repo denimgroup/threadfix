@@ -1,94 +1,78 @@
 var module = angular.module('threadfix');
 
-module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService) {
+module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, vulnSearchParameterService) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
     $scope.noData = false;
     $scope.margin = [70, 70, 100, 70];
-    $scope.savedDefaultTrendingFilter = undefined;
 
     var startIndex, endIndex;
 
     $scope.resetFilters = function() {
-        if ($scope.savedDefaultTrendingFilter) {
-            $scope.selectedFilter = $scope.savedDefaultTrendingFilter;
-            $scope.parameters = JSON.parse($scope.savedDefaultTrendingFilter.json);
-            if ($scope.parameters.startDate)
-                $scope.parameters.startDate = new Date($scope.parameters.startDate);
-            if ($scope.parameters.endDate)
-                $scope.parameters.endDate = new Date($scope.parameters.endDate);
-        } else
-            $scope.parameters = {
-                teams: [],
-                applications: [],
-                severities: {},
-                showClosed: false,
-                showOld: false,
-                showHidden: false,
-                showTotal: true,
-                showNew: true,
-                showResurfaced: true,
-                daysOldModifier: 'LastYear',
-                endDate: undefined,
-                startDate: undefined
-            };
+        $scope.parameters = {
+            tags: [],
+            severities: {
+                critical: true,
+                high: true,
+                medium: true,
+                low: true,
+                info: true
+            },
+            daysOldModifier: 'LastYear',
+            endDate: undefined,
+            startDate: undefined
+        };
     };
 
-
-    $scope.$on('loadTrendingReport', function() {
+    $scope.$on('loadComplianceReport', function() {
         $scope.noData = false;
         $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
             var parameters = JSON.parse(filter.json);
             return (parameters.filterType && parameters.filterType.isTrendingFilter);
         });
-        filterService.findDefaultFilter($scope);
 
+        // Data for trending chart and table
         if (!$scope.allScans) {
-            $scope.loading = true;
-            $http.post(tfEncoder.encode("/reports/trendingScans"), $scope.getReportParameters()).
-                success(function(data) {
-                    $scope.loading = false;
-                    $scope.resetFilters();
-                    $scope.allScans = data.object.scanList;
-                    if ($scope.$parent.teamId !== -1 && $scope.$parent.applicationId === -1) {
-                        $scope.parameters.teams = [$scope.$parent.team];
-                        $scope.parameters.applications = [];
-                        $scope.$broadcast("updateBackParameters", $scope.parameters);
-                    }
-                    if ($scope.$parent.applicationId !== -1) {
-                        var app = angular.copy($scope.$parent.application);
-                        app.name = $scope.$parent.team.name + " / " + app.name;
-                        $scope.parameters.applications = [app];
-                        $scope.parameters.teams = [];
-                        $scope.$broadcast("updateBackParameters", $scope.parameters);
-                    }
-                    if ($scope.allScans) {
-                        $scope.allScans.sort(function (a, b) {
-                            return a.importTime - b.importTime;
-                        });
-                       refreshScans();
-                    } else {
-                        $scope.noData = true;
-                    };
-                    $rootScope.$broadcast('allTrendingScans', $scope.allScans);
-                }).
-                error(function() {
-                    $scope.loading = false;
-                });
+            if ($scope.gotDataFromTrending) {
+                $scope.noData = true;
+            } else {
+                $scope.loading = true;
+                $http.post(tfEncoder.encode("/reports/trendingScans"), $scope.getReportParameters()).
+                    success(function(data) {
+                        $scope.loading = false;
+                        $scope.resetFilters();
+                        $scope.allScans = data.object.scanList;
+
+                        if ($scope.allScans) {
+                            $scope.allScans.sort(function (a, b) {
+                                return a.importTime - b.importTime;
+                            });
+                            refreshScans();
+                        } else {
+                            $scope.noData = true;
+                        };
+                    }).
+                    error(function() {
+                        $scope.loading = false;
+                    });
+            }
+        } else {
+            refreshScans();
         }
-        $scope.$parent.trendingActive = true;
+
+        retrieveVulnList();
     });
 
     $scope.$on('resetParameters', function(event, parameters) {
-        if (!$scope.$parent.trendingActive)
+        if (!$scope.$parent.complianceActive)
             return;
         $scope.parameters = angular.copy(parameters);
         refreshScans();
     });
 
     $scope.$on('updateDisplayData', function(event, parameters) {
-        if (!$scope.$parent.trendingActive)
+        if (!$scope.$parent.complianceActive)
             return;
         $scope.parameters = angular.copy(parameters);
         updateDisplayData();
@@ -96,17 +80,10 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
 
      var refreshScans = function(){
         $scope.loading = true;
-        filterByTeamAndApp();
-         if ($scope.filterScans.length === 0) {
-             $scope.noData = true;
-             return;
-         } else {
-             $scope.noData = false;
-         }
+        filterByTag();
         filterByTime();
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
-            return;
         } else {
             $scope.noData = false;
         }
@@ -117,13 +94,14 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
     var updateDisplayData = function(){
         var hashBefore, hashAfter;
         reportUtilities.createTeamAppNames($scope);
-        $scope.trendingScansData = [];
+        $scope.complianceScansData = [];
         $scope.totalVulnsByChannelMap = {};
         $scope.infoVulnsByChannelMap = {};
         $scope.lowVulnsByChannelMap = {};
         $scope.mediumVulnsByChannelMap = {};
         $scope.highVulnsByChannelMap = {};
         $scope.criticalVulnsByChannelMap = {};
+
         if (startIndex && endIndex) {
             $scope.filterScans.forEach(function(scan, index){
                 var _scan = filterDisplayData(scan);
@@ -134,26 +112,30 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                     hashAfter = _scan;
                 if ((!startIndex || startIndex <= index)
                     && (!endIndex || endIndex >= index))
-                    $scope.trendingScansData.push(_scan);
+                    $scope.complianceScansData.push(_scan);
 
             });
 
-
-            if ($scope.trendingScansData.length===1 && $scope.trendingStartDate == $scope.trendingEndDate) {
+            if ($scope.complianceScansData.length===1 && $scope.trendingStartDate == $scope.trendingEndDate) {
                 $scope.trendingEndDate = (new Date()).getTime();
-                var time = new Date($scope.trendingScansData[0].importTime);
+                var time = new Date($scope.complianceScansData[0].importTime);
                 $scope.trendingStartDate = (new Date(time.getFullYear(), time.getMonth() - 1, 1)).getTime();
             }
-            $scope.trendingScansData.unshift(createStartHash(hashBefore));
-            $scope.trendingScansData.push(createEndHash(hashAfter));
-        }
+
+            if ($scope.complianceScansData.length > 0) {
+                $scope.complianceScansData.unshift(createStartHash(hashBefore));
+                $scope.complianceScansData.push(createEndHash(hashAfter));
+            }
+        };
+
+        renderTable();
     };
 
     var createStartHash = function(hashBefore) {
         var startHash = {};
-        if ($scope.trendingScansData.length===0)
+        if ($scope.complianceScansData.length===0)
             return startHash;
-        var firstHashInList = $scope.trendingScansData[0];
+        var firstHashInList = $scope.complianceScansData[0];
 
         if (!hashBefore) {
             startHash.importTime=  $scope.trendingStartDate;
@@ -175,13 +157,13 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             });
         }
         return startHash;
-    }
+    };
 
     var createEndHash = function(hashAfter) {
         var endHash = {};
-        if ($scope.trendingScansData.length===0)
+        if ($scope.complianceScansData.length===0)
             return endHash;
-        var lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
+        var lastHashInList = $scope.complianceScansData[$scope.complianceScansData.length-1];
 
         if (!hashAfter) {
             endHash.importTime=  $scope.trendingEndDate;
@@ -203,24 +185,31 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
             });
         }
         return endHash;
-    }
+    };
+
+    var renderTable = function() {
+        var startingInfo, endingInfo;
+            $scope.tableInfo = [];
+        if ($scope.complianceScansData.length> 0) {
+            startingInfo = $scope.complianceScansData[0];
+            endingInfo = $scope.complianceScansData[$scope.complianceScansData.length-1];
+            var keys = Object.keys(startingInfo);
+
+            keys.forEach(function(key){
+                if (key !== 'importTime') {
+                    var map = {};
+                    map['Severity'] = key;
+                    map['Starting Count'] = startingInfo[key];
+                    map['Ending Count'] = endingInfo[key];
+                    $scope.tableInfo.push(map);
+                }
+            })
+        }
+    };
 
     var filterDisplayData = function(scan) {
         var data = {};
         data.importTime = scan.importTime;
-        if ($scope.parameters.showNew)
-            data.New = scan.numberNewVulnerabilities;
-        if ($scope.parameters.showResurfaced)
-            data.Resurfaced = scan.numberResurfacedVulnerabilities;
-        if ($scope.parameters.showTotal) {
-            data.Total = calculateTotal(scan);
-        }
-        if ($scope.parameters.showClosed)
-            data.Closed = scan.numberClosedVulnerabilities;
-        if ($scope.parameters.showOld)
-            data.Old = scan.numberOldVulnerabilities;
-        if ($scope.parameters.showHidden)
-            data.Hidden = scan.numberHiddenVulnerabilities;
 
         if ($scope.parameters.severities.info) {
             data.Info = calculateInfo(scan);
@@ -240,12 +229,6 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         return data;
     }
 
-    var calculateTotal = function(scan) {
-        var adjustedTotal = scan.numberTotalVulnerabilities -
-            scan.numberOldVulnerabilities +
-            scan.numberOldVulnerabilitiesInitiallyFromThisChannel;
-        return trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal);
-    }
 
     var calculateInfo = function(scan) {
         return trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities);
@@ -284,21 +267,17 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         return numTotal;
     }
 
-    var filterByTeamAndApp = function() {
+    var filterByTag = function() {
 
         $scope.filterScans = $scope.allScans.filter(function(scan){
-            if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0)
+            if ($scope.parameters.tags.length === 0 )
                 return true;
-            var i;
-            for (i=0; i<$scope.parameters.teams.length; i++) {
-                if (scan.team.name === $scope.parameters.teams[i].name) {
-                    return true;
-                }
-            }
-            for (i=0; i<$scope.parameters.applications.length; i++) {
-                if (beginsWith($scope.parameters.applications[i].name, scan.team.name + " / ") &&
-                    endsWith($scope.parameters.applications[i].name, " / " + scan.app.name)) {
-                    return true;
+            var i, j;
+            for (i=0; i<$scope.parameters.tags.length; i++) {
+                for (j=0; j<scan.applicationTags.length; j++) {
+                    if (scan.applicationTags[j].name === $scope.parameters.tags[i].name) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -348,12 +327,73 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         if (startIndex && !endIndex) endIndex = $scope.filterScans.length - 1;
     };
 
-    var endsWith = function(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    $scope.$on('allTrendingScans', function(event, trendingScans) {
+        $scope.allScans = trendingScans;
+        $scope.gotDataFromTrending = true;
+        retrieveVulnList();
+//        if ($scope.allScans)
+//            refreshScans();
+    });
+
+    var retrieveVulnList = function(){
+        $scope.resetFilters();
+        var parameters = updateParameters();
+        loadClosedVulns(parameters);
+        loadOpenVulns(parameters);
+
     };
 
-    var beginsWith = function(str, prefix) {
-        return str.indexOf(prefix) == 0;
+    var updateParameters = function(){
+        var parameters = angular.copy($scope.parameters);
+
+        vulnSearchParameterService.updateParameters($scope, parameters);
+        if (parameters.daysOldModifier) {
+            var endDate = new Date();
+            if (parameters.daysOldModifier === "LastYear") {
+                parameters.endDate = endDate.getTime();
+                parameters.startDate = (new Date(endDate.getFullYear(), endDate.getMonth() - 11, 1)).getTime();
+            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
+                parameters.endDate = endDate.getTime();
+                parameters.startDate = (new Date(endDate.getFullYear(), endDate.getMonth() - 2, 1)).getTime();
+            };
+            parameters.daysOldModifier = undefined;
+        } ;
+        parameters.page = 1;
+        parameters.numberVulnerabilities = 50;
+
+        return parameters;
+    }
+
+    var loadOpenVulns = function(parameters) {
+        $scope.openVulns = {};
+        $scope.loadingOpen = true;
+        parameters.showOpen = true;
+        parameters.showClosed = false;
+
+        $http.post(tfEncoder.encode("/reports/search"), parameters).
+            success(function(data) {
+                $scope.loadingOpen = false;
+                $scope.openVulns = data.object.vulns;
+            }).
+            error(function() {
+                $scope.loadingOpen = false;
+            });
+    };
+
+    var loadClosedVulns = function(parameters) {
+        $scope.closedVulns = {};
+        $scope.loadingClosed = true;
+        parameters.showOpen = false;
+        parameters.showClosed = true;
+
+        $http.post(tfEncoder.encode("/reports/search"), parameters).
+            success(function(data) {
+                $scope.loadingClosed = false;
+                $scope.closedVulns = data.object.vulns;
+            }).
+            error(function() {
+                $scope.loadingClosed = false;
+            });
     };
 
 });

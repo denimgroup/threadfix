@@ -124,7 +124,7 @@ public class EndpointMain {
         if (logging == Logging.ON) {
             console.setThreshold(Level.DEBUG);
         } else {
-            console.setThreshold(Level.INFO);
+            console.setThreshold(Level.ERROR);
         }
 
         console.activateOptions();

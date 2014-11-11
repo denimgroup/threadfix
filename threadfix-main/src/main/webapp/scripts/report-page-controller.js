@@ -8,6 +8,10 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.base = window.location.pathname;
 
+    $scope.trendingActive = false;
+    $scope.complianceActive = false;
+    $scope.snapshotActive = false;
+
     $scope.formatId = 1;
 
     $scope.getReportParameters = function() {
@@ -29,6 +33,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.savedFilters = data.object.savedFilters;
                     $scope.searchApplications = data.object.applications;
                     $scope.filterParameters = data.object.filterParameters;
+                    $scope.tags = data.object.tags;
 
                     $scope.teams.sort(nameCompare)
 
@@ -86,22 +91,33 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.vulnSearch = true;
         $scope.trendingActive = false;
         $scope.snapshotActive = false;
+        $scope.complianceActive = false;
         $scope.filterParameters = undefined;
         $scope.$broadcast('loadVulnerabilitySearchTable');
     }
 
     $scope.loadTrending = function() {
-
         $scope.trendingActive = true;
         $scope.snapshotActive = false;
+        $scope.complianceActive = false;
         $scope.vulnSearch = false;
         $scope.$broadcast('loadTrendingReport');
+
+    };
+
+    $scope.loadCompliance = function() {
+        $scope.trendingActive = false;
+        $scope.snapshotActive = false;
+        $scope.complianceActive = true;
+        $scope.vulnSearch = false;
+        $scope.$broadcast('loadComplianceReport');
 
     };
 
     $scope.loadSnapshot = function() {
         $scope.trendingActive = false;
         $scope.snapshotActive = true;
+        $scope.complianceActive = false;
         $scope.vulnSearch = false;
         $scope.$broadcast('loadSnapshotReport');
 
