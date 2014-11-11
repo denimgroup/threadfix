@@ -1,4 +1,4 @@
-11/7/2014 8:55:00
+11/7/2014 15:16:00
 section.activityFeedType
 Application
 Team
@@ -8,5 +8,5 @@ User
 Vulnerability
 Remote Provider
 section.activityType
-Scan Upload
-Comment Submission
+Scan Upload,{user} uploaded a new {link} with {details}
+Comment Submission,{user} commented on {link}: {details}

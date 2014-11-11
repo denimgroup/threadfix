@@ -87,16 +87,28 @@ class ActivityFeedUpdater implements Updater {
     }
 
     private void processActivityType(String line) {
-        ActivityType activityType = activityTypeDao.retrieveByName(line);
+        String[] lineSplit = line.split(",");
+        if (lineSplit.length != 2) {
+            throw new IllegalStateException("ActivityType lines must have two sections separated by a comma, not " + line);
+        }
+
+        ActivityType activityType = activityTypeDao.retrieveByName(lineSplit[0]);
 
         if (activityType == null) {
             ActivityType type = new ActivityType();
-            type.setName(line);
+            type.setName(lineSplit[0]);
+            type.setFormatString(lineSplit[1]);
             activityTypeDao.saveOrUpdate(type);
 
-            LOG.info("Creating new activity type " + line);
+            LOG.info("Created new activity type " + lineSplit[0]);
         } else {
-            LOG.debug("Already found activity type " + line);
+            if (activityType.getFormatString() == null || !activityType.getFormatString().equals(lineSplit[1])) {
+                activityType.setFormatString(lineSplit[1]);
+                activityTypeDao.saveOrUpdate(activityType);
+                LOG.info("Updated format string for activity type " + lineSplit[0]);
+            } else {
+                LOG.debug("No change for activity type " + line);
+            }
         }
     }
 
