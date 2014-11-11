@@ -17,6 +17,16 @@
             </table>
         </div>
 
+        <div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='openVulns'; init()">
+            <h4 style="padding-top:10px">Open Vulnerabilities</h4>
+            <%@ include file="/WEB-INF/views/tags/commentTable.jsp" %>
+        </div>
+
+        <div ng-controller="VulnerabilityCommentsTableController" ng-init="vulnType='closedVulns'; init()">
+            <h4 style="padding-top:10px">Closed Vulnerabilities</h4>
+            <%@ include file="/WEB-INF/views/tags/commentTable.jsp" %>
+        </div>
+
     </div>
 
     <div id="complianceFilterDiv" class="filter-controls">

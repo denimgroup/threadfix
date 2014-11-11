@@ -61,7 +61,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             refreshScans();
         }
 
-        retrieveVulnList();
+//        $scope.resetFilters();
+//        retrieveVulnList();
     });
 
     $scope.$on('resetParameters', function(event, parameters) {
@@ -69,6 +70,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             return;
         $scope.parameters = angular.copy(parameters);
         refreshScans();
+        $scope.$broadcast("updateParameters");
     });
 
     $scope.$on('updateDisplayData', function(event, parameters) {
@@ -76,6 +78,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             return;
         $scope.parameters = angular.copy(parameters);
         updateDisplayData();
+        $scope.$broadcast("updateParameters");
     });
 
      var refreshScans = function(){
@@ -330,70 +333,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     $scope.$on('allTrendingScans', function(event, trendingScans) {
         $scope.allScans = trendingScans;
         $scope.gotDataFromTrending = true;
-        retrieveVulnList();
-//        if ($scope.allScans)
-//            refreshScans();
-    });
-
-    var retrieveVulnList = function(){
         $scope.resetFilters();
-        var parameters = updateParameters();
-        loadClosedVulns(parameters);
-        loadOpenVulns(parameters);
-
-    };
-
-    var updateParameters = function(){
-        var parameters = angular.copy($scope.parameters);
-
-        vulnSearchParameterService.updateParameters($scope, parameters);
-        if (parameters.daysOldModifier) {
-            var endDate = new Date();
-            if (parameters.daysOldModifier === "LastYear") {
-                parameters.endDate = endDate.getTime();
-                parameters.startDate = (new Date(endDate.getFullYear(), endDate.getMonth() - 11, 1)).getTime();
-            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
-                parameters.endDate = endDate.getTime();
-                parameters.startDate = (new Date(endDate.getFullYear(), endDate.getMonth() - 2, 1)).getTime();
-            };
-            parameters.daysOldModifier = undefined;
-        } ;
-        parameters.page = 1;
-        parameters.numberVulnerabilities = 50;
-
-        return parameters;
-    }
-
-    var loadOpenVulns = function(parameters) {
-        $scope.openVulns = {};
-        $scope.loadingOpen = true;
-        parameters.showOpen = true;
-        parameters.showClosed = false;
-
-        $http.post(tfEncoder.encode("/reports/search"), parameters).
-            success(function(data) {
-                $scope.loadingOpen = false;
-                $scope.openVulns = data.object.vulns;
-            }).
-            error(function() {
-                $scope.loadingOpen = false;
-            });
-    };
-
-    var loadClosedVulns = function(parameters) {
-        $scope.closedVulns = {};
-        $scope.loadingClosed = true;
-        parameters.showOpen = false;
-        parameters.showClosed = true;
-
-        $http.post(tfEncoder.encode("/reports/search"), parameters).
-            success(function(data) {
-                $scope.loadingClosed = false;
-                $scope.closedVulns = data.object.vulns;
-            }).
-            error(function() {
-                $scope.loadingClosed = false;
-            });
-    };
+    });
 
 });
