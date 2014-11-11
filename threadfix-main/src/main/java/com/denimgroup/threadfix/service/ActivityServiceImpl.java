@@ -88,14 +88,13 @@ public class ActivityServiceImpl
         activity.setActivityFeedList(activityFeeds);
 
         String scannerType = scan.getApplicationChannel().getChannelType().getName();
-        activity.setDetails(scannerType + " scan with " + numberNew + " new and " + numberClosed + " closed vulnerabilities.");
+        activity.setDetails(" with " + numberNew + " new and " + numberClosed + " closed vulnerabilities.");
 
-        activity.setLinkText("View Scan");
+        activity.setLinkText(scannerType + " scan");
         activity.setLinkPath(getPathForScan(teamId, appId, scanId));
 
         activityDao.saveOrUpdate(activity);
 
-        // I would prefer foreach but it throws ConcurrentModificationException for this code
         addActivityToFeeds(activity, activityFeeds);
 
         LOG.info("Created activity log for new scan.");
@@ -145,7 +144,7 @@ public class ActivityServiceImpl
 
         Activity activity = new Activity();
 
-        // TODO fix this probably
+        // TODO fix this probably, the comment ID will be null until the transaction completes. Maybe make async?
 //        activity.setObjectId(vulnerabilityComment.getId());
 
         activity.setParentId(vulnerabilityId);
@@ -160,7 +159,7 @@ public class ActivityServiceImpl
 
         activity.setDetails(vulnerabilityComment.getComment());
 
-        activity.setLinkText("View Vulnerability");
+        activity.setLinkText("Vulnerability " + vulnerabilityId);
         activity.setLinkPath(getPathForVulnerability(teamId, appId, vulnerabilityId));
 
         activityDao.saveOrUpdate(activity);

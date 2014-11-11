@@ -37,7 +37,7 @@ import java.util.List;
 @Table(name = "ActivityType")
 public class ActivityType extends BaseEntity {
 
-    private String name;
+    private String name, formatString;
     private List<Activity> activities;
 
     @OneToMany(mappedBy = "activityType")
@@ -59,5 +59,15 @@ public class ActivityType extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column
+    @JsonView(AllViews.FormInfo.class)
+    public String getFormatString() {
+        return formatString;
+    }
+
+    public void setFormatString(String formatString) {
+        this.formatString = formatString;
     }
 }
