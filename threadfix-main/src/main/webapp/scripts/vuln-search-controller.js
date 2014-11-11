@@ -593,6 +593,10 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.errorMessage = "Failed to retrieve heading information. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
-    }
+    };
+
+    $scope.goToTag = function (tag) {
+        window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id + "/view");
+    };
 
 });

@@ -88,6 +88,10 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         } else {
             $scope.leftReport = null;
             $scope.rightReport = null;
+
+            $scope.topAppsData = null;
+            $scope.trendingData = null;
+
             $scope.empty = true;
         }
     });
