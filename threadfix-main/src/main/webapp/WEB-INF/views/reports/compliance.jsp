@@ -6,7 +6,7 @@
         </span>
 
         <div ng-show="complianceActive">
-            <d3-trending data="complianceScansData" label="title" width="670" height="400" margin="margin"
+            <d3-trending data="trendingScansData" label="title" width="670" height="400" margin="margin"
                          table-info="tableInfo" start-date="trendingStartDate" end-date="trendingEndDate"></d3-trending>
         </div>
 

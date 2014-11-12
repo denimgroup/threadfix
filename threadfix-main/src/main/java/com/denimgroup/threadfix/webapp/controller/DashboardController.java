@@ -29,15 +29,20 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.report.ReportsService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +70,8 @@ public class DashboardController {
     private VulnerabilityService vulnerabilityService;
     @Autowired
 	private OrganizationService organizationService;
+    @Autowired
+    private FilterJsonBlobService filterJsonBlobService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
@@ -92,17 +99,18 @@ public class DashboardController {
 
 		return "dashboard/dashboard";
 	}
-	
-	@RequestMapping(value="/leftReport", method=RequestMethod.GET)
-	public @ResponseBody RestResponse<Map<String, Object>> leftReport(HttpServletRequest request) {
-        ReportCheckResultBean report = report(request, ReportFormat.TRENDING);
-        Map<String, Object> map = new HashMap<>();
-        map.put("scanList", report.getReportList());
-        map.put("startDate", report.getStartDate());
-        map.put("endDate", report.getEndDate());
-        return RestResponse.success(map);
-	}
-	
+
+    @RequestMapping(value="/leftReport", method=RequestMethod.GET)
+    public @ResponseBody String leftReport(HttpServletRequest request) {
+
+        ReportParameters parameters = getParameters(request, ReportFormat.TRENDING);
+        Map<String, Object> map = reportsService.generateTrendingReport(parameters, request);
+        map.put("savedFilters", filterJsonBlobService.loadAll());
+
+        return ControllerUtils.writeSuccessObjectWithView(map, AllViews.RestViewScanStatistic.class);
+    }
+
+
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {
 		if (request.getParameter("appId") != null) {
@@ -113,7 +121,13 @@ public class DashboardController {
 	}
 
     public ReportCheckResultBean report(HttpServletRequest request, ReportFormat reportFormat) {
+        ReportParameters parameters = getParameters(request, reportFormat);
+        ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
 
+        return resultBean;
+    }
+
+    private ReportParameters getParameters(HttpServletRequest request, ReportFormat reportFormat) {
         int orgId = -1, appId = -1;
         if (request.getParameter("orgId") != null) {
             orgId = safeParseInt(request.getParameter("orgId"));
@@ -126,8 +140,8 @@ public class DashboardController {
         parameters.setOrganizationId(orgId);
         parameters.setFormatId(1);
         parameters.setReportFormat(reportFormat);
-        ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
-        return resultBean;
+
+        return parameters;
     }
 	
 	public int safeParseInt(String string) {

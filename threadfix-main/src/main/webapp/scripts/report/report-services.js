@@ -156,7 +156,7 @@ threadfixModule.factory('reportConstants', function() {
 
 });
 
-threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, threadFixModalService) {
+threadfixModule.factory('reportUtilities', function() {
 
     var reportUtilities = {};
     var drawingDuration = 500;
@@ -279,4 +279,322 @@ threadfixModule.factory('reportUtilities', function(vulnSearchParameterService, 
 
 });
 
+threadfixModule.factory('trendingUtilities', function(reportUtilities) {
+
+    var trendingUtilities = {};
+    var startIndex = -1, endIndex = -1;
+
+    trendingUtilities.refreshScans = function($scope){
+        $scope.loading = true;
+        $scope.noData = false;
+
+        trendingUtilities.filterByTime($scope);
+        if ($scope.filterScans.length === 0) {
+            $scope.noData = true;
+            return;
+        }
+        trendingUtilities.updateDisplayData($scope);
+        if ($scope.trendingScansData.length === 0) {
+            $scope.noData = true;
+            return;
+        }
+        $scope.loading = false;
+    };
+
+    trendingUtilities.updateDisplayData = function($scope){
+        var hashBefore, hashAfter;
+        reportUtilities.createTeamAppNames($scope);
+        $scope.trendingScansData = [];
+        $scope.totalVulnsByChannelMap = {};
+        $scope.infoVulnsByChannelMap = {};
+        $scope.lowVulnsByChannelMap = {};
+        $scope.mediumVulnsByChannelMap = {};
+        $scope.highVulnsByChannelMap = {};
+        $scope.criticalVulnsByChannelMap = {};
+        if (startIndex!==-1 && endIndex!==-1) {
+            $scope.filterScans.forEach(function(scan, index){
+                var _scan = trendingUtilities.filterDisplayData(scan, $scope);
+
+                if (startIndex == index + 1)
+                    hashBefore = _scan;
+                if (index == endIndex + 1)
+                    hashAfter = _scan;
+                if ((startIndex===-1 || startIndex <= index)
+                    && (endIndex===-1 || endIndex >= index))
+                    $scope.trendingScansData.push(_scan);
+
+            });
+
+            if ($scope.trendingScansData.length===1 && $scope.trendingStartDate == $scope.trendingEndDate) {
+                $scope.trendingEndDate = (new Date()).getTime();
+                var time = new Date($scope.trendingScansData[0].importTime);
+                $scope.trendingStartDate = (new Date(time.getFullYear(), time.getMonth() - 1, 1)).getTime();
+            }
+            if ($scope.trendingScansData.length > 0) {
+                $scope.trendingScansData.unshift(createStartHash(hashBefore, $scope));
+                $scope.trendingScansData.push(createEndHash(hashAfter, $scope));
+            }
+        }
+    };
+
+    var createStartHash = function(hashBefore, $scope) {
+        var startHash = {};
+        if ($scope.trendingScansData.length===0)
+            return startHash;
+        var firstHashInList = $scope.trendingScansData[0];
+
+        if (!hashBefore) {
+            startHash.importTime=  $scope.trendingStartDate;
+            var keys = Object.keys(firstHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime")
+                    startHash[key] = 0;
+            });
+        } else {
+            var rate1 = (firstHashInList.importTime)-(hashBefore.importTime);
+            var rate2 = $scope.trendingStartDate-(hashBefore.importTime);
+            startHash.importTime=  $scope.trendingStartDate;
+            var keys = Object.keys(firstHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime") {
+                    var value = Math.round(hashBefore[key] + (firstHashInList[key] - hashBefore[key]) / rate1 * rate2);
+                    startHash[key] = value;
+                }
+            });
+        }
+        return startHash;
+    }
+
+    var createEndHash = function(hashAfter, $scope) {
+        var endHash = {};
+        if ($scope.trendingScansData.length===0)
+            return endHash;
+        var lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
+
+        if (!hashAfter) {
+            endHash.importTime=  $scope.trendingEndDate;
+            var keys = Object.keys(lastHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime")
+                    endHash[key] = lastHashInList[key];
+            });
+        } else {
+            var rate1 = (hashAfter.importTime)-(lastHashInList.importTime);
+            var rate2 = $scope.trendingEndDate-(hashAfter.importTime);
+            endHash.importTime=  $scope.trendingEndDate;
+            var keys = Object.keys(lastHashInList);
+            keys.forEach(function(key){
+                if (key != "importTime") {
+                    var value = Math.round(lastHashInList[key] + (hashAfter[key] - lastHashInList[key]) / rate1 * rate2);
+                    endHash[key] = value;
+                }
+            });
+        }
+        return endHash;
+    }
+
+    trendingUtilities.filterDisplayData = function(scan, $scope) {
+        var data = {};
+        data.importTime = scan.importTime;
+        if ($scope.parameters.showNew)
+            data.New = scan.numberNewVulnerabilities;
+        if ($scope.parameters.showResurfaced)
+            data.Resurfaced = scan.numberResurfacedVulnerabilities;
+        if ($scope.parameters.showTotal) {
+            data.Total = calculateTotal(scan, $scope);
+        }
+        if ($scope.parameters.showClosed)
+            data.Closed = scan.numberClosedVulnerabilities;
+        if ($scope.parameters.showOld)
+            data.Old = scan.numberOldVulnerabilities;
+        if ($scope.parameters.showHidden)
+            data.Hidden = scan.numberHiddenVulnerabilities;
+
+        if ($scope.parameters.severities.info) {
+            data.Info = calculateInfo(scan, $scope);
+        }
+        if ($scope.parameters.severities.low) {
+            data.Low = calculateLow(scan, $scope);
+        }
+        if ($scope.parameters.severities.medium) {
+            data.Medium = calculateMedium(scan, $scope);
+        }
+        if ($scope.parameters.severities.high) {
+            data.High = calculateHigh(scan, $scope);
+        }
+        if ($scope.parameters.severities.critical) {
+            data.Critical = calculateCritical(scan, $scope);
+        }
+        return data;
+    }
+
+    var calculateTotal = function(scan, $scope) {
+        var adjustedTotal = scan.numberTotalVulnerabilities -
+            scan.numberOldVulnerabilities +
+            scan.numberOldVulnerabilitiesInitiallyFromThisChannel;
+        return trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal);
+    }
+
+    var calculateInfo = function(scan, $scope) {
+        return trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities);
+    }
+
+    var calculateLow = function(scan, $scope) {
+        return trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities);
+    }
+
+    var calculateMedium = function(scan, $scope) {
+        return trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities);
+    }
+
+    var calculateHigh = function(scan, $scope) {
+        return trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities);
+    }
+
+    var calculateCritical = function(scan, $scope) {
+        return trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities);
+    }
+
+    var trendingTotal = function(map, scan, newNum) {
+        if (scan.applicationChannelId) {
+            map[scan.applicationChannelId] = newNum;
+        }
+
+        var numTotal = newNum;
+        // This code counts in the old vulns from other channels.
+        for (var key in map) {
+            if (map.hasOwnProperty(key)) {
+                if (!scan.applicationChannelId || scan.applicationChannelId != key) {
+                    numTotal += map[key];
+                }
+            }
+        }
+        return numTotal;
+    }
+
+    trendingUtilities.filterByTeamAndApp = function($scope) {
+
+        $scope.filterScans = $scope.allScans.filter(function(scan){
+            if ($scope.parameters.teams.length === 0 && $scope.parameters.applications.length === 0)
+                return true;
+            var i;
+            for (i=0; i<$scope.parameters.teams.length; i++) {
+                if (scan.team.name === $scope.parameters.teams[i].name) {
+                    return true;
+                }
+            }
+            for (i=0; i<$scope.parameters.applications.length; i++) {
+                if (beginsWith($scope.parameters.applications[i].name, scan.team.name + " / ") &&
+                    endsWith($scope.parameters.applications[i].name, " / " + scan.app.name)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+    };
+
+    trendingUtilities.filterByTag = function($scope) {
+
+        $scope.filterScans = $scope.allScans.filter(function(scan){
+            if ($scope.parameters.tags.length === 0 )
+                return true;
+            var i, j;
+            for (i=0; i<$scope.parameters.tags.length; i++) {
+                for (j=0; j<scan.applicationTags.length; j++) {
+                    if (scan.applicationTags[j].name === $scope.parameters.tags[i].name) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+
+    };
+
+    trendingUtilities.filterByTime = function($scope) {
+        $scope.trendingStartDate = undefined;
+        $scope.trendingEndDate = undefined;
+        startIndex = -1; endIndex = -1;
+        if ($scope.parameters.daysOldModifier) {
+            $scope.trendingEndDate = new Date();
+            if ($scope.parameters.daysOldModifier === "LastYear") {
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
+            } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
+                $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
+            };
+        } else {
+            if ($scope.parameters.endDate) {
+                $scope.trendingEndDate = $scope.parameters.endDate;
+            }
+            if ($scope.parameters.startDate) {
+                $scope.trendingStartDate = $scope.parameters.startDate;
+            }
+        };
+
+        if (!$scope.trendingStartDate) {
+            startIndex = 0;
+            $scope.trendingStartDate = $scope.filterScans[0].importTime;
+        }
+        if (!$scope.trendingEndDate ) {
+            endIndex = $scope.filterScans.length - 1;
+            $scope.trendingEndDate = new Date();
+        }
+
+        $scope.filterScans.some(function(scan, index) {
+            if (startIndex!==-1 && endIndex!==-1)
+                return true;
+            if (startIndex===-1 && $scope.trendingStartDate && $scope.trendingStartDate<=scan.importTime)
+                startIndex = index;
+            if (endIndex===-1 && $scope.trendingEndDate && $scope.trendingEndDate < scan.importTime)
+                endIndex = index - 1;
+        });
+
+        if (startIndex===-1 && endIndex!==-1)
+            startIndex = 0;
+        if (startIndex!==-1 && endIndex===-1)
+            endIndex = $scope.filterScans.length - 1;
+    };
+
+    var endsWith = function(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    };
+
+    var beginsWith = function(str, prefix) {
+        return str.indexOf(prefix) == 0;
+    };
+
+    trendingUtilities.resetFilters = function($scope) {
+        if ($scope.savedDefaultTrendingFilter) {
+            $scope.selectedFilter = $scope.savedDefaultTrendingFilter;
+            $scope.parameters = JSON.parse($scope.savedDefaultTrendingFilter.json);
+            if ($scope.parameters.startDate)
+                $scope.parameters.startDate = new Date($scope.parameters.startDate);
+            if ($scope.parameters.endDate)
+                $scope.parameters.endDate = new Date($scope.parameters.endDate);
+        } else
+            $scope.parameters = {
+                teams: [],
+                applications: [],
+                severities: {
+                    info: true,
+                    low: true,
+                    medium: true,
+                    high: true,
+                    critical: true
+                },
+                showClosed: false,
+                showOld: false,
+                showHidden: false,
+                showTotal: false,
+                showNew: false,
+                showResurfaced: false,
+                daysOldModifier: 'LastYear',
+                endDate: undefined,
+                startDate: undefined
+            };
+    };
+
+    return trendingUtilities;
+});
 

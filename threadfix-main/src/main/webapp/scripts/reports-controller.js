@@ -1,9 +1,10 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ReportsController', function ($scope, $window, threadfixAPIService) {
+myAppModule.controller('ReportsController', function ($scope, $window, threadfixAPIService, filterService, trendingUtilities) {
 
     // Using this controller is easy; just set up a parent controller with empty and reportQuery fields.
     $scope.empty = $scope.$parent.empty;
+    $scope.noData = $scope.$parent.empty;
     $scope.leftMargin = [20, 70, 40, 60];
     $scope.rightMargin = {top: 20, right: 20, bottom: 30, left: 60};
 
@@ -20,12 +21,19 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
         threadfixAPIService.loadReport("/dashboard/leftReport", $scope.reportQuery).
             success(function(data, status, headers, config) {
 
-                $scope.trendingData = data.object.scanList;
-                $scope.trendingStartDate = data.object.startDate;
-                $scope.trendingEndDate = data.object.endDate;
+                $scope.allScans = data.object.scanList;
+                $scope.savedFilters = data.object.savedFilters;
+                filterService.findDefaultFilter($scope);
+                trendingUtilities.resetFilters($scope);
 
-                if (!$scope.trendingData) {
-                    $scope.empty = true;
+                if ($scope.allScans) {
+                    $scope.allScans.sort(function (a, b) {
+                        return a.importTime - b.importTime;
+                    });
+                    $scope.filterScans = $scope.allScans;
+                    trendingUtilities.refreshScans($scope);
+                } else {
+                    $scope.noData = true;
                 }
 
                 $scope.loadingLeft = false;
