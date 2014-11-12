@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.service.defects;
+package com.denimgroup.threadfix.viewmodel;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
@@ -34,15 +34,10 @@ import java.util.Map;
  */
 public class DefectMetadata {
 	
-	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
+	protected static final SanitizedLogger log = new SanitizedLogger(DefectMetadata.class);
 
-	private String description;
-	private String preamble;
-	private String component;
-	private String version;
-	private String severity;
-	private String priority;
-	private String status;
+	private String description, preamble, component, version, severity, priority, status, fullDescription;
+
     private Map<String, Object> fieldsMap;
 
 	/**
@@ -50,7 +45,7 @@ public class DefectMetadata {
 	 * @param preamble
 	 */
 	public DefectMetadata(String description, String preamble, String component, String version,
-			String severity, String priority, String status) {
+                          String severity, String priority, String status) {
 		if (description == null) {
 			log.warn("Description should never be null");
 		}
@@ -80,49 +75,78 @@ public class DefectMetadata {
         this.fieldsMap = fieldsMap;
     }
 
-	/**
-	 * @return
-	 */
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * @return
-	 */
-	public String getPreamble() {
-		if (this.preamble != null) {
-			return this.preamble;
-		} else {
-			return "";
-		}
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPreamble() {
+        return preamble == null ? "" : preamble;
+    }
 
     public void setPreamble(String preamble) {
         this.preamble = preamble;
     }
 
     public String getComponent() {
-		return component;
-	}
+        return component;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public void setComponent(String component) {
+        this.component = component;
+    }
 
-	public String getSeverity() {
-		return severity;
-	}
-	
-	public String getStatus() {
-		return status;
-	}
-	
-	public String getPriority() {
-		return priority;
-	}
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Map<String, Object> getFieldsMap() {
         return fieldsMap;
+    }
+
+    public void setFieldsMap(Map<String, Object> fieldsMap) {
+        this.fieldsMap = fieldsMap;
+    }
+
+    /**
+     * @return the full generated description for the defect including vulnerability IDs and information
+     */
+    public String getFullDescription() {
+        return fullDescription;
+    }
+
+    public void setFullDescription(String fullDescription) {
+        this.fullDescription = fullDescription;
     }
 }

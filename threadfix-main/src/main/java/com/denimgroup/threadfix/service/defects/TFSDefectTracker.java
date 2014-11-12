@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClientImpl;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
@@ -69,10 +70,12 @@ public class TFSDefectTracker extends AbstractDefectTracker {
         assert vulnerabilities != null && vulnerabilities.size() > 0;
         assert metadata != null;
 
+        String description = metadata.getFullDescription();
+
 		boolean validConfiguration = configureClient();
 		
 		if (validConfiguration) {
-            return client.createDefect(getProjectName(), metadata, makeDescription(vulnerabilities, metadata));
+            return client.createDefect(getProjectName(), metadata, description);
 		} else {
             log.warn("Unable to create defect.");
             return null;

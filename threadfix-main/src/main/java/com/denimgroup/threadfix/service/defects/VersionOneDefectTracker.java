@@ -28,13 +28,14 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
 import com.denimgroup.threadfix.exception.RestUrlException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
 import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinition;
 import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinitionParser;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
@@ -71,12 +72,12 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
             return null;
         }
 
-        if(fieldsMap.get("Description") != null) {
-            String preamble = metadata.getPreamble();
-            metadata.setPreamble(preamble + "\n" + String.valueOf(fieldsMap.get("Description")));
+        String description = metadata.getFullDescription();
+
+        if (fieldsMap.get("Description") != null) {
+            description = description + "\n" + String.valueOf(fieldsMap.get("Description"));
         }
 
-        String description = makeDescription(vulnerabilities, metadata);
         description = description.replaceAll("\n", "<br>");
 
         assetTemplate.getAttributes().add(createAttribute("Description", "set", description));
@@ -89,20 +90,19 @@ public class VersionOneDefectTracker extends AbstractDefectTracker {
 
         getV1Data();
 
-        if (fieldsMap != null) {
-            for(Map.Entry<String, Object> entry : fieldsMap.entrySet()){
-                AttributeDefinition entryDef = findAttributeDefinition(entry.getKey());
-                if (entryDef != null) {
-                    if (entryDef.getRelationType().equals("select")) {
-                        addRelation(entryDef, assetTemplate, entry.getValue());
-                    } else {
-                        addAttribute(entryDef, assetTemplate, entry.getValue());
-                    }
+        for (Map.Entry<String, Object> entry : fieldsMap.entrySet()){
+            AttributeDefinition entryDef = findAttributeDefinition(entry.getKey());
+            if (entryDef != null) {
+                if (entryDef.getRelationType().equals("select")) {
+                    addRelation(entryDef, assetTemplate, entry.getValue());
                 } else {
-                    LOG.warn("Was unable to find " + entry.getKey() + " information");
+                    addAttribute(entryDef, assetTemplate, entry.getValue());
                 }
+            } else {
+                LOG.warn("Was unable to find " + entry.getKey() + " information");
             }
         }
+
         String defectXml = MarshallingUtils.unmarshal(Assets.Asset.class, assetTemplate);
         
         LOG.debug(defectXml);
