@@ -27,14 +27,15 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.RestIOException;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;
 import com.denimgroup.threadfix.service.defects.utils.jira.DynamicFormFieldParser;
-import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
 import com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse;
+import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
@@ -326,9 +327,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 			setProjectId(getProjectIdByName());
 		}
 
-		String description = makeDescription(vulnerabilities, metadata);
-
         Map<String, Object> map = metadata.getFieldsMap();
+
+        String description = metadata.getFullDescription();
 
         if (map.get("description") != null) {
             description = map.get("description") + "\n" + description;
@@ -395,12 +396,6 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         } catch (IOException e) {
             throw new DefectTrackerFormatException(e, "We were unable to serialize object as JSON");
         }
-    }
-
-    private boolean isValidField(List<String> errorFieldList, String field) {
-        if (errorFieldList == null || errorFieldList.size() == 0)
-            return true;
-        return !errorFieldList.contains(field);
     }
 
 	@Override

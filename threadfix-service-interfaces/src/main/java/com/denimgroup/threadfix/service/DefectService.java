@@ -23,11 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.interfaces.DefectSubmitter;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author bbeverly
@@ -74,7 +76,7 @@ public interface DefectService {
 			String component, String version, String severity, String priority, String status, Map<String,
             Object> fieldsMap, Boolean additionalScannerInfo);
 
-	/**
+    /**
 	 * Get the error message associated with the submission of the list of Vulnerabilities.
 	 * 
 	 * @param vulns
@@ -100,7 +102,7 @@ public interface DefectService {
 	 * @param applicationId
 	 */
 	void deleteByApplicationId(Integer applicationId);
-	
+
 	/**
 	 * 
 	 * @param vulnerabilities

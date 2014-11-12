@@ -23,10 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Defect;
+import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.interfaces.DefectSubmitter;
 import com.denimgroup.threadfix.data.interfaces.ProjectMetadataSource;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
@@ -43,7 +46,7 @@ import java.util.Map;
  * @author mcollins
  * 
  */
-public abstract class AbstractDefectTracker implements ProjectMetadataSource {
+public abstract class AbstractDefectTracker implements ProjectMetadataSource, DefectSubmitter {
 	
 	protected String url, username, password, projectName, projectId, lastError;
 
@@ -172,107 +175,6 @@ public abstract class AbstractDefectTracker implements ProjectMetadataSource {
 	 * 
 	 */
 	public abstract boolean hasValidUrl();
-
-	/**
-	 * @param vulnerabilities
-	 * @param metadata
-	 * @return
-	 */
-	protected String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
-
-		StringBuilder stringBuilder = new StringBuilder();
-
-		String preamble = metadata.getPreamble();
-
-		if (preamble != null && !"".equals(preamble)) {
-			stringBuilder.append("General information\n");
-			stringBuilder.append(preamble);
-			stringBuilder.append('\n');
-			stringBuilder.append('\n');
-		}
-
-		int vulnIndex = 0;
-
-		if (vulnerabilities != null) {
-			for (Vulnerability vulnerability : vulnerabilities) {
-				if (vulnerability.getGenericVulnerability() != null &&
-						vulnerability.getSurfaceLocation() != null) {
-
-                    stringBuilder
-                            .append("Vulnerability[")
-                            .append(vulnIndex)
-                            .append("]:\n")
-                            .append(vulnerability.getGenericVulnerability().getName())
-                            .append('\n')
-                            .append("CWE-ID: ")
-                            .append(vulnerability.getGenericVulnerability().getId())
-                            .append('\n')
-                            .append("http://cwe.mitre.org/data/definitions/")
-                            .append(vulnerability.getGenericVulnerability().getId())
-                            .append(".html")
-                            .append('\n');
-	
-					SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
-                    stringBuilder
-                            .append("Vulnerability attack surface location:\n")
-                            .append("URL: ")
-                            .append(surfaceLocation.getUrl())
-                            .append("\n")
-                            .append("Parameter: ")
-                            .append(surfaceLocation.getParameter());
-
-                    List<Finding> findings = vulnerability.getFindings();
-                    if (findings != null && !findings.isEmpty()) {
-                        addUrlReferences(findings, stringBuilder);
-                        addNativeIds(findings, stringBuilder);
-                    }
-					
-					stringBuilder.append("\n\n");
-					vulnIndex++;
-				}
-			}
-		}
-		return stringBuilder.toString();
-	}
-
-    private boolean hasChannelName(Finding finding) {
-        return finding != null &&
-                finding.getScan() != null &&
-                finding.getScan().getApplicationChannel() != null &&
-                finding.getScan().getApplicationChannel().getChannelType() != null &&
-                finding.getScan().getApplicationChannel().getChannelType().getName() != null;
-    }
-
-    protected void addUrlReferences(List<Finding> findings, StringBuilder builder) {
-        builder.append("\n");
-
-        for(Finding finding: findings){
-            if (hasChannelName(finding)) {
-                String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
-                String urlReference = finding.getUrlReference();
-                if (urlReference != null) {
-                    builder.append("\n")
-                            .append(channelName)
-                            .append(" Vuln URL: ")
-                            .append(urlReference);
-                }
-            }
-        }
-    }
-	
-	protected void addNativeIds(List<Finding> findings, StringBuilder builder) {
-        for (Finding finding : findings) {
-            if (hasChannelName(finding)) {
-                String channelName = finding.getScan().getApplicationChannel().getChannelType().getName();
-                if (ChannelType.NATIVE_ID_SCANNERS.contains(channelName)) {
-                    builder.append("\n")
-                            .append(channelName)
-                            .append(" ID: ")
-                            .append(finding.getNativeId());
-                }
-            }
-        }
-	}
 	
 	public String getUrl() {
 		return url;

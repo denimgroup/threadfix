@@ -25,41 +25,38 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
-import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.service.DefectDescriptionBuilder.makeDescription;
 
 @Service
 @Transactional(readOnly = false)
 public class DefectServiceImpl implements DefectService {
 
-	private DefectDao defectDao = null;
-	private VulnerabilityDao vulnerabilityDao = null;
-	private ApplicationService applicationService = null;
+    @Autowired
+	private DefectDao defectDao;
+	@Autowired
+	private VulnerabilityDao vulnerabilityDao;
+	@Autowired
+	private ApplicationService applicationService;
+    @Autowired
+    private DefectSubmissionServiceImpl defectSubmissionService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
 	
-	@Autowired
-	public DefectServiceImpl(DefectDao defectDao,
-			VulnerabilityDao vulnerabilityDao,
-			ApplicationService applicationService) {
-		this.defectDao = defectDao;
-		this.vulnerabilityDao = vulnerabilityDao;
-		this.applicationService = applicationService;
-	}
-
 	@Override
 	public List<Defect> loadAll() {
 		return defectDao.retrieveAll();
@@ -111,17 +108,17 @@ public class DefectServiceImpl implements DefectService {
 		Vulnerability vuln = allVulns.get(0);
 
 		Application application = vuln.getApplication();
-		
+
 		if (application != null) {
 			applicationService.decryptCredentials(application);
 		}
-		
+
 		AbstractDefectTracker dt = DefectTrackerFactory.getTracker(application);
 		if (dt == null) {
 			log.warn("Unable to load Defect Tracker.");
 			return null;
 		}
-		
+
 		String editedSummary = summary, editedPreamble = preamble;
 
 		// TODO handle error cases better.
@@ -136,7 +133,7 @@ public class DefectServiceImpl implements DefectService {
 		if (editedPreamble == null || editedPreamble.equals("")) {
 			if (vuln.getGenericVulnerability() != null && vuln.getSurfaceLocation() != null) {
 
-                if(additionalScannerInfo){
+                if(additionalScannerInfo != null && additionalScannerInfo){
                     String additionalScannerInfoStr = getAdditionalScannerInfo(allVulns);
 
                     if(additionalScannerInfoStr == null || additionalScannerInfoStr.equals("")){
@@ -164,26 +161,30 @@ public class DefectServiceImpl implements DefectService {
 			log.warn("All the vulnerabilities already had defects, exiting.");
 			return null;
 		}
-		
+
 		String defectTrackerName = null;
 		if (application != null && application.getDefectTracker() != null
 				&& application.getDefectTracker().getDefectTrackerType() != null
 				&& application.getDefectTracker().getDefectTrackerType().getName() != null) {
 			defectTrackerName = application.getDefectTracker().getDefectTrackerType().getName();
 		}
-		
+
 		if (defectTrackerName != null) {
 			log.info("About to submit a defect to " + defectTrackerName + ".");
 		} else {
 			log.info("About to submit a defect to the defect tracker.");
 		}
-		
-		String defectId = dt.createDefect(vulnsWithoutDefects,
-				new DefectMetadata(editedSummary, editedPreamble,
-				component, version, severity, priority, status, fieldsMap));
+
+        DefectMetadata metadata = new DefectMetadata(editedSummary, editedPreamble,
+                component, version, severity, priority, status, fieldsMap);
+
+        String description = makeDescription(vulnsWithoutDefects, metadata);
+        metadata.setFullDescription(description);
+
+        String defectId = defectSubmissionService.submitDefect(dt, vulnsWithoutDefects, metadata);
 
 		if (defectId != null) {
-			
+
 			Defect defect = new Defect();
 			defect.setNativeId(defectId);
 			defect.setVulnerabilities(vulnsWithoutDefects);
@@ -195,12 +196,12 @@ public class DefectServiceImpl implements DefectService {
 			status = (sObj != null ? String.valueOf(sObj) : status);
 
             // By default, set status to Open
-            if (status == null)
+            if (status == null) {
                 status = "Open";
+            }
 
             defect.setStatus(status);
-			defect.setDefectURL(dt.getBugURL(
-					application.getDefectTracker().getUrl(), defectId));
+			defect.setDefectURL(dt.getBugURL(application.getDefectTracker().getUrl(), defectId));
 			defectDao.saveOrUpdate(defect);
 
 			for (Vulnerability vulnerability : vulnsWithoutDefects) {
@@ -208,7 +209,7 @@ public class DefectServiceImpl implements DefectService {
 				vulnerability.setDefectSubmittedTime(Calendar.getInstance());
 				vulnerabilityDao.saveOrUpdate(vulnerability);
 			}
-			
+
 			if (defectTrackerName != null) {
 				log.info("Successfully submitted defect to " + defectTrackerName + ".");
 			} else {
@@ -217,7 +218,7 @@ public class DefectServiceImpl implements DefectService {
             map.put(DEFECT, defect);
 			return map;
 		}
-		
+
 		if (defectTrackerName != null) {
 			log.warn("There was an error submitting the defect to " + defectTrackerName + ".");
 		} else {
