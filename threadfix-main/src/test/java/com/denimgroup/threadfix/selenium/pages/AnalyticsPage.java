@@ -77,6 +77,7 @@ public class AnalyticsPage extends BasePage {
         if(expanding) {
             waitForClickableElement(filterDiv.findElement(By.id("showTeamInputReport")));
         }
+        sleep(1500);
         return new AnalyticsPage(driver);
     }
 
@@ -162,7 +163,7 @@ public class AnalyticsPage extends BasePage {
 
     public void waitForResultsToLoad() {
         while (driver.findElementById("vulnTreeLoadingSpinner").isDisplayed()) {
-            sleep(1000);
+            sleep(2500);
         }
     }
 
