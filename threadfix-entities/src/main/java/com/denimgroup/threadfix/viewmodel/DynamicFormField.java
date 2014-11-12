@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.service.defects.utils;
+package com.denimgroup.threadfix.viewmodel;
 
 import java.util.*;
 
@@ -169,10 +169,10 @@ public class DynamicFormField {
      * Java method to sort Map in Java by value e.g. HashMap or Hashtable
      * It also sort values even if they are duplicates
      */
-    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map){
+    public static <K extends Comparable<K>,V extends Comparable<V>> Map<K,V> sortByValues(Map<K,V> map){
         if (map == null)
             return null;
-        List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
+        List<Map.Entry<K,V>> entries = new LinkedList<Map.Entry<K, V>>(map.entrySet());
 
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
 
@@ -184,7 +184,7 @@ public class DynamicFormField {
 
         //LinkedHashMap will keep the keys in the order they are inserted
         //which is currently sorted on natural ordering
-        Map<K,V> sortedMap = new LinkedHashMap<>();
+        Map<K,V> sortedMap = new LinkedHashMap<K, V>();
 
         for(Map.Entry<K,V> entry: entries){
             sortedMap.put(entry.getKey(), entry.getValue());

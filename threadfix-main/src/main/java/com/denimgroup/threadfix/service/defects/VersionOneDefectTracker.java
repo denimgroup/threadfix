@@ -28,13 +28,14 @@ import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerCommunicationException;
 import com.denimgroup.threadfix.exception.RestUrlException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.versionone.Assets;
 import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinition;
 import com.denimgroup.threadfix.service.defects.utils.versionone.AttributeDefinitionParser;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

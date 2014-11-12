@@ -34,9 +34,9 @@ import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
@@ -304,7 +304,7 @@ public class ApplicationsController {
                 defectList = list();
             }
 
-			data = dt.getProjectMetadata();
+			data = defectTrackerService.getProjectMetadata(dt);
             if (dt.getLastError() != null && !dt.getLastError().isEmpty()) {
                 map.put(ERROR_MSG, dt.getLastError());
                 return map;
@@ -433,7 +433,7 @@ public class ApplicationsController {
 		
 		ProjectMetadata data = null;
 		if (dt != null) {
-			data = dt.getProjectMetadata();
+			data = defectTrackerService.getProjectMetadata(dt);
 			defectList = dt.getDefectList();
 		}
 		model.addAttribute("projectMetadata", data);

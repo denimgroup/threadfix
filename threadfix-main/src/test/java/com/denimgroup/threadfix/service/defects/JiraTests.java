@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.RestUtilsMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.jira.UserRetriever;
 import org.junit.Test;
 

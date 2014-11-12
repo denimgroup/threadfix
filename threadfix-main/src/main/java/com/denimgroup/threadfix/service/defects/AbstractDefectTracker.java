@@ -24,8 +24,10 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.interfaces.ProjectMetadataSource;
 import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;
@@ -41,7 +43,7 @@ import java.util.Map;
  * @author mcollins
  * 
  */
-public abstract class AbstractDefectTracker {
+public abstract class AbstractDefectTracker implements ProjectMetadataSource {
 	
 	protected String url, username, password, projectName, projectId, lastError;
 
@@ -120,7 +122,7 @@ public abstract class AbstractDefectTracker {
 	 * These choices will be presented to the user and the choices will come back 
 	 * in the DefectMetadata bean for the createDefect() method.
 	 * 
-	 * @see ProjectMetadata
+	 * @see com.denimgroup.threadfix.viewmodel.ProjectMetadata
 	 * @return a ProjectMetadata bean
 	 */
 	public abstract ProjectMetadata getProjectMetadata();
