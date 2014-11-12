@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.weekend;
 
-import com.denimgroup.threadfix.CommunityTests;
+import com.denimgroup.threadfix.WeekendTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.tests.ScanContents;
@@ -32,10 +32,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@Category(CommunityTests.class)
+@Category(WeekendTests.class)
 public class SlowAnalyticsSnapshotIT extends BaseDataTest {
 
     @Test
@@ -74,7 +73,7 @@ public class SlowAnalyticsSnapshotIT extends BaseDataTest {
         for(int i = 0; i < 5; i++) {
             analyticsPage.clickSnapshotTab(true)
                     .expandTeamApplicationFilterReport("snapshotFilterDiv")
-                    .addTeamFilterReport(teamName,"snapshotFilterDiv");
+                    .addTeamFilterReport(teamName, "snapshotFilterDiv");
 
             sleep(2500);
 
