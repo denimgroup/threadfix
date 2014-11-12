@@ -28,16 +28,15 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;

@@ -23,12 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
-import org.springframework.validation.BindingResult;
-
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.data.interfaces.ProjectMetadataSource;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import org.springframework.validation.BindingResult;
+
+import java.util.List;
 
 /**
  * @author bbeverly
@@ -37,7 +38,7 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 public interface DefectTrackerService {
 	
 	/**
-	 * 
+	 *
 	 * @param defectTracker
 	 * @return
 	 */
@@ -80,6 +81,13 @@ public interface DefectTrackerService {
 	 * @return
 	 */
 	DefectTrackerType loadDefectTrackerType(int defectTrackerTypeId);
+
+    /**
+     * This method only exists so that we can use AOP to intercept it
+     * @param tracker the defect tracker
+     * @return project metadata or null if tracker is null
+     */
+    ProjectMetadata getProjectMetadata(ProjectMetadataSource tracker);
 
 	/**
 	 * @param name

@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClient;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClientImpl;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import org.apache.xmlrpc.XmlRpcException;
 
 import javax.annotation.Nonnull;

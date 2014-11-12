@@ -23,22 +23,23 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.util.List;
-
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerDao;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.DefectTracker;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.data.interfaces.ProjectMetadataSource;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = false) // used to be true
@@ -115,6 +116,11 @@ public class DefectTrackerServiceImpl implements DefectTrackerService {
 	public DefectTrackerType loadDefectTrackerType(int defectId) {
 		return defectTrackerTypeDao.retrieveById(defectId);
 	}
+
+    @Override
+    public ProjectMetadata getProjectMetadata(ProjectMetadataSource tracker) {
+        return tracker == null ? null : tracker.getProjectMetadata();
+    }
 
 	@Override
 	public DefectTrackerType loadDefectTrackerType(String name) {

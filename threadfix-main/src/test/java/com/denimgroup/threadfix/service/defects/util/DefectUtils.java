@@ -28,7 +28,7 @@ import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.DefectMetadata;
-import com.denimgroup.threadfix.service.defects.ProjectMetadata;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import java.util.HashMap;
 import java.util.List;
