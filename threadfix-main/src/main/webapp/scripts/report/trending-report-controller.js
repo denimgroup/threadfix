@@ -1,12 +1,15 @@
 var module = angular.module('threadfix');
 
-module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService, trendingUtilities) {
+module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService, trendingUtilities, reportConstants) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
     $scope.noData = false;
     $scope.margin = [70, 70, 100, 70];
     $scope.savedDefaultTrendingFilter = undefined;
+    $scope.title = {
+        svgId: reportConstants.reportTypes.trending.name
+    };
 
     $scope.resetFilters = function() {
         trendingUtilities.resetFilters($scope);
@@ -72,5 +75,22 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.parameters = angular.copy(parameters);
         trendingUtilities.updateDisplayData($scope);
     });
+
+    $scope.exportPNG = function(){
+        if (!$scope.exportInfo) {
+            $scope.exportInfo = {
+                id: reportConstants.reportTypes.trending.id
+            }
+        } else {
+            if ($scope.exportInfo.id  === reportConstants.reportTypes.trending.id)
+                $scope.exportInfo.id  = "" +  reportConstants.reportTypes.trending.id;
+            else
+                $scope.exportInfo.id  = reportConstants.reportTypes.trending.id;
+        }
+        $scope.exportInfo.svgId = reportConstants.reportTypes.trending.name;
+        $scope.exportInfo.teams = $scope.title.teams;
+        $scope.exportInfo.apps = $scope.title.apps;
+        $scope.exportInfo.tags = undefined;
+    };
 
 });

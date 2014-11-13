@@ -13,7 +13,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 margin: '=',
                 tableInfo: '=',
                 startDate: '=',
-                endDate: '='
+                endDate: '=',
+                exportInfo: '='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -49,6 +50,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 var svg = d3.select(ele[0]).append("svg")
                     .attr("width", w + m[1] + m[3])
                     .attr("height", h + m[0] + m[2])
+                    .attr("id", function(){
+                        return (scope.label && scope.label.svgId) ? scope.label.svgId : "trendingGraph";
+                    })
                     .append("g")
                     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
 
@@ -90,6 +94,11 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 scope.$watch('label', function() {
                     scope.render(scope.data);
+                }, true);
+
+                scope.$watch('exportInfo', function() {
+                    if (scope.exportInfo)
+                        scope.export();
                 }, true);
 
                 scope.render = function (reportData) {
@@ -283,13 +292,6 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         reportUtilities.drawTable(d3, scope.tableInfo, "complianceTable");
                 }
 
-                d3.select("#exportPNGButtonReport").on('click', function(){
-                    var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
-                    var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
-                    reportExporter.exportPDF(d3, svgWidth, svgHeight,
-                            "TrendingScans" + teamsName + appsName);
-                });
-
                 function prepareStackedData(data) {
                     return color.domain().map(function(name){
                         var values = [];
@@ -348,7 +350,19 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
 
                 function getColor(key) {
                     return (reportConstants.vulnTypeColorMap[key] ? reportConstants.vulnTypeColorMap[key] : color(key));
-                }
+                };
+
+                scope.export = function(){
+
+                    var teamsName = (scope.exportInfo && scope.exportInfo.teams) ? "_" + scope.exportInfo.teams : "",
+                        appsName = (scope.exportInfo && scope.exportInfo.apps) ? "_" + scope.exportInfo.apps : "",
+                        tagsName = (scope.exportInfo && scope.exportInfo.tags) ? "_" + scope.exportInfo.tags : "",
+                        title = (scope.exportInfo && scope.exportInfo.tags) ? "Compliance_Report" : "Trending_Scans";
+
+                    reportExporter.exportPDF(d3, scope.exportInfo, svgWidth, svgHeight,
+                            title + teamsName + appsName + tagsName);
+
+                };
 
             }
         }

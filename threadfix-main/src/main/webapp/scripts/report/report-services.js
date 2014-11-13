@@ -1,14 +1,21 @@
 var threadfixModule = angular.module('threadfix')
 
-threadfixModule.factory('reportExporter', function() {
+threadfixModule.factory('reportExporter', function(reportConstants) {
 
     var reportExporter = {};
 
     reportExporter.exportCSV = function() {
     };
 
-    reportExporter.exportPDF = function(d3, width, height, name) {
+    reportExporter.exportPDF = function(d3, exportInfo, width, height, name) {
         var svg = d3.select("svg");
+        d3.selectAll("svg").each(function(d, i) {
+
+            if (d3.select(this).attr("id") === exportInfo.svgId)
+                svg = d3.select(this);
+
+            console.log(d3.select(this).attr("id"));
+        });
         reportExporter.exportPDFSvg(d3, svg, width, height, name);
     }
 
@@ -27,8 +34,8 @@ threadfixModule.factory('reportExporter', function() {
         d3.select("#svgdataurl").html(img);
 
         var canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = (svg.attr("width")) ? svg.attr("width") : width;
+        canvas.height = (svg.attr("height")) ? svg.attr("height") : height;
         var context = canvas.getContext("2d");
 
         var image = new Image();
@@ -150,6 +157,16 @@ threadfixModule.factory('reportConstants', function() {
         Medium: reportConstants.vulnTypeColorList[2],
         High: reportConstants.vulnTypeColorList[3],
         Critical: reportConstants.vulnTypeColorList[4]
+    };
+    reportConstants.reportTypes = {
+        trending: {
+            id: 9,
+            name: "trendingTrendingGraph"
+        },
+        compliance: {
+            id: 11,
+            name: "complianceTrendingGraph"
+        }
     };
 
     return reportConstants;

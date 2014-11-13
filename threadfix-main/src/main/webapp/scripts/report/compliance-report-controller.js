@@ -1,11 +1,14 @@
 var module = angular.module('threadfix');
 
-module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities) {
+module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
     $scope.noData = false;
     $scope.margin = [70, 70, 100, 70];
+    $scope.title = {
+        svgId: reportConstants.reportTypes.compliance.name
+    };
 
     $scope.resetFilters = function() {
         $scope.parameters = {
@@ -106,5 +109,23 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.gotDataFromTrending = true;
         $scope.resetFilters();
     });
+
+    $scope.exportPNG = function(){
+
+        if (!$scope.exportInfo) {
+            $scope.exportInfo = {
+                id: reportConstants.reportTypes.compliance.id
+            }
+        } else {
+            if ($scope.exportInfo.id  === reportConstants.reportTypes.compliance.id)
+                $scope.exportInfo.id  = "" +  reportConstants.reportTypes.compliance.id;
+            else
+                $scope.exportInfo.id  = reportConstants.reportTypes.compliance.id;
+        }
+        $scope.exportInfo.svgId = reportConstants.reportTypes.compliance.name;
+        $scope.exportInfo.tags = $scope.title.tags;
+        $scope.exportInfo.teams = undefined;
+        $scope.exportInfo.apps = undefined;
+    };
 
 });
