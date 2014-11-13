@@ -23,13 +23,15 @@ myAppModule.controller('ReportsController', function ($scope, $window, threadfix
 
                 $scope.allScans = data.object.scanList;
                 $scope.savedFilters = data.object.savedFilters;
-                filterService.findDefaultFilter($scope);
-                trendingUtilities.resetFilters($scope);
 
                 if ($scope.allScans) {
+                    filterService.findDefaultFilter($scope);
+                    trendingUtilities.resetFilters($scope);
+
                     $scope.allScans.sort(function (a, b) {
                         return a.importTime - b.importTime;
                     });
+
                     $scope.filterScans = $scope.allScans;
                     trendingUtilities.refreshScans($scope);
                 } else {

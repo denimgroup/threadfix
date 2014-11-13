@@ -287,15 +287,19 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     trendingUtilities.refreshScans = function($scope){
         $scope.loading = true;
         $scope.noData = false;
+        $scope.trendingScansData = [];
+        reportUtilities.createTeamAppNames($scope);
 
         trendingUtilities.filterByTime($scope);
         if ($scope.filterScans.length === 0) {
             $scope.noData = true;
+            $scope.loading = false;
             return;
         }
         trendingUtilities.updateDisplayData($scope);
         if ($scope.trendingScansData.length === 0) {
             $scope.noData = true;
+            $scope.loading = false;
             return;
         }
         $scope.loading = false;
@@ -513,6 +517,8 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     };
 
     trendingUtilities.filterByTime = function($scope) {
+        if (!$scope.filterScans || $scope.filterScans.length === 0)
+            return;
         $scope.trendingStartDate = undefined;
         $scope.trendingEndDate = undefined;
         startIndex = -1; endIndex = -1;

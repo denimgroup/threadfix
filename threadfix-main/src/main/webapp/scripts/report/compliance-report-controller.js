@@ -42,15 +42,14 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
                         $scope.resetFilters();
                         $scope.allScans = data.object.scanList;
 
-                        if ($scope.allScans) {
-                            $scope.allScans.sort(function (a, b) {
-                                return a.importTime - b.importTime;
-                            });
-                            trendingUtilities.filterByTag($scope);
-                            trendingUtilities.refreshScans($scope);
-                        } else {
-                            $scope.noData = true;
-                        };
+                        if (!$scope.allScans) {
+                            $scope.allScans = [];
+                        }
+                        $scope.allScans.sort(function (a, b) {
+                            return a.importTime - b.importTime;
+                        });
+                        trendingUtilities.filterByTag($scope);
+                        trendingUtilities.refreshScans($scope);
                     }).
                     error(function() {
                         $scope.loading = false;

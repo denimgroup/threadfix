@@ -39,15 +39,16 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
                         $scope.parameters.teams = [];
                         $scope.$broadcast("updateBackParameters", $scope.parameters);
                     }
-                    if ($scope.allScans) {
-                        $scope.allScans.sort(function (a, b) {
-                            return a.importTime - b.importTime;
-                        });
-                        trendingUtilities.filterByTeamAndApp($scope);
-                        trendingUtilities.refreshScans($scope);
-                    } else {
-                        $scope.noData = true;
-                    };
+
+                    if (!$scope.allScans) {
+                        $scope.allScans = [];
+                    }
+                    $scope.allScans.sort(function (a, b) {
+                        return a.importTime - b.importTime;
+                    });
+                    trendingUtilities.filterByTeamAndApp($scope);
+                    trendingUtilities.refreshScans($scope);
+
                     $rootScope.$broadcast('allTrendingScans', $scope.allScans);
                 }).
                 error(function() {

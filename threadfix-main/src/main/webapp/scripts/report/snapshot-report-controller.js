@@ -51,7 +51,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         if (!$scope.allVulns) {
             $scope.loading = true;
-            $scope.reportId = ($scope.$parent.reportId) ? $scope.$parent.reportId : 2;
+            $scope.reportId = ($scope.$parent.reportId && $scope.$parent.reportId !== 9) ? $scope.$parent.reportId : 2;
             $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
                 success(function(data) {
                     $scope.loading = false;
