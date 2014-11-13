@@ -112,7 +112,8 @@ public class AnalyticsPage extends BasePage {
         filterDiv.findElement(By.id("showTeamInput")).click();
         teamNameSpace.clear();
         teamNameSpace.sendKeys(teamName);
-        teamNameSpace.sendKeys(Keys.ENTER);
+        sleep(1000);
+        driver.findElementById("teamNameTypeahead").sendKeys(Keys.ENTER);
         waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }

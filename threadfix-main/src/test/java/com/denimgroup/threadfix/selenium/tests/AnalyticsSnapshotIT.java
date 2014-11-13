@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -77,7 +78,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickSnapshotTab(false);
 
         analyticsPage.expandTeamApplicationFilterReport("snapshotFilterDiv")
-                .addApplicationFilterReport(appName,"snapshotFilterDiv");
+                .addApplicationFilterReport(appName, "snapshotFilterDiv");
 
         analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
 
@@ -91,7 +92,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
         analyticsPage.clearFilterReport("snapshotFilterDiv")
-                .addApplicationFilterReport(appName2,"snapshotFilterDiv");
+                .addApplicationFilterReport(appName2, "snapshotFilterDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -151,7 +152,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         for(int i = 0; i < 5; i++) {
             String numLegend = driver.findElement(By.id("legend" + levels[i]))
-                    .getText().replace(levels[i],"").split("\\(")[0];
+                    .getText().replace(levels[i], "").split("\\(")[0];
             String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
 
             assertTrue("Legend value at level " + levels[i] + " does not match badge", numBadge.equals(numLegend));
@@ -221,7 +222,38 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
-        assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info",teamName,appName)
+        assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info", teamName, appName)
                 .equals("Info: 120"));
+    }
+
+    @Test
+    public void checkProgressByVulnNav() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true);
+
+        analyticsPage.selectDropDownReport("Progress By Vulnerability");
+
+        assertTrue("Did not navigate correctly", driver.findElement(By.xpath("//*[@id=\"pointInTimeDiv\"]/div/h2"))
+                .getText().equals("Vulnerability Progress By Type"));
+    }
+
+    @Ignore
+    @Test
+    public void checkMostVulnAppsNav() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true);
+
+        analyticsPage.selectDropDownReport("Most Vulnerable Applications");
+
+        sleep(1000);
+
+        assertTrue("Did not navigate correctly", driver.findElement(By.xpath("//*[@id=\"topAppChart\"]/svg/g/g[1]"))
+                .getText().equals("Most Vulnerable Applications"));
     }
 }
