@@ -533,6 +533,19 @@ public abstract class BasePage {
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T hoverRealOverSVGElement(String id) {
+        return (T) hoverRealOverSVGElement(id, this.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends BasePage> T hoverRealOverSVGElement(String ID, Class<T> targetClass) {
+        WebElement d3Object = driver.findElementById(ID);
+        Actions builder = new Actions(driver);
+        builder.moveToElement(d3Object).build().perform();
+        return (T) this;
+    }
+
     public void hover(String ID) {
         Actions action = new Actions(driver);
         action.moveToElement(driver.findElementById(ID), 2, 2);

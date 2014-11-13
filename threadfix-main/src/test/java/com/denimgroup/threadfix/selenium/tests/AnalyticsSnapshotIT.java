@@ -180,4 +180,48 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
             assertTrue("Modal did not close at level " + levels[i], analyticsPage.isClickable("reportSnapshotSelect"));
         }
     }
+
+    @Test
+    public void checkMostVulnerableAppTips() {
+        initializeTeamAndAppWithWebInspectScan();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true)
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName,"snapshotFilterDiv");
+
+        analyticsPage.selectDropDownReport("Most Vulnerable Applications");
+
+        assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info",teamName,appName)
+                .equals("Info: 120"));
+        assertTrue("Tip at level low does not match count", analyticsPage.mostVulnAppTip("Low",teamName,appName)
+                .equals("Low: 139"));
+        assertTrue("Tip at level medium does not match count", analyticsPage.mostVulnAppTip("Medium",teamName,appName)
+                .equals("Medium: 115"));
+        assertTrue("Tip at level high does not match count", analyticsPage.mostVulnAppTip("High",teamName,appName)
+                .equals("High: 38"));
+        assertTrue("Tip at level critical does not match count", analyticsPage.mostVulnAppTip("Critical",teamName,appName)
+                .equals("Critical: 27"));
+    }
+
+    @Test
+    public void checkMostVulnerableAppModalHeader() {
+        initializeTeamAndAppWithWebInspectScan();
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true)
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName,"snapshotFilterDiv");
+
+        analyticsPage.selectDropDownReport("Most Vulnerable Applications");
+
+        assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info",teamName,appName)
+                .equals("Info: 120"));
+    }
 }

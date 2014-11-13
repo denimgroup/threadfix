@@ -27,6 +27,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class AnalyticsPage extends BasePage {
         driver.findElementByLinkText("Trending").click();
         waitForElement(driver.findElementById("trendingFilterDiv"));
         if(usingD3){
-            sleep(1500);
+            sleep(2500);
         }
         return new AnalyticsPage(driver);
     }
@@ -51,7 +52,7 @@ public class AnalyticsPage extends BasePage {
         driver.findElementByLinkText("Snapshot").click();
         waitForElement(driver.findElementById("snapshotFilterDiv"));
         if(usingD3){
-            sleep(1500);
+            sleep(2500);
         }
         return new AnalyticsPage(driver);
     }
@@ -65,31 +66,28 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage toggleAllFilter(String divId, Boolean expanding) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("toggleAllButton")).click();
-        if(expanding) {
-            waitForClickableElement(filterDiv.findElement(By.id("showTeamInput")));
-        }
+        sleep(2000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage toggleAllFilterReport(String divId, Boolean expanding) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("toggleAllButtonReport")).click();
-        if(expanding) {
-            waitForClickableElement(filterDiv.findElement(By.id("showTeamInputReport")));
-        }
-        sleep(1500);
+        sleep(2000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clearFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButton")).click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage clearFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("clearFiltersButtonReport")).click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
@@ -104,6 +102,7 @@ public class AnalyticsPage extends BasePage {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTeamAndApplicationFiltersReport")).click();
         waitForElement(filterDiv.findElement(By.id("showTeamInputReport")));
+        sleep(2000);
         return new AnalyticsPage(driver);
     }
 
@@ -126,6 +125,12 @@ public class AnalyticsPage extends BasePage {
         teamNameSpace.sendKeys(teamName);
         teamNameSpace.sendKeys(Keys.ENTER);
         waitForResultsToLoad();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage selectDropDownReport(String report) {
+        new Select(driver.findElementById("reportSnapshotSelect")).selectByVisibleText(report);
+        sleep(2000);
         return new AnalyticsPage(driver);
     }
 
@@ -157,6 +162,18 @@ public class AnalyticsPage extends BasePage {
 
     public int getFilterDivHeight(String divId) {
         return driver.findElement(By.id(divId)).getSize().getHeight();
+    }
+
+    public String mostVulnAppTip(String level, String team, String application) {
+        hoverRealOverSVGElement(team + application + level + "Bar");
+        return driver.findElementById("horizontalBarTip").getText();
+    }
+
+    public String mostVulnAppModalHeader(String level, String team, String application) {
+        clickSVGElement(team + application + level + "Bar");
+        String header = driver.findElementById("header2").getText().trim();
+        driver.findElementByXPath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]");
+        return header;
     }
 
     /* _____________________ Helper Methods _____________________ */
