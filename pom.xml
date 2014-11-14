@@ -258,6 +258,43 @@
             </build>
         </profile>
         <profile>
+            <id>specific</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <version>${maven-failsafe.version}</version>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>org.apache.maven.surefire</groupId>
+                                    <artifactId>surefire-junit47</artifactId>
+                                    <version>${surefire-junit47.version}</version>
+                                </dependency>
+                            </dependencies>
+                            <configuration>
+                                <skipTests>false</skipTests>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                    </goals>
+                                    <configuration>
+                                        <groups>${regression.category}</groups>
+                                        <includes>
+                                            <include>**/SpecificTestClass.class</include>
+                                        </includes>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
             <id>dependencycheck</id>
             <build>
                 <pluginManagement>
