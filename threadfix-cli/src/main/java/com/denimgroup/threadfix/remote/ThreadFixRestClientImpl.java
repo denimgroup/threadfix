@@ -133,23 +133,28 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
             for (Organization team : teams.object) {
                 List<Application> applications = team.getApplications();
 
-                if (team.isActive() && !applications.isEmpty()) {
+                if (team.isActive()) {
                     String teamName = team.getName();
 
-                    for (Application application : applications) {
-                        boolean applicationActive = application.isActive();
+                    if (!applications.isEmpty()) {
+                        for (Application application : applications) {
+                            boolean applicationActive = application.isActive();
 
-                        if (applicationActive) {
-                            String applicationName = application.getName();
-                            Integer id = application.getId();
+                            if (applicationActive) {
+                                String applicationName = application.getName();
+                                Integer id = application.getId();
 
-                            outputBuilder.append(teamName);
-                            outputBuilder.append(";");
-                            outputBuilder.append(applicationName);
-                            outputBuilder.append(";");
-                            outputBuilder.append(id);
-                            outputBuilder.append("\n");
+                                outputBuilder.append(teamName);
+                                outputBuilder.append(";");
+                                outputBuilder.append(applicationName);
+                                outputBuilder.append(";");
+                                outputBuilder.append(id);
+                                outputBuilder.append("\n");
+                            }
                         }
+                    } else {
+                        outputBuilder.append(teamName);
+                        outputBuilder.append(": No Applications Found \n");
                     }
                 }
             }
