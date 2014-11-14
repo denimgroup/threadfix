@@ -57,6 +57,15 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage clickComplianceTab(Boolean usingD3) {
+        driver.findElementByLinkText("Compliance").click();
+        waitForElement(driver.findElementById("complianceFilterDiv"));
+        if(usingD3){
+            sleep(2500);
+        }
+        return new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
         waitForElement(driver.findElementById("vulnSearchFilterDiv"));
@@ -118,6 +127,25 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage addTagFilter(String tagName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        WebElement tagNameSpace = filterDiv.findElement(By.id("tagNameTypeahead"));
+        filterDiv.findElement(By.id("showTagInput")).click();
+        tagNameSpace.clear();
+        tagNameSpace.sendKeys(tagName);
+        sleep(1000);
+        tagNameSpace.sendKeys(Keys.ENTER);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandTagFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("expandTagFilters")).click();
+        waitForElement(filterDiv.findElement(By.id("showTagInput")));
+        sleep(2000);
+        return new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage addTeamFilterReport(String teamName, String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         WebElement teamNameSpace = filterDiv.findElement(By.id("teamNameTypeaheadReport"));
@@ -126,6 +154,19 @@ public class AnalyticsPage extends BasePage {
         teamNameSpace.sendKeys(teamName);
         teamNameSpace.sendKeys(Keys.ENTER);
         waitForResultsToLoad();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandAgingFilterReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showDateControlsReport")).click();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage toggleAgingFilterReport(String age, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.linkText(age)).click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
@@ -173,7 +214,7 @@ public class AnalyticsPage extends BasePage {
     public String mostVulnAppModalHeader(String level, String team, String application) {
         clickSVGElement(team + application + level + "Bar");
         String header = driver.findElementById("header2").getText().trim();
-        driver.findElementByXPath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]");
+        driver.findElementById("header2");
         return header;
     }
 

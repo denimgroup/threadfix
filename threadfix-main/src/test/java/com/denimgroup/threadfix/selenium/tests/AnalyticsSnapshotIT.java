@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.selenium.tests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -236,11 +237,10 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         analyticsPage.selectDropDownReport("Progress By Vulnerability");
 
-        assertTrue("Did not navigate correctly", driver.findElement(By.xpath("//*[@id=\"pointInTimeDiv\"]/div/h2"))
+        assertTrue("Did not navigate correctly", driver.findElement(By.id("vulnerabilityProgressByTypeTitle"))
                 .getText().equals("Vulnerability Progress By Type"));
     }
 
-    @Ignore
     @Test
     public void checkMostVulnAppsNav() {
         initializeTeamAndAppWithWebInspectScan();
@@ -251,9 +251,47 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
-        sleep(1000);
-
-        assertTrue("Did not navigate correctly", driver.findElement(By.xpath("//*[@id=\"topAppChart\"]/svg/g/g[1]"))
+        assertTrue("Did not navigate correctly", driver.findElement(By.id("Most Vulnerable Applications_Title"))
                 .getText().equals("Most Vulnerable Applications"));
+    }
+
+    @Test
+    public void checkPointInTimeNav() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true);
+
+        analyticsPage.selectDropDownReport("Most Vulnerable Applications")
+                .selectDropDownReport("Point in Time");
+
+        assertTrue("Did not navigate correctly", driver.findElement(By.id("Point in Time Report_Title"))
+                .getText().equals("Point in Time Report"));
+    }
+
+    @Test
+    public void checkVulnClosedTime() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName);
+
+        applicationDetailPage.expandVulnerabilityByType("Critical79")
+                .checkVulnerabilityByType("Critical790")
+                .clickVulnerabilitiesActionButton()
+                .clickCloseVulnerabilitiesButton();
+
+        AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
+                .clickSnapshotTab(false)
+                .selectDropDownReport("Progress By Vulnerability")
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName, "snapshotFilterDiv");
+
+        System.out.println(Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()));
+
+        assertTrue("Time to close is invalid.",
+                Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()) >= 0);
     }
 }
