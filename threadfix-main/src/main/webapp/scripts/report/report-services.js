@@ -308,6 +308,15 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
 
     var trendingUtilities = {};
     var startIndex = -1, endIndex = -1;
+    var firstHashInList, lastHashInList;
+
+    trendingUtilities.getFirstHashInList = function(){
+        return firstHashInList;
+    };
+
+    trendingUtilities.getLastHashInList = function() {
+        return lastHashInList;
+    };
 
     trendingUtilities.refreshScans = function($scope){
         $scope.loading = true;
@@ -332,6 +341,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
 
     trendingUtilities.updateDisplayData = function($scope){
         var hashBefore, hashAfter;
+        firstHashInList = null, lastHashInList = null;
         reportUtilities.createTeamAppNames($scope);
         $scope.trendingScansData = [];
         $scope.totalVulnsByChannelMap = {};
@@ -370,7 +380,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         var startHash = {};
         if ($scope.trendingScansData.length===0)
             return startHash;
-        var firstHashInList = $scope.trendingScansData[0];
+        firstHashInList = $scope.trendingScansData[0];
 
         if (!hashBefore) {
             startHash.importTime=  $scope.trendingStartDate;
@@ -379,6 +389,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                 if (key != "importTime")
                     startHash[key] = 0;
             });
+            firstHashInList = startHash;
         } else {
             var rate1 = (firstHashInList.importTime)-(hashBefore.importTime);
             var rate2 = $scope.trendingStartDate-(hashBefore.importTime);
@@ -390,6 +401,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                     startHash[key] = value;
                 }
             });
+            firstHashInList = hashBefore;
         }
         return startHash;
     }
@@ -398,7 +410,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         var endHash = {};
         if ($scope.trendingScansData.length===0)
             return endHash;
-        var lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
+        lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
 
         if (!hashAfter) {
             endHash.importTime=  $scope.trendingEndDate;

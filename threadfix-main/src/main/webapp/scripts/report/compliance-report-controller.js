@@ -89,8 +89,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         var startingInfo, endingInfo;
             $scope.tableInfo = [];
         if ($scope.trendingScansData.length> 0) {
-            startingInfo = $scope.trendingScansData[0];
-            endingInfo = $scope.trendingScansData[$scope.trendingScansData.length-1];
+            startingInfo = (trendingUtilities.getFirstHashInList()) ? trendingUtilities.getFirstHashInList() : $scope.trendingScansData[0];
+            endingInfo = (trendingUtilities.getLastHashInList()) ? trendingUtilities.getLastHashInList() : $scope.trendingScansData[$scope.trendingScansData.length-1];
             var keys = Object.keys(startingInfo);
 
             keys.forEach(function(key){
