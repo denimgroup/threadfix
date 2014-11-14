@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
-import org.aspectj.lang.annotation.Pointcut;
 
 /**
  * @author mcollins
@@ -67,7 +66,6 @@ public interface ScanMergeService {
 	 * which is why this bypass is available.
 	 * 
 	 * @param channelId
-	 * @param scanContents
 	 * @param fileName
 	 * @return
 	 */

@@ -35,7 +35,6 @@ final class UpdaterConstants {
             GENERIC_VULNS_FOLDER = "mappings/generic",
             SCANNERS_FOLDER = "mappings/scanner",
             WAFS_FOLDER = "mappings/waf",
-            EVENT_MODEL_FOLDER = "mappings/eventmodel",
             DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
 
 }

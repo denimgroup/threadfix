@@ -61,8 +61,6 @@ public class User extends AuditableEntity {
 
 	private Role globalRole;
 
-    private List<Activity> activities;
-
     private List<AccessControlTeamMap> accessControlTeamMaps;
 
     @Column(length = NAME_LENGTH, nullable = false)
@@ -73,17 +71,6 @@ public class User extends AuditableEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @OneToMany(mappedBy = "user")
-    @OrderBy("createdDate")
-    @JsonIgnore
-    public List<Activity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
     }
 
     @Column(length = PASSWORD_LENGTH, nullable = false)
