@@ -190,6 +190,7 @@ threadfixModule.factory('reportUtilities', function() {
             .attr("x", w/2)
             .attr("y", y)
             .attr("class", "header")
+            .attr("id", title+"_Title")
             .text(title)
         var i = 0;
         if (teams) {
@@ -198,6 +199,7 @@ threadfixModule.factory('reportUtilities', function() {
                 .attr("x", w/2)
                 .attr("y", y + 20)
                 .attr("class", "title")
+                .attr("id", title+"_Teams")
                 .text("Team: " + teams);
             i++;
         }
@@ -207,6 +209,7 @@ threadfixModule.factory('reportUtilities', function() {
                 .attr("x", w/2)
                 .attr("y", y + 20 + i*15)
                 .attr("class", "title")
+                .attr("id", title+"_Apps")
                 .text("Application: " + apps);
             i++;
         }
@@ -216,6 +219,7 @@ threadfixModule.factory('reportUtilities', function() {
                 .attr("x", w/2)
                 .attr("y", y + 20 + i*15)
                 .attr("class", "title")
+                .attr("id", title+"_Tags")
                 .text("Tags: " + tags)
         }
     }
@@ -279,16 +283,20 @@ threadfixModule.factory('reportUtilities', function() {
 
         thead.selectAll("th")
             .data(d3.keys(tableData[0]))
-            .enter().append("th").text(function(d){return d});
+            .enter().append("th")
+            .attr("id", function(d){return d})
+            .text(function(d){return d});
 
         // First create the table rows
         var tr = tbody.selectAll("tr")
-            .data(tableData).enter().append("tr");
+            .data(tableData).enter().append("tr")
+            .attr("id", function(d, index){return index});
 
         // Now create the table cells
         var td = tr.selectAll("td")
             .data(function(d){return d3.values(d)})
             .enter().append("td")
+            .attr("id", function(d, index){return index})
             .text(function(d) {return d});
     }
 

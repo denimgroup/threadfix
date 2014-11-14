@@ -62,6 +62,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             trendingUtilities.filterByTag($scope);
             trendingUtilities.refreshScans($scope);
         }
+        renderTable();
 
     });
 

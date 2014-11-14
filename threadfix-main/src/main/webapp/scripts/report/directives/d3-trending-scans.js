@@ -233,6 +233,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .data(d3.range(1))
                             .enter().insert("path", ".line")
                             .attr("class", "area")
+                            .attr("id", function(){
+                                return d.key + "Area";
+                            })
                             .style("fill", "white")
                             .transition()
                             .duration(duration)
@@ -254,6 +257,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .transition()
                             .duration(duration)
                             .attr('fill', getColor(d.key))
+                            .attr("id", function(){
+                                return d.key + "Text";
+                            })
                             .text(d.key)
                             .attr("transform", function() {
                                 d = d.values[d.values.length - 1];
