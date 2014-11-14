@@ -205,7 +205,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 statsMap[key]["totalAgeOpen"] = statsMap[key]["totalAgeOpen"] + getDates(now, vuln.importTime);
             } else {
                 statsMap[key]["numClosed"] = statsMap[key]["numClosed"] + 1;
-                statsMap[key]["totalTimeToClose"] = statsMap[key]["totalTimeToClose"] + getDates(vuln.closeTime, vuln.importTime);
+
+                //If there is no information about Close Time, then will default Close Time is Today
+                statsMap[key]["totalTimeToClose"] = statsMap[key]["totalTimeToClose"] + getDates((vuln.closeTime) ? vuln.closeTime : now, vuln.importTime);
             }
         });
 
