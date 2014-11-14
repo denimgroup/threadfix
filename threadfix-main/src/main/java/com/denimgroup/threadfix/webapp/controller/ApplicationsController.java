@@ -23,9 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.dao.ActivityFeedDao;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.enums.ActivityFeedTypeName;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -34,12 +32,12 @@ import com.denimgroup.threadfix.service.beans.DefectTrackerBean;
 import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
-import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.service.defects.VersionOneDefectTracker;
-import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
@@ -98,8 +96,6 @@ public class ApplicationsController {
 	private ChannelVulnerabilityService channelVulnerabilityService;
     @Autowired
     private ChannelTypeService channelTypeService;
-    @Autowired
-    private ActivityFeedDao activityFeedDao;
     @Autowired
     private TagService tagService;
 
@@ -199,9 +195,6 @@ public class ApplicationsController {
 
         // scans tab
         map.put("scans", application.getScans());
-
-        // activity feed
-        map.put("feed", activityFeedDao.retrieveByTypeAndObjectId(ActivityFeedTypeName.APPLICATION, appId));
 
         // doc tab
         map.put("documents", application.getDocuments());
