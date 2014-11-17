@@ -103,7 +103,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     public void expandCollapseTest() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab(false);
+                .clickSnapshotTab(true);
 
         int filtersCollapsedSize = analyticsPage.getFilterDivHeight("snapshotFilterDiv");
         analyticsPage.toggleAllFilterReport("snapshotFilterDiv", true);

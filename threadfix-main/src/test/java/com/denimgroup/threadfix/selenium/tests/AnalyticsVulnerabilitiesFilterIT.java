@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -38,6 +39,14 @@ import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
 public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
+    
+    /* TAKE OUT AFTER TESTING! */
+    @Before
+    public void initialize() {
+        for(int i = 1; i == 60; i++) {
+            initializeTeamAndAppWithIBMScan();
+        }
+    }
 
     @Test
     public void expandCollapseTest() {
