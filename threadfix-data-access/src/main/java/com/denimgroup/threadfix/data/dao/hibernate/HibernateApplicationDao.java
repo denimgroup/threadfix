@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -161,7 +162,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     @Override
     public List<Integer> getTopXVulnerableAppsFromList(int numApps,
                                                        List<Integer> applicationIdList) {
-        return sessionFactory.getCurrentSession()
+        List<Integer> list = sessionFactory.getCurrentSession()
                 .createQuery("SELECT application.id as id " +
                         " FROM Application as application join application.vulnerabilities as vulnerability " +
                         " WHERE application.id IN (:applicationIdList) AND " +
@@ -173,6 +174,9 @@ public class HibernateApplicationDao implements ApplicationDao {
                 .setParameterList("applicationIdList", applicationIdList)
                 .setMaxResults(numApps)
                 .list();
+        if (list==null || list.isEmpty())
+            list = Arrays.asList(new Integer[]{-1});
+        return list;
     }
 
     @Override

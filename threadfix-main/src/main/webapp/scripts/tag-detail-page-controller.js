@@ -29,14 +29,20 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
             if (comment.commentInfo.vulnerabilityId) {
                 if (!vulnMap[comment.commentInfo.vulnerabilityId]) {
                     vulnMap[comment.commentInfo.vulnerabilityId] = {
-                        vulnId : comment.commentInfo.vulnerabilityId,
-                        vulnName: comment.commentInfo.vulnerabilityName,
-                        appId : comment.commentInfo.applicationId,
-                        appName : comment.commentInfo.applicationName,
-                        teamId : comment.commentInfo.teamId,
-                        teamName : comment.commentInfo.teamName,
-                        comments : [{
-                            commentId: comment.commentInfo.commentId,
+                        id : comment.commentInfo.vulnerabilityId,
+                        genericVulnerability: {
+                            name: comment.commentInfo.vulnerabilityName
+                        },
+                        app : {
+                            id: comment.commentInfo.applicationId,
+                            name: comment.commentInfo.applicationName
+                        },
+                        team : {
+                            id: comment.commentInfo.teamId,
+                            name: comment.commentInfo.teamName
+                        },
+                        vulnerabilityComments : [{
+                            id: comment.commentInfo.commentId,
                             comment: comment.commentInfo.comment,
                             tags: comment.commentInfo.tags,
                             username: comment.commentInfo.username,
@@ -44,8 +50,8 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                         }]
                     }
                 } else {
-                    vulnMap[comment.commentInfo.vulnerabilityId].comments.push({
-                        commentId: comment.commentInfo.commentId,
+                    vulnMap[comment.commentInfo.vulnerabilityId].vulnerabilityComments.push({
+                        id: comment.commentInfo.commentId,
                         comment: comment.commentInfo.comment,
                         tags: comment.commentInfo.tags,
                         username: comment.commentInfo.username,
@@ -55,58 +61,25 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
             }
         })
 
-        $scope.vulnList = [];
+        $scope.allVulnList = [];
         var keys = Object.keys(vulnMap);
         keys.forEach(function(key){
-            $scope.vulnList.push(vulnMap[key]);
-        })
+            $scope.allVulnList.push(vulnMap[key]);
+        });
 
-        $scope.vulnList.sort(function(vuln1, vuln2){
-            return vuln1.comments.length - vuln2.comments.length;
-        })
+        $scope.allVulnList.sort(function(vuln1, vuln2){
+            return vuln1.vulnerabilityComments.length - vuln2.vulnerabilityComments.length;
+        });
+
+        $scope.$broadcast("complianceVulnList", $scope.allVulnList);
     }
 
     $scope.goToApp = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id + "/applications/" + app.id);
-    }
+    };
 
     $scope.goToTeam = function(app) {
         $window.location.href = tfEncoder.encode("/organizations/" + app.team.id);
-    }
-
-    $scope.goToAppFromVuln = function(vuln) {
-        $window.location.href = tfEncoder.encode("/organizations/" + vuln.teamId + "/applications/" + vuln.appId);
-    }
-
-    $scope.goToTeamFromVuln = function(vuln) {
-        $window.location.href = tfEncoder.encode("/organizations/" + vuln.teamId);
-    }
-
-    $scope.goToTag = function(tag) {
-        window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id +"/view");
-    }
-
-    $scope.goToVuln = function(vuln) {
-        $window.location.href = tfEncoder.encode("/organizations/" + vuln.teamId + "/applications/" + vuln.appId + "/vulnerabilities/" + vuln.vulnId);
-    };
-
-    $scope.expand = function() {
-        $scope.vulnList.forEach(function(vuln) {
-            vuln.expanded = true;
-        });
-    };
-
-    $scope.contract = function() {
-        $scope.vulnList.forEach(function(vuln) {
-            vuln.expanded = false;
-        });
-    };
-
-    $scope.toggle = function(vuln) {
-        if (typeof vuln.expanded === "undefined") {
-            vuln.expanded = false;
-        }
-        vuln.expanded = !vuln.expanded;
     };
 
 });

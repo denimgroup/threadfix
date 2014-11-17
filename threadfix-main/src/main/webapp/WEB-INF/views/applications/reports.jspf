@@ -6,9 +6,11 @@
                     <a id="leftViewMore" ng-href="{{ urlRoot }}/reports/9{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="leftTileReport">
-                    <d3-trending ng-show="trendingData" data="trendingData" width="422" height="250" margin="leftMargin"
-                                 start-date="trendingStartDate" end-date="trendingEndDate"></d3-trending>
-                    <div ng-hide="empty || trendingData || leftReportFailed" class="team-report-wrapper report-image">
+                    <div ng-show="trendingScansData" class="team-report-wrapper report-image">
+                        <d3-trending data="trendingScansData" width="422" height="250" margin="leftMargin"
+                                     start-date="trendingStartDate" end-date="trendingEndDate"></d3-trending>
+                    </div>
+                    <div ng-hide="noData || trendingScansData || leftReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>
                     <div ng-show="leftReportFailed" class="team-report-wrapper report-image">
@@ -16,9 +18,14 @@
                             Report Failed
                         </div>
                     </div>
-                    <div ng-show="empty && !trendingData" class="team-report-wrapper report-image">
+                    <div ng-show="noData && !allScans" class="team-report-wrapper report-image">
                         <div class="text">
                             No Data Found
+                        </div>
+                    </div>
+                    <div ng-show="noData && allScans" class="team-report-wrapper report-image">
+                        <div class="text">
+                            No New Scans Uploaded This Time
                         </div>
                     </div>
                 </div>
@@ -29,7 +36,9 @@
                     <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>
                 </h4>
                 <div id="rightTileReport">
-                    <d3-hbars ng-show="topAppsData" data="topAppsData" label = "label" width="422" height="250" margin="rightMargin"></d3-hbars>
+                    <div ng-show="topAppsData" class="team-report-wrapper report-image">
+                        <d3-hbars data="topAppsData" label = "label" width="422" height="250" margin="rightMargin"></d3-hbars>
+                    </div>
                     <div ng-hide="empty || topAppsData || rightReportFailed" class="team-report-wrapper report-image">
                         <div style="float:right;padding-top:120px" class="modal-loading"><div><span class="spinner dark"></span>Loading...</div></div>
                     </div>

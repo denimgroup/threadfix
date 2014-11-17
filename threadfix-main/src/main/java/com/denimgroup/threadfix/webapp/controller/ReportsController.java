@@ -98,6 +98,8 @@ public class ReportsController {
 		model.addAttribute("firstReport", ControllerUtils.getItem(request, "reportId"));
 		model.addAttribute("firstTeamId", ControllerUtils.getItem(request, "teamId"));
 		model.addAttribute("firstAppId", ControllerUtils.getItem(request, "appId"));
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_TAGS);
+
 		return "reports/index";
 	}
 	

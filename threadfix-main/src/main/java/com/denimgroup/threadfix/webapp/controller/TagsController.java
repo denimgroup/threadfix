@@ -155,7 +155,11 @@ public class TagsController {
         }
 
         int numApps = tag.getApplications().size();
-        int numVulnComments = tag.getVulnerabilityComments().size();
+        int numVulnComments = 0;
+        for (VulnerabilityComment comment: tag.getVulnerabilityComments()) {
+            if (comment.getVulnerability() != null)
+                numVulnComments++;
+        }
 
         ModelAndView mav = new ModelAndView("tags/detail");
         mav.addObject("numApps", numApps);

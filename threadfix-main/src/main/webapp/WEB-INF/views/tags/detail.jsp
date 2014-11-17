@@ -3,6 +3,7 @@
 <head>
     <title>Tag Details</title>
     <cbs:cachebustscript src="/scripts/tag-detail-page-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vulnerability-comments-table-controller.js"/>
 </head>
 
 <body id="tagDetail" ng-controller="TagDetailPageController">
@@ -38,7 +39,10 @@
 
     <div>
         <%@ include file="appTable.jsp" %>
-        <%@ include file="commentTable.jsp" %>
+        <div ng-controller="VulnerabilityCommentsTableController">
+            <h4 style="padding-top:10px">Tagged Vulnerability Comments</h4>
+            <%@ include file="commentTable.jsp" %>
+        </div>
     </div>
 </div>
 </body>

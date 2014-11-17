@@ -16,8 +16,8 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
 
     $scope.getReportParameters = function() {
         return {
-            organizationId: $scope.teamId,
-            applicationId: $scope.applicationId,
+            organizationId: -1,
+            applicationId: -1,
             reportId: $scope.reportId,
             formatId: $scope.formatId
         };

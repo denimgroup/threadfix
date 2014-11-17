@@ -84,14 +84,6 @@ public class ReportsD3Controller {
 		
 	}
 
-    @RequestMapping(value="/scansComparison", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Map<String, Object>> processScanComparison(@ModelAttribute ReportParameters reportParameters,
-                                                                         HttpServletRequest request) throws IOException {
-        log.info("Generating scans comparison report");
-        return null;
-
-    }
-
     @RequestMapping(value="/snapshot", method = RequestMethod.POST)
     public @ResponseBody RestResponse<Map<String, Object>> processSnapShot(@ModelAttribute ReportParameters reportParameters,
                                                                                  HttpServletRequest request) throws IOException {

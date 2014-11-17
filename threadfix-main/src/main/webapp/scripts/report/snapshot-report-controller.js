@@ -51,7 +51,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         if (!$scope.allVulns) {
             $scope.loading = true;
-            $scope.reportId = ($scope.$parent.reportId) ? $scope.$parent.reportId : 2;
+            $scope.reportId = ($scope.$parent.reportId && $scope.$parent.reportId !== 9) ? $scope.$parent.reportId : 2;
             $http.post(tfEncoder.encode("/reports/snapshot"), $scope.getReportParameters()).
                 success(function(data) {
                     $scope.loading = false;
@@ -205,7 +205,9 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 statsMap[key]["totalAgeOpen"] = statsMap[key]["totalAgeOpen"] + getDates(now, vuln.importTime);
             } else {
                 statsMap[key]["numClosed"] = statsMap[key]["numClosed"] + 1;
-                statsMap[key]["totalTimeToClose"] = statsMap[key]["totalTimeToClose"] + getDates(vuln.closeTime, vuln.importTime);
+
+                //If there is no information about Close Time, then will default Close Time is Today
+                statsMap[key]["totalTimeToClose"] = statsMap[key]["totalTimeToClose"] + getDates((vuln.closeTime) ? vuln.closeTime : now, vuln.importTime);
             }
         });
 
@@ -606,46 +608,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var beginsWith = function(str, prefix) {
         return str.indexOf(prefix) == 0;
-    };
-
-    var getKeys = function(object) {
-        var prototypeOfObject = Object.prototype;
-        var owns = Function.prototype.call.bind(prototypeOfObject.hasOwnProperty);
-        var hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
-            dontEnums = [
-                "toString",
-                "toLocaleString",
-                "valueOf",
-                "hasOwnProperty",
-                "isPrototypeOf",
-                "propertyIsEnumerable",
-                "constructor"
-            ],
-            dontEnumsLength = dontEnums.length;
-
-        if (
-            (typeof object != "object" && typeof object != "function") ||
-            object === null
-            ) {
-            throw new TypeError("Object.keys called on a non-object");
-        }
-
-        var keys = [];
-        for (var name in object) {
-            if (owns(object, name)) {
-                keys.push(name);
-            }
-        }
-
-        if (hasDontEnumBug) {
-            for (var i = 0, ii = dontEnumsLength; i < ii; i++) {
-                var dontEnum = dontEnums[i];
-                if (owns(object, dontEnum)) {
-                    keys.push(dontEnum);
-                }
-            }
-        }
-        return keys;
     };
 
     $scope.exportPNG = function(){
