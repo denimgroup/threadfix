@@ -335,4 +335,15 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
 
         assertTrue("Only 10 low vulnerabilities should be shown.", applicationDetailPage.isVulnerabilityCountCorrect("Low", "10"));
     }
+
+    @Test
+    public void checkTopVulnerabilitiesResponsivetoScanDelete() {
+        initialize();
+        String vulnerabilityBar = teamName + appName + "CWE20Bar";
+
+        applicationDetailPage.waitForElement(driver.findElement(By.id(vulnerabilityBar)));
+        applicationDetailPage.clickScansTab().clickDeleteScanButton();
+
+        assertTrue("Element bar not refreshed", driver.findElements(By.id(vulnerabilityBar)).isEmpty());
+    }
 }

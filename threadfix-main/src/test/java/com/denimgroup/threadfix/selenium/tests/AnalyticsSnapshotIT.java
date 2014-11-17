@@ -283,13 +283,11 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton();
 
-        AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
+        applicationDetailPage.clickAnalyticsLink()
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
-
-        System.out.println(Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()));
 
         assertTrue("Time to close is invalid.",
                 Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()) >= 0);

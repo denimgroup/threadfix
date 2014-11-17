@@ -40,16 +40,6 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
-    /* TAKE OUT AFTER TESTING! */
-    @Before
-    public void initialize() {
-        for(int i = 1; i <= 60; i++) {
-            String tempTeam = createTeam();
-            String tempApp = createApplication(tempTeam);
-            DatabaseUtils.uploadScan(tempTeam, tempApp, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-        }
-    }
-
     @Test
     public void expandCollapseTest() {
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
