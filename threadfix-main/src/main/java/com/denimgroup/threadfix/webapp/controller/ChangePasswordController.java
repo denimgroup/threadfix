@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.ThreadFixUserDetails;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
