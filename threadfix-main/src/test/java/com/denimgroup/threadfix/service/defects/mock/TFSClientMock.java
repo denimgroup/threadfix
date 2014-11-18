@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.mock;
 
-import com.denimgroup.threadfix.service.defects.DefectMetadata;
 import com.denimgroup.threadfix.service.defects.utils.tfs.TFSClient;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 
 import java.util.Arrays;
 import java.util.List;

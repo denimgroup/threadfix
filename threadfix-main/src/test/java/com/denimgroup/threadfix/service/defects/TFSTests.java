@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.service.defects.mock.TFSClientMock;
 import com.denimgroup.threadfix.service.defects.util.DefectUtils;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import org.junit.Ignore;
 import org.junit.Test;
 
