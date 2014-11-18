@@ -23,12 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.update;
 
+import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -37,8 +39,9 @@ import java.io.IOException;
 /**
  * Created by mac on 9/12/14.
  */
+@MappingsUpdater
 @Service
-class DefectTrackerUpdater implements Updater {
+public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements Updater {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DefectTrackerUpdater.class);
     @Autowired

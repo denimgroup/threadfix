@@ -21,21 +21,10 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.util;
 
 /**
- * Created by mac on 9/12/14.
+ * Created by mac on 11/18/14.
  */
-final class UpdaterConstants {
-
-    private UpdaterConstants() {}
-
-    public static final String
-            DEFECT_TRACKERS_FOLDER = "mappings/defect",
-            GENERIC_VULNS_FOLDER = "mappings/generic",
-            SCANNERS_FOLDER = "mappings/scanner",
-            WAFS_FOLDER = "mappings/waf",
-            REMOTE_PROVIDERS_FOLDER = "mappings/remoteprovider",
-            DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
-
+public class AnnotationLoaderUtils {
 }

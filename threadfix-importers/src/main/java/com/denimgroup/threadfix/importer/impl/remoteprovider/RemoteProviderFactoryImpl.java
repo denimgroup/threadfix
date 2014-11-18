@@ -64,6 +64,8 @@ public class RemoteProviderFactoryImpl implements RemoteProviderFactory {
             remoteProvider = new WhiteHatRemoteProvider();
         } else if (type == ScannerType.VERACODE) {
             remoteProvider = new VeracodeRemoteProvider();
+        } else if (providerType.equals("Trustwave Hailstorm")) {
+            remoteProvider = new TrustwaveHailstormRemoteProvider();
         }
 
         return remoteProvider;

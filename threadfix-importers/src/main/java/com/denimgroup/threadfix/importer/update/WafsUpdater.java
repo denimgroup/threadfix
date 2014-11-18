@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.update;
 
+import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.dao.WafTypeDao;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
@@ -30,6 +31,7 @@ import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,7 +42,8 @@ import static com.denimgroup.threadfix.CollectionUtils.listOf;
  * Created by mac on 9/12/14.
  */
 @Service
-public class WafsUpdater implements Updater {
+@MappingsUpdater
+public class WafsUpdater extends SpringBeanAutowiringSupport implements Updater {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(WafsUpdater.class);
 

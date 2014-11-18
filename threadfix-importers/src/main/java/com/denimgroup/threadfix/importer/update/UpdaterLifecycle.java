@@ -23,19 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.update;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+
 /**
- * Created by mac on 9/12/14.
+ * Created by mac on 11/18/14.
  */
-final class UpdaterConstants {
+public class UpdaterLifecycle implements BeanFactoryPostProcessor {
 
-    private UpdaterConstants() {}
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
 
-    public static final String
-            DEFECT_TRACKERS_FOLDER = "mappings/defect",
-            GENERIC_VULNS_FOLDER = "mappings/generic",
-            SCANNERS_FOLDER = "mappings/scanner",
-            WAFS_FOLDER = "mappings/waf",
-            REMOTE_PROVIDERS_FOLDER = "mappings/remoteprovider",
-            DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
-
+    }
 }
