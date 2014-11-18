@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('ApplicationPageModalController', function($scope, $rootScope, $window, $log, $http, $modal, tfEncoder, timeoutService) {
 
@@ -45,7 +45,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                                return true;
                            }
                        })
-                   })
+                   });
 
                    $scope.config.trackerTypes = $scope.config.defectTrackerTypeList;
 

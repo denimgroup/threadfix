@@ -28,6 +28,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.annotations.Cascade;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Calendar;
@@ -485,5 +486,17 @@ public class Finding extends AuditableEntity implements FindingLike {
                     ", surfaceLocation=" + surfaceLocation +
                     '}';
         }
+    }
+    
+    @Transient
+    @JsonIgnore
+    @Nullable
+    public String getChannelNameOrNull() {
+        return getScan() != null &&
+                getScan().getApplicationChannel() != null &&
+                getScan().getApplicationChannel().getChannelType() != null &&
+                getScan().getApplicationChannel().getChannelType().getName() != null ?
+                    getScan().getApplicationChannel().getChannelType().getName() :
+                    null;
     }
 }

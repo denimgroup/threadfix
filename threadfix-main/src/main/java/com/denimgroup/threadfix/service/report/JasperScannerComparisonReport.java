@@ -140,11 +140,8 @@ public class JasperScannerComparisonReport implements JRDataSource {
 			
 			// TODO think about a good way to do this without traversing so many objects
 			for (Finding finding : vuln.getFindings()) {
-				if (finding != null && finding.getScan() != null 
-						&& finding.getScan().getApplicationChannel() != null 
-						&& finding.getScan().getApplicationChannel().getChannelType() != null
-						&& finding.getScan().getApplicationChannel().getChannelType().getName() != null) {
-					scannersInUse.add(finding.getScan().getApplicationChannel().getChannelType().getName());
+				if (finding != null && finding.getChannelNameOrNull() != null) {
+					scannersInUse.add(finding.getChannelNameOrNull());
 				}
 			}
 			
