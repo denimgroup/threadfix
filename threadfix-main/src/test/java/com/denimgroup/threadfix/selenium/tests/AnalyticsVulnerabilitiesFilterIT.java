@@ -66,9 +66,10 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
+        analyticsPage.takeScreenShot();
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addTeamFilter(teamName, "vulnSearchFilterDiv");
-
+        analyticsPage.takeScreenShot();
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
@@ -98,6 +99,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addApplicationFilter(appName,"vulnSearchFilterDiv");
 
+        analyticsPage.takeScreenShot();
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
@@ -138,6 +140,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addApplicationFilter(appName, "vulnSearchFilterDiv");
 
+        analyticsPage.takeScreenShot();
         assertTrue("Only 9 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
@@ -152,10 +155,12 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickViewAppLink(appName, teamName)
                 .clickViewMoreVulnerabilityTrending();
 
+        analyticsPage.takeScreenShot();
         assertTrue("Incorrect Navigation", analyticsPage.isReportCorrect());
 
         analyticsPage.clickVulnerabilitySearchTab();
 
+        analyticsPage.takeScreenShot();
         assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isElementPresent("vulnSearchFilterDiv"));
     }
 
@@ -174,6 +179,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         driver.findElement(By.linkText("More Than")).click();
         driver.findElement(By.linkText("1 Week")).click();
 
+        analyticsPage.takeScreenShot();
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",

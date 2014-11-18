@@ -292,4 +292,113 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         assertTrue("Time to close is invalid.",
                 Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()) >= 0);
     }
+
+    @Test
+    public void progressByVulnInTimeFieldFilters() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(false)
+                .selectDropDownReport("Progress By Vulnerability")
+                .expandFieldControlsReport("snapshotFilterDiv")
+                .selectFieldControls("Info", "snapshotFilterDiv")
+                .selectFieldControls("Low", "snapshotFilterDiv")
+                .selectFieldControls("Medium", "snapshotFilterDiv")
+                .selectFieldControls("High", "snapshotFilterDiv")
+                .selectFieldControls("Critical", "snapshotFilterDiv");
+
+        assertTrue("Field controls did not work.", driver.findElements(By.id("averageTimeToCloseVuln5")).isEmpty());
+    }
+
+    @Test
+    public void progressByVulnTeamFilterCount() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(false)
+                .selectDropDownReport("Progress By Vulnerability")
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName, "snapshotFilterDiv");
+
+        assertTrue("Team specific vulnerabilities are not correct.",
+                driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
+                driver.findElement(By.id("totalVuln1")).getText().equals("1") &&
+                driver.findElement(By.id("totalVuln2")).getText().equals("1") &&
+                driver.findElement(By.id("totalVuln3")).getText().equals("1") &&
+                driver.findElement(By.id("totalVuln4")).getText().equals("2") &&
+                driver.findElement(By.id("totalVuln5")).getText().equals("3") &&
+                driver.findElement(By.id("totalVuln6")).getText().equals("18"));
+    }
+
+    @Test
+    public void progressByVulnCheckSavedFilter() {
+        initializeTeamAndAppWithIBMScan();
+        initializeTeamAndAppWithWebInspectScan();
+        String filterName = getName();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(false)
+                .selectDropDownReport("Progress By Vulnerability")
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName, "snapshotFilterDiv")
+                .saveCurrentFilterReport(filterName,"snapshotFilterDiv");
+
+        analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
+                .selectDropDownReport("Progress By Vulnerability")
+                .loadFilterReport(filterName,"snapshotFilterDiv");
+
+        assertTrue("Team specific vulnerabilities are not correct.",
+                driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
+                        driver.findElement(By.id("totalVuln1")).getText().equals("1") &&
+                        driver.findElement(By.id("totalVuln2")).getText().equals("1") &&
+                        driver.findElement(By.id("totalVuln3")).getText().equals("1") &&
+                        driver.findElement(By.id("totalVuln4")).getText().equals("2") &&
+                        driver.findElement(By.id("totalVuln5")).getText().equals("3") &&
+                        driver.findElement(By.id("totalVuln6")).getText().equals("18"));
+    }
+
+    @Test
+    public void mostVulnAppTestFilter() {
+        initializeTeamAndAppWithWebInspectScan();
+
+        loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(false)
+                .selectDropDownReport("Most Vulnerable Applications")
+                .expandFieldControlsReport("snapshotFilterDiv")
+                .selectFieldControls("Medium", "snapshotFilterDiv")
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName, "snapshotFilterDiv");
+
+        assertTrue("Info Bar is not present", !driver.findElements(By.id(teamName + appName + "InfoBar")).isEmpty());
+        assertTrue("Low Bar is not present", !driver.findElements(By.id(teamName + appName + "LowBar")).isEmpty());
+        assertTrue("Medium Bar shouldn't be present", driver.findElements(By.id(teamName + appName + "MediumBar")).isEmpty());
+        assertTrue("High Bar is not present", !driver.findElements(By.id(teamName + appName + "HighBar")).isEmpty());
+        assertTrue("Critical Bar is not present", !driver.findElements(By.id(teamName + appName + "CriticalBar")).isEmpty());
+    }
+
+    @Test
+    public void mostVulnAppSaveFilter() {
+        initializeTeamAndAppWithWebInspectScan();
+        String filterName = getName();
+
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
+                .clickSnapshotTab(false)
+                .selectDropDownReport("Most Vulnerable Applications")
+                .expandFieldControlsReport("snapshotFilterDiv")
+                .selectFieldControls("Medium", "snapshotFilterDiv")
+                .expandTeamApplicationFilterReport("snapshotFilterDiv")
+                .addTeamFilterReport(teamName, "snapshotFilterDiv")
+                .saveCurrentFilterReport(filterName,"snapshotFilterDiv");
+
+        analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
+                .selectDropDownReport("Most Vulnerable Applications")
+                .loadFilterReport(filterName,"snapshotFilterDiv");
+
+        assertTrue("Medium Bar shouldn't be present", driver.findElements(By.id(teamName + appName + "MediumBar")).isEmpty());
+    }
 }

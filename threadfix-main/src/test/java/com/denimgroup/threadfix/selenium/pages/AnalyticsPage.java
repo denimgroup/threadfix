@@ -157,9 +157,29 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage saveCurrentFilterReport(String name, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showSaveFilterReport")).click();
+        filterDiv.findElement(By.id("filterNameInputReport")).sendKeys(name);
+        filterDiv.findElement(By.id("saveFilterButtonReport")).click();
+        return new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage expandAgingFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("showDateControlsReport")).click();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandFieldControlsReport(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showFieldControlsReport")).click();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage selectFieldControls(String level, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("show" + level + "Report")).click();
         return new AnalyticsPage(driver);
     }
 
@@ -173,6 +193,16 @@ public class AnalyticsPage extends BasePage {
     public AnalyticsPage selectDropDownReport(String report) {
         new Select(driver.findElementById("reportSnapshotSelect")).selectByVisibleText(report);
         sleep(2000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage loadFilterReport(String name, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.linkText("Load Filters")).click();
+        filterDiv.findElement(By.id("filterSelectReport")).sendKeys(name);
+        filterDiv.findElement(By.id("filterSelectReport")).sendKeys(Keys.ENTER);
+        filterDiv.findElement(By.linkText("Filters")).click();
+        sleep(1000);
         return new AnalyticsPage(driver);
     }
 
