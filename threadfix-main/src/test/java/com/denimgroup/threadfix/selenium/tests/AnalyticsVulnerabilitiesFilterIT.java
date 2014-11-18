@@ -69,8 +69,6 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addTeamFilter(teamName, "vulnSearchFilterDiv");
 
-        sleep(2000);
-
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",
@@ -99,8 +97,6 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addApplicationFilter(appName,"vulnSearchFilterDiv");
-
-        sleep(2000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -141,7 +137,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addApplicationFilter(appName, "vulnSearchFilterDiv");
-        sleep(2000);
+
         assertTrue("Only 9 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
     }
@@ -174,13 +170,9 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
                 .addTeamFilter(teamName, "vulnSearchFilterDiv");
 
-        sleep(2000);
-
         driver.findElement(By.id("showDateControls")).click();
         driver.findElement(By.linkText("More Than")).click();
         driver.findElement(By.linkText("1 Week")).click();
-
-        sleep(2000);
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));

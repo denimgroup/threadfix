@@ -130,7 +130,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .addTeamFilterReport(teamName,"snapshotFilterDiv");
 
         for(int i = 0; i < 5; i++) {
-            analyticsPage.hoverOverSVGElement("pointInTime" + levels[i] + "Arc");
+            analyticsPage.hoverRealOverSVGElement("pointInTime" + levels[i] + "Arc");
             String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
             String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
 
