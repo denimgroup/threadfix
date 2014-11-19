@@ -70,4 +70,58 @@ public class AnalyticsComplianceIT extends BaseDataTest {
                 driver.findElement(By.cssSelector("#\\32")).getText().equals("16"));
     }
 
+    @Test
+    public void checkAppNameNavigation() {
+        initializeTeamAndAppWithIBMScan();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(appName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag(appName)
+                .clickModalSubmit();
+
+        applicationDetailPage.clickAnalyticsLink()
+                .clickComplianceTab(false)
+                .expandTagFilter("complianceFilterDiv")
+                .addTagFilter(appName,"complianceFilterDiv")
+                .expandAgingFilterReport("complianceFilterDiv")
+                .toggleAgingFilterReport("Forever","complianceFilterDiv");
+
+        driver.findElement(By.linkText(appName)).click();
+
+        assertTrue("Link did not navigate correclty", driver.findElement(By.id("nameText")).getText().equals(appName));
+    }
+
+    @Test
+    public void checkTeamNameNavigation() {
+        initializeTeamAndAppWithIBMScan();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickTagsLink()
+                .createNewTag(appName)
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag(appName)
+                .clickModalSubmit();
+
+        applicationDetailPage.clickAnalyticsLink()
+                .clickComplianceTab(true)
+                .expandTagFilter("complianceFilterDiv")
+                .addTagFilter(appName,"complianceFilterDiv")
+                .expandAgingFilterReport("complianceFilterDiv")
+                .toggleAgingFilterReport("Forever","complianceFilterDiv");
+
+        driver.findElement(By.linkText(teamName)).click();
+
+        assertTrue("Link did not navigate correclty", driver.findElement(By.id("name")).getText().equals(teamName));
+    }
+
 }

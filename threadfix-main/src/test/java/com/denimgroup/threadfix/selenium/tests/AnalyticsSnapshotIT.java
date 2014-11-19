@@ -283,11 +283,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton();
 
-        applicationDetailPage.clickAnalyticsLink()
+        AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
+
+        analyticsPage.waitForElement(driver.findElement(By.id("averageTimeToCloseVuln5")));
 
         assertTrue("Time to close is invalid.",
                 Integer.parseInt(driver.findElement(By.id("averageTimeToCloseVuln5")).getText()) >= 0);
@@ -315,12 +317,14 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     public void progressByVulnTeamFilterCount() {
         initializeTeamAndAppWithWebInspectScan();
 
-        loginPage.defaultLogin()
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
+
+        analyticsPage.waitForElement(driver.findElement(By.id("totalVuln0")));
 
         assertTrue("Team specific vulnerabilities are not correct.",
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
@@ -349,6 +353,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .loadFilterReport(filterName,"snapshotFilterDiv");
+
+        analyticsPage.waitForElement(driver.findElement(By.id("totalVuln0")));
 
         assertTrue("Team specific vulnerabilities are not correct.",
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&

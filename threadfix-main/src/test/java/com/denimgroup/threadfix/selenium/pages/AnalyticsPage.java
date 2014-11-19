@@ -154,6 +154,7 @@ public class AnalyticsPage extends BasePage {
         teamNameSpace.sendKeys(teamName);
         teamNameSpace.sendKeys(Keys.ENTER);
         waitForResultsToLoad();
+        sleep(1500);
         return new AnalyticsPage(driver);
     }
 

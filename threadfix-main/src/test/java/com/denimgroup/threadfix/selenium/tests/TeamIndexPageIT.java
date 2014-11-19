@@ -228,7 +228,7 @@ public class TeamIndexPageIT extends BaseDataTest {
 
         for(int i = 0; i < 5; i++) {
             teamIndexPage.hoverOverSVGElement(teamName + levels[i] + "Arc");
-            sleep(2000);
+            sleep(2500);
             String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
 
             assertTrue("Tip value at level " + levels[i] + " does not match badge",
