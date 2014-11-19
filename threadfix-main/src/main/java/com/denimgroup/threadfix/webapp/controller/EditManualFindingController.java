@@ -54,24 +54,18 @@ public class EditManualFindingController {
 	private final SanitizedLogger log = new SanitizedLogger(EditManualFindingController.class);
 
     @Autowired
-	private FindingService findingService = null;
-    @Autowired
-    private ChannelVulnerabilityService channelVulnerabilityService;
+	private FindingService findingService;
     @Autowired
     private VulnerabilityService vulnerabilityService;
 	@Autowired
-    private ManualFindingService manualFindingService = null;
+    private ManualFindingService manualFindingService;
     @Autowired
     private QueueSender queueSender;
     @Autowired
     private ScanService scanService;
 
 	public boolean isManual(Finding finding) {
-		return !(finding == null || finding.getScan() == null || 
-				finding.getScan().getApplicationChannel() == null ||
-				finding.getScan().getApplicationChannel().getChannelType() == null ||
-				finding.getScan().getApplicationChannel().getChannelType().getName() == null ||
-				finding.getScan().getApplicationChannel().getChannelType().getName().equals(ScannerType.MANUAL.getFullName()));
+        return finding != null && ScannerType.MANUAL.getFullName().equals(finding.getChannelNameOrNull());
 	}
 	
 	public boolean isAuthorizedForFinding(Finding finding) {

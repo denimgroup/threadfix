@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,81 +41,100 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-	protected final SanitizedLogger log = new SanitizedLogger(UserService.class);
+    protected final SanitizedLogger log = new SanitizedLogger(UserService.class);
 
     @Autowired
-	private UserDao userDao = null;
+    private UserDao             userDao             = null;
     @Autowired
-	private RoleDao roleDao = null;
+    private RoleDao             roleDao             = null;
     @Autowired
-	private AccessControlMapDao accessControlMapDao = null;
+    private AccessControlMapDao accessControlMapDao = null;
 
-	private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
+    private ThreadFixPasswordEncoder encoder = new ThreadFixPasswordEncoder();
+    private Authentication authentication;
 
-	/**
-	 * Transactional(readOnly = false) here means that false will be put in to 
-	 * the LDAP user field and update correctly.
-	 */
-	@Override
-	@Transactional(readOnly = false)
-	public List<User> loadAllUsers() {
-		return userDao.retrieveAllActive();
-	}
+    /**
+     * Transactional(readOnly = false) here means that false will be put in to
+     * the LDAP user field and update correctly.
+     */
+    @Override
+    @Transactional(readOnly = false)
+    public List<User> loadAllUsers() {
+        return userDao.retrieveAllActive();
+    }
 
-	@Override
-	@Transactional(readOnly = false) // used to be true
-	public User loadUser(int userId) {
-		return userDao.retrieveById(userId);
-	}
+    @Override
+    public User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-	@Override
-	@Transactional(readOnly = false)
-	public User loadUser(String name) {
-		User user = userDao.retrieveByName(name);
-		if (user != null && user.getIsLdapUser()) {
-			return null;
-		} else {
-			return user;
-		}
-	}
+        User user = null;
 
-	@Override
-	@Transactional(readOnly = false)
-	public void storeUser(User user) {
-		if ((user.getUnencryptedPassword() != null) && (user.getUnencryptedPassword().length() > 0)) {
-			encryptPassword(user);
-		}
-		userDao.saveOrUpdate(user);
-	}
+        if (principal instanceof ThreadFixUserDetails) {
 
-	@Override
-	@Transactional(readOnly = false)
-	public void delete(User user) {
-		if (user != null) {
-			user.setName(user.getName() + new Date().toString());
-			if (user.getName().length() > User.NAME_LENGTH) {
-				user.setName(user.getName().substring(0, User.NAME_LENGTH - 1));
-			}
+            ThreadFixUserDetails details = (ThreadFixUserDetails) principal;
 
-			user.setActive(false);
-			userDao.saveOrUpdate(user);
-		}
-	}
+            Integer userId = details.getUserId();
 
-	@Override
-	@Transactional(readOnly = false)
-	public Integer createUser(User user) {
+            user = userDao.retrieveById(userId);
+        }
+
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly = false) // used to be true
+    public User loadUser(int userId) {
+        return userDao.retrieveById(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public User loadUser(String name) {
+        User user = userDao.retrieveByName(name);
+        if (user != null && user.getIsLdapUser()) {
+            return null;
+        } else {
+            return user;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void storeUser(User user) {
+        if ((user.getUnencryptedPassword() != null) && (user.getUnencryptedPassword().length() > 0)) {
+            encryptPassword(user);
+        }
+        userDao.saveOrUpdate(user);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(User user) {
+        if (user != null) {
+            user.setName(user.getName() + new Date().toString());
+            if (user.getName().length() > User.NAME_LENGTH) {
+                user.setName(user.getName().substring(0, User.NAME_LENGTH - 1));
+            }
+
+            user.setActive(false);
+            userDao.saveOrUpdate(user);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Integer createUser(User user) {
         encryptPassword(user);
-		userDao.saveOrUpdate(user);
+        userDao.saveOrUpdate(user);
         return user.getId();
-	}
+    }
 
-	private void encryptPassword(User user) {
-		try {
-			user.setSalt(encoder.generateSalt());
-			user.setPassword(encoder.generatePasswordHash(user.getUnencryptedPassword(),
-					user.getSalt()));
-		} catch (NoSuchAlgorithmException e) {
+    private void encryptPassword(User user) {
+        try {
+            user.setSalt(encoder.generateSalt());
+            user.setPassword(encoder.generatePasswordHash(user.getUnencryptedPassword(),
+                    user.getSalt()));
+        } catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 	}
