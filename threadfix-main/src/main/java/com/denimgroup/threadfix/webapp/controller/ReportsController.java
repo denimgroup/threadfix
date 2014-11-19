@@ -333,13 +333,21 @@ public class ReportsController {
     private void insertEnterpriseTags() {
         if (EnterpriseTest.isEnterprise()) {
             for (TagEnum tagEnum: TagEnum.values()) {
-                if (tagService.loadTag(tagEnum.getName()) == null) {
+
+                Tag dbTag = tagService.loadTag(tagEnum.getName());
+
+                if (dbTag == null) {
                     log.info("Saving new Enterprise Tag " + tagEnum.getName());
                     Tag tag = new Tag();
                     tag.setName(tagEnum.getName());
                     tag.setDefaultJsonFilter(tagEnum.getDefaultFilter());
                     tag.setEnterpriseTag(true);
                     tagService.storeTag(tag);
+                } else {
+                    log.info("Updating Tag " + tagEnum.getName() + " to Enterprise Tag");
+                    dbTag.setDefaultJsonFilter(tagEnum.getDefaultFilter());
+                    dbTag.setEnterpriseTag(true);
+                    tagService.storeTag(dbTag);
                 }
             }
         }
