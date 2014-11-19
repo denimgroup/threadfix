@@ -29,9 +29,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -47,6 +45,9 @@ public class Tag extends AuditableEntity {
     @NotEmpty(message = "{errors.required}")
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     private String name;
+
+    private Boolean enterpriseTag = false;
+    private String defaultJsonFilter;
 
     private Set<Application> applications = new HashSet<Application>(0);
     private Set<VulnerabilityComment> vulnerabilityComments = new HashSet<VulnerabilityComment>(0);
@@ -81,9 +82,42 @@ public class Tag extends AuditableEntity {
         this.vulnerabilityComments = vulnerabilityComments;
     }
 
+    @Column(nullable = true)
+    @JsonView(Object.class)
+    public Boolean getEnterpriseTag() {
+        return enterpriseTag;
+    }
+
+    public void setEnterpriseTag(Boolean enterpriseTag) {
+        this.enterpriseTag = enterpriseTag;
+    }
+
+    @Column(length = 1024, nullable = true)
+    @JsonView(Object.class)
+    public String getDefaultJsonFilter() {
+        return defaultJsonFilter;
+    }
+
+    public void setDefaultJsonFilter(String defaultJsonFilter) {
+        this.defaultJsonFilter = defaultJsonFilter;
+    }
+
+    @Transient
+    @JsonIgnore
+    public int getVulnCommentsCount(){
+        int numVulnComments = 0;
+        for (VulnerabilityComment comment: vulnerabilityComments) {
+            if (comment.getVulnerability() != null
+                    && comment.getVulnerability().getApplication() != null
+                    && comment.getVulnerability().getApplication().isActive())
+                numVulnComments++;
+        }
+        return numVulnComments;
+
+    }
     @Transient
     public boolean getDeletable(){
-        return applications.size()==0 && vulnerabilityComments.size()==0;
+        return applications.size()==0 && getVulnCommentsCount()==0;
     }
 
 }

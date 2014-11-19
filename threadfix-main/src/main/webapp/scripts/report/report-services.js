@@ -166,6 +166,10 @@ threadfixModule.factory('reportConstants', function() {
         compliance: {
             id: 11,
             name: "complianceTrendingGraph"
+        },
+        complianceEnterprise: {
+            id: 12,
+            name: "complianceEnterpriseTrendingGraph"
         }
     };
 

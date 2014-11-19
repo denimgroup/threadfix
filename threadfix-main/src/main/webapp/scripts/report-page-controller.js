@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService, vulnSearchParameterService) {
+myAppModule.controller('ReportPageController', function ($scope, $window, $http, tfEncoder, threadfixAPIService) {
 
     var nameCompare = function(a,b) {
         return a.name.localeCompare(b.name);
@@ -34,6 +34,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
                     $scope.searchApplications = data.object.applications;
                     $scope.filterParameters = data.object.filterParameters;
                     $scope.tags = data.object.tags;
+                    $scope.enterpriseTags = data.object.enterpriseTags;
 
                     $scope.teams.sort(nameCompare)
 
@@ -93,6 +94,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.snapshotActive = false;
         $scope.complianceActive = false;
         $scope.filterParameters = undefined;
+        $scope.remediationEnterpriseActive = false;
         $scope.$broadcast('loadVulnerabilitySearchTable');
     }
 
@@ -101,6 +103,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.snapshotActive = false;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
+        $scope.remediationEnterpriseActive = false;
         $scope.$broadcast('loadTrendingReport');
 
     };
@@ -110,6 +113,7 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.snapshotActive = false;
         $scope.complianceActive = true;
         $scope.vulnSearch = false;
+        $scope.remediationEnterpriseActive = false;
         $scope.$broadcast('loadComplianceReport');
 
     };
@@ -119,7 +123,18 @@ myAppModule.controller('ReportPageController', function ($scope, $window, $http,
         $scope.snapshotActive = true;
         $scope.complianceActive = false;
         $scope.vulnSearch = false;
+        $scope.remediationEnterpriseActive = false;
         $scope.$broadcast('loadSnapshotReport');
+
+    };
+
+    $scope.loadEnterpriseRemediation = function() {
+        $scope.remediationEnterpriseActive = true;
+        $scope.trendingActive = false;
+        $scope.snapshotActive = false;
+        $scope.complianceActive = false;
+        $scope.vulnSearch = false;
+        $scope.$broadcast('loadComplianceReport');
 
     };
 

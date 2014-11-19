@@ -14,7 +14,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 tableInfo: '=',
                 startDate: '=',
                 endDate: '=',
-                exportInfo: '='
+                exportInfo: '=',
+                svgId:'='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -51,7 +52,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     .attr("width", w + m[1] + m[3])
                     .attr("height", h + m[0] + m[2])
                     .attr("id", function(){
-                        return (scope.label && scope.label.svgId) ? scope.label.svgId : "trendingGraph";
+                        return (scope.svgId) ? scope.svgId : "trendingGraph";
                     })
                     .append("g")
                     .attr("transform", "translate(" + m[3] + "," + m[0] + ")");

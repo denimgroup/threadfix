@@ -21,17 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.Tag;
+package com.denimgroup.threadfix.data.enums;
 
-import java.util.List;
+public enum TagEnum {
+	PCI("PCI","{\"tags\":[],\"severities\":{\"critical\":true,\"high\":true,\"medium\":true,\"low\":true,\"info\":true},\"daysOldModifier\":\"LastYear\",\"filterType\":{\"isComplianceFilter\":true}}"),
+	HIPAA("HIPAA","{\"tags\":[],\"severities\":{\"critical\":true,\"high\":true,\"medium\":true,\"low\":false,\"info\":false},\"daysOldModifier\":\"LastYear\",\"filterType\":{\"isComplianceFilter\":true}}");
 
-/**
- * Basic DAO class for the Tag entity.
- * 
- * @author stran
- */
-public interface TagDao extends GenericNamedObjectDao<Tag> {
-    List<Tag> retrieveAllEnterprise();
+	private String name, defaultFilter;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDefaultFilter() {
+        return defaultFilter;
+    }
+
+    TagEnum(String name, String defaultFilter) {
+        this.name = name;
+		this.defaultFilter = defaultFilter;
+	}
+
 }

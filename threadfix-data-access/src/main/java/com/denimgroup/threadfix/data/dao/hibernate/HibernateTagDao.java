@@ -26,10 +26,14 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractNamedObjectDao;
 import com.denimgroup.threadfix.data.dao.TagDao;
 import com.denimgroup.threadfix.data.entities.Tag;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Hibernate Tag DAO implementation. Most basic methods are implemented in the
@@ -56,5 +60,29 @@ public class HibernateTagDao
     @Override
     protected Class<Tag> getClassReference() {
         return Tag.class;
+    }
+
+    @Override
+    public List<Tag> retrieveAllEnterprise() {
+        Criteria criteria = getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("enterpriseTag", true));
+
+        Order order = getOrder();
+        if (order != null) {
+            criteria.addOrder(order);
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public Tag retrieveByName(String name) {
+        return (Tag) getSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("active", true))
+                .add(Restrictions.eq("name", name))
+                .uniqueResult();
     }
 }
