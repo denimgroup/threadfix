@@ -21,41 +21,30 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.struts;
 
-import javax.annotation.Nonnull;
+import com.denimgroup.threadfix.framework.ResourceManager;
+import org.junit.Test;
 
-import java.io.File;
+import java.util.*;
 
-import static org.junit.Assert.assertTrue;
+/**
+ * Created by sgerick on 11/12/2014.
+ */
+public class StrutsPropertiesParserTests {
 
-public class ResourceManager {
+	@Test
+	public void testStrutsPropertiesFile() {
 
-	@Nonnull
-    public static File getFile(String name) {
-		File file = new File(TestConstants.THREADFIX_SOURCE_ROOT + "threadfix-ham/target/test-classes/" + name);
-        assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
+		Properties strutsProperties
+				= StrutsPropertiesParser.getStrutsProperties( ResourceManager.getStrutsFile("struts.properties") );
 
-        return file;
-    }
+		assert strutsProperties != null;
+		assert strutsProperties.getProperty("struts.action.extension").equals("rol");
+		assert strutsProperties.getProperty("struts.action.extension","default").equals("rol");
+		assert strutsProperties.getProperty("strutsActionExtension") == null;
+		assert strutsProperties.getProperty("strutsActionExtension","default").equals("default");
 
-	@Nonnull
-    public static File getSpringFile(String name) {
-		return getFile("code/spring/" + name);
 	}
 
-	@Nonnull
-    public static File getStrutsFile(String name) {
-		return getFile("code.struts/" + name);
-	}
-
-    @Nonnull
-    public static File getDotNetMvcFile(String name) {
-        return getFile("code.dotNet.mvc/" + name);
-    }
-
-    @Nonnull
-    public static File getDotNetWebFormsFile(String name) {
-        return getFile("code.dotNet.webforms/" + name);
-    }
 }
