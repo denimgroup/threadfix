@@ -182,7 +182,7 @@
 </div>
 
 <!-- Save Filter -->
-<div class="accordion-group">
+<div class="accordion-group" ng-hide="remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showSaveFilter = !showSaveFilter">
         <span id="showSaveFilterReport" class="icon" ng-class="{ 'icon-minus': showSaveFilter, 'icon-plus': !showSaveFilter }"></span> Save Current Filter
     </div>
@@ -247,7 +247,7 @@
 </security:authorize>
 </div>
 
-<div ng-show="showSavedFilters">
+<div ng-show="showSavedFilters && !remediationEnterpriseActive">
     <!-- Saved Filters section -->
     <div class="saved-filters-tab" ng-show="savedFilters && savedFilters.length > 0">
 

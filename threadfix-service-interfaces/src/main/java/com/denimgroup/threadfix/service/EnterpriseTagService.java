@@ -21,16 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Tag;
 
 import java.util.List;
 
 /**
- * Basic DAO class for the Tag entity.
- * 
  * @author stran
+ * 
  */
-public interface TagDao extends GenericNamedObjectDao<Tag> {
+public interface EnterpriseTagService {
+    List<Tag> loadEnterpriseTags();
+    void insertTags();
+
 }
