@@ -34,6 +34,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.OrderComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -178,6 +179,8 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
                 }
             }
         }
+
+        Collections.sort(updaters, OrderComparator.INSTANCE);
 
         return updaters;
     }

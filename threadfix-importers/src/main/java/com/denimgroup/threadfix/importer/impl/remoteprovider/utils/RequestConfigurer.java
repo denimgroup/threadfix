@@ -21,19 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.apache.commons.httpclient.HttpMethodBase;
 
 /**
- * Created by mac on 11/18/14.
+ * Created by mac on 11/19/14.
  */
-public class UpdaterLifecycle implements BeanFactoryPostProcessor {
+public interface RequestConfigurer {
 
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+    void configure(HttpMethodBase method);
 
-    }
 }

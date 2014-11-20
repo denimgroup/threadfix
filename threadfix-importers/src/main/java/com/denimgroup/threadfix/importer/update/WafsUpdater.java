@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -43,7 +44,7 @@ import static com.denimgroup.threadfix.CollectionUtils.listOf;
  */
 @Service
 @MappingsUpdater
-public class WafsUpdater extends SpringBeanAutowiringSupport implements Updater {
+public class WafsUpdater extends SpringBeanAutowiringSupport implements Updater, Ordered {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(WafsUpdater.class);
 
@@ -51,6 +52,11 @@ public class WafsUpdater extends SpringBeanAutowiringSupport implements Updater 
     WafTypeDao wafTypeDao;
     @Autowired
     WafRuleDirectiveDao wafRuleDirectiveDao;
+
+    @Override
+    public int getOrder() {
+        return 300;
+    }
 
     enum State {
         START, NAME, DIRECTIVES

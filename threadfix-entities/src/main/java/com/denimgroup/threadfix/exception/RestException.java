@@ -37,7 +37,7 @@ public abstract class RestException extends RuntimeException {
      * @param responseString gets printed to the user
      */
     public RestException(Throwable cause, String responseString) {
-        super(cause);
+        super(responseString, cause);
         this.responseString = responseString;
     }
 
@@ -46,7 +46,7 @@ public abstract class RestException extends RuntimeException {
      * @param responseString gets printed to the user
      */
     public RestException(String responseString) {
-        super();
+        super(responseString);
         this.responseString = responseString;
     }
 

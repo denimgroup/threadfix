@@ -24,10 +24,13 @@
 package com.denimgroup.threadfix.importer.update;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
+import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -41,15 +44,22 @@ import static com.denimgroup.threadfix.importer.update.UpdaterConstants.REMOTE_P
  */
 @Service
 @MappingsUpdater
-public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implements Updater {
+public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implements Updater, Ordered {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(RemoteProviderUpdater.class);
 
     @Autowired
     private RemoteProviderTypeService remoteProviderTypeService;
+    @Autowired
+    private ChannelTypeService channelTypeService;
+
+    @Override
+    public int getOrder() {
+        return 500;
+    }
 
     enum State {
-        START, NAME, CREDENTIALS
+        START, NAME, CREDENTIALS, CHANNEL_TYPE
     }
 
     State currentState = State.START;
@@ -61,7 +71,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
         assert remoteProviderTypeService != null :
                 "remoteProviderTypeService was null. This indicates an error in Spring autowiring.";
 
-        String name = null;
+        String name = null, channelName = null;
         boolean usernamePassword = false;
 
         String line;
@@ -70,10 +80,14 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
                 currentState = State.NAME;
             } else if (line.equals("type.credentials")) {
                 currentState = State.CREDENTIALS;
+            } else if (line.equals("type.channelname")) {
+                currentState = State.CHANNEL_TYPE;
             } else if (currentState == State.NAME) {
                 name = line;
             } else if (currentState == State.CREDENTIALS) {
                 usernamePassword = line.equalsIgnoreCase("usernamepassword");
+            } else if (currentState == State.CHANNEL_TYPE) {
+                channelName = line;
             }
         }
 
@@ -81,7 +95,15 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             throw new IllegalStateException("Failed to get a remote provider name from " + fileName);
         }
 
+        if (channelName == null) {
+            throw new IllegalStateException("Failed to get a channel name from " + fileName);
+        }
+
         RemoteProviderType databaseType = remoteProviderTypeService.load(name);
+
+        ChannelType channelType = channelTypeService.loadChannel(channelName);
+
+        assert channelType != null : "Got null channel type for string " + channelName;
 
         if (databaseType == null) {
             LOG.info("Creating new RemoteProviderType with name " + name);
@@ -89,10 +111,16 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             RemoteProviderType type = new RemoteProviderType();
             type.setName(name);
             type.setHasUserNamePassword(usernamePassword);
+            type.setChannelType(channelType);
             remoteProviderTypeService.store(type);
 
         } else {
             LOG.debug(name + " was already present in the database.");
+
+            databaseType.setHasUserNamePassword(usernamePassword);
+            databaseType.setChannelType(channelType);
+
+            remoteProviderTypeService.store(databaseType);
         }
     }
 

@@ -220,6 +220,10 @@
                             <td>HP Quality Center</td>
                             <td><form:checkbox path="shouldProxyHPQC" value="${ defaultConfiguration.shouldProxyHPQC }"/></td>
                         </tr>
+                        <tr>
+                            <td>Trustwave Hailstorm</td>
+                            <td><form:checkbox path="shouldProxyTrustwaveHailstorm" value="${ defaultConfiguration.shouldProxyTrustwaveHailstorm }"/></td>
+                        </tr>
                     </table>
                 </div>
             </div>

@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -41,7 +42,7 @@ import java.io.IOException;
  */
 @MappingsUpdater
 @Service
-public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements Updater {
+public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements Updater, Ordered {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DefectTrackerUpdater.class);
     @Autowired
@@ -89,4 +90,8 @@ public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements
         return UpdaterConstants.DEFECT_TRACKERS_FOLDER;
     }
 
+    @Override
+    public int getOrder() {
+        return 400;
+    }
 }

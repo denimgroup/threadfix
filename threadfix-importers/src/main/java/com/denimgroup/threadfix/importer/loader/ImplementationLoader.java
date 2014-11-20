@@ -58,6 +58,7 @@ public class ImplementationLoader<A extends Annotation, C> {
         this.concreteClass = concreteClass;
     }
 
+    // TODO maybe cache constructors
     public C getImplementation(String key) {
         Class<?> channelImporterClass = classMap.get(key);
 

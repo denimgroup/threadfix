@@ -29,8 +29,13 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RequestConfigurer;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,29 +54,36 @@ import static com.denimgroup.threadfix.CollectionUtils.*;
  */
 public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
 
-    // TODO move to code that calls the server
-    private String getApplicationJson() {
-        return "{\n" +
-                "\"ReturnCode\": 0, \"ApplicationIds\": [\n" +
-                "\"0a6c98bf-3f83-41a5-9deb-bd3a4e41a645\", \"0f4938fb-8e4e-45e3-b7c0-610939080a7b\", \"1e3c16f4-c14a-4fe0-abbe-53430be8370d\",\n" +
-                "] }";
+    String url = "https://ctsarc.cenzic.com/ResultEngineApi/applications",
+            secret = "12341234",
+            accessToken = "12341234-1234-1234-1234-123412341234";
+
+    private       RequestConfigurer       addCtsAuth = new RequestConfigurer() {
+        @Override
+        public void configure(HttpMethodBase method) {
+            method.setRequestHeader("CTSAuth", constructHeaderValue());
+        }
+    };
+    private final RemoteProviderHttpUtils utils      = new RemoteProviderHttpUtilsImpl<>(TrustwaveHailstormRemoteProvider.class);
+
+    // CTSAuth: client_secret=<<answer>>,access_token=<<answer>>
+    private String constructHeaderValue() {
+        return "client_secret=" + secret + ",access_token=" + accessToken;
     }
 
-    private String getScansJSON() {
-        return "{\n" +
-                "ReturnCode: 0 UniqueVulnerabilities: \" <Applications>\n" +
-                "<Application ApplicationId=\"2abbb729-1e14-467b-8a44-a7046f727907\"> <UniqueFindings>\n" +
-                "<UniqueFinding Id=\"7df1868f4e0db072814880ea2bf497a9a93573c\"> <Url>http://crackme.cenzic.com/Kelev/register/register.php</Url> <Type>35</Type>\n" +
-                "<TypeName>Form Caching</TypeName>\n" +
-                "<TypeDescription>No caching directives found.</TypeDescription> <FirstFoundDate>2013-05-21T18:58:23.0000000Z</FirstFoundDate> <LastFoundDate>2013-05-21T18:58:23.0000000Z</LastFoundDate> <Status>Fixed</Status>\n" +
-                "</UniqueFinding>\n" +
-                "<UniqueFinding Id=\"7df1868f4e0db072814880ea2bf497a9a93573c \">\n" +
-                "<Url>http://crackme.cenzic.com/Kelev/register/register.php</Url> <Type>23</Type>\n" +
-                "<TypeName>Non-SSL Form</TypeName>\n" +
-                "<TypeDescription>Number of forms found without SSL =1</TypeDescription> <FirstFoundDate>2013-05-21T18:58:23.0000000Z</FirstFoundDate> <LastFoundDate>2013-05-21T18:58:23.0000000Z</LastFoundDate> <Status>Open</Status>\n" +
-                "</UniqueFinding> </UniqueFindings>\n" +
-                "</Application> <Applications>\"\n" +
-                "}";
+    // TODO move to code that calls the server
+    private String getApplicationJson() {
+
+        HttpResponse response = utils.getUrlWithConfigurer(getUrl(), addCtsAuth);
+
+        return response.getStringOrThrowRestException();
+    }
+
+    private String getScansJSON(String applicationId) {
+
+        HttpResponse response = utils.getUrlWithConfigurer(url + "/" + applicationId + "/uFindings", addCtsAuth);
+
+        return response.getStringOrThrowRestException();
     }
 
     private static final SanitizedLogger LOG = new SanitizedLogger(TrustwaveHailstormRemoteProvider.class);
@@ -97,7 +109,7 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
 
     @Override
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
-        String scansJson = getScansJSON();
+        String scansJson = getScansJSON(remoteProviderApplication.getNativeId());
 
         checkReturnCode(scansJson);
 
@@ -108,6 +120,7 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
         Scan scan = new Scan();
 
         scan.setFindings(parser.findings);
+        scan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 
         return list(scan);
     }
@@ -128,6 +141,10 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
         }
     }
 
+    public String getUrl() {
+        return "https://ctsarc.cenzic.com/ResultEngineApi/applications";
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////
     //                                Findings XML Parser
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +154,7 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
         private FindingKey key = null;
         Map<String, FindingKey> keyMap    = map(
                 "Url", FindingKey.PATH,
-                "Type", FindingKey.VULN_CODE
+                "TypeName", FindingKey.VULN_CODE
         );
         Map<FindingKey, String> map       = newMap();
         boolean                 getStatus = false, findingIsOpen = false;
@@ -150,6 +167,8 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
                 key = keyMap.get(qName);
             } else if ("Status".equals(qName)) {
                 getStatus = true;
+            } else if ("UniqueFinding".equals(qName)) {
+                map.put(FindingKey.NATIVE_ID, attributes.getValue("Id"));
             }
         }
 
@@ -168,9 +187,14 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
 
             if ("UniqueFinding".equals(qName)) {
                 if (findingIsOpen) {
-                    findings.add(constructFinding(map));
+                    Finding finding = constructFinding(map);
+                    if (finding != null) {
+                        finding.setNativeId(map.get(FindingKey.NATIVE_ID));
+                        findings.add(finding);
+                    }
                 }
                 map.clear();
+                map.put(FindingKey.SEVERITY_CODE, "High");
             }
         }
 
@@ -252,8 +276,10 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
                         "Got error from server with code " + returnCode +
                                 " and string value " + statusMap.get(returnCode), returnCode);
             }
+
+
         } catch (JSONException e) {
-            throw new RestIOException("Unable to connect to Trustwave servers. Check your URL and credentials.", -1);
+            throw new RestIOException(e, "Unable to connect to Trustwave servers. Check your URL and credentials.", -1);
         }
     }
 }
