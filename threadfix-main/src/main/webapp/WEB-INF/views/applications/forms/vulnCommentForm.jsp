@@ -14,8 +14,8 @@
         <table class="modal-form-table">
             <tr class="left-align">
                 <td>Tag</td>
-                <td class="left-align" >
-                    <multi-select
+                <td class="left-align">
+                    <multi-select id="tagSelect"
                             input-model="config.tags"
                             output-model="object.tags"
                             button-label="name"

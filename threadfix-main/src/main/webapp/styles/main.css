@@ -890,6 +890,14 @@ div.box-shadow {
     display:block;
 }
 
+.vulnerabilitySection {
+    display:none;
+}
+
+.vulnerabilitySection.expanded {
+    display:block;
+}
+
 .tableReportDiv {
     float:right;
     margin-right:-20px;
