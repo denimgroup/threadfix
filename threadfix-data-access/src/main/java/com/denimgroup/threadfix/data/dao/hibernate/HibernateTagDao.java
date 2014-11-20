@@ -63,21 +63,6 @@ public class HibernateTagDao
     }
 
     @Override
-    public List<Tag> retrieveAllEnterprise() {
-        Criteria criteria = getSession()
-                .createCriteria(getClassReference())
-                .add(Restrictions.eq("active", true))
-                .add(Restrictions.eq("enterpriseTag", true));
-
-        Order order = getOrder();
-        if (order != null) {
-            criteria.addOrder(order);
-        }
-
-        return criteria.list();
-    }
-
-    @Override
     public Tag retrieveByName(String name) {
         return (Tag) getSession()
                 .createCriteria(getClassReference())
