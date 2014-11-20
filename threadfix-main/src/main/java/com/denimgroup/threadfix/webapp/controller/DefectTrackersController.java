@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectTrackerService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.service.ScheduledDefectTrackerUpdateService;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

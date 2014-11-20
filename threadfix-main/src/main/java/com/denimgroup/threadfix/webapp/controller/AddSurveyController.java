@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.SurveyService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
