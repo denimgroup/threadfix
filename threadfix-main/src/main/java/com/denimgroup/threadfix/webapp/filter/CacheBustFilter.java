@@ -61,7 +61,7 @@ public class CacheBustFilter extends GenericFilterBean {
 
         // If there was a build number defined in the war, then use it for the cache buster.
         req.setAttribute("gitCommit", (gitCommit != null) ? gitCommit : new Random().nextInt(10000000));
-        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.1-SNAPSHOT");
+        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.2-SNAPSHOT");
         req.setAttribute("buildDate", (buildDate != null) ? buildDate : Calendar.getInstance().getTime());
 
         chain.doFilter(request, response);
