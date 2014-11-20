@@ -73,8 +73,6 @@ public class ReportsController {
 	private ReportsService reportsService;
     @Autowired
 	private VulnerabilityService vulnerabilityService;
-    @Autowired
-    private TagService tagService;
     @Autowired(required = false)
     private EnterpriseTagService enterpriseTagService;
 	

@@ -112,6 +112,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             filterByTeamAndApp($scope.allCWEvulns);
             filterByTypeDataBySeverity($scope.filterVulns);
             processByTypeData($scope.filterVulns);
+        } else if ($scope.reportId === 10) {
+            filterTopAppsBySeverity();
         }
     });
     $scope.updateTree = function (severity) {
@@ -600,7 +602,35 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
             return false;
         });
+
+        $scope._topAppsData = angular.copy($scope.topAppsData);
+
+        filterTopAppsBySeverity();
     };
+
+    var filterTopAppsBySeverity = function() {
+        $scope.topAppsData = angular.copy($scope._topAppsData);
+        $scope.topAppsData.forEach(function(app) {
+            if (!$scope.parameters.severities.critical)
+             app["Critical"] = 0;
+            if (!$scope.parameters.severities.high)
+                app["High"] = 0;
+            if (!$scope.parameters.severities.medium)
+                app["Medium"] = 0;
+            if (!$scope.parameters.severities.low)
+                app["Low"] = 0;
+            if (!$scope.parameters.severities.info)
+                app["Info"] = 0;
+        });
+
+        $scope.topAppsData.sort(function(app1, app2) {
+            return getTotalVulns(app2) - getTotalVulns(app1);
+        })
+    };
+
+    var getTotalVulns = function (app){
+        return app.Critical + app.High + app.Medium + app.Low + app.Info;
+    }
 
     var endsWith = function(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
