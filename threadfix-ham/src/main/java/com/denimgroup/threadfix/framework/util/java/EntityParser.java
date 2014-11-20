@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.spring;
+package com.denimgroup.threadfix.framework.util.java;
 
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SpringEntityParser implements EventBasedTokenizer {
+public class EntityParser implements EventBasedTokenizer {
 
     @Nonnull
     private Set<ModelField> fieldMappings = new HashSet<>();
@@ -41,8 +41,8 @@ public class SpringEntityParser implements EventBasedTokenizer {
     private String          className     = null, superClass = null, currentParamType = null;
 
     @Nonnull
-    public static SpringEntityParser parse(@Nonnull File file) {
-        SpringEntityParser parser = new SpringEntityParser();
+    public static EntityParser parse(@Nonnull File file) {
+        EntityParser parser = new EntityParser();
         EventBasedTokenizerRunner.run(file, parser);
         return parser;
     }

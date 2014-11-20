@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import com.denimgroup.threadfix.framework.engine.AbstractEndpoint;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -80,7 +81,7 @@ public class SpringControllerEndpoint extends AbstractEndpoint {
      * @param entityMappings entity mappings from the application
      * @param globalDataBinderParser can be null, if a databinderparser is set with the setter it will be used too
      */
-    public void expandParameters(@Nonnull SpringEntityMappings entityMappings,
+    public void expandParameters(@Nonnull EntityMappings entityMappings,
                                  @Nullable SpringDataBinderParser globalDataBinderParser) {
         if (modelObject != null) {
             ModelFieldSet fields = entityMappings.getPossibleParametersForModelType(modelObject);

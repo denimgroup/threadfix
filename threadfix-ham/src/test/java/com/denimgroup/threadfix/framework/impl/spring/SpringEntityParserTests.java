@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
+import com.denimgroup.threadfix.framework.util.java.EntityParser;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
@@ -40,7 +41,7 @@ public class SpringEntityParserTests {
 			TestConstants.SPRING_MODELS_PREFIX + TestConstants.SPRING_OWNER_MODEL);
 
 	@Nonnull
-    SpringEntityParser parser = SpringEntityParser.parse(testFile);
+	EntityParser parser = EntityParser.parse(testFile);
 	
 	@Test
 	public void testBasicFieldEquivalence() {

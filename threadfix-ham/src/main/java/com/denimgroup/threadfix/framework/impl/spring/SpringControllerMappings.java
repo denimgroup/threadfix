@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
 import com.denimgroup.threadfix.framework.util.FilePathUtils;
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
+import com.denimgroup.threadfix.framework.util.java.EntityParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 
@@ -87,7 +89,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 	}
 	
 	private void generateMaps() {
-        List<SpringEntityParser> springEntityParsers = list();
+        List<EntityParser> entityParsers = list();
 
         SpringDataBinderParser globalDataBinderParser = null;
 
@@ -96,11 +98,11 @@ public class SpringControllerMappings implements EndpointGenerator {
 					file.getAbsolutePath().contains(rootDirectory.getAbsolutePath())) {
 
                 SpringControllerEndpointParser endpointParser = new SpringControllerEndpointParser(file.getAbsolutePath());
-                SpringEntityParser entityParser = new SpringEntityParser();
+                EntityParser entityParser = new EntityParser();
                 SpringDataBinderParser dataBinderParser = new SpringDataBinderParser();
                 EventBasedTokenizerRunner.run(file, entityParser, endpointParser, dataBinderParser);
 
-                springEntityParsers.add(entityParser);
+                entityParsers.add(entityParser);
                 addEndpointsToMaps(file, endpointParser, dataBinderParser);
 
                 if (dataBinderParser.isGlobal) {
@@ -109,7 +111,7 @@ public class SpringControllerMappings implements EndpointGenerator {
 			}
 		}
 
-        SpringEntityMappings mappings = new SpringEntityMappings(springEntityParsers);
+        EntityMappings mappings = new EntityMappings(entityParsers);
 
         for (SpringControllerEndpoint endpoint : endpointsList) {
             endpoint.expandParameters(mappings, globalDataBinderParser);

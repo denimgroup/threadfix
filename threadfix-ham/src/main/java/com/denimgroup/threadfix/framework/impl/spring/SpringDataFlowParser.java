@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.parameter.ParameterParser;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.RegexUtils;
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,12 +53,12 @@ public class SpringDataFlowParser implements ParameterParser {
 		REQUEST_PARAM_NO_PARAM   = Pattern.compile("@RequestParam\\W+\\w+\\W+([^,\\)]+)");
 	
 	@Nullable
-    private final SpringEntityMappings mappings;
+    private final EntityMappings mappings;
 	
 	public SpringDataFlowParser(@Nonnull ProjectConfig projectConfig) {
-		SpringEntityMappings mappings = null;
+		EntityMappings mappings = null;
 		if (projectConfig.getRootFile() != null) {
-			mappings = new SpringEntityMappings(projectConfig.getRootFile());
+			mappings = new EntityMappings(projectConfig.getRootFile());
 		}
 		this.mappings = mappings;
 	}

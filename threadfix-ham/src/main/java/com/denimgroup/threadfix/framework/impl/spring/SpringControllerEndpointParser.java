@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +80,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     private SignatureState  signatureState  = SignatureState.START;
 
     @Nullable
-    private SpringEntityMappings entityMappings = null;
+    private EntityMappings entityMappings = null;
 
     private enum Phase {
         ANNOTATION, SIGNATURE, METHOD
@@ -94,7 +95,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     }
 
     @Nonnull
-    public static Set<SpringControllerEndpoint> parse(@Nonnull File file, @Nullable SpringEntityMappings entityMappings) {
+    public static Set<SpringControllerEndpoint> parse(@Nonnull File file, @Nullable EntityMappings entityMappings) {
         SpringControllerEndpointParser parser = new SpringControllerEndpointParser(file.getAbsolutePath(), entityMappings);
         EventBasedTokenizerRunner.run(file, parser);
         return parser.endpoints;
@@ -105,7 +106,7 @@ class SpringControllerEndpointParser implements EventBasedTokenizer {
     }
 
     private SpringControllerEndpointParser(@Nonnull String rootFilePath,
-                                           @Nullable SpringEntityMappings entityMappings) {
+                                           @Nullable EntityMappings entityMappings) {
         this.rootFilePath = rootFilePath;
         this.entityMappings = entityMappings;
     }
