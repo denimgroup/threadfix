@@ -9,7 +9,7 @@
 	</a>
 </div>
 <div id="copyright">
-    Version 2.1 Official. Copyright &copy; 2009 - 2014. Denim Group, Ltd. All rights reserved. Built on
+    Version 2.1.1. Copyright &copy; 2009 - 2014. Denim Group, Ltd. All rights reserved. Built on
     <fmt:formatDate value="${requestScope.buildDate}"/>
 </div>
 
