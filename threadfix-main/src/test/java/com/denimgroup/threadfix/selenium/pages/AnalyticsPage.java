@@ -138,6 +138,16 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public ApplicationDetailPage clickAppName(String appName) {
+        driver.findElementByLinkText(appName).click();
+        return new ApplicationDetailPage(driver);
+    }
+
+    public TeamDetailPage clickTeamName(String teamName) {
+        driver.findElementByLinkText(teamName).click();
+        return new TeamDetailPage(driver);
+    }
+
     public AnalyticsPage expandTagFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTagFilters")).click();

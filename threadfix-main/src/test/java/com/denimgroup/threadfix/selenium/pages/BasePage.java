@@ -116,7 +116,6 @@ public abstract class BasePage {
         driver.findElementById("reportsHeader").click();
         waitForElement(driver.findElementByTagName("h2"));
         sleep(2500);
-        takeScreenShot();
         return new AnalyticsPage(driver);
     }
 

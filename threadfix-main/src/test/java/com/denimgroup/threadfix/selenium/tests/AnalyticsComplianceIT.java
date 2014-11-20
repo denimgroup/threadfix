@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
+import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -39,13 +40,13 @@ import static org.junit.Assert.assertTrue;
 @Category(CommunityTests.class)
 public class AnalyticsComplianceIT extends BaseDataTest {
 
-    @Test
-    public void checkStartingEndingCount() {
-        initializeTeamAndApp();
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("OWASP Zed Attack Proxy"));
-        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+    private AnalyticsPage analyticsPage;
+    private ApplicationDetailPage applicationDetailPage;
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+    public void initialize() {
+        initializeTeamAndAppWithIBMScan();
+
+        applicationDetailPage = loginPage.defaultLogin()
                 .clickTagsLink()
                 .createNewTag(appName)
                 .clickOrganizationHeaderLink()
@@ -56,7 +57,23 @@ public class AnalyticsComplianceIT extends BaseDataTest {
                 .attachTag(appName)
                 .clickModalSubmit();
 
-        applicationDetailPage.clickAnalyticsLink()
+        analyticsPage = applicationDetailPage.clickAnalyticsLink()
+                .clickComplianceTab(false)
+                .expandTagFilter("complianceFilterDiv")
+                .addTagFilter(appName,"complianceFilterDiv")
+                .expandAgingFilterReport("complianceFilterDiv")
+                .toggleAgingFilterReport("Forever","complianceFilterDiv");
+
+    }
+
+    @Test
+    public void checkStartingEndingCount() {
+        initialize();
+
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("OWASP Zed Attack Proxy"));
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
+
+        analyticsPage.clickAnalyticsLink()
                 .clickComplianceTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
@@ -67,61 +84,52 @@ public class AnalyticsComplianceIT extends BaseDataTest {
                 driver.findElement(By.cssSelector("#\\31")).getText().equals("0"));
 
         assertTrue("Ending count is incorrect",
-                driver.findElement(By.cssSelector("#\\32")).getText().equals("16"));
+                driver.findElement(By.cssSelector("#\\32")).getText().equals("21"));
     }
 
     @Test
     public void checkAppNameNavigation() {
-        initializeTeamAndAppWithIBMScan();
+        initialize();
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(appName)
-                .clickOrganizationHeaderLink()
+        analyticsPage.clickAppName(appName);
+
+        assertTrue("Link did not navigate correctly", driver.findElement(By.id("nameText")).getText().equals(appName));
+    }
+
+    @Test
+    public void checkTeamNameNavigation() {
+        initialize();
+
+        analyticsPage.clickTeamName(teamName);
+
+        assertTrue("Link did not navigate correctly", driver.findElement(By.id("name")).getText().contains(teamName));
+    }
+
+    @Test
+    public void testOpenVulns() {
+        initialize();
+
+        assertTrue("Open Vulnerabilities are correct", driver.findElement(By.xpath("//*[@id=\"vulnName\"][1]"))
+                .getText().equals("Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')") );
+    }
+
+    @Test
+    public void testClosedVulns() {
+        initialize();
+
+        analyticsPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(appName)
-                .clickModalSubmit();
-
-        applicationDetailPage.clickAnalyticsLink()
+                .clickViewAppLink(appName,teamName)
+                .expandVulnerabilityByType("Critical79")
+                .checkVulnerabilityByType("Critical790")
+                .clickVulnerabilitiesActionButton()
+                .clickCloseVulnerabilitiesButton()
+                .clickAnalyticsLink()
                 .clickComplianceTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever","complianceFilterDiv");
-
-        driver.findElement(By.linkText(appName)).click();
-
-        assertTrue("Link did not navigate correclty", driver.findElement(By.id("nameText")).getText().equals(appName));
-    }
-
-    @Test
-    public void checkTeamNameNavigation() {
-        initializeTeamAndAppWithIBMScan();
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(appName)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(appName)
-                .clickModalSubmit();
-
-        applicationDetailPage.clickAnalyticsLink()
-                .clickComplianceTab(true)
-                .expandTagFilter("complianceFilterDiv")
-                .addTagFilter(appName,"complianceFilterDiv")
-                .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever","complianceFilterDiv");
-
-        driver.findElement(By.linkText(teamName)).click();
-
-        assertTrue("Link did not navigate correclty", driver.findElement(By.id("name")).getText().equals(teamName));
     }
 
 }

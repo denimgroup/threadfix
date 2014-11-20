@@ -289,6 +289,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
 
+        analyticsPage.takeScreenShot();
+
         analyticsPage.waitForElement(driver.findElement(By.id("averageTimeToCloseVuln5")));
 
         assertTrue("Time to close is invalid.",
@@ -324,6 +326,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
 
+        analyticsPage.takeScreenShot();
+
         analyticsPage.waitForElement(driver.findElement(By.id("totalVuln0")));
 
         assertTrue("Team specific vulnerabilities are not correct.",
@@ -353,6 +357,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .loadFilterReport(filterName,"snapshotFilterDiv");
+
+        analyticsPage.takeScreenShot();
 
         analyticsPage.waitForElement(driver.findElement(By.id("totalVuln0")));
 
