@@ -55,6 +55,32 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.9</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>commons-codec</groupId>
+                                    <artifactId>commons-codec</artifactId>
+                                    <version>${commons.codec.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/unpacked-jars</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
                 <version>2.4</version>
                 <executions>
@@ -93,6 +119,19 @@
                         <configuration>
                             <tasks>
                                 <copy file="src/main/java/ESAPI.properties" tofile="target/classes/ESAPI.properties" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Base64-to-classes</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.directory}/unpacked-jars/org/apache/commons/codec/binary/Base64.class"
+                                      tofile="target/classes/org/apache/commons/codec/binary/Base64.class" />
                             </tasks>
                         </configuration>
                     </execution>

@@ -106,7 +106,11 @@ public class Application extends AuditableEntity {
 	@Size(max = 50, message = "{errors.maxlength} 50.")
 	private String component;
 	private DefectTracker defectTracker;
-	
+
+	private GRCTool grcTool;
+
+    private List<GRCApplication> grcApplications;
+
 	@Size(max = 80, message = "{errors.maxlength} 80.")
 	private String userName;
 	
@@ -269,6 +273,17 @@ public class Application extends AuditableEntity {
 		this.defectTracker = defectTracker;
 	}
 
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "grcToolId")
+    @JsonView(AllViews.FormInfo.class)
+    public GRCTool getGrcTool() {
+		return grcTool;
+	}
+
+	public void setGrcTool(GRCTool grcTool) {
+		this.grcTool = grcTool;
+	}
+
 	@OneToMany(mappedBy = "application")
     @JsonIgnore
 	public List<Defect> getDefectList() {
@@ -411,6 +426,17 @@ public class Application extends AuditableEntity {
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;
 	}	
+
+    @OneToMany(mappedBy = "application")
+    @JsonIgnore
+	public List<GRCApplication> getGrcApplications() {
+		return grcApplications;
+	}
+
+	public void setGrcApplications(
+			List<GRCApplication> grcApplications) {
+		this.grcApplications = grcApplications;
+	}
 
 	@OneToMany(mappedBy = "application")
 	@JsonIgnore
