@@ -23,8 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.Option;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Finding;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
@@ -49,7 +53,8 @@ import static com.denimgroup.threadfix.CollectionUtils.*;
 /**
  * Created by mac on 11/18/14.
  */
-public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
+@RemoteProvider(name = "Trustwave Hailstorm")
+public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
 
     String url = "https://ctsarc.cenzic.com/ResultEngineApi/applications",
             secret = null,

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
+import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -44,7 +45,8 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-public class WhiteHatRemoteProvider extends RemoteProvider {
+@RemoteProvider(name = "WhiteHat Sentinel")
+public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
 	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";

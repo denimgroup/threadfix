@@ -40,9 +40,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-public abstract class RemoteProvider extends AbstractChannelImporter {
+public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
 
-	public RemoteProvider(ScannerType scannerType) {
+	public AbstractRemoteProvider(ScannerType scannerType) {
 		super(scannerType);
 	}
 
