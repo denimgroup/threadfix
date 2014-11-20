@@ -62,8 +62,6 @@ public class ImplementationLoader<A extends Annotation, C> {
     public C getImplementation(String key) {
         Class<?> channelImporterClass = classMap.get(key);
 
-        C result;
-
         try {
             assert channelImporterClass != null : "Got null class for key " + key;
 
@@ -74,13 +72,11 @@ public class ImplementationLoader<A extends Annotation, C> {
             Object maybeClass = constructors[0].newInstance();
 
             if (concreteClass.isInstance(maybeClass)) {
-                result = concreteClass.cast(maybeClass);
+                return concreteClass.cast(maybeClass);
             } else {
                 throw new IllegalStateException(maybeClass +
                         " didn't implement " + concreteClass + ". Fix your code and try again.");
             }
-
-            return result;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             LOG.error("Encountered exception while loading classes.", e);
             throw new IllegalStateException(e);
