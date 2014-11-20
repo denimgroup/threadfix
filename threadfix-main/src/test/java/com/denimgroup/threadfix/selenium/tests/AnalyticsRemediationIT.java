@@ -109,13 +109,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     public void testOpenVulns() {
         initialize();
 
-        sleep(1000);
-
-        analyticsPage.waitForElement(driver.findElement(By.id("vulnName114")));
-
-        System.out.println(driver.findElement(By.id("vulnName114")).getText());
-
-        assertTrue("Open Vulnerabilities are correct", driver.findElement(By.id("vulnName114"))
+        assertTrue("Open Vulnerabilities are correct", driver.findElement(By.id("vulnName0"))
                 .getText().equals("Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')") );
     }
 
@@ -143,7 +137,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
         initialize();
         String testComment = getName();
 
-        analyticsPage.clickViewMore("").clickAddComment()
+        analyticsPage.clickViewMore("0").clickAddComment()
                 .setCommentText(testComment)
                 .clickSubmitComment()
                 .clickAnalyticsLink()
@@ -152,8 +146,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv")
-                .expandVulnComments("");
+                .expandVulnComments("0");
 
-        assertTrue("Comment not attached properly", analyticsPage.getCommentText("","").equals(testComment));
+        assertTrue("Comment not attached properly", analyticsPage.getCommentText("0").equals(testComment));
     }
 }

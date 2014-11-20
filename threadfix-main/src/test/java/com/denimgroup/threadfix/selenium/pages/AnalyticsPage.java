@@ -211,7 +211,8 @@ public class AnalyticsPage extends BasePage {
     }
 
     public AnalyticsPage expandVulnComments(String number) {
-        driver.findElementById("vulnCaret" + number).click();
+        driver.findElementById("vulnName" + number).click();
+        driver.findElementById("vulnName" + number).click();
         return new AnalyticsPage(driver);
     }
 
@@ -273,8 +274,8 @@ public class AnalyticsPage extends BasePage {
         return header;
     }
 
-    public String getCommentText(String vulnNumber, String commentNumber ) {
-        return driver.findElementById("commentText" + vulnNumber + commentNumber).getText();
+    public String getCommentText(String commentNumber ) {
+        return driver.findElementById("commentText" + commentNumber).getText();
     }
 
     /* _____________________ Helper Methods _____________________ */
