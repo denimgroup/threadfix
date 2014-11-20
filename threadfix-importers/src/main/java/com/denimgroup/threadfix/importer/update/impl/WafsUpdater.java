@@ -21,13 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.update.impl;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.dao.WafTypeDao;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
+import com.denimgroup.threadfix.importer.update.Updater;
+import com.denimgroup.threadfix.importer.update.UpdaterConstants;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;

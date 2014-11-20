@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.importer.update;
 /**
  * Created by mac on 9/12/14.
  */
-final class UpdaterConstants {
+public final class UpdaterConstants {
 
     private UpdaterConstants() {}
 

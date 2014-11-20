@@ -21,11 +21,12 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.update.impl;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.importer.update.Updater;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ChannelTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;

@@ -167,7 +167,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         if (updaters == null) {
             updaters = AnnotationLoader.getListOfConcreteClass(
                     MappingsUpdater.class,
-                    "com.denimgroup.threadfix.importer.update",
+                    "com.denimgroup.threadfix.importer.update.impl",
                     Updater.class);
 
             if (applicationContext != null) {

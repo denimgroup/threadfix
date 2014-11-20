@@ -21,11 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.update.impl;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
+import com.denimgroup.threadfix.importer.update.Updater;
+import com.denimgroup.threadfix.importer.update.UpdaterConstants;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

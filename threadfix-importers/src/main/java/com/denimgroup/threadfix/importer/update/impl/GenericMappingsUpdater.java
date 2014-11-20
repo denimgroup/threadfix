@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.update.impl;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.importer.update.Updater;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
