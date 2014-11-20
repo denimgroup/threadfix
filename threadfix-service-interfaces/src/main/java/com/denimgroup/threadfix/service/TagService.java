@@ -33,7 +33,6 @@ import java.util.List;
  */
 public interface TagService {
     List<Tag> loadAll();
-    List<Tag> loadEnterpriseTags();
     Tag loadTag(String name);
     Tag loadTag(int tagId);
     void storeTag(Tag tag);

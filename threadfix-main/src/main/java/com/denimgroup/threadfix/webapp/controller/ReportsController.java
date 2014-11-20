@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.data.enums.TagEnum;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
+import com.denimgroup.threadfix.service.EnterpriseTagService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.TagService;
 import com.denimgroup.threadfix.service.VulnerabilityService;
@@ -72,8 +73,8 @@ public class ReportsController {
 	private ReportsService reportsService;
     @Autowired
 	private VulnerabilityService vulnerabilityService;
-    @Autowired
-    private TagService tagService;
+    @Autowired(required = false)
+    private EnterpriseTagService enterpriseTagService;
 	
 	private SecureRandom random;
 
@@ -100,9 +101,12 @@ public class ReportsController {
 		model.addAttribute("firstReport", ControllerUtils.getItem(request, "reportId"));
 		model.addAttribute("firstTeamId", ControllerUtils.getItem(request, "teamId"));
 		model.addAttribute("firstAppId", ControllerUtils.getItem(request, "appId"));
-        model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
+        boolean isEnterprise = EnterpriseTest.isEnterprise();
+        model.addAttribute("isEnterprise", isEnterprise);
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_TAGS);
-        insertEnterpriseTags();
+
+        if (isEnterprise)
+            enterpriseTagService.insertTags();
 
 		return "reports/index";
 	}
@@ -330,27 +334,4 @@ public class ReportsController {
 		return "ajaxRedirectHarness";
 	}
 
-    private void insertEnterpriseTags() {
-        if (EnterpriseTest.isEnterprise()) {
-            for (TagEnum tagEnum: TagEnum.values()) {
-
-                Tag dbTag = tagService.loadTag(tagEnum.getName());
-
-                if (dbTag == null) {
-                    log.info("Saving new Enterprise Tag " + tagEnum.getName());
-                    Tag tag = new Tag();
-                    tag.setName(tagEnum.getName());
-                    tag.setDefaultJsonFilter(tagEnum.getDefaultFilter());
-                    tag.setEnterpriseTag(true);
-                    tagService.storeTag(tag);
-                } else {
-                    log.info("Updating Tag " + tagEnum.getName() + " to Enterprise Tag");
-                    dbTag.setDefaultJsonFilter(tagEnum.getDefaultFilter());
-                    dbTag.setEnterpriseTag(true);
-                    tagService.storeTag(dbTag);
-                }
-            }
-        }
-    }
-	
 }

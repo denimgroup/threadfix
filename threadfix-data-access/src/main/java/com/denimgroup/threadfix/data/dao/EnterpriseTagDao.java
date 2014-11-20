@@ -28,9 +28,10 @@ import com.denimgroup.threadfix.data.entities.Tag;
 import java.util.List;
 
 /**
- * Basic DAO class for the Tag entity.
+ * Enterprise DAO class for the Tag entity.
  * 
  * @author stran
  */
-public interface TagDao extends GenericNamedObjectDao<Tag> {
+public interface EnterpriseTagDao extends GenericNamedObjectDao<Tag> {
+    List<Tag> retrieveAllEnterprise();
 }
