@@ -157,7 +157,6 @@ module.controller('ReportFilterController', function($scope, $rootScope, filterS
             $scope.parameters.endDate = new Date($scope.parameters.endDate);
 
         $rootScope.$broadcast("resetParameters", $scope.parameters);
-        $scope.lastLoadedFilterName = $scope.selectedFilter.name;
 //        $scope.currentFilterNameInput = $scope.selectedFilter.name;
     };
 
@@ -166,6 +165,9 @@ module.controller('ReportFilterController', function($scope, $rootScope, filterS
             $scope.parameters.filterType = {isTrendingFilter : true};
         else if ($scope.$parent.snapshotActive)
             $scope.parameters.filterType = {isSnapshotFilter : true};
+        else if ($scope.$parent.complianceActive)
+            $scope.parameters.filterType = {isComplianceFilter : true};
+
         filterService.saveCurrentFilters($scope, filterSavedFilters);
 
     };
@@ -179,6 +181,8 @@ module.controller('ReportFilterController', function($scope, $rootScope, filterS
                 return (parameters.filterType.isSnapshotFilter);
             else if ($scope.$parent.trendingActive)
                 return (parameters.filterType.isTrendingFilter);
+            else if ($scope.$parent.complianceActive)
+                return (parameters.filterType.isComplianceFilter);
             else
                 return false;
         }

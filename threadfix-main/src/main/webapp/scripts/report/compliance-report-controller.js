@@ -6,9 +6,6 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     $scope.filterScans = [];
     $scope.noData = false;
     $scope.margin = [70, 70, 100, 70];
-    $scope.title = {
-        svgId: reportConstants.reportTypes.compliance.name
-    };
 
     $scope.resetFilters = function() {
         $scope.parameters = {
@@ -22,7 +19,8 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             },
             daysOldModifier: 'LastYear',
             endDate: undefined,
-            startDate: undefined
+            startDate: undefined,
+            remediationType: $scope.remediationType
         };
     };
 
@@ -30,7 +28,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.noData = false;
         $scope.savedFilters = $scope.$parent.savedFilters.filter(function(filter){
             var parameters = JSON.parse(filter.json);
-            return (parameters.filterType && parameters.filterType.isTrendingFilter);
+            return (parameters.filterType && parameters.filterType.isComplianceFilter);
         });
 
         // Data for trending chart and table
@@ -58,31 +56,46 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
                         $scope.loading = false;
                     });
             }
-        } else {
+        }
+        else {
             trendingUtilities.filterByTag($scope);
             trendingUtilities.refreshScans($scope);
         }
+        $scope.title.svgId = getReportType().name;
         renderTable();
 
     });
 
     $scope.$on('resetParameters', function(event, parameters) {
-        if (!$scope.$parent.complianceActive)
+        refreshData(parameters);
+    });
+
+    var refreshData = function(parameters) {
+        if (!$scope.$parent.complianceActive
+            && !$scope.$parent.remediationEnterpriseActive)
             return;
+
+        if ($scope.remediationType !== parameters.remediationType)
+            return;
+
         $scope.parameters = angular.copy(parameters);
         trendingUtilities.filterByTag($scope);
         trendingUtilities.refreshScans($scope);
         renderTable();
-        $scope.$broadcast("updateParameters");
-    });
+        $scope.$broadcast("updateTableVulnerabilities");
+    };
+
 
     $scope.$on('updateDisplayData', function(event, parameters) {
-        if (!$scope.$parent.complianceActive)
+        if (!$scope.$parent.complianceActive
+            && !$scope.$parent.remediationEnterpriseActive)
+            return;
+        if ($scope.remediationType !== parameters.remediationType)
             return;
         $scope.parameters = angular.copy(parameters);
         trendingUtilities.updateDisplayData($scope);
         renderTable();
-        $scope.$broadcast("updateParameters");
+        $scope.$broadcast("updateTableVulnerabilities");
     });
 
     var renderTable = function() {
@@ -112,21 +125,53 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
     });
 
     $scope.exportPNG = function(){
-
+        var reportType = getReportType();
         if (!$scope.exportInfo) {
             $scope.exportInfo = {
-                id: reportConstants.reportTypes.compliance.id
+                id: reportType.id
             }
         } else {
-            if ($scope.exportInfo.id  === reportConstants.reportTypes.compliance.id)
-                $scope.exportInfo.id  = "" +  reportConstants.reportTypes.compliance.id;
+            if ($scope.exportInfo.id  === reportType.id)
+                $scope.exportInfo.id  = "" +  reportType.id;
             else
-                $scope.exportInfo.id  = reportConstants.reportTypes.compliance.id;
+                $scope.exportInfo.id  = reportType.id;
         }
-        $scope.exportInfo.svgId = reportConstants.reportTypes.compliance.name;
+        $scope.exportInfo.svgId = reportType.name;
         $scope.exportInfo.tags = $scope.title.tags;
         $scope.exportInfo.teams = undefined;
         $scope.exportInfo.apps = undefined;
     };
+
+    var getReportType = function() {
+        if ($scope.$parent.complianceActive)
+            return reportConstants.reportTypes.compliance;
+        else
+            return reportConstants.reportTypes.complianceEnterprise;
+    };
+
+    $scope.addNewTag = function(name) {
+
+        if ($scope.remediationType !== 2)
+            return;
+        getDefaultTagFilter(name);
+        refreshData($scope.parameters);
+        $scope.$broadcast("updateBackParameters", $scope.parameters);
+
+    };
+
+    var getDefaultTagFilter = function(name) {
+        $scope.enterpriseTags = $scope.$parent.enterpriseTags;
+        $scope.enterpriseTags.some(function(tag) {
+            if (tag.name === name) {
+                $scope.parameters =  JSON.parse(tag.defaultJsonFilter);
+                return true;
+            }
+        });
+
+        $scope.parameters.tags = [];
+        $scope.parameters.tags.push({name: name});
+        $scope.parameters.remediationType = $scope.remediationType;
+    }
+
 
 });

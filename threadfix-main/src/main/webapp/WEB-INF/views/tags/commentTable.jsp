@@ -22,8 +22,8 @@
     </div>
 
     <div style="padding-bottom:10px">
-        <a ng-show="vulnList" class="btn" id="expandAllButton" ng-click="expand(vulnList)">Expand All</a>
-        <a ng-show="vulnList" class="btn" id="collapseAllButton" ng-click="contract(vulnList)">Collapse All</a>
+        <a ng-show="vulnList" class="btn" id="{{vulnType}}ExpandAllButton" ng-click="expand(vulnList)">Expand All</a>
+        <a ng-show="vulnList" class="btn" id="{{vulnType}}CollapseAllButton" ng-click="contract(vulnList)">Collapse All</a>
     </div>
 
     <table ng-show="vulnList" class="table table-hover white-inner-table">
@@ -31,6 +31,7 @@
         <tr>
             <th style="width:8px"></th>
             <th style="width:300px;">Vulnerability Name</th>
+            <th class="centered">Severity</th>
             <th class="centered">Application</th>
             <th class="centered">Team</th>
             <th style="width:70px;"></th>
@@ -42,17 +43,26 @@
             <td id="vulnCaret{{ vuln.id }}" ng-click="toggle(vuln)">
                 <span ng-class="{ expanded: vuln.expanded }" class="caret-right"></span>
             </td>
-            <td ng-click="toggle(vuln)" id="vulnName{{ vuln.Id }}" style="word-wrap: break-word;text-align:left;">{{ vuln.genericVulnerability.name }}
+            <td ng-click="toggle(vuln)" id="vulnName{{ vuln.id }}" style="word-wrap: break-word;text-align:left;">
+                {{ vuln.genericVulnerability.name }}
             </td>
-            <td class="centered" id="appName{{ vuln.app.id }}"><a ng-click="goToAppFromVuln(vuln)">{{ vuln.app.name }}</a></td>
-            <td class="centered" id="teamName{{ vuln.team.id }}"><a ng-click="goToTeamFromVuln(vuln)">{{ vuln.team.name }}</a></td>
+            <td ng-click="toggle(vuln)" class="centered" id="severity{{ vuln.id }}"
+                ng-class="{
+                        'badge-critical': vuln.genericSeverity.intValue === 5,
+                        'badge-high': vuln.genericSeverity.intValue === 4,
+                        'badge-medium': vuln.genericSeverity.intValue === 3,
+                        'badge-low': vuln.genericSeverity.intValue === 2,
+                        'badge-info': vuln.genericSeverity.intValue === 1
+                        }">{{ vuln.genericSeverity.name }}</td>
+            <td class="centered" id="appName{{ vuln.id }}"><a ng-click="goToAppFromVuln(vuln)">{{ vuln.app.name }}</a></td>
+            <td class="centered" id="teamName{{ vuln.id }}"><a ng-click="goToTeamFromVuln(vuln)">{{ vuln.team.name }}</a></td>
             <td>
                 <a style="text-decoration:none" id="vulnLink{{ vuln.id }}" ng-click="goToVuln(vuln)">View More</a>
             </td>
         </tr>
 
         <tr ng-repeat-end class="grey-background">
-            <td colspan="5">
+            <td colspan="6">
                 <div collapse="!vuln.expanded"
                      id="vulnInfoDiv{{ vuln.id }}"
                      class="collapse vulnerabilitySection"
@@ -63,7 +73,7 @@
                     </div>
 
                     <div ng-show='vuln.vulnerabilityComments'>
-                        <table id="vulnCommentTable{{ $index }}">
+                        <table id="vulnCommentTable{{ vuln.id }}{{ $index }}">
                             <thead>
                             <tr>
                                 <th>User</th>
@@ -74,16 +84,16 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="comment in vuln.vulnerabilityComments" class="bodyRow left-align">
-                                <td id="commentUser{{ $index }}">{{ comment.username }}</td>
-                                <td id="commentDate{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
-                                <td id="commentText{{ $index }}">
+                                <td id="commentUser{{ vuln.id }}{{ $index }}">{{ comment.username }}</td>
+                                <td id="commentDate{{ vuln.id }}{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>
+                                <td id="commentText{{ vuln.id }}{{ $index }}">
                                     <div class="vuln-comment-word-wrap">
                                         {{ comment.comment }}
                                     </div>
                                 </td>
                                 <td class="left-align" >
                         <span ng-repeat="cmtTag in comment.tags">
-                            <a class="pointer" id="cmtTag{{ $index }}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}<span ng-hide="$index===comment.tags.length-1">,</span></a>
+                            <a class="pointer" id="cmtTag{{ vuln.id }}{{ $index }}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}<span ng-hide="$index===comment.tags.length-1">,</span></a>
                         </span>
                                 </td>
                             </tr>

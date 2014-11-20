@@ -47,7 +47,8 @@ myAppModule.controller('TagDetailPageController', function ($scope, $window, $ht
                             tags: comment.commentInfo.tags,
                             username: comment.commentInfo.username,
                             time: comment.commentInfo.time
-                        }]
+                        }],
+                        genericSeverity : comment.commentInfo.genericSeverity
                     }
                 } else {
                     vulnMap[comment.commentInfo.vulnerabilityId].vulnerabilityComments.push({

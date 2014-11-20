@@ -52,6 +52,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<Tag> loadEnterpriseTags() {
+        return tagDao.retrieveAllEnterprise();
+    }
+
+    @Override
     public Tag loadTag(String name) {
         return tagDao.retrieveByName(name);
     }

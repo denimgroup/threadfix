@@ -30,15 +30,26 @@
         <h2>Analytics</h2>
 
         <tabset>
-            <tab heading="Trending" ng-click="loadTrending()" active="trendingActive">
+            <tab id="trendingTab" heading="Trending" ng-click="loadTrending()" active="trendingActive">
                 <%@ include file="trending.jsp" %>
             </tab>
-            <tab heading="Snapshot" ng-click="loadSnapshot()" active="snapshotActive">
+            <tab id="snapshotTab" heading="Snapshot" ng-click="loadSnapshot()" active="snapshotActive">
                 <%@ include file="snapshot.jsp" %>
             </tab>
-            <tab heading="Compliance" ng-click="loadCompliance()" active="complianceActive">
-                <%@ include file="compliance.jsp" %>
+            <tab id="remediationTab" heading="Remediation" ng-click="loadCompliance()" active="complianceActive">
+                <div ng-controller="ComplianceReportController" ng-init="remediationType = 1; graphName = 'complianceTrendingGraph'">
+                    <%@ include file="compliance.jsp" %>
+                </div>
             </tab>
+
+            <c:if test="${isEnterprise}">
+                <tab id="enterpriseTab" active="remediationEnterpriseActive" heading="Enterprise" ng-click="loadEnterpriseRemediation()">
+                    <div ng-controller="ComplianceReportController" ng-init="remediationType = 2; graphName = 'complianceEnterpriseTrendingGraph'">
+                        <%@ include file="compliance.jsp" %>
+                    </div>
+                </tab>
+            </c:if>
+
             <%--<tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled" ng-click="updateOptions(tab)"></tab>--%>
             <tab heading="Vulnerability Search" ng-click="loadVulnSearch()" active="showVulnTab">
                 <%@ include file="../vulnerabilities/vulnSearchControls.jsp" %>

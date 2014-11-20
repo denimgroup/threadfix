@@ -13,7 +13,7 @@
 </div>
 
 <!-- Teams and Applications section -->
-<div class="accordion-group" ng-show="!complianceActive">
+<div class="accordion-group" ng-show="!complianceActive && !remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
         <span id="expandTeamAndApplicationFiltersReport" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
     </div>
@@ -127,7 +127,7 @@
 </div>
 
 <!-- Aging -->
-<div class="accordion-group" ng-show="trendingActive || complianceActive">
+<div class="accordion-group" ng-show="trendingActive || complianceActive || remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
         <span id="showDateControlsReport" class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Aging
     </div>
@@ -144,7 +144,7 @@
 </div>
 
 <!-- Date Range -->
-<div class="accordion-group" ng-show="trendingActive || complianceActive">
+<div class="accordion-group" ng-show="trendingActive || complianceActive || remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
         <span id="showDateRangeReport" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
     </div>
@@ -210,7 +210,7 @@
                        type="text"/>
 
                 <div ng-show="trendingActive">
-                    <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>Default Trending Dashboard Field Controls And Date Range<br>
+                    <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>Default Trending Field Controls And Date Range<br>
                 </div>
 
                 <br>
