@@ -38,7 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class AnalyticsComplianceIT extends BaseDataTest {
+public class AnalyticsRemediationIT extends BaseDataTest {
 
     private AnalyticsPage analyticsPage;
     private ApplicationDetailPage applicationDetailPage;
@@ -58,7 +58,7 @@ public class AnalyticsComplianceIT extends BaseDataTest {
                 .clickModalSubmit();
 
         analyticsPage = applicationDetailPage.clickAnalyticsLink()
-                .clickComplianceTab(false)
+                .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
@@ -74,11 +74,11 @@ public class AnalyticsComplianceIT extends BaseDataTest {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
         analyticsPage.clickAnalyticsLink()
-                .clickComplianceTab(false)
+                .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever","complianceFilterDiv");
+                .toggleAgingFilterReport("Forever", "complianceFilterDiv");
 
         assertTrue("Starting count is incorrect",
                 driver.findElement(By.cssSelector("#\\31")).getText().equals("0"));
@@ -109,7 +109,13 @@ public class AnalyticsComplianceIT extends BaseDataTest {
     public void testOpenVulns() {
         initialize();
 
-        assertTrue("Open Vulnerabilities are correct", driver.findElement(By.xpath("//*[@id=\"vulnName\"][1]"))
+        sleep(1000);
+
+        analyticsPage.waitForElement(driver.findElement(By.id("vulnName114")));
+
+        System.out.println(driver.findElement(By.id("vulnName114")).getText());
+
+        assertTrue("Open Vulnerabilities are correct", driver.findElement(By.id("vulnName114"))
                 .getText().equals("Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')") );
     }
 
@@ -125,11 +131,11 @@ public class AnalyticsComplianceIT extends BaseDataTest {
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
                 .clickAnalyticsLink()
-                .clickComplianceTab(false)
+                .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever","complianceFilterDiv");
+                .toggleAgingFilterReport("Forever", "complianceFilterDiv");
     }
 
 }

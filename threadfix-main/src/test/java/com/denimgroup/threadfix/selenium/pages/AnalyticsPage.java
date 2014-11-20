@@ -57,8 +57,8 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
-    public AnalyticsPage clickComplianceTab(Boolean usingD3) {
-        driver.findElementByLinkText("Compliance").click();
+    public AnalyticsPage clickRemediationTab(Boolean usingD3) {
+        driver.findElementByLinkText("Remediation").click();
         waitForElement(driver.findElementById("complianceFilterDiv"));
         if(usingD3){
             sleep(2500);
