@@ -138,4 +138,22 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv");
     }
 
+    @Test
+    public void attachComment() {
+        initialize();
+        String testComment = getName();
+
+        analyticsPage.clickViewMore("").clickAddComment()
+                .setCommentText(testComment)
+                .clickSubmitComment()
+                .clickAnalyticsLink()
+                .clickRemediationTab(false)
+                .expandTagFilter("complianceFilterDiv")
+                .addTagFilter(appName,"complianceFilterDiv")
+                .expandAgingFilterReport("complianceFilterDiv")
+                .toggleAgingFilterReport("Forever", "complianceFilterDiv")
+                .expandVulnComments("");
+
+        assertTrue("Comment not attached properly", analyticsPage.getCommentText("","").equals(testComment));
+    }
 }

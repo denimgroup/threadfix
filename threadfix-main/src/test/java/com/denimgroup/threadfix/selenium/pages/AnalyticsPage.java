@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.pages;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -151,6 +152,11 @@ public class AnalyticsPage extends BasePage {
         return new TeamDetailPage(driver);
     }
 
+    public VulnerabilityDetailPage clickViewMore(String number) {
+        driver.findElementById("vulnLink" + number).click();
+        return new VulnerabilityDetailPage(driver);
+    }
+
     public AnalyticsPage expandTagFilter(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("expandTagFilters")).click();
@@ -201,6 +207,11 @@ public class AnalyticsPage extends BasePage {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.linkText(age)).click();
         sleep(1000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandVulnComments(String number) {
+        driver.findElementById("vulnCaret" + number).click();
         return new AnalyticsPage(driver);
     }
 
@@ -260,6 +271,10 @@ public class AnalyticsPage extends BasePage {
         String header = driver.findElementById("header2").getText().trim();
         driver.findElementById("header2");
         return header;
+    }
+
+    public String getCommentText(String vulnNumber, String commentNumber ) {
+        return driver.findElementById("commentText" + vulnNumber + commentNumber).getText();
     }
 
     /* _____________________ Helper Methods _____________________ */
