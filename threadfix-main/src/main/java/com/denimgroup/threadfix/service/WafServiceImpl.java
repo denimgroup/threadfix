@@ -43,21 +43,17 @@ public class WafServiceImpl implements WafService {
 
     private final SanitizedLogger log = new SanitizedLogger("WafService");
 
-    private WafDao              wafDao              = null;
-    private WafTypeDao          wafTypeDao          = null;
-    private WafRuleDao          wafRuleDao          = null;
-    private WafRuleDirectiveDao wafRuleDirectiveDao = null;
-    private VulnerabilityDao    vulnerabilityDao    = null;
-
     @Autowired
-    public WafServiceImpl(WafDao wafDao, WafTypeDao wafTypeDao, WafRuleDao wafRuleDao,
-                          VulnerabilityDao vulnerabilityDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
-        this.wafDao = wafDao;
-        this.wafTypeDao = wafTypeDao;
-        this.wafRuleDao = wafRuleDao;
-        this.vulnerabilityDao = vulnerabilityDao;
-        this.wafRuleDirectiveDao = wafRuleDirectiveDao;
-    }
+    private       WafDao                             wafDao              = null;
+    @Autowired
+    private       WafTypeDao                         wafTypeDao          = null;
+    @Autowired
+    private       WafRuleDao                         wafRuleDao          = null;
+    @Autowired
+    private       WafRuleDirectiveDao                wafRuleDirectiveDao = null;
+    @Autowired
+    private       VulnerabilityDao                   vulnerabilityDao    = null;
+    private final RealTimeProtectionGeneratorFactory factory             = new RealTimeProtectionGeneratorFactory();
 
     @Override
     public List<Waf> loadAll() {
@@ -121,21 +117,19 @@ public class WafServiceImpl implements WafService {
     @Override
     @Transactional(readOnly = false)
     public List<WafRule> generateWafRules(Waf waf, WafRuleDirective directive, Application application) {
-        List<WafRule> newWafRuleList = null;
         if (waf == null || waf.getApplications() == null || waf.getApplications().size() == 0
 				|| waf.getWafType() == null) {
-			return newWafRuleList;
+			return null;
 		}
-		
+
 		WafRuleDirective editedDirective = directive;
-		
+
 		if (editedDirective == null && waf.getLastWafRuleDirective() != null) {
 			editedDirective = waf.getLastWafRuleDirective();
 		}
 
-		RealTimeProtectionGeneratorFactory factory = new RealTimeProtectionGeneratorFactory(
-															wafRuleDao, wafRuleDirectiveDao);
-		RealTimeProtectionGenerator generator = factory.getTracker(waf.getWafType().getName());
+        List<WafRule> newWafRuleList = null;
+        RealTimeProtectionGenerator generator = factory.getTracker(waf.getWafType().getName());
 		if (generator != null) {
 			if (editedDirective == null) {
 				editedDirective = generator.getDefaultDirective(waf);

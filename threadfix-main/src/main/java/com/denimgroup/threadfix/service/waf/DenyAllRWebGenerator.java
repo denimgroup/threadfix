@@ -24,9 +24,9 @@
 
 package com.denimgroup.threadfix.service.waf;
 
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
+import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.WafType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +35,7 @@ import java.util.Map;
  * @author mcollins
  * 
  */
+@WebApplicationFirewall(name = WafType.DENY_ALL_RWEB)
 public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 
 	// templateStart + pattern + templateMiddle + id + templateEnd + action = rule
@@ -44,9 +45,7 @@ public class DenyAllRWebGenerator extends RealTimeProtectionGenerator {
 	String templateMiddle = "\" --type URI -d ";
 	String templateEnd    = " --action ";
 	
-	public DenyAllRWebGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
-		this.wafRuleDao = wafRuleDao;
-		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
+	public DenyAllRWebGenerator() {
 		this.defaultDirective = "deny";
 	}
 	
