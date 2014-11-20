@@ -24,10 +24,7 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.Option;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
@@ -55,8 +52,8 @@ import static com.denimgroup.threadfix.CollectionUtils.*;
 public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
 
     String url = "https://ctsarc.cenzic.com/ResultEngineApi/applications",
-            secret = "12341234",
-            accessToken = "12341234-1234-1234-1234-123412341234";
+            secret = null,
+            accessToken = null;
 
     private       RequestConfigurer       addCtsAuth = new RequestConfigurer() {
         @Override
@@ -68,7 +65,23 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
 
     // CTSAuth: client_secret=<<answer>>,access_token=<<answer>>
     private String constructHeaderValue() {
-        return "client_secret=" + secret + ",access_token=" + accessToken;
+        return "client_secret=" + getSecret() + ",access_token=" + getAccessToken();
+    }
+
+    private String getAccessToken() {
+        if (accessToken == null) {
+            accessToken = getAuthenticationFieldValue("Access Token");
+        }
+
+        return accessToken;
+    }
+
+    private String getSecret() {
+        if (secret == null) {
+            secret = getAuthenticationFieldValue("Client Secret");
+        }
+
+        return secret;
     }
 
     // TODO move to code that calls the server
@@ -276,7 +289,6 @@ public class TrustwaveHailstormRemoteProvider extends RemoteProvider {
                         "Got error from server with code " + returnCode +
                                 " and string value " + statusMap.get(returnCode), returnCode);
             }
-
 
         } catch (JSONException e) {
             throw new RestIOException(e, "Unable to connect to Trustwave servers. Check your URL and credentials.", -1);

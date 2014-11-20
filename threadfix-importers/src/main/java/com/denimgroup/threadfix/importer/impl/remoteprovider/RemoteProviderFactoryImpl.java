@@ -85,8 +85,11 @@ public class RemoteProviderFactoryImpl implements RemoteProviderFactory {
 
         RemoteProvider provider = getProvider(remoteProviderApplication.getRemoteProviderType().getName());
 
-        if (provider == null)
+        if (provider == null) {
             return null;
+        }
+
+        provider.setRemoteProviderType(remoteProviderApplication.getRemoteProviderType());
 
         List<Scan> scanList = provider.getScans(remoteProviderApplication);
 

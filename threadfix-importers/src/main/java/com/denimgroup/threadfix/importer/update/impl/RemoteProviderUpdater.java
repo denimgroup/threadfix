@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.importer.update.impl;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.importer.update.Updater;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -37,7 +38,9 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.importer.update.UpdaterConstants.REMOTE_PROVIDERS_FOLDER;
 
 /**
@@ -60,7 +63,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
     }
 
     enum State {
-        START, NAME, CREDENTIALS, CHANNEL_TYPE
+        START, NAME, CREDENTIALS, CHANNEL_TYPE, AUTHENTICATION_FIELDS
     }
 
     State currentState = State.START;
@@ -74,6 +77,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
 
         String name = null, channelName = null;
         boolean usernamePassword = false;
+        List<RemoteProviderAuthenticationField> fields = list();
 
         String line;
         while ((line = bufferedReader.readLine()) != null) {
@@ -83,12 +87,16 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
                 currentState = State.CREDENTIALS;
             } else if (line.equals("type.channelname")) {
                 currentState = State.CHANNEL_TYPE;
+            } else if (line.equals("type.authenticationfields")) {
+                currentState = State.AUTHENTICATION_FIELDS;
             } else if (currentState == State.NAME) {
                 name = line;
             } else if (currentState == State.CREDENTIALS) {
                 usernamePassword = line.equalsIgnoreCase("usernamepassword");
             } else if (currentState == State.CHANNEL_TYPE) {
                 channelName = line;
+            } else if (currentState == State.AUTHENTICATION_FIELDS) {
+                fields.add(parseField(line));
             }
         }
 
@@ -113,6 +121,10 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             type.setName(name);
             type.setHasUserNamePassword(usernamePassword);
             type.setChannelType(channelType);
+            type.setAuthenticationFields(fields);
+            for (RemoteProviderAuthenticationField field : fields) {
+                field.setRemoteProviderType(type);
+            }
             remoteProviderTypeService.store(type);
 
         } else {
@@ -120,9 +132,34 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
 
             databaseType.setHasUserNamePassword(usernamePassword);
             databaseType.setChannelType(channelType);
+            databaseType.setAuthenticationFields(fields);
+
+            for (RemoteProviderAuthenticationField field : fields) {
+                field.setRemoteProviderType(databaseType);
+            }
 
             remoteProviderTypeService.store(databaseType);
         }
+    }
+
+    private RemoteProviderAuthenticationField parseField(String line) {
+        String[] split = line.split(",");
+        if (split.length != 2) {
+            throw new IllegalArgumentException("Line " + line + " didn't have two parts separated by a comma.");
+        }
+
+        RemoteProviderAuthenticationField field = new RemoteProviderAuthenticationField();
+
+        switch (split[1]) {
+            case "true":  field.setSecret(true);  break;
+            case "false": field.setSecret(false); break;
+            default:
+                throw new IllegalArgumentException("The second section in " + line + " should be true or false.");
+        }
+
+        field.setName(split[0]);
+
+        return field;
     }
 
     @Override
