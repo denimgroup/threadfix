@@ -33,5 +33,6 @@ import java.util.List;
  */
 public interface EnterpriseTagService {
     List<Tag> loadEnterpriseTags();
+    void insertTags();
 
 }
