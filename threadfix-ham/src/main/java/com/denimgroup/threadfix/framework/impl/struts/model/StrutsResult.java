@@ -84,12 +84,6 @@ public class StrutsResult {
 
 	@Override
 	public String toString() {
-//		return "StrutsResult{" +
-//				"name='" + name + '\'' +
-//				", type='" + type + '\'' +
-//				", value='" + value + '\'' +
-//				", params=" + params +
-//				'}';
 		if (name==null && type==null && value==null)
 			return "null";
 		StringBuilder sb = new StringBuilder("<result");

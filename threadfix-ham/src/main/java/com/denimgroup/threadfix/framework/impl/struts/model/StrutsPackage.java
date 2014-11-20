@@ -97,19 +97,4 @@ public class StrutsPackage {
 		sb.append(">");
 		return sb.toString();
 	}
-
-	public void printTo(PrintStream o) {
-		o.println(this);
-		for (StrutsAction a : this.getActions()) {
-			o.println("\t" + a);
-			if (a.getParams() != null)
-				o.println("\t\t" + a.getParams());
-			for (StrutsResult r : a.getResults()) {
-				o.println("\t\t" + r);
-				if (r.getParams() != null)
-					o.println("\t\t\t" + r.getParams());
-			}
-		}
-	}
-
 }
