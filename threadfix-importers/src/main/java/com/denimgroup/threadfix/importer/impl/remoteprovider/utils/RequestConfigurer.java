@@ -23,22 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
+import org.apache.commons.httpclient.HttpMethodBase;
+
 /**
- * Created by mac on 6/2/14.
+ * Created by mac on 11/19/14.
  */
-public interface RemoteProviderHttpUtils {
+public interface RequestConfigurer {
 
-    HttpResponse getUrl(String url);
-
-    HttpResponse getUrl(String url, String username, String password);
-
-    HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password,
-                         String[] headerNames, String[] headerVals);
+    void configure(HttpMethodBase method);
 
 }

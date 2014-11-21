@@ -21,18 +21,22 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update;
+package com.denimgroup.threadfix.importer.update.impl;
 
+import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.dao.GenericVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.importer.update.Updater;
 import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -44,7 +48,8 @@ import static com.denimgroup.threadfix.importer.update.UpdaterConstants.GENERIC_
  * Created by mac on 9/12/14.
  */
 @Service
-class GenericMappingsUpdater implements Updater {
+@MappingsUpdater
+public class GenericMappingsUpdater extends SpringBeanAutowiringSupport implements Updater, Ordered {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(GenericMappingsUpdater.class);
 
@@ -56,6 +61,11 @@ class GenericMappingsUpdater implements Updater {
     private ChannelVulnerabilityDao     channelVulnerabilityDao;
     @Autowired
     private ChannelVulnerabilityUpdater channelVulnerabilityUpdater;
+
+    @Override
+    public int getOrder() {
+        return 100;
+    }
 
     enum State { TYPE, VULNS, SEVERITIES, NONE }
 

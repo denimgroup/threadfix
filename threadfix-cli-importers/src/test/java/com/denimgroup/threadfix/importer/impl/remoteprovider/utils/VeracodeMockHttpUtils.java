@@ -48,7 +48,6 @@ public class VeracodeMockHttpUtils implements RemoteProviderHttpUtils {
         return VeracodeMockHttpUtils.class.getClassLoader().getResourceAsStream(name);
     }
 
-
     @Override
     public HttpResponse getUrl(String url, String username, String password) {
 
@@ -68,6 +67,11 @@ public class VeracodeMockHttpUtils implements RemoteProviderHttpUtils {
         }
 
         return HttpResponse.failure();
+    }
+
+    @Override
+    public HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer) {
+        return getUrl(url);
     }
 
     @Override

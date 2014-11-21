@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class VeracodeApplicationParsingTests {
 
-    public static RemoteProvider getVeracodeImporterWithMock(String username, String password) {
+    public static AbstractRemoteProvider getVeracodeImporterWithMock(String username, String password) {
         VeracodeRemoteProvider provider = new VeracodeRemoteProvider();
 
         provider.utils = new VeracodeMockHttpUtils();
@@ -54,7 +54,7 @@ public class VeracodeApplicationParsingTests {
 
     @Test
     public void readAppsAuthenticated() {
-        RemoteProvider provider = getVeracodeImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
+        AbstractRemoteProvider provider = getVeracodeImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
                 VeracodeMockHttpUtils.GOOD_PASSWORD);
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();
@@ -65,7 +65,7 @@ public class VeracodeApplicationParsingTests {
 
     @Test
     public void readAppsUnauthenticated() {
-        RemoteProvider provider = getVeracodeImporterWithMock(VeracodeMockHttpUtils.BAD_USERNAME,
+        AbstractRemoteProvider provider = getVeracodeImporterWithMock(VeracodeMockHttpUtils.BAD_USERNAME,
                 VeracodeMockHttpUtils.BAD_PASSWORD);
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();

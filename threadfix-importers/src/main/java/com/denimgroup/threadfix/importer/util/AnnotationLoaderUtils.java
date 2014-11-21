@@ -21,24 +21,10 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
+package com.denimgroup.threadfix.importer.util;
 
 /**
- * Created by mac on 6/2/14.
+ * Created by mac on 11/18/14.
  */
-public interface RemoteProviderHttpUtils {
-
-    HttpResponse getUrl(String url);
-
-    HttpResponse getUrl(String url, String username, String password);
-
-    HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password,
-                         String[] headerNames, String[] headerVals);
-
+public class AnnotationLoaderUtils {
 }

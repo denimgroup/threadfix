@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.CollectionUtils;
+import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.QualysPlatform;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
@@ -47,7 +48,8 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
  * @author mcollins
  *
  */
-public class QualysRemoteProvider extends RemoteProvider {
+@RemoteProvider(name = "QualysGuard WAS")
+public class QualysRemoteProvider extends AbstractRemoteProvider {
 	
 	public String getType() {
 		return ScannerType.QUALYSGUARD_WAS.getFullName();
