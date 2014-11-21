@@ -124,6 +124,8 @@ public class RestExceptionControllerAdvice {
 
         if(ex.getMessage().contains("401")){
             return failure("GRC Credentials not valid.");
+        } else if(ex.getMessage().contains("403")){
+            return failure("Cannot reach GRC service.");
         } else {
             return failure(ex.getMessage());
         }
