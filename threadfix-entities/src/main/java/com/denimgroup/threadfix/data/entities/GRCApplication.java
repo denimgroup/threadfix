@@ -28,6 +28,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -56,6 +57,8 @@ public class GRCApplication extends AuditableEntity {
     private Application application;
 
     private List<GRCControlRecord> grcControlRecords;
+
+    private Calendar lastUpdateTime;
 
     public String getNativeId() {
         return nativeId;
@@ -112,7 +115,13 @@ public class GRCApplication extends AuditableEntity {
         this.grcTool = grcTool;
     }
 
-//    public boolean equals(Object obj) {
-//
-//    }
+    @Temporal(TemporalType.TIMESTAMP)
+    public Calendar getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(Calendar lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
+    }
+
 }
