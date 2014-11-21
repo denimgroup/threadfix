@@ -254,6 +254,11 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage sleepOnArrival(int length) {
+        sleep(length);
+        return new AnalyticsPage(driver);
+    }
+
     /* _____________________ Set Methods _____________________ */
 
     /* _____________________ Get Methods _____________________ */
