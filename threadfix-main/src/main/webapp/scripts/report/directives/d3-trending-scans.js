@@ -15,7 +15,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 startDate: '=',
                 endDate: '=',
                 exportInfo: '=',
-                svgId:'='
+                svgId:'=',
+                sumTableDivId:'='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -295,8 +296,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function drawTable(){
-                    if (scope.tableInfo)
-                        reportUtilities.drawTable(d3, scope.tableInfo, "complianceTable");
+                    if (scope.tableInfo && scope.sumTableDivId)
+                        reportUtilities.drawTable(d3, scope.tableInfo, scope.sumTableDivId);
                 }
 
                 function prepareStackedData(data) {
