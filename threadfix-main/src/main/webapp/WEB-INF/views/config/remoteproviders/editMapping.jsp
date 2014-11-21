@@ -2,7 +2,7 @@
 
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Edit Mapping for {{ object.nativeId }}
+            Edit Mapping for {{ object.customName || object.nativeId }}
             <span ng-show="config.showDelete" class="delete-span">
                 <a class="btn btn-danger header-button deleteLink"
                         id="deleteLink${ remoteProviderApplication.id }"
