@@ -54,8 +54,8 @@
                         'badge-low': vuln.genericSeverity.intValue === 2,
                         'badge-info': vuln.genericSeverity.intValue === 1
                         }">{{ vuln.genericSeverity.name }}</td>
-            <td class="centered" id="appName{{ $index }}"><a ng-click="goToAppFromVuln(vuln)">{{ vuln.app.name }}</a></td>
-            <td class="centered" id="teamName{{ $index }}"><a ng-click="goToTeamFromVuln(vuln)">{{ vuln.team.name }}</a></td>
+            <td style="word-wrap: break-word;" class="centered" id="appName{{ $index }}"><a ng-click="goToAppFromVuln(vuln)">{{ vuln.app.name }}</a></td>
+            <td style="word-wrap: break-word;" class="centered" id="teamName{{ $index }}"><a ng-click="goToTeamFromVuln(vuln)">{{ vuln.team.name }}</a></td>
             <td>
                 <a style="text-decoration:none" id="vulnLink{{ $index }}" ng-click="goToVuln(vuln)">View More</a>
             </td>
