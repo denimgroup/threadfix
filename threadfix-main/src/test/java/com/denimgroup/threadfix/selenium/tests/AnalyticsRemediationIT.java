@@ -130,6 +130,9 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv");
+
+        assertTrue("Closed vulnerability is not displayed.",
+                driver.findElements(By.id("vulnName0")).toArray().length == 4);
     }
 
     @Test
@@ -149,5 +152,13 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .expandVulnComments("0");
 
         assertTrue("Comment not attached properly", analyticsPage.getCommentText("0").equals(testComment));
+    }
+
+    @Test
+    public void testNumVulns() {
+        initialize();
+
+        assertTrue("There aren't enough vulnerabilities shown on the page.", !driver.findElements(By.id("vulnName44")).isEmpty());
+        assertTrue("There are too many vulnerabilities shown.", !driver.findElements(By.id("vulnName45")).isEmpty());
     }
 }

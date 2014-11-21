@@ -284,7 +284,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickCloseVulnerabilitiesButton();
 
         AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .sleepOnArrival(30000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
@@ -322,7 +322,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .sleepOnArrival(30000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
@@ -350,7 +350,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .sleepOnArrival(30000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
@@ -414,6 +414,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .selectDropDownReport("Most Vulnerable Applications")
                 .loadFilterReport(filterName, "snapshotFilterDiv");
 
-        assertTrue("Medium Bar shouldn't be present", driver.findElements(By.id(teamName + appName + "MediumBar")).isEmpty());
+        assertTrue("Medium Bar shouldn't be present", driver.findElement(By.id(teamName + appName + "MediumBar"))
+                .getAttribute("width").equals("0"));
     }
 }
