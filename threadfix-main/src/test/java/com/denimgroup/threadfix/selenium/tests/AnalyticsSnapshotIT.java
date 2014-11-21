@@ -193,11 +193,11 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true)
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
-                .addTeamFilterReport(teamName,"snapshotFilterDiv");
+                .addTeamFilterReport(teamName, "snapshotFilterDiv");
 
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
-        assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info",teamName,appName)
+        assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info", teamName, appName)
                 .equals("Info: 120"));
         assertTrue("Tip at level low does not match count", analyticsPage.mostVulnAppTip("Low",teamName,appName)
                 .equals("Low: 139"));
@@ -219,7 +219,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true)
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
-                .addTeamFilterReport(teamName,"snapshotFilterDiv");
+                .addTeamFilterReport(teamName, "snapshotFilterDiv");
 
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
@@ -355,7 +355,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv")
-                .saveCurrentFilterReport(filterName,"snapshotFilterDiv");
+                .saveCurrentFilterReport(filterName, "snapshotFilterDiv");
 
         analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
@@ -408,11 +408,11 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .selectFieldControls("Medium", "snapshotFilterDiv")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv")
-                .saveCurrentFilterReport(filterName,"snapshotFilterDiv");
+                .saveCurrentFilterReport(filterName, "snapshotFilterDiv");
 
         analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
                 .selectDropDownReport("Most Vulnerable Applications")
-                .loadFilterReport(filterName,"snapshotFilterDiv");
+                .loadFilterReport(filterName, "snapshotFilterDiv");
 
         assertTrue("Medium Bar shouldn't be present", driver.findElements(By.id(teamName + appName + "MediumBar")).isEmpty());
     }
