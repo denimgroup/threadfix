@@ -33,16 +33,8 @@ myAppModule.controller('RemoteProviderModalController', function ($scope, $modal
 
             if (confirmed) {
                 $scope.loading = true;
-                var reducedObject = {
-                    "username": $scope.object.username,
-                    "password": $scope.object.password,
-                    "apiKey": $scope.object.apiKey,
-                    "matchSourceNumbers": $scope.object.matchSourceNumbers,
-                    "platform": $scope.object.platform,
-                    "authenticationFields": $scope.object.authenticationFields
-                };
 
-                threadFixModalService.post(url, reducedObject).
+                threadFixModalService.post(url, $scope.object).
                     success(function(data, status, headers, config) {
                         $scope.loading = false;
 

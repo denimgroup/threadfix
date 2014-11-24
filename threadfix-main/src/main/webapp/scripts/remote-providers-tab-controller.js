@@ -212,9 +212,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                         if ( $scope.teams &&  $scope.teams[0] &&  $scope.teams[0].applications)
                             return {
                                 organization: $scope.teams[0],
-                                application: $scope.teams[0].applications[0],
-                                nativeId: app.nativeId,
-                                customName: app.customName
+                                application: $scope.teams[0].applications[0]
                             }
                     } else {
                         var teamId = app.application.team.id;
@@ -222,11 +220,13 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
                         var filterTeam = function(team) {
                             return team.id === teamId;
-                        };
+                        }
 
                         var filterApp = function(app) {
                             return app.id === appId;
-                        };
+                        }
+
+
 
                         var team = $scope.teams.filter(filterTeam)[0]
                         team.applications = team.applications.filter(filterActiveApp);
@@ -235,9 +235,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                         return {
                             organization: team,
                             application: application,
-                            remoteProviderType: provider,
-                            customName: app.customName,
-                            nativeId: app.nativeId
+                            remoteProviderType: provider
                         }
                     }
                     return app;
@@ -268,44 +266,6 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
             calculateShowImportAll(provider);
 
             $scope.successMessage = "Successfully edited mapping for " + provider.name;
-
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
-
-
-    $scope.openNameModal = function(provider, app) {
-
-        var modalInstance = $modal.open({
-            templateUrl: 'editRemoteProviderApplicationName.html',
-            controller: 'GenericModalController',
-            resolve: {
-                url: function() {
-                    return tfEncoder.encode("/configuration/remoteproviders/" + provider.id + "/apps/" + app.id + "/setName");
-                },
-                object: function() {
-                    return {
-                        customName: app.customName,
-                        nativeId: app.nativeId
-                    }
-                },
-                buttonText: function() {
-                    return "Save";
-                },
-                config: function() {
-                    return {
-                        showDelete: false
-                    };
-                }
-            }
-        });
-
-        modalInstance.result.then(function (editedApp) {
-
-            app.customName = editedApp.customName;
-
-            $scope.successMessage = "Successfully edited name for " + provider.name;
 
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,31 +58,17 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
     @Nonnull
     public HttpResponse getUrl(String url, String username, String password) {
         assert url != null;
-        assert username != null;
-        assert password != null;
-
-        String login = username + ":" + password;
-        final String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
-
-        return getUrlWithConfigurer(url, new RequestConfigurer() {
-            @Override
-            public void configure(HttpMethodBase method) {
-                method.setRequestHeader("Authorization", "Basic " + encodedLogin);
-                method.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
-            }
-        });
-    }
-
-    @Override
-    public HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer) {
-        assert url != null;
-        assert configurer != null;
 
         GetMethod get = new GetMethod(url);
 
         get.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
 
-        configurer.configure(get);
+        if (username != null && password != null) {
+            String login = username + ":" + password;
+            String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
+
+            get.setRequestHeader("Authorization", "Basic " + encodedLogin);
+        }
 
         HttpClient client = getConfiguredHttpClient(classInstance);
         try {

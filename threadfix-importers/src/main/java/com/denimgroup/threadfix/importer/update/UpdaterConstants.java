@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.importer.update;
 /**
  * Created by mac on 9/12/14.
  */
-public final class UpdaterConstants {
+final class UpdaterConstants {
 
     private UpdaterConstants() {}
 
@@ -35,7 +35,6 @@ public final class UpdaterConstants {
             GENERIC_VULNS_FOLDER = "mappings/generic",
             SCANNERS_FOLDER = "mappings/scanner",
             WAFS_FOLDER = "mappings/waf",
-            REMOTE_PROVIDERS_FOLDER = "mappings/remoteprovider",
             DATE_PATTERN = "MM/dd/yyyy hh:mm:ss";
 
 }

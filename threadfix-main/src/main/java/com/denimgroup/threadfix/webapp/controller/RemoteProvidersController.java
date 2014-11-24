@@ -50,8 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.CollectionUtils.newMap;
-
 @Controller
 @RequestMapping("configuration/remoteproviders")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
@@ -71,8 +69,8 @@ public class RemoteProvidersController {
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
-        dataBinder.setAllowedFields("apiKey", "username", "password", "application.id",
-                "application.organization.id", "platform");
+        dataBinder.setAllowedFields("apiKey", "username",
+                "password", "application.id", "application.organization.id", "platform");
     }
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -182,26 +180,11 @@ public class RemoteProvidersController {
 	public @ResponseBody RestResponse<RemoteProviderApplication> configureAppSubmit(
             @PathVariable int typeId,
             @PathVariable int remoteProviderApplicationId,
-            @RequestParam int applicationId) {
+            @RequestParam("applicationId") int applicationId) {
 
         String errMsg = remoteProviderApplicationService.processApp(remoteProviderApplicationId, applicationId);
 
         if (errMsg != null && !errMsg.isEmpty()) {
-            return RestResponse.failure(errMsg);
-        }
-
-		return RestResponse.success(remoteProviderApplicationService.load(remoteProviderApplicationId));
-	}
-
-	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
-	@RequestMapping(value="/{typeId}/apps/{remoteProviderApplicationId}/setName", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<RemoteProviderApplication> configureApplicationName(
-            @PathVariable int remoteProviderApplicationId,
-            @RequestParam String customName) {
-
-        String errMsg = remoteProviderApplicationService.setCustomName(remoteProviderApplicationId, customName);
-
-        if (errMsg != null && !errMsg.isEmpty() && !errMsg.equals("Success")) {
             return RestResponse.failure(errMsg);
         }
 
@@ -231,7 +214,6 @@ public class RemoteProvidersController {
 				request.getParameter("apiKey"),
                 request.getParameter("matchSourceNumbers"),
                 request.getParameter("platform"),
-                getAuthenticationFieldMap(request),
                 typeId);
 
 		if (test.equals(ResponseCode.BAD_ID)) {
@@ -251,22 +233,8 @@ public class RemoteProvidersController {
             return RestResponse.failure("Response was " + test);
 		}
 	}
-
-    private Map<String, String> getAuthenticationFieldMap(HttpServletRequest request) {
-        Map<String, String> authenticationFieldMap = newMap();
-
-        for (int i = 0; i < 100; i++) {
-            String value = request.getParameter("authenticationFields[" + i + "].value");
-            String name = request.getParameter("authenticationFields[" + i + "].name");
-            if (value != null && name != null) {
-                authenticationFieldMap.put(name, value);
-            }
-        }
-
-        return authenticationFieldMap;
-    }
-
-    @PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
+	
+	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/clearConfiguration", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<RemoteProviderType> clearConfiguration(@PathVariable("typeId") int typeId,
 			HttpServletRequest request) {
