@@ -23,20 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.struts;
 
-import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class EntityMappingsTests {
 
@@ -186,7 +181,7 @@ public class EntityMappingsTests {
 		assertEquals("int", mediaFileBean.getField("height").getType() );
 		assertEquals("long", mediaFileBean.getField("length").getType() );
 		assertEquals("String", mediaFileBean.getField("contentType").getType() );
-		assertEquals("String", mediaFileBean.getField("originalPath").getType() );
+		assertEquals("String", mediaFileBean.getField("originalPath").getType());
 
 	}
 }
