@@ -22,7 +22,8 @@ myAppModule.controller('RemoteProviderModalMappingController', function ($scope,
             timeoutService.timeout();
             $scope.loading = true;
             var scope =  {
-                applicationId : $scope.object.application.id
+                applicationId : $scope.object.application.id,
+                customName : $scope.object.customName
             };
             threadFixModalService.post(url, scope).
                 success(function(data, status, headers, config) {
