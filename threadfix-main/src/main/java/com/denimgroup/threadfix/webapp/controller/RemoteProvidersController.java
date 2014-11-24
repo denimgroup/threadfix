@@ -182,26 +182,11 @@ public class RemoteProvidersController {
 	public @ResponseBody RestResponse<RemoteProviderApplication> configureAppSubmit(
             @PathVariable int typeId,
             @PathVariable int remoteProviderApplicationId,
-            @RequestParam int applicationId) {
+            @RequestParam("applicationId") int applicationId) {
 
         String errMsg = remoteProviderApplicationService.processApp(remoteProviderApplicationId, applicationId);
 
         if (errMsg != null && !errMsg.isEmpty()) {
-            return RestResponse.failure(errMsg);
-        }
-
-		return RestResponse.success(remoteProviderApplicationService.load(remoteProviderApplicationId));
-	}
-
-	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
-	@RequestMapping(value="/{typeId}/apps/{remoteProviderApplicationId}/setName", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<RemoteProviderApplication> configureApplicationName(
-            @PathVariable int remoteProviderApplicationId,
-            @RequestParam String customName) {
-
-        String errMsg = remoteProviderApplicationService.setCustomName(remoteProviderApplicationId, customName);
-
-        if (errMsg != null && !errMsg.isEmpty() && !errMsg.equals("Success")) {
             return RestResponse.failure(errMsg);
         }
 

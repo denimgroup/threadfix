@@ -51,10 +51,4 @@ public interface RemoteProviderApplicationDao extends GenericObjectDao<RemotePro
 	 */
 	List<RemoteProviderApplication> retrieveAllWithMappings();
 
-	/**
-	 *
-	 * @return
-	 */
-	RemoteProviderApplication retrieveByCustomName(String customName);
-
 }
