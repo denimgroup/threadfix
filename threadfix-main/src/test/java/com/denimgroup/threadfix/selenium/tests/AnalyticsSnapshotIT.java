@@ -390,7 +390,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         assertTrue("Info Bar is not present", !driver.findElements(By.id(teamName + appName + "InfoBar")).isEmpty());
         assertTrue("Low Bar is not present", !driver.findElements(By.id(teamName + appName + "LowBar")).isEmpty());
-        assertTrue("Medium Bar shouldn't be present", driver.findElements(By.id(teamName + appName + "MediumBar")).isEmpty());
+        assertTrue("Medium Bar shouldn't be present", driver.findElement(By.id(teamName + appName + "MediumBar"))
+                .getAttribute("width").equals("0"));
         assertTrue("High Bar is not present", !driver.findElements(By.id(teamName + appName + "HighBar")).isEmpty());
         assertTrue("Critical Bar is not present", !driver.findElements(By.id(teamName + appName + "CriticalBar")).isEmpty());
     }
