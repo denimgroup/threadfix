@@ -34,6 +34,11 @@ public class RestIOException extends RestException {
 
     int statusCode = -1;
 
+    public RestIOException(String responseString, int statusCode) {
+        super(responseString);
+        this.statusCode = statusCode;
+    }
+
     public RestIOException(Throwable cause, String responseString) {
         super(cause, responseString);
     }

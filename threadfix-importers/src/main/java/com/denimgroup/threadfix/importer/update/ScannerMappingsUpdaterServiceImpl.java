@@ -24,13 +24,17 @@
 
 package com.denimgroup.threadfix.importer.update;
 
+import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
-import com.denimgroup.threadfix.importer.util.DateUtils;
+import com.denimgroup.threadfix.importer.loader.AnnotationLoader;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.OrderComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,22 +43,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.importer.util.DateUtils.getLatestCalendar;
 
 @Service
 @Transactional(readOnly = false) // used to be true
 class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService {
 
     @Autowired
-    private DefaultConfigurationDao     defaultConfigurationDao;
-    @Autowired
-    private GenericMappingsUpdater      genericMappingsUpdater;
-    @Autowired
-    private ChannelVulnerabilityUpdater channelVulnerabilityUpdater;
-    @Autowired
-    private DefectTrackerUpdater        defectTrackerUpdater;
-    @Autowired
-    private WafsUpdater wafsUpdater;
+    private DefaultConfigurationDao defaultConfigurationDao;
 
     private final SanitizedLogger log = new SanitizedLogger(ScannerMappingsUpdaterServiceImpl.class);
 
@@ -73,6 +68,11 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         Collections.sort(scanners);
 
         return scanners;
+    }
+
+    @Override
+    public void updateMappings() {
+        updateMappings(null);
     }
 
     public DefaultConfiguration loadCurrentConfiguration() {
@@ -98,7 +98,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
     @Override
     @Transactional
-    public void updateMappings() {
+    public void updateMappings(ApplicationContext applicationContext) {
         log.info("Start updating Scanner mapping from startup");
 
         DefaultConfiguration config = loadCurrentConfiguration();
@@ -106,14 +106,16 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
 
         UpdaterHarness harness = new UpdaterHarness(pluginTimestamp);
 
-        Calendar genericMappingsTime = harness.executeUpdates(genericMappingsUpdater);
-        Calendar channelMappingsTime = harness.executeUpdates(channelVulnerabilityUpdater);
-        Calendar defectTrackerTime = harness.executeUpdates(defectTrackerUpdater);
-        Calendar wafTime = harness.executeUpdates(wafsUpdater);
+        Calendar latest = null;
 
-        Calendar latestCalendar = getLatestCalendar(
-                pluginTimestamp, genericMappingsTime, channelMappingsTime, defectTrackerTime, wafTime);
-        config.setLastScannerMappingsUpdate(latestCalendar);
+        for (Updater updater : getUpdaters(applicationContext)) {
+            Calendar mostRecentDate = harness.executeUpdates(updater);
+            if (latest == null || latest.before(mostRecentDate)) {
+                latest = mostRecentDate;
+            }
+        }
+
+        config.setLastScannerMappingsUpdate(latest);
 
         defaultConfigurationDao.saveOrUpdate(config);
 
@@ -121,15 +123,15 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     }
 
     @Override
-    public ScanPluginCheckBean checkPluginJar() {
+    public ScanPluginCheckBean checkPluginJar(ApplicationContext applicationContext) {
         DefaultConfiguration configuration = loadCurrentConfiguration();
 
         if (configuration != null && configuration.getLastScannerMappingsUpdate() != null) {
 
             Calendar databaseDate = configuration.getLastScannerMappingsUpdate();
-            Calendar pluginDate = getMostRecentFileDate(databaseDate);
+            Calendar pluginDate = getMostRecentFileDate(databaseDate, applicationContext);
 
-            if (pluginDate != null && databaseDate != null && !pluginDate.after(databaseDate)) {
+            if (pluginDate != null && !pluginDate.after(databaseDate)) {
                 return new ScanPluginCheckBean(false, databaseDate, pluginDate);
             } else {
                 return new ScanPluginCheckBean(true, databaseDate, pluginDate);
@@ -139,16 +141,48 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         }
     }
 
-    private Calendar getMostRecentFileDate(Calendar baseDate) {
+    @Override
+    public ScanPluginCheckBean checkPluginJar() {
+        return checkPluginJar(null);
+    }
+
+    private Calendar getMostRecentFileDate(Calendar baseDate, ApplicationContext applicationContext) {
         UpdaterHarness harness = new UpdaterHarness(baseDate);
 
-        Calendar genericMappingsTime = harness.findMostRecentDate(genericMappingsUpdater);
-        Calendar channelMappingsTime = harness.findMostRecentDate(channelVulnerabilityUpdater);
-        Calendar defectTrackerTime = harness.findMostRecentDate(defectTrackerUpdater);
-        Calendar wafsTime = harness.findMostRecentDate(wafsUpdater);
+        Calendar latest = null;
 
-        return DateUtils.getLatestCalendar(
-                genericMappingsTime, channelMappingsTime, defectTrackerTime, wafsTime);
+        for (Updater updater : getUpdaters(applicationContext)) {
+            Calendar mostRecentDate = harness.findMostRecentDate(updater);
+            if (latest == null || latest.before(mostRecentDate)) {
+                latest = mostRecentDate;
+            }
+        }
+
+        return latest;
+    }
+
+    List<Updater> updaters = null;
+
+    private List<Updater> getUpdaters(ApplicationContext applicationContext) {
+        if (updaters == null) {
+            updaters = AnnotationLoader.getListOfConcreteClass(
+                    MappingsUpdater.class,
+                    "com.denimgroup.threadfix.importer.update.impl",
+                    Updater.class);
+
+            if (applicationContext != null) {
+                AutowiredAnnotationBeanPostProcessor bpp = new AutowiredAnnotationBeanPostProcessor();
+                bpp.setBeanFactory(applicationContext.getAutowireCapableBeanFactory());
+
+                for (Updater updater : updaters) {
+                    bpp.processInjection(updater);
+                }
+            }
+        }
+
+        Collections.sort(updaters, OrderComparator.INSTANCE);
+
+        return updaters;
     }
 
 }

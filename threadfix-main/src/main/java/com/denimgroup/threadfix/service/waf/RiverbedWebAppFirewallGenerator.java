@@ -23,29 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
+import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.WafRule;
+import com.denimgroup.threadfix.data.entities.WafType;
+import com.google.gson.JsonObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
-import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /**
  * @author Mirko Dziadzka, Riverbed Technology
  *
  */
+@WebApplicationFirewall(name = WafType.RIVERBED_WEB_APP_FIREWALL)
 public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator {
 
     public static String RULE_PROVIDER_NAME = "threadfix";
@@ -77,11 +69,6 @@ public class RiverbedWebAppFirewallGenerator extends RealTimeProtectionGenerator
             put(GenericVulnerability.CWE_DEBUG_CODE, "GENERIC_DEBUG_CODE");
         }
     };
-
-    public RiverbedWebAppFirewallGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
-        this.wafRuleDao = wafRuleDao;
-        this.wafRuleDirectiveDao = wafRuleDirectiveDao;
-    }
 
     @Override
     public String[] getSupportedVulnerabilityTypes() {
