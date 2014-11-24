@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
-import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
@@ -39,8 +38,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
-@RemoteProvider(name = "Veracode")
-public class VeracodeRemoteProvider extends AbstractRemoteProvider {
+public class VeracodeRemoteProvider extends RemoteProvider {
 
 	public static final String GET_APP_BUILDS_URI = "https://analysiscenter.veracode.com/api/2.0/getappbuilds.do";
 	public static final String GET_DETAILED_REPORT_URI = "https://analysiscenter.veracode.com/api/detailedreport.do";

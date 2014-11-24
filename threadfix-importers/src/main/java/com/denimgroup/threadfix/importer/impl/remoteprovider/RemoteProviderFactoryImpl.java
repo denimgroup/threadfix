@@ -24,13 +24,11 @@
 
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
-import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
-import com.denimgroup.threadfix.importer.loader.AnnotationKeyGenerator;
-import com.denimgroup.threadfix.importer.loader.ImplementationLoader;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,52 +39,34 @@ import java.util.List;
 @Service
 public class RemoteProviderFactoryImpl implements RemoteProviderFactory {
 
-    @Override
     public List<RemoteProviderApplication> fetchApplications(RemoteProviderType remoteProviderType) {
-        AbstractRemoteProvider provider = getProvider(remoteProviderType);
+        RemoteProvider provider = getProvider(remoteProviderType.getName());
 
-        if (provider == null) {
+        if (provider == null)
             return null;
-        }
 
+        provider.setRemoteProviderType(remoteProviderType);
         return provider.fetchApplications();
     }
 
-    private AbstractRemoteProvider getProvider(RemoteProviderType remoteProviderType) {
-        if (remoteProviderType == null) {
-            assert false : "Got null remote provider type.";
+    public RemoteProvider getProvider(String providerType) {
+        if (providerType == null) {
             return null;
         }
 
-        if (loader == null) {
-            init();
-            assert loader != null : "Initialization failed.";
+        RemoteProvider remoteProvider = null;
+
+        ScannerType type = ScannerType.getScannerType(providerType);
+
+        if (type == ScannerType.QUALYSGUARD_WAS) {
+            remoteProvider = new QualysRemoteProvider();
+        } else if (type == ScannerType.SENTINEL) {
+            remoteProvider = new WhiteHatRemoteProvider();
+        } else if (type == ScannerType.VERACODE) {
+            remoteProvider = new VeracodeRemoteProvider();
         }
 
-        AbstractRemoteProvider implementation = loader.getImplementation(remoteProviderType.getName());
-
-        if (implementation == null) {
-            throw new IllegalArgumentException("No implementation found for " + remoteProviderType.getName());
-        }
-
-        implementation.setRemoteProviderType(remoteProviderType);
-
-        return implementation;
-    }
-
-    ImplementationLoader<RemoteProvider, AbstractRemoteProvider> loader = null;
-
-    private void init() {
-
-        loader = new ImplementationLoader<>(RemoteProvider.class,
-                AbstractRemoteProvider.class,
-                "com.denimgroup.threadfix.importer.impl.remoteprovider",
-                new AnnotationKeyGenerator<RemoteProvider>() {
-                    @Override
-                    public String getKey(RemoteProvider annotation) {
-                        return annotation.name();
-                    }
-                });
+        return remoteProvider;
     }
 
     /**
@@ -95,18 +75,16 @@ public class RemoteProviderFactoryImpl implements RemoteProviderFactory {
      * @param remoteProviderApplication
      * @return
      */
-    @Override
     public List<Scan> fetchScans(RemoteProviderApplication remoteProviderApplication) {
         if (remoteProviderApplication == null ||
                 remoteProviderApplication.getRemoteProviderType() == null) {
             return null;
         }
 
-        AbstractRemoteProvider provider = getProvider(remoteProviderApplication.getRemoteProviderType());
+        RemoteProvider provider = getProvider(remoteProviderApplication.getRemoteProviderType().getName());
 
-        if (provider == null) {
+        if (provider == null)
             return null;
-        }
 
         List<Scan> scanList = provider.getScans(remoteProviderApplication);
 

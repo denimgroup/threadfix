@@ -23,19 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
-import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.WafType;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
+import com.denimgroup.threadfix.data.entities.GenericVulnerability;
 
 /**
  * @author bbeverly
  * @author mcollins
  * 
  */
-@WebApplicationFirewall(name = WafType.SNORT)
 public class SnortGenerator extends RealTimeProtectionGenerator {
 
 	// Intended use:
@@ -71,7 +70,9 @@ public class SnortGenerator extends RealTimeProtectionGenerator {
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_EVAL_INJECTION, PAYLOAD_EVAL_INJECTION);
 	}
 	
-	public SnortGenerator(){
+	public SnortGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
+		this.wafRuleDao = wafRuleDao;
+		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
 		this.defaultDirective = "drop";
 	}
 

@@ -21,20 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update.impl;
+package com.denimgroup.threadfix.importer.update;
 
-import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
 import com.denimgroup.threadfix.data.dao.WafTypeDao;
 import com.denimgroup.threadfix.data.entities.WafRuleDirective;
 import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.importer.update.Updater;
-import com.denimgroup.threadfix.importer.update.UpdaterConstants;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,8 +40,7 @@ import static com.denimgroup.threadfix.CollectionUtils.listOf;
  * Created by mac on 9/12/14.
  */
 @Service
-@MappingsUpdater
-public class WafsUpdater extends SpringBeanAutowiringSupport implements Updater, Ordered {
+public class WafsUpdater implements Updater {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(WafsUpdater.class);
 
@@ -54,11 +48,6 @@ public class WafsUpdater extends SpringBeanAutowiringSupport implements Updater,
     WafTypeDao wafTypeDao;
     @Autowired
     WafRuleDirectiveDao wafRuleDirectiveDao;
-
-    @Override
-    public int getOrder() {
-        return 300;
-    }
 
     enum State {
         START, NAME, DIRECTIVES

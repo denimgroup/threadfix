@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
@@ -42,17 +41,17 @@ import java.util.*;
 @Service
 @Transactional(readOnly = false)
 public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService {
-
-    private static final SanitizedLogger LOG = new SanitizedLogger(RemoteProviderTypeServiceImpl.class);
-
-    @Autowired
-    private RemoteProviderTypeDao remoteProviderTypeDao;
+	
+	private final SanitizedLogger log = new SanitizedLogger(RemoteProviderTypeServiceImpl.class);
 
     @Autowired
-    private RemoteProviderApplicationService remoteProviderApplicationService;
+	private RemoteProviderTypeDao remoteProviderTypeDao;
 
     @Autowired
-    private ScanMergeService scanMergeService;
+	private RemoteProviderApplicationService remoteProviderApplicationService;
+
+    @Autowired
+	private ScanMergeService scanMergeService;
 
     @Autowired
     private RemoteProviderFactory remoteProviderFactory;
@@ -61,61 +60,61 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
     private VulnerabilityService vulnerabilityService;
 
     @Autowired
-    RemoteProviderTypeServiceImpl(RemoteProviderTypeDao remoteProviderTypeDao) {
+    RemoteProviderTypeServiceImpl (RemoteProviderTypeDao remoteProviderTypeDao) {
         this.remoteProviderTypeDao = remoteProviderTypeDao;
     }
 
 	@Override
 	@Transactional
 	public ResponseCode importScansForApplications(Integer remoteProviderTypeId) {
-
+		
 		RemoteProviderType type = load(remoteProviderTypeId);
-
+		
 		if (type == null) {
-			LOG.error("Type was null, Remote Provider import failed.");
+			log.error("Type was null, Remote Provider import failed.");
 			return ResponseCode.BAD_ID;
 		} else {
-
+			
 			decryptCredentials(type);
-
+			
 			List<RemoteProviderApplication> applications = type.getRemoteProviderApplications();
-
+			
 			if (applications == null || applications.isEmpty()) {
-                LOG.error("No applications found, Remote Provider import failed.");
+				log.error("No applications found, Remote Provider import failed.");
 				return ResponseCode.NO_APPS;
 			} else {
-
-                LOG.info("Starting scan import for " + applications.size() + " applications.");
-
+				
+				log.info("Starting scan import for " + applications.size() + " applications.");
+				
 				for (RemoteProviderApplication application : applications) {
 					if (application != null && application.getApplicationChannel() != null) {
 						ResponseCode success = importScansForApplication(application);
-
+						
 						if (!success.equals(ResponseCode.SUCCESS)) {
-                            LOG.info("No scans were imported for Remote Provider application " + application.getNativeName());
+							log.info("No scans were imported for Remote Provider application " + application.getNativeName());
 						} else {
-                            LOG.info("Remote Provider import was successful for application " + application.getNativeName());
+							log.info("Remote Provider import was successful for application " + application.getNativeName());
 						}
 					}
 				}
-
+				
 				return ResponseCode.SUCCESS;
 			}
 		}
-
+		
 	}
-
+	
 	@Transactional(readOnly=false)
 	@Override
 	public ResponseCode updateAll() {
-        LOG.info("Importing scans for all Remote Provider Applications.");
+		log.info("Importing scans for all Remote Provider Applications.");
 		List<RemoteProviderApplication> apps = remoteProviderApplicationService.loadAllWithMappings();
-
+		
 		if (apps == null || apps.size() == 0) {
-            LOG.info("No apps with mappings found. Exiting.");
+			log.info("No apps with mappings found. Exiting.");
 			return ResponseCode.NO_APPS;
 		}
-
+		
 		for (RemoteProviderApplication remoteProviderApplication : apps) {
 			if (remoteProviderApplication == null || remoteProviderApplication.getRemoteProviderType() == null) {
 				continue;
@@ -124,7 +123,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			importScansForApplication(remoteProviderApplication);
 		}
 		
-		LOG.info("Completed requests for scan imports.");
+		log.info("Completed requests for scan imports.");
 		
 		return ResponseCode.SUCCESS;
 	}
@@ -159,19 +158,19 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			for (Scan resultScan : resultScans) {
 				if (resultScan == null || resultScan.getFindings() == null
 						|| resultScan.getFindings().size() == 0) {
-					LOG.warn("Remote Scan import returned a null scan or a scan with no findings.");
+					log.warn("Remote Scan import returned a null scan or a scan with no findings.");
 					noOfScanNotFound++;
 					
 				} else if (remoteProviderApplication.getLastImportTime() != null &&
 							(resultScan.getImportTime() == null ||
 							!remoteProviderApplication.getLastImportTime().before(
 									resultScan.getImportTime()))) {
-					LOG.warn("Remote Scan was not newer than the last imported scan " +
-                            "for this RemoteProviderApplication.");
+					log.warn("Remote Scan was not newer than the last imported scan " +
+							"for this RemoteProviderApplication.");
 					noOfNoNewScans++;
 
 				} else {
-					LOG.info("Scan was parsed and has findings, passing to ScanMergeService.");
+					log.info("Scan was parsed and has findings, passing to ScanMergeService.");
 					
 					remoteProviderApplication.setLastImportTime(resultScan.getImportTime());
 					
@@ -181,7 +180,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 						if (remoteProviderApplication.getApplicationChannel() != null) {
 							resultScan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 						} else {
-							LOG.error("Didn't have enough application channel information.");
+							log.error("Didn't have enough application channel information.");
 						}
 					}
 					
@@ -252,7 +251,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				type.setEncryptedPassword(ESAPI.encryptor().encrypt(type.getPassword()));
 			}
 		} catch (EncryptionException e) {
-			LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}
 		
 		return type;
@@ -275,7 +274,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				type.setPassword(ESAPI.encryptor().decrypt(type.getEncryptedPassword()));
 			}
 		} catch (EncryptionException e) {
-			LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
+			log.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}
 		
 		return type;
@@ -288,7 +287,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 	
 	@Override
 	public ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
-                                           String platform, Map<String, String> authenticationFieldMap, int typeId) {
+                                           String platform, int typeId) {
 		
 		RemoteProviderType databaseRemoteProviderType = load(typeId);
 
@@ -302,19 +301,58 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 		
 		// TODO test this
 		// If the username hasn't changed but the password has, update the apps instead of deleting them.
-
-        if (!databaseRemoteProviderType.getAuthenticationFields().isEmpty()) {
-
-            return processAuthenticationFields(databaseRemoteProviderType, authenticationFieldMap);
-
-        } else if (databaseRemoteProviderType.getHasUserNamePassword()) {
-
-            return processUsernamePassword(username, password, platform, databaseRemoteProviderType, matchSourceNumberBoolean);
+		
+		if (databaseRemoteProviderType.getHasUserNamePassword() &&
+				username != null && password != null &&
+				username.equals(databaseRemoteProviderType.getUsername()) &&
+				!password.equals(USE_OLD_PASSWORD) &&
+				!password.equals(databaseRemoteProviderType.getPassword())) {
 			
-		} else if (databaseRemoteProviderType.getHasApiKey()) {
+			log.warn("Provider password has changed, updating applications.");
+			
+			databaseRemoteProviderType.setPassword(password);
+			databaseRemoteProviderType.setPlatform(platform);
+            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
+			remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
+			store(databaseRemoteProviderType);
+			return ResponseCode.SUCCESS;
+			
+		} else if (databaseRemoteProviderType.getHasApiKey() &&
+				apiKey != null && !apiKey.startsWith(USE_OLD_PASSWORD) &&
+				!apiKey.equals(databaseRemoteProviderType.getApiKey())
+				||
+				databaseRemoteProviderType.getHasUserNamePassword() &&
+				username != null &&
+				!username.equals(databaseRemoteProviderType.getUsername())) {
+			
+			databaseRemoteProviderType.setApiKey(apiKey);
+			databaseRemoteProviderType.setUsername(username);
+			databaseRemoteProviderType.setPassword(password);
+            databaseRemoteProviderType.setPlatform(platform);
+            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
 
-            return processApikey(username, password, apiKey, platform, databaseRemoteProviderType, matchSourceNumberBoolean);
+            List<RemoteProviderApplication> apps = remoteProviderApplicationService
+													.getApplications(databaseRemoteProviderType);
+			
+			if (apps == null) {
+				
+				return ResponseCode.NO_APPS;
 
+			} else {
+				log.warn("Provider username has changed, deleting old apps.");
+				
+				remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
+
+				databaseRemoteProviderType.setRemoteProviderApplications(apps);
+				
+				for (RemoteProviderApplication remoteProviderApplication :
+						databaseRemoteProviderType.getRemoteProviderApplications()) {
+					remoteProviderApplicationService.store(remoteProviderApplication);
+				}
+								
+				store(encryptCredentials(databaseRemoteProviderType));
+				return ResponseCode.SUCCESS;
+			}
 		} else if (databaseRemoteProviderType.getMatchSourceNumbers() == null ||
                 databaseRemoteProviderType.getMatchSourceNumbers() != matchSourceNumberBoolean) {
 
@@ -323,111 +361,12 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
             return ResponseCode.SUCCESS;
 
         } else {
-			LOG.info("No change was made to the credentials.");
+			log.info("No change was made to the credentials.");
 			return ResponseCode.SUCCESS;
 		}
 	}
 
-    private ResponseCode processAuthenticationFields(RemoteProviderType databaseRemoteProviderType,
-                                                     Map<String, String> authenticationFieldMap) {
-
-        boolean updated = false;
-
-        for (RemoteProviderAuthenticationField field : databaseRemoteProviderType.getAuthenticationFields()) {
-            if (authenticationFieldMap.containsKey(field.getName())) {
-                String value = authenticationFieldMap.get(field.getName());
-
-                if (!value.equals(field.getValue())) {
-                    field.setValue(value);
-                    updated = true;
-                }
-            }
-        }
-
-        if (updated) {
-            LOG.info("Credentials have been updated, updating applications");
-
-            List<RemoteProviderApplication> applications = remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
-            store(databaseRemoteProviderType); // should cascade field values too
-
-            if (applications != null && !applications.isEmpty()) {
-                return ResponseCode.SUCCESS;
-            } else {
-                return ResponseCode.NO_APPS;
-            }
-
-        } else {
-            LOG.info("No change to credentials.");
-            return ResponseCode.SUCCESS;
-        }
-    }
-
-    private ResponseCode processApikey(String username,
-                                       String password,
-                                       String apiKey,
-                                       String platform,
-                                       RemoteProviderType databaseRemoteProviderType,
-                                       boolean matchSourceNumberBoolean) {
-
-        if (databaseRemoteProviderType.getHasApiKey() &&
-                apiKey != null && !apiKey.startsWith(USE_OLD_PASSWORD) &&
-                !apiKey.equals(databaseRemoteProviderType.getApiKey())
-                ||
-                databaseRemoteProviderType.getHasUserNamePassword() &&
-                        username != null &&
-                        !username.equals(databaseRemoteProviderType.getUsername())) {
-            databaseRemoteProviderType.setApiKey(apiKey);
-            databaseRemoteProviderType.setUsername(username);
-            databaseRemoteProviderType.setPassword(password);
-            databaseRemoteProviderType.setPlatform(platform);
-            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
-
-            List<RemoteProviderApplication> apps = remoteProviderApplicationService
-                    .getApplications(databaseRemoteProviderType);
-
-            if (apps == null) {
-
-                return ResponseCode.NO_APPS;
-
-            } else {
-                LOG.warn("Provider username has changed, deleting old apps.");
-
-                remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
-
-                databaseRemoteProviderType.setRemoteProviderApplications(apps);
-
-                for (RemoteProviderApplication remoteProviderApplication :
-                        databaseRemoteProviderType.getRemoteProviderApplications()) {
-                    remoteProviderApplicationService.store(remoteProviderApplication);
-                }
-
-                store(encryptCredentials(databaseRemoteProviderType));
-            }
-        }
-        return ResponseCode.SUCCESS;
-    }
-
-    private ResponseCode processUsernamePassword(String username,
-                                                 String password,
-                                                 String platform,
-                                                 RemoteProviderType databaseRemoteProviderType,
-                                                 boolean matchSourceNumberBoolean) {
-        if (username != null && password != null &&
-                username.equals(databaseRemoteProviderType.getUsername()) &&
-                !password.equals(USE_OLD_PASSWORD) &&
-                !password.equals(databaseRemoteProviderType.getPassword())) {
-            LOG.warn("Provider password has changed, updating applications.");
-
-            databaseRemoteProviderType.setPassword(password);
-            databaseRemoteProviderType.setPlatform(platform);
-            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
-            remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
-            store(databaseRemoteProviderType);
-        }
-        return ResponseCode.SUCCESS;
-    }
-
-    @Override
+	@Override
 	public void clearConfiguration(int id) {
 		RemoteProviderType type = load(id);
 		
@@ -439,12 +378,8 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 			if (type.getRemoteProviderApplications() != null) {
 				remoteProviderApplicationService.deleteApps(type);
 			}
-
-            for (RemoteProviderAuthenticationField field : type.getAuthenticationFields()) {
-                field.setValue(null);
-            }
-
-            store(type);
+			
+			store(type);
 		}
 	}
 }

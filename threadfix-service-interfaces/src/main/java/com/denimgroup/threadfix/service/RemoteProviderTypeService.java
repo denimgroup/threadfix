@@ -25,7 +25,6 @@
 package com.denimgroup.threadfix.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
@@ -89,10 +88,10 @@ public interface RemoteProviderTypeService {
 	/**
 	 * Checks over the remote configuration and puts any errors into the result.
 	 * This is to tidy up the controller layer.
-     * @param authenticationFieldMap
-     */
+	 * @param remoteProviderType
+	 */
 	ResponseCode checkConfiguration(String username, String password, String apiKey, String matchSourceNumber,
-                                    String platform, Map<String, String> authenticationFieldMap, int typeId);
+                                    String platform, int typeId);
 	
 	/**
 	 * Deletes all apps and username / password / API key

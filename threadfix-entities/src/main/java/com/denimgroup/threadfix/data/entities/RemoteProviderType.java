@@ -65,8 +65,6 @@ public class RemoteProviderType extends BaseEntity  {
 
     private boolean encrypted = false;
 
-    private List<RemoteProviderAuthenticationField> authenticationFields;
-
     @Size(max = API_KEY_LENGTH, message = "{errors.maxlength} " + API_KEY_LENGTH + ".")
     private String encryptedApiKey;
 
@@ -86,7 +84,7 @@ public class RemoteProviderType extends BaseEntity  {
     private List<RemoteProviderApplication> remoteProviderApplications;
     private List<RemoteProviderApplication> filteredApplications;
     private ChannelType                     channelType;
-    private boolean                         matchSourceNumbersNullSafe;
+    private boolean matchSourceNumbersNullSafe;
 
     @Transient
     @JsonView(AllViews.TableRow.class)
@@ -204,8 +202,8 @@ public class RemoteProviderType extends BaseEntity  {
      * @param remoteProviderApplications
      */
     public void setRemoteProviderApplications(
-            List<RemoteProviderApplication> remoteProviderApplications) {
-        this.remoteProviderApplications = remoteProviderApplications;
+			List<RemoteProviderApplication> remoteProviderApplications) {
+		this.remoteProviderApplications = remoteProviderApplications;
 	}
 
     @JsonIgnore
@@ -246,16 +244,6 @@ public class RemoteProviderType extends BaseEntity  {
         this.matchSourceNumbers = matchSourceNumbers;
     }
 
-    @OneToMany(mappedBy = "remoteProviderType", cascade = CascadeType.ALL)
-    @JsonView(AllViews.TableRow.class)
-    public List<RemoteProviderAuthenticationField> getAuthenticationFields() {
-        return authenticationFields;
-    }
-
-    public void setAuthenticationFields(List<RemoteProviderAuthenticationField> authenticationFields) {
-        this.authenticationFields = authenticationFields;
-    }
-
 	@Transient
     @JsonView(AllViews.TableRow.class)
 	public List<RemoteProviderApplication> getFilteredApplications() {
@@ -265,7 +253,7 @@ public class RemoteProviderType extends BaseEntity  {
 	public void setFilteredApplications(List<RemoteProviderApplication> filteredApplications) {
 		this.filteredApplications = filteredApplications;
 	}
-
+	
 	@Transient
     @JsonView(AllViews.TableRow.class)
 	public boolean getIsQualys() {
@@ -277,11 +265,11 @@ public class RemoteProviderType extends BaseEntity  {
 	public boolean getIsWhiteHat() {
 		return name != null && name.equals(SENTINEL);
 	}
-
+	
 	@Transient
 	public boolean getHasConfiguredApplications() {
 		boolean hasAppsWithApps = false;
-
+		
 		if (remoteProviderApplications != null && !remoteProviderApplications.isEmpty()) {
 			for (RemoteProviderApplication app : getRemoteProviderApplications()) {
 				if (app != null && app.getApplicationChannel() != null) {
@@ -290,7 +278,7 @@ public class RemoteProviderType extends BaseEntity  {
 				}
 			}
 		}
-
+		
 		return hasAppsWithApps;
 	}
 
