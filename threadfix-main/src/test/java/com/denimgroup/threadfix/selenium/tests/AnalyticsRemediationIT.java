@@ -58,6 +58,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .clickModalSubmit();
 
         analyticsPage = applicationDetailPage.clickAnalyticsLink()
+                .sleepOnArrival(15000)
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
@@ -125,11 +126,14 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .clickVulnerabilitiesActionButton()
                 .clickCloseVulnerabilitiesButton()
                 .clickAnalyticsLink()
+                .sleepOnArrival(15000)
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(appName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv");
+
+        analyticsPage.takeScreenShot();
 
         assertTrue("Closed vulnerability is not displayed.",
                 driver.findElements(By.id("vulnName0")).toArray().length == 4);
@@ -157,6 +161,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     @Test
     public void testNumVulns() {
         initialize();
+
+        analyticsPage.takeScreenShot();
 
         assertTrue("There aren't enough vulnerabilities shown on the page.", !driver.findElements(By.id("vulnName44")).isEmpty());
         assertTrue("There are too many vulnerabilities shown.", !driver.findElements(By.id("vulnName45")).isEmpty());

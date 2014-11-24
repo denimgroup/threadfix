@@ -278,4 +278,43 @@ public class TagDetailPageIT extends BaseDataTest {
 
         assertTrue("Tag header link did not navigate properly", tagDetailPage.isLinkPresent(appName));
     }
+
+    @Test
+    public void testAttachPCITagtoApp() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag("PCI")
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName("PCI");
+
+        assertTrue("PCI tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    }
+
+    @Test
+    public void testAttachHIPAATagtoApp() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag("HIPAA")
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName("HIPAA");
+
+        assertTrue("HIPAA tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    }
+
 }

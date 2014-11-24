@@ -284,7 +284,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickCloseVulnerabilitiesButton();
 
         AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
-                .sleepOnArrival(30000)
+                .sleepOnArrival(45000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
@@ -322,7 +322,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(30000)
+                .sleepOnArrival(45000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
@@ -350,14 +350,16 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(30000)
+                .sleepOnArrival(45000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv")
                 .saveCurrentFilterReport(filterName, "snapshotFilterDiv");
 
-        analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
+        analyticsPage.clickAnalyticsLink()
+                .sleepOnArrival(45000)
+                .clickSnapshotTab(false)
                 .selectDropDownReport("Progress By Vulnerability")
                 .loadFilterReport(filterName,"snapshotFilterDiv");
 
@@ -379,14 +381,17 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
     public void mostVulnAppTestFilter() {
         initializeTeamAndAppWithWebInspectScan();
 
-        loginPage.defaultLogin()
+        AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
+                .sleepOnArrival(45000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Most Vulnerable Applications")
                 .expandFieldControlsReport("snapshotFilterDiv")
                 .selectFieldControls("Medium", "snapshotFilterDiv")
                 .expandTeamApplicationFilterReport("snapshotFilterDiv")
                 .addTeamFilterReport(teamName, "snapshotFilterDiv");
+
+        analyticsPage.takeScreenShot();
 
         assertTrue("Info Bar is not present", !driver.findElements(By.id(teamName + appName + "InfoBar")).isEmpty());
         assertTrue("Low Bar is not present", !driver.findElements(By.id(teamName + appName + "LowBar")).isEmpty());
@@ -403,6 +408,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
+                .sleepOnArrival(45000)
                 .clickSnapshotTab(false)
                 .selectDropDownReport("Most Vulnerable Applications")
                 .expandFieldControlsReport("snapshotFilterDiv")
@@ -411,9 +417,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .addTeamFilterReport(teamName, "snapshotFilterDiv")
                 .saveCurrentFilterReport(filterName, "snapshotFilterDiv");
 
-        analyticsPage.clickAnalyticsLink().clickSnapshotTab(false)
+        analyticsPage.clickAnalyticsLink()
+                .sleepOnArrival(45000)
+                .clickSnapshotTab(false)
                 .selectDropDownReport("Most Vulnerable Applications")
                 .loadFilterReport(filterName, "snapshotFilterDiv");
+
+        analyticsPage.takeScreenShot();
 
         assertTrue("Medium Bar shouldn't be present", driver.findElement(By.id(teamName + appName + "MediumBar"))
                 .getAttribute("width").equals("0"));

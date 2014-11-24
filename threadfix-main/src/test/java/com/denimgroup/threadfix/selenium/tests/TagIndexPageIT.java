@@ -90,8 +90,6 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testPCITagPresence() {
-        initializeTeamAndApp();
-
         loginPage.defaultLogin()
                 .clickTagsLink();
 
@@ -100,8 +98,6 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testHIPAATagPresence() {
-        initializeTeamAndApp();
-
         loginPage.defaultLogin()
                 .clickTagsLink();
 
