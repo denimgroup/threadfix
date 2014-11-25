@@ -59,6 +59,14 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage clickEnterpriseTab(Boolean usingD3) {
+        driver.findElementByLinkText("Enterprise").click();
+        if(usingD3){
+            sleep(2500);
+        }
+        return new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage clickRemediationTab(Boolean usingD3) {
         driver.findElementByLinkText("Remediation").click();
         waitForElement(driver.findElementById("complianceFilterDiv"));
@@ -218,6 +226,12 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage selectDropDownReport(String report) {
         new Select(driver.findElementById("reportSnapshotSelect")).selectByVisibleText(report);
+        sleep(2000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage selectComplianceType(String type) {
+        new Select(driver.findElements(By.id("complianceTypeSelect")).get(1)).selectByVisibleText(type);
         sleep(2000);
         return new AnalyticsPage(driver);
     }
