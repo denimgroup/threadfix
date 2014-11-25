@@ -42,11 +42,9 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testAttachTagToApp() {
         initializeTeamAndApp();
-        String tagName = getName();
+        String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
@@ -65,28 +63,12 @@ public class TagDetailPageIT extends BaseDataTest {
     public void testCorrectNumberofApps() {
         initializeTeamAndApp();
         String appName2 = createApplication(teamName);
-        String tagName = getName();
+        String tagName = createTag();
+        DatabaseUtils.attachAppToTag(tagName,appName,teamName);
+        DatabaseUtils.attachAppToTag(tagName,appName2,teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+        TagDetailPage tagDetailPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(tagName)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(tagName)
-                .clickModalSubmit();
-
-        ApplicationDetailPage applicationDetailPage1 = applicationDetailPage.clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName2,teamName);
-
-        applicationDetailPage1.clickEditDeleteBtn()
-                .attachTag(tagName)
-                .clickModalSubmit();
-
-        TagDetailPage tagDetailPage = applicationDetailPage1.clickTagsLink()
                 .clickTagName(tagName);
 
         assertTrue("The number of apps attached is incorrect", tagDetailPage.getNumberofAttachedApps().equals("2"));
@@ -95,11 +77,9 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testAttachTagToComment() {
         initializeTeamAndAppWithIBMScan();
-        String tagName = getName();
+        String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
@@ -120,11 +100,9 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testCorrectNumberofComments() {
         initializeTeamAndAppWithIBMScan();
-        String tagName = getName();
+        String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
@@ -150,43 +128,25 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testAppLinkNavigation() {
         initializeTeamAndApp();
-        String tagName = getName();
+        String tagName = createTag();
+        DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(tagName)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(tagName)
-                .clickModalSubmit();
-
-        ApplicationDetailPage applicationDetailPage1 = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName)
                 .clickAppName(appName);
 
-        assertTrue("Application navigation failed.", applicationDetailPage1.isApplicationNameCorrect(appName));
+        assertTrue("Application navigation failed.", applicationDetailPage.isApplicationNameCorrect(appName));
     }
 
     @Test
     public void testTeamLinkNavigation() {
         initializeTeamAndApp();
-        String tagName = getName();
+        String tagName = createTag();
+        DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(tagName)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(tagName)
-                .clickModalSubmit();
-
-        TeamDetailPage teamDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName(tagName)
                 .clickTeamName(teamName);
 
@@ -196,11 +156,9 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testCommentTagLinkNavigation() {
         initializeTeamAndAppWithIBMScan();
-        String tagName = getName();
+        String tagName = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
@@ -220,13 +178,10 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testUpdateCommentTag() {
         initializeTeamAndAppWithIBMScan();
-        String tagName = getName();
-        String tagName2 = getName();
+        String tagName = createTag();
+        String tagName2 = createTag();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
-                .createNewTag(tagName2)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
@@ -259,20 +214,13 @@ public class TagDetailPageIT extends BaseDataTest {
     @Test
     public void testTagHeaderNavigation() {
         initializeTeamAndApp();
-        String tagName = getName();
+        String tagName = createTag();
+        DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(tagName)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(tagName)
-                .clickModalSubmit();
-
-        applicationDetailPage.refreshPage();
 
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagHeader("0");
 

@@ -51,11 +51,10 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testDeleteTag() {
-        String tagName = getName();
+        String tagName = createTag();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(tagName)
                 .deleteTag(tagName);
 
         assertTrue("Tag was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
@@ -63,12 +62,11 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testEditTag() {
-        String tagName = getName();
+        String tagName = createTag();
         String newName = getName();
 
         TagIndexPage tagIndexPage = loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(tagName)
                 .editTagName(tagName,newName);
 
         assertTrue("Old tag name was not deleted properly", !tagIndexPage.isTagNameLinkPresent(tagName));
@@ -77,45 +75,32 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testTagNameNavigation() {
-        String tagName = getName();
+        String tagName = createTag();
 
         loginPage.defaultLogin()
                 .clickTagsLink()
-                .createNewTag(tagName)
                 .clickTagName(tagName);
 
         assertTrue("Tag name did not navigate correctly",
                 driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
     }
 
+    //TODO Remove extra navigation when issue is closed in JIRA for generation of PCI and HIPAA Tags
     @Test
     public void testPCITagPresence() {
-        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+        loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickTagsLink();
-
-        int i = 0;
-
-        while(driver.findElements(By.linkText("PCI")).isEmpty() && i < 5) {
-            tagIndexPage.refreshPage();
-            i++;
-        }
 
         assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
     }
 
+    //TODO Remove extra navigation when issue is closed in JIRA for generation of PCI and HIPAA Tags
     @Test
     public void testHIPAATagPresence() {
-        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+        loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickTagsLink();
-
-        int i = 0;
-
-        while(driver.findElements(By.linkText("HIPAA")).isEmpty() && i < 5) {
-            tagIndexPage.refreshPage();
-            i++;
-        }
 
         assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
     }

@@ -43,6 +43,7 @@ public class TagIndexPage extends BasePage{
 
     public TagIndexPage deleteTag(String name) {
         driver.findElementById("editTagModalButton" + name).click();
+        waitForElement(driver.findElementById("deleteTagButton"));
         driver.findElementById("deleteTagButton").click();
         driver.switchTo().alert().accept();
         sleep(1000);
