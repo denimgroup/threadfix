@@ -284,6 +284,7 @@ public class TagDetailPageIT extends BaseDataTest {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);
@@ -303,6 +304,7 @@ public class TagDetailPageIT extends BaseDataTest {
         initializeTeamAndApp();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName,teamName);

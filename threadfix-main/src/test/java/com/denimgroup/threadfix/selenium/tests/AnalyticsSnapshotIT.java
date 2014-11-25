@@ -393,9 +393,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .sleepOnArrival(35000)
                 .clickSnapshotTab(false)
-                .sleepOnArrival(15000)
+                .sleepOnArrival(35000)
                 .selectDropDownReport("Most Vulnerable Applications")
                 .expandFieldControlsReport("snapshotFilterDiv")
                 .selectFieldControls("Medium", "snapshotFilterDiv")
@@ -419,9 +419,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .sleepOnArrival(35000)
                 .clickSnapshotTab(false)
-                .sleepOnArrival(15000)
+                .sleepOnArrival(35000)
                 .selectDropDownReport("Most Vulnerable Applications")
                 .expandFieldControlsReport("snapshotFilterDiv")
                 .selectFieldControls("Medium", "snapshotFilterDiv")
@@ -430,9 +430,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .saveCurrentFilterReport(filterName, "snapshotFilterDiv");
 
         analyticsPage.clickAnalyticsLink()
-                .sleepOnArrival(15000)
+                .sleepOnArrival(35000)
                 .clickSnapshotTab(false)
-                .sleepOnArrival(15000)
+                .sleepOnArrival(35000)
                 .selectDropDownReport("Most Vulnerable Applications")
                 .loadFilterReport(filterName, "snapshotFilterDiv");
 

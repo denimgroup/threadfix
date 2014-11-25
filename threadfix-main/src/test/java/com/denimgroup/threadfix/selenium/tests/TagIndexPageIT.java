@@ -90,17 +90,33 @@ public class TagIndexPageIT extends BaseDataTest{
 
     @Test
     public void testPCITagPresence() {
-        loginPage.defaultLogin()
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
                 .clickTagsLink();
+
+        int i = 0;
+
+        while(driver.findElements(By.linkText("PCI")).isEmpty() && i < 5) {
+            tagIndexPage.refreshPage();
+            i++;
+        }
 
         assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
     }
 
     @Test
     public void testHIPAATagPresence() {
-        loginPage.defaultLogin()
+        TagIndexPage tagIndexPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
                 .clickTagsLink();
 
-        assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
+        int i = 0;
+
+        while(driver.findElements(By.linkText("HIPAA")).isEmpty() && i < 5) {
+            tagIndexPage.refreshPage();
+            i++;
+        }
+
+        assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
     }
 }
