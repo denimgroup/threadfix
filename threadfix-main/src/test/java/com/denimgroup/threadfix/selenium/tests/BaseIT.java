@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.selenium.tests;
 import com.denimgroup.threadfix.selenium.pages.LoginPage;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.easymock.internal.RuntimeExceptionWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
@@ -34,8 +33,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
-import javax.xml.crypto.Data;
 
 
 public abstract class BaseIT {
