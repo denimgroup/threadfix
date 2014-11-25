@@ -67,6 +67,18 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
+    public static void createTag(String tagName) {
+        RestResponse<Tag> response = CLIENT.createTag(tagName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
+    public static void attachAppToTag(String tagName, String appName, String teamName) {
+        RestResponse<Tag> response = CLIENT.attachAppToTag(tagName, appName, teamName);
+
+        assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
+    }
+
     public static void createWaf(String wafName, String type) {
         RestResponse<Waf> response = CLIENT.createWaf(wafName, type);
 

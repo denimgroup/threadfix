@@ -35,6 +35,8 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import javax.xml.crypto.Data;
+
 
 public abstract class BaseIT {
 	protected WebDriver driver;
@@ -162,4 +164,12 @@ public abstract class BaseIT {
         DatabaseUtils.createRole(roleName, true);
         return roleName;
     }
+
+    protected String createTag() {
+        String tagName = getName();
+        DatabaseUtils.createTag(tagName);
+        return tagName;
+    }
+
+
 }
