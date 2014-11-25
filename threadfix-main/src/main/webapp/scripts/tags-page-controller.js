@@ -63,6 +63,8 @@ module.controller('TagsPageController', function($scope, $http, $modal, $log, tf
     }
 
     $scope.openEditModal = function(tag) {
+        if (tag.enterpriseTag)
+            return;
         var modalInstance = $modal.open({
             templateUrl: 'editTagModal.html',
             controller: 'ModalControllerWithConfig',

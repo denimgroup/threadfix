@@ -73,9 +73,7 @@ public class ReportsController {
 	private ReportsService reportsService;
     @Autowired
 	private VulnerabilityService vulnerabilityService;
-    @Autowired(required = false)
-    private EnterpriseTagService enterpriseTagService;
-	
+
 	private SecureRandom random;
 
 	@ModelAttribute("organizationList")
@@ -104,9 +102,6 @@ public class ReportsController {
         boolean isEnterprise = EnterpriseTest.isEnterprise();
         model.addAttribute("isEnterprise", isEnterprise);
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_MANAGE_TAGS);
-
-        if (isEnterprise)
-            enterpriseTagService.insertTags();
 
 		return "reports/index";
 	}
