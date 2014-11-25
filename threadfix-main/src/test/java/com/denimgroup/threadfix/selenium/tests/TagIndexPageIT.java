@@ -85,21 +85,17 @@ public class TagIndexPageIT extends BaseDataTest{
                 driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
     }
 
-    //TODO Remove extra navigation when issue is closed in JIRA for generation of PCI and HIPAA Tags
     @Test
     public void testPCITagPresence() {
         loginPage.defaultLogin()
-                .clickAnalyticsLink()
                 .clickTagsLink();
 
         assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
     }
 
-    //TODO Remove extra navigation when issue is closed in JIRA for generation of PCI and HIPAA Tags
     @Test
     public void testHIPAATagPresence() {
         loginPage.defaultLogin()
-                .clickAnalyticsLink()
                 .clickTagsLink();
 
         assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
