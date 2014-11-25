@@ -28,15 +28,25 @@ import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.importer.interop.ChannelImporter;
 import com.denimgroup.threadfix.importer.interop.ChannelImporterFactory;
-import com.denimgroup.threadfix.importer.loader.AnnotationKeyGenerator;
-import com.denimgroup.threadfix.importer.loader.ImplementationLoader;
+import com.denimgroup.threadfix.importer.loader.ScannerTypeLoader;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 
 @Service
 class ChannelImporterFactoryImpl implements ChannelImporterFactory {
 
-    ImplementationLoader<ScanImporter, ChannelImporter> loader = null;
+    private static final SanitizedLogger LOG = new SanitizedLogger(ChannelImporterFactoryImpl.class);
+
+    Map<String, Class<?>> classMap = newMap();
+
+    boolean initialized = false;
 
     @Override
     @Transactional
@@ -48,14 +58,37 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
             return null;
         }
 
-        if (loader == null) {
+        if (!initialized) {
             init();
-            assert loader != null : "Initialization failed.";
+            assert initialized : "Initialization failed.";
         }
 
         String scannerName = applicationChannel.getChannelType().getName();
 
-        ChannelImporter importer = loader.getImplementation(scannerName);
+        Class<?> channelImporterClass = classMap.get(scannerName);
+
+        ChannelImporter importer;
+
+        try {
+            assert channelImporterClass != null : "Got null class for key " + scannerName;
+
+            Constructor<?>[] constructors = channelImporterClass.getConstructors();
+
+            assert constructors.length == 1 : "Got " + constructors.length + " constructors.";
+
+            Object maybeImporter = constructors[0].newInstance();
+
+            if (maybeImporter instanceof ChannelImporter) {
+                importer = (ChannelImporter) maybeImporter;
+            } else {
+                throw new IllegalStateException(channelImporterClass +
+                        " didn't implement ChannelImporter. Fix your code and try again.");
+            }
+
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e);
+        }
 
         importer.setChannel(applicationChannel);
 
@@ -63,15 +96,12 @@ class ChannelImporterFactoryImpl implements ChannelImporterFactory {
     }
 
     private void init() {
+        Map<ScanImporter, Class<?>> map = ScannerTypeLoader.getMap();
 
-        loader = new ImplementationLoader<>(ScanImporter.class,
-                ChannelImporter.class,
-                "com.denimgroup.threadfix.importer.impl.upload",
-                new AnnotationKeyGenerator<ScanImporter>() {
-            @Override
-            public String getKey(ScanImporter annotation) {
-                return annotation.scannerName();
-            }
-        });
+        for (Map.Entry<ScanImporter, Class<?>> entry : map.entrySet()) {
+            classMap.put(entry.getKey().scannerName(), entry.getValue());
+        }
+
+        initialized = true;
     }
 }

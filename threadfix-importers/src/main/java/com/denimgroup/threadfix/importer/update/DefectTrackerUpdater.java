@@ -21,19 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.update.impl;
+package com.denimgroup.threadfix.importer.update;
 
-import com.denimgroup.threadfix.annotations.MappingsUpdater;
 import com.denimgroup.threadfix.data.dao.DefectTrackerTypeDao;
 import com.denimgroup.threadfix.data.entities.DefectTrackerType;
-import com.denimgroup.threadfix.importer.update.Updater;
-import com.denimgroup.threadfix.importer.update.UpdaterConstants;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Nonnull;
 import java.io.BufferedReader;
@@ -42,9 +37,8 @@ import java.io.IOException;
 /**
  * Created by mac on 9/12/14.
  */
-@MappingsUpdater
 @Service
-public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements Updater, Ordered {
+class DefectTrackerUpdater implements Updater {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DefectTrackerUpdater.class);
     @Autowired
@@ -92,8 +86,4 @@ public class DefectTrackerUpdater extends SpringBeanAutowiringSupport implements
         return UpdaterConstants.DEFECT_TRACKERS_FOLDER;
     }
 
-    @Override
-    public int getOrder() {
-        return 400;
-    }
 }

@@ -24,7 +24,10 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
+import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.xml.sax.InputSource;
@@ -40,9 +43,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 
-public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
+public abstract class RemoteProvider extends AbstractChannelImporter {
 
-	public AbstractRemoteProvider(ScannerType scannerType) {
+	public RemoteProvider(ScannerType scannerType) {
 		super(scannerType);
 	}
 
@@ -104,19 +107,5 @@ public abstract class AbstractRemoteProvider extends AbstractChannelImporter {
                 LOG.error("Failed to close the input stream in RemoteProvider.", e);
             }
         }
-    }
-
-    protected String getAuthenticationFieldValue(String key) {
-
-        assert remoteProviderType != null : "Remote Provider type was null, can't continue.";
-
-        for (RemoteProviderAuthenticationField field : remoteProviderType.getAuthenticationFields()) {
-            if (key.equals(field.getName())) {
-                return field.getValue();
-            }
-        }
-
-        assert false : "Didn't find a value for " + key;
-        return null;
     }
 }
