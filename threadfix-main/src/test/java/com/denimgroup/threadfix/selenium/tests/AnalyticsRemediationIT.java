@@ -43,33 +43,26 @@ public class AnalyticsRemediationIT extends BaseDataTest {
     private AnalyticsPage analyticsPage;
     private ApplicationDetailPage applicationDetailPage;
 
-    public void initialize() {
+    public String initialize() {
         initializeTeamAndAppWithIBMScan();
+        String tagName = createTag();
+        DatabaseUtils.attachAppToTag(tagName,appName,teamName);
 
-        applicationDetailPage = loginPage.defaultLogin()
-                .clickTagsLink()
-                .createNewTag(appName)
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName,teamName);
-
-        applicationDetailPage.clickEditDeleteBtn()
-                .attachTag(appName)
-                .clickModalSubmit();
-
-        analyticsPage = applicationDetailPage.clickAnalyticsLink()
+        analyticsPage = loginPage.defaultLogin()
+                .clickAnalyticsLink()
                 .sleepOnArrival(15000)
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
-                .addTagFilter(appName,"complianceFilterDiv")
+                .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever","complianceFilterDiv");
 
+        return tagName;
     }
 
     @Test
     public void checkStartingEndingCount() {
-        initialize();
+        String tagName = initialize();
 
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("OWASP Zed Attack Proxy"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
@@ -77,7 +70,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
         analyticsPage.clickAnalyticsLink()
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
-                .addTagFilter(appName,"complianceFilterDiv")
+                .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv");
 
@@ -116,7 +109,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
     @Test
     public void testClosedVulns() {
-        initialize();
+        String tagName = initialize();
 
         analyticsPage.clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
@@ -129,7 +122,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .sleepOnArrival(15000)
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
-                .addTagFilter(appName,"complianceFilterDiv")
+                .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv");
 
@@ -141,7 +134,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
 
     @Test
     public void attachComment() {
-        initialize();
+        String tagName = initialize();
         String testComment = getName();
 
         analyticsPage.clickViewMore("0").clickAddComment()
@@ -150,7 +143,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .clickAnalyticsLink()
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
-                .addTagFilter(appName,"complianceFilterDiv")
+                .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
                 .toggleAgingFilterReport("Forever", "complianceFilterDiv")
                 .expandVulnComments("0");
