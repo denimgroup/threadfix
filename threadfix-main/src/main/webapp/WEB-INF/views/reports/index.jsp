@@ -14,6 +14,7 @@
     <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vulnerability-comments-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
 </head>
 
 <body id="reports">

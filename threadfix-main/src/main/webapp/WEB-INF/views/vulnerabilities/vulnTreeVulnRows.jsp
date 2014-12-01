@@ -78,7 +78,7 @@
         <div id="commentDiv{{ $index }}" >
             <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
         </div>
-        <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability)">Add Comment</a>
+        <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability, tags)">Add Comment</a>
     </div>
 
     <!-- Documents body -->
