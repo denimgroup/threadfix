@@ -33,6 +33,56 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         return filteredVulns;
     };
 
+    $scope.showSubmitGrcControlModal = function() {
+
+        var filteredVulns = getFilteredVulns();
+
+        if (filteredVulns.length === 0) {
+            alert('You must select at least one vulnerability.');
+            return;
+        }
+
+        filteredVulns = filteredVulns.filter(function(vuln) {
+            return !vuln.grcControlRecord;
+        });
+
+        if (filteredVulns.length === 0) {
+            alert('All of the selected vulnerabilities already have control records.');
+            return;
+        }
+
+        var modalInstance = $modal.open({
+//            templateUrl: 'submitGrcControlRecordLoadingModal.html',
+//            controller: 'GRCControlSubmissionModalController',
+            resolve: {
+                url: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/controlRecords");
+                },
+                configUrl: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/controlRecordSubmission");
+                },
+                object: function () {
+                    return {};
+                },
+                config: function() {
+                    return {
+                        vulns: filteredVulns,
+                        typeName: getApplication().grcTool.grcToolType.name
+                    }
+                }
+            }
+        });
+
+        $scope.currentModal = modalInstance;
+
+        modalInstance.result.then(function (s) {
+            $scope.refresh();
+            $rootScope.$broadcast('successMessage', "Successfully submitted the Control Record: " + s);
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
     $scope.showSubmitDefectModal = function() {
 
         var filteredVulns = getFilteredVulns();
