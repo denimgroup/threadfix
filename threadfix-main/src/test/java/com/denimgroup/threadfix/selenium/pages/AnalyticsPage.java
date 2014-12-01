@@ -226,7 +226,7 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage selectDropDownReport(String report) {
         new Select(driver.findElementById("reportSnapshotSelect")).selectByVisibleText(report);
-        sleep(2000);
+        sleep(4000);
         return new AnalyticsPage(driver);
     }
 

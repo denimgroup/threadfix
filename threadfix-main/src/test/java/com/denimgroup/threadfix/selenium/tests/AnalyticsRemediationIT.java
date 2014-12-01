@@ -51,11 +51,13 @@ public class AnalyticsRemediationIT extends BaseDataTest {
         analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .sleepOnArrival(15000)
-                .clickRemediationTab(false)
+                .clickRemediationTab(true)
+                .sleepOnArrival(3000)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever","complianceFilterDiv");
+                .toggleAgingFilterReport("Forever","complianceFilterDiv")
+                .sleepOnArrival(2000);
 
         return tagName;
     }
@@ -141,7 +143,7 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .setCommentText(testComment)
                 .clickSubmitComment()
                 .clickAnalyticsLink()
-                .clickRemediationTab(false)
+                .clickRemediationTab(true)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilterReport("complianceFilterDiv")

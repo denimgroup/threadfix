@@ -84,20 +84,4 @@ public class TagIndexPageIT extends BaseDataTest{
         assertTrue("Tag name did not navigate correctly",
                 driver.findElement(By.linkText("Back to Tags Page")).isEnabled());
     }
-
-    @Test
-    public void testPCITagPresence() {
-        loginPage.defaultLogin()
-                .clickTagsLink();
-
-        assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
-    }
-
-    @Test
-    public void testHIPAATagPresence() {
-        loginPage.defaultLogin()
-                .clickTagsLink();
-
-        assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
-    }
 }

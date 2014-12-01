@@ -21,12 +21,14 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.selenium.tests;
+package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
+import com.denimgroup.threadfix.selenium.pages.TagDetailPage;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -38,10 +40,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(CommunityTests.class)
-public class AnalyticsEnterpriseIT  extends BaseDataTest {
+public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
-    public void testAttachPCITag() {
+    public void testUtilsAttachPCITag() {
         initializeTeamAndAppWithIBMScan();
         DatabaseUtils.attachAppToTag("PCI",appName,teamName);
 
@@ -52,7 +54,7 @@ public class AnalyticsEnterpriseIT  extends BaseDataTest {
     }
 
     @Test
-    public void testAttachHIPAATag() {
+    public void testUtilsAttachHIPAATag() {
         initializeTeamAndAppWithIBMScan();
         DatabaseUtils.attachAppToTag("HIPAA",appName,teamName);
 
@@ -60,5 +62,59 @@ public class AnalyticsEnterpriseIT  extends BaseDataTest {
                 .clickAnalyticsLink()
                 .clickEnterpriseTab(true)
                 .selectComplianceType("HIPAA");
+    }
+
+    @Test
+    public void testManuallyAttachPCITagtoApp() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag("PCI")
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName("PCI");
+
+        assertTrue("PCI tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    }
+
+    @Test
+    public void testManuallyAttachHIPAATagtoApp() {
+        initializeTeamAndApp();
+
+        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName);
+
+        applicationDetailPage.clickEditDeleteBtn()
+                .attachTag("HIPAA")
+                .clickModalSubmit();
+
+        TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
+                .clickTagName("HIPAA");
+
+        assertTrue("HIPAA tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
+    }
+
+    @Test
+    public void testPCITagPresence() {
+        loginPage.defaultLogin()
+                .clickTagsLink();
+
+        assertTrue("PCI Tag not on page", driver.findElement(By.linkText("PCI")).isDisplayed());
+    }
+
+    @Test
+    public void testHIPAATagPresence() {
+        loginPage.defaultLogin()
+                .clickTagsLink();
+
+        assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
     }
 }
