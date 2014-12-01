@@ -21,24 +21,19 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
+package com.denimgroup.threadfix.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Created by mac on 6/2/14.
+ * Created by mac on 11/18/14.
  */
-public interface RemoteProviderHttpUtils {
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RemoteProvider {
 
-    HttpResponse getUrl(String url);
-
-    HttpResponse getUrl(String url, String username, String password);
-
-    HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password,
-                         String[] headerNames, String[] headerVals);
-
+    String name();
 }

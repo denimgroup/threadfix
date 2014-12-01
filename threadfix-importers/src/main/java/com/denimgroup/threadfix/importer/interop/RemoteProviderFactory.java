@@ -26,15 +26,13 @@ package com.denimgroup.threadfix.importer.interop;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.RemoteProvider;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.AbstractRemoteProvider;
 
 import java.util.List;
 
 public interface RemoteProviderFactory {
 
 	public List<RemoteProviderApplication> fetchApplications(RemoteProviderType remoteProviderType);
-	
-	public RemoteProvider getProvider(String providerType);
 
 	/**
 	 * This method takes a remoteProviderApplication and does the rest of the work of getting

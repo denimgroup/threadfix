@@ -29,7 +29,7 @@ import java.io.IOException;
 /**
  * Created by mac on 9/12/14.
  */
-interface Updater {
+public interface Updater {
 
     void doUpdate(String fileName, BufferedReader bufferedReader) throws IOException;
 

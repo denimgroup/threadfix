@@ -23,23 +23,22 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
+import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.GenericVulnerability;
+import com.denimgroup.threadfix.data.entities.WafType;
 
 /**
  * @author bbeverly
  * @author mcollins
  * 
  */
+@WebApplicationFirewall(name = WafType.MOD_SECURITY)
 public class ModSecurityWafGenerator extends RealTimeProtectionGenerator {	
 	public static final String RULE_START_URI = "SecRule REQUEST_URI \"^";
 	
 	public static final String MOD_SECURITY_PATH_TRAVERSAL = ".|\\%2e";
 	
-	public ModSecurityWafGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
-		this.wafRuleDao = wafRuleDao;
-		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
+	public ModSecurityWafGenerator(){
 		this.defaultDirective = "deny";
 		PAYLOAD_MAP.put(GenericVulnerability.CWE_PATH_TRAVERSAL, MOD_SECURITY_PATH_TRAVERSAL);
 	}
