@@ -45,7 +45,7 @@ import java.util.Map;
 @ScanImporter(
         scannerName = ScannerDatabaseNames.APPSCAN_ENTERPRISE_DB_NAME,
         startingXMLTags = { "report", "control", "row" })
-class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
+public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {

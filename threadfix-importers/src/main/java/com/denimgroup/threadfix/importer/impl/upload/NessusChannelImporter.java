@@ -56,27 +56,27 @@ import java.util.regex.Pattern;
  * @author mcollins
  */
 @ScanImporter(scannerName = ScannerDatabaseNames.NESSUS_DB_NAME, startingXMLTags = {"NessusClientData_v2"})
-class NessusChannelImporter extends AbstractChannelImporter {
-	
+public class NessusChannelImporter extends AbstractChannelImporter {
+
 	private static final String SIMPLE_HTTP_REGEX = "(http[^\n]*)";
 	private static final String URL_COLON_REGEX   = "URL  : ([^\n]*)\n";
 	private static final String PAGE_COLON_REGEX  = "Page : ([^\n]*)\n";
-	
+
 	private static final String CSRF_PATH_START = "The following CGIs are not protected by a random token :";
 	private static final String CSRF_VULN_CODE = "56818";
-	
+
 	private static final String INPUT_NAME_COLON_PARAM_REGEX = "Input name : ([^\n]*)\n";
-	
-	private static final List<String> SSL_VULNS = 
+
+	private static final List<String> SSL_VULNS =
 			Arrays.asList("26928", "60108", "57620", "53360", "42873", "35291");
-	
+
 	private static final Map<String,String> PATH_PARSE_MAP = new HashMap<>();
 	static {
 		PATH_PARSE_MAP.put("26194", PAGE_COLON_REGEX);
 		PATH_PARSE_MAP.put("11411", URL_COLON_REGEX);
 		PATH_PARSE_MAP.put("40984", SIMPLE_HTTP_REGEX);
 	}
-	
+
 	private static final Map<String,String> PARAM_PARSE_MAP = new HashMap<>();
 	static {
 		PARAM_PARSE_MAP.put("26194", INPUT_NAME_COLON_PARAM_REGEX);
@@ -90,7 +90,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	public Scan parseInput() {
 		return parseSAXInput(new NessusSAXParser());
 	}
-	
+
 	public class NessusSAXParser extends HandlerWithBuilder {
 		private Boolean getDate               = false;
 		private Boolean getFindings           = false;
@@ -100,7 +100,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
         private Boolean getScannerRecommendation = false;
         private Boolean inFinding = false;
         private Boolean getCwe = false;
-	
+
 		private String currentChannelVulnCode = null;
 		private String currentSeverityCode    = null;
 		private String host                   = null;
@@ -110,12 +110,12 @@ class NessusChannelImporter extends AbstractChannelImporter {
         private String cwe = null;
 
         Map<FindingKey, String> findingMap = new HashMap<>();
-		
+
 		private String pluginOutputString = null;
-		
+
 		private String infoLineParamRegex = "\\+ The '([^&]+)' parameter of the [^ ]+ CGI :";
 		private String infoLinePathRegex = "\\+ The '[^&]+' parameter of the ([^ ]+) CGI :";
-					    
+
 	    public void add(Finding finding) {
 			if (finding != null) {
     			finding.setNativeId(getNativeId(finding));
@@ -125,12 +125,12 @@ class NessusChannelImporter extends AbstractChannelImporter {
                 }
     		}
 	    }
-	    
+
 	    //Once the entire string has been taken out of characters(), parse it
 	    public void parseFindingString() {
 	    	if (pluginOutputString == null)
 	    		return;
-	    	
+
 	    	String stringResult = pluginOutputString;
 	    	if (stringResult.trim().isEmpty())
 	    		return;
@@ -144,7 +144,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    	} else {
 	    		parseGenericPattern(stringResult);
 	    	}
-	    	
+
     		currentChannelVulnCode = null;
     		currentSeverityCode = null;
             cwe = null;
@@ -162,11 +162,11 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    		}
 	    	}
 	    }
-	    
+
 	    private void parseRegexMatchesAndAdd(String stringResult) {
 	    	String paramRegex = null,    pathRegex  = PATH_PARSE_MAP.get(currentChannelVulnCode);
     		Matcher paramMatcher = null, pathMatcher = Pattern.compile(pathRegex).matcher(stringResult);
-    		
+
     		if (PARAM_PARSE_MAP.containsKey(currentChannelVulnCode)) {
     			paramRegex = PARAM_PARSE_MAP.get(currentChannelVulnCode);
     			paramMatcher = Pattern.compile(paramRegex).matcher(stringResult);
@@ -178,31 +178,31 @@ class NessusChannelImporter extends AbstractChannelImporter {
     			if (paramMatcher != null && paramMatcher.find(pathMatcher.start())) {
     				param = paramMatcher.group(1);
     			}
-    				
+
     			String path = pathMatcher.group(1);
-    			
+
     			if (path != null && host != null && !path.startsWith("http"))
     				path = host + path;
-    			
+
 	    		add(createFinding(path, param));
     		}
 	    }
-	    
+
 	    private void parseGenericPattern(String stringResult) {
 	    	String param = "", path = "/";
 
             if (stringResult.contains("\n")) {
 	    		String [] lines = stringResult.split("\n");
-	    		
+
 	    		for (String line : lines) {
-	    			
+
 	    			if (line == null || !line.contains("+ The '")) {
 	    				continue;
 	    			}
-	    			
+
 	    			param = RegexUtils.getRegexResult(line, infoLineParamRegex);
 	    			path = RegexUtils.getRegexResult(line,infoLinePathRegex);
-	    			
+
 	    			if (path != null && host != null && !path.startsWith("http"))
 	    				path = host + path;
 
@@ -230,7 +230,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
-	    
+
 	    public void startElement (String uri, String name,
 				      String qName, Attributes atts)
 	    {
@@ -274,15 +274,15 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    		getFindings = false;
 	    	} else if (getNameText) {
 	    		String text = getBuilderText();
-	    		
+
 	    		if ("TARGET".equals(text)) {
 	    			getHost = true;
 	    		}
-	    		
+
 	    		getNameText = false;
 	    	} else if (getHost) {
 	    		String text = getBuilderText();
-	    		
+
 	    		if (text != null && text.startsWith("http")) {
 	    			host = text;
 	    			if (host.charAt(host.length()-1) == '/') {
@@ -315,7 +315,7 @@ class NessusChannelImporter extends AbstractChannelImporter {
                 currentRawFinding.setLength(0);
             }
 	    }
-	    
+
 	    public void characters (char ch[], int start, int length) {
 	    	if (getDate || getFindings || getNameText || getHost || getScannerDetail || getScannerRecommendation || getCwe) {
 	    		addTextToBuilder(ch, start, length);
@@ -348,25 +348,25 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	public ScanCheckResultBean checkFile() {
 		return testSAXInput(new NessusSAXValidator());
 	}
-	
+
 	public class NessusSAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
 		private boolean correctFormat = false;
 		private boolean getDate = false;
-		
+
 		private boolean clientDataTag = false;
 		private boolean reportTag = false;
-		
+
 	    private void setTestStatus() {
 	    	correctFormat = clientDataTag && reportTag;
-	    	
+
 	    	if (!correctFormat) {
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	} else if (hasDate) {
 	    		testStatus = checkTestDate();
 	    	}
-	    	
+
 	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
 	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	} else if (testStatus == null) {
@@ -377,12 +377,12 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    ////////////////////////////////////////////////////////////////////
 	    // Event handlers.
 	    ////////////////////////////////////////////////////////////////////
-	    
+
 	    public void endDocument() {
 	    	setTestStatus();
 	    }
 
-	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
+	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {
 	    	if ("NessusClientData_v2".equals(qName)) {
 	    		clientDataTag = true;
 	    	} else if ("Report".equals(qName)) {
@@ -395,18 +395,18 @@ class NessusChannelImporter extends AbstractChannelImporter {
 	    		getDate = true;
 	    	}
 	    }
-	    
+
 	    public void endElement(String uri, String name, String qName) {
 	    	if (getDate) {
 	    		String tempDateString = getBuilderText();
 	    		testDate = DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);
-	    		
+
 	    		hasDate = testDate != null;
-	    		
+
 	    		getDate = false;
 	    	}
 	    }
-	    
+
 	    public void characters (char ch[], int start, int length) {
 	    	if (getDate) {
 	    		addTextToBuilder(ch, start, length);

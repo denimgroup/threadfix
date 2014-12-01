@@ -55,7 +55,7 @@ import java.util.Set;
                 @StartingTagSet({"OWASPZAPReport", "site", "alerts"})
         }
 )
-class ZaproxyChannelImporter extends AbstractChannelImporter {
+public class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 	private static final String SQL_INJECTION = "SQL Injection", XSS = "Cross Site Scripting";
 

@@ -55,7 +55,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
         scannerName = ScannerDatabaseNames.SSVL_DB_NAME,
         startingXMLTags = { "Vulnerabilities", "Vulnerability" }
 )
-class SSVLChannelImporter extends AbstractChannelImporter {
+public class SSVLChannelImporter extends AbstractChannelImporter {
 
 	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
 
