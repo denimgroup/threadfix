@@ -5,6 +5,7 @@
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/config/remoteproviders/configure.jsp" %>
     <%@ include file="/WEB-INF/views/config/remoteproviders/editMapping.jsp" %>
+    <%@ include file="/WEB-INF/views/config/remoteproviders/editRemoteProviderApplicationName.jsp" %>
 
     <div id="helpText">
         Remote Providers are links to services which
@@ -120,6 +121,9 @@
             <thead>
             <tr>
                 <th class="medium first">Name / ID</th>
+                <c:if test="${ canManageRemoteProviders }">
+                    <th class="medium"></th>
+                </c:if>
                 <th class="medium">Team</th>
                 <th class="medium">Application</th>
                 <c:if test="${ canManageRemoteProviders }">
@@ -132,8 +136,13 @@
 
             <tr ng-repeat="app in provider.displayApps">
                 <td id="provider{{ provider.id }}appid{{ app.id }}">
-                    {{ app.nativeName }}
+                    {{ app.customName || app.nativeName }}
                 </td>
+                <c:if test="${ canManageRemoteProviders }">
+                    <td>
+                        <a id="provider{{ provider.id }}updateName{{ $index }}" class="btn" ng-click="openNameModal(provider, app)">Edit Name</a>
+                    </td>
+                </c:if>
                 <td id="provider{{ provider.id }}tfteamname{{ $index }}">
                     <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
                         <a class="pointer" ng-click="goToTeam(app.application.team)">

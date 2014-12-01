@@ -122,6 +122,7 @@
         		protected-regex ^/configuration/remoteproviders/[0-9]+/table$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/configure$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/edit$,
+		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/setName,
                 protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/import$,
 		    	protected-regex ^/configuration/remoteproviders/[0-9]+/apps/[0-9]+/delete/[0-9]+$,
 		    	protected-regex ^/configuration/remoteproviders/scheduledImports/addImport$,
