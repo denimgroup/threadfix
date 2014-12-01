@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -110,7 +109,7 @@ public class Application extends AuditableEntity {
 
 	private GRCTool grcTool;
 
-    private List<GRCApplication> grcApplications;
+    private GRCApplication grcApplication;
 
 	@Size(max = 80, message = "{errors.maxlength} 80.")
 	private String userName;
@@ -430,15 +429,15 @@ public class Application extends AuditableEntity {
 		this.remoteProviderApplications = remoteProviderApplications;
 	}	
 
-    @OneToMany(mappedBy = "application")
-    @JsonIgnore
-	public List<GRCApplication> getGrcApplications() {
-		return grcApplications;
+    @OneToOne(mappedBy = "application")
+    @JsonView(Object.class)
+	public GRCApplication getGrcApplication() {
+		return grcApplication;
 	}
 
-	public void setGrcApplications(
-			List<GRCApplication> grcApplications) {
-		this.grcApplications = grcApplications;
+	public void setGrcApplication(
+			GRCApplication grcApplication) {
+		this.grcApplication = grcApplication;
 	}
 
 	@OneToMany(mappedBy = "application")
