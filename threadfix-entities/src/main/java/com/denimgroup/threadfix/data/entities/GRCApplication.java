@@ -24,7 +24,9 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -84,7 +86,9 @@ public class GRCApplication extends AuditableEntity {
         this.name = name;
     }
 
-    @ManyToOne
+    @OneToOne
+    @JsonBackReference
+    @JsonView(Object.class)
     @JoinColumn(name = "applicationId")
     public Application getApplication() {
         return application;
