@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.framework.impl.dotNet;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,6 +64,11 @@ public class DotNetPathCleaner implements PathCleaner {
     @Override
     public String getDynamicRoot() {
         return null;
+    }
+
+    @Override
+    public void setEndpointGenerator(EndpointGenerator generator) {
+        // we don't care about this
     }
 
     @Nullable
