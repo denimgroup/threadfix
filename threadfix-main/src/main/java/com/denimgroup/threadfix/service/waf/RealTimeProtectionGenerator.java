@@ -23,24 +23,18 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
+import com.denimgroup.threadfix.data.dao.WafRuleDao;
+import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
+import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringEscapeUtils;
-
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.Waf;
-import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
-import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -62,9 +56,11 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  * 	
  */
-public abstract class RealTimeProtectionGenerator {
-	
+public abstract class RealTimeProtectionGenerator extends SpringBeanAutowiringSupport {
+
+	@Autowired
 	protected WafRuleDao wafRuleDao;
+	@Autowired
 	protected WafRuleDirectiveDao wafRuleDirectiveDao;
 	protected final SanitizedLogger log = new SanitizedLogger(this.getClass());
 	

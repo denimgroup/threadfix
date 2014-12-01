@@ -10,7 +10,6 @@ else
     mvn clean install -DskipTests
 fi
 
-VERSION=2.1
 ARTIFACTS_FOLDER=$BUILDING_AREA/artifacts
 
 rm -r $ARTIFACTS_FOLDER

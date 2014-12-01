@@ -57,7 +57,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
                 @StartingTagSet({"report", "version", "options"})
         }
 )
-class ArachniChannelImporter extends AbstractChannelImporter {
+public class ArachniChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = map(
 		"name", FindingKey.VULN_CODE,

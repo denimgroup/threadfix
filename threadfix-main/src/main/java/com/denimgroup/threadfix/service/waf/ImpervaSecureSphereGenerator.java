@@ -24,8 +24,7 @@
 
 package com.denimgroup.threadfix.service.waf;
 
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
+import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.*;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +35,7 @@ import java.util.Map.Entry;
  * @author mcollins
  * 
  */
+@WebApplicationFirewall(name = WafType.IMPERVA_SECURE_SPHERE)
 public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 	
 	// TODO look through CVEs in sm_schema_report_vulns.xsd
@@ -60,10 +60,7 @@ public class ImpervaSecureSphereGenerator extends RealTimeProtectionGenerator {
 		SEVERITIES_MAP.put(GenericSeverity.INFO, "informative");
 	}
 	
-	public ImpervaSecureSphereGenerator(WafRuleDao wafRuleDao, 
-			WafRuleDirectiveDao wafRuleDirectiveDao) {
-		this.wafRuleDao = wafRuleDao;
-		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
+	public ImpervaSecureSphereGenerator() {
 		this.defaultDirective = "-";
 	}
 	

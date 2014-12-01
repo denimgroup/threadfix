@@ -122,10 +122,13 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
     private void initializeMappingsFromAnnotations() {
 
-        Map<ScanImporter, Class<?>> typeMap = ScannerTypeLoader.getMap();
+        Map<Class<?>, ScanImporter> typeMap =
+                AnnotationLoader.getMap(
+                        ScanImporter.class,
+                        "com.denimgroup.threadfix.importer.impl.upload");
 
-        for (Entry<ScanImporter, Class<?>> entry : typeMap.entrySet()) {
-            ScanImporter annotation = entry.getKey();
+        for (Entry<Class<?>, ScanImporter> entry : typeMap.entrySet()) {
+            ScanImporter annotation = entry.getValue();
 
             if (annotation.format() == ScanFormat.XML) {
                 boolean addedEntry = false;
@@ -144,7 +147,6 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
                 }
 
                 assert addedEntry : "Failed to add an XML entry for scanner " + annotation.scannerName();
-
             }
         }
 

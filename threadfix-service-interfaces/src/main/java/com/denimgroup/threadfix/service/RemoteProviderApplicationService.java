@@ -72,7 +72,7 @@ public interface RemoteProviderApplicationService {
 	void deleteApps(RemoteProviderType remoteProviderType);
 
 	/**
-	 * 
+	 *
 	 * @param result
 	 * @param remoteProviderApplication
 	 * @param application
@@ -99,4 +99,6 @@ public interface RemoteProviderApplicationService {
 	 */
 	String deleteMapping(RemoteProviderApplication remoteProviderApplication,
 			int appId);
+
+    String setCustomName(int remoteProviderApplicationId, String customName);
 }

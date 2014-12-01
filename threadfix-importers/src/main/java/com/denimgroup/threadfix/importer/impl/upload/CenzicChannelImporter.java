@@ -50,7 +50,7 @@ import java.util.Map;
         scannerName = ScannerDatabaseNames.CENZIC_HAILSTORM_DB_NAME,
         startingXMLTags = { "Assessments", "AssessmentRunData" }
 )
-class CenzicChannelImporter extends AbstractChannelImporter {
+public class CenzicChannelImporter extends AbstractChannelImporter {
 
     private static final String EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet, Script, or Object",
             DB_EXTERNAL_APPLET_SCRIPT_OBJECT = "External Applet Script or Object";

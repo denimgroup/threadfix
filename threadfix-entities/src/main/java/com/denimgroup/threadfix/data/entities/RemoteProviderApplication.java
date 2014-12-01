@@ -40,7 +40,7 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
 	// Veracode Build numbers / whatever WhiteHat has.
 	// TODO checking on this
-	public static final int NATIVE_ID_LENGTH = 32;
+	public static final int NATIVE_ID_LENGTH = 1024;
 	public static final int NATIVE_NAME_LENGTH = 1024;
 
 	@Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
@@ -48,6 +48,9 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
     @Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
 	private String nativeName;
+
+    @Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
+	private String customName;
 	
 	private RemoteProviderType remoteProviderType;
 	
@@ -119,5 +122,14 @@ public class RemoteProviderApplication extends AuditableEntity  {
 	public void setApplicationChannel(ApplicationChannel applicationChannel) {
 		this.applicationChannel = applicationChannel;
 	}
-	
+
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
 }

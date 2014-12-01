@@ -80,6 +80,11 @@ public class QualysMockHttpUtils implements RemoteProviderHttpUtils {
     }
 
     @Override
+    public HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer) {
+        return getUrl(url);
+    }
+
+    @Override
     public HttpResponse postUrl(String url, String[] parameters, String[] values) {
         return null;
     }

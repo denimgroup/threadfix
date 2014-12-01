@@ -56,7 +56,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
         format = ScanFormat.ZIP,
         zipItems = "audit.fvdl"
 )
-class FortifyChannelImporter extends AbstractChannelImporter {
+public class FortifyChannelImporter extends AbstractChannelImporter {
 
 	// TODO run through more files and determine whether this method is still valuable
 	// or whether we can use only the 'action' parameter and the column parsing.

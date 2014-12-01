@@ -60,7 +60,7 @@ public class ScanComparisonUtils {
     public void compareInternal(String[][] array, String filePath) {
         if (needsUpdating) {
             try {
-                mappingsUpdaterService.updateMappings();
+                mappingsUpdaterService.updateMappings(SpringConfiguration.getContext());
                 System.out.println("Updated mappings.");
                 needsUpdating = false;
             } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException

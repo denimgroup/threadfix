@@ -24,6 +24,8 @@
 
 package com.denimgroup.threadfix.importer.interop;
 
+import org.springframework.context.ApplicationContext;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -57,6 +59,7 @@ public interface ScannerMappingsUpdaterService {
      *
      * @return
      */
+    ScanPluginCheckBean checkPluginJar(ApplicationContext applicationContext);
     ScanPluginCheckBean checkPluginJar();
 
     /**
@@ -65,5 +68,7 @@ public interface ScannerMappingsUpdaterService {
     List<String> getSupportedScanners();
 
     void updateMappings();
+
+    void updateMappings(ApplicationContext applicationContext);
 
 }

@@ -57,7 +57,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
         format = ScanFormat.ZIP,
         zipItems = "issue_index.js"
 )
-class SkipfishChannelImporter extends AbstractChannelImporter {
+public class SkipfishChannelImporter extends AbstractChannelImporter {
 
 	private String folderName;
 	

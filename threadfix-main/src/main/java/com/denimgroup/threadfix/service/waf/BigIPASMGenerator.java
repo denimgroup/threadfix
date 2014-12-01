@@ -23,25 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
-
+import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.dao.WafRuleDao;
 import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.GenericVulnerability;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.entities.WafRule;
-import com.denimgroup.threadfix.data.entities.WafRuleDirective;
+import com.denimgroup.threadfix.data.entities.*;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -54,13 +43,12 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  * @author mcollins
  *
  */
+@WebApplicationFirewall(name = WafType.BIG_IP_ASM)
 public class BigIPASMGenerator extends RealTimeProtectionGenerator {
 	
 	//TODO change structure of getStart / getEnd here and in other classes
 	
-	public BigIPASMGenerator(WafRuleDao wafRuleDao, WafRuleDirectiveDao wafRuleDirectiveDao) {
-		this.wafRuleDao = wafRuleDao;
-		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
+	public BigIPASMGenerator() {
 		defaultDirective = "transparent";
 	}
 	

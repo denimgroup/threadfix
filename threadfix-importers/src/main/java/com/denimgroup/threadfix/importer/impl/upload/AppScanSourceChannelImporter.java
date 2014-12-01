@@ -47,7 +47,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
         scannerName = ScannerDatabaseNames.APPSCAN_SOURCE_DB_NAME,
         startingXMLTags = { "AssessmentRun", "AssessmentStats" }
 )
-class AppScanSourceChannelImporter extends AbstractChannelImporter {
+public class AppScanSourceChannelImporter extends AbstractChannelImporter {
 
 	private static final Map<String, String> REGEX_MAP = new HashMap<>();
 	static {
