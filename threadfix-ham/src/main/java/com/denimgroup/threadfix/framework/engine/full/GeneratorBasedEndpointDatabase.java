@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
+import static com.denimgroup.threadfix.CollectionUtils.setFrom;
 
 class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	
@@ -237,22 +239,22 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
             if ((keyEntry.isEmpty() && !key.isEmpty())
                     || (key.isEmpty() && !keyEntry.isEmpty()))
-                return new HashSet<>();
+                return set();
 
             if (keyEntryForwardSlash.endsWith(keyForwardSlash) || keyForwardSlash.endsWith(keyEntryForwardSlash))
-                return new HashSet<>(entry.getValue());
+                return setFrom(entry.getValue());
         }
 
-        return new HashSet<>();
+        return set();
     }
 
 	@Nonnull
     private Set<Endpoint> getValueOrEmptySetWithSimpleKey(@Nullable String key,
                                              @Nonnull Map<String, Set<Endpoint>> map) {
 		if (key != null && map.containsKey(key) && map.get(key) != null) {
-			return new HashSet<>(map.get(key));
+			return setFrom(map.get(key));
 		} else {
-			return new HashSet<>();
+			return set();
 		}
 	}
 

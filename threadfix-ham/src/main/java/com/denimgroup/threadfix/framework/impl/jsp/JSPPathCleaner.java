@@ -25,6 +25,7 @@
 package com.denimgroup.threadfix.framework.impl.jsp;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
@@ -97,6 +98,11 @@ public class JSPPathCleaner extends DefaultPathCleaner {
     public String toString() {
         return "[JSP PathCleaner dynamicRoot = " +
                 dynamicRoot + ", staticRoot = " + staticRoot + "]";
+    }
+
+    @Override
+    public void setEndpointGenerator(EndpointGenerator generator) {
+        // we don't care about this
     }
 
 }

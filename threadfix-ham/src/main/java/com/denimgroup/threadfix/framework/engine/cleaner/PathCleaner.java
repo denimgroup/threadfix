@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.engine.cleaner;
 
+import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,5 +49,6 @@ public interface PathCleaner {
 
     @Nullable
 	String getStaticRoot();
-	
+
+    void setEndpointGenerator(EndpointGenerator generator);
 }
