@@ -15,10 +15,10 @@
 
         <div ng-show="complianceActive || remediationEnterpriseActive">
             <d3-trending data="trendingScansData" label="title" width="670" height="400" margin="margin"
-                         table-info="tableInfo" start-date="trendingStartDate" end-date="trendingEndDate" export-info="exportInfo" svg-id="graphName"></d3-trending>
+                         table-info="tableInfo" start-date="trendingStartDate" end-date="trendingEndDate" export-info="exportInfo" svg-id="graphName" sum-table-div-id = "sumTableDivId"></d3-trending>
         </div>
 
-        <div id="complianceTable">
+        <div id="{{sumTableDivId}}">
             <table>
                 <thead></thead>
                 <tbody></tbody>

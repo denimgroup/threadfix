@@ -117,7 +117,9 @@ public class Tag extends AuditableEntity {
     }
     @Transient
     public boolean getDeletable(){
-        return applications.size()==0 && getVulnCommentsCount()==0;
+        if (enterpriseTag == null)
+            enterpriseTag = false;
+        return applications.size()==0 && getVulnCommentsCount()==0 && !enterpriseTag;
     }
 
 }

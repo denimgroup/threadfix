@@ -15,7 +15,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 startDate: '=',
                 endDate: '=',
                 exportInfo: '=',
-                svgId:'='
+                svgId:'=',
+                sumTableDivId:'='
             },
             link: function(scope, ele, attrs) {
                 var svgWidth = scope.width,
@@ -110,7 +111,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     svg.selectAll('*').remove();
 
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -40);
 
                     if (_data.length === 0) {
                         svg.append("g")
@@ -185,7 +186,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     var g = svg.selectAll(".symbol");
                     svg.call(tip);
                     if (scope.label)
-                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -30);
+                        reportUtilities.drawTitle(svg, w, scope.label, "Trending Report", -40);
 
                     // Add the x-axis.
                     svg.append("g")
@@ -295,8 +296,8 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function drawTable(){
-                    if (scope.tableInfo)
-                        reportUtilities.drawTable(d3, scope.tableInfo, "complianceTable");
+                    if (scope.tableInfo && scope.sumTableDivId)
+                        reportUtilities.drawTable(d3, scope.tableInfo, scope.sumTableDivId);
                 }
 
                 function prepareStackedData(data) {

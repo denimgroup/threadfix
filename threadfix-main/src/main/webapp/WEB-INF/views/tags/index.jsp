@@ -36,7 +36,7 @@
                     <a ng-click="goToTag(tag)">{{ tag.name }}</a>
                 </td>
                 <td class="centered">
-                    <a id="editTagModalButton{{ tag.name }}" ng-click="openEditModal(tag)" class="btn">Edit / Delete</a>
+                    <a id="editTagModalButton{{ tag.name }}" ng-click="openEditModal(tag)" class="btn" ng-class="{ disabled : tag.enterpriseTag }">Edit / Delete</a>
                 </td>
             </tr>
         </tbody>

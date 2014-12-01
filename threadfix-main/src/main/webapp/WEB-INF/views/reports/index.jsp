@@ -37,14 +37,16 @@
                 <%@ include file="snapshot.jsp" %>
             </tab>
             <tab id="remediationTab" heading="Remediation" ng-click="loadCompliance()" active="complianceActive">
-                <div ng-controller="ComplianceReportController" ng-init="remediationType = 1; graphName = 'complianceTrendingGraph'">
+                <div ng-controller="ComplianceReportController"
+                     ng-init="remediationType = 1; graphName = 'complianceTrendingGraph'; sumTableDivId = 'complianceTable1'">
                     <%@ include file="compliance.jsp" %>
                 </div>
             </tab>
 
             <c:if test="${isEnterprise}">
                 <tab id="enterpriseTab" active="remediationEnterpriseActive" heading="Enterprise" ng-click="loadEnterpriseRemediation()">
-                    <div ng-controller="ComplianceReportController" ng-init="remediationType = 2; graphName = 'complianceEnterpriseTrendingGraph'">
+                    <div ng-controller="ComplianceReportController"
+                         ng-init="remediationType = 2; graphName = 'complianceEnterpriseTrendingGraph'; sumTableDivId = 'complianceTable2'">
                         <%@ include file="compliance.jsp" %>
                     </div>
                 </tab>

@@ -111,7 +111,7 @@ public class TagsController {
                     result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                 }
                 databaseTag = tagService.loadTag(tagId);
-                if (databaseTag == null) {
+                if (databaseTag == null || (databaseTag.getEnterpriseTag() != null && databaseTag.getEnterpriseTag())) {
                     result.rejectValue("name", MessageConstants.ERROR_INVALID, new String[]{"Tag Id"}, null);
                 }
             }
