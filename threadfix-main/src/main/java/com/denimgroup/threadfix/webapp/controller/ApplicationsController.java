@@ -39,7 +39,6 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.views.AllViews;
-import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;

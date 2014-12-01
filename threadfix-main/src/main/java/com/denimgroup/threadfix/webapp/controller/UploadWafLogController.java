@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import java.util.List;
 
-import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

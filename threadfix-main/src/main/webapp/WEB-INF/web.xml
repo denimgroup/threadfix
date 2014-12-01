@@ -13,12 +13,11 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-            /WEB-INF/applicationContext*.xml
-            /WEB-INF/security.xml
-            classpath:/applicationContext-hibernate.xml
-            classpath:/applicationContext-scheduling.xml
-            classpath:/applicationContext-webservices.xml
-        </param-value>
+			/WEB-INF/applicationContext*.xml
+			/WEB-INF/security.xml
+			classpath:/applicationContext-hibernate.xml
+			classpath:/applicationContext-scheduling.xml
+		</param-value>
 	</context-param>
     <filter>
         <filter-name>CacheBustFilter</filter-name>
