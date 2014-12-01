@@ -52,22 +52,18 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         }
 
         var modalInstance = $modal.open({
-//            templateUrl: 'submitGrcControlRecordLoadingModal.html',
-//            controller: 'GRCControlSubmissionModalController',
+            templateUrl: 'submitGrcControlRecordLoadingModal.html',
+            controller: 'GRCControlSubmissionModalController',
             resolve: {
                 url: function() {
-                    return tfEncoder.encode(getAppUrlBase() + "/controlRecords");
-                },
-                configUrl: function() {
-                    return tfEncoder.encode(getAppUrlBase() + "/controlRecordSubmission");
+                    return tfEncoder.encode(getAppUrlBase() + "/controls");
                 },
                 object: function () {
                     return {};
                 },
                 config: function() {
                     return {
-                        vulns: filteredVulns,
-                        typeName: getApplication().grcTool.grcToolType.name
+                        vulns: filteredVulns
                     }
                 }
             }
@@ -94,7 +90,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
         filteredVulns = filteredVulns.filter(function(vuln) {
             return !vuln.defect;
-        })
+        });
 
         if (filteredVulns.length === 0) {
             alert('All of the selected vulnerabilities already have defects.');

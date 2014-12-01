@@ -80,6 +80,7 @@
     <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
     <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
+    <%@ include file="/WEB-INF/views/config/grctools/modals/submitGRCControl.jsp" %>
     <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
