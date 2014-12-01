@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -430,6 +431,7 @@ public class Application extends AuditableEntity {
 	}	
 
     @OneToOne(mappedBy = "application")
+    @JsonManagedReference
     @JsonView(Object.class)
 	public GRCApplication getGrcApplication() {
 		return grcApplication;
