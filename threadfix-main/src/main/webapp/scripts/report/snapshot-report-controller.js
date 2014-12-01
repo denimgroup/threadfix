@@ -1,6 +1,7 @@
 var module = angular.module('threadfix');
 
-module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer, reportUtilities) {
+module.controller('SnapshotReportController', function($scope, $rootScope, $window, $http, tfEncoder, vulnSearchParameterService,
+                                                       vulnTreeTransformer, reportUtilities, reportExporter) {
 
     $scope.parameters = {};
     $scope.noData = false;
@@ -480,6 +481,29 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             $scope.exportReportId = "" + $scope.reportId;
         else
             $scope.exportReportId = $scope.reportId;
+    };
+
+    $scope.exportCSV = function() {
+
+        var teamsName = ($scope.title.teams) ? "_" + $scope.title.teams : "";
+        var appsName = ($scope.title.apps) ? "_" + $scope.title.apps : "";
+
+        reportExporter.exportCSV(convertToCsv($scope.title, $scope.progressByTypeData),
+            "application/octet-stream", "VulnerabilityProgressByType" + teamsName + appsName + ".csv");
+    };
+
+    var convertToCsv = function(title, data){
+        var csvArray = ['Vulnerability Progress By Type \n'];
+        if (title.teams)
+            csvArray.push(["Teams: " + title.teams]);
+        if (title.apps)
+            csvArray.push(["Applications: " + title.apps]);
+        csvArray.push("\n");
+        csvArray.push(['Type,Count,% Fixed,Average Age,Average Time to Close']);
+        data.forEach(function(d) {
+            csvArray.push(d.description + ',' + d.total + ',' + d.percentClosed + ',' + d.averageAgeOpen + ',' + d.averageTimeToClose);
+        });
+        return csvArray.join("\n");
     };
 
 });
