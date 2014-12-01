@@ -79,6 +79,8 @@ public class GenericMappingsUpdater extends SpringBeanAutowiringSupport implemen
 
         State state = State.NONE;
 
+        assert channelTypeDao != null : "ChannelType DAO was null, fix the autowiring code.";
+
         ChannelType manualChannel = channelTypeDao.retrieveByName("Manual");
 
         String line;

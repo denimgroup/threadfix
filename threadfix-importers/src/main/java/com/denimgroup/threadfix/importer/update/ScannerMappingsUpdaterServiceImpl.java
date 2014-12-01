@@ -177,6 +177,8 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
                 for (Updater updater : updaters) {
                     bpp.processInjection(updater);
                 }
+            } else {
+                assert false : "ApplicationContext was null, unable to autowire.";
             }
         }
 

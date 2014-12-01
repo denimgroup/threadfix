@@ -24,13 +24,13 @@
 package com.denimgroup.threadfix.importer.update.impl;
 
 import com.denimgroup.threadfix.annotations.MappingsUpdater;
+import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.dao.RemoteProviderTypeDao;
 import com.denimgroup.threadfix.data.entities.ChannelType;
 import com.denimgroup.threadfix.data.entities.RemoteProviderAuthenticationField;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.importer.update.Updater;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.ChannelTypeService;
-import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Service;
@@ -53,9 +53,9 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
     private static final SanitizedLogger LOG = new SanitizedLogger(RemoteProviderUpdater.class);
 
     @Autowired
-    private RemoteProviderTypeService remoteProviderTypeService;
+    private RemoteProviderTypeDao remoteProviderTypeDao;
     @Autowired
-    private ChannelTypeService channelTypeService;
+    private ChannelTypeDao        channelTypeDao;
 
     @Override
     public int getOrder() {
@@ -72,7 +72,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
     public void doUpdate(String fileName, BufferedReader bufferedReader) throws IOException {
         LOG.debug("Performing mapping update for file " + fileName);
 
-        assert remoteProviderTypeService != null :
+        assert remoteProviderTypeDao != null :
                 "remoteProviderTypeService was null. This indicates an error in Spring autowiring.";
 
         String name = null, channelName = null;
@@ -108,9 +108,9 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             throw new IllegalStateException("Failed to get a channel name from " + fileName);
         }
 
-        RemoteProviderType databaseType = remoteProviderTypeService.load(name);
+        RemoteProviderType databaseType = remoteProviderTypeDao.retrieveByName(name);
 
-        ChannelType channelType = channelTypeService.loadChannel(channelName);
+        ChannelType channelType = channelTypeDao.retrieveByName(channelName);
 
         assert channelType != null : "Got null channel type for string " + channelName;
 
@@ -125,7 +125,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             for (RemoteProviderAuthenticationField field : fields) {
                 field.setRemoteProviderType(type);
             }
-            remoteProviderTypeService.store(type);
+            remoteProviderTypeDao.saveOrUpdate(type);
 
         } else {
             LOG.debug(name + " was already present in the database.");
@@ -138,7 +138,7 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
                 field.setRemoteProviderType(databaseType);
             }
 
-            remoteProviderTypeService.store(databaseType);
+            remoteProviderTypeDao.saveOrUpdate(databaseType);
         }
     }
 
