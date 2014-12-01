@@ -23,23 +23,17 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.selenium.enttests;
 
-import com.denimgroup.threadfix.CommunityTests;
-import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
+import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.TagDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@Category(CommunityTests.class)
+@Category(EnterpriseTests.class)
 public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
