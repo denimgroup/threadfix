@@ -60,8 +60,8 @@ public class CacheBustFilter extends GenericFilterBean {
         HttpServletRequest req = (HttpServletRequest) request;
 
         // If there was a build number defined in the war, then use it for the cache buster.
-        req.setAttribute("gitCommit", (gitCommit != null) ? gitCommit : new Random().nextInt(10000000));
-        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.2-SNAPSHOT");
+        req.setAttribute("gitCommit", gitCommit);
+        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.2-SNAPSHOT" + "-" + gitCommit);
         req.setAttribute("buildDate", (buildDate != null) ? buildDate : Calendar.getInstance().getTime());
 
         chain.doFilter(request, response);
@@ -81,6 +81,8 @@ public class CacheBustFilter extends GenericFilterBean {
                 String version = attrs.getValue("Implementation-Version");
                 String date = attrs.getValue("Implementation-Build-Date");
                 gitCommit = attrs.getValue("Implementation-Build");
+
+                gitCommit = (gitCommit != null) ? gitCommit : String.valueOf(new Random().nextInt(10000000));
 
                 if (version != null && gitCommit != null){
                     buildNumber = version + "-" + gitCommit;
