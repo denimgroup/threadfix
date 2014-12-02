@@ -376,35 +376,48 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
                 databaseRemoteProviderType.getHasUserNamePassword() &&
                         username != null &&
                         !username.equals(databaseRemoteProviderType.getUsername())) {
-            databaseRemoteProviderType.setApiKey(apiKey);
-            databaseRemoteProviderType.setUsername(username);
-            databaseRemoteProviderType.setPassword(password);
-            databaseRemoteProviderType.setPlatform(platform);
-            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
 
-            List<RemoteProviderApplication> apps = remoteProviderApplicationService
-                    .getApplications(databaseRemoteProviderType);
+            LOG.warn("New API key, deleting old apps.");
 
-            if (apps == null) {
-
-                return ResponseCode.NO_APPS;
-
-            } else {
-                LOG.warn("Provider username has changed, deleting old apps.");
-
-                remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
-
-                databaseRemoteProviderType.setRemoteProviderApplications(apps);
-
-                for (RemoteProviderApplication remoteProviderApplication :
-                        databaseRemoteProviderType.getRemoteProviderApplications()) {
-                    remoteProviderApplicationService.store(remoteProviderApplication);
-                }
-
-                store(encryptCredentials(databaseRemoteProviderType));
-            }
+            return importApplications(username, password, apiKey, platform, databaseRemoteProviderType, matchSourceNumberBoolean);
+        } else {
+            LOG.debug("No change to API key, returning success.");
+            return ResponseCode.SUCCESS;
         }
-        return ResponseCode.SUCCESS;
+    }
+
+    private ResponseCode importApplications(String username, String password, String apiKey, String platform, RemoteProviderType databaseRemoteProviderType, boolean matchSourceNumberBoolean) {
+        databaseRemoteProviderType.setApiKey(apiKey);
+        databaseRemoteProviderType.setUsername(username);
+        databaseRemoteProviderType.setPassword(password);
+        databaseRemoteProviderType.setPlatform(platform);
+        databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
+
+        List<RemoteProviderApplication> apps = remoteProviderApplicationService
+                .getApplications(databaseRemoteProviderType);
+
+        if (apps == null) {
+
+            LOG.info("No applications were found for " + databaseRemoteProviderType.getName());
+            return ResponseCode.NO_APPS;
+
+        } else {
+
+            remoteProviderApplicationService.deleteApps(databaseRemoteProviderType);
+
+            databaseRemoteProviderType.setRemoteProviderApplications(apps);
+
+            for (RemoteProviderApplication remoteProviderApplication :
+                    databaseRemoteProviderType.getRemoteProviderApplications()) {
+                remoteProviderApplicationService.store(remoteProviderApplication);
+            }
+
+            store(encryptCredentials(databaseRemoteProviderType));
+
+            LOG.info("Successfully updated applications for " + databaseRemoteProviderType.getName());
+
+            return ResponseCode.SUCCESS;
+        }
     }
 
     private ResponseCode processUsernamePassword(String username,
@@ -412,17 +425,26 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
                                                  String platform,
                                                  RemoteProviderType databaseRemoteProviderType,
                                                  boolean matchSourceNumberBoolean) {
-        if (username != null && password != null &&
-                username.equals(databaseRemoteProviderType.getUsername()) &&
-                !password.equals(USE_OLD_PASSWORD) &&
-                !password.equals(databaseRemoteProviderType.getPassword())) {
-            LOG.warn("Provider password has changed, updating applications.");
+        if (username != null && password != null) {
 
-            databaseRemoteProviderType.setPassword(password);
-            databaseRemoteProviderType.setPlatform(platform);
-            databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
-            remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
-            store(databaseRemoteProviderType);
+            if (databaseRemoteProviderType.getUsername() == null ||
+                    !databaseRemoteProviderType.getUsername().equals(username)) {
+
+                LOG.info("Importing applications for " + databaseRemoteProviderType.getName());
+
+                return importApplications(username, password, "", platform, databaseRemoteProviderType, matchSourceNumberBoolean);
+
+            } else if (username.equals(databaseRemoteProviderType.getUsername()) &&
+                    !password.equals(USE_OLD_PASSWORD) &&
+                    !password.equals(databaseRemoteProviderType.getPassword())) {
+                LOG.info("Provider password has changed, updating applications.");
+
+                databaseRemoteProviderType.setPassword(password);
+                databaseRemoteProviderType.setPlatform(platform);
+                databaseRemoteProviderType.setMatchSourceNumbers(matchSourceNumberBoolean);
+                remoteProviderApplicationService.updateApplications(databaseRemoteProviderType);
+                store(databaseRemoteProviderType);
+            }
         }
         return ResponseCode.SUCCESS;
     }
