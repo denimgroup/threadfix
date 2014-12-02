@@ -147,7 +147,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 
 	}
 
-    public static final String FORMAT_STRING = "yyyy-MM-DD'T'kk:mm:ssX";
+    public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
 
     public ArachniChannelImporter() {
         super(ScannerType.ARACHNI);
