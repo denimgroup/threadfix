@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class QualysApplicationParsingTests {
 
-    public static RemoteProvider getQualysImporterWithMock(String username, String password) {
+    public static AbstractRemoteProvider getQualysImporterWithMock(String username, String password) {
         QualysRemoteProvider provider = new QualysRemoteProvider();
 
         provider.utils = new QualysMockHttpUtils();
@@ -55,7 +55,7 @@ public class QualysApplicationParsingTests {
 
     @Test
     public void readAppsAuthenticated() {
-        RemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
+        AbstractRemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
                 VeracodeMockHttpUtils.GOOD_PASSWORD);
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();
@@ -66,7 +66,7 @@ public class QualysApplicationParsingTests {
 
     @Test
     public void readAppsUnauthenticated() {
-        RemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.BAD_USERNAME,
+        AbstractRemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.BAD_USERNAME,
                 VeracodeMockHttpUtils.BAD_PASSWORD);
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();

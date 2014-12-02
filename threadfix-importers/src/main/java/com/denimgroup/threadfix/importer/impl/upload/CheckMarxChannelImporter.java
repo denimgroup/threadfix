@@ -55,7 +55,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
         scannerName = ScannerDatabaseNames.CHECKMARX_DB_NAME,
         startingXMLTags = { "CxXMLResults" }
 )
-class CheckMarxChannelImporter extends AbstractChannelImporter {
+public class CheckMarxChannelImporter extends AbstractChannelImporter {
 
     public static final String ROOT_NODE_NAME = "CxXMLResults";
 

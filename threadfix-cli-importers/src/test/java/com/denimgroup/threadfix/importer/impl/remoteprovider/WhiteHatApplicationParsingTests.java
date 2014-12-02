@@ -39,7 +39,7 @@ public class WhiteHatApplicationParsingTests {
 
     public static String[] appIds = new String[] { "Demo Site BE", "Demo Site PE", "Demo Site PL", "Demo Site SE" };
 
-    public static RemoteProvider getWhiteHatImporterWithMock(String apiKey) {
+    public static AbstractRemoteProvider getWhiteHatImporterWithMock(String apiKey) {
         WhiteHatRemoteProvider provider = new WhiteHatRemoteProvider();
 
         provider.utils = new WhiteHatMockHttpUtils();
@@ -54,7 +54,7 @@ public class WhiteHatApplicationParsingTests {
 
     @Test
     public void getApplicationsValidCredentials() {
-        RemoteProvider provider = getWhiteHatImporterWithMock(WhiteHatMockHttpUtils.GOOD_API_KEY);
+        AbstractRemoteProvider provider = getWhiteHatImporterWithMock(WhiteHatMockHttpUtils.GOOD_API_KEY);
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();
 
@@ -74,7 +74,7 @@ public class WhiteHatApplicationParsingTests {
 
     @Test
     public void getApplicationsInvalidCredentials() {
-        RemoteProvider provider = getWhiteHatImporterWithMock(WhiteHatMockHttpUtils.BAD_API_KEY);
+        AbstractRemoteProvider provider = getWhiteHatImporterWithMock(WhiteHatMockHttpUtils.BAD_API_KEY);
 
         List<RemoteProviderApplication> applications = provider.fetchApplications();
 

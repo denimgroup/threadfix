@@ -51,7 +51,7 @@ import java.util.*;
         scannerName = ScannerDatabaseNames.BRAKEMAN_DB_NAME,
         format = ScanFormat.JSON
 )
-class BrakemanChannelImporter extends AbstractChannelImporter {
+public class BrakemanChannelImporter extends AbstractChannelImporter {
 
 	boolean hasFindings = false, correctFormat = false, hasDate = false;
 	

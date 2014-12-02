@@ -45,7 +45,7 @@ import java.util.Map;
         scannerName = ScannerDatabaseNames.DEPENDENCY_CHECK_DB_NAME,
         startingXMLTags = "analysis"
 )
-class DependencyCheckChannelImporter extends AbstractChannelImporter {
+public class DependencyCheckChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {
