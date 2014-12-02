@@ -32,9 +32,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
-import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
-import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -44,7 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.ACUNETIX_WVS_DB_NAME;
 import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.CPPCHECK_DB_NAME;
 
 /**
@@ -55,7 +52,7 @@ import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.CPPCHE
         scannerName = CPPCHECK_DB_NAME,
         startingXMLTags = {"results", "cppcheck", "errors", "error"}
 )
-class CppcheckChannelImporter extends AbstractChannelImporter {
+public class CppcheckChannelImporter extends AbstractChannelImporter {
 
 	public CppcheckChannelImporter() {
 		super(ScannerType.CPPCHECK);

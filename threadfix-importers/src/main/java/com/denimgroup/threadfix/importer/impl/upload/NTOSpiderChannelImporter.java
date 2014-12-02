@@ -53,7 +53,7 @@ import java.util.Map;
                 @StartingTagSet({ "VulnSummary" })
         }
 )
-class NTOSpiderChannelImporter extends AbstractChannelImporter {
+public class NTOSpiderChannelImporter extends AbstractChannelImporter {
 
 	private static Map<String, FindingKey> tagMap = new HashMap<>();
 	static {

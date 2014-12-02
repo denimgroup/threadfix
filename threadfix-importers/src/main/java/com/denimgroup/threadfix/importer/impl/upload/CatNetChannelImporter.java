@@ -50,7 +50,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 @ScanImporter(
         scannerName = ScannerDatabaseNames.CAT_NET_DB_NAME,
         startingXMLTags = { "Report", "Analysis", "AnalysisEngineVersion", "StartTimeStamp", "StopTimeStamp", "ElapsedTime" })
-class CatNetChannelImporter extends AbstractChannelImporter {
+public class CatNetChannelImporter extends AbstractChannelImporter {
 
 	// this hash is used to keep track of how many times a line has been parsed.
 	private Map<String, Integer> paramMap;

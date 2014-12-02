@@ -51,7 +51,7 @@ import static com.denimgroup.threadfix.data.entities.ScannerDatabaseNames.ACUNET
         scannerName = ACUNETIX_WVS_DB_NAME,
         startingXMLTags = {"ScanGroup", "Scan", "Name", "ShortName", "StartURL", "StartTime"}
 )
-class AcunetixChannelImporter extends AbstractChannelImporter {
+public class AcunetixChannelImporter extends AbstractChannelImporter {
 	
 	public AcunetixChannelImporter() {
 		super(ScannerType.ACUNETIX_WVS);

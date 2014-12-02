@@ -23,29 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.waf;
 
-import com.denimgroup.threadfix.data.dao.WafRuleDao;
-import com.denimgroup.threadfix.data.dao.WafRuleDirectiveDao;
+import com.denimgroup.threadfix.annotations.WebApplicationFirewall;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.WafType;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.importer.loader.AnnotationKeyGenerator;
+import com.denimgroup.threadfix.importer.loader.ImplementationLoader;
+import org.springframework.stereotype.Service;
 
 /**
  * @author bbeverly
  * 
  */
+@Service
 public class RealTimeProtectionGeneratorFactory {
 
-	private WafRuleDao wafRuleDao;
-	private WafRuleDirectiveDao wafRuleDirectiveDao;
-	
-	private final SanitizedLogger log = new SanitizedLogger(this.getClass());
-
-	public RealTimeProtectionGeneratorFactory(WafRuleDao wafRuleDao,
-			WafRuleDirectiveDao wafRuleDirectiveDao) {
-		this.wafRuleDao = wafRuleDao;
-		this.wafRuleDirectiveDao = wafRuleDirectiveDao;
-	}
-	
 	/**
 	 * Returns an RealTimeProtectionGenerator implementation based on the
 	 * application's waf name.
@@ -73,24 +63,33 @@ public class RealTimeProtectionGeneratorFactory {
 			return null;
 		}
 
-		if (wafName.equals(WafType.MOD_SECURITY)) {
-			return new ModSecurityWafGenerator(wafRuleDao, wafRuleDirectiveDao);
-		} else if (wafName.equals(WafType.SNORT)) {
-			return new SnortGenerator(wafRuleDao, wafRuleDirectiveDao);
-		} else if (wafName.equals(WafType.BIG_IP_ASM)) {
-			return new BigIPASMGenerator(wafRuleDao, wafRuleDirectiveDao);
-		} else if (wafName.equals(WafType.IMPERVA_SECURE_SPHERE)) {
-			return new ImpervaSecureSphereGenerator(wafRuleDao, wafRuleDirectiveDao);
-		} else if (wafName.equals(WafType.DENY_ALL_RWEB)) {
-			return new DenyAllRWebGenerator(wafRuleDao, wafRuleDirectiveDao);
-		} else if (wafName.equals(WafType.RIVERBED_WEB_APP_FIREWALL)) {
-			return new RiverbedWebAppFirewallGenerator(wafRuleDao, wafRuleDirectiveDao);
-		} else {
-			log.warn("Invalid WAF type name '"
-					+ wafName
-					+ "'. Unable to find suitable RealTimeProtectionGenerator"
-					+ " implementation class.  Returning null");
-			return null;
-		}
+        if (loader == null) {
+            init();
+            assert loader != null : "Failed to initialize the WAF loader";
+        }
+
+        RealTimeProtectionGenerator implementation = loader.getImplementation(wafName);
+
+        if (implementation == null) {
+            throw new IllegalArgumentException("No implementation found for " + wafName);
+        }
+
+        return implementation;
 	}
+
+    ImplementationLoader<WebApplicationFirewall, RealTimeProtectionGenerator> loader = null;
+
+    private void init() {
+
+        loader = new ImplementationLoader<>(WebApplicationFirewall.class,
+                RealTimeProtectionGenerator.class,
+                "com.denimgroup.threadfix.service.waf",
+                new AnnotationKeyGenerator<WebApplicationFirewall>() {
+                    @Override
+                    public String getKey(WebApplicationFirewall annotation) {
+                        return annotation.name();
+                    }
+                });
+    }
+
 }

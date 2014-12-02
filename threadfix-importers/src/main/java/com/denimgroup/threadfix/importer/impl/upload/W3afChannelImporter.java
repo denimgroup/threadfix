@@ -52,7 +52,7 @@ import java.util.Map;
  * @author mcollins
  */
 @ScanImporter(scannerName = ScannerDatabaseNames.W3AF_DB_NAME, startingXMLTags = { "w3afrun" })
-class W3afChannelImporter extends AbstractChannelImporter {
+public class W3afChannelImporter extends AbstractChannelImporter {
 
     public static final String POTENTIALLY_INTERESTING_FILE = "Potentially interesting file";
     private final       String dateFormatString             = "EEE MMM dd HH:mm:ss yyyy";

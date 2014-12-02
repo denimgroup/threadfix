@@ -49,8 +49,8 @@ public class DefaultConfiguration extends BaseEntity {
 
     private String proxyHost = null, proxyUsername = null, proxyPassword = null, proxyUsernameEncrypted = null, proxyPasswordEncrypted = null;
     private Integer proxyPort = null;
-	
-	private Calendar lastScannerMappingsUpdate;
+
+    private Calendar lastScannerMappingsUpdate;
 
     private Integer sessionTimeout = null;
 
@@ -78,7 +78,7 @@ public class DefaultConfiguration extends BaseEntity {
         return hasAddedScheduledImports != null && hasAddedScheduledImports;
     }
 
-    public void setHasAddedScheduledImports(Boolean hasAddedScheduledImports){
+    public void setHasAddedScheduledImports(Boolean hasAddedScheduledImports) {
         this.hasAddedScheduledImports = hasAddedScheduledImports;
     }
 
@@ -87,7 +87,7 @@ public class DefaultConfiguration extends BaseEntity {
         return hasAddedScheduledDefectTrackerUpdates != null && hasAddedScheduledDefectTrackerUpdates;
     }
 
-    public void setHasAddedScheduledDefectTrackerUpdates(Boolean hasAddedScheduledDefectTrackerUpdates){
+    public void setHasAddedScheduledDefectTrackerUpdates(Boolean hasAddedScheduledDefectTrackerUpdates) {
         this.hasAddedScheduledDefectTrackerUpdates = hasAddedScheduledDefectTrackerUpdates;
     }
 
@@ -99,25 +99,26 @@ public class DefaultConfiguration extends BaseEntity {
     public void setHasCachedData(Boolean hasCachedData) {
         this.hasCachedData = hasCachedData;
     }
-	
-	@Column
-	public Integer getDefaultRoleId() {
-		return defaultRoleId;
-	}
-	
-	public void setDefaultRoleId(Integer defaultRoleId) {
-		this.defaultRoleId = defaultRoleId;
-	}
-	
-	@Column
-	public Boolean getGlobalGroupEnabled() {
-		return globalGroupEnabled != null && globalGroupEnabled;
-	}
-	public void setGlobalGroupEnabled(Boolean globalGroupEnabled) {
-		this.globalGroupEnabled = globalGroupEnabled;
-	}
-	
-	@Column(length=256)
+
+    @Column
+    public Integer getDefaultRoleId() {
+        return defaultRoleId;
+    }
+
+    public void setDefaultRoleId(Integer defaultRoleId) {
+        this.defaultRoleId = defaultRoleId;
+    }
+
+    @Column
+    public Boolean getGlobalGroupEnabled() {
+        return globalGroupEnabled != null && globalGroupEnabled;
+    }
+
+    public void setGlobalGroupEnabled(Boolean globalGroupEnabled) {
+        this.globalGroupEnabled = globalGroupEnabled;
+    }
+
+    @Column(length=256)
 	public void setActiveDirectoryBase(String activeDirectoryBase) {
 		this.activeDirectoryBase = activeDirectoryBase;
 	}
@@ -229,7 +230,8 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Transient
     public <T> boolean shouldUseProxy(Class<T> classToProxy) {
-        return getProxySupportMap().get(classToProxy.getSimpleName());
+        Boolean aBoolean = getProxySupportMap().get(classToProxy.getSimpleName());
+        return aBoolean != null && aBoolean;
     }
 
     @Transient
@@ -243,6 +245,7 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("WhiteHatRemoteProvider", getShouldProxyWhiteHat());
         map.put("VeracodeRemoteProvider", getShouldProxyVeracode());
         map.put("QualysRemoteProvider", getShouldProxyQualys());
+        map.put("TrustwaveHailstormRemoteProvider", getShouldProxyTrustwaveHailstorm());
         return map;
     }
 
@@ -336,4 +339,14 @@ public class DefaultConfiguration extends BaseEntity {
     Boolean shouldProxyHPQC = false;
     Boolean shouldProxyWhiteHat = false;
     Boolean shouldUseProxyCredentials = false;
+    Boolean shouldProxyTrustwaveHailstorm = false;
+
+    @Column
+    public Boolean getShouldProxyTrustwaveHailstorm() {
+        return shouldProxyTrustwaveHailstorm;
+    }
+
+    public void setShouldProxyTrustwaveHailstorm(Boolean shouldProxyTrustwaveHailstorm) {
+        this.shouldProxyTrustwaveHailstorm = shouldProxyTrustwaveHailstorm;
+    }
 }

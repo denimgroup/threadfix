@@ -48,7 +48,7 @@ import java.util.Map;
         scannerName = ScannerDatabaseNames.NETSPARKER_DB_NAME,
         startingXMLTags = "netsparker"
 )
-class NetsparkerChannelImporter extends AbstractChannelImporter {
+public class NetsparkerChannelImporter extends AbstractChannelImporter {
 
     public NetsparkerChannelImporter() {
         super(ScannerType.NETSPARKER);

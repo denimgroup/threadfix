@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
         scannerName = ScannerDatabaseNames.BURPSUITE_DB_NAME,
         startingXMLTags = { "issues", "issue", "serialNumber", "type", "name", "host", "path" }
 )
-class BurpSuiteChannelImporter extends AbstractChannelImporter {
+public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 
 	private static final String TEMPLATE_NAME = "name of an arbitrarily supplied request";
 	private static final String REST_URL_PARAM = "REST URL parameter";
