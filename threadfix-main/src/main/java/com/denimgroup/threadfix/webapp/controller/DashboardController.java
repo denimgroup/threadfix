@@ -113,19 +113,15 @@ public class DashboardController {
 
 	@RequestMapping(value="/rightReport", method=RequestMethod.GET)
 	public @ResponseBody RestResponse<List<Map<String, Object>>> rightReport(HttpServletRequest request) {
-		if (request.getParameter("appId") != null) {
-			return RestResponse.success(report(request, ReportFormat.TOP_TEN_VULNS).getReportList());
-		} else {
-			return RestResponse.success(report(request, ReportFormat.TOP_TEN_APPS).getReportList());
-		}
-	}
 
-    public ReportCheckResultBean report(HttpServletRequest request, ReportFormat reportFormat) {
+        ReportFormat reportFormat = (request.getParameter("appId") != null) ? ReportFormat.TOP_TEN_VULNS : ReportFormat.TOP_TEN_APPS;
+
         ReportParameters parameters = getParameters(request, reportFormat);
         ReportCheckResultBean resultBean = reportsService.generateDashboardReport(parameters, request);
 
-        return resultBean;
-    }
+        return RestResponse.success(resultBean.getReportList());
+
+	}
 
     private ReportParameters getParameters(HttpServletRequest request, ReportFormat reportFormat) {
         int orgId = -1, appId = -1;
