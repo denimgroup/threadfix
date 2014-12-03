@@ -19,7 +19,7 @@
             </tbody>
         </table>
 
-        <%@ include file="littleVulnTable.jspf" %>
+        <%@ include file="../vulnerabilities/littleVulnTable.jspf" %>
 	</div>
     <div class="modal-footer">
         <span class="errors" style="float:left">{{ errorMessage }}</span>
