@@ -16,7 +16,7 @@
                         <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="mergeDefectButton" ng-click="showMergeDefectModal()">Merge Defect</a></li>
                     </c:if>
                     <c:if test="${ canManageGrcTools }">
-                        <li ng-show="$parent.treeApplication.grcApplication"><a class="pointer" id="submitGrcControlButton" ng-click="showSubmitGrcControlModal()">Submit GRC Control</a></li>
+                        <li ng-show="$parent.treeApplication.grcApplication"><a class="pointer" id="submitGrcControlButton" ng-click="showSubmitGrcControlModal()">Submit GRC Control(s)</a></li>
                     </c:if>
                     <c:if test="${ canModifyVulnerabilities }">
                         <li ng-show="parameters.showOpen"><a class="pointer" id="closeVulnsButton" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>
