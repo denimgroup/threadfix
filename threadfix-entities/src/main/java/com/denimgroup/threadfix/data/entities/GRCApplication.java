@@ -24,14 +24,18 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * @author zabdisubhan
@@ -57,6 +61,8 @@ public class GRCApplication extends AuditableEntity {
     private GRCTool grcTool;
 
     private Application application;
+
+    private Map applicationJson;
 
     private List<GRCControlRecord> grcControlRecords;
 
@@ -87,11 +93,25 @@ public class GRCApplication extends AuditableEntity {
     }
 
     @OneToOne
-    @JsonBackReference
-    @JsonView(Object.class)
+    @JsonIgnore
     @JoinColumn(name = "applicationId")
     public Application getApplication() {
         return application;
+    }
+
+    @Transient
+    @JsonProperty("application")
+    @JsonView(Object.class)
+    public Map<String, ? extends Serializable> getApplicationJson() {
+        if(application != null) {
+            return map(
+                    "id", application.getId(),
+                    "name", application.getName(),
+                    "teamName", application.getOrganization().getName(),
+                    "teamId", application.getOrganization().getId());
+        } else {
+            return null;
+        }
     }
 
     public void setApplication(Application application) {
