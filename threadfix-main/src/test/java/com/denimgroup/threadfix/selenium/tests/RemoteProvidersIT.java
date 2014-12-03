@@ -30,6 +30,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
+
+import javax.validation.constraints.AssertTrue;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -623,5 +626,48 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertFalse("success message is present",
                 remoteProvidersIndexPage.isSuccessMessagePresent("Weekly Scheduled Remote Provider Import successfully deleted."));
 
+    }
+
+    @Test
+    public void checkQualysEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureQualys()
+                .setQualysUsername(QUALYS_USER)
+                .setQualysPassword(QUALYS_PASS)
+                .setQualysPlatform(QUALYS_PLATFORM)
+                .clickModalSubmitInvalid();
+
+        assertTrue("Success message was " + remoteProvidersIndexPage.successAlert(),
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS"));
+
+        remoteProvidersIndexPage.clickEditName("3","0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("PHP Demo site"));
+    }
+
+    @Test
+    public void checkVeracodeEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureVeracode()
+                .setVeraUsername(VERACODE_USER)
+                .setVeraPassword(VERACODE_PASSWORD)
+                .saveVera()
+                .mapVeracodeToTeamAndApp(0, teamName, appName);
+
+        remoteProvidersIndexPage.clickEditName("2","0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("Apache"));
+    }
+
+    @Test
+    public void checkWhiteHatEditNameModalHeader() {
+        remoteProvidersIndexPage.clickConfigureWhiteHat()
+                .setWhiteHatAPI(SENTINEL_API_KEY)
+                .saveWhiteHat();
+
+        remoteProvidersIndexPage.clickEditName("1","0");
+
+        assertTrue("Modal does not contain app name",
+                driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
     }
 }
