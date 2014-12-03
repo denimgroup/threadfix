@@ -7,6 +7,7 @@
 	<cbs:cachebustscript src="/scripts/application-detail-page-controller.js"/>
 	<cbs:cachebustscript src="/scripts/application-page-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/defect-submission-modal-controller.js"/>
+	<cbs:cachebustscript src="/scripts/grc-control-submission-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
@@ -80,7 +81,7 @@
     <%@ include file="/WEB-INF/views/config/defecttrackers/modals/createDTModal.jsp" %>
     <%@ include file="/WEB-INF/views/config/users/permissibleUsers.jsp" %>
     <%@ include file="/WEB-INF/views/defects/submitDefectForm.jsp" %>
-    <%@ include file="/WEB-INF/views/config/grctools/modals/submitGRCControl.jsp" %>
+    <%@ include file="/WEB-INF/views/applications/modals/submitGRCControl.jsp" %>
     <%@ include file="/WEB-INF/views/defects/mergeDefectForm.jsp" %>
     <%@ include file="/WEB-INF/views/applications/forms/vulnCommentForm.jsp"%>
     <%@ include file="/WEB-INF/views/applications/forms/uploadDocForm.jsp"%>
