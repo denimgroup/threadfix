@@ -283,7 +283,12 @@ public class RemoteProvidersIndexPage extends BasePage {
         handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }
-	
+
+    public RemoteProvidersIndexPage clickEditName(String provider, String appNum) {
+        driver.findElementById("provider" + provider + "updateName" + appNum).click();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
 	public String successAlert(){
         waitForElement(driver.findElementByClassName("alert-success"));
 		return driver.findElementByClassName("alert-success").getText().trim();
