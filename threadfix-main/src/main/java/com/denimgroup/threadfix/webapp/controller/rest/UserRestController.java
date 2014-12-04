@@ -23,17 +23,21 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller.rest;
 
+import com.denimgroup.threadfix.data.entities.AccessControlApplicationMap;
+import com.denimgroup.threadfix.data.entities.AccessControlTeamMap;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.RoleService;
-import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 
@@ -51,6 +55,12 @@ public class UserRestController {
     UserService userService;
     @Autowired
     RoleService roleService;
+    @Autowired
+    OrganizationService organizationService;
+    @Autowired
+    ApplicationService applicationService;
+    @Autowired
+    AccessControlMapService accessControlMapService;
 
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public @ResponseBody RestResponse<User> createUser(@RequestParam String username,
@@ -66,6 +76,36 @@ public class UserRestController {
 
         user.setSalt("c892c2c6-2bd9-4b6a-a826-d9a71f5db441");
         user.setPassword("3ac7de35360886d9aa7c821e4908f7c260c63eea9c229bff38ac40b28279b7a5");
+
+        userService.storeUser(user);
+
+        return success(user);
+    }
+
+    @RequestMapping(value= "permission", method =  RequestMethod.POST)
+    public @ResponseBody RestResponse<User> addUserTeamAppPermission(@RequestParam String username,
+                                                          @RequestParam String rolename,
+                                                          @RequestParam String teamname,
+                                                          @RequestParam String appname) {
+
+        User user = userService.loadUser(username);
+
+        AccessControlTeamMap newAccessControlTeamMap = new AccessControlTeamMap();
+
+        newAccessControlTeamMap.setUser(user);
+        newAccessControlTeamMap.setOrganization(organizationService.loadByName(teamname));
+        newAccessControlTeamMap.setRole(roleService.loadRole(rolename));
+        newAccessControlTeamMap.setAllApps(true);
+
+        accessControlMapService.store(newAccessControlTeamMap);
+
+        List<AccessControlTeamMap> userControlTeamMap = accessControlMapService.loadAllMapsForUser(user.getId());
+        int controlTeamMapID = userControlTeamMap.get(0).getId();
+
+        List<AccessControlTeamMap> accessControlTeamMapList = user.getAccessControlTeamMaps();
+        accessControlTeamMapList.add(accessControlMapService.loadAccessControlTeamMap(controlTeamMapID));
+
+        user.setAccessControlTeamMaps(accessControlTeamMapList);
 
         userService.storeUser(user);
 

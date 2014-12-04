@@ -86,6 +86,9 @@ public interface ThreadFixRestClient {
     public RestResponse<User> createUser(String username, String globalRoleName);
     // QA only
     public RestResponse<User> createUser(String username);
+    // QA only
+    public RestResponse<User> addUserTeamAppPermission(String userName, String roleName, String teamName, String appName);
+
 
     // QA only
     public RestResponse<Role> createRole(String roleName, Boolean allPermissions);

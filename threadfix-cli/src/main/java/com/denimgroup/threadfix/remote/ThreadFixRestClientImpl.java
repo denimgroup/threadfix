@@ -283,6 +283,14 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     // QA only
     @Override
+    public RestResponse<User> createUserTeamAppPermission(String userName, String roleName, String teamName, String appName) {
+        return httpRestUtils.httpPost("/user/permission",
+                new String[] {"username", "rolename", "teamname", "appname"},
+                new String[] {userName, roleName, teamName, appName}, User.class);
+    }
+
+    // QA only
+    @Override
     public RestResponse<Role> createRole(String roleName, Boolean allPermissions) {
         return httpRestUtils.httpPost("/role/create",
                 new String[] {"roleName", "allPermissions"},

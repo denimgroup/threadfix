@@ -514,7 +514,7 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .clickRemoteProvidersLink()
                 .clickScheduleTab();
 
-        assertTrue("New Schedule wasn't Created", remoteProvidersSchedulePage.isNewSchedulePresent("_9_30_AM"));
+        assertTrue("New Schedule wasn't created", remoteProvidersSchedulePage.isNewSchedulePresent("_9_30_AM"));
 
         remoteProvidersSchedulePage.clickScheduleNewImportButton()
                 .setFrequency(frequency)
@@ -523,7 +523,7 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setPeriodOfDay(periodOfDay)
                 .clickAddScheduledUpdated();
 
-        assertTrue("Same Schedule was Created",
+        assertTrue("Same Schedule was created",
                 remoteProvidersSchedulePage.isErrorPresent("Another remote provider import is scheduled at that time/frequency"));
     }
 
