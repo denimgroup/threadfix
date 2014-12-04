@@ -94,14 +94,13 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
 
         HttpResponse response = utils.getUrlWithConfigurer(getUrl(), addCtsAuth);
 
-        return response.getStringOrThrowRestException();
+        return response.getBodyAsString();
     }
 
     private String getScansJSON(String applicationId) {
-
         HttpResponse response = utils.getUrlWithConfigurer(url + "/" + applicationId + "/uFindings", addCtsAuth);
 
-        return response.getStringOrThrowRestException();
+        return response.getBodyAsString();
     }
 
     private static final SanitizedLogger LOG = new SanitizedLogger(TrustwaveHailstormRemoteProvider.class);
@@ -230,7 +229,6 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
 
     @Override
     public List<RemoteProviderApplication> fetchApplications() {
-
         String serverReturn = getApplicationJson();
 
         checkReturnCode(serverReturn);
@@ -291,12 +289,15 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
 
             if (returnCode != 0) {
                 throw new RestIOException(
-                        "Got error from server with code " + returnCode +
-                                " and string value " + statusMap.get(returnCode), returnCode);
+                        "Server returned code " + returnCode +
+                                " (" + statusMap.get(returnCode) + ")", returnCode);
             }
 
         } catch (JSONException e) {
-            throw new RestIOException(e, "Unable to connect to Trustwave servers. Check your URL and credentials.", -1);
+            throw new RestIOException(e,
+                    "Error parsing Trustwave response. " +
+                    "This is usually due to an incorrect access token value.",
+                    -1);
         }
     }
 }
