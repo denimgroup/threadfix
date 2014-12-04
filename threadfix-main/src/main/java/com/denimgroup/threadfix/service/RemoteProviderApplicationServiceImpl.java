@@ -338,17 +338,19 @@ public class RemoteProviderApplicationServiceImpl implements
         RemoteProviderApplication applicationFromId = load(remoteProviderApplicationId);
         RemoteProviderApplication applicationFromName = remoteProviderApplicationDao.retrieveByCustomName(customName);
 
-        if (applicationFromName == null) {
-            applicationFromId.setCustomName(customName);
-            remoteProviderApplicationDao.saveOrUpdate(applicationFromId);
-            log.info("Successfully updated name of remote provider application with native ID " +
-                    applicationFromId.getNativeId() + " to name " + customName);
-        } else {
+        if (applicationFromName != null) {
             if (applicationFromId.getId().equals(remoteProviderApplicationId)) {
                 log.debug("The custom name was not changed, continuing");
             } else {
                 return "That name was already taken.";
             }
+        } else if (customName.length() > 100) {
+            return "Maximum length is 100 characters.";
+        } else {
+            applicationFromId.setCustomName(customName);
+            remoteProviderApplicationDao.saveOrUpdate(applicationFromId);
+            log.info("Successfully updated name of remote provider application with native ID " +
+                    applicationFromId.getNativeId() + " to name " + customName);
         }
 
         return "Success";
