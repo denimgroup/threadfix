@@ -26,16 +26,18 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
-public class ApplicationEntIT extends BaseIT {
+public class ApplicationEntIT extends BaseDataTest {
 
     @Test
     public void viewBasicPermissibleUsers(){
@@ -53,5 +55,29 @@ public class ApplicationEntIT extends BaseIT {
                 applicationDetailPage.isUserPresentPerm("user"));
         assertFalse("A user without the correct permissions is in the permissible user list.",
                 applicationDetailPage.isUserPresentPerm(userName));
+    }
+
+    @Test
+    public void testTeamNameNotVisibleInChangeAppTeam() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canManageApplications");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        ApplicationDetailPage applicationDetailPage = loginPage.login(user, "TestPassword")
+                .clickOrganizationHeaderLink()
+                .expandTeamRowByName(teamName)
+                .clickViewAppLink(appName,teamName)
+                .clickEditDeleteBtn();
+
+        assertTrue("Team name should not be visible given user permissions",
+                !applicationDetailPage.isTeamDisplayedinEditDeleteDropdown(hiddenTeam));
     }
 }

@@ -24,10 +24,12 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
+import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TagDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.microsoft.tfs.core.clients.registration.Database;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
@@ -110,5 +112,141 @@ public class AnalyticsEntIT extends BaseDataTest {
                 .clickTagsLink();
 
         assertTrue("HIPAA Tag not on page", driver.findElement(By.linkText("HIPAA")).isDisplayed());
+    }
+
+    @Test
+    public void testTrendingReportTeamInfoLeak() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
+                .clickAnalyticsLink()
+                .expandTeamApplicationFilterReport("trendingFilterDiv");
+
+        assertTrue("Team name is displayed and should not be",
+                !analyticsPage.isTeamDisplayedinTeamDropDownReport(hiddenTeam,"trendingFilterDiv"));
+    }
+
+    @Test
+    public void testTrendingReportAppInfoLeak() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
+                .clickAnalyticsLink()
+                .expandTeamApplicationFilterReport("trendingFilterDiv");
+
+        assertTrue("Team/App name is displayed and should not be",
+                !analyticsPage.isAppDisplayedinAppDropDownReport(hiddenTeam, hiddenApp, "trendingFilterDiv"));
+    }
+
+    @Test
+    public void testSnapshotReportTeamInfoLeak() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true)
+                .expandTeamApplicationFilterReport("snapshotFilterDiv");
+
+        assertTrue("Team name is displayed and should not be",
+                !analyticsPage.isTeamDisplayedinTeamDropDownReport(hiddenTeam,"snapshotFilterDiv"));
+    }
+
+    @Test
+    public void testSnapshotReportAppInfoLeak() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
+                .clickAnalyticsLink()
+                .clickSnapshotTab(true)
+                .expandTeamApplicationFilterReport("snapshotFilterDiv");
+
+        assertTrue("Team/App name is displayed and should not be",
+                !analyticsPage.isAppDisplayedinAppDropDownReport(hiddenTeam, hiddenApp, "snapshotFilterDiv"));
+    }
+
+    @Test
+    public void testVulnerabilitySearchReportTeamInfoLeak() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
+                .clickAnalyticsLink()
+                .clickVulnerabilitySearchTab()
+                .expandTeamApplicationFilter("vulnSearchFilterDiv");
+
+        assertTrue("Team name is displayed and should not be",
+                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"vulnSearchFilterDiv"));
+    }
+
+    @Test
+    public void testVulnerabilitySearchReportAppInfoLeak() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenTeam = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createTeam(hiddenTeam);
+        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
+        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
+                .clickAnalyticsLink()
+                .clickVulnerabilitySearchTab()
+                .expandTeamApplicationFilter("vulnSearchFilterDiv");
+
+        assertTrue("Team/App name is displayed and should not be",
+                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "vulnSearchFilterDiv"));
     }
 }

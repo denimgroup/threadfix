@@ -1015,6 +1015,10 @@ public class ApplicationDetailPage extends BasePage {
         return false;
     }
 
+    public boolean isTeamDisplayedinEditDeleteDropdown(String teamName) {
+        return driver.findElementById("organizationId").getText().contains(teamName);
+    }
+
     public boolean isUserPresentPerm(String user) {
         for (int i = 1; i <= getNumPermUsers(); i++) {
             if (driver.findElementById("name" + i).getText().contains(user)) {

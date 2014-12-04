@@ -311,6 +311,34 @@ public class AnalyticsPage extends BasePage {
         return expected.equals(driver.findElementById("totalBadge" + level).getText().trim());
     }
 
+    public boolean isTeamDisplayedinTeamDropDownReport(String teamName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showTeamInputReport")).click();
+        filterDiv.findElement(By.id("teamNameTypeaheadReport")).sendKeys(teamName);
+        return !driver.findElementsByLinkText(teamName).isEmpty();
+    }
+
+    public boolean isAppDisplayedinAppDropDownReport(String teamName, String appName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showApplicationInputReport")).click();
+        filterDiv.findElement(By.id("applicationNameTypeaheadReport")).sendKeys(teamName);
+        return !driver.findElementsByLinkText(teamName + " / " + appName).isEmpty();
+    }
+
+    public boolean isTeamDisplayedinTeamDropDown(String teamName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showTeamInput")).click();
+        filterDiv.findElement(By.id("teamNameTypeahead")).sendKeys(teamName);
+        return !driver.findElementsByLinkText(teamName).isEmpty();
+    }
+
+    public boolean isAppDisplayedinAppDropDown(String teamName, String appName, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showApplicationInput")).click();
+        filterDiv.findElement(By.id("applicationNameTypeahead")).sendKeys(teamName);
+        return !driver.findElementsByLinkText(teamName + " / " + appName).isEmpty();
+    }
+
     public boolean isSeverityLevelShown(String level) {
         return driver.findElementsById("totalBadge" + level).size() != 0;
     }
