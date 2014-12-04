@@ -2,7 +2,7 @@
 
     <div class="modal-header">
         <h4 id="myModalLabel">
-            Edit Name for {{ object.nativeId }}
+            Edit Name for {{ object.nativeName || object.nativeId }}
         </h4>
     </div>
 
@@ -16,7 +16,7 @@
                                id="customName"
                                name="customName"
                                ng-model="object.customName"
-                               placeholder="{{object.nativeId}}"
+                               placeholder="{{ object.nativeName || object.nativeId }}"
                                ng-maxlength="100"
                                focus-on="true"
                                 />

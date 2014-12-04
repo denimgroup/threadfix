@@ -220,6 +220,8 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
             $scope.empty = $scope.providers.length === 0;
 
+            provider.hasCredentials = "Yes";
+
             $scope.providers.sort(nameCompare);
 
             $scope.successMessage = "Successfully edited remote provider " + newProvider.name;
@@ -252,6 +254,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                                 organization: $scope.teams[0],
                                 application: $scope.teams[0].applications[0],
                                 nativeId: app.nativeId,
+                                nativeName: app.nativeName,
                                 customName: app.customName
                             }
                     } else {
@@ -274,6 +277,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                             organization: team,
                             application: application,
                             remoteProviderType: provider,
+                            nativeName: app.nativeName,
                             customName: app.customName,
                             nativeId: app.nativeId
                         }
@@ -325,7 +329,8 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 object: function() {
                     return {
                         customName: app.customName,
-                        nativeId: app.nativeId
+                        nativeId: app.nativeId,
+                        nativeName: app.nativeName
                     }
                 },
                 buttonText: function() {
