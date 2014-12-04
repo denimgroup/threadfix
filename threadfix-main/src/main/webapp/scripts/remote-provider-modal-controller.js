@@ -49,7 +49,7 @@ myAppModule.controller('RemoteProviderModalController', function ($scope, $modal
                         if (data.success) {
                             $modalInstance.close(data.object);
                         } else {
-                            $scope.error = "Failure. Message was : " + data.message;
+                            $scope.error = "Failure. " + data.message;
                         }
                     }).
                     error(function(data, status, headers, config) {

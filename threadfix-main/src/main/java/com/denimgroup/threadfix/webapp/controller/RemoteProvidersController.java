@@ -77,7 +77,7 @@ public class RemoteProvidersController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
-		log.info("Processing request for Remote Provider index.");
+		log.debug("Processing request for Remote Provider index.");
 		List<RemoteProviderType> typeList = remoteProviderTypeService.loadAll();
 
 		for (RemoteProviderType type : typeList) {

@@ -20,6 +20,41 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
         }).length > 0;
     };
 
+    var setCredentialsMatrix = function(provider) {
+
+        var hasCredentials = false;
+
+        if (provider.authenticationFields.length) {
+            var authString = "";
+
+            provider.authenticationFields.forEach(function(field) {
+                authString = authString + field.name + ", ";
+
+                if (field.value) {
+                    hasCredentials = true;
+                }
+            });
+
+            if (authString.length > 0) {
+                authString = authString.substring(0, authString.length - 2);
+            }
+
+            provider.authInformation = authString;
+        } else if (provider.hasApiKey) {
+            provider.authInformation = "API Key";
+            if (provider.apiKey) {
+                hasCredentials = true;
+            }
+        } else if (provider.hasUserNamePassword) {
+            provider.authInformation = "Username and Password";
+            if (provider.username) {
+                hasCredentials = true;
+            }
+        }
+
+        provider.hasCredentials = hasCredentials ? 'Yes' : 'No';
+    };
+
     $scope.$on('rootScopeInitialized', function() {
         $http.get(tfEncoder.encode('/configuration/remoteproviders/getMap')).
             success(function(data, status, headers, config) {
@@ -37,6 +72,8 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                     $scope.providers.forEach($scope.paginate);
 
                     $scope.providers.forEach(calculateShowImportAll);
+
+                    $scope.providers.forEach(setCredentialsMatrix);
 
                     $rootScope.$broadcast('scheduledImports', $scope.scheduledImports);
 
@@ -83,6 +120,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                         provider.remoteProviderApplications = undefined;
                         provider.successMessage = undefined;
                         provider.errorMessage = undefined;
+                        provider.hasCredentials = "No";
                         $scope.successMessage = provider.name + " configuration was cleared successfully.";
                     } else {
                         provider.errorMessage = "Error encountered: " + data.message;
@@ -182,6 +220,8 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
             $scope.empty = $scope.providers.length === 0;
 
+            provider.hasCredentials = "Yes";
+
             $scope.providers.sort(nameCompare);
 
             $scope.successMessage = "Successfully edited remote provider " + newProvider.name;
@@ -214,6 +254,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                                 organization: $scope.teams[0],
                                 application: $scope.teams[0].applications[0],
                                 nativeId: app.nativeId,
+                                nativeName: app.nativeName,
                                 customName: app.customName
                             }
                     } else {
@@ -236,6 +277,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                             organization: team,
                             application: application,
                             remoteProviderType: provider,
+                            nativeName: app.nativeName,
                             customName: app.customName,
                             nativeId: app.nativeId
                         }
@@ -287,7 +329,8 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                 object: function() {
                     return {
                         customName: app.customName,
-                        nativeId: app.nativeId
+                        nativeId: app.nativeId,
+                        nativeName: app.nativeName
                     }
                 },
                 buttonText: function() {

@@ -20,8 +20,8 @@
             <tr>
                 <th class="medium first">Name</th>
                 <c:if test="${ canManageRemoteProviders }">
-                    <th class="medium">User name</th>
-                    <th class="medium">API Key</th>
+                    <th class="medium">Authentication Type</th>
+                    <th class="medium">Configured?</th>
                     <th class="medium last">Configure</th>
                 </c:if>
             </tr>
@@ -36,10 +36,10 @@
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td id="username{{ $index }}">
-                        {{ provider.username }}
+                        {{ provider.authInformation }}
                     </td>
                     <td id="apiKey{{ $index }}">
-                        {{ provider.apiKey }}
+                        {{ provider.hasCredentials }}
                     </td>
                     <td>
                         <a id="configure{{ $index }}" class="btn" ng-click="configure(provider)">Configure</a>
@@ -135,7 +135,7 @@
             <tbody>
 
             <tr ng-repeat="app in provider.displayApps">
-                <td id="provider{{ provider.id }}appid{{ app.id }}">
+                <td id="provider{{ provider.id }}appid{{ app.id }}" style="word-wrap: break-word">
                     {{ app.customName || app.nativeName }}
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
