@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -70,8 +71,10 @@ public class DynamicFormFieldParser {
         LOG.debug("Starting JSON field description deserialization.");
 
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             JiraJsonMetadataResponse response =
-                    new ObjectMapper().readValue(jsonString, JiraJsonMetadataResponse.class);
+                    objectMapper.readValue(jsonString, JiraJsonMetadataResponse.class);
 
             assert response.projects.size() != 0 :
                     "The response didn't contain any projects. Something went wrong.";
