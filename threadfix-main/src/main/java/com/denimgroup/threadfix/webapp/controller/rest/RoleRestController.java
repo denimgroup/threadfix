@@ -60,11 +60,13 @@ public class RoleRestController {
             role.setCanGenerateWafRules(allPermissions);
             role.setCanManageApiKeys(allPermissions);
             role.setCanManageApplications(allPermissions);
+            role.setCanManageGrcTools(allPermissions);
             role.setCanManageDefectTrackers(allPermissions);
             role.setCanManageRemoteProviders(allPermissions);
             role.setCanManageScanAgents(allPermissions);
             role.setCanManageSystemSettings(allPermissions);
             role.setCanManageRoles(allPermissions);
+            role.setCanManageTags(allPermissions);
             role.setCanManageTeams(allPermissions);
             role.setCanManageUsers(allPermissions);
             role.setCanManageUsers(allPermissions);
@@ -97,6 +99,9 @@ public class RoleRestController {
                 break;
             case "canManageTeams":
                 role.setCanManageTeams(true);
+                break;
+            case "canManageGRCTools":
+                role.setCanManageGrcTools(true);
                 break;
             case "canManageDefectTrackers":
                 role.setCanManageDefectTrackers(true);
