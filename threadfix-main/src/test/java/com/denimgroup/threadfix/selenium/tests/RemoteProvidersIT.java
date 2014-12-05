@@ -130,7 +130,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.sleep(1000);
 
 		assertTrue("Incorrect credentials accepted",
-                remoteProvidersIndexPage.getErrorMessage().contains("Failure. Message was : undefined"));
+                remoteProvidersIndexPage.getErrorMessage().contains("Failure. undefined"));
 	}
 
 	@Test

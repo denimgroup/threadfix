@@ -115,7 +115,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testTrendingReportTeamInfoLeak() {
+    public void testIssue842Part1() {
         String roleName = getName();
         String user = getName();
         String hiddenTeam = getName();
@@ -137,7 +137,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testTrendingReportAppInfoLeak() {
+    public void testIssue842Part2() {
         String roleName = getName();
         String user = getName();
         String hiddenTeam = getName();
@@ -159,7 +159,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testSnapshotReportTeamInfoLeak() {
+    public void testIssue845Part1() {
         String roleName = getName();
         String user = getName();
         String hiddenTeam = getName();
@@ -182,7 +182,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testSnapshotReportAppInfoLeak() {
+    public void testIssue845Part2() {
         String roleName = getName();
         String user = getName();
         String hiddenTeam = getName();
@@ -205,7 +205,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testVulnerabilitySearchReportTeamInfoLeak() {
+    public void testIssue841Part1() {
         String roleName = getName();
         String user = getName();
         String hiddenTeam = getName();
@@ -228,7 +228,7 @@ public class AnalyticsEntIT extends BaseDataTest {
     }
 
     @Test
-    public void testVulnerabilitySearchReportAppInfoLeak() {
+    public void testIssue841Part2() {
         String roleName = getName();
         String user = getName();
         String hiddenTeam = getName();
