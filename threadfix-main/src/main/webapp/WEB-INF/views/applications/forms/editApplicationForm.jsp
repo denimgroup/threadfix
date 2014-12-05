@@ -57,6 +57,7 @@
                         </option>
 					</select>
 					<errors name="organization.id" cssClass="errors" />
+                    <span id="teamSelectError" class="errors" ng-show="object.organization_error"> {{ object.organization_error }}</span>
 				</td>
 			</tr>
 			<tr>

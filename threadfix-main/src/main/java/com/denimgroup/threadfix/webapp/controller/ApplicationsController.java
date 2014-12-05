@@ -206,7 +206,7 @@ public class ApplicationsController {
         // edit form
         map.put("applicationTypes", FrameworkType.values());
         map.put("applicationCriticalityList", applicationCriticalityService.loadAll());
-        map.put("teams", organizationService.loadAllActive());
+        map.put("teams", organizationService.loadTeams(Permission.CAN_MANAGE_TEAMS, false));
 
         return getSerializedMap(map);
     }

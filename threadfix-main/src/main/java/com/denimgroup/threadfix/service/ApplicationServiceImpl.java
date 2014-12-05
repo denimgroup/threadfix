@@ -382,7 +382,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		Application oldApp = loadApplication(application.getId());
-		
+
+
+        if (permissionService != null && application.getOrganization() != null && oldApp != null
+                && application.getOrganization().getId() != oldApp.getOrganization().getId()) {
+            if (!permissionService.isAuthorized(Permission.CAN_MANAGE_TEAMS, application.getOrganization().getId(), null)) {
+                result.rejectValue("organization", null, null, "You don't have permission for this team.");
+                return;
+            }
+        }
+
 		if (oldApp != null && !canManageWafs) {
 			application.setWaf(oldApp.getWaf());
 		}
@@ -423,7 +432,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 				application.getId())) {
 			result.rejectValue("name", "errors.nameTaken");
 		}
-		
+
 		Integer databaseWafId = null;
 		if (databaseApplication != null && databaseApplication.getWaf() != null) {
 			databaseWafId = databaseApplication.getWaf().getId();
@@ -500,6 +509,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             canManageDefectTrackers = true;
             canManageWafs = true;
         } else if (application.getOrganization() != null) {
+
 			canManageWafs = permissionService.isAuthorized(Permission.CAN_MANAGE_WAFS,
 					application.getOrganization().getId(), application.getId());
 			
@@ -508,11 +518,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 		
 		Application databaseApplication = loadApplication(application.getName().trim(), application.getOrganization().getId());
-		if (databaseApplication != null) {
+
+        if (databaseApplication != null) {
 			result.rejectValue("name", "errors.nameTaken");
 			return;
 		}
-		
+
 		if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().equals("")) {
 			File file = new File(application.getRepositoryFolder().trim());
 			if (!file.exists() || !file.isDirectory()) {
