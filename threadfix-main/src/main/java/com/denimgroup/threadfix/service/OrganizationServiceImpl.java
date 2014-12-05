@@ -97,43 +97,62 @@ public class OrganizationServiceImpl extends AbstractNamedObjectService<Organiza
 	
 	@Override
 	public List<Organization> loadAllActiveFilter() {
-		if (!EnterpriseTest.isEnterprise() || PermissionUtils.hasGlobalPermission(Permission.READ_ACCESS))
-			return loadAllActive();
+
+        return loadTeams(Permission.READ_ACCESS, true);
+
+	}
+
+    @Override
+    public List<Organization> loadTeams(Permission permission, boolean checkApps) {
+        if (!EnterpriseTest.isEnterprise() || PermissionUtils.hasGlobalPermission(permission))
+            return loadAllActive();
 
         if (permissionService == null) {
             throw new IllegalStateException("EnterpriseTest.isEnterprise returned true but permissionService is null. " +
                     "Fix the code.");
         }
 
-		Set<Integer> ids = permissionService.getAuthenticatedTeamIds();
-		
-		Set<Integer> teamIds;
-		
-		if (ids == null || ids.isEmpty()) {
-			teamIds = new HashSet<>();
-		} else {
-			teamIds = new HashSet<>(ids);
-		}
-		
-		// Also add in the teams that only have app permissions
-		Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
-		if (appIds != null && !appIds.isEmpty()) {
-			for (Integer id : appIds) {
-				Application app = applicationService.loadApplication(id);
-				if (app != null && app.getOrganization() != null && 
-						app.getOrganization().getId() != null && 
-						!teamIds.contains(app.getOrganization().getId())) {
-					teamIds.add(app.getOrganization().getId());
-				}
-			}
-		}
-		
-		if (teamIds.size() == 0) {
-			return list();
-		}
-		
-		return organizationDao.retrieveAllActiveFilter(teamIds);
-	}
+        Set<Integer> ids = permissionService.getAuthenticatedTeamIds();
+
+        Set<Integer> teamIds;
+
+        if (ids == null || ids.isEmpty()) {
+            teamIds = new HashSet<>();
+        } else {
+            teamIds = new HashSet<>(ids);
+        }
+
+        if (checkApps) {
+            // Also add in the teams that only have app permissions
+            Set<Integer> appIds = permissionService.getAuthenticatedAppIds();
+            if (appIds != null && !appIds.isEmpty()) {
+                for (Integer id : appIds) {
+                    Application app = applicationService.loadApplication(id);
+                    if (app != null && app.getOrganization() != null &&
+                            app.getOrganization().getId() != null &&
+                            !teamIds.contains(app.getOrganization().getId())) {
+                        teamIds.add(app.getOrganization().getId());
+                    }
+                }
+            }
+        }
+
+        if (teamIds.size() == 0) {
+            return list();
+        }
+
+        List<Organization> tempList = organizationDao.retrieveAllActiveFilter(teamIds);
+        if (permission == Permission.READ_ACCESS)
+            return tempList;
+        else {
+            List<Organization> returnList = list();
+            for (Organization org: tempList) {
+                if (permissionService.isAuthorized(permission, org.getId(), null))
+                    returnList.add(org);
+            }
+            return returnList;
+        }
+    }
 
     @Override
     GenericNamedObjectDao<Organization> getDao() {
