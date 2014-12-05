@@ -51,13 +51,19 @@ public class DynamicFormFieldParser {
     private DynamicFormFieldParser() {
     }
 
+    private static ObjectMapper getLenientObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
+    }
+
 //    private static final String TIME_TRACKING
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DynamicFormFieldParser.class);
 
     public static Project getJiraProjectMetadata(String jsonString) {
         try {
-            return new ObjectMapper().readValue(jsonString, JiraJsonMetadataResponse.class).getProjectOrNull();
+            return getLenientObjectMapper().readValue(jsonString, JiraJsonMetadataResponse.class).getProjectOrNull();
         } catch (IOException e) {
             LOG.info("Failed to deserialize JSON.");
             LOG.debug("Failing JSON: " + jsonString, e);
@@ -71,8 +77,8 @@ public class DynamicFormFieldParser {
         LOG.debug("Starting JSON field description deserialization.");
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ObjectMapper objectMapper = getLenientObjectMapper();
+
             JiraJsonMetadataResponse response =
                     objectMapper.readValue(jsonString, JiraJsonMetadataResponse.class);
 
