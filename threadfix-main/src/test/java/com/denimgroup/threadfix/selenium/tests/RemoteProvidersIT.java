@@ -27,12 +27,9 @@ import com.denimgroup.threadfix.CommunityTests;
 import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
-
-import javax.validation.constraints.AssertTrue;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -643,6 +640,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("PHP Demo site"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearQualys();
+
+        assertTrue("Qualys configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
     }
 
     @Test
@@ -657,6 +659,11 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("Apache"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearVeraCode();
+
+        assertTrue("Veracode configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
     }
 
     @Test
@@ -669,5 +676,10 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Modal does not contain app name",
                 driver.findElement(By.id("myModalLabel")).getText().contains("Demo Site BE"));
+
+        remoteProvidersIndexPage = remoteProvidersIndexPage.closeModal().clearWhiteHat();
+
+        assertTrue("WhiteHat Sentinel configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 }
