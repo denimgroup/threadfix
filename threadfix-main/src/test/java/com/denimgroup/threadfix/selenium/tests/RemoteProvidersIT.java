@@ -82,11 +82,15 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Qualys was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider QualysGuard WAS"));
+        assertTrue("Qualys configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0,"Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearQualys();
 
         assertTrue("Qualys configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("QualysGuard WAS configuration was cleared successfully."));
+        assertTrue("Qualys configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
     }
 
     @Test
@@ -110,11 +114,15 @@ public class RemoteProvidersIT extends BaseDataTest {
 
 		assertTrue("WhiteHat Sentinel was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
+        assertTrue("WhiteHat Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(3, "Yes"));
 		
 		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
 		
 		assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
+        assertTrue("WhiteHat Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(3, "No"));
 	}
 
 	@Test
@@ -139,11 +147,15 @@ public class RemoteProvidersIT extends BaseDataTest {
 
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
+        assertTrue("Veracode configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(2, "Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
+        assertTrue("Veracode configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(2, "No"));
 	}
 	
 	@Test

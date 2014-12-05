@@ -303,6 +303,10 @@ public class RemoteProvidersIndexPage extends BasePage {
         return driver.findElementsByLinkText(appName).size() != 0;
     }
 
+    public boolean checkConfigurationMessage(int provider, String status) {
+        return driver.findElementById("apiKey" + provider).getText().contains(status);
+    }
+
     public boolean isTeamLinkPresent(String teamName) {
         return driver.findElementsByLinkText(teamName).size() != 0;
     }
