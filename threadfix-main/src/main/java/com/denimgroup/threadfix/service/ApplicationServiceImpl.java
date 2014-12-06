@@ -98,7 +98,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		
 		return applicationDao.retrieveAllActiveFilter(authenticatedTeamIds);
 	}
-	
+
 	@Override
 	public Application loadApplication(int applicationId) {
 		return applicationDao.retrieveById(applicationId);
