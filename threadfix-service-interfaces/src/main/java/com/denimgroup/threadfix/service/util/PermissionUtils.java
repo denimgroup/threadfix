@@ -168,6 +168,8 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 
                 if (applications != null && !applications.isEmpty()) {
                     organization.setActiveApplications(applications);
+                    organization.setApplications(applications);
+                    organization.updateVulnerabilityReport();
                     returnList.add(organization);
                 }
             }
