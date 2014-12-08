@@ -129,10 +129,10 @@ public class AnalyticsEntIT extends BaseDataTest {
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
-                .expandTeamApplicationFilterReport("trendingFilterDiv");
+                .expandTeamApplicationFilter("trendingFilterDiv");
 
         assertTrue("Team name is displayed and should not be",
-                !analyticsPage.isTeamDisplayedinTeamDropDownReport(hiddenTeam,"trendingFilterDiv"));
+                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"trendingFilterDiv"));
     }
 
     @Test
@@ -151,10 +151,10 @@ public class AnalyticsEntIT extends BaseDataTest {
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
-                .expandTeamApplicationFilterReport("trendingFilterDiv");
+                .expandTeamApplicationFilter("trendingFilterDiv");
 
         assertTrue("Team/App name is displayed and should not be",
-                !analyticsPage.isAppDisplayedinAppDropDownReport(hiddenTeam, hiddenApp, "trendingFilterDiv"));
+                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "trendingFilterDiv"));
     }
 
     @Test
@@ -174,10 +174,10 @@ public class AnalyticsEntIT extends BaseDataTest {
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true)
-                .expandTeamApplicationFilterReport("snapshotFilterDiv");
+                .expandTeamApplicationFilter("snapshotFilterDiv");
 
         assertTrue("Team name is displayed and should not be",
-                !analyticsPage.isTeamDisplayedinTeamDropDownReport(hiddenTeam,"snapshotFilterDiv"));
+                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"snapshotFilterDiv"));
     }
 
     @Test
@@ -197,10 +197,10 @@ public class AnalyticsEntIT extends BaseDataTest {
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true)
-                .expandTeamApplicationFilterReport("snapshotFilterDiv");
+                .expandTeamApplicationFilter("snapshotFilterDiv");
 
         assertTrue("Team/App name is displayed and should not be",
-                !analyticsPage.isAppDisplayedinAppDropDownReport(hiddenTeam, hiddenApp, "snapshotFilterDiv"));
+                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "snapshotFilterDiv"));
     }
 
     @Test
@@ -220,10 +220,10 @@ public class AnalyticsEntIT extends BaseDataTest {
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab()
-                .expandTeamApplicationFilter("vulnSearchFilterDiv");
+                .expandTeamApplicationFilter("vulnSearchDiv");
 
         assertTrue("Team name is displayed and should not be",
-                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"vulnSearchFilterDiv"));
+                !analyticsPage.isTeamDisplayedinTeamDropDown(hiddenTeam,"vulnSearchDiv"));
     }
 
     @Test
@@ -243,9 +243,9 @@ public class AnalyticsEntIT extends BaseDataTest {
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab()
-                .expandTeamApplicationFilter("vulnSearchFilterDiv");
+                .expandTeamApplicationFilter("vulnSearchDiv");
 
         assertTrue("Team/App name is displayed and should not be",
-                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "vulnSearchFilterDiv"));
+                !analyticsPage.isAppDisplayedinAppDropDown(hiddenTeam, hiddenApp, "vulnSearchDiv"));
     }
 }

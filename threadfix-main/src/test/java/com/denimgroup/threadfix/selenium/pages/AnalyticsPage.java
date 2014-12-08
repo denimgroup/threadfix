@@ -79,7 +79,7 @@ public class AnalyticsPage extends BasePage {
 
     public AnalyticsPage clickVulnerabilitySearchTab() {
         driver.findElementByLinkText("Vulnerability Search").click();
-        waitForElement(driver.findElementById("vulnSearchFilterDiv"));
+        waitForElement(driver.findElementById("vulnSearchDiv"));
         sleep(2500);
         return  new AnalyticsPage(driver);
     }

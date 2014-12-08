@@ -24,12 +24,10 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
-import com.denimgroup.threadfix.selenium.pages.AnalyticsPage;
-import com.denimgroup.threadfix.selenium.pages.TeamDetailPage;
-import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.pages.UserIndexPage;
+import com.denimgroup.threadfix.selenium.pages.*;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import com.denimgroup.threadfix.selenium.tests.ScanContents;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -86,5 +84,35 @@ public class TeamEntIT extends BaseDataTest {
 
         assertTrue("Hidden Team is present and shouldn't be",
                 driver.findElements(By.id("teamName" + hiddenTeam)).isEmpty());
+    }
+
+    @Test
+    public void testIssue866() {
+        String roleName = getName();
+        String user = getName();
+        String hiddenApp = getName();
+
+        initializeTeamAndApp();
+        DatabaseUtils.createUser(user);
+        DatabaseUtils.createApplication(teamName, hiddenApp);
+        DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
+        DatabaseUtils.uploadScan(teamName,hiddenApp, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
+        DatabaseUtils.createSpecificPermissionRole(roleName, "canGenerateReports");
+        DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
+
+        loginPage.defaultLogin()
+                .clickManageUsersLink()
+                .clickEditPermissions(user)
+                .editSpecificPermissions(teamName, "all", roleName)
+                .toggleAllApps()
+                .setApplicationRole(appName, roleName)
+                .clickModalSubmit()
+                .logout();
+
+        TeamIndexPage teamIndexPage = loginPage.login(user, "TestPassword")
+                .clickOrganizationHeaderLink();
+
+        assertTrue("App vulnerabilities are shown which user should not have permissions to see.",
+                teamIndexPage.teamVulnerabilitiesFiltered(teamName,"Total","45"));
     }
 }
