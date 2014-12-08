@@ -5,13 +5,13 @@
         <a id="toggleAllButton" class="btn" ng-click="toggleAllFilters()">
             {{ (showSaveAndLoadControls || showTeamAndApplicationControls || showDetailsControls || showDateControls || showDateRange || showTypeAndMergedControls || showSaveFilter) ? 'Collapse' : 'Expand' }} All
         </a>
-        <a id="clearFiltersButton" class="btn" ng-click="resetFilters()">Clear</a>
+        <a id="clearFiltersButton" class="btn" ng-click="reset()">Clear</a>
     </div>
 </div>
 
 
 <!-- Teams and Applications section (should only show on Reports page -->
-<div class="accordion-group" ng-show="!treeApplication && !treeTeam">
+<div class="accordion-group" ng-hide="treeApplication || treeTeam || complianceActive || remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showTeamAndApplicationControls = !showTeamAndApplicationControls">
         <span id="expandTeamAndApplicationFilters" class="icon" ng-class="{ 'icon-minus': showTeamAndApplicationControls, 'icon-plus': !showTeamAndApplicationControls }"></span> Teams And Applications
     </div>
@@ -84,7 +84,7 @@
 </div>
 
 <!-- Tags. -->
-<div class="accordion-group" ng-show="!treeApplication">
+<div class="accordion-group" ng-show="treeTeam || vulnSearch || complianceActive">
     <div class="accordion-heading" ng-click="showTagControls = !showTagControls">
         <span id="expandTagFilters" class="icon" ng-class="{ 'icon-minus': showTagControls, 'icon-plus': !showTagControls }"></span> Tags
     </div>
@@ -112,7 +112,7 @@
 </div>
 
 <!-- Scanner and # Merged controls -->
-<div class="accordion-group">
+<div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication">
     <div class="accordion-heading" ng-click="showTypeAndMergedControls = !showTypeAndMergedControls">
         <span id="expandScannerFilters" class="icon" ng-class="{ 'icon-minus': showTypeAndMergedControls, 'icon-plus': !showTypeAndMergedControls }"></span> Scanner and # Merged
     </div>
@@ -156,38 +156,40 @@
     </div>
     <div class="filter-group-body" ng-show="showDetailsControls">
 
-        <div class="accordion-inner">
-            Vulnerability Type
-            <a ng-hide="showTypeInput" ng-click="showTypeInput = !showTypeInput">
-                <span id="showTypeInput" class="icon" ng-class="{ 'icon-minus': showTypeInput, 'icon-plus': !showTypeInput }"></span>
-            </a>
-            <br>
-            <input id="vulnerabilityTypeTypeahead"
-                   ng-show="showTypeInput"
-                   focus-on="showTypeInput"
-                   type="text"
-                   class="form-control"
-                   ng-model="newFilteredType.text"
-                   typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in genericVulnerabilities | filter:$viewValue | limitTo:10"
-                   typeahead-on-select="addNew(parameters.genericVulnerabilities, newFilteredType.text); newFilteredType = {}; showTypeInput = false"/>
-            <div ng-repeat="filteredType in parameters.genericVulnerabilities">
-                <span id="removeType{{ filteredType.displayId }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.genericVulnerabilities, $index)"></span>
-                {{ filteredType.name | shortCweNames }}
+        <div ng-show="treeTeam || vulnSearch || treeApplication">
+            <div class="accordion-inner">
+                Vulnerability Type
+                <a ng-hide="showTypeInput" ng-click="showTypeInput = !showTypeInput">
+                    <span id="showTypeInput" class="icon" ng-class="{ 'icon-minus': showTypeInput, 'icon-plus': !showTypeInput }"></span>
+                </a>
+                <br>
+                <input id="vulnerabilityTypeTypeahead"
+                       ng-show="showTypeInput"
+                       focus-on="showTypeInput"
+                       type="text"
+                       class="form-control"
+                       ng-model="newFilteredType.text"
+                       typeahead="(vulnerability.name + ' (CWE ' + vulnerability.displayId + ')') for vulnerability in genericVulnerabilities | filter:$viewValue | limitTo:10"
+                       typeahead-on-select="addNew(parameters.genericVulnerabilities, newFilteredType.text); newFilteredType = {}; showTypeInput = false"/>
+                <div ng-repeat="filteredType in parameters.genericVulnerabilities">
+                    <span id="removeType{{ filteredType.displayId }}" class="pointer icon icon-minus-sign" ng-click="remove(parameters.genericVulnerabilities, $index)"></span>
+                    {{ filteredType.name | shortCweNames }}
+                </div>
             </div>
-        </div>
 
-        <div class="accordion-inner">
-            Path
-            <br>
-            <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp"
-                   ng-model="parameters.path" ng-blur="refresh()" ng-enter="refresh()"/>
-        </div>
+            <div class="accordion-inner">
+                Path
+                <br>
+                <input id="pathInput" style="width: 180px;" type="text" placeholder="Example: /login.jsp"
+                       ng-model="parameters.path" ng-blur="refresh()" ng-enter="refresh()"/>
+            </div>
 
-        <div class="accordion-inner">
-            Parameter
-            <br>
-            <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username"
-                   ng-model="parameters.parameter" ng-blur="refresh()" ng-enter="refresh()"/>
+            <div class="accordion-inner">
+                Parameter
+                <br>
+                <input id="parameterFilterInput" style="width: 180px;" type="text" placeholder="Example: username"
+                       ng-model="parameters.parameter" ng-blur="refresh()" ng-enter="refresh()"/>
+            </div>
         </div>
 
         <div class="accordion-inner">
@@ -202,17 +204,33 @@
             </div>
         </div>
 
-        <div class="accordion-inner">
+        <div class="accordion-inner" ng-show="treeTeam || vulnSearch || treeApplication || trendingActive">
             Status
             <br>
             <div>
-                <input id="showOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOpen"/>Open<br>
+                <div ng-show="treeTeam || vulnSearch || treeApplication">
+                    <input id="showOpen" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOpen"/>Open<br>
+                    <input id="showFalsePositive" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showFalsePositive"/>False Positive<br>
+                </div>
+                <div ng-show="trendingActive">
+                    <input id="showOldReport" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showOld"/>Old<br>
+                    <input id="showNewReport" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showNew"/>New<br>
+                    <input id="showResurfacedReport" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showResurfaced"/>Resurfaced<br>
+                </div>
                 <input id="showClosed" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showClosed"/>Closed<br>
-                <input id="showFalsePositive" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showFalsePositive"/>False Positive<br>
                 <input id="showHidden" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showHidden"/>Hidden
             </div>
         </div>
-        <div class="accordion-inner">
+
+        <div class="accordion-inner" ng-show="trendingActive">
+            Other
+            <br>
+            <div>
+                <input id="showTotalReport" type="checkbox" class="btn" ng-change="refresh()" ng-model="parameters.showTotal"/>Total<br>
+            </div>
+        </div>
+
+        <div class="accordion-inner" ng-show="treeTeam || vulnSearch || treeApplication">
             Defect
             <br>
             <div>
@@ -226,12 +244,12 @@
 </div>
 
 <!-- Aging -->
-<div class="accordion-group">
+<div class="accordion-group" ng-hide="snapshotActive">
     <div class="accordion-heading" ng-click="showDateControls = !showDateControls">
         <span id="showDateControls" class="icon" ng-class="{ 'icon-minus': showDateControls, 'icon-plus': !showDateControls }"></span> Aging
     </div>
     <div class="filter-group-body" ng-show="showDateControls">
-        <div class="accordion-inner">
+        <div class="accordion-inner" ng-show="treeTeam || vulnSearch || treeApplication">
             Days Old
             <ul class="nav nav-pills">
                 <li id="lessThan" ng-class="{ active: parameters.daysOldModifier === 'Less' }"><a ng-click="setDaysOldModifier('Less')">Less Than</a></li>
@@ -244,11 +262,21 @@
                 <li id="90days" ng-class="{ active: parameters.daysOld === 90 }"><a ng-click="setDaysOld(90)">90 days</a></li>
             </ul>
         </div>
+
+        <div class="accordion-inner" ng-hide="treeTeam || vulnSearch || treeApplication">
+            Days Old
+            <ul class="nav nav-pills">
+                <li id="lastYearReport" ng-class="{ active: parameters.daysOldModifier === 'LastYear' }"><a ng-click="setDaysOldModifier('LastYear')">Last Year</a></li>
+                <li id="lastQuarterReport" ng-class="{ active: parameters.daysOldModifier === 'LastQuarter' }"><a ng-click="setDaysOldModifier('LastQuarter')">Last Quarter</a></li>
+                <li id="foreverReport" ng-class="{ active: parameters.daysOldModifier === 'Forever' }"><a ng-click="setDaysOldModifier('Forever')">Forever</a></li>
+            </ul>
+        </div>
+
     </div>
 </div>
 
 <!-- Date Range -->
-<div class="accordion-group">
+<div class="accordion-group" ng-hide="snapshotActive">
     <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
         <span id="showDateRange" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
     </div>
@@ -286,7 +314,7 @@
 </div>
 
 <!-- Save Filter -->
-<div class="accordion-group">
+<div class="accordion-group" ng-hide="remediationEnterpriseActive">
     <div class="accordion-heading" ng-click="showSaveFilter = !showSaveFilter">
         <span id="showSaveFilter" class="icon" ng-class="{ 'icon-minus': showSaveFilter, 'icon-plus': !showSaveFilter }"></span> Save Current Filter
     </div>
@@ -336,9 +364,16 @@
 
 <!-- Export buttons -->
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-    <div class="accordion-group">
+    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportCSVButton" ng-click="exportCSV()" class="btn">Export CSV</a>
+            <a id="exportCSVButton" ng-click="exportCSV(reportId)" class="btn">Export CSV</a>
+        </div>
+    </div>
+
+    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication || reportId === 3">
+        <div class="accordion-heading" style="text-align:center">
+            <a id="exportPNGButtonReport" class="btn"
+               ng-click="exportPNG()">Export PNG</a>
         </div>
     </div>
 </security:authorize>

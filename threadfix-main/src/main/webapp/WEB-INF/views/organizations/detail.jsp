@@ -6,6 +6,8 @@
 	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 

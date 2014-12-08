@@ -14,10 +14,6 @@
         <to>/scripts/$2</to>
     </rule>
 	<rule>
-		<from>/jasper/**</from>
-		<to>/jasper/$1</to>
-	</rule>
-	<rule>
 		<from>/styles/**</from>
 		<to>/styles/$1</to>
 	</rule>

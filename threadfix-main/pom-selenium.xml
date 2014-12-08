@@ -487,11 +487,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 			<version>${itext.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>${jasperreports.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 			<version>${persistence.version}</version>
@@ -696,7 +691,6 @@ ThreadFix is developed and maintained by Denim Group, Ltd (http://www.denimgroup
 		<hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
 		<hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
 		<itext.version>2.1.7</itext.version>
-		<jasperreports.version>4.5.0</jasperreports.version>
 		<javassist.version>3.12.0.GA</javassist.version>
 		<jgit.version>2.3.1.201302201838-r</jgit.version>
 		<jstl.version>1.2</jstl.version>

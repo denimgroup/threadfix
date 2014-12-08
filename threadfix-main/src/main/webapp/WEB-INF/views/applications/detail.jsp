@@ -18,6 +18,8 @@
 	<cbs:cachebustscript src="/scripts/scan-agent-tasks-tab-controller.js"/>
 	<cbs:cachebustscript src="/scripts/bulk-operations-controller.js"/>
 	<cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
+    <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>

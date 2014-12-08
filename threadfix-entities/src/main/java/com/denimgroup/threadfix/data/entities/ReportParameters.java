@@ -28,27 +28,22 @@ import java.io.Serializable;
 public class ReportParameters implements Serializable {
 	
 	public enum ReportFormat { 
-		BAD_FORMAT(""),
-		TRENDING("trending.jrxml"), 
-		POINT_IN_TIME("pointInTime.jrxml"), 
-		VULNERABILITY_PROGRESS_BY_TYPE("cwe.jrxml"), 
-		CHANNEL_COMPARISON_BY_VULN_TYPE("cweChannel.jrxml"), 
-		CHANNEL_COMPARISON_SUMMARY("scannerComparison.jrxml"), 
-		CHANNEL_COMPARISON_DETAIL("scannerComparisonByVulnerability"), 
-		MONTHLY_PROGRESS_REPORT("monthlyBarChart.jrxml"),
-		SIX_MONTH_SUMMARY("sixMonthSummary.jrxml"),
-		TWELVE_MONTH_SUMMARY("twelveMonthSummary.jrxml"),
-		PORTFOLIO_REPORT("portfolioReport"),
-		TOP_TEN_APPS("topTenApps.jrxml"),
-		TOP_TWENTY_APPS("topTwentyApps.jrxml"),
-		TOP_TEN_VULNS("topTenVulns.jrxml"),
-		POINT_IN_TIME_GRAPH("pointInTimeGraph.jrxml"),
-		VULNERABILITY_LIST("vulnerabilityList");
-		
-		private String fileName;
-		
-		ReportFormat(String fileName) { this.fileName = fileName; }
-		public String getFileName() { return fileName; }
+		BAD_FORMAT,
+		TRENDING,
+		POINT_IN_TIME,
+		VULNERABILITY_PROGRESS_BY_TYPE,
+		CHANNEL_COMPARISON_BY_VULN_TYPE,
+		CHANNEL_COMPARISON_SUMMARY,
+		CHANNEL_COMPARISON_DETAIL,
+		MONTHLY_PROGRESS_REPORT,
+		SIX_MONTH_SUMMARY,
+		TWELVE_MONTH_SUMMARY,
+		PORTFOLIO_REPORT,
+		TOP_TEN_APPS,
+		TOP_TWENTY_APPS,
+		TOP_TEN_VULNS,
+		POINT_IN_TIME_GRAPH,
+		VULNERABILITY_LIST;
 	}
 
 	private static final long serialVersionUID = -1005210910671815370L;
