@@ -31,7 +31,7 @@
         </div>
     </c:if>
 
-    <div id="vulnSearchFilterDiv" class="filter-controls">
+    <div id="vulnSearchDiv" class="filter-controls">
         <%@ include file="/WEB-INF/views/reports/filter.jsp" %>
     </div>
     <%@ include file="vulnSearchTree.jsp" %>
