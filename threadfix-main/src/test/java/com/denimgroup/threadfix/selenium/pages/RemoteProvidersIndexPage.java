@@ -252,12 +252,6 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 
-    public RemoteProvidersIndexPage clearQualysGuard(){
-        driver.findElementById("clearConfig3").click();
-        handleAlert();
-        return new RemoteProvidersIndexPage(driver);
-    }
-
     public RemoteProvidersIndexPage clearPreviousWhiteHat() {
         if (driver.findElementById("clearConfig1").isDisplayed()) {
             driver.findElementById("clearConfig1").click();
@@ -286,6 +280,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public RemoteProvidersIndexPage clickEditName(String provider, String appNum) {
         driver.findElementById("provider" + provider + "updateName" + appNum).click();
+        waitForElement(driver.findElementById("myModalLabel"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -306,6 +301,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public boolean isApplicationLinkPresent(String appName) {
         return driver.findElementsByLinkText(appName).size() != 0;
+    }
+
+    public boolean checkConfigurationMessage(int provider, String status) {
+        return driver.findElementById("apiKey" + provider).getText().contains(status);
     }
 
     public boolean isTeamLinkPresent(String teamName) {

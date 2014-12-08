@@ -29,7 +29,6 @@ import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.TagDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import com.microsoft.tfs.core.clients.registration.Database;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openqa.selenium.By;
