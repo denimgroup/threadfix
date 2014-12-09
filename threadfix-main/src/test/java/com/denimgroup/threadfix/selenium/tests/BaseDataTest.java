@@ -46,7 +46,6 @@ public abstract class BaseDataTest extends BaseIT{
     protected static String QUALYS_PASS = System.getProperty("QUALYS_PASS");
     protected static String QUALYS_PLATFORM = System.getProperty("QUALYS_PLATFORM");
 
-
     protected String teamName;
     protected String appName;
 

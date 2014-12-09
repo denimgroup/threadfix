@@ -162,6 +162,12 @@ public abstract class BaseIT {
         return roleName;
     }
 
+    protected String createSpecificPermissionRole(String permission) {
+        String roleName = getName();
+        DatabaseUtils.createSpecificPermissionRole(roleName, permission);
+        return roleName;
+    }
+
     protected String createTag() {
         String tagName = getName();
         DatabaseUtils.createTag(tagName);

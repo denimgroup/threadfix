@@ -115,16 +115,11 @@ public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
     public void testIssue842Part1() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
@@ -137,16 +132,12 @@ public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
     public void testIssue842Part2() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
+        String hiddenApp = createApplication(hiddenTeam);
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
@@ -159,16 +150,11 @@ public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
     public void testIssue845Part1() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
@@ -182,16 +168,12 @@ public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
     public void testIssue845Part2() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
+        String hiddenApp = createApplication(hiddenTeam);
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
@@ -205,16 +187,11 @@ public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
     public void testIssue841Part1() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
@@ -228,16 +205,12 @@ public class AnalyticsEntIT extends BaseDataTest {
 
     @Test
     public void testIssue841Part2() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
+        String hiddenApp = createApplication(hiddenTeam);
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         AnalyticsPage analyticsPage = loginPage.login(user, "TestPassword")
