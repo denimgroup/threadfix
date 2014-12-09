@@ -56,7 +56,7 @@ public class GRCControl extends AuditableEntity {
     private String status;
 
     @Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
-    private String grcReferenceUrl;
+    private String referenceUrl;
 
     private Vulnerability vulnerability;
 
@@ -101,12 +101,12 @@ public class GRCControl extends AuditableEntity {
         this.status = status;
     }
 
-    public String getGrcReferenceUrl() {
-        return grcReferenceUrl;
+    public String getReferenceUrl() {
+        return referenceUrl;
     }
 
-    public void setGrcReferenceUrl(String grcReferenceUrl) {
-        this.grcReferenceUrl = grcReferenceUrl;
+    public void setReferenceUrl(String referenceUrl) {
+        this.referenceUrl = referenceUrl;
     }
 
     @Transient
