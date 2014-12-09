@@ -46,7 +46,7 @@ public class GRCControl extends AuditableEntity {
 
     // TODO make this smarter
     public final static Set<String> OPEN_CODES   = set("Active", "Open", "New", "CONFIRMED", "IN_PROGRESS", "Reopen",
-                                                        "Future", "In Progress", "Accepted");
+                                                        "Future", "In Progress", "Accepted", "OK");
     public final static Set<String> CLOSED_CODES = set("Closed", "Resolved", "RESOLVED", "VERIFIED", "Fixed", "Done");
 
     @Size(max = NATIVE_ID_LENGTH, message = "{errors.maxlength} " + NATIVE_ID_LENGTH + ".")
@@ -61,6 +61,8 @@ public class GRCControl extends AuditableEntity {
     private Vulnerability vulnerability;
 
     private GRCApplication grcApplication;
+
+    private String controlId;
 
     @JsonView({AllViews.TableRow.class})
     public String getNativeId(){
@@ -89,10 +91,21 @@ public class GRCControl extends AuditableEntity {
         return grcApplication;
     }
 
+    @Column(length = 50)
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
+    public String getControlId() {
+        return controlId;
+    }
+
+    public void setControlId(String controlId) {
+        this.controlId = controlId;
+    }
+
     public void setGrcApplication(GRCApplication grcApplication) {
         this.grcApplication = grcApplication;
     }
 
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
     public String getStatus() {
         return status;
     }
@@ -101,6 +114,8 @@ public class GRCControl extends AuditableEntity {
         this.status = status;
     }
 
+    @Column(length = 255)
+    @JsonView({AllViews.TableRow.class, AllViews.VulnSearch.class})
     public String getReferenceUrl() {
         return referenceUrl;
     }
