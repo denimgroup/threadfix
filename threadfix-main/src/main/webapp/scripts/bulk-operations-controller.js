@@ -43,16 +43,16 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
         }
 
         filteredVulns = filteredVulns.filter(function(vuln) {
-            return !vuln.grcControlRecord;
+            return !vuln.grcControl;
         });
 
         if (filteredVulns.length === 0) {
-            alert('All of the selected vulnerabilities already have control records.');
+            alert('All of the selected vulnerabilities already have controls.');
             return;
         }
 
         var modalInstance = $modal.open({
-            templateUrl: 'submitGrcControlRecordLoadingModal.html',
+            templateUrl: 'submitGrcControlLoadingModal.html',
             controller: 'GRCControlSubmissionModalController',
             resolve: {
                 url: function() {
@@ -73,7 +73,7 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
 
         modalInstance.result.then(function (s) {
             $scope.refresh();
-            $rootScope.$broadcast('successMessage', "Successfully submitted the Control Record: " + s);
+            $rootScope.$broadcast('successMessage', "Successfully submitted the Control: " + s);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

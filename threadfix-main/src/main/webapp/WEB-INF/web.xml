@@ -17,7 +17,6 @@
             /WEB-INF/security.xml
             classpath:/applicationContext-hibernate.xml
             classpath:/applicationContext-scheduling.xml
-            classpath:/applicationContext-webservices.xml
         </param-value>
 	</context-param>
     <filter>
