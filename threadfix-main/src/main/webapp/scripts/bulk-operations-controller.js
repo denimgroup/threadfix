@@ -108,11 +108,9 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
             controller: 'DefectSubmissionModalController',
             resolve: {
                 url: function() {
-                    var app = getApplication();
                     return tfEncoder.encode(getAppUrlBase() + "/defects/merge");
                 },
                 configUrl: function() {
-                    var app = getApplication();
                     return tfEncoder.encode(getAppUrlBase() + "/defectSubmissionWithIssues");
                 },
                 object: function () {
