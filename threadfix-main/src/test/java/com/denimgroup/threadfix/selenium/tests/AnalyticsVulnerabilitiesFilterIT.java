@@ -46,15 +46,15 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        int filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
-        analyticsPage.toggleAllFilter("vulnSearchFilterDiv", true);
+        int filtersCollapsedSize = analyticsPage.getFilterDivHeight("vulnSearchDiv");
+        analyticsPage.toggleAllFilter("vulnSearchDiv", true);
 
-        int filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchFilterDiv");
+        int filtersExpandedSize = analyticsPage.getFilterDivHeight("vulnSearchDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        analyticsPage = analyticsPage.toggleAllFilter("vulnSearchFilterDiv", false);
+        analyticsPage = analyticsPage.toggleAllFilter("vulnSearchDiv", false);
         assertFalse("Filters were not collapsed.",
-                filtersExpandedSize == analyticsPage.getFilterDivHeight("vulnSearchFilterDiv"));
+                filtersExpandedSize == analyticsPage.getFilterDivHeight("vulnSearchDiv"));
     }
 
     @Test
@@ -66,8 +66,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
-                .addTeamFilter(teamName, "vulnSearchFilterDiv");
+        analyticsPage.expandTeamApplicationFilter("vulnSearchDiv")
+                .addTeamFilter(teamName, "vulnSearchDiv");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -78,8 +78,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        analyticsPage.clearFilter("vulnSearchFilterDiv")
-                .addTeamFilter(teamName2, "vulnSearchFilterDiv");
+        analyticsPage.clearFilter("vulnSearchDiv")
+                .addTeamFilter(teamName2, "vulnSearchDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -95,8 +95,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
-                .addApplicationFilter(appName,"vulnSearchFilterDiv");
+        analyticsPage.expandTeamApplicationFilter("vulnSearchDiv")
+                .addApplicationFilter(appName,"vulnSearchDiv");
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
@@ -107,8 +107,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
-        analyticsPage.clearFilter("vulnSearchFilterDiv")
-                .addApplicationFilter(appName2,"vulnSearchFilterDiv");
+        analyticsPage.clearFilter("vulnSearchDiv")
+                .addApplicationFilter(appName2,"vulnSearchDiv");
 
         assertTrue("There should be no results shown.",
                 analyticsPage.areAllVulnerabilitiesHidden());
@@ -135,8 +135,8 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
-                .addApplicationFilter(appName, "vulnSearchFilterDiv");
+        analyticsPage.expandTeamApplicationFilter("vulnSearchDiv")
+                .addApplicationFilter(appName, "vulnSearchDiv");
 
         assertTrue("Only 9 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "9"));
@@ -156,7 +156,7 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
 
         analyticsPage.clickVulnerabilitySearchTab();
 
-        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isElementPresent("vulnSearchFilterDiv"));
+        assertTrue("Vulnerabilities Lists are not Present", analyticsPage.isElementPresent("vulnSearchDiv"));
     }
 
     @Test
@@ -167,21 +167,17 @@ public class AnalyticsVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickAnalyticsLink()
                 .clickVulnerabilitySearchTab();
 
-        analyticsPage.expandTeamApplicationFilter("vulnSearchFilterDiv")
-                .addTeamFilter(teamName, "vulnSearchFilterDiv");
+        analyticsPage.expandTeamApplicationFilter("vulnSearchDiv")
+                .addTeamFilter(teamName, "vulnSearchDiv");
 
-        driver.findElement(By.id("showDateControls")).click();
-        driver.findElement(By.linkText("More Than")).click();
-        driver.findElement(By.linkText("1 Week")).click();
+
+        WebElement filterDiv = driver.findElement(By.id("vulnSearchDiv"));
+        filterDiv.findElement(By.id("showDateControls")).click();
+        filterDiv.findElement(By.linkText("More Than")).click();
+        filterDiv.findElement(By.linkText("1 Week")).click();
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
-        assertTrue("Only 9 medium vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Medium", "9"));
-        assertTrue("Only 21 low vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
-        assertTrue("Only 5 info vulnerabilities should be shown.",
-                analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
 
         driver.findElement(By.linkText("Less Than")).click();
 

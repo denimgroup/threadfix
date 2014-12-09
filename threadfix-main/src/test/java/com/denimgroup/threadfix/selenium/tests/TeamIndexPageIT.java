@@ -204,6 +204,8 @@ public class TeamIndexPageIT extends BaseDataTest {
 
             analyticsPage = teamIndexPage.clickDetails();
 
+            sleep(1000);
+
             assertTrue("Navigation @ level " + levels[i] + " failed", analyticsPage.checkCorrectFilterLevel(levels[i]));
             assertTrue("Number of badge vulnerabilities at level " + levels[i] + "is incorrect",
                     analyticsPage.isVulnerabilityCountCorrect(levels[i],numVulns));

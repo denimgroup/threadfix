@@ -134,7 +134,7 @@ public class AnalyticsPage extends BasePage {
         teamNameSpace.clear();
         teamNameSpace.sendKeys(teamName);
         sleep(1000);
-        driver.findElementById("teamNameTypeahead").sendKeys(Keys.ENTER);
+        driver.findElementByLinkText(teamName).click();
         waitForResultsToLoad();
         return new AnalyticsPage(driver);
     }
@@ -193,9 +193,23 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage saveCurrentFilter(String name, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showSaveFilter")).click();
+        filterDiv.findElement(By.id("filterNameInput")).sendKeys(name);
+        filterDiv.findElement(By.id("saveFilterButton")).click();
+        return new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage expandAgingFilterReport(String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.id("showDateControlsReport")).click();
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage expandAgingFilter(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showDateControls")).click();
         return new AnalyticsPage(driver);
     }
 
@@ -205,13 +219,26 @@ public class AnalyticsPage extends BasePage {
         return new AnalyticsPage(driver);
     }
 
+    public AnalyticsPage expandFieldControls(String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.id("showFieldControls")).click();
+        return new AnalyticsPage(driver);
+    }
+
     public AnalyticsPage selectFieldControls(String level, String divId) {
         WebElement filterDiv = driver.findElementById(divId);
-        filterDiv.findElement(By.id("show" + level + "Report")).click();
+        filterDiv.findElement(By.id("show" + level)).click();
         return new AnalyticsPage(driver);
     }
 
     public AnalyticsPage toggleAgingFilterReport(String age, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.linkText(age)).click();
+        sleep(1000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage toggleAgingFilter(String age, String divId) {
         WebElement filterDiv = driver.findElementById(divId);
         filterDiv.findElement(By.linkText(age)).click();
         sleep(1000);
@@ -241,6 +268,16 @@ public class AnalyticsPage extends BasePage {
         filterDiv.findElement(By.linkText("Load Filters")).click();
         filterDiv.findElement(By.id("filterSelectReport")).sendKeys(name);
         filterDiv.findElement(By.id("filterSelectReport")).sendKeys(Keys.ENTER);
+        filterDiv.findElement(By.linkText("Filters")).click();
+        sleep(1000);
+        return new AnalyticsPage(driver);
+    }
+
+    public AnalyticsPage loadFilter(String name, String divId) {
+        WebElement filterDiv = driver.findElementById(divId);
+        filterDiv.findElement(By.linkText("Load Filters")).click();
+        filterDiv.findElement(By.id("filterSelect")).sendKeys(name);
+        filterDiv.findElement(By.id("filterSelect")).sendKeys(Keys.ENTER);
         filterDiv.findElement(By.linkText("Filters")).click();
         sleep(1000);
         return new AnalyticsPage(driver);
@@ -349,7 +386,7 @@ public class AnalyticsPage extends BasePage {
 
     public boolean isReportCorrect() {
         WebElement filterDiv = driver.findElementById("trendingFilterDiv");
-        return filterDiv.findElement(By.id("toggleAllButtonReport")).isEnabled();
+        return filterDiv.findElement(By.id("toggleAllButton")).isEnabled();
     }
 
     public boolean checkCorrectFilterLevel(String level) {
@@ -357,7 +394,7 @@ public class AnalyticsPage extends BasePage {
         levels.add("Info"); levels.add("Low"); levels.add("Medium"); levels.add("High"); levels.add("Critical");
         levels.remove(level);
 
-        WebElement filterDiv = driver.findElementById("vulnSearchFilterDiv");
+        WebElement filterDiv = driver.findElementById("vulnSearchDiv");
         return (filterDiv.findElement(By.id("show" + level)).isSelected() &&
                 !filterDiv.findElement(By.id("show" + levels.get(0))).isSelected() &&
                 !filterDiv.findElement(By.id("show" + levels.get(1))).isSelected() &&

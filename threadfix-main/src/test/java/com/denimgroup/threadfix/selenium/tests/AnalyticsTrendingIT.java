@@ -45,12 +45,12 @@ public class AnalyticsTrendingIT extends BaseDataTest {
                 .clickTrendingTab(false);
 
         int filtersCollapsedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
-        analyticsPage.toggleAllFilterReport("trendingFilterDiv", true);
+        analyticsPage.toggleAllFilter("trendingFilterDiv", true);
 
         int filtersExpandedSize = analyticsPage.getFilterDivHeight("trendingFilterDiv");
         assertFalse("Filters were not expanded.", filtersCollapsedSize == filtersExpandedSize);
 
-        analyticsPage = analyticsPage.toggleAllFilterReport("trendingFilterDiv", false);
+        analyticsPage = analyticsPage.toggleAllFilter("trendingFilterDiv", false);
         assertFalse("Filters were not collapsed.",
                 filtersExpandedSize == analyticsPage.getFilterDivHeight("trendingFilterDiv"));
     }

@@ -55,8 +55,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .sleepOnArrival(5000)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
-                .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever","complianceFilterDiv")
+                .expandAgingFilter("complianceFilterDiv")
+                .toggleAgingFilter("Forever","complianceFilterDiv")
                 .sleepOnArrival(2000);
 
         return tagName;
@@ -73,8 +73,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
-                .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever", "complianceFilterDiv");
+                .expandAgingFilter("complianceFilterDiv")
+                .toggleAgingFilter("Forever", "complianceFilterDiv");
 
         assertTrue("Starting count is incorrect",
                 driver.findElement(By.cssSelector("#\\31")).getText().equals("0"));
@@ -125,8 +125,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .clickRemediationTab(false)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
-                .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever", "complianceFilterDiv");;
+                .expandAgingFilter("complianceFilterDiv")
+                .toggleAgingFilter("Forever", "complianceFilterDiv");;
 
         assertTrue("Closed vulnerability is not displayed.",
                 driver.findElements(By.id("vulnName0")).toArray().length == 2 ||
@@ -145,8 +145,8 @@ public class AnalyticsRemediationIT extends BaseDataTest {
                 .clickRemediationTab(true)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
-                .expandAgingFilterReport("complianceFilterDiv")
-                .toggleAgingFilterReport("Forever", "complianceFilterDiv")
+                .expandAgingFilter("complianceFilterDiv")
+                .toggleAgingFilter("Forever", "complianceFilterDiv")
                 .expandVulnComments("0");
 
         assertTrue("Comment not attached properly", analyticsPage.getCommentText("0").equals(testComment));
