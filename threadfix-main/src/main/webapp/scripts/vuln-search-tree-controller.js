@@ -122,6 +122,7 @@ module.controller('VulnSearchTreeController', function($scope, $rootScope, $wind
             success(function(data, status, headers, config) {
                 if (data.success) {
                     $scope.vulnTree = vulnTreeTransformer.transform(data.object);
+                    $scope.$parent.vulnTree = $scope.vulnTree;
                     $scope.badgeWidth = 0;
                     if ($scope.vulnTree) {
                         $scope.vulnTree.forEach(function(treeElement) {
