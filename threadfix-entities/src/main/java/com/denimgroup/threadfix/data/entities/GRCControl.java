@@ -37,8 +37,8 @@ import static com.denimgroup.threadfix.CollectionUtils.set;
  *
  */
 @Entity
-@Table(name = "GRCControlRecord")
-public class GRCControlRecord extends AuditableEntity {
+@Table(name = "GRCControl")
+public class GRCControl extends AuditableEntity {
 
     public static final int NATIVE_ID_LENGTH = 32;
     public final static int URL_LENGTH = 255;
@@ -56,7 +56,7 @@ public class GRCControlRecord extends AuditableEntity {
     private String status;
 
     @Size(max = URL_LENGTH, message = "{errors.maxlength} " + URL_LENGTH + ".")
-    private String snowUrl;
+    private String grcReferenceUrl;
 
     private Vulnerability vulnerability;
 
@@ -101,12 +101,12 @@ public class GRCControlRecord extends AuditableEntity {
         this.status = status;
     }
 
-    public String getSnowUrl() {
-        return snowUrl;
+    public String getGrcReferenceUrl() {
+        return grcReferenceUrl;
     }
 
-    public void setSnowUrl(String snowUrl) {
-        this.snowUrl = snowUrl;
+    public void setGrcReferenceUrl(String grcReferenceUrl) {
+        this.grcReferenceUrl = grcReferenceUrl;
     }
 
     @Transient

@@ -1,4 +1,4 @@
-<script type="text/ng-template" id="submitGrcControlRecordLoadingModal.html">
+<script type="text/ng-template" id="submitGrcControlLoadingModal.html">
     <div class="modal-header">
         <h4 id="myModalLabel">
             Submit GRC {{ vulns.length === 1 ? 'Control' : 'Controls' }}

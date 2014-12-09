@@ -64,7 +64,7 @@ public class GRCApplication extends AuditableEntity {
 
     private Map applicationJson;
 
-    private List<GRCControlRecord> grcControlRecords;
+    private List<GRCControl> grcControls;
 
     private Calendar lastUpdateTime;
 
@@ -120,12 +120,12 @@ public class GRCApplication extends AuditableEntity {
 
     @OneToMany(mappedBy = "grcApplication")
     @JsonIgnore
-    public List<GRCControlRecord> getGrcControlRecords() {
-        return grcControlRecords;
+    public List<GRCControl> getGrcControls() {
+        return grcControls;
     }
 
-    public void setGrcControlRecords(List<GRCControlRecord> grcControlRecords) {
-        this.grcControlRecords = grcControlRecords;
+    public void setGrcControls(List<GRCControl> grcControls) {
+        this.grcControls = grcControls;
     }
 
     @ManyToOne
