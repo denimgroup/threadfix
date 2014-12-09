@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.entities.ReportParameters.ReportFormat;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.PermissionService;
+import com.denimgroup.threadfix.service.VulnerabilitySearchService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.controller.ReportCheckResultBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +37,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
@@ -67,6 +65,8 @@ public class ReportsServiceImpl implements ReportsService {
     @Autowired(required = false)
     @Nullable
     private PermissionService permissionService = null;
+    @Autowired
+    private VulnerabilitySearchService vulnerabilitySearchService;
 
     @Override
     public ReportCheckResultBean generateDashboardReport(ReportParameters parameters, HttpServletRequest request) {
@@ -79,7 +79,7 @@ public class ReportsServiceImpl implements ReportsService {
         ReportCheckResultBean report = null;
 
         if (parameters.getReportFormat() == ReportFormat.TOP_TEN_APPS) {
-            applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, applicationIdList);
+            applicationIdList = applicationDao.getTopXVulnerableAppsFromList(10, new ArrayList<Integer>(), applicationIdList);
             report = getTopAppsReportD3(applicationIdList);
         }
         if (parameters.getReportFormat() == ReportFormat.POINT_IN_TIME_GRAPH) {
@@ -128,9 +128,25 @@ public class ReportsServiceImpl implements ReportsService {
         }
         map.put("vulnList", vulnerabilityDao.retrieveMapByApplicationIdList(applicationIdList));
 
-        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, applicationIdList);
-        map.put("appList", getTopAppsListInfo(top20Apps));
+        return map;
+    }
 
+    @Override
+    public Map<String, Object> generateMostAppsReport(VulnerabilitySearchParameters parameters, HttpServletRequest request) {
+        Map<String, Object> map = newMap();
+        List<Integer> teamIdList = list();
+        List<Integer> applicationIdList = list();
+
+        vulnerabilitySearchService.applyPermissions(parameters);
+
+        for (Organization organization: parameters.getTeams())
+            teamIdList.add(organization.getId());
+
+        for (Application application: parameters.getApplications())
+            applicationIdList.add(application.getId());
+
+        List<Integer> top20Apps = applicationDao.getTopXVulnerableAppsFromList(20, teamIdList, applicationIdList);
+        map.put("appList", getTopAppsListInfo(top20Apps));
         return map;
     }
 

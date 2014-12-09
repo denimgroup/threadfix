@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
-import com.denimgroup.threadfix.data.entities.ReportParameters;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.OrganizationService;
@@ -140,6 +137,17 @@ public class ReportsController {
         Map<String, Object> map = reportsService.generateSnapshotReport(reportParameters,
                 request);
         map.put("tags", tagService.loadAll());
+        return RestResponse.success(map);
+
+    }
+
+
+    @RequestMapping(value="/getTopApps", method = RequestMethod.POST)
+    public @ResponseBody RestResponse<Map<String, Object>> processTopApps(@ModelAttribute VulnerabilitySearchParameters reportParameters,
+                                                                           HttpServletRequest request) throws IOException {
+        log.info("Generating Top 20 Vulnerable applications report");
+        Map<String, Object> map = reportsService.generateMostAppsReport(reportParameters,
+                request);
         return RestResponse.success(map);
 
     }

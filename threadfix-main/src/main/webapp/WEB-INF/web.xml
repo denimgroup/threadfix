@@ -206,6 +206,7 @@
         		protected-regex ^/reports/filter$,
         		protected-regex ^/reports/search$,
         		protected-regex ^/reports/tree$,
+                protected-regex ^/reports/getTopApps$,
         		protected-regex ^/reports/parameters$,
                 protected-regex ^/reports/ajax/export/[0-9]+/[0-9]+/[0-9]+/[0-9]+$,
         		protected-regex ^/scans/table$,

@@ -61,7 +61,6 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                     $scope.loading = false;
                     $scope.resetFilters();
                     $scope.allVulns = data.object.vulnList;
-                    $scope.allApps = data.object.appList;
 
                     $scope.tags = data.object.tags;
 
@@ -416,30 +415,29 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     var processMVAData = function() {
 
-        $scope.topAppsData = $scope.allApps.filter(function(app){
-            if ($scope.parameters.teams.length === 0
-                && $scope.parameters.applications.length === 0)
-                return true;
+        $scope.loading = true;
 
-            var i;
-            for (i=0; i<$scope.parameters.teams.length; i++) {
-                if (app.teamName === $scope.parameters.teams[i].name) {
-                    return true;
-                }
-            }
+        var parameters = angular.copy($scope.parameters);
 
-            for (i=0; i<$scope.parameters.applications.length; i++) {
-                if (beginsWith($scope.parameters.applications[i].name, app.teamName + " / ") &&
-                    endsWith($scope.parameters.applications[i].name, " / " + app.appName)) {
-                    return true;
-                }
-            }
-            return false;
-        });
+        vulnSearchParameterService.updateParameters($scope.$parent, parameters);
 
-        $scope._topAppsData = angular.copy($scope.topAppsData);
+        $http.post(tfEncoder.encode("/reports/getTopApps"), parameters).
+            success(function(data) {
+                $scope.loading = false;
+                $scope.topAppsData = data.object.appList;
 
-        filterMVABySeverity();
+                if ($scope.topAppsData) {
+                    $scope._topAppsData = angular.copy($scope.topAppsData);
+                    filterMVABySeverity();
+
+                } else {
+                    $scope.noData = true;
+                };
+            })
+            .error(function() {
+                $scope.loading = false;
+            });
+
     };
 
     var filterMVABySeverity = function() {
