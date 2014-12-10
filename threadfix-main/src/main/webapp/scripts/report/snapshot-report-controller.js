@@ -390,27 +390,29 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     }
 
     var filterByTeamAndApp = function(vulnList) {
-        $scope.filterVulns = vulnList.filter(function(vuln){
 
-            if ($scope.parameters.teams.length === 0
-                && $scope.parameters.applications.length === 0)
-                return true;
+        if ($scope.parameters.teams.length === 0
+            && $scope.parameters.applications.length === 0)
+            $scope.filterVulns = vulnList;
 
-            var i;
-            for (i=0; i<$scope.parameters.teams.length; i++) {
-                if (vuln.teamName === $scope.parameters.teams[i].name) {
-                    return true;
+        else {
+            $scope.filterVulns = vulnList.filter(function(vuln){
+                var i;
+                for (i=0; i<$scope.parameters.teams.length; i++) {
+                    if (vuln.teamName === $scope.parameters.teams[i].name) {
+                        return true;
+                    }
                 }
-            }
 
-            for (i=0; i<$scope.parameters.applications.length; i++) {
-                if (beginsWith($scope.parameters.applications[i].name, vuln.teamName + " / ") &&
-                    endsWith($scope.parameters.applications[i].name, " / " + vuln.appName)) {
-                    return true;
+                for (i=0; i<$scope.parameters.applications.length; i++) {
+                    if (beginsWith($scope.parameters.applications[i].name, vuln.teamName + " / ") &&
+                        endsWith($scope.parameters.applications[i].name, " / " + vuln.appName)) {
+                        return true;
+                    }
                 }
-            }
-            return false;
-        });
+                return false;
+            });
+        }
     };
 
     var processMVAData = function() {
@@ -423,9 +425,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
         $http.post(tfEncoder.encode("/reports/getTopApps"), parameters).
             success(function(data) {
-                $scope.loading = false;
-                $scope.topAppsData = data.object.appList;
 
+                $scope.topAppsData = data.object.appList;
                 if ($scope.topAppsData) {
                     $scope._topAppsData = angular.copy($scope.topAppsData);
                     filterMVABySeverity();
@@ -433,6 +434,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
                 } else {
                     $scope.noData = true;
                 };
+                $scope.loading = false;
             })
             .error(function() {
                 $scope.loading = false;

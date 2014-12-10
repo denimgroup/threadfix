@@ -29,7 +29,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     stackedData,
                     _data,
                     circles,
-                    duration = 500;
+                    duration = 500,
+                    firstScanNotReal,
+                    lastScanNotReal;
 
                 var x = d3.time.scale().range([0, w]),
                     y = d3.scale.linear().range([h, 0]);
@@ -124,7 +126,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         return;
                     }
 
-                    var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime";});
+                    var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime" && key !== "notRealScan";});
                     if (colorDomain.length === 0) {
                         svg.append("g")
                             .append("text")
@@ -143,6 +145,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function drawReport(){
+                    if (_data.length > 0) {
+                        firstScanNotReal = _data[0].notRealScan;
+                        lastScanNotReal = _data[_data.length - 1].notRealScan;
+                    }
                     stackedData = prepareStackedData(_data);
                     stackedData.forEach(function(s) {
                         s.maxNoOfVulns = d3.max(s.values, function(d) { return d.noOfVulns; });
@@ -328,6 +334,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                                     break;
                                 }
                             }
+                        }
+
+                        if (d.values.length > 1) {
+                            if (i === 0 && firstScanNotReal)
+                                i= 1;
+                            else if (i === d.values.length - 1 && lastScanNotReal)
+                                i= i-1;
                         }
 
                         time = d.values[i].date;

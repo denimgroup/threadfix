@@ -418,7 +418,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     };
 
     var createStartHash = function(hashBefore, $scope) {
-        var startHash = {};
+        var startHash = {
+            notRealScan : true
+        };
         if ($scope.trendingScansData.length===0)
             return startHash;
         firstHashInList = $scope.trendingScansData[0];
@@ -448,7 +450,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     }
 
     var createEndHash = function(hashAfter, $scope) {
-        var endHash = {};
+        var endHash = {
+            notRealScan : true
+        };
         if ($scope.trendingScansData.length===0)
             return endHash;
         lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
