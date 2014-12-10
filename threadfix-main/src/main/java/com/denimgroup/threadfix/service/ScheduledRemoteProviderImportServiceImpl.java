@@ -30,13 +30,15 @@ import com.denimgroup.threadfix.data.dao.ScheduledRemoteProviderImportDao;
 import com.denimgroup.threadfix.data.entities.ScheduledRemoteProviderImport;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
+import com.denimgroup.threadfix.service.impl.ScheduledJobServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 /**
- * Created by dzabdi88 on 8/15/14.
+ * @author zabdisubhan
+ *
  */
 
 @Service

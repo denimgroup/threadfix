@@ -83,7 +83,7 @@ public class QueueSenderImpl implements QueueSender {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.denimgroup.threadfix.service.queue.QueueSender#startImportScans()
 	 */

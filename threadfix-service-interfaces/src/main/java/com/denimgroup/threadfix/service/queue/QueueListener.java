@@ -91,6 +91,7 @@ public class QueueListener implements MessageListener {
 				switch(text) {
 					case QueueConstants.IMPORT_SCANS_REQUEST            : importScans();  break;
 					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE : syncTrackers(); break;
+					case QueueConstants.GRC_TOOL_UPDATE_TYPE            : syncGRCTools(); break;
 				}
 			}
 
@@ -202,6 +203,24 @@ public class QueueListener implements MessageListener {
 			}
 		}
 		
+		log.info("Finished updating Defect status for all Applications.");
+	}
+
+    private void syncGRCTools() {
+		log.info("Syncing status with all GRC Tools.");
+
+		List<Application> apps = applicationService.loadAllActive();
+		if (apps == null) {
+			log.info("No applications found. Exiting.");
+			return;
+		}
+
+		for (Application application : apps) {
+			if (application != null && application.getGrcTool() != null) {
+				defectService.updateVulnsFromDefectTracker(application.getId());
+			}
+		}
+
 		log.info("Finished updating Defect status for all Applications.");
 	}
 
