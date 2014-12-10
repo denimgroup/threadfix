@@ -45,8 +45,10 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
 
@@ -67,6 +69,8 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         }
     };
     private final RemoteProviderHttpUtils utils      = new RemoteProviderHttpUtilsImpl<>(TrustwaveHailstormRemoteProvider.class);
+
+    private static final Set<String> CLOSED_CODES = set("Fixed");
 
     // CTSAuth: client_secret=<<answer>>,access_token=<<answer>>
     private String constructHeaderValue() {
@@ -91,7 +95,6 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
 
     // TODO move to code that calls the server
     private String getApplicationJson() {
-
         HttpResponse response = utils.getUrlWithConfigurer(getUrl(), addCtsAuth);
 
         return response.getBodyAsString();
@@ -139,6 +142,13 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         scan.setFindings(parser.findings);
         scan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 
+        // fixes one error?
+        Calendar instance = Calendar.getInstance();
+        if (parser.latestDate != null) {
+            instance.setTime(parser.latestDate);
+        }
+        scan.setImportTime(instance);
+
         return list(scan);
     }
 
@@ -174,9 +184,11 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 "TypeName", FindingKey.VULN_CODE
         );
         Map<FindingKey, String> map       = newMap();
-        boolean                 getStatus = false, findingIsOpen = false;
+        boolean                 getStatus = false, findingIsOpen = false, getDate = false;
 
         List<Finding> findings = list();
+
+        Date latestDate = null;
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -186,6 +198,8 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 getStatus = true;
             } else if ("UniqueFinding".equals(qName)) {
                 map.put(FindingKey.NATIVE_ID, attributes.getValue("Id"));
+            } else if ("LastFoundDate".equals(qName)) {
+                getDate = true;
             }
         }
 
@@ -193,13 +207,21 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         public void endElement(String uri, String localName, String qName) throws SAXException {
 
             if (getStatus) {
-                findingIsOpen = "Open".equals(getBuilderText());
+                findingIsOpen = !CLOSED_CODES.contains(getBuilderText());
                 getStatus = false;
             }
 
             if (key != null) {
                 map.put(key, getBuilderText());
                 key = null;
+            }
+
+            if (getDate) {
+                Date date = parseDate(getBuilderText());
+
+                if (date != null && (latestDate == null || latestDate.before(date))) {
+                    latestDate = date;
+                }
             }
 
             if ("UniqueFinding".equals(qName)) {
@@ -220,6 +242,17 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
             if (key != null || getStatus) {
                 addTextToBuilder(ch, start, length);
             }
+        }
+    }
+
+    private static final DateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'");
+
+    Date parseDate(String builderText) {
+        try {
+            return myFormat.parse(builderText);
+        } catch (ParseException e) {
+            LOG.info("Couldn't parse date " + builderText);
+            return null;
         }
     }
 
