@@ -22,11 +22,12 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.service;
+package com.denimgroup.threadfix.service.impl;
 
 import com.denimgroup.threadfix.data.dao.ScheduledJobDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ScheduledJobService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
