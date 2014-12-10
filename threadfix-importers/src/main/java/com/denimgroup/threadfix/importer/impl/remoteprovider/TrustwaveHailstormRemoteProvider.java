@@ -184,10 +184,11 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 "TypeName", FindingKey.VULN_CODE
         );
         Map<FindingKey, String> map       = newMap();
-        boolean                 getStatus = false, findingIsOpen = false, getDate = false;
+        boolean                 getStatus = false, findingIsOpen = false, getDate = false, inFinding = false;
 
         List<Finding> findings = list();
 
+        StringBuffer rawFindingXML = new StringBuffer();
         Date latestDate = null;
 
         @Override
@@ -197,9 +198,14 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
             } else if ("Status".equals(qName)) {
                 getStatus = true;
             } else if ("UniqueFinding".equals(qName)) {
+                inFinding = true;
                 map.put(FindingKey.NATIVE_ID, attributes.getValue("Id"));
             } else if ("LastFoundDate".equals(qName)) {
                 getDate = true;
+            }
+
+            if (inFinding) {
+                rawFindingXML.append(makeTag(localName, qName, attributes));
             }
         }
 
@@ -222,10 +228,18 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 if (date != null && (latestDate == null || latestDate.before(date))) {
                     latestDate = date;
                 }
+
+                getDate = false;
+            }
+
+            if (inFinding) {
+                rawFindingXML.append(makeEndTag(localName, qName));
             }
 
             if ("UniqueFinding".equals(qName)) {
                 if (findingIsOpen) {
+                    map.put(FindingKey.RAWFINDING, rawFindingXML.toString());
+
                     Finding finding = constructFinding(map);
                     if (finding != null) {
                         finding.setNativeId(map.get(FindingKey.NATIVE_ID));
@@ -234,13 +248,19 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 }
                 map.clear();
                 map.put(FindingKey.SEVERITY_CODE, "High");
+                inFinding = false;
+                rawFindingXML.setLength(0);
             }
         }
 
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
-            if (key != null || getStatus) {
+            if (key != null || getStatus || getDate) {
                 addTextToBuilder(ch, start, length);
+            }
+
+            if (inFinding) {
+                rawFindingXML.append(ch, start, length);
             }
         }
     }
