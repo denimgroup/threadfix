@@ -13,5 +13,9 @@
         <%@include file="/WEB-INF/views/config/defecttrackers/tabs/defectTrackersTab.jsp"%>
         <%@include file="/WEB-INF/views/config/defecttrackers/tabs/scheduledUpdateTab.jsp"%>
     </tabset>
-    <%@ include file="/WEB-INF/views/applications/forms/addScheduledDefectTrackerUpdateForm.jsp"%>
+
+
+    <script type="text/ng-template" id="newScheduledUpdate.html">
+        <%@ include file="/WEB-INF/views/applications/forms/addScheduledJobForm.jsp"%>
+    </script>
 </body>
