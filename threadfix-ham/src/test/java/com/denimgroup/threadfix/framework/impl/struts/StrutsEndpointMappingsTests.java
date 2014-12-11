@@ -25,13 +25,11 @@ package com.denimgroup.threadfix.framework.impl.struts;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
-import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQuery;
 import com.denimgroup.threadfix.framework.engine.full.EndpointQueryBuilder;
-import com.denimgroup.threadfix.framework.impl.spring.SpringControllerMappings;
 import org.junit.Test;
 
 import java.io.File;

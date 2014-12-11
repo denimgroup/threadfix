@@ -122,10 +122,6 @@ public class StrutsEndpointMappings implements EndpointGenerator {
                     parameters.add( mf.getParameterKey() );
                 }
                 endpoints.add( new StrutsEndpoint(filePath, urlPath, httpMethods, parameters) );
-                System.err.println();
-                System.err.println(filePath);
-                System.err.println(urlPath);
-                System.err.println(parameters);
             }
         }
 
