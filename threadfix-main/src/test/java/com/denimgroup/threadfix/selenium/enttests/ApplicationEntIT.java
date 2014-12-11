@@ -59,16 +59,11 @@ public class ApplicationEntIT extends BaseDataTest {
 
     @Test
     public void testTeamNameNotVisibleInChangeAppTeam() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canManageApplications");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canManageApplications");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.login(user, "TestPassword")

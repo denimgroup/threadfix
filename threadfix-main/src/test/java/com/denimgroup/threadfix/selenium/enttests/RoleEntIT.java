@@ -27,6 +27,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.*;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.tests.BaseIT;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 import org.junit.Test;
@@ -36,11 +37,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
-public class RoleEntIT extends BaseIT {
+public class RoleEntIT extends BaseDataTest {
 
 	@Test
 	public void createRoleTest() {
-        String roleName = getRandomString(8);
+        String roleName = getName();
 
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
 				.clickManageRolesLink()
@@ -54,7 +55,7 @@ public class RoleEntIT extends BaseIT {
 
     @Test
     public void deleteRoleTest() {
-        String roleName = getRandomString(8);
+        String roleName = getName();
 
         RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
@@ -72,8 +73,8 @@ public class RoleEntIT extends BaseIT {
 
 	@Test
 	public void editRoleTest() {
-		String originalRoleName = getRandomString(8);
-		String editedRoleName = getRandomString(8);
+		String originalRoleName = getName();
+		String editedRoleName = getName();
 
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
 				.clickManageRolesLink()
@@ -114,7 +115,7 @@ public class RoleEntIT extends BaseIT {
 
     @Test
     public void editRoleValidation() {
-        String roleName = getRandomString(8);
+        String roleName = getName();
         String whiteSpaceName = "     ";
         String emptyStringName = "";
 
@@ -138,18 +139,12 @@ public class RoleEntIT extends BaseIT {
 
     @Test
 	public void createRoleDuplicateValidation() {
-		String roleName1 = "testNameDuplication";
-        String roleName2 = "testNameDuplication";
+		String roleName = createRole();
 
-		// Test duplicates
-		RolesIndexPage rolesIndexPage = loginPage.defaultLogin().clickOrganizationHeaderLink()
+		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
 				.clickCreateRole()
-				.setRoleName(roleName1)
-				.clickSaveRole()
-				.clickManageRolesLink()
-				.clickCreateRole()
-				.setRoleName(roleName2)
+				.setRoleName(roleName)
 				.clickSaveRoleInvalid();
 
 		assertTrue("Duplicate name error did not show correctly.",
@@ -158,32 +153,12 @@ public class RoleEntIT extends BaseIT {
 
 	@Test
 	public void addApplicationOnlyRoleTest(){
-		String roleName = getName();
-		String userName = getName();
-		String password = getRandomString(15);
+		String roleName = createSpecificPermissionRole("canManageApplications");
+		String userName = createSpecificRoleUser(roleName);
 		String teamName = createTeam();
 		String appName = getName();
 
-		TeamIndexPage teamIndexPage = loginPage.defaultLogin()
-                 .clickOrganizationHeaderLink()
-                 .clickManageRolesLink()
-                 .clickCreateRole()
-                 .setRoleName(roleName)
-                 .setPermissionValue("canManageApplications", true)
-                 .clickSaveRole()
-                 .clickOrganizationHeaderLink();
-
-        teamIndexPage.clickManageUsersLink()
-                 .clickAddUserLink()
-                 .setName(userName)
-                 .setPassword(password)
-                 .setConfirmPassword(password)
-                 .toggleGlobalAccess()
-                 .chooseRoleForGlobalAccess(roleName)
-                 .clickAddNewUserBtn();
-
-		ApplicationDetailPage applicationDetailPage = teamIndexPage.logout()
-                .login(userName, password)
+		ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .addNewApplication(teamName, appName, "", "Low")
@@ -198,7 +173,7 @@ public class RoleEntIT extends BaseIT {
 
 	@Test
 	public void setPermissionsTest() {
-		String roleName = getRandomString(10);
+		String roleName = getName();
 		
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
 				.clickManageRolesLink()
@@ -246,34 +221,15 @@ public class RoleEntIT extends BaseIT {
 
 	@Test
 	public void deleteRoleWithUserAttachedTest(){
-		String roleName = getRandomString(10);
-        String tempUser = getRandomString(8);
+		String roleName = createRole();
+        String roleUser = createSpecificRoleUser(roleName);
 
 		RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
-                .clickManageRolesLink();
-		
-		rolesIndexPage = rolesIndexPage.clickCreateRole()
-				.setRoleName(roleName);
-		
-		for (String permission : Role.ALL_PERMISSIONS) {
-            if (!permission.equals("enterprise")) {
-                rolesIndexPage = rolesIndexPage.setPermissionValue(permission, true);
-            }
-		}
-		
-		rolesIndexPage = rolesIndexPage.clickSaveRole()
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(tempUser)
-                .setPassword("TestPassword")
-                .setConfirmPassword("TestPassword")
-                .toggleGlobalAccess()
-                .chooseRoleForGlobalAccess(roleName)
-                .clickModalSubmit()
                 .clickManageRolesLink()
                 .clickDeleteButton(roleName)
                 .clickManageRolesLink();
 
+        assertTrue("Validation message is Present.",rolesIndexPage.isDeleteValidationPresent(roleName));
 		assertFalse("Role was not removed.", rolesIndexPage.isNamePresent(roleName));
 	}
 }
