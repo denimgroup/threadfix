@@ -59,8 +59,6 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
     @Nonnull
     public HttpResponse getUrl(String url, String username, String password) {
         assert url != null;
-        assert username != null;
-        assert password != null;
 
         String login = username + ":" + password;
         final String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
