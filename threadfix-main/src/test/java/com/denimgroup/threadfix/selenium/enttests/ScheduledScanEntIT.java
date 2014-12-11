@@ -25,24 +25,21 @@ package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
-import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
-import org.junit.Ignore;
+
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
-public class ScheduledScanEntIT extends BaseIT{
+public class ScheduledScanEntIT extends BaseDataTest {
 
     @Test
     public void scheduleDailyScanTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -108,11 +105,8 @@ public class ScheduledScanEntIT extends BaseIT{
 
     @Test
     public void scheduleWeeklyScanTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()

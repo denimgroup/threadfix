@@ -26,8 +26,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.ScanAgentTasksPage;
-import com.denimgroup.threadfix.selenium.tests.BaseIT;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -40,26 +39,23 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 @Category(EnterpriseTests.class)
-public class ScanAgentTaskEntIT extends BaseIT {
+public class ScanAgentTaskEntIT extends BaseDataTest {
 
-	private static final  Map<String, String> scansMap = new HashMap<>();
+	private static final Map<String, String> scanAgentMap = new HashMap<>();
     static{
-        scansMap.put("OWASP Zed Attack Proxy", null );
-        scansMap.put("Burp Suite", null );
-        scansMap.put("Acunetix WVS", null);
-        scansMap.put("IBM Rational AppScan", null);
+        scanAgentMap.put("ZAP", "OWASP Zed Attack Proxy");
+        scanAgentMap.put("Burp", "Burp Suite");
+        scanAgentMap.put("Acunetix", "Acunetix WVS");
+        scanAgentMap.put("AppScan", "IBM Rational AppScan");
     }
 
     @Test
     public void addScanAgentTaskTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanner = "OWASP Zed Attack Proxy";
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String scanner = scanAgentMap.get("ZAP");
         String date;
         int scanId;
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -84,13 +80,10 @@ public class ScanAgentTaskEntIT extends BaseIT {
 
     @Test
     public void deleteScanAgentTaskTest() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanner = "OWASP Zed Attack Proxy";
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String scanner = scanAgentMap.get("ZAP");
         String date;
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -113,14 +106,11 @@ public class ScanAgentTaskEntIT extends BaseIT {
     //TODO evaluate
     @Test
     public void testDeleteScanFromScanAgentTaskPage() {
-        String teamName = getRandomString(8);
-        String appName = getRandomString(8);
-        String scanner = "OWASP Zed Attack Proxy";
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
+        String scanner = scanAgentMap.get("ZAP");
         String date;
         int scanId;
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
@@ -151,21 +141,18 @@ public class ScanAgentTaskEntIT extends BaseIT {
 
 	@Test
 	public void testAddMultipleScans() throws MalformedURLException {
-		String teamName = getRandomString(8);
-		String appName = getRandomString(8);
+        String teamName = createTeam();
+        String appName = createApplication(teamName);
 		int scanQueueCount  = 0;
         String date;
-
-        DatabaseUtils.createTeam(teamName);
-        DatabaseUtils.createApplication(teamName, appName);
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName);
 
-		for (Entry<String, String> mapEntry : scansMap.entrySet()) {
-            String tempName = mapEntry.getKey();
+		for (Entry<String, String> mapEntry : scanAgentMap.entrySet()) {
+            String tempName = mapEntry.getValue();
 
 			applicationDetailPage = applicationDetailPage.clickScanAgentTasksTab(scanQueueCount)
                     .clickAddNewScanTask()

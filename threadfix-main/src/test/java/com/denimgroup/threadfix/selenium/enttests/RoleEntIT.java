@@ -102,7 +102,6 @@ public class RoleEntIT extends BaseDataTest {
     public void createRoleValidation() {
         String whiteSpaceName = "     ";
 
-        // Test whitespace
         RolesIndexPage rolesIndexPage = loginPage.defaultLogin()
                 .clickManageRolesLink()
                 .clickCreateRole()

@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
-import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -36,7 +36,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
-public class SystemSettingsEntIT extends BaseIT{
+public class SystemSettingsEntIT extends BaseDataTest {
     private SystemSettingsPage systemSettingsPage;
 
     private static final String LDAP_SEARCHBASE = System.getProperty("LDAP_SEARCHBASE");

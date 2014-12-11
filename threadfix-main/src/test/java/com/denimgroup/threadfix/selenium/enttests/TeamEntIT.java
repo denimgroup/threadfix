@@ -41,20 +41,10 @@ public class TeamEntIT extends BaseDataTest {
 
     @Test
     public void viewBasicPermissibleUsers(){
-        String teamName = getRandomString(8);
-        String userName = getRandomString(8);
-        String password = getRandomString(15);
-        DatabaseUtils.createTeam(teamName);
+        String teamName = createTeam();
+        String userName = createRegularUser();
 
-        UserIndexPage userIndexPage = loginPage.defaultLogin()
-                .clickManageUsersLink()
-                .clickAddUserLink()
-                .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
-                .clickAddNewUserBtn();
-
-        TeamDetailPage teamDetailPage = userIndexPage
+        TeamDetailPage teamDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickUserPermLink();
@@ -67,16 +57,11 @@ public class TeamEntIT extends BaseDataTest {
 
     @Test
     public void testTeamNotVisibleWithoutPermissions() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenTeam = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
+        String hiddenTeam = createTeam();
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createTeam(hiddenTeam);
-        DatabaseUtils.createApplication(hiddenTeam,hiddenApp);
-        DatabaseUtils.createSpecificPermissionRole(roleName,"canGenerateReports");
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         loginPage.login(user, "TestPassword")
@@ -88,16 +73,13 @@ public class TeamEntIT extends BaseDataTest {
 
     @Test
     public void testIssue866() {
-        String roleName = getName();
-        String user = getName();
-        String hiddenApp = getName();
+        String roleName = createSpecificPermissionRole("canGenerateReports");
+        String user = createRegularUser();
 
         initializeTeamAndApp();
-        DatabaseUtils.createUser(user);
-        DatabaseUtils.createApplication(teamName, hiddenApp);
+        String hiddenApp = createApplication(teamName);
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("IBM Rational AppScan"));
-        DatabaseUtils.uploadScan(teamName,hiddenApp, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
-        DatabaseUtils.createSpecificPermissionRole(roleName, "canGenerateReports");
+        DatabaseUtils.uploadScan(teamName, hiddenApp, ScanContents.SCAN_FILE_MAP.get("WebInspect"));
         DatabaseUtils.addUserWithTeamAppPermission(user,roleName,teamName,appName);
 
         loginPage.defaultLogin()

@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.*;
-import com.denimgroup.threadfix.selenium.tests.BaseIT;
+import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -33,26 +33,25 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @Category(EnterpriseTests.class)
-public class UserEntIT extends BaseIT {
+public class UserEntIT extends BaseDataTest {
 
     @Test
     public void createUserWithoutGlobalAccess() {
         String userName = getName();
-        String password = getRandomString(15);
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
+                .setPassword(testPassword)
+                .setConfirmPassword(testPassword)
                 .clickAddNewUserBtn()
                 .clickEditLink(userName);
 
         assertFalse("Global Access was selected when it should not have been.", userIndexPage.isGlobalAccessSelected());
 
         DashboardPage dashboardPage = userIndexPage.logout()
-                .login(userName, password);
+                .login(userName, testPassword);
 
         assertTrue("Alert was not shown on dashboard page.", dashboardPage.isPermissionsAlertDisplayed());
     }
@@ -60,14 +59,13 @@ public class UserEntIT extends BaseIT {
     @Test
     public void createUserWithGlobalAccess() {
         String userName = getName();
-        String password = getRandomString(15);
 
         UserIndexPage userIndexPage = loginPage.defaultLogin()
                 .clickManageUsersLink()
                 .clickAddUserLink()
                 .setName(userName)
-                .setPassword(password)
-                .setConfirmPassword(password)
+                .setPassword(testPassword)
+                .setConfirmPassword(testPassword)
                 .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess("Administrator")
                 .clickAddNewUserBtn()
@@ -77,7 +75,7 @@ public class UserEntIT extends BaseIT {
 
         DashboardPage dashboardPage = userIndexPage.clickAddNewUserBtn()
                 .logout()
-                .login(userName, password);
+                .login(userName, testPassword);
 
         assertFalse("Alert was shown on dashboard page", dashboardPage.isPermissionsAlertDisplayed());
     }
@@ -85,7 +83,6 @@ public class UserEntIT extends BaseIT {
 	@Test
 	public void createLdapUser(){
 		String userName = getName();
-        String password = getRandomString(15);
 
 		UserIndexPage userIndexPage = loginPage.defaultLogin()
 				.clickManageUsersLink()
@@ -105,8 +102,8 @@ public class UserEntIT extends BaseIT {
         assertTrue("Password fields are not present when switching from a LDAP user to regular user.",
                 userIndexPage.isPasswordFieldPresent());
 
-        userIndexPage.setPassword(password)
-                .setConfirmPassword(password)
+        userIndexPage.setPassword(testPassword)
+                .setConfirmPassword(testPassword)
                 .clickUpdateUserBtn(userName)
                 .clickEditLink(userName);
 		assertFalse("LDAP remained selected after editing.", userIndexPage.isLDAPSelected());
@@ -126,8 +123,8 @@ public class UserEntIT extends BaseIT {
 				.clickManageUsersLink()
 				.clickAddUserLink()
 				.setName(userName)
-				.setPassword("TestPassword")
-				.setConfirmPassword("TestPassword")
+				.setPassword(testPassword)
+				.setConfirmPassword(testPassword)
                 .toggleGlobalAccess()
                 .chooseRoleForGlobalAccess("User")
 				.clickAddNewUserBtn()

@@ -139,7 +139,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
         String appName = getName();
 
         String userName = createRegularUser();
-        String password = "TestPassword";
         String role1 = "Administrator";
         String role2 = "User";
 
@@ -163,7 +162,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 userPermissionsPage.isPermissionPresent(teamName2, "all", role2));
 
         TeamIndexPage teamIndexPage = userPermissionsPage.logout()
-                .login(userName, password)
+                .login(userName, testPassword)
                 .clickOrganizationHeaderLink();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
@@ -214,7 +213,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
         String appName = getName();
 
         String userName = createRegularUser();
-        String password = "TestPassword";
         String role = "Administrator";
 
         UserPermissionsPage userPermissionsPage = loginPage.defaultLogin()
@@ -231,7 +229,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickModalSubmit();
 
         TeamIndexPage teamIndexPage = userPermissionsPage.logout()
-                .login(userName, password)
+                .login(userName, testPassword)
                 .clickOrganizationHeaderLink();
 
         TeamDetailPage teamDetailPage = teamIndexPage.clickViewTeamLink(teamName1);
@@ -252,7 +250,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
                 .clickDeleteButton(teamName1, "all", role);
 
         teamIndexPage = userPermissionsPage.logout()
-                .login(userName, password)
+                .login(userName, testPassword)
                 .clickOrganizationHeaderLink();
 
         assertFalse("User should not be able to view this team.", teamIndexPage.isTeamPresent(teamName1));
@@ -286,7 +284,6 @@ public class UserPermissionsEntIT extends BaseDataTest{
         initializeTeamAndAppWithIBMScan();
 
         String userName = getRandomString(8);
-        String password = getRandomString(15);
 
         String roleName = getName();
         String deniedPermission = "canGenerateReports";
