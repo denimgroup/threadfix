@@ -77,15 +77,6 @@ public class RestConnector extends SpringBeanAutowiringSupport {
         return this;
     }
 
-    private RestConnector() {
-    }
-
-    private static RestConnector instance = new RestConnector();
-
-    public static RestConnector getInstance() {
-        return instance;
-    }
-
     public String buildEntityCollectionUrl(String entityType) {
         return buildUrl("rest/domains/"
                 + domain
