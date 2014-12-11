@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
@@ -181,7 +182,8 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         private FindingKey key = null;
         Map<String, FindingKey> keyMap    = map(
                 "Url", FindingKey.PATH,
-                "TypeName", FindingKey.VULN_CODE
+                "TypeName", FindingKey.VULN_CODE,
+                "TypeDescription", FindingKey.DETAIL
         );
         Map<FindingKey, String> map       = newMap();
         boolean                 getStatus = false, findingIsOpen = false, getDate = false, inFinding = false;
@@ -237,6 +239,12 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
             }
 
             if ("UniqueFinding".equals(qName)) {
+
+                String detail = map.get(FindingKey.DETAIL);
+                if (detail != null && detail.startsWith("No vulnerabilities were found for:")) {
+                    findingIsOpen = false;
+                }
+
                 if (findingIsOpen) {
                     map.put(FindingKey.RAWFINDING, rawFindingXML.toString());
 
