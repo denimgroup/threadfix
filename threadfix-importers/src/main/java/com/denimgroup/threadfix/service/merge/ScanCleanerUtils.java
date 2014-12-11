@@ -131,7 +131,11 @@ public class ScanCleanerUtils {
 				}
                 finding.getScan().getApplication().addVulnerability(finding.getVulnerability());
 
-				if ((finding.getVulnerability().getOpenTime() == null)
+				if (finding.getScannedDate() != null) {
+					if (finding.getScannedDate().before(finding.getVulnerability().getOpenTime())) {
+						finding.getVulnerability().setOpenTime(finding.getScannedDate());
+					}
+				} else if ((finding.getVulnerability().getOpenTime() == null)
 						|| (finding.getVulnerability().getOpenTime()
 								.compareTo(scan.getImportTime()) > 0))
 					finding.getVulnerability()
