@@ -366,6 +366,23 @@ public class ApplicationDetailPage extends BasePage {
         return new ApplicationDetailPage(driver);
     }
 
+    public ApplicationDetailPage setSourceFile(String Status) {
+        driver.findElementById("urlStaticSearch").clear();
+        driver.findElementById("urlStaticSearch").sendKeys(Status);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setLineNumber(String Status) {
+        driver.findElementById("lineNumberInput").clear();
+        driver.findElementById("lineNumberInput").sendKeys(Status);
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage setSeverity(String Status) {
+        driver.findElementById("severityInput").sendKeys(Status);
+        return new ApplicationDetailPage(driver);
+    }
+
     public ApplicationDetailPage setURL(String Status) {
         driver.findElementById("urlDynamicSearch").clear();
         driver.findElementById("urlDynamicSearch").sendKeys(Status);
