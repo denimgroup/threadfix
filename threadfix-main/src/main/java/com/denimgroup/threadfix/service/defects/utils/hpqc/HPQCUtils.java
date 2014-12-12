@@ -38,7 +38,7 @@ public class HPQCUtils {
             log.info("URL was invalid.");
             return false;
         }
-        con = RestConnector.getInstance().init(
+        con = getRestConnector().init(
                 new HashMap<String, String>(),
                 serverUrl,
                 "",
@@ -53,8 +53,18 @@ public class HPQCUtils {
             return true;
         }
     }
+
+    // TODO refactor this out
+    private static RestConnector getRestConnector() {
+        if (con == null) {
+            con = new RestConnector();
+        }
+
+        return con;
+    }
+
     public static String getAllProjects(String serverUrl, String username, String password) {
-        con = RestConnector.getInstance().init(
+        con = getRestConnector().init(
                 new HashMap<String, String>(),
                 serverUrl,
                 "",
@@ -404,7 +414,7 @@ public class HPQCUtils {
             log.warn("domain/project is invalid");
             return false;
         }
-        con = RestConnector.getInstance().init(
+        con = getRestConnector().init(
                 new HashMap<String, String>(),
                 serverUrl,
                 pDetails[0],
@@ -418,7 +428,7 @@ public class HPQCUtils {
             log.warn("domain/project is invalid");
             return false;
         }
-        con = RestConnector.getInstance().reset(
+        con = getRestConnector().reset(
                 serverUrl,
                 pDetails[0],
                 pDetails[1]);
