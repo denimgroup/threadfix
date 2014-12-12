@@ -30,6 +30,7 @@ import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
+import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
@@ -45,8 +46,10 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.*;
 
@@ -67,6 +70,8 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         }
     };
     private final RemoteProviderHttpUtils utils      = new RemoteProviderHttpUtilsImpl<>(TrustwaveHailstormRemoteProvider.class);
+
+    private static final Set<String> CLOSED_CODES = set("Fixed");
 
     // CTSAuth: client_secret=<<answer>>,access_token=<<answer>>
     private String constructHeaderValue() {
@@ -91,7 +96,6 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
 
     // TODO move to code that calls the server
     private String getApplicationJson() {
-
         HttpResponse response = utils.getUrlWithConfigurer(getUrl(), addCtsAuth);
 
         return response.getBodyAsString();
@@ -139,6 +143,13 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         scan.setFindings(parser.findings);
         scan.setApplicationChannel(remoteProviderApplication.getApplicationChannel());
 
+        // fixes one error?
+        Calendar instance = Calendar.getInstance();
+        if (parser.latestDate != null) {
+            instance.setTime(parser.latestDate);
+        }
+        scan.setImportTime(instance);
+
         return list(scan);
     }
 
@@ -171,12 +182,16 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         private FindingKey key = null;
         Map<String, FindingKey> keyMap    = map(
                 "Url", FindingKey.PATH,
-                "TypeName", FindingKey.VULN_CODE
+                "TypeName", FindingKey.VULN_CODE,
+                "TypeDescription", FindingKey.DETAIL
         );
         Map<FindingKey, String> map       = newMap();
-        boolean                 getStatus = false, findingIsOpen = false;
+        boolean                 getStatus = false, findingIsOpen = false, getDate = false, inFinding = false;
 
         List<Finding> findings = list();
+
+        StringBuffer rawFindingXML = new StringBuffer();
+        Date latestDate = null;
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -185,7 +200,14 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
             } else if ("Status".equals(qName)) {
                 getStatus = true;
             } else if ("UniqueFinding".equals(qName)) {
+                inFinding = true;
                 map.put(FindingKey.NATIVE_ID, attributes.getValue("Id"));
+            } else if ("LastFoundDate".equals(qName)) {
+                getDate = true;
+            }
+
+            if (inFinding) {
+                rawFindingXML.append(makeTag(localName, qName, attributes));
             }
         }
 
@@ -193,7 +215,7 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
         public void endElement(String uri, String localName, String qName) throws SAXException {
 
             if (getStatus) {
-                findingIsOpen = "Open".equals(getBuilderText());
+                findingIsOpen = !CLOSED_CODES.contains(getBuilderText());
                 getStatus = false;
             }
 
@@ -202,8 +224,30 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 key = null;
             }
 
+            if (getDate) {
+                Date date = parseDate(getBuilderText());
+
+                if (date != null && (latestDate == null || latestDate.before(date))) {
+                    latestDate = date;
+                }
+
+                getDate = false;
+            }
+
+            if (inFinding) {
+                rawFindingXML.append(makeEndTag(localName, qName));
+            }
+
             if ("UniqueFinding".equals(qName)) {
+
+                String detail = map.get(FindingKey.DETAIL);
+                if (detail != null && detail.startsWith("No vulnerabilities were found for:")) {
+                    findingIsOpen = false;
+                }
+
                 if (findingIsOpen) {
+                    map.put(FindingKey.RAWFINDING, rawFindingXML.toString());
+
                     Finding finding = constructFinding(map);
                     if (finding != null) {
                         finding.setNativeId(map.get(FindingKey.NATIVE_ID));
@@ -212,14 +256,31 @@ public class TrustwaveHailstormRemoteProvider extends AbstractRemoteProvider {
                 }
                 map.clear();
                 map.put(FindingKey.SEVERITY_CODE, "High");
+                inFinding = false;
+                rawFindingXML.setLength(0);
             }
         }
 
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
-            if (key != null || getStatus) {
+            if (key != null || getStatus || getDate) {
                 addTextToBuilder(ch, start, length);
             }
+
+            if (inFinding) {
+                rawFindingXML.append(ch, start, length);
+            }
+        }
+    }
+
+    private static final DateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS'Z'");
+
+    Date parseDate(String builderText) {
+        try {
+            return myFormat.parse(builderText);
+        } catch (ParseException e) {
+            LOG.info("Couldn't parse date " + builderText);
+            return null;
         }
     }
 
