@@ -31,7 +31,6 @@ import org.codehaus.jackson.map.annotate.JsonView;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -65,8 +64,6 @@ public class GRCApplication extends AuditableEntity {
     private Map applicationJson;
 
     private List<GRCControl> grcControls;
-
-    private Calendar lastUpdateTime;
 
     public String getNativeId() {
         return nativeId;
@@ -118,7 +115,7 @@ public class GRCApplication extends AuditableEntity {
         this.application = application;
     }
 
-    @OneToMany(mappedBy = "grcApplication")
+    @OneToMany(mappedBy = "grcApplication", cascade = CascadeType.ALL)
     @JsonIgnore
     public List<GRCControl> getGrcControls() {
         return grcControls;
@@ -138,14 +135,4 @@ public class GRCApplication extends AuditableEntity {
     public void setGrcTool(GRCTool grcTool) {
         this.grcTool = grcTool;
     }
-
-    @Temporal(TemporalType.TIMESTAMP)
-    public Calendar getLastUpdateTime() {
-        return lastUpdateTime;
-    }
-
-    public void setLastUpdateTime(Calendar lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
-    }
-
 }
