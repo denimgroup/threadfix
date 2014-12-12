@@ -45,19 +45,39 @@ public abstract class HandlerWithBuilder extends DefaultHandler {
     	StringBuilder tag = new StringBuilder();
 
         tag.append("<");
+
         if (name != null && name.length()>0){
             tag.append(name);
         } else {
             tag.append(qName);
         }
 
-        for (int i = 0; i < attrs.getLength(); i++){
-            tag.append(" ");
-            tag.append(attrs.getQName(i));
-            tag.append("=\"");
-            //this will probably need entity encoding
-            tag.append(attrs.getValue(i));
-            tag.append("\"");
+        if (attrs != null) {
+            for (int i = 0; i < attrs.getLength(); i++) {
+                tag.append(" ");
+                tag.append(attrs.getQName(i));
+                tag.append("=\"");
+                //this will probably need entity encoding
+                tag.append(attrs.getValue(i));
+                tag.append("\"");
+            }
+        }
+
+    	tag.append(">");
+    	return tag.toString();
+    }
+
+	//used for synthesizing raw XML from SAX startElement events
+    protected String makeEndTag(String name, String qName){
+
+    	StringBuilder tag = new StringBuilder();
+
+        tag.append("</");
+
+        if (name != null && name.length()>0){
+            tag.append(name);
+        } else {
+            tag.append(qName);
         }
 
     	tag.append(">");
