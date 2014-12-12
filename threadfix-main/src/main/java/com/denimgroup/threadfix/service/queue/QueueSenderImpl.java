@@ -81,6 +81,18 @@ public class QueueSenderImpl implements QueueSender {
 		send(QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE);
 	}
 
+    /*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.denimgroup.threadfix.service.queue.QueueSender#startDefectTrackerSync
+	 * ()
+	 */
+	@Override
+	public void startGrcToolSync() {
+		send(QueueConstants.GRC_CONTROLS_UPDATE_TYPE);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *

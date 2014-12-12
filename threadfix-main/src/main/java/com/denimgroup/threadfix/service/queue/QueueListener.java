@@ -28,6 +28,8 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import javax.annotation.Nullable;
+
+import com.denimgroup.threadfix.service.grc.GRCToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,8 @@ public class QueueListener implements MessageListener {
 	private ScanMergeService scanMergeService;
     @Autowired
 	private DefectService defectService;
+    @Autowired
+	private GRCToolService grcToolService;
     @Autowired
 	private ApplicationService applicationService;
     @Autowired
@@ -89,9 +93,9 @@ public class QueueListener implements MessageListener {
 				log.info("Processing text message: " + text);
 				
 				switch(text) {
-					case QueueConstants.IMPORT_SCANS_REQUEST            : importScans();  break;
-					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE : syncTrackers(); break;
-					case QueueConstants.GRC_TOOL_UPDATE_TYPE            : syncGRCTools(); break;
+					case QueueConstants.IMPORT_SCANS_REQUEST            : importScans();     break;
+					case QueueConstants.DEFECT_TRACKER_VULN_UPDATE_TYPE : syncTrackers();    break;
+					case QueueConstants.GRC_CONTROLS_UPDATE_TYPE        : syncGrcControls(); break;
 				}
 			}
 
@@ -206,8 +210,8 @@ public class QueueListener implements MessageListener {
 		log.info("Finished updating Defect status for all Applications.");
 	}
 
-    private void syncGRCTools() {
-		log.info("Syncing status with all GRC Tools.");
+    private void syncGrcControls() {
+		log.info("Syncing status with all GRC Controls.");
 
 		List<Application> apps = applicationService.loadAllActive();
 		if (apps == null) {
@@ -217,11 +221,11 @@ public class QueueListener implements MessageListener {
 
 		for (Application application : apps) {
 			if (application != null && application.getGrcTool() != null) {
-				defectService.updateVulnsFromDefectTracker(application.getId());
+				grcToolService.updateControlsFromGRCTool(application.getId());
 			}
 		}
 
-		log.info("Finished updating Defect status for all Applications.");
+		log.info("Finished updating Control status for all Applications.");
 	}
 
 	private void importScans() {
