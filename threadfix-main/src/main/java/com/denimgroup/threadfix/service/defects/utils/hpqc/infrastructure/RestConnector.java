@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
+
 
 /**
  * This class keeps the state of the connection for the examples.
@@ -39,7 +41,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
 
     private static final SanitizedLogger log = new SanitizedLogger(HPQCUtils.class);
 
-    protected Map<String, String> cookies;
+    protected Map<String, String> cookies = newMap();
     /**
      * This is the URL to the ALM application.
      * For example: http://myhost:8080/qcbin.
@@ -335,8 +337,7 @@ public class RestConnector extends SpringBeanAutowiringSupport {
 
         if (!cookies.isEmpty()) {
 
-            Set<Entry<String, String>> cookieEntries =
-                    cookies.entrySet();
+            Set<Entry<String, String>> cookieEntries = cookies.entrySet();
             for (Entry<String, String> entry : cookieEntries) {
                 sb.append(entry.getKey()).append("=").append(entry.getValue()).append(";");
             }
