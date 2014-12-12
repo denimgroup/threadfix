@@ -50,6 +50,6 @@ public class ScheduledGRCToolUpdateJob implements Job {
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         QueueSender queueSender = (QueueSender)dataMap.get("queueSender");
 
-//        queueSender.startGrcToolSync();
+        queueSender.startGrcToolSync();
     }
 }
