@@ -70,11 +70,15 @@ public class AnalyticsRemediationIT extends BaseDataTest {
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
         analyticsPage.clickAnalyticsLink()
-                .clickRemediationTab(false)
+                .sleepOnArrival(5000)
+                .clickRemediationTab(true)
                 .expandTagFilter("complianceFilterDiv")
                 .addTagFilter(tagName,"complianceFilterDiv")
                 .expandAgingFilter("complianceFilterDiv")
-                .toggleAgingFilter("Forever", "complianceFilterDiv");
+                .toggleAgingFilter("Forever", "complianceFilterDiv")
+                .sleepOnArrival(5000);
+
+        analyticsPage.takeScreenShot();
 
         assertTrue("Starting count is incorrect",
                 driver.findElement(By.cssSelector("#\\31")).getText().equals("0"));

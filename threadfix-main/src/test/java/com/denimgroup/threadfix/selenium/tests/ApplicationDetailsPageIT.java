@@ -276,6 +276,8 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
                 .clickUploadScan()
                 .uploadScan(ScanContents.getScanFilePath("Acunetix WVS"));
 
+        applicationDetailPage.takeScreenShot();
+
         applicationDetailPage.waitForCWEBar(teamName, appName, "CWE301");
 
         assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));

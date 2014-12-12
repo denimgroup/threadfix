@@ -165,6 +165,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 .expandSavedFilters()
                 .addSavedFilter(newFilter);
 
+        teamDetailPage.takeScreenShot();
+
         assertTrue("Only 4 critical vulnerabilities should be shown.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
         assertTrue("Only 4 medium vulnerabilities should be shown.",
@@ -176,6 +178,8 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 .clickClearFilters()
                 .clickLoadFilters()
                 .loadSavedFilter(newFilter);
+
+        teamDetailPage.takeScreenShot();
 
         assertTrue("Only 4 critical vulnerabilities should be shown. There was a problem loading saved filter.",
                 teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));

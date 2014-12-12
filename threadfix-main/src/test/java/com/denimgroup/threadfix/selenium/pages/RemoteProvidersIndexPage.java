@@ -68,8 +68,8 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage closeModal(){
-		driver.findElementByClassName("modal-footer").findElement(By.className("btn")).click();
-		waitForInvisibleElement(driver.findElementByClassName("modal"));
+		driver.findElementById("closeModalButton").click();
+        sleep(1000);
 		return new RemoteProvidersIndexPage(driver);
 	}
 	

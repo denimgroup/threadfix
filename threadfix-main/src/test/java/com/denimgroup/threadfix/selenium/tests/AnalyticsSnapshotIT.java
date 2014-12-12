@@ -81,6 +81,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
                 .addApplicationFilter(appName, "snapshotFilterDiv");
 
+        analyticsPage.takeScreenShot();
+
         analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
 
         assertTrue("Only 10 critical vulnerabilities should be shown.",
