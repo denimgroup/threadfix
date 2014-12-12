@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.defects.utils.jira;
 
+import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
@@ -56,34 +57,43 @@ public class UserRetriever {
                 + "&permissions=ASSIGNABLE_USER&username";
 
         LOG.debug("Requesting " + url + extension);
-
-        String result = restUtils.getUrlAsString(url + extension, username, password);
-
-        LOG.debug("Got " + result);
-
-        if (result == null) {
-            assert false : "Got null result for project " + project + ".";
-            return null;
-        }
-
-        JSONArray returnArray = JsonUtils.getJSONArray(result);
-
         Map<String, String> nameFieldMap = new HashMap<>();
 
-        if (returnArray != null) {
-            for (int i = 0; i < returnArray.length(); i++) {
-                try {
-                    String name = returnArray.getJSONObject(i).getString("name");
-                    nameFieldMap.put(name, name);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        try {
+            String result = restUtils.getUrlAsString(url + extension, username, password);
+
+            LOG.debug("Got " + result);
+
+            if (result == null) {
+                assert false : "Got null result for project " + project + ".";
+                return null;
+            }
+
+            JSONArray returnArray = JsonUtils.getJSONArray(result);
+
+            if (returnArray != null) {
+                for (int i = 0; i < returnArray.length(); i++) {
+                    try {
+                        String name = returnArray.getJSONObject(i).getString("name");
+                        nameFieldMap.put(name, name);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+
+            LOG.debug("Returning map with " + nameFieldMap.size() + " entries.");
+
+        } catch (RestIOException e) {
+
+            nameFieldMap = null;
+            LOG.debug("Exception happens", e);
+            throw new RestIOException(e, "Unable to get response from server.");
+
+        } finally {
+            return nameFieldMap;
         }
 
-        LOG.debug("Returning map with " + nameFieldMap.size() + " entries.");
-
-        return nameFieldMap;
     }
 
 }
