@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.ScanAgentTasksPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -49,10 +50,13 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
         scanAgentMap.put("AppScan", "IBM Rational AppScan");
     }
 
+    @Before
+    public void initialize() {
+        initializeTeamAndApp();
+    }
+
     @Test
     public void addScanAgentTaskTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
         String scanner = scanAgentMap.get("ZAP");
         String date;
         int scanId;
@@ -80,8 +84,6 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
 
     @Test
     public void deleteScanAgentTaskTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
         String scanner = scanAgentMap.get("ZAP");
         String date;
 
@@ -106,8 +108,6 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
     //TODO evaluate
     @Test
     public void testDeleteScanFromScanAgentTaskPage() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
         String scanner = scanAgentMap.get("ZAP");
         String date;
         int scanId;
@@ -141,8 +141,6 @@ public class ScanAgentTaskEntIT extends BaseDataTest {
 
 	@Test
 	public void testAddMultipleScans() throws MalformedURLException {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
 		int scanQueueCount  = 0;
         String date;
 

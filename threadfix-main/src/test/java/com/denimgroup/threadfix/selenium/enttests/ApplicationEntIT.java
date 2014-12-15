@@ -41,8 +41,7 @@ public class ApplicationEntIT extends BaseDataTest {
 
     @Test
     public void viewBasicPermissibleUsers(){
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
         String userName = createRegularUser();
 
         ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()

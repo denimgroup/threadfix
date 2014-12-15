@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.selenium.enttests;
 import com.denimgroup.threadfix.EnterpriseTests;
 import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
-import com.denimgroup.threadfix.selenium.utils.DatabaseUtils;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -36,17 +36,21 @@ import static org.junit.Assert.assertTrue;
 @Category(EnterpriseTests.class)
 public class ScheduledScanEntIT extends BaseDataTest {
 
-    @Test
-    public void scheduleDailyScanTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+    private ApplicationDetailPage applicationDetailPage;
 
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
+    @Before
+    public void initialize() {
+        initializeTeamAndApp();
+
+        applicationDetailPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName)
                 .clickViewAppLink(appName, teamName)
                 .clickScheduleScanTab(0);
+    }
 
+    @Test
+    public void scheduleDailyScanTest() {
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
@@ -58,15 +62,6 @@ public class ScheduledScanEntIT extends BaseDataTest {
 
     @Test
     public void validDailyScanTest(){
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab(0);
-
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
@@ -82,15 +77,6 @@ public class ScheduledScanEntIT extends BaseDataTest {
 
     @Test
     public void deleteDailyScanTest(){
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab(0);
-
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Daily")
                 .setScheduledScanTime("8", "15", "PM")
@@ -105,15 +91,6 @@ public class ScheduledScanEntIT extends BaseDataTest {
 
     @Test
     public void scheduleWeeklyScanTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab(0);
-
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
@@ -126,15 +103,6 @@ public class ScheduledScanEntIT extends BaseDataTest {
 
     @Test
     public void validWeeklyScanTest(){
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab(0);
-
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")
@@ -151,15 +119,6 @@ public class ScheduledScanEntIT extends BaseDataTest {
 
     @Test
     public void deleteWeeklyScanTest(){
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
-
-        ApplicationDetailPage applicationDetailPage = loginPage.defaultLogin()
-                .clickOrganizationHeaderLink()
-                .expandTeamRowByName(teamName)
-                .clickViewAppLink(appName, teamName)
-                .clickScheduleScanTab(0);
-
         applicationDetailPage.clickScheduleNewScanButton()
                 .setScheduledScanFrequency("Weekly")
                 .setScheduledScanTime("6", "30", "AM")

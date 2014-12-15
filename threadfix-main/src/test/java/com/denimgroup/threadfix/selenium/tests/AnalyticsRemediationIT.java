@@ -41,7 +41,6 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsRemediationIT extends BaseDataTest {
 
     private AnalyticsPage analyticsPage;
-    private ApplicationDetailPage applicationDetailPage;
 
     public String initialize() {
         initializeTeamAndAppWithIBMScan();

