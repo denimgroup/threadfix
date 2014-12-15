@@ -2,10 +2,12 @@ var module = angular.module('threadfix')
 
 module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
 
+    $scope.numberToShow = 50;
+
     $scope.updatePage = function(page) {
         if (page) {
 
-            $http.get(tfEncoder.encode('/configuration/logs/page/' + page)).
+            $http.get(tfEncoder.encode('/configuration/logs/page/' + page + '/' + $scope.numberToShow)).
                 success(function(data, status, headers, config) {
 
                     if (data.success) {

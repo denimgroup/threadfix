@@ -33,7 +33,7 @@ import java.util.List;
  */
 public interface ExceptionLogDao extends GenericObjectDao<ExceptionLog> {
 
-    List<ExceptionLog> retrievePage(int page);
+    List<ExceptionLog> retrievePage(int page, int numberToShow);
 
     Long countLogs();
 }

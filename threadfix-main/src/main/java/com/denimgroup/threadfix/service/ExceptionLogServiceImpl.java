@@ -49,8 +49,8 @@ public class ExceptionLogServiceImpl implements ExceptionLogService {
 	}
 
     @Override
-    public List<ExceptionLog> loadPage(int page) {
-        return exceptionLogDao.retrievePage(page);
+    public List<ExceptionLog> loadPage(int page, int numberToShow) {
+        return exceptionLogDao.retrievePage(page, numberToShow);
     }
 
     @Override
