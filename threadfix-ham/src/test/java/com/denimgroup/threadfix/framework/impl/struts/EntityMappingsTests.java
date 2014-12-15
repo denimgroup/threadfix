@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.struts;
 
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
@@ -35,11 +36,9 @@ import static org.junit.Assert.assertTrue;
 
 public class EntityMappingsTests {
 
-	private static final String ROLLER_SOURCE_LOCATION = "C:\\SourceCode\\roller-weblogger-5.1.1-source";
-
 	@Test
 	public void testUserFields() {
-		File file = new File( ROLLER_SOURCE_LOCATION );
+		File file = new File( TestConstants.ROLLER_SOURCE_LOCATION );
 
 		EntityMappings mappings = new EntityMappings(file);
 		
@@ -65,7 +64,7 @@ public class EntityMappingsTests {
 
 	@Test
 	public void testConfigModel() {
-		File file = new File( ROLLER_SOURCE_LOCATION );
+		File file = new File( TestConstants.ROLLER_SOURCE_LOCATION );
 
 		EntityMappings mappings = new EntityMappings(file);
 
@@ -100,7 +99,7 @@ public class EntityMappingsTests {
 
 	@Test
 	public void testMediaFile() {
-		File file = new File( ROLLER_SOURCE_LOCATION );
+		File file = new File( TestConstants.ROLLER_SOURCE_LOCATION );
 
 		EntityMappings mappings = new EntityMappings(file);
 
@@ -160,7 +159,7 @@ public class EntityMappingsTests {
 	}
 	@Test
 	public void testMediaFileBean() {
-		File file = new File(ROLLER_SOURCE_LOCATION);
+		File file = new File(TestConstants.ROLLER_SOURCE_LOCATION);
 
 		EntityMappings mappings = new EntityMappings(file);
 

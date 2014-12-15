@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.framework.impl.struts;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
@@ -38,19 +39,9 @@ import static org.junit.Assert.assertTrue;
 
 public class StrutsEndpointMappingsTests {
 	
-//	@Test
-//	public void printEndpoints() {
-//		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-//		SpringControllerMappings mappings = new SpringControllerMappings(file);
-//
-//		for (Endpoint endpoint: mappings.generateEndpoints()) {
-//			System.out.println(endpoint);
-//		}
-//	}
-	
 	@Test
 	public void testRoller() {
-        File rootFile = new File("C:/SourceCode/roller-weblogger-5.1.1-source/app/src");
+        File rootFile = new File(TestConstants.ROLLER_SOURCE_LOCATION);
         StrutsEndpointMappings mappings = new StrutsEndpointMappings(rootFile);
 
         EndpointDatabase database = EndpointDatabaseFactory.getDatabase(
@@ -58,24 +49,24 @@ public class StrutsEndpointMappingsTests {
                 FrameworkType.STRUTS,
                 new DefaultPathCleaner("",""));
 
-        test(database, "/main/java/org/apache/roller/weblogger/ui/struts2/core/Register.java",
+        test(database, "/app/src/main/java/org/apache/roller/weblogger/ui/struts2/core/Register.java",
                 "/roller-ui/register!*.rol", "POST",
                 "servletRequest", "activationStatus", "bean", "activationCode", "authMethod");
 
-        test(database, "/main/java/org/apache/roller/weblogger/ui/struts2/admin/UserEdit.java",
+        test(database, "/app/src/main/java/org/apache/roller/weblogger/ui/struts2/admin/UserEdit.java",
                 "/roller-ui/admin/modifyUser!*.rol", "POST", "bean", "authMethod");
 
-        test(database, "/main/java/org/apache/roller/weblogger/ui/struts2/editor/MediaFileAdd.java",
+        test(database, "/app/src/main/java/org/apache/roller/weblogger/ui/struts2/editor/MediaFileAdd.java",
                 "/roller-ui/authoring/overlay/mediaFileAdd!*.rol", "POST", "bean", "directoryName", "directory");
 
-        test(database, "/main/java/org/apache/roller/weblogger/ui/struts2/editor/MediaFileImageChooser.java",
+        test(database, "/app/src/main/java/org/apache/roller/weblogger/ui/struts2/editor/MediaFileImageChooser.java",
                 "/roller-ui/authoring/overlay/mediaFileImageChooser!*.rol", "POST",
                 "currentDirectory", "directoryId", "directoryName");
 
-        test(database, "/main/java/org/apache/roller/weblogger/ui/struts2/editor/ThemeEdit.java",
+        test(database, "/app/src/main/java/org/apache/roller/weblogger/ui/struts2/editor/ThemeEdit.java",
                 "/roller-ui/authoring/themeEdit!*.rol", "POST", "themeId", "themeType", "selectedThemeId");
 
-        test(database, "/main/java/org/apache/roller/weblogger/ui/struts2/editor/Comments.java",
+        test(database, "/app/src/main/java/org/apache/roller/weblogger/ui/struts2/editor/Comments.java",
                 "/roller-ui/authoring/comments!*.rol", "POST",
                 "pager", "lastComment", "bulkDeleteCount", "bean", "queryEntry", "firstComment");
 

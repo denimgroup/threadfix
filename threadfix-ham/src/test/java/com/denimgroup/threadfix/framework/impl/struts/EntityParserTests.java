@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 public class EntityParserTests {
 	
 	@Nonnull
-    File testFile = new File("C:/SourceCode/roller-weblogger-5.1.1-source"
+    File testFile = new File(TestConstants.ROLLER_SOURCE_LOCATION
             +"/app/src/main/java/org/apache/roller/weblogger/ui/rendering/model/SearchResultsModel.java");
 
 	@Nonnull
