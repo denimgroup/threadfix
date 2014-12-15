@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -278,7 +277,7 @@ public class Application extends AuditableEntity {
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "grcToolId")
-    @JsonView(AllViews.FormInfo.class)
+    @JsonIgnore
     public GRCTool getGrcTool() {
 		return grcTool;
 	}
