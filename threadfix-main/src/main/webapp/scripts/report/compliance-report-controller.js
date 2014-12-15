@@ -107,7 +107,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
             var keys = Object.keys(startingInfo);
 
             keys.forEach(function(key){
-                if (key !== 'importTime') {
+                if (key !== 'importTime' && key !== 'notRealScan') {
                     var map = {};
                     map['Severity'] = key;
                     map['Starting Count'] = startingInfo[key];
