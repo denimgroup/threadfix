@@ -122,6 +122,8 @@
 		    	protected-regex ^/configuration/grctools/[0-9]+/apps/new,
 		    	protected-regex ^/configuration/grctools/apps/[0-9]+/delete,
 		    	protected-regex ^/configuration/grctools/[0-9]+/apps/[0-9]+/edit,
+		    	protected-regex ^/configuration/grctools/scheduledUpdates,
+		    	protected-regex ^/configuration/grctools/scheduledUpdates/update/[0-9]+,
         		protected-regex ^/configuration/keys/new$,
         		protected-regex ^/configuration/keys/[0-9]+/edit$,
         		protected-regex ^/configuration/keys/[0-9]+/delete$,
