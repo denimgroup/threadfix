@@ -55,8 +55,8 @@ public class TagIndexPage extends BasePage{
         waitForElement(driver.findElementById("tagCreateNameInput"));
         driver.findElementById("tagCreateNameInput").clear();
         driver.findElementById("tagCreateNameInput").sendKeys(newName);
-        clickModalSubmit();
-        sleep(1000);
+        clickModalSubmitInvalid();
+        sleep(10000);
         return new TagIndexPage(driver);
     }
 

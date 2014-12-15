@@ -776,4 +776,9 @@ public class WafIT extends BaseDataTest {
 
         assertTrue("Fired Waf Navigation failed", wafRulesPage2.checkFiredWafNav("100000"));
     }
+
+    @Test
+    public void hhahah() {
+        initializeTeamAndAppWithIBMScan();
+    }
 }
