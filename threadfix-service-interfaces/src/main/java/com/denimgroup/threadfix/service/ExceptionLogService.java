@@ -44,7 +44,7 @@ public interface ExceptionLogService {
 	 */
 	List<ExceptionLog> loadAll();
 
-    List<ExceptionLog> loadPage(int page);
+    List<ExceptionLog> loadPage(int page, int numberToShow);
 
     Long countLogs();
 }

@@ -56,11 +56,11 @@ public class ErrorLogController {
 		return "config/logs";
 	}
 
-    @RequestMapping(value="/page/{page}", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> getPage(@PathVariable int page) {
+    @RequestMapping(value="/page/{page}/{numberToShow}", method = RequestMethod.GET)
+    public @ResponseBody RestResponse<Map<String, Object>> getPage(@PathVariable int page, @PathVariable int numberToShow) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("logs", exceptionLogService.loadPage(page));
+        map.put("logs", exceptionLogService.loadPage(page, numberToShow));
         map.put("totalLogs", exceptionLogService.countLogs());
 
         return RestResponse.success(map);

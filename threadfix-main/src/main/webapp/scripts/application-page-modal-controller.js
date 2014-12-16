@@ -68,7 +68,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
            error(function(data, status, headers, config) {
                 $log.info("HTTP request for form objects failed.");
                // TODO improve error handling and pass something back to the users
-               $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
+               $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
            });
     });
 
@@ -78,7 +78,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             success(function(data, status, headers, config) {
                 timeoutService.cancel();
                 if (data.success) {
-                    $scope.successMessage = data.object;
+                    $scope.$parent.successMessage = data.object;
                 } else {
                     $log.info("Request to update defect statuses failed. Error was " + data.message);
                 }
@@ -87,7 +87,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
                 timeoutService.cancel();
                 $log.info("HTTP request for form objects failed.");
                 // TODO improve error handling and pass something back to the users
-                $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
+                $scope.$parent.errorMessage = "Request to server failed. Got " + status + " response code.";
             });
     };
 
@@ -201,7 +201,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (waf) {
             $scope.config.application.waf = waf;
-            $scope.successMessage = "Set waf to " + waf.name;
+            $scope.$parent.successMessage = "Set waf to " + waf.name;
             $scope.showEditModal();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -242,7 +242,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             }
             $scope.config.wafList.push(waf);
             $scope.config.application.waf = waf;
-            $scope.successMessage = "Successfully created waf " + waf.name;
+            $scope.$parent.successMessage = "Successfully created waf " + waf.name;
             $scope.showEditModal();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -293,7 +293,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
         modalInstance.result.then(function (defectTracker) {
             $scope.config.application.defectTracker = defectTracker;
-            $scope.successMessage = "Set defect tracker to " + defectTracker.name;
+            $scope.$parent.successMessage = "Set defect tracker to " + defectTracker.name;
             $scope.showEditModal();
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -333,7 +333,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
 
             $scope.config.defectTrackerList.push(dt);
 //            $scope.config.application.defectTracker = dt;
-            $scope.successMessage = "Successfully created waf " + dt.name;
+            $scope.$parent.successMessage = "Successfully created waf " + dt.name;
 //            $scope.showEditModal();
             $scope.showAddDefectTrackerModal(dt);
         }, function () {
@@ -409,7 +409,7 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (result) {
-            $scope.successMessage = result;
+            $scope.$parent.successMessage = result;
             $rootScope.$broadcast('scanUploaded');
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());

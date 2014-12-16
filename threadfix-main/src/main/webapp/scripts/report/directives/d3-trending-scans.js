@@ -154,9 +154,16 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         s.maxNoOfVulns = d3.max(s.values, function(d) { return d.noOfVulns; });
                     });
 
-                    // Sort by maximum number of vulnerabilities, descending.
+                    //Sorting
                     stackedData.sort(function(a, b) {
                         return fieldOrderMap[b.key] - fieldOrderMap[a.key];
+                    });
+
+                    var noVulnsList = [];
+                    stackedData = stackedData.filter(function(s){
+                        if (s.maxNoOfVulns === 0)
+                            noVulnsList.push(s.key);
+                        return s.maxNoOfVulns > 0;
                     });
 
                     var stack = d3.layout.stack()
@@ -299,12 +306,27 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .on("mouseover", function() { focus.style("display", null); })
                         .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
-                }
+
+                    if (scope.label && noVulnsList.length > 0) {
+                        var listStr = "";
+                        for (var i=0; i<noVulnsList.length-1; i++)
+                            listStr += noVulnsList[i] + ", ";
+
+                        listStr += noVulnsList[noVulnsList.length-1] + ": ";
+
+                        svg.append("g")
+                            .append("text")
+                            .attr("x", w/2)
+                            .attr("y", h + 60)
+                            .attr("class", "small_warning")
+                            .text(listStr + "No Vulnerabilities");
+                    }
+                };
 
                 function drawTable(){
                     if (scope.tableInfo && scope.sumTableDivId)
                         reportUtilities.drawTable(d3, scope.tableInfo, scope.sumTableDivId);
-                }
+                };
 
                 function prepareStackedData(data) {
                     return color.domain().map(function(name){

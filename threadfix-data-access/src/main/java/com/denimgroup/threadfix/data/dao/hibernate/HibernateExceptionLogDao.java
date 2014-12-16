@@ -60,11 +60,11 @@ public class HibernateExceptionLogDao
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ExceptionLog> retrievePage(int page) {
+    public List<ExceptionLog> retrievePage(int page, int numberToShow) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from ExceptionLog log order by log.time desc")
-                .setMaxResults(50)
-                .setFirstResult((page - 1) * 50)
+                .setMaxResults(numberToShow)
+                .setFirstResult((page - 1) * numberToShow)
                 .list();
     }
 
