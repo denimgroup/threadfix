@@ -27,12 +27,12 @@
 
     <table id="logListTable">
         <tbody>
-        <tr ng-repeat-start="log in logs">
+        <tr ng-repeat-start="log in logs" >
             <td id="{{ $index }}LogId">
                 <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date }} -- {{ log.uuid }} -- {{ log.type }}</a>
             </td>
             <td id="{{ $index }}ReportLink">
-                <a class="pointer"
+                <a class="pointer" ng-click="log.expanded = true"
                    href="mailto:support@threadfix.org?subject={{ log.time | date }} -- {{ log.uuid }} -- {{ log.type }}
                    &body=***** Please copy log trace here *****">
                    Report To ThreadFix Team</a>
