@@ -28,12 +28,14 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.ProjectDirectory;
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import com.denimgroup.threadfix.framework.impl.spring.SpringJavaConfigurationChecker;
+import com.denimgroup.threadfix.framework.impl.struts.StrutsConfigurationChecker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import javax.annotation.Nonnull;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class JavaAndJspFrameworkChecker extends FrameworkChecker {
 
@@ -53,15 +55,25 @@ public class JavaAndJspFrameworkChecker extends FrameworkChecker {
             }
         }
 
-        if (frameworkType != FrameworkType.SPRING_MVC) {
-            Collection<File> files = FileUtils.listFiles(directory.getDirectory(),
-                    new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
+        if (frameworkType == FrameworkType.SPRING_MVC)
+            return frameworkType;
 
-            for (File file : files) {
-                if (SpringJavaConfigurationChecker.checkJavaFile(file)) {
-                    frameworkType = FrameworkType.SPRING_MVC;
-                    break;
-                }
+        // check for STRUTS
+        Collection<File> configFiles = FileUtils.listFiles(directory.getDirectory(), new String[]{"xml", "properties"}, true);
+        if (StrutsConfigurationChecker.check(configFiles)) {
+            frameworkType = FrameworkType.STRUTS;
+            return frameworkType;
+        }
+
+
+        // check for SPRING
+        Collection<File> javaFiles = FileUtils.listFiles(directory.getDirectory(),
+                new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
+
+        for (File file : javaFiles) {
+            if (SpringJavaConfigurationChecker.checkJavaFile(file)) {
+                frameworkType = FrameworkType.SPRING_MVC;
+                break;
             }
         }
 
