@@ -63,6 +63,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private ApplicationDao applicationDao;
 	@Autowired private DefectTrackerDao defectTrackerDao;
 	@Autowired private RemoteProviderApplicationDao remoteProviderApplicationDao;
+	@Autowired private GRCApplicationDao grcApplicationDao;
 	@Autowired private WafRuleDao wafRuleDao;
 	@Autowired private WafDao wafDao;
 	@Autowired private VulnerabilityDao vulnerabilityDao;
@@ -126,6 +127,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
 		removeRemoteApplicationLinks(application);
+        removeGrcApplicationLink(application);
 		String possibleName = getNewName(application);
 		
 		if (application.getAccessControlApplicationMaps() != null) {
@@ -203,6 +205,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 	}
 	
+	private void removeGrcApplicationLink(Application application) {
+        GRCApplication grcApplication = application.getGrcApplication();
+		if (grcApplication != null) {
+			log.info("Removing GRC application from the application " + application.getName() +
+					 " (id=" + application.getId() + ")");
+
+            grcApplication.setApplication(null);
+            grcApplicationDao.saveOrUpdate(grcApplication);
+		}
+	}
+
 	@Override
 	public boolean validateApplicationDefectTracker(Application application,
 			BindingResult result) {
