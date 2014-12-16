@@ -165,19 +165,14 @@ public class TeamVulnerabilitiesFilterIT extends BaseDataTest{
                 .expandSavedFilters()
                 .addSavedFilter(newFilter);
 
-        teamDetailPage.takeScreenShot();
-
-        assertTrue("Only 4 critical vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Critical", "4"));
-        assertTrue("Only 4 medium vulnerabilities should be shown.",
-                teamDetailPage.isVulnerabilityCountCorrect("Medium", "4"));
-
         teamDetailPage.clickOrganizationHeaderLink()
                 .clickViewTeamLink(teamName)
                 .clickVulnerabilitiesTab("71")
                 .clickClearFilters()
                 .clickLoadFilters()
                 .loadSavedFilter(newFilter);
+
+        sleep(5000);
 
         teamDetailPage.takeScreenShot();
 

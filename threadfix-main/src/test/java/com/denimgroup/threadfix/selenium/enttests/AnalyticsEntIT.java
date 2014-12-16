@@ -94,6 +94,8 @@ public class AnalyticsEntIT extends BaseDataTest {
         TagDetailPage tagDetailPage = applicationDetailPage.clickTagsLink()
                 .clickTagName("HIPAA");
 
+        tagDetailPage.takeScreenShot();
+
         assertTrue("HIPAA tag was not attached to application", tagDetailPage.isTagAttachedtoApp(appName));
     }
 

@@ -76,10 +76,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab(false);
+                .sleepOnArrival(5000)
+                .clickSnapshotTab(true)
+                .sleepOnArrival(5000);
 
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
-                .addApplicationFilter(appName, "snapshotFilterDiv");
+                .addApplicationFilter(appName, "snapshotFilterDiv")
+                .sleepOnArrival(5000);
 
         analyticsPage.takeScreenShot();
 
@@ -93,8 +96,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 analyticsPage.isVulnerabilityCountCorrect("Low", "21"));
         assertTrue("Only 5 info vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Info", "5"));
-                analyticsPage.isVulnerabilityCountCorrect("Info", "5");
-                analyticsPage.isVulnerabilityCountCorrect("Info", "5");
 
         analyticsPage.clearFilter("snapshotFilterDiv")
                 .addApplicationFilter(appName2, "snapshotFilterDiv");
