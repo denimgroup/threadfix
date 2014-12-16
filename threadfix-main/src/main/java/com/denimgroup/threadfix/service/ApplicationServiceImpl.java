@@ -127,7 +127,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
 		removeRemoteApplicationLinks(application);
-        removeGrcApplicationLink(application);
 		String possibleName = getNewName(application);
 		
 		if (application.getAccessControlApplicationMaps() != null) {
