@@ -267,6 +267,14 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 
     // QA only
     @Override
+    public RestResponse<User> trap() {
+        return httpRestUtils.httpPost("user/trap",
+                new String[] {},
+                new String[] {}, User.class);
+    }
+
+    // QA only
+    @Override
     public RestResponse<User> createUser(String username, String globalRoleName) {
         return httpRestUtils.httpPost("/user/create",
                 new String[] {"username", "globalRoleName" },

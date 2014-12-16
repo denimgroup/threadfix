@@ -49,6 +49,10 @@ public class DatabaseUtils {
         assertTrue("Response was unsuccessful. Message: " + response.message, response.success);
     }
 
+    public static void createErrorLog() {
+        CLIENT.trap();
+    }
+
     public static void addUserWithTeamAppPermission(String userName, String roleName, String teamName, String appName) {
         RestResponse<User> response = CLIENT.addUserTeamAppPermission(userName, roleName, teamName, appName);
 

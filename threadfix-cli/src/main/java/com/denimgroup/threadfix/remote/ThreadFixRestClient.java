@@ -83,6 +83,9 @@ public interface ThreadFixRestClient {
 
 
     // QA only
+    public RestResponse<User> trap();
+
+    // QA only
     public RestResponse<User> createUser(String username, String globalRoleName);
     // QA only
     public RestResponse<User> createUser(String username);

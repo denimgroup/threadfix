@@ -109,4 +109,10 @@ public class UserRestController {
         return success(user);
     }
 
+    @RequestMapping(value="trap", method = RequestMethod.POST)
+    public @ResponseBody void trap() {
+        String a = null;
+        a.length();
+    }
+
 }
