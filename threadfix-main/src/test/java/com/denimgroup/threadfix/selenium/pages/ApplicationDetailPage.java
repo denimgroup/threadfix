@@ -363,41 +363,48 @@ public class ApplicationDetailPage extends BasePage {
     public ApplicationDetailPage setCWE(String Status) {
         driver.findElementById("txtSearch").clear();
         driver.findElementById("txtSearch").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setSourceFile(String Status) {
         driver.findElementById("urlStaticSearch").clear();
         driver.findElementById("urlStaticSearch").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setLineNumber(String Status) {
         driver.findElementById("lineNumberInput").clear();
         driver.findElementById("lineNumberInput").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setSeverity(String Status) {
         driver.findElementById("severityInput").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setURL(String Status) {
         driver.findElementById("urlDynamicSearch").clear();
         driver.findElementById("urlDynamicSearch").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setParameter(String Status) {
         driver.findElementById("parameterInput").clear();
         driver.findElementById("parameterInput").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
     public ApplicationDetailPage setDescription(String Status) {
         driver.findElementById("descriptionInput").clear();
         driver.findElementById("descriptionInput").sendKeys(Status);
+        sleep(500);
         return new ApplicationDetailPage(driver);
     }
 
