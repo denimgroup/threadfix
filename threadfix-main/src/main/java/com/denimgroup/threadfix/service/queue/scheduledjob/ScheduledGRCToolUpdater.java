@@ -57,7 +57,7 @@ public class ScheduledGRCToolUpdater {
     private static final SanitizedLogger log = new SanitizedLogger(ScheduledGRCToolUpdater.class);
     private static Scheduler scheduler = getScheduler();
 
-    @Autowired
+    @Autowired(required=false)
     private ScheduledGRCToolUpdateService scheduledGRCToolUpdateService;
 
     @Autowired
@@ -94,6 +94,11 @@ public class ScheduledGRCToolUpdater {
 
     @PostConstruct
     public void run() {
+
+        if(scheduledGRCToolUpdateService == null) {
+            return;
+        }
+
         if (scheduler == null) {
             throw new IllegalStateException("Scheduler is null");
         }
