@@ -28,7 +28,7 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.ScheduledGRCToolUpdate;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.grc.ScheduledGRCToolUpdateService;
+import com.denimgroup.threadfix.service.ScheduledGRCToolUpdateService;
 import com.denimgroup.threadfix.service.queue.scheduledjob.ScheduledGRCToolUpdater;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
