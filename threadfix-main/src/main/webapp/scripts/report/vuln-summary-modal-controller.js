@@ -1,6 +1,6 @@
 var myAppModule = angular.module('threadfix')
 
-myAppModule.controller('VulnSummaryModalController', function ($scope, $window, $rootScope, $modalInstance, $modal, $http, tfEncoder, threadFixModalService, scope, headers, headerColor, isStay, vulnSearchParameterService) {
+myAppModule.controller('VulnSummaryModalController', function ($log, $scope, $window, $rootScope, $modalInstance, $modal, $http, tfEncoder, threadFixModalService, scope, headers, headerColor, isStay, vulnSearchParameterService) {
 
     $scope.header = "Vulnerabilities Summary";
     $scope.headers = headers;
@@ -32,7 +32,7 @@ myAppModule.controller('VulnSummaryModalController', function ($scope, $window, 
         }).
         error(function(data, status, headers, config) {
             $scope.loading = false;
-            console.log("Got " + status + " back.");
+            $log.info("Got " + status + " back.");
         });
 
     $scope.cancel = function () {

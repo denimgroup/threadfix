@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchTreeController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer) {
+module.controller('VulnSearchTreeController', function($log, $scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer) {
 
     $scope.loadingTree = true;
     $scope.canUpdateVulnComment = false;
@@ -77,7 +77,7 @@ module.controller('VulnSearchTreeController', function($scope, $rootScope, $wind
     };
 
     $scope.updateElementTable = function(element, numToShow, page) {
-        console.log('Updating element table');
+        $log.info('Updating element table');
 
         var parameters = angular.copy($scope.$parent.parameters);
 
@@ -152,7 +152,7 @@ module.controller('VulnSearchTreeController', function($scope, $rootScope, $wind
                 $scope.loadingTree = false;
             }).
             error(function(data, status, headers, config) {
-                console.log("Got " + status + " back.");
+                $log.info("Got " + status + " back.");
                 $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
@@ -225,5 +225,18 @@ module.controller('VulnSearchTreeController', function($scope, $rootScope, $wind
     $scope.goToTag = function (tag) {
         window.location.href = tfEncoder.encode("/configuration/tags/" + tag.id + "/view");
     };
+
+    $scope.showPagination = function(element, option) {
+        switch (option) {
+            case 10:
+                return element.totalVulns > 10 && element.totalVulns <= 25;
+            case 25:
+                return element.totalVulns > 25 && element.totalVulns <= 50;
+            case 50:
+                return element.totalVulns > 50;
+            default :
+                return false;
+        }
+    }
 
 });

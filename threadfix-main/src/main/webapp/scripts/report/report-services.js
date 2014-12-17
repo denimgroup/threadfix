@@ -1,6 +1,6 @@
 var threadfixModule = angular.module('threadfix')
 
-threadfixModule.factory('reportExporter', function() {
+threadfixModule.factory('reportExporter', function($log) {
 
     var reportExporter = {};
 
@@ -28,7 +28,7 @@ threadfixModule.factory('reportExporter', function() {
                 event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
                 link.dispatchEvent(event);
 
-                console.log("Download Data Success");
+                $log.info("Download Data Success");
 
             } else {
                 // Prepare a blob URL
@@ -37,10 +37,10 @@ threadfixModule.factory('reportExporter', function() {
                 var url = urlCreator.createObjectURL(blob);
                 window.location = url;
 
-                console.log("window.location Success");
+                $log.info("window.location Success");
             }
         } else {
-            console.log("Not supported");
+            $log.info("Not supported");
         }
     };
 
@@ -51,7 +51,7 @@ threadfixModule.factory('reportExporter', function() {
             if (d3.select(this).attr("id") === exportInfo.svgId)
                 svg = d3.select(this);
 
-            console.log(d3.select(this).attr("id"));
+            $log.info(d3.select(this).attr("id"));
         });
         reportExporter.exportPDFSvg(d3, svg, width, height, name);
     };
@@ -107,7 +107,7 @@ threadfixModule.factory('reportExporter', function() {
                             used += rule.selectorText + " { " + rule.style.cssText + " }\n";
                         }
                     } catch (x) {
-                        console.log(x);
+                        $log.warn(x);
                     }
                 }
             }

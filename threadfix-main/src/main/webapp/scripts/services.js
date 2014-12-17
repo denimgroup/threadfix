@@ -445,12 +445,12 @@ threadfixModule.factory('vulnTreeTransformer', function() {
     return transformer;
 });
 
-threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, $http) {
+threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameterService, $http, $log) {
     var filter = {};
 
 
     filter.saveCurrentFilters = function($scope, filterSavedFilters) {
-        console.log("Saving filters");
+        $log.info("Saving filters");
 
         if ($scope.currentFilterNameInput) {
 
@@ -475,7 +475,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
             $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
                 success(function(data, status, headers, config) {
-                    console.log("Successfully saved filters.");
+                    $log.info("Successfully saved filters.");
                     $scope.savingFilter = false;
 
                     if (data.success) {
@@ -500,7 +500,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
                 }).
                 error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
+                    $log.info("Failed to save filters.");
                     $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
                     $scope.savingFilter = false;
                 });
@@ -508,11 +508,11 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
     };
 
-    filter.deleteCurrentFilter = function($scope, filterSavedFilters) {
+    filter.deleteCurrentFilter = function($scope, filterSavedFilters, $log) {
         if ($scope.selectedFilter) {
             $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
                 success(function(data, status, headers, config) {
-                    console.log("Successfully deleted filter.");
+                    $log.info("Successfully deleted filter.");
                     $scope.initialized = true;
 
                     if (data.success) {
@@ -531,7 +531,7 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                     $scope.loading = false;
                 }).
                 error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
+                    $log.info("Failed to save filters.");
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loading = false;
                 });

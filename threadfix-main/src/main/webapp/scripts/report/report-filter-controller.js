@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('ReportFilterController', function($http, $scope, $rootScope, filterService, vulnSearchParameterService, tfEncoder, reportExporter) {
+module.controller('ReportFilterController', function($http, $scope, $rootScope, filterService, vulnSearchParameterService, tfEncoder, reportExporter, $log) {
 
     $scope.parameters = undefined;
 
@@ -231,7 +231,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         if (reportId === 3) {
             $scope.$parent.exportCSV();
         } else {
-            console.log('Downloading vulnerabilities list');
+            $log.info('Downloading vulnerabilities list');
 
             var parameters = angular.copy($scope.parameters);
 
@@ -256,7 +256,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
                         // Save blob is supported, so get the blob as it's contentType and call save.
                         var blob = new Blob([data], { type: contentType });
                         navigator.msSaveBlob(blob, filename);
-                        console.log("SaveBlob Success");
+                        $log.info("SaveBlob Success");
                     }
                     else {
                         reportExporter.exportCSV(data, contentType, filename);
