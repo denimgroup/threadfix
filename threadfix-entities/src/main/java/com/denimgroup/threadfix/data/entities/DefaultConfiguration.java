@@ -46,7 +46,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Boolean hasCachedData = null;
 
-	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
+	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials, activeDirectoryUsernameEncrypted, activeDirectoryCredentialsEncrypted;
 
     private String proxyHost = null, proxyUsername = null, proxyPassword = null, proxyUsernameEncrypted = null, proxyPasswordEncrypted = null;
     private Integer proxyPort = null;
@@ -141,20 +141,41 @@ public class DefaultConfiguration extends BaseEntity {
 	public void setActiveDirectoryURL(String activeDirectoryURL) {
 		this.activeDirectoryURL = activeDirectoryURL;
 	}
+
+    @Transient
 	public String getActiveDirectoryUsername() {
 		return activeDirectoryUsername == null ? "" : activeDirectoryUsername;
 	}
 	
-	@Column(length=256)
+//	@Column(length=256)
 	public void setActiveDirectoryUsername(String activeDirectoryUsername) {
 		this.activeDirectoryUsername = activeDirectoryUsername;
 	}
-	
+
+    @Transient
 	public String getActiveDirectoryCredentials() {
 		return activeDirectoryCredentials == null ? "" : activeDirectoryCredentials;
 	}
-	
-	@Column(length=256)
+
+    @Column(length = 1024)
+    public String getActiveDirectoryUsernameEncrypted() {
+        return activeDirectoryUsernameEncrypted;
+    }
+
+    public void setActiveDirectoryUsernameEncrypted(String activeDirectoryUsernameEncrypted) {
+        this.activeDirectoryUsernameEncrypted = activeDirectoryUsernameEncrypted;
+    }
+
+    @Column(length = 1024)
+    public String getActiveDirectoryCredentialsEncrypted() {
+        return activeDirectoryCredentialsEncrypted;
+    }
+
+    public void setActiveDirectoryCredentialsEncrypted(String activeDirectoryCredentialsEncrypted) {
+        this.activeDirectoryCredentialsEncrypted = activeDirectoryCredentialsEncrypted;
+    }
+
+    //	@Column(length=256)
 	public void setActiveDirectoryCredentials(String activeDirectoryCredentials) {
 		this.activeDirectoryCredentials = activeDirectoryCredentials;
 	}

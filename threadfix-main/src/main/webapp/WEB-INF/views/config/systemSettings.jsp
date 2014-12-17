@@ -82,7 +82,7 @@
                         <tr>
                             <td class="no-color">Password</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryCredentials" path="activeDirectoryCredentials" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryCredentials }"/>
+                                <form:input id="activeDirectoryCredentials" type="password" path="activeDirectoryCredentials" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryCredentials }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryCredentials" cssClass="errors" />
@@ -167,6 +167,7 @@
                                 <c:if test="${ empty defaultConfiguration.proxyPasswordEncrypted }">
                                     <form:input ng-disabled="!shouldUseProxyCredentials"
                                                 id="proxyPassword"
+                                                type="password"
                                                 path="proxyPassword"
                                                 cssClass="focus"
                                                 size="60"
@@ -176,6 +177,7 @@
                                 <c:if test="${ not empty defaultConfiguration.proxyPasswordEncrypted }">
                                     <form:input ng-disabled="!shouldUseProxyCredentials"
                                                 id="proxyPassword"
+                                                type="password"
                                                 path="proxyPassword"
                                                 cssClass="focus"
                                                 size="60"

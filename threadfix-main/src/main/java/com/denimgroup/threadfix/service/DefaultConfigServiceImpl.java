@@ -63,7 +63,8 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         }
 
         assert configuration != null;
-        return configuration;
+
+        return decrypt(configuration);
 	}
 
 	@Override
@@ -82,10 +83,47 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
             if (config.getProxyUsername() != null && !config.getProxyPassword().trim().equals("")) {
                 config.setProxyUsernameEncrypted(ESAPI.encryptor().encrypt(config.getProxyPassword()));
             }
+
+            if (!config.getActiveDirectoryUsername().trim().isEmpty()) {
+                config.setActiveDirectoryUsernameEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryUsername()));
+            }
+
+            if (!config.getActiveDirectoryCredentials().trim().isEmpty()) {
+                config.setActiveDirectoryCredentialsEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryCredentials()));
+            }
+
         } catch (EncryptionException e) {
             log.error("Encountered encryption exception, ESAPI configuration is probably incorrect. " +
                     "Check that ESAPI.properties is on the classpath.", e);
             assert false;
+        }
+
+        return config;
+    }
+
+    private DefaultConfiguration decrypt(DefaultConfiguration config) {
+        assert config != null;
+
+        try {
+            if (config.getProxyPasswordEncrypted() != null) {
+                config.setProxyPassword(ESAPI.encryptor().decrypt(config.getProxyPasswordEncrypted()));
+            }
+
+            if (config.getProxyUsernameEncrypted() != null) {
+                config.setProxyUsername(ESAPI.encryptor().decrypt(config.getProxyPasswordEncrypted()));
+            }
+
+            if (config.getActiveDirectoryUsernameEncrypted() != null) {
+                config.setActiveDirectoryUsername(ESAPI.encryptor().decrypt(config.getActiveDirectoryUsernameEncrypted()));
+            }
+
+            if (config.getActiveDirectoryCredentialsEncrypted() != null) {
+                config.setActiveDirectoryCredentials(ESAPI.encryptor().decrypt(config.getActiveDirectoryCredentialsEncrypted()));
+            }
+
+        } catch (EncryptionException e) {
+            log.error("Encountered encryption exception, ESAPI configuration is probably incorrect. " +
+                    "Check that ESAPI.properties is on the classpath.", e);
         }
 
         return config;
