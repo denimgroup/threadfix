@@ -29,7 +29,7 @@ import com.denimgroup.threadfix.service.*;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import javax.annotation.Nullable;
 
-import com.denimgroup.threadfix.service.grc.GRCToolService;
+import com.denimgroup.threadfix.service.GRCToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class QueueListener implements MessageListener {
 	private ScanMergeService scanMergeService;
     @Autowired
 	private DefectService defectService;
-    @Autowired
+    @Autowired(required=false)
 	private GRCToolService grcToolService;
     @Autowired
 	private ApplicationService applicationService;
@@ -211,6 +211,10 @@ public class QueueListener implements MessageListener {
 	}
 
     private void syncGrcControls() {
+        if (grcToolService == null) {
+            return;
+        }
+
 		log.info("Syncing status with all GRC Controls.");
 
 		List<Application> apps = applicationService.loadAllActive();

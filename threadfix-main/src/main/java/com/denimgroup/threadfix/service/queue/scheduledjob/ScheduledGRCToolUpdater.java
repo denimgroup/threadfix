@@ -28,7 +28,7 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import com.denimgroup.threadfix.service.DefaultConfigService;
-import com.denimgroup.threadfix.service.grc.ScheduledGRCToolUpdateService;
+import com.denimgroup.threadfix.service.ScheduledGRCToolUpdateService;
 import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.bouncycastle.util.Strings;
 import org.quartz.impl.StdSchedulerFactory;
