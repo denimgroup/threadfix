@@ -69,7 +69,7 @@ public class ScheduledGRCToolUpdateController {
             BindingResult result) {
 
         if(scheduledGRCToolUpdateService == null) {
-            return null;
+            return RestResponse.failure("This method cannot be reached in the Community Edition.");
         }
 
         log.info("Start adding scheduled GRC tool update.");
