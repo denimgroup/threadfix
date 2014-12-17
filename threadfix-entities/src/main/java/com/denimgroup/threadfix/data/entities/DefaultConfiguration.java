@@ -181,7 +181,7 @@ public class DefaultConfiguration extends BaseEntity {
 	}
 	
 	public String getActiveDirectoryBase() {
-		return activeDirectoryCredentials == null ? "" : activeDirectoryBase;
+		return activeDirectoryBase == null ? "" : activeDirectoryBase;
 	}
 
 	@Column
