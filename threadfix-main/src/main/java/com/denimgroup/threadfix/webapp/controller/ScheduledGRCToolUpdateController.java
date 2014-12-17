@@ -56,7 +56,7 @@ public class ScheduledGRCToolUpdateController {
 
     private final SanitizedLogger log = new SanitizedLogger(ScheduledGRCToolUpdateController.class);
 
-    @Autowired
+    @Autowired(required = false)
     private ScheduledGRCToolUpdateService scheduledGRCToolUpdateService;
 
     @Autowired
@@ -67,6 +67,10 @@ public class ScheduledGRCToolUpdateController {
     RestResponse<List<ScheduledGRCToolUpdate>> addScheduledGRCToolUpdate(
             @Valid @ModelAttribute ScheduledGRCToolUpdate scheduledGRCToolUpdate,
             BindingResult result) {
+
+        if(scheduledGRCToolUpdateService == null) {
+            return null;
+        }
 
         log.info("Start adding scheduled GRC tool update.");
 
