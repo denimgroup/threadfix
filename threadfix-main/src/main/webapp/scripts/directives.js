@@ -59,12 +59,12 @@ threadfixModule.directive('notZero', function() {
     };
 });
 
-threadfixModule.directive('focusOn', function($timeout, $parse) {
+threadfixModule.directive('focusOn', function($timeout, $parse, $log) {
     return {
         link: function(scope, element, attrs) {
             var model = $parse(attrs.focusOn);
             scope.$watch(model, function(value) {
-                console.log('value=',value);
+                $log.info('value=',value);
                 if(value === true) {
                     $timeout(function() {
                         element[0].focus();
@@ -72,7 +72,7 @@ threadfixModule.directive('focusOn', function($timeout, $parse) {
                 }
             });
             element.bind('blur', function() {
-                console.log('blur')
+                $log.info('blur')
                 scope.$apply(model.assign(scope, false));
             })
         }

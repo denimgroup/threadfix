@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService) {
+module.controller('VulnSearchController', function($scope, $rootScope, $window, $http, tfEncoder, $modal, $log, vulnSearchParameterService, vulnTreeTransformer, threadfixAPIService, $log) {
 
     $scope.parameters = {};
 
@@ -194,7 +194,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                 $scope.loadingTree = false;
             }).
             error(function(data, status, headers, config) {
-                console.log("Got " + status + " back.");
+                $log.info("Got " + status + " back.");
                 $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
                 $scope.loadingTree = false;
             });
@@ -289,7 +289,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         if ($scope.selectedFilter) {
             $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
                 success(function(data, status, headers, config) {
-                    console.log("Successfully deleted filter.");
+                    $log.info("Successfully deleted filter.");
                     $scope.initialized = true;
 
                     if (data.success) {
@@ -303,7 +303,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     $scope.loading = false;
                 }).
                 error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
+                    $log.info("Failed to save filters.");
                     $scope.errorMessage = "Failed to retrieve team list. HTTP status was " + status;
                     $scope.loading = false;
                 });
@@ -330,7 +330,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.saveCurrentFilters = function() {
-        console.log("Saving filters");
+        $log.info("Saving filters");
 
         if ($scope.currentFilterNameInput) {
 
@@ -351,7 +351,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
             $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
                 success(function(data, status, headers, config) {
-                    console.log("Successfully saved filters.");
+                    $log.info("Successfully saved filters.");
                     $scope.savingFilter = false;
 
                     if (data.success) {
@@ -371,7 +371,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
 
                 }).
                 error(function(data, status, headers, config) {
-                    console.log("Failed to save filters.");
+                    $log.info("Failed to save filters.");
                     $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
                     $scope.savingFilter = false;
                 });
@@ -404,7 +404,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.updateElementTable = function(element, numToShow, page) {
-        console.log('Updating element table');
+        $log.info('Updating element table');
 
         var parameters = angular.copy($scope.parameters);
 
@@ -501,7 +501,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
     };
 
     $scope.exportCSV = function() {
-        console.log('Downloading vulnerabilities list');
+        $log.info('Downloading vulnerabilities list');
 
         var parameters = angular.copy($scope.parameters);
 
@@ -526,7 +526,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                     // Save blob is supported, so get the blob as it's contentType and call save.
                     var blob = new Blob([data], { type: contentType });
                     navigator.msSaveBlob(blob, filename);
-                    console.log("SaveBlob Success");
+                    $log.info("SaveBlob Success");
                 }
                 else
                 {
@@ -551,7 +551,7 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                             event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
                             link.dispatchEvent(event);
 
-                            console.log("Download link Success");
+                            $log.info("Download link Success");
 
                         } else {
                             // Prepare a blob URL
@@ -560,11 +560,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
                             var url = urlCreator.createObjectURL(blob);
                             window.location = url;
 
-                            console.log("window.location Success");
+                            $log.info("window.location Success");
                         }
 
                     } else {
-                        console.log("Not supported");
+                        $log.info("Not supported");
                     }
                 }
 
