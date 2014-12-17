@@ -10,10 +10,13 @@
 
     <%@ include file="../angular-init.jspf"%>
 
-    <h3>Log List (Click to expand)</h3>
+    <h3>Log List <span ng-show="totalLogs !== 0">(Click to expand)</span></h3>
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div>
 
+    <div ng-show="totalLogs === 0">
+        <span>No Logs Found.</span>
+    </div>
     <div ng-show="totalLogs > numberToShow" class="pagination" ng-init="page = 1">
         <pagination id="logPagination"
                     class="no-margin"
@@ -29,11 +32,11 @@
         <tbody>
         <tr ng-repeat-start="log in logs" >
             <td id="{{ $index }}LogId">
-                <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date }} -- {{ log.uuid }} -- {{ log.type }}</a>
+                <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date : 'medium' }} -- {{ log.type }}</a>
             </td>
-            <td id="{{ $index }}ReportLink">
+            <td id="{{ $index }}ReportLink" style="padding-left: 5em">
                 <a class="pointer" ng-click="log.expanded = true"
-                   href="mailto:support@threadfix.org?subject={{ log.time | date }} -- {{ log.uuid }} -- {{ log.type }}
+                   href="mailto:support@threadfix.org?subject={{ log.time | date : 'medium' }} -- {{ log.type }}
                    &body=***** Please copy log trace here *****">
                    Report To ThreadFix Team</a>
             </td>
