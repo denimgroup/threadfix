@@ -191,7 +191,7 @@ public class RestUtilsImpl<T> extends SpringBeanAutowiringSupport implements Res
 						LOG.warn("Error stream from HTTP connection was not null. Attempting to get response text.");
                         setPostErrorResponse(IOUtils.toString(errorStream));
 						LOG.warn("Error text in response was '" + getPostErrorResponse() + "'");
-                        throw new RestIOException(e, "Received error from server. Check the logs for more details.",
+                        throw new RestIOException(e, getPostErrorResponse(),
                                 "Unable to get response from server. Error text was: " +
                                 getPostErrorResponse(), getStatusCode(httpConnection));
 					}
