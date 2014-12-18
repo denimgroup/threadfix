@@ -142,17 +142,15 @@ public class DefaultConfiguration extends BaseEntity {
 		this.activeDirectoryURL = activeDirectoryURL;
 	}
 
-    @Transient
 	public String getActiveDirectoryUsername() {
 		return activeDirectoryUsername == null ? "" : activeDirectoryUsername;
 	}
 	
-//	@Column(length=256)
+	@Column(length=256)
 	public void setActiveDirectoryUsername(String activeDirectoryUsername) {
 		this.activeDirectoryUsername = activeDirectoryUsername;
 	}
 
-    @Transient
 	public String getActiveDirectoryCredentials() {
 		return activeDirectoryCredentials == null ? "" : activeDirectoryCredentials;
 	}
@@ -175,7 +173,7 @@ public class DefaultConfiguration extends BaseEntity {
         this.activeDirectoryCredentialsEncrypted = activeDirectoryCredentialsEncrypted;
     }
 
-    //	@Column(length=256)
+    	@Column(length=256)
 	public void setActiveDirectoryCredentials(String activeDirectoryCredentials) {
 		this.activeDirectoryCredentials = activeDirectoryCredentials;
 	}
