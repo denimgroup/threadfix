@@ -13,11 +13,11 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/applicationContext*.xml
-			/WEB-INF/security.xml
-			classpath:/applicationContext-hibernate.xml
-			classpath:/applicationContext-scheduling.xml
-		</param-value>
+            /WEB-INF/applicationContext*.xml
+            /WEB-INF/security.xml
+            classpath:/applicationContext-hibernate.xml
+            classpath:/applicationContext-scheduling.xml
+        </param-value>
 	</context-param>
     <filter>
         <filter-name>CacheBustFilter</filter-name>
@@ -86,7 +86,7 @@
 			<param-name>entryPoints</param-name>
 			<param-value>
         		,/,/index.jsp,/login.jsp,/organizations,/about,/wafs,/configuration,/reports,/dashboard,/scans,
-        		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,
+        		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,/configuration/grctools,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/scanplugin/index,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/jasper/*,/rest/*,
@@ -115,6 +115,15 @@
 		    	protected-regex ^/configuration/filters/[0-9]+/edit$,
 		    	protected-regex ^/configuration/filters/new$,
 		    	protected-regex ^/configuration/filters/tab$,
+		    	protected-regex ^/configuration/grctools/info$,
+		    	protected-regex ^/configuration/grctools/new$,
+		    	protected-regex ^/configuration/grctools/[0-9]+/getApps$,
+		    	protected-regex ^/configuration/grctools/[0-9]+/delete,
+		    	protected-regex ^/configuration/grctools/[0-9]+/apps/new,
+		    	protected-regex ^/configuration/grctools/apps/[0-9]+/delete,
+		    	protected-regex ^/configuration/grctools/[0-9]+/apps/[0-9]+/edit,
+		    	protected-regex ^/configuration/grctools/scheduledUpdates,
+		    	protected-regex ^/configuration/grctools/scheduledUpdates/update/[0-9]+,
         		protected-regex ^/configuration/keys/new$,
         		protected-regex ^/configuration/keys/[0-9]+/edit$,
         		protected-regex ^/configuration/keys/[0-9]+/delete$,

@@ -126,6 +126,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 		application.setActive(false);
 		application.setModifiedDate(new Date());
 		removeRemoteApplicationLinks(application);
+        removeGrcApplicationLink(application);
 		String possibleName = getNewName(application);
 		
 		if (application.getAccessControlApplicationMaps() != null) {
@@ -135,15 +136,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 
         if (scanQueueService != null && application.getScanQueueTasks() != null) {
-			for (ScanQueueTask task : application.getScanQueueTasks())
+			for (ScanQueueTask task : application.getScanQueueTasks()) {
 				scanQueueService.deactivateTask(task);
-				
+			}
 		}
+
+        application.setWaf(null);
 
         // Delete WafRules attached with application
         deleteWafRules(application);
 
-		
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
@@ -198,6 +200,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 	}
 	
+	private void removeGrcApplicationLink(Application application) {
+        GRCApplication grcApplication = application.getGrcApplication();
+		if (grcApplication != null) {
+			log.info("Removing GRC application from the application " + application.getName() +
+					 " (id=" + application.getId() + ")");
+
+            application.setGrcApplication(null);
+            grcApplication.setApplication(null);
+		}
+	}
+
 	@Override
 	public boolean validateApplicationDefectTracker(Application application,
 			BindingResult result) {

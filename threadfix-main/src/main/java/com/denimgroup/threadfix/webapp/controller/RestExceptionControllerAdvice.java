@@ -40,6 +40,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.orm.hibernate3.HibernateJdbcException;
 import com.mysql.jdbc.PacketTooBigException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.ws.client.WebServiceTransportException;
+
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 
 /**
@@ -97,6 +99,9 @@ public class RestExceptionControllerAdvice {
         assert !(ex instanceof AccessDeniedException) :
                 "ControllerAdvice received a AccessDeniedException in its generic Exception handler";
 
+        assert !(ex instanceof WebServiceTransportException) :
+                "ControllerAdvice received a WebServiceTransportException in its generic Exception handler";
+
         ExceptionLog exceptionLog = new ExceptionLog(ex);
 
         exceptionLogService.storeExceptionLog(exceptionLog);
@@ -106,6 +111,24 @@ public class RestExceptionControllerAdvice {
         ModelAndView mav = new ModelAndView("exception", "uuid", exceptionLog.getUUID());
         mav.addObject("logId", exceptionLog.getId());
         return mav;
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(value = WebServiceTransportException.class)
+    public @ResponseBody RestResponse<String> resolveWebServiceTransportException(WebServiceTransportException ex) {
+
+        ExceptionLog exceptionLog = new ExceptionLog(ex);
+        exceptionLogService.storeExceptionLog(exceptionLog);
+
+        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+
+        if(ex.getMessage().contains("401")){
+            return failure("GRC Credentials not valid.");
+        } else if(ex.getMessage().contains("403")){
+            return failure("Cannot reach GRC service.");
+        } else {
+            return failure(ex.getMessage());
+        }
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
