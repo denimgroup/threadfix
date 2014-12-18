@@ -86,10 +86,12 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 
             if (!config.getActiveDirectoryUsername().trim().isEmpty()) {
                 config.setActiveDirectoryUsernameEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryUsername()));
+                config.setActiveDirectoryUsername(null);
             }
 
             if (!config.getActiveDirectoryCredentials().trim().isEmpty()) {
                 config.setActiveDirectoryCredentialsEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryCredentials()));
+                config.setActiveDirectoryCredentials(null);
             }
 
         } catch (EncryptionException e) {
