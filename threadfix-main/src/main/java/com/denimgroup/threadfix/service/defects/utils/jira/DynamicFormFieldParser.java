@@ -186,10 +186,9 @@ public class DynamicFormFieldParser {
                         } else if (type.equals("user")) {
                             field.setType("select");
                             Map<String, String> map = retriever.getUserMap();
-
-                            if (map == null)
-                                continue;
-                            field.setOptionsMap(map);
+                            if (map == null) {
+                                field.setType("text");
+                            } else field.setOptionsMap(map);
 
                         } else if (type.equals("array")) {
                             LOG.error("Unable to determine dynamic type for " + entry.getKey() + ":" + type + " of " +
