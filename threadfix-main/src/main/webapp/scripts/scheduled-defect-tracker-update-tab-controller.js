@@ -15,6 +15,9 @@ myAppModule.controller('ScheduledDefectTrackerUpdateTabController', function ($s
                 buttonText: function () {
                     return "Add Scheduled Update";
                 },
+                heading: function () {
+                    return "New Scheduled Update";
+                },
                 object: function () {
                     return {
                         frequency: 'Daily',

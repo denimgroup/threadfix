@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.ScanMergeService;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.Node;
 import com.denimgroup.threadfix.webapp.viewmodels.PathTree;

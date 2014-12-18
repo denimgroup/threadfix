@@ -15,5 +15,7 @@
         <%@ include file="/WEB-INF/views/config/remoteproviders/tabs/scheduledImportTab.jsp" %>
     </tabset>
 
-    <%@ include file="/WEB-INF/views/applications/forms/addScheduledRemoteProviderImportForm.jsp"%>
+    <script type="text/ng-template" id="newScheduledImport.html">
+        <%@ include file="/WEB-INF/views/applications/forms/addScheduledJobForm.jsp"%>
+    </script>
 </body>
