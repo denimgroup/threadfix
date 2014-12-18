@@ -204,23 +204,30 @@ public class StrutsEndpointMappingsTests {
                     "currentDirectory", "directoryId", "directoryName"}
     };
 
-	@Test
-	public void testRoller() {
+    @Test
+    public void testRoller() {
         File rootFile = new File(TestConstants.ROLLER_SOURCE_LOCATION);
         StrutsEndpointMappings mappings = new StrutsEndpointMappings(rootFile);
 
         EndpointDatabase database = EndpointDatabaseFactory.getDatabase(
                 mappings,
                 FrameworkType.STRUTS,
-                new DefaultPathCleaner("",""));
+                new DefaultPathCleaner("", ""));
 
         test(database);
+    }
+
+    @Test
+    public void testRollerFrameworkType() {
+        File rootFile = new File(TestConstants.ROLLER_SOURCE_LOCATION);
+        StrutsEndpointMappings mappings = new StrutsEndpointMappings(rootFile);
 
         // test with EndpointDatabaseFactory finding the FrameworkType
-        EndpointDatabase database2 = EndpointDatabaseFactory.getDatabase(rootFile);
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(rootFile);
 
-        test(database2);
+        test(database);
     }
+
 
     private void test(EndpointDatabase edb) {
         for (String[] endpointTest : TEST_DATA) {
@@ -231,7 +238,7 @@ public class StrutsEndpointMappingsTests {
             if (endpointTest.length > 3) {
                 testParams = new String[endpointTest.length - 3];
                 for (int i = 0; i < testParams.length; i++) {
-                    testParams[i] = endpointTest[i+3];
+                    testParams[i] = endpointTest[i + 3];
                 }
             }
             test(edb, testFileName, testUrl, testMethod, testParams);
