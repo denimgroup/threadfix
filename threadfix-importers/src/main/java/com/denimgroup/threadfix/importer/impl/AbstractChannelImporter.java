@@ -83,7 +83,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected enum FindingKey {
         VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
-        RECOMMENDATION, RAWFINDING, URL_REFERENCE, DESCRIPTION
+        RECOMMENDATION, RAWFINDING, URL_REFERENCE
     }
 
     // A stream pointing to the scan's contents. Set with either setFile or
@@ -418,7 +418,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
         String rawFinding = findingMap.get(FindingKey.RAWFINDING);
         String urlReference = findingMap.get(FindingKey.URL_REFERENCE);
-        String description = findingMap.get(FindingKey.DESCRIPTION);
 
         if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
             parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
@@ -447,10 +446,6 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         if (urlReference != null && urlReference.length() > Finding.URL_REFERENCE_LENGTH)
             urlReference = urlReference.substring(0,Finding.URL_REFERENCE_LENGTH-20) + "\n\n[truncated]\n";
         finding.setUrlReference(urlReference);
-
-        if (description != null && description.length() > Finding.LONG_DESCRIPTION_LENGTH)
-            description = description.substring(0,Finding.LONG_DESCRIPTION_LENGTH-20) + "\n\n[truncated]\n";
-        finding.setLongDescription(description);
     }
 
     protected void closeInputStream(InputStream stream) {

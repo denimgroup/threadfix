@@ -83,7 +83,7 @@ public class DashboardController {
 
         List<Organization> organizationList = organizationService.loadAllActiveFilter();
 
-		model.addAttribute("teams", organizationService.loadAllActiveFilter());
+		model.addAttribute("teams", organizationList);
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
 
         if (defaultConfigService.isReportCacheDirty()) {
