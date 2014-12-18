@@ -12,10 +12,8 @@ module.controller("ErrorLogsController", function($scope, $http, tfEncoder) {
 
                     if (data.success) {
 
-                        if (data.object.logs.length > 0) {
-                            $scope.logs = data.object.logs;
-                            $scope.totalLogs = data.object.totalLogs;
-                        }
+                        $scope.logs = data.object.logs;
+                        $scope.totalLogs = data.object.totalLogs;
 
                     } else {
                         $scope.errorMessage = "Failure. Message was : " + data.message;
