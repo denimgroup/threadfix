@@ -149,6 +149,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 		if (applicationDao.retrieveByName(possibleName, application.getOrganization().getId()) == null) {
 			application.setName(possibleName);
 		}
+
+		application.getOrganization().updateVulnerabilityReport();
+
 		applicationDao.saveOrUpdate(application);
 	}
 
