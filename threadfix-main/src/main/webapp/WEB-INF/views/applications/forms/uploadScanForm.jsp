@@ -5,18 +5,24 @@
         </h4>
     </div>
 
-    <div ng-file-drop-available="dropSupported=true"
+    <div
          ng-class="{ 'drop-box' : ready(), 'long-drop-box' : alerts.length != 0 }"
          ng-file-drop="onFileSelect($files)"
+         ng-file-drop-available="isIE=false"
          class="modal-body">
 
         <div ng-show="waiting" class="modal-loading"><div><span class="spinner dark"></span>Processing...</div></div><br>
 
-        <div ng-show="ready()" ng-show="dropSupported">
+        <div ng-show="ready()">
             <div>
                 <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
-            Drag and drop scan file here.
+            <div ng-hide="isIE">
+                Drag and drop scan file here.
+            </div>
+            <div ng-show="isIE">
+                Select scan file.
+            </div>
         </div>
 
         <progressbar ng-show="uploading" animate="false" value="dynamic" type="success"><b>{{uploadedPercent}}%</b></progressbar>

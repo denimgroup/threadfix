@@ -6,6 +6,8 @@ myAppModule.controller('UploadScanController', function ($scope, $modalInstance,
 
     $scope.uploadedPercent = 0;
 
+    $scope.isIE = /*@cc_on!@*/false || !!document.documentMode;
+
     $scope.ready = function() {
         return !$scope.uploading && !$scope.waiting;
     };

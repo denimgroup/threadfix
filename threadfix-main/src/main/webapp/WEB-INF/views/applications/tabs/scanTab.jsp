@@ -1,8 +1,12 @@
 <tab id="scanTab" ng-controller="ScanTableController"
      heading="{{ heading }}">
 
-    <div ng-hide="scans" class="empty-tab-drop-area">
+    <div ng-hide="scans || isIE" class="empty-tab-drop-area">
         <div>Drop a scan here to upload.</div>
+    </div>
+
+    <div ng-show="!scans && isIE" class="empty-tab-drop-area">
+        <div>No Scans Found.</div>
     </div>
 
     <table ng-show="scans" class="table table-striped">

@@ -6,6 +6,8 @@ myAppModule.controller('ScanTableController', function ($scope, $window, $http, 
 
     $scope.heading = '0 Scans';
 
+    $scope.isIE = /*@cc_on!@*/false || !!document.documentMode;
+
     $scope.refresh = function() {
 
     };
