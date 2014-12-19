@@ -62,7 +62,7 @@
                 <div class="panel-body" ng-show="editLdapSettings">
                     <table>
                         <tr>
-                            <td style="width:150px" class="no-color">LDAP Search Base</td>
+                            <td style="width:150px" class="no-color">Search Base</td>
                             <td class="no-color">
                                 <form:input id="activeDirectoryBase" path="activeDirectoryBase" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryBase }"/>
                             </td>
@@ -71,7 +71,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="no-color">LDAP User DN</td>
+                            <td class="no-color">sAMAccountName</td>
                             <td class="no-color">
                                 <form:input id="activeDirectoryUsername" path="activeDirectoryUsername" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryUsername }"/>
                             </td>
@@ -80,7 +80,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="no-color">LDAP Password</td>
+                            <td class="no-color">Password</td>
                             <td class="no-color">
                                 <form:input id="activeDirectoryCredentials" path="activeDirectoryCredentials" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryCredentials }"/>
                             </td>
@@ -89,7 +89,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="no-color">LDAP URL</td>
+                            <td class="no-color">URL</td>
                             <td class="no-color">
                                 <form:input id="activeDirectoryURL" path="activeDirectoryURL" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryURL }"/>
                             </td>
