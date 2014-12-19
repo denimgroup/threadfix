@@ -38,6 +38,11 @@ public interface QueueSender {
 	/**
 	 * 
 	 */
+	 void startGrcToolSync();
+
+	/**
+	 *
+	 */
 	void startDefectTrackerSync();
 
 	/**

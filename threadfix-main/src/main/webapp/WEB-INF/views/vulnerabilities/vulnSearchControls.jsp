@@ -3,7 +3,7 @@
     <%--<%@ include file="../successMessage.jspf" %>--%>
 
     <!-- This is the Action button -->
-    <c:if test="${ canModifyVulnerabilities || canSubmitDefects }">
+    <c:if test="${ canModifyVulnerabilities || canSubmitDefects || canManageGrcTools }">
         <div ng-if="treeApplication">
             <div ng-show="treeApplication && vulnTree" id="btnDiv" class="btn-group" ng-controller="BulkOperationsController">
                 {{ $parent | json }}
@@ -14,6 +14,9 @@
                     <c:if test="${ canSubmitDefects }">
                         <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="submitDefectButton" ng-click="showSubmitDefectModal()">Submit Defect</a></li>
                         <li ng-show="$parent.treeApplication.defectTracker"><a class="pointer" id="mergeDefectButton" ng-click="showMergeDefectModal()">Merge Defect</a></li>
+                    </c:if>
+                    <c:if test="${ canManageGrcTools }">
+                        <li ng-show="$parent.treeApplication.grcApplication"><a class="pointer" id="submitGrcControlButton" ng-click="showSubmitGrcControlModal()">Submit GRC Control(s)</a></li>
                     </c:if>
                     <c:if test="${ canModifyVulnerabilities }">
                         <li ng-show="parameters.showOpen"><a class="pointer" id="closeVulnsButton" ng-click="closeVulnerabilities()">Close Vulnerabilities</a></li>

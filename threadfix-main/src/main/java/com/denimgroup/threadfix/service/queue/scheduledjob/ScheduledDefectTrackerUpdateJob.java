@@ -34,7 +34,8 @@ import org.quartz.JobExecutionException;
 import java.util.Date;
 
 /**
- * Created by dzabdi88 on 8/27/14.
+ * @author zabdisubhan
+ *
  */
 
 public class ScheduledDefectTrackerUpdateJob implements Job {
