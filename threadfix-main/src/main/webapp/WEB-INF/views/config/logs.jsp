@@ -10,27 +10,45 @@
 
     <%@ include file="../angular-init.jspf"%>
 
-	<h3>Log List (Click to expand)</h3>
+    <h3>Log List <span ng-show="totalLogs !== 0">(Click to expand)</span></h3>
 
     <div ng-hide="initialized" class="spinner-div"><span class="spinner dark"></span>Loading</div>
 
-    <div ng-show="initialized" class="pagination" ng-init="page = 1">
-        <pagination class="no-margin"
-                    total-items="totalLogs / 5"
+    <div ng-show="totalLogs === 0">
+        <span>No Logs Found.</span>
+    </div>
+    <div ng-show="totalLogs > numberToShow" class="pagination" ng-init="page = 1">
+        <pagination id="logPagination"
+                    class="no-margin"
+                    total-items="totalLogs / numberToShow * 10"
                     max-size="5"
                     page="page"
                     ng-model="page"
-                    ng-change="updatePage(page)"></pagination>
+                    ng-click="updatePage(page)"></pagination>
     </div>
     <br>
 
-	<a ng-repeat-start="log in logs" class="pointer" ng-click="log.expanded = !log.expanded">
-        {{ log.time | date }} -- {{ log.uuid }} -- {{ log.type }}
-    </a>
-			
-    <span ng-repeat-end id="{{ $index }}">
-        <pre ng-show="log.expanded">{{ log.exceptionStackTrace }}</pre>
-        <br>
-    </span>
+    <table id="logListTable">
+        <tbody>
+        <tr ng-repeat-start="log in logs" >
+            <td id="{{ $index }}LogId">
+                <a class="pointer" ng-click="log.expanded = !log.expanded">{{ log.time | date : 'medium' }} -- {{ log.type }}</a>
+            </td>
+            <td id="{{ $index }}ReportLink" style="padding-left: 5em">
+                <a class="pointer" ng-click="log.expanded = true"
+                   href="mailto:support@threadfix.org?subject={{ log.time | date : 'medium' }} -- {{ log.type }}
+                   &body=***** Please copy log trace here *****">
+                   Report To ThreadFix Team</a>
+            </td>
+
+        </tr>
+        <tr ng-repeat-end>
+            <td colspan="2" id="{{ $index }}LogContent">
+                <pre ng-show="log.expanded">{{ log.exceptionStackTrace }}</pre>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
 
 </body>

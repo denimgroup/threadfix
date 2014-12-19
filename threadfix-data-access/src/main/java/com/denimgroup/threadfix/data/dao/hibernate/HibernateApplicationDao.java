@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -156,20 +157,42 @@ public class HibernateApplicationDao implements ApplicationDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Integer> getTopXVulnerableAppsFromList(int numApps,
+    public List<Integer> getTopXVulnerableAppsFromList(int numApps, List<Integer> teamIdList,
                                                        List<Integer> applicationIdList) {
-        List<Integer> list = sessionFactory.getCurrentSession()
-                .createQuery("SELECT application.id as id " +
-                        " FROM Application as application join application.vulnerabilities as vulnerability " +
-                        " WHERE application.id IN (:applicationIdList) AND " +
-                        "   application.active = true AND " +
-                        " 	vulnerability.active = true AND " +
-                        "   vulnerability.isFalsePositive = false " +
-                        "GROUP BY application.id " +
-                        "ORDER BY count(vulnerability) desc")
-                .setParameterList("applicationIdList", applicationIdList)
-                .setMaxResults(numApps)
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT application.id as id " +
+                " FROM Application as application join application.vulnerabilities as vulnerability " +
+                " WHERE" +
+                "   application.active = true AND " +
+                " 	vulnerability.active = true AND " +
+                "   vulnerability.isFalsePositive = false " );
+
+        if (teamIdList.isEmpty() || applicationIdList.isEmpty()) {
+            if (!applicationIdList.isEmpty()) {
+                builder.append(" AND application.id IN (:applicationIdList)");
+            }
+
+            if (!teamIdList.isEmpty()) {
+                builder.append(" AND application.organization.id IN (:teamIdList)");
+            }
+        } else {
+            builder.append(" AND (application.id IN (:applicationIdList) OR application.organization.id IN (:teamIdList))");
+        }
+
+        builder.append(" GROUP BY application.id" +
+                " ORDER BY count(vulnerability) desc");
+
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery(builder.toString());
+        if (!teamIdList.isEmpty())
+            query.setParameterList("teamIdList", teamIdList);
+
+        if (!applicationIdList.isEmpty()) {
+            query.setParameterList("applicationIdList", applicationIdList);
+        }
+        List<Integer> list = query.setMaxResults(numApps)
                 .list();
+
         if (list==null || list.isEmpty())
             list = Arrays.asList(new Integer[]{-1});
         return list;

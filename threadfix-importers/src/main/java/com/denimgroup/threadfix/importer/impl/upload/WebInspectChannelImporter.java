@@ -54,7 +54,7 @@ import java.util.Map;
 @ScanImporter(
         scannerName = ScannerDatabaseNames.WEBINSPECT_DB_NAME,
         startingXMLTags = { "Sessions", "Session", "URL", "Scheme", "Host", "Port"})
-class WebInspectChannelImporter extends AbstractChannelImporter {
+public class WebInspectChannelImporter extends AbstractChannelImporter {
 	
 	private String bestPractices = "Best Practices";
 		

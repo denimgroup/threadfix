@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Organization;
+import com.denimgroup.threadfix.data.entities.Permission;
 
 import java.util.List;
 
@@ -46,5 +47,7 @@ public interface OrganizationService extends GenericNamedObjectService<Organizat
 	 * @return
 	 */
 	List<Organization> loadAllActiveFilter();
+
+    List<Organization> loadTeams(Permission permission, boolean checkApps);
 
 }

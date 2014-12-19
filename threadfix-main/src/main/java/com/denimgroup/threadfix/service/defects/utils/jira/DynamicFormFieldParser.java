@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -50,13 +51,19 @@ public class DynamicFormFieldParser {
     private DynamicFormFieldParser() {
     }
 
+    private static ObjectMapper getLenientObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
+    }
+
 //    private static final String TIME_TRACKING
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DynamicFormFieldParser.class);
 
     public static Project getJiraProjectMetadata(String jsonString) {
         try {
-            return new ObjectMapper().readValue(jsonString, JiraJsonMetadataResponse.class).getProjectOrNull();
+            return getLenientObjectMapper().readValue(jsonString, JiraJsonMetadataResponse.class).getProjectOrNull();
         } catch (IOException e) {
             LOG.info("Failed to deserialize JSON.");
             LOG.debug("Failing JSON: " + jsonString, e);
@@ -70,8 +77,10 @@ public class DynamicFormFieldParser {
         LOG.debug("Starting JSON field description deserialization.");
 
         try {
+            ObjectMapper objectMapper = getLenientObjectMapper();
+
             JiraJsonMetadataResponse response =
-                    new ObjectMapper().readValue(jsonString, JiraJsonMetadataResponse.class);
+                    objectMapper.readValue(jsonString, JiraJsonMetadataResponse.class);
 
             assert response.projects.size() != 0 :
                     "The response didn't contain any projects. Something went wrong.";
@@ -176,7 +185,10 @@ public class DynamicFormFieldParser {
 
                         } else if (type.equals("user")) {
                             field.setType("select");
-                            field.setOptionsMap(retriever.getUserMap());
+                            Map<String, String> map = retriever.getUserMap();
+                            if (map == null) {
+                                field.setType("text");
+                            } else field.setOptionsMap(map);
 
                         } else if (type.equals("array")) {
                             LOG.error("Unable to determine dynamic type for " + entry.getKey() + ":" + type + " of " +

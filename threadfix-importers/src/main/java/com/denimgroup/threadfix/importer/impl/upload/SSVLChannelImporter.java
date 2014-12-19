@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +57,11 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
         scannerName = ScannerDatabaseNames.SSVL_DB_NAME,
         startingXMLTags = { "Vulnerabilities", "Vulnerability" }
 )
-class SSVLChannelImporter extends AbstractChannelImporter {
+public class SSVLChannelImporter extends AbstractChannelImporter {
 
-	public final static String DATE_PATTERN = "MM/dd/yyyy hh:mm:ss a X";
+	public final static String
+			DATE_PATTERN = "yyyy-MM-dd HH:mm:ss aaa XXX",
+			FINDING_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss aaa XXX";
 
 	public SSVLChannelImporter() {
 		super(ScannerType.MANUAL);
@@ -69,6 +73,8 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	}
 
 	public class SSVLChannelImporterSAXParser extends HandlerWithBuilder {
+
+		Calendar lastDate = null;
 		
 		private boolean getText = false;
 		private String description = null;
@@ -80,7 +86,6 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 					    
 	    public void add(Finding finding) {
 			if (finding != null) {
-    			finding.setNativeId(getNativeId(finding));
 	    		finding.setIsStatic(false);
 	    		saxFindingList.add(finding);
     		}
@@ -113,7 +118,9 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	    }
 	    
 	    private void parseNativeId(Attributes atts) {
-	    	findingMap.put(FindingKey.NATIVE_ID, atts.getValue("NativeID"));
+			String nativeID = atts.getValue("NativeID");
+			findingMap.put(FindingKey.NATIVE_ID, nativeID);
+			lastDate = DateUtils.getCalendarFromString(FINDING_DATE_FORMAT, atts.getValue("IdentifiedTimestamp"));
 	    }
 	    
 	    private void parseSurfaceLocation(Attributes atts) {
@@ -166,6 +173,9 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 			
 				Finding finding = constructFinding(findingMap);
                 if (finding != null) {
+					finding.setScannedDate(lastDate);
+					finding.setNativeId(findingMap.get(FindingKey.NATIVE_ID));
+
                     if (!dataFlowElementList.isEmpty()) {
                         finding.setIsStatic(true);
                         finding.setDataFlowElements(dataFlowElementList);
@@ -179,6 +189,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 				findingMap = new HashMap<>();
 				description = null;
 			}
+			lastDate = null;
 		}
 
 		@Override

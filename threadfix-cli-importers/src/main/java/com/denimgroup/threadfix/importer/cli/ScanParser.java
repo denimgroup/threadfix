@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
+import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class ScanParser {
     private void checkForUpdate() {
         if (needsUpdating) {
             try {
-                mappingsUpdaterService.updateMappings();
+                mappingsUpdaterService.updateMappings(SpringConfiguration.getContext());
                 needsUpdating = false;
             } catch (Exception e) { // this isn't production code, and I'm rethrowing as RuntimeException
                 throw new IllegalStateException("Encountered error while updating channel vulns. Fix it.", e);

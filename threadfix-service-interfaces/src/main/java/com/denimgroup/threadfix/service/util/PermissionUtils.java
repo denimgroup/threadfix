@@ -168,12 +168,41 @@ public class PermissionUtils extends SpringBeanAutowiringSupport {
 
                 if (applications != null && !applications.isEmpty()) {
                     organization.setActiveApplications(applications);
+                    organization.setApplications(applications);
+                    organization.updateVulnerabilityReport();
                     returnList.add(organization);
                 }
             }
         }
 
         return returnList;
+    }
+
+    public static List<Application> filterAppsList(List<Organization> organizations) {
+
+        Set<Integer> teamIds = getAuthenticatedTeamIds();
+        List<Application> returnApps = list();
+
+        // If community or global read access, return all teams.
+        if (teamIds == null) { // TODO use something other than null to indicate all permissions
+            for (Organization org: organizations)
+                returnApps.addAll(org.getActiveApplications());
+            return returnApps;
+        }
+
+        for (Organization organization : organizations) {
+            if (teamIds.contains(organization.getId())) {
+                returnApps.addAll(organization.getActiveApplications());
+            } else {
+                List<Application> applications = filterApps(organization);
+
+                if (applications != null && !applications.isEmpty()) {
+                    returnApps.addAll(applications);
+                }
+            }
+        }
+
+        return returnApps;
     }
 
     public static List<Integer> getIdsWithPermission(Permission permission, List<Organization> organizations) {

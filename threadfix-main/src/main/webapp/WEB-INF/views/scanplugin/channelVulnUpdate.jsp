@@ -8,7 +8,7 @@
 	<h2>Scanner Plugin Management</h2>
 	
 	<%@ include file="/WEB-INF/views/successMessage.jspf" %>
-	<%@ include file="/WEB-INF/views/errorMessage.jsp"%>
+	<%@ include file="/WEB-INF/views/errorMessage.jspf"%>
 	
 	<c:if test="${ not empty pluginCheckBean.lastImportDate }">
 		Vulnerability Mappings were last updated from the 

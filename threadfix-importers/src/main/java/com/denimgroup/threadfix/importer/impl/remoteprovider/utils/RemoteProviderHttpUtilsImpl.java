@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.ProxyService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
     private static final SanitizedLogger LOG = new SanitizedLogger(RemoteProviderHttpUtils.class);
 
     private final Class<T> classInstance;
-    private HttpClient HttpClientInstance = null;
+    private HttpClient httpClientInstance = null;
     @Autowired(required = false)
     private ProxyService proxyService;
 
@@ -56,33 +57,51 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
 
     @Override
     @Nonnull
-    public HttpResponse getUrl(String url, String username, String password) {
+    public HttpResponse getUrl(String url, final String username, final String password) {
         assert url != null;
+
+        return getUrlWithConfigurer(url, new RequestConfigurer() {
+            @Override
+            public void configure(HttpMethodBase method) {
+                if (username != null && password != null) {
+                    String login = username + ":" + password;
+                    String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
+                    method.setRequestHeader("Authorization", "Basic " + encodedLogin);
+                }
+                method.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
+            }
+        });
+    }
+
+    @Override
+    public HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer) {
+        assert url != null;
+        assert configurer != null;
 
         GetMethod get = new GetMethod(url);
 
         get.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
 
-        if (username != null && password != null) {
-            String login = username + ":" + password;
-            String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
-
-            get.setRequestHeader("Authorization", "Basic " + encodedLogin);
-        }
+        configurer.configure(get);
 
         HttpClient client = getConfiguredHttpClient(classInstance);
-        try {
-            int status = client.executeMethod(get);
 
-            if (status == 200) {
-                return HttpResponse.success(status, get.getResponseBodyAsStream());
+        int status = -1;
+
+        try {
+            status = client.executeMethod(get);
+
+            if (status != 200) {
+                LOG.warn("Status wasn't 200, it was " + status);
+                return HttpResponse.failure(status, get.getResponseBodyAsStream());
             } else {
-                LOG.warn("Status : " + status);
+                return HttpResponse.success(status, get.getResponseBodyAsStream());
             }
+
         } catch (IOException e) {
             LOG.error("Encountered IOException while making request in " + classInstance.getName() + ".", e);
         }
-        return HttpResponse.failure();
+        return HttpResponse.failure(status);
     }
 
     @Override
@@ -114,6 +133,8 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
             post.setRequestHeader(headerNames[i], headerVals[i]);
         }
 
+        int status = -1;
+
         try {
             for (int i = 0; i < paramNames.length; i++) {
                 post.addParameter(paramNames[i], paramVals[i]);
@@ -121,13 +142,13 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
 
             HttpClient client = getConfiguredHttpClient(classInstance);
 
-            int status = client.executeMethod(post);
+            status = client.executeMethod(post);
 
-            if (status == 200) {
-                return HttpResponse.success(status, post.getResponseBodyAsStream());
+            if (status != 200) {
+                LOG.warn("Status wasn't 200, it was " + status);
+                return HttpResponse.failure(status, post.getResponseBodyAsStream());
             } else {
-                LOG.warn("Status : " + status);
-                return HttpResponse.failure(status);
+                return HttpResponse.success(status, post.getResponseBodyAsStream());
             }
 
         } catch (IOException e1) {
@@ -135,20 +156,20 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
         }
 
         LOG.warn("There was an error and the POST request was not finished.");
-        return HttpResponse.failure();
+        return HttpResponse.failure(status);
     }
 
-    protected <T> HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
-        if (HttpClientInstance == null) {
+    protected HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
+        if (httpClientInstance == null) {
             if (proxyService == null) {
-                HttpClientInstance = new HttpClient();
+                httpClientInstance = new HttpClient();
             } else {
-                HttpClientInstance = proxyService.getClientWithProxyConfig(classToProxy);
+                httpClientInstance = proxyService.getClientWithProxyConfig(classToProxy);
             }
         }
 
-        assert HttpClientInstance != null;
+        assert httpClientInstance != null;
 
-        return HttpClientInstance;
+        return httpClientInstance;
     }
 }

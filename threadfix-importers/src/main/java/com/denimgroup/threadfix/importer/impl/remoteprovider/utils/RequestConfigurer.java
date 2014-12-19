@@ -21,19 +21,15 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
-package com.denimgroup.threadfix.service.report;
+import org.apache.commons.httpclient.HttpMethodBase;
 
-import net.sf.jasperreports.engine.JRChart;
-import net.sf.jasperreports.engine.JRChartCustomizer;
+/**
+ * Created by mac on 11/19/14.
+ */
+public interface RequestConfigurer {
 
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
+    void configure(HttpMethodBase method);
 
-public class CategoryIntegerTicksChartCustomizer implements JRChartCustomizer {
-
-	@Override
-	public void customize(JFreeChart chart, JRChart jasperChart) {
-		chart.getCategoryPlot().getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-	}
 }

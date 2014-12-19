@@ -1,10 +1,47 @@
 var threadfixModule = angular.module('threadfix')
 
-threadfixModule.factory('reportExporter', function(reportConstants) {
+threadfixModule.factory('reportExporter', function($log) {
 
     var reportExporter = {};
 
-    reportExporter.exportCSV = function() {
+    reportExporter.exportCSV = function(data, contentType, fileName) {
+
+        // Get the blob url creator
+        var urlCreator = window.URL || window.webkitURL || window.mozURL || window.msURL;
+
+        var octetStreamMime = "application/octet-stream";
+
+        if(urlCreator) {
+            // Try to use a download link
+            var link = document.createElement("a");
+            if ("download" in link) {
+                // Prepare a blob URL
+                var blob = new Blob([data], { type: contentType });
+                var url = urlCreator.createObjectURL(blob);
+                link.setAttribute("href", url);
+
+                // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
+                link.setAttribute("download", fileName);
+
+                // Simulate clicking the download link
+                var event = document.createEvent('MouseEvents');
+                event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+                link.dispatchEvent(event);
+
+                $log.info("Download Data Success");
+
+            } else {
+                // Prepare a blob URL
+                // Use application/octet-stream when using window.location to force download
+                var blob = new Blob([data], { type: octetStreamMime });
+                var url = urlCreator.createObjectURL(blob);
+                window.location = url;
+
+                $log.info("window.location Success");
+            }
+        } else {
+            $log.info("Not supported");
+        }
     };
 
     reportExporter.exportPDF = function(d3, exportInfo, width, height, name) {
@@ -14,10 +51,10 @@ threadfixModule.factory('reportExporter', function(reportConstants) {
             if (d3.select(this).attr("id") === exportInfo.svgId)
                 svg = d3.select(this);
 
-            console.log(d3.select(this).attr("id"));
+            $log.info(d3.select(this).attr("id"));
         });
         reportExporter.exportPDFSvg(d3, svg, width, height, name);
-    }
+    };
 
     reportExporter.exportPDFSvg = function(d3, svg, width, height, name) {
         var node = svg
@@ -70,7 +107,7 @@ threadfixModule.factory('reportExporter', function(reportConstants) {
                             used += rule.selectorText + " { " + rule.style.cssText + " }\n";
                         }
                     } catch (x) {
-                        console.log(x);
+                        $log.warn(x);
                     }
                 }
             }
@@ -381,7 +418,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     };
 
     var createStartHash = function(hashBefore, $scope) {
-        var startHash = {};
+        var startHash = {
+            notRealScan : true
+        };
         if ($scope.trendingScansData.length===0)
             return startHash;
         firstHashInList = $scope.trendingScansData[0];
@@ -411,7 +450,9 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
     }
 
     var createEndHash = function(hashAfter, $scope) {
-        var endHash = {};
+        var endHash = {
+            notRealScan : true
+        };
         if ($scope.trendingScansData.length===0)
             return endHash;
         lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];

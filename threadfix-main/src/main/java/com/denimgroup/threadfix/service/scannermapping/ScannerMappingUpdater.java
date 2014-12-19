@@ -27,10 +27,11 @@ package com.denimgroup.threadfix.service.scannermapping;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.GenericVulnerabilityService;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Service;
 
 
 /**
@@ -40,8 +41,8 @@ import javax.annotation.PostConstruct;
  * Time: 5:03 PM
  * To change this template use File | Settings | File Templates.
  */
-@Component
-public class ScannerMappingUpdater {
+@Service
+public class ScannerMappingUpdater implements ApplicationContextAware {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(ScannerMappingUpdater.class);
 
@@ -50,24 +51,22 @@ public class ScannerMappingUpdater {
     @Autowired
     private GenericVulnerabilityService genericVulnerabilityService;
 
-    @PostConstruct
-    public void update() {
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
         LOG.info("Checking if scanner mapping update is required");
-        boolean canUpdate = scannerMappingsUpdaterService.checkPluginJar().canUpdate;
+        boolean canUpdate = scannerMappingsUpdaterService.checkPluginJar(applicationContext).canUpdate;
         boolean hasGenericVulns =
                 genericVulnerabilityService.loadAll() != null &&
-                genericVulnerabilityService.loadAll().size() > 0;
+                        genericVulnerabilityService.loadAll().size() > 0;
 
         if (canUpdate && hasGenericVulns) {
             LOG.info("Updating mappings.");
-            scannerMappingsUpdaterService.updateMappings();
+            scannerMappingsUpdaterService.updateMappings(applicationContext);
         } else if (!canUpdate) {
             LOG.info("Scanner mappings are up-to-date, continuing");
         } else {
             LOG.info("No generic vulnerabilities found, skipping updates for now.");
         }
-
     }
-
 }

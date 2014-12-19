@@ -14,6 +14,7 @@
     <cbs:cachebustscript src="/scripts/generic-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vulnerability-comments-table-controller.js"/>
+    <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
 </head>
 
 <body id="reports">
@@ -44,7 +45,7 @@
             </tab>
 
             <c:if test="${isEnterprise}">
-                <tab id="enterpriseTab" active="remediationEnterpriseActive" heading="Enterprise" ng-click="loadEnterpriseRemediation()">
+                <tab id="enterpriseTab" active="remediationEnterpriseActive" heading="Compliance" ng-click="loadEnterpriseRemediation()">
                     <div ng-controller="ComplianceReportController"
                          ng-init="remediationType = 2; graphName = 'complianceEnterpriseTrendingGraph'; sumTableDivId = 'complianceTable2'">
                         <%@ include file="compliance.jsp" %>

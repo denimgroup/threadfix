@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.report;
 import javax.servlet.http.HttpServletRequest;
 
 import com.denimgroup.threadfix.data.entities.Vulnerability;
+import com.denimgroup.threadfix.data.entities.VulnerabilitySearchParameters;
 import org.springframework.ui.Model;
 
 import com.denimgroup.threadfix.data.entities.ReportParameters;
@@ -54,20 +55,13 @@ public interface ReportsService {
 		public String toString() { return text; }
 	}
 	
-	ReportCheckResultBean generateReport(ReportParameters parameters, HttpServletRequest request);
-
     ReportCheckResultBean generateDashboardReport(ReportParameters parameters, HttpServletRequest request);
 
     Map<String, Object> generateTrendingReport(ReportParameters parameters, HttpServletRequest request);
 
     Map<String, Object> generateSnapshotReport(ReportParameters parameters, HttpServletRequest request);
 
-    Map<String, Object> scannerComparisonByVulnerability(Model model,
-			ReportParameters reportParameters);
-
-    Map<String, Object> vulnerabilityList(Model model, ReportParameters reportParameters);
-
-    String getExportFileName(ReportParameters reportParameters);
+    Map<String, Object> generateMostAppsReport(VulnerabilitySearchParameters parameters, HttpServletRequest request);
 
     ReportCheckResultBean generateSearchReport(List<Vulnerability> vulnerabilityList);
 

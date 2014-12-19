@@ -23,6 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
+import com.denimgroup.threadfix.exception.RestIOException;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -51,6 +55,10 @@ public class HttpResponse {
         return new HttpResponse(status, null);
     }
 
+    public static HttpResponse failure(int status, InputStream stream) {
+        return new HttpResponse(status, stream);
+    }
+
     public static HttpResponse failure() {
         return new HttpResponse(-1, null);
     }
@@ -65,5 +73,25 @@ public class HttpResponse {
 
     public InputStream getInputStream() {
         return inputStream;
+    }
+
+    public String getBodyAsString() {
+        try {
+            return IOUtils.toString(getInputStream());
+        } catch (IOException e) {
+            throw new RestIOException(e, "Got IOException while trying to read a string from an inputstream.");
+        }
+    }
+
+    public String getStringOrThrowRestException() {
+        if (isValid()) {
+            try {
+                return IOUtils.toString(getInputStream());
+            } catch (IOException e) {
+                throw new RestIOException(e, "Got IOException while trying to read a string from an inputstream.");
+            }
+        } else {
+            throw new RestIOException("Got bad response from server: " + getStatus(), getStatus());
+        }
     }
 }

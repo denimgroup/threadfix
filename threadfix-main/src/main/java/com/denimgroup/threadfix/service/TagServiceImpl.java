@@ -23,19 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.*;
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.dao.TagDao;
+import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.waf.RealTimeProtectionGenerator;
-import com.denimgroup.threadfix.service.waf.RealTimeProtectionGeneratorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
 import java.util.List;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Service
 @Transactional(readOnly = false) // used to be true

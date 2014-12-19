@@ -73,6 +73,13 @@ svg text.warning{
     font-weight:bold;
 }
 
+svg text.small_warning{
+    fill:red;
+    text-anchor:middle;
+    font-size:12px;
+    font-weight:bold;
+}
+
 svg text.header{
     fill:black;
     text-anchor:middle;

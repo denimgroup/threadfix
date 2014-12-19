@@ -40,6 +40,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private static final long serialVersionUID = 5978786078427181952L;
 
+	private Calendar scannedDate; // used in SSVL but available in all scanners
+
 	public static final int LONG_DESCRIPTION_LENGTH = 2047;
 	public static final int ATTACK_STRING_LENGTH = 1048575;
 	public static final int ATTACK_REQUEST_LENGTH = 1048575;
@@ -53,7 +55,6 @@ public class Finding extends AuditableEntity implements FindingLike {
 
     // TODO figure out the appropriate place for this
     public static final int NUMBER_ITEM_PER_PAGE = 100;
-
 
     private Vulnerability vulnerability;
 
@@ -122,6 +123,15 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	private String calculatedUrlPath = "", calculatedFilePath = "";
 	private Dependency dependency;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	public Calendar getScannedDate() {
+		return scannedDate;
+	}
+
+	public void setScannedDate(Calendar scannedDate) {
+		this.scannedDate = scannedDate;
+	}
 
 	@Override
 	@ManyToOne
@@ -231,6 +241,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(nullable = false)
+    @JsonView(AllViews.VulnerabilityDetail.class)
 	public boolean getIsStatic() {
 		return isStatic;
 	}
@@ -314,7 +325,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	@Column(length = LONG_DESCRIPTION_LENGTH)
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class})
 	public void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
 	}

@@ -148,6 +148,10 @@ angular.module('threadfix')
                 .outerRadius(rs - 10)
                 .innerRadius(0);
 
+            data = data.filter(function(item){
+                return item.value !== 0;
+            })
+
             var _data = d3.layout.pie().sort(null).value(function(d) {return d.value;})(data);
 
             var svg = d3.select("#"+id)

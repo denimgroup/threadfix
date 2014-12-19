@@ -76,8 +76,15 @@ public class HibernateRemoteProviderApplicationDao
 							 .add(Restrictions.isNotNull("application"))
 							 .list();
 	}
-	
-	public Criteria getActiveRPACriteria() {
+
+    @Override
+    public RemoteProviderApplication retrieveByCustomName(String customName) {
+        return (RemoteProviderApplication) getActiveRPACriteria()
+                .add(Restrictions.eq("customName", customName))
+                .uniqueResult();
+    }
+
+    public Criteria getActiveRPACriteria() {
 		return sessionFactory.getCurrentSession()
 				.createCriteria(RemoteProviderApplication.class)
 				.add(Restrictions.eq("active",true));

@@ -29,7 +29,9 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     stackedData,
                     _data,
                     circles,
-                    duration = 500;
+                    duration = 500,
+                    firstScanNotReal,
+                    lastScanNotReal;
 
                 var x = d3.time.scale().range([0, w]),
                     y = d3.scale.linear().range([h, 0]);
@@ -124,7 +126,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         return;
                     }
 
-                    var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime";});
+                    var colorDomain = d3.keys(_data[0]).filter(function(key){return key !== "importTime" && key !== "notRealScan";});
                     if (colorDomain.length === 0) {
                         svg.append("g")
                             .append("text")
@@ -143,14 +145,25 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                 }
 
                 function drawReport(){
+                    if (_data.length > 0) {
+                        firstScanNotReal = _data[0].notRealScan;
+                        lastScanNotReal = _data[_data.length - 1].notRealScan;
+                    }
                     stackedData = prepareStackedData(_data);
                     stackedData.forEach(function(s) {
                         s.maxNoOfVulns = d3.max(s.values, function(d) { return d.noOfVulns; });
                     });
 
-                    // Sort by maximum number of vulnerabilities, descending.
+                    //Sorting
                     stackedData.sort(function(a, b) {
                         return fieldOrderMap[b.key] - fieldOrderMap[a.key];
+                    });
+
+                    var noVulnsList = [];
+                    stackedData = stackedData.filter(function(s){
+                        if (s.maxNoOfVulns === 0)
+                            noVulnsList.push(s.key);
+                        return s.maxNoOfVulns > 0;
                     });
 
                     var stack = d3.layout.stack()
@@ -293,12 +306,27 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         .on("mouseover", function() { focus.style("display", null); })
                         .on("mouseout", function() { focus.style("display", "none"); tip.hide()})
                         .on("mousemove", mousemove);
-                }
+
+                    if (scope.label && noVulnsList.length > 0) {
+                        var listStr = "";
+                        for (var i=0; i<noVulnsList.length-1; i++)
+                            listStr += noVulnsList[i] + ", ";
+
+                        listStr += noVulnsList[noVulnsList.length-1] + ": ";
+
+                        svg.append("g")
+                            .append("text")
+                            .attr("x", w/2)
+                            .attr("y", h + 60)
+                            .attr("class", "small_warning")
+                            .text(listStr + "No Vulnerabilities");
+                    }
+                };
 
                 function drawTable(){
                     if (scope.tableInfo && scope.sumTableDivId)
                         reportUtilities.drawTable(d3, scope.tableInfo, scope.sumTableDivId);
-                }
+                };
 
                 function prepareStackedData(data) {
                     return color.domain().map(function(name){
@@ -328,6 +356,13 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                                     break;
                                 }
                             }
+                        }
+
+                        if (d.values.length > 1) {
+                            if (i === 0 && firstScanNotReal)
+                                i= 1;
+                            else if (i === d.values.length - 1 && lastScanNotReal)
+                                i= i-1;
                         }
 
                         time = d.values[i].date;

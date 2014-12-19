@@ -57,7 +57,7 @@ import static com.denimgroup.threadfix.CollectionUtils.map;
                 @StartingTagSet({"report", "version", "options"})
         }
 )
-class ArachniChannelImporter extends AbstractChannelImporter {
+public class ArachniChannelImporter extends AbstractChannelImporter {
 	
 	private static Map<String, FindingKey> tagMap = map(
 		"name", FindingKey.VULN_CODE,
@@ -147,7 +147,8 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 
 	}
 
-    public static final String FORMAT_STRING = "yyyy-MM-DD'T'kk:mm:ssX";
+    public static final String FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String TIME_ZONE_PATTERN = ".*[0-9]T[0-9].*";
 
     public ArachniChannelImporter() {
         super(ScannerType.ARACHNI);
@@ -333,7 +334,7 @@ class ArachniChannelImporter extends AbstractChannelImporter {
 	}
 
     Calendar getDateFromString(String tempDateString) {
-        if (tempDateString.contains("T")) {
+        if (tempDateString.matches(TIME_ZONE_PATTERN)) {
             return DateUtils.getCalendarFromString(FORMAT_STRING, tempDateString);
         } else {
             return DateUtils.getCalendarFromString("EEE MMM dd kk:mm:ss yyyy", tempDateString);

@@ -5,6 +5,7 @@
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
     <%@ include file="/WEB-INF/views/config/remoteproviders/configure.jsp" %>
     <%@ include file="/WEB-INF/views/config/remoteproviders/editMapping.jsp" %>
+    <%@ include file="/WEB-INF/views/config/remoteproviders/editRemoteProviderApplicationName.jsp" %>
 
     <div id="helpText">
         Remote Providers are links to services which
@@ -19,8 +20,8 @@
             <tr>
                 <th class="medium first">Name</th>
                 <c:if test="${ canManageRemoteProviders }">
-                    <th class="medium">User name</th>
-                    <th class="medium">API Key</th>
+                    <th class="medium">Authentication Type</th>
+                    <th class="medium">Configured?</th>
                     <th class="medium last">Configure</th>
                 </c:if>
             </tr>
@@ -35,10 +36,10 @@
                 </td>
                 <c:if test="${ canManageRemoteProviders }">
                     <td id="username{{ $index }}">
-                        {{ provider.username }}
+                        {{ provider.authInformation }}
                     </td>
                     <td id="apiKey{{ $index }}">
-                        {{ provider.apiKey }}
+                        {{ provider.hasCredentials }}
                     </td>
                     <td>
                         <a id="configure{{ $index }}" class="btn" ng-click="configure(provider)">Configure</a>
@@ -120,6 +121,9 @@
             <thead>
             <tr>
                 <th class="medium first">Name / ID</th>
+                <c:if test="${ canManageRemoteProviders }">
+                    <th class="medium"></th>
+                </c:if>
                 <th class="medium">Team</th>
                 <th class="medium">Application</th>
                 <c:if test="${ canManageRemoteProviders }">
@@ -131,9 +135,14 @@
             <tbody>
 
             <tr ng-repeat="app in provider.displayApps">
-                <td id="provider{{ provider.id }}appid{{ app.id }}">
-                    {{ app.nativeName }}
+                <td id="provider{{ provider.id }}appid{{ app.id }}" style="word-wrap: break-word">
+                    {{ app.customName || app.nativeName }}
                 </td>
+                <c:if test="${ canManageRemoteProviders }">
+                    <td>
+                        <a id="provider{{ provider.id }}updateName{{ $index }}" class="btn" ng-click="openNameModal(provider, app)">Edit Name</a>
+                    </td>
+                </c:if>
                 <td id="provider{{ provider.id }}tfteamname{{ $index }}">
                     <div ng-show="app.application" style="word-wrap: break-word;max-width:170px;text-align:left;">
                         <a class="pointer" ng-click="goToTeam(app.application.team)">

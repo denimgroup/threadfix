@@ -34,22 +34,22 @@
                             <spring:param name="appId" value="${ application.id }"/>
                         </spring:url>
                         <li>
-                            <a id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">
+                            <a class="pointer" id="editVulnerabilityFiltersButton" href="<c:out value="${ vulnFiltersUrl }"/>" data-toggle="modal">
                                 Edit Vulnerability Filters
                             </a>
                         </li>
                     </c:if>
                     <c:if test="${ !canManageApplications }">
-                        <li><a id="viewApplicationModalButton" ng-click="viewApplicationDetail()">Details	</a></li>
+                        <li><a class="pointer" id="viewApplicationModalButton" ng-click="viewApplicationDetail()">Details	</a></li>
                     </c:if>
                     <c:if test="${ canManageUsers && isEnterprise}">
-                        <li><a id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
+                        <li><a class="pointer" id="userListModelButton" ng-click="showUsers()">View Permissible Users</a></li>
                     </c:if>
                     <c:if test="${ canUploadScans }">
                         <li><a class="pointer" id="uploadScanModalLink" ng-click="showUploadForm(false)">Upload Scan</a></li>
                         <li><a class="pointer" id="addManualFindingModalLink" ng-click="submitFindingForm()">Add Manual Finding</a></li>
                         <li ng-show="config.application.defectTracker">
-                            <a id="updateDefectsLink" ng-click="updateDefectStatus()">
+                            <a class="pointer" id="updateDefectsLink" ng-click="updateDefectStatus()">
                                 Update Defect Status
                             </a>
                         </li>

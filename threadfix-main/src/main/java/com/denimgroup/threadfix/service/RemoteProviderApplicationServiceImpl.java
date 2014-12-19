@@ -31,11 +31,11 @@ import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.queue.QueueSender;
-import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 @Service
@@ -184,7 +184,7 @@ public class RemoteProviderApplicationServiceImpl implements
 			}
 		}
 	}
-	
+
 	@Override
 	public String processApp(int remoteProviderApplicationId, int applicationId) {
 
@@ -265,7 +265,7 @@ public class RemoteProviderApplicationServiceImpl implements
 				|| previousId == null
 				|| !previousId.equals(remoteProviderApplication
 						.getApplicationChannel().getId())) {
-			
+
 			store(remoteProviderApplication);
 			applicationDao.saveOrUpdate(application);
 		}
@@ -331,4 +331,28 @@ public class RemoteProviderApplicationServiceImpl implements
 
 		return returnStr;
 	}
+
+    @Override
+    public String setCustomName(int remoteProviderApplicationId, String customName) {
+
+        RemoteProviderApplication applicationFromId = load(remoteProviderApplicationId);
+        RemoteProviderApplication applicationFromName = remoteProviderApplicationDao.retrieveByCustomName(customName);
+
+        if (applicationFromName != null) {
+            if (applicationFromId.getId().equals(remoteProviderApplicationId)) {
+                log.debug("The custom name was not changed, continuing");
+            } else {
+                return "That name was already taken.";
+            }
+        } else if (customName.length() > 100) {
+            return "Maximum length is 100 characters.";
+        } else {
+            applicationFromId.setCustomName(customName);
+            remoteProviderApplicationDao.saveOrUpdate(applicationFromId);
+            log.info("Successfully updated name of remote provider application with native ID " +
+                    applicationFromId.getNativeId() + " to name " + customName);
+        }
+
+        return "Success";
+    }
 }

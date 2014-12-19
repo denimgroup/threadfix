@@ -46,12 +46,12 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Boolean hasCachedData = null;
 
-	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials;
+	private String activeDirectoryBase, activeDirectoryURL, activeDirectoryUsername, activeDirectoryCredentials, activeDirectoryUsernameEncrypted, activeDirectoryCredentialsEncrypted;
 
     private String proxyHost = null, proxyUsername = null, proxyPassword = null, proxyUsernameEncrypted = null, proxyPasswordEncrypted = null;
     private Integer proxyPort = null;
-	
-	private Calendar lastScannerMappingsUpdate;
+
+    private Calendar lastScannerMappingsUpdate;
 
     private Integer sessionTimeout = null;
 
@@ -80,7 +80,7 @@ public class DefaultConfiguration extends BaseEntity {
         return hasAddedScheduledImports != null && hasAddedScheduledImports;
     }
 
-    public void setHasAddedScheduledImports(Boolean hasAddedScheduledImports){
+    public void setHasAddedScheduledImports(Boolean hasAddedScheduledImports) {
         this.hasAddedScheduledImports = hasAddedScheduledImports;
     }
 
@@ -89,7 +89,7 @@ public class DefaultConfiguration extends BaseEntity {
         return hasAddedScheduledDefectTrackerUpdates != null && hasAddedScheduledDefectTrackerUpdates;
     }
 
-    public void setHasAddedScheduledDefectTrackerUpdates(Boolean hasAddedScheduledDefectTrackerUpdates){
+    public void setHasAddedScheduledDefectTrackerUpdates(Boolean hasAddedScheduledDefectTrackerUpdates) {
         this.hasAddedScheduledDefectTrackerUpdates = hasAddedScheduledDefectTrackerUpdates;
     }
 
@@ -110,25 +110,26 @@ public class DefaultConfiguration extends BaseEntity {
     public void setHasCachedData(Boolean hasCachedData) {
         this.hasCachedData = hasCachedData;
     }
-	
-	@Column
-	public Integer getDefaultRoleId() {
-		return defaultRoleId;
-	}
-	
-	public void setDefaultRoleId(Integer defaultRoleId) {
-		this.defaultRoleId = defaultRoleId;
-	}
-	
-	@Column
-	public Boolean getGlobalGroupEnabled() {
-		return globalGroupEnabled != null && globalGroupEnabled;
-	}
-	public void setGlobalGroupEnabled(Boolean globalGroupEnabled) {
-		this.globalGroupEnabled = globalGroupEnabled;
-	}
-	
-	@Column(length=256)
+
+    @Column
+    public Integer getDefaultRoleId() {
+        return defaultRoleId;
+    }
+
+    public void setDefaultRoleId(Integer defaultRoleId) {
+        this.defaultRoleId = defaultRoleId;
+    }
+
+    @Column
+    public Boolean getGlobalGroupEnabled() {
+        return globalGroupEnabled != null && globalGroupEnabled;
+    }
+
+    public void setGlobalGroupEnabled(Boolean globalGroupEnabled) {
+        this.globalGroupEnabled = globalGroupEnabled;
+    }
+
+    @Column(length=256)
 	public void setActiveDirectoryBase(String activeDirectoryBase) {
 		this.activeDirectoryBase = activeDirectoryBase;
 	}
@@ -141,6 +142,7 @@ public class DefaultConfiguration extends BaseEntity {
 	public void setActiveDirectoryURL(String activeDirectoryURL) {
 		this.activeDirectoryURL = activeDirectoryURL;
 	}
+
 	public String getActiveDirectoryUsername() {
 		return activeDirectoryUsername == null ? "" : activeDirectoryUsername;
 	}
@@ -149,18 +151,36 @@ public class DefaultConfiguration extends BaseEntity {
 	public void setActiveDirectoryUsername(String activeDirectoryUsername) {
 		this.activeDirectoryUsername = activeDirectoryUsername;
 	}
-	
+
 	public String getActiveDirectoryCredentials() {
 		return activeDirectoryCredentials == null ? "" : activeDirectoryCredentials;
 	}
-	
-	@Column(length=256)
+
+    @Column(length = 1024)
+    public String getActiveDirectoryUsernameEncrypted() {
+        return activeDirectoryUsernameEncrypted;
+    }
+
+    public void setActiveDirectoryUsernameEncrypted(String activeDirectoryUsernameEncrypted) {
+        this.activeDirectoryUsernameEncrypted = activeDirectoryUsernameEncrypted;
+    }
+
+    @Column(length = 1024)
+    public String getActiveDirectoryCredentialsEncrypted() {
+        return activeDirectoryCredentialsEncrypted;
+    }
+
+    public void setActiveDirectoryCredentialsEncrypted(String activeDirectoryCredentialsEncrypted) {
+        this.activeDirectoryCredentialsEncrypted = activeDirectoryCredentialsEncrypted;
+    }
+
+    	@Column(length=256)
 	public void setActiveDirectoryCredentials(String activeDirectoryCredentials) {
 		this.activeDirectoryCredentials = activeDirectoryCredentials;
 	}
 	
 	public String getActiveDirectoryBase() {
-		return activeDirectoryCredentials == null ? "" : activeDirectoryBase;
+		return activeDirectoryBase == null ? "" : activeDirectoryBase;
 	}
 
 	@Column
@@ -240,7 +260,8 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Transient
     public <T> boolean shouldUseProxy(Class<T> classToProxy) {
-        return getProxySupportMap().get(classToProxy.getSimpleName());
+        Boolean aBoolean = getProxySupportMap().get(classToProxy.getSimpleName());
+        return aBoolean != null && aBoolean;
     }
 
     @Transient
@@ -254,6 +275,7 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("WhiteHatRemoteProvider", getShouldProxyWhiteHat());
         map.put("VeracodeRemoteProvider", getShouldProxyVeracode());
         map.put("QualysRemoteProvider", getShouldProxyQualys());
+        map.put("TrustwaveHailstormRemoteProvider", getShouldProxyTrustwaveHailstorm());
         return map;
     }
 
@@ -347,4 +369,14 @@ public class DefaultConfiguration extends BaseEntity {
     Boolean shouldProxyHPQC = false;
     Boolean shouldProxyWhiteHat = false;
     Boolean shouldUseProxyCredentials = false;
+    Boolean shouldProxyTrustwaveHailstorm = false;
+
+    @Column
+    public Boolean getShouldProxyTrustwaveHailstorm() {
+        return shouldProxyTrustwaveHailstorm;
+    }
+
+    public void setShouldProxyTrustwaveHailstorm(Boolean shouldProxyTrustwaveHailstorm) {
+        this.shouldProxyTrustwaveHailstorm = shouldProxyTrustwaveHailstorm;
+    }
 }
