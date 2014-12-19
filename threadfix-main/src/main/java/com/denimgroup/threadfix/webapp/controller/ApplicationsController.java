@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
 import com.denimgroup.threadfix.webapp.viewmodels.DefectViewModel;
 import com.denimgroup.threadfix.webapp.viewmodels.VulnerabilityCollectionModel;
@@ -135,6 +136,7 @@ public class ApplicationsController {
 //				Permission.CAN_VIEW_JOB_STATUSES,
 				Permission.CAN_GENERATE_REPORTS,
 				Permission.CAN_MANAGE_DEFECT_TRACKERS,
+				Permission.CAN_MANAGE_GRC_TOOLS,
 				Permission.CAN_MANAGE_USERS,
                 Permission.CAN_MANAGE_TAGS);
 		

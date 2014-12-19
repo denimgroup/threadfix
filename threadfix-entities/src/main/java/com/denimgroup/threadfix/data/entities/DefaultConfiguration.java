@@ -41,6 +41,7 @@ public class DefaultConfiguration extends BaseEntity {
 	private Boolean globalGroupEnabled = null;
     private Boolean hasAddedScheduledImports = null;
     private Boolean hasAddedScheduledDefectTrackerUpdates = null;
+    private Boolean hasAddedScheduledGRCToolUpdates = null;
     private Integer defaultRoleId = null;
 
     private Boolean hasCachedData = null;
@@ -60,6 +61,7 @@ public class DefaultConfiguration extends BaseEntity {
         config.setGlobalGroupEnabled(true);
         config.setHasAddedScheduledImports(false);
         config.setHasAddedScheduledDefectTrackerUpdates(false);
+        config.setHasAddedScheduledGRCToolUpdates(false);
         return config;
     }
 
@@ -89,6 +91,15 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setHasAddedScheduledDefectTrackerUpdates(Boolean hasAddedScheduledDefectTrackerUpdates) {
         this.hasAddedScheduledDefectTrackerUpdates = hasAddedScheduledDefectTrackerUpdates;
+    }
+
+    @Column
+    public Boolean getHasAddedScheduledGRCToolUpdates() {
+        return hasAddedScheduledGRCToolUpdates != null && hasAddedScheduledGRCToolUpdates;
+    }
+
+    public void setHasAddedScheduledGRCToolUpdates(Boolean hasAddedScheduledGRCToolUpdates){
+        this.hasAddedScheduledGRCToolUpdates = hasAddedScheduledGRCToolUpdates;
     }
 
     @Column

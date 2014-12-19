@@ -62,6 +62,19 @@
     </a>
     <br ng-show="vulnerability.defect">
 
+    <a id="grcControlBadge{{ element.genericVulnerability.displayId }}{{ $index }}"
+       ng-href="{{ vulnerability.grcControl.referenceUrl }}"
+       target="_blank"
+       ng-show="vulnerability.grcControl"
+       ng-class="{
+        'badge-critical': vulnerability.grcControl.bugImageName === 'icn_bug_red_stroke.png',
+        'badge-low': vulnerability.grcControl.bugImageName === 'icn_bug_grn_stroke.png',
+        }"
+       class="badge">
+        Control {{ vulnerability.grcControl.controlId }} ({{ vulnerability.grcControl.status }})
+    </a>
+    <br ng-show="vulnerability.grcControl">
+
     <!-- Comments + Documents -->
     <span id="commentsButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="pointer" ng-click="vulnerability.showComments = !vulnerability.showComments">
         {{ vulnerability.vulnerabilityComments.length ? vulnerability.vulnerabilityComments.length : 0 }} <span class="icon icon-comment"></span>

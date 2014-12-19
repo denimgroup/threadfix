@@ -15,13 +15,17 @@ myAppModule.controller('ScheduledRemoteProviderImportTabController', function ($
                 buttonText: function () {
                     return "Add Scheduled Import";
                 },
+                heading: function () {
+                    return "New Scheduled Import";
+                },
                 object: function () {
                     return {
                         frequency: 'Daily',
                         hour: '6',
                         minute: '0',
                         period: 'AM',
-                        day: 'Sunday'
+                        day: 'Sunday',
+                        modalHeading: 'Import'
                     };
                 },
                 config: function () {

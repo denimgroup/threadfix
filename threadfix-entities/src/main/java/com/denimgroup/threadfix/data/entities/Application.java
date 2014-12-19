@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.data.enums.SourceCodeAccessLevel;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -107,7 +106,11 @@ public class Application extends AuditableEntity {
 	@Size(max = 50, message = "{errors.maxlength} 50.")
 	private String component;
 	private DefectTracker defectTracker;
-	
+
+	private GRCTool grcTool;
+
+    private GRCApplication grcApplication;
+
 	@Size(max = 80, message = "{errors.maxlength} 80.")
 	private String userName;
 	
@@ -272,6 +275,17 @@ public class Application extends AuditableEntity {
 		this.defectTracker = defectTracker;
 	}
 
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "grcToolId")
+    @JsonIgnore
+    public GRCTool getGrcTool() {
+		return grcTool;
+	}
+
+	public void setGrcTool(GRCTool grcTool) {
+		this.grcTool = grcTool;
+	}
+
 	@OneToMany(mappedBy = "application")
     @JsonIgnore
 	public List<Defect> getDefectList() {
@@ -414,6 +428,17 @@ public class Application extends AuditableEntity {
 			List<RemoteProviderApplication> remoteProviderApplications) {
 		this.remoteProviderApplications = remoteProviderApplications;
 	}	
+
+    @OneToOne(mappedBy = "application")
+    @JsonView(Object.class)
+	public GRCApplication getGrcApplication() {
+		return grcApplication;
+	}
+
+	public void setGrcApplication(
+			GRCApplication grcApplication) {
+		this.grcApplication = grcApplication;
+	}
 
 	@OneToMany(mappedBy = "application")
 	@JsonIgnore
