@@ -36,7 +36,10 @@ import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,10 +47,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
+import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
+import static com.denimgroup.threadfix.remote.response.RestResponse.success;
 import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
@@ -58,6 +64,7 @@ public class AccessControlMapController {
 	public AccessControlMapController(){}
 	
 	protected final SanitizedLogger log = new SanitizedLogger(AccessControlMapController.class);
+	private static final ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
 	
 	private AccessControlMapService accessControlMapService;
 	private UserService userService;
@@ -120,8 +127,8 @@ public class AccessControlMapController {
 	}
 	
 	@RequestMapping(value="/access/new", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<AccessControlTeamMap> createMapping(@PathVariable("userId") int userId,
-			@ModelAttribute AccessControlMapModel accessControlModel) {
+	public @ResponseBody String createMapping(@PathVariable("userId") int userId,
+			@ModelAttribute AccessControlMapModel accessControlModel) throws IOException {
 
 		User user = userService.loadUser(userId);
 		if (user == null) {
@@ -138,20 +145,20 @@ public class AccessControlMapController {
 
             String error = accessControlMapService.validateMap(map, null);
             if (error != null) {
-                return RestResponse.failure(error);
+                return writer.writeValueAsString(failure(error));
             } else {
                 accessControlMapService.store(map);
-                return RestResponse.success(map);
+                return writer.writeValueAsString(success(map));
             }
         } else {
-            return RestResponse.failure("The map was not parsable from the given www-url-formencoded form.");
+            return writer.writeValueAsString(failure("The map was not parsable from the given www-url-formencoded form."));
         }
 	}
 	
 	@RequestMapping(value="/access/{mapId}/edit", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<AccessControlTeamMap> editMapping(@ModelAttribute AccessControlMapModel accessControlModel,
+	public @ResponseBody String editMapping(@ModelAttribute AccessControlMapModel accessControlModel,
 			@PathVariable("userId") int userId, 
-			@PathVariable("mapId") int mapId) {
+			@PathVariable("mapId") int mapId) throws IOException {
 		
 		User user = userService.loadUser(userId);
 		if (user == null) {
@@ -169,15 +176,15 @@ public class AccessControlMapController {
 
             String error = accessControlMapService.validateMap(map, mapId);
             if (error != null) {
-                return RestResponse.failure(error);
+                return writer.writeValueAsString(failure(error));
             } else {
 
                 accessControlMapService.deactivate(accessControlMapService.loadAccessControlTeamMap(mapId));
                 accessControlMapService.store(map);
-                return RestResponse.success(map);
+                return writer.writeValueAsString(success(map));
             }
         } else {
-    		return RestResponse.failure("Unable to parse HTML parameters.");
+    		return writer.writeValueAsString(failure("Unable to parse HTML parameters."));
         }
 	}
 	
@@ -185,13 +192,13 @@ public class AccessControlMapController {
 	public @ResponseBody RestResponse<String> deleteTeamMapping(@PathVariable("mapId") int mapId) {
 		AccessControlTeamMap map = accessControlMapService.loadAccessControlTeamMap(mapId);
 		accessControlMapService.deactivate(map);
-		return RestResponse.success("Successfully deleted mapping.");
+		return success("Successfully deleted mapping.");
 	}
 	
 	@RequestMapping(value="/access/app/{mapId}/delete", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<String> deleteAppMapping(@PathVariable("mapId") int mapId) {
 		AccessControlApplicationMap map = accessControlMapService.loadAccessControlApplicationMap(mapId);
 		accessControlMapService.deactivate(map);
-		return RestResponse.success("Successfully deleted mapping.");
+		return success("Successfully deleted mapping.");
 	}
 }

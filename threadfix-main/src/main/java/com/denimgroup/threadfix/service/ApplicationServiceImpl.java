@@ -136,9 +136,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 		}
 
         if (scanQueueService != null && application.getScanQueueTasks() != null) {
-			for (ScanQueueTask task : application.getScanQueueTasks())
+			for (ScanQueueTask task : application.getScanQueueTasks()) {
 				scanQueueService.deactivateTask(task);
-				
+			}
+		}
+
+		if (application.getGrcApplication() != null) {
+			application.getGrcApplication().setApplication(null);
+			application.setGrcApplication(null);
 		}
 
         application.setWaf(null);

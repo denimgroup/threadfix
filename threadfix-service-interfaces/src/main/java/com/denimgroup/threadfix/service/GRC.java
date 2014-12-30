@@ -21,25 +21,37 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.webapp.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package com.denimgroup.threadfix.service;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends RuntimeException {
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.GRCApplication;
+import com.denimgroup.threadfix.data.entities.GRCTool;
+import com.denimgroup.threadfix.data.entities.GRCControl;
+import com.servicenow.grccontrol.GetRecordsControlsResponse;
+import com.servicenow.grcpolicy.GetRecordsPoliciesResponse;
+import com.servicenow.grccontrolservice.SubmitControlResponse;
+import com.servicenow.grcpolicyservice.SubmitPolicyResponse;
 
-	private static final long serialVersionUID = -7358564559091741728L;
+/**
+ * @author zabdisubhan
+ *
+ */
+public interface GRC {
 
-	public ResourceNotFoundException(){}
+    /**
+     * @param grcTool
+     */
+    void setModelObject(GRCTool grcTool);
 
-	public static String getLogMessage(String notFoundClass, Integer notFoundId) {
-		return notFoundClass + " with ID " + notFoundId + 
-				" was requested but not found and a ResourceNotFoundException was thrown.";
-	}
-	
-	public static String getLogMessage(String notFoundClass, String name) {
-		return notFoundClass + " with name " + name + 
-				" was requested but not found and a ResourceNotFoundException was thrown.";
-	}
+    boolean hasValidUrl();
+
+    public SubmitPolicyResponse createPolicy(Application application);
+
+    public GetRecordsPoliciesResponse getPolicies();
+
+    public SubmitControlResponse createControl(GRCControl control);
+
+    public GetRecordsControlsResponse getControls(GRCApplication grcApplication);
+
 }
