@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
@@ -238,7 +239,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 									}
 								}
 							}
-							finding.setDataFlowElements(Arrays.asList(element));
+							finding.setDataFlowElements(CollectionUtils.list(element));
 						}
 						
 						scan.getFindings().add(finding);
