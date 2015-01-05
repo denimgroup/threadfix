@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.ScanImporterHarness.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -45,7 +46,7 @@ import static org.junit.Assert.assertTrue;
  * Created by mac on 6/3/14.
  */
 @Component
-public class QualysScanParsingTests {
+public class QualysScanParsingTests implements RemoteProviderScanParser {
 
     @Autowired
     RemoteProviderFactory factory = null;
@@ -62,11 +63,6 @@ public class QualysScanParsingTests {
         application.setRemoteProviderType(type);
         application.setApplicationChannel(new ApplicationChannel());
         return application;
-    }
-
-    public static void test(String nativeName) {
-        // @Transactional requires Spring AOP, which requires a Spring Bean. Lots of steps to get DB access
-        SpringConfiguration.getContext().getBean(QualysScanParsingTests.class).testInner(nativeName);
     }
 
     @Transactional(readOnly = false)
@@ -98,7 +94,7 @@ public class QualysScanParsingTests {
     @Test
     public void testAllScans() {
         for (String application : appNames) {
-            test(application);
+            test(getClass(), application);
         }
     }
 }
