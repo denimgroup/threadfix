@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ErrorHandler;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by mcollins on 6/4/14.
  */
@@ -40,12 +42,14 @@ public class QueueErrorHandler extends SpringBeanAutowiringSupport implements Er
 
     private final SanitizedLogger log = new SanitizedLogger(QueueErrorHandler.class);
 
+    private static final SimpleDateFormat format = new SimpleDateFormat("MMM d, y h:mm:ss a");
+
     @Override
     public void handleError(Throwable throwable) {
         ExceptionLog exceptionLog = new ExceptionLog(throwable);
 
         exceptionLogService.storeExceptionLog(exceptionLog);
 
-        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
     }
 }
