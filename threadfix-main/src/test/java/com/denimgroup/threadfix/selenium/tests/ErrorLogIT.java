@@ -40,24 +40,6 @@ import static org.junit.Assert.assertTrue;
 public class ErrorLogIT extends BaseDataTest {
 
     @Test
-    public void checkForNoError() {
-        loginPage.defaultLogin().clickViewLogsLink();
-
-        assertTrue("There are already errors on the page. This could be due to other tests running incorrectly."
-                ,driver.findElements(By.partialLinkText("Report To ThreadFix Team")).isEmpty());
-    }
-
-    @Test
-    public void checkForNoPagination() {
-        loginPage.defaultLogin().clickViewLogsLink();
-
-        assertTrue("There is pagination without there being enough errors.",
-                driver.findElements(By.linkText("Previous")).isEmpty() ||
-                driver.findElements(By.linkText("Next")).isEmpty() ||
-                driver.findElements(By.linkText("1")).isEmpty());
-    }
-
-    @Test
     public void createSingleError() {
         ErrorLogPage errorLogPage = loginPage.defaultLogin()
                 .clickViewLogsLink();

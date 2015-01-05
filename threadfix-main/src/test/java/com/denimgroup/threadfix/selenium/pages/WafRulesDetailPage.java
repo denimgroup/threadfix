@@ -11,7 +11,7 @@ public class WafRulesDetailPage extends BasePage {
     }
 
     public WafSecurityEventDetailsPage clickVulnerabilityLink() {
-        driver.findElementByLinkText("8/2/14 2:58:37 PM -- \"SQL Injection attempt\"").click();
+        driver.findElementByLinkText("8/2/15 2:58:37 PM -- \"SQL Injection attempt\"").click();
         return new WafSecurityEventDetailsPage(driver);
     }
 }

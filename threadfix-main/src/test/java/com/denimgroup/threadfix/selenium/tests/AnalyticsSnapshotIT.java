@@ -45,7 +45,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab(false);
+                .sleepOnArrival(5000)
+                .clickSnapshotTab(true);
 
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
@@ -76,13 +77,13 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .sleepOnArrival(15000)
                 .clickSnapshotTab(true)
-                .sleepOnArrival(5000);
+                .sleepOnArrival(15000);
 
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
                 .addApplicationFilter(appName, "snapshotFilterDiv")
-                .sleepOnArrival(5000);
+                .sleepOnArrival(15000);
 
         analyticsPage.takeScreenShot();
 
@@ -126,7 +127,6 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
-        String[] levels = {"Info","Low","Medium","High","Critical"};
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
@@ -136,13 +136,11 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName,"snapshotFilterDiv");
 
-        for(int i = 0; i < 5; i++) {
-            analyticsPage.hoverRealOverSVGElement("pointInTime" + levels[i] + "Arc");
-            String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
-            String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
+        analyticsPage.hoverRealOverSVGElement("pointInTimeInfoArc");
+        String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
+        String numBadge = driver.findElement(By.id("totalBadgeInfo")).getText().trim();
 
-            assertTrue("Tip value at level " + levels[i] + " does not match badge", numBadge.equals(numTip));
-        }
+        assertTrue("Tip value at level Info does not match badge", numBadge.equals(numTip));
     }
 
     @Test
@@ -150,23 +148,19 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         initializeTeamAndAppWithWebInspectScan();
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
-        String[] levels = {"Info","Low","Medium","High","Critical"};
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .sleepOnArrival(15000)
-                .clickSnapshotTab(false)
+                .clickSnapshotTab(true)
                 .sleepOnArrival(15000)
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName,"snapshotFilterDiv");
+        String numLegend = driver.findElement(By.id("legendInfo"))
+                .getText().replace("Info", "").split("\\(")[0];
+        String numBadge = driver.findElement(By.id("totalBadgeInfo")).getText().trim();
 
-        for(int i = 0; i < 5; i++) {
-            String numLegend = driver.findElement(By.id("legend" + levels[i]))
-                    .getText().replace(levels[i], "").split("\\(")[0];
-            String numBadge = driver.findElement(By.id("totalBadge" + levels[i])).getText().trim();
-
-            assertTrue("Legend value at level " + levels[i] + " does not match badge", numBadge.equals(numLegend));
-        }
+        assertTrue("Legend value at level Info does not match badge", numBadge.equals(numLegend));
     }
 
     @Test
@@ -175,21 +169,16 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("New ZAP Scan"));
         DatabaseUtils.uploadScan(teamName, appName, ScanContents.SCAN_FILE_MAP.get("AppScanEnterprise"));
 
-        String[] levels = {"Info","Low","Medium","High","Critical"};
-
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickSnapshotTab(true);
+                .clickSnapshotTab(true)
+                .sleepOnArrival(2500);
 
-        for(int i = 0; i < 5; i++) {
-            sleep(2500);
+        analyticsPage.clickSVGElement("pointInTimeInfoArc");
 
-            analyticsPage.clickSVGElement("pointInTime" + levels[i] + "Arc");
+        driver.findElement(By.xpath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]")).click();
 
-            driver.findElement(By.xpath("//*[@id=\"reports\"]/div[8]/div/div/div[4]/button[1]")).click();
-
-            assertTrue("Modal did not close at level " + levels[i], analyticsPage.isClickable("reportSnapshotSelect"));
-        }
+        assertTrue("Modal did not close at level Info", analyticsPage.isClickable("reportSnapshotSelect"));
     }
 
     @Test
@@ -293,9 +282,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 .clickCloseVulnerabilitiesButton();
 
         AnalyticsPage analyticsPage = applicationDetailPage.clickAnalyticsLink()
-                .sleepOnArrival(5000)
-                .clickSnapshotTab(false)
-                .sleepOnArrival(5000)
+                .sleepOnArrival(10000)
+                .clickSnapshotTab(true)
+                .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
@@ -312,9 +301,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .sleepOnArrival(10000)
                 .clickSnapshotTab(false)
-                .sleepOnArrival(5000)
+                .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandFieldControls("snapshotFilterDiv")
                 .selectFieldControls("Info", "snapshotFilterDiv")
@@ -332,9 +321,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
-                .clickSnapshotTab(false)
-                .sleepOnArrival(5000)
+                .sleepOnArrival(10000)
+                .clickSnapshotTab(true)
+                .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv");
@@ -359,9 +348,9 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
-                .clickSnapshotTab(false)
-                .sleepOnArrival(5000)
+                .sleepOnArrival(10000)
+                .clickSnapshotTab(true)
+                .sleepOnArrival(10000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv")
