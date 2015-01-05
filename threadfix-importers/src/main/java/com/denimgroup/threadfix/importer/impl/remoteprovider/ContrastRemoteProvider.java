@@ -61,6 +61,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                 return applicationList;
 
             } else {
+                log.info("Contents:\n" + response.getBodyAsString());
                 throw new RestIOException("Invalid response received from Contrast servers.", response.getStatus());
             }
 
@@ -93,8 +94,10 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         return new RequestConfigurer() {
             @Override
             public void configure(HttpMethodBase method) {
-                method.setRequestHeader("Authentication", encoded);
+                method.setRequestHeader("Authorization", encoded);
                 method.setRequestHeader("API-Key", apiKey);
+                method.setRequestHeader("Accept", "application/json");
+                method.removeRequestHeader("Content-type");
             }
         };
     }

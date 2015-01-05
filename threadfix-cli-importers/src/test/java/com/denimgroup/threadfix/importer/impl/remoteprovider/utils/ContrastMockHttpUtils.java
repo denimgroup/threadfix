@@ -48,7 +48,7 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
 
         configurer.configure(get);
 
-        testHeader(get, "Authentication", GOOD_ENCODING);
+        testHeader(get, "Authorization", GOOD_ENCODING);
         testHeader(get, "API-Key", GOOD_API_KEY);
 
         if (url.equals(APPS_URL)) {
