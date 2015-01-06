@@ -8,6 +8,7 @@ import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.xerces.impl.dv.util.Base64;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,13 +62,44 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                 return applicationList;
 
             } else {
-                log.info("Contents:\n" + response.getBodyAsString());
-                throw new RestIOException("Invalid response received from Contrast servers.", response.getStatus());
+                String body = response.getBodyAsString();
+                log.info("Contents:\n" + body);
+                String errorMessageOrNull = getErrorOrNull(body);
+
+                if (errorMessageOrNull == null) {
+                    errorMessageOrNull =
+                            "Invalid response received from Contrast servers, check the logs for more details.";
+                }
+
+                throw new RestIOException(errorMessageOrNull, response.getStatus());
             }
 
         } catch (JSONException e) {
             throw new RestIOException(e, "Invalid response received: not JSON.");
         }
+    }
+
+    private String getErrorOrNull(String body) throws JSONException {
+
+        JSONObject object = new JSONObject(body);
+
+        if (object.has("success") && "false".equals(object.getString("success"))) {
+            JSONArray errors = object.getJSONArray("messages");
+
+            if (errors.length() > 0) {
+                StringBuilder builder = new StringBuilder("Contrast error: ");
+
+                for (int i = 0; i < errors.length(); i++) {
+                    builder.append(errors.getString(i)).append(", ");
+                }
+
+                builder.setLength(builder.length() - 2);
+
+                return builder.toString();
+            }
+        }
+
+        return null;
     }
 
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {

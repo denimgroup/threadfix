@@ -17,6 +17,10 @@ public class IterableJSONArray implements Iterable<JSONObject> {
         array = new JSONArray(jsonString);
     }
 
+    public IterableJSONArray(JSONArray array) throws JSONException {
+        this.array = array;
+    }
+
     @Override
     public Iterator<JSONObject> iterator() {
         return new Iterator<JSONObject>() {
