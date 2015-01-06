@@ -50,6 +50,10 @@ public class CommonPathFinder {
 
 	@Nullable
     public static String findOrParseProjectRoot(List<PartialMapping> partialMappings) {
+		if (partialMappings.size() == 1) {
+			return ""; // otherwise it will remove the whole path
+		}
+
 		return findOrParseProjectRoot(partialMappings, null);
 	}
 	
@@ -60,6 +64,10 @@ public class CommonPathFinder {
 
 	@Nullable
     public static String findOrParseUrlPath(List<PartialMapping> partialMappings) {
+		if (partialMappings.size() == 1) {
+			return ""; // otherwise it will remove the whole path
+		}
+
 		return findOrParseUrlPath(partialMappings, null);
 	}
 

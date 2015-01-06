@@ -1,13 +1,11 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
-import com.denimgroup.threadfix.data.entities.RemoteProviderType;
-import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.ContrastMockHttpUtils;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.denimgroup.threadfix.importer.impl.remoteprovider.ContrastRemoteProvider.*;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.ContrastUtils.getMockedRemoteProvider;
 
 /**
  * Created by mcollins on 1/5/15.
@@ -16,16 +14,7 @@ public class ContrastApplicationParsingTests {
 
     @Test
     public void testAppsGoodAuthentication() {
-        ContrastRemoteProvider provider = new ContrastRemoteProvider();
-
-        RemoteProviderType type = new RemoteProviderType();
-
-        type.setAuthField(USERNAME, ContrastMockHttpUtils.GOOD_USERNAME);
-        type.setAuthField(API_KEY, ContrastMockHttpUtils.GOOD_API_KEY);
-        type.setAuthField(SERVICE_KEY, ContrastMockHttpUtils.GOOD_SERVICE_KEY);
-
-        provider.setRemoteProviderType(type);
-        provider.httpUtils = new ContrastMockHttpUtils();
+        ContrastRemoteProvider provider = getMockedRemoteProvider();
 
         List<RemoteProviderApplication> remoteProviderApplications = provider.fetchApplications();
 
@@ -39,7 +28,6 @@ public class ContrastApplicationParsingTests {
         String expectedName = "threadfix";
         String actualName = remoteProviderApplications.get(0).getNativeName();
         assert actualName.equals(expectedName) : actualName + " (name) didn't match " + expectedId;
-
     }
 
 

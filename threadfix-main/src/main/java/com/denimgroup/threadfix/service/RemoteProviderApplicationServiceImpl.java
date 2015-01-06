@@ -45,26 +45,17 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	private final SanitizedLogger log = new SanitizedLogger("RemoteProviderApplicationService");
 	
-	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
-	private ApplicationDao applicationDao = null;
-	private ApplicationChannelDao applicationChannelDao = null;
-	private QueueSender queueSender = null;
-    private RemoteProviderFactory remoteProviderFactory = null;
-	
 	@Autowired
-	public RemoteProviderApplicationServiceImpl(
-			RemoteProviderApplicationDao remoteProviderApplicationDao,
-			ApplicationDao applicationDao,
-			QueueSender queueSender,
-            RemoteProviderFactory remoteProviderFactory,
-			ApplicationChannelDao applicationChannelDao) {
-		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
-		this.applicationDao = applicationDao;
-		this.applicationChannelDao = applicationChannelDao;
-		this.queueSender = queueSender;
-        this.remoteProviderFactory = remoteProviderFactory;
-	}
-	
+	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
+	@Autowired
+	private ApplicationDao applicationDao = null;
+	@Autowired
+	private ApplicationChannelDao applicationChannelDao = null;
+	@Autowired
+	private QueueSender queueSender = null;
+    @Autowired
+    private RemoteProviderFactory remoteProviderFactory = null;
+
 	@Override
 	public RemoteProviderApplication load(int id) {
 		return remoteProviderApplicationDao.retrieveById(id);

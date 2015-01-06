@@ -1,6 +1,7 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.annotations.RemoteProvider;
+import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
@@ -12,9 +13,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 1/5/15.
@@ -35,18 +39,15 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
     RemoteProviderHttpUtils httpUtils = new RemoteProviderHttpUtilsImpl<>(ContrastRemoteProvider.class);
 
-    @Override
-    public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
-        return null;
-    }
+    ////////////////////////////////////////////////////////////////////////
+    //                     Get Applications
+    ////////////////////////////////////////////////////////////////////////
 
     @Override
     public List<RemoteProviderApplication> fetchApplications() {
         assert remoteProviderType != null : "Remote Provider Type was null, please set before calling any methods.";
 
-        RequestConfigurer configurer = getConfigurer();
-
-        HttpResponse response = httpUtils.getUrlWithConfigurer(APPS_URL, configurer);
+        HttpResponse response = makeRequest(APPS_URL);
 
         try {
             if (response.isValid()) {
@@ -79,29 +80,6 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         }
     }
 
-    private String getErrorOrNull(String body) throws JSONException {
-
-        JSONObject object = new JSONObject(body);
-
-        if (object.has("success") && "false".equals(object.getString("success"))) {
-            JSONArray errors = object.getJSONArray("messages");
-
-            if (errors.length() > 0) {
-                StringBuilder builder = new StringBuilder("Contrast error: ");
-
-                for (int i = 0; i < errors.length(); i++) {
-                    builder.append(errors.getString(i)).append(", ");
-                }
-
-                builder.setLength(builder.length() - 2);
-
-                return builder.toString();
-            }
-        }
-
-        return null;
-    }
-
     private RemoteProviderApplication getApplicationFromJson(JSONObject object) throws JSONException {
         RemoteProviderApplication application = new RemoteProviderApplication();
 
@@ -109,6 +87,101 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
         application.setNativeId(object.getString("app-id"));
 
         return application;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////
+    //                         Get Applications
+    ////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
+        assert remoteProviderType != null : "Remote Provider Type was null.";
+
+        HttpResponse response = makeRequest(TRACES_URL + remoteProviderApplication.getNativeId());
+
+        try {
+            if (response.isValid()) {
+
+                List<Finding> findingList = list();
+
+                Scan scan = new Scan();
+
+                IterableJSONArray array = new IterableJSONArray(response.getBodyAsString());
+
+                for (JSONObject object : array) {
+                    findingList.add(getFindingFromObject(object));
+                }
+
+                scan.setFindings(findingList);
+
+                return list(scan);
+
+            } else {
+                String body = response.getBodyAsString();
+                log.info("Contents:\n" + body);
+                String errorMessageOrNull = getErrorOrNull(body);
+
+                if (errorMessageOrNull == null) {
+                    errorMessageOrNull =
+                            "Invalid response received from Contrast servers, check the logs for more details.";
+                }
+
+                throw new RestIOException(errorMessageOrNull, response.getStatus());
+            }
+
+        } catch (JSONException e) {
+            throw new RestIOException(e, "Invalid response received: not JSON.");
+        }
+
+
+    }
+
+    private Finding getFindingFromObject(JSONObject object) throws JSONException {
+
+        Map<FindingKey, String> findingMap = map (
+            FindingKey.SEVERITY_CODE, object.getString("severity"),
+            FindingKey.VULN_CODE, object.getString("rule-name"),
+            FindingKey.PATH, object.getJSONObject("request").getString("uri")
+        );
+
+        Finding finding = constructFinding(findingMap);
+
+        assert finding != null : "Null finding received from constructFinding";
+
+        finding.setNativeId(object.getString("uuid"));
+
+        finding.setRawFinding(object.toString());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(object.getLong("last-time-seen"));
+        finding.setScannedDate(calendar);
+
+        finding.setAttackRequest(object.getJSONObject("request").toString());
+
+        finding.setUrlReference(getUrlReference(object));
+
+        return finding;
+    }
+
+    private String getUrlReference(JSONObject object) throws JSONException {
+
+        for (JSONObject link : new IterableJSONArray(object.getJSONArray("links"))) {
+            if (link.has("rel") && "self".equals(link.get("rel"))) {
+                return link.getString("href");
+            }
+        }
+
+        return null;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////
+    //                             Helpers
+    ////////////////////////////////////////////////////////////////////////
+
+    private HttpResponse makeRequest(String url) {
+        return httpUtils.getUrlWithConfigurer(url, getConfigurer());
     }
 
     private RequestConfigurer getConfigurer() {
@@ -132,5 +205,28 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
                 method.removeRequestHeader("Content-type");
             }
         };
+    }
+
+    private String getErrorOrNull(String body) throws JSONException {
+
+        JSONObject object = new JSONObject(body);
+
+        if (object.has("success") && "false".equals(object.getString("success"))) {
+            JSONArray errors = object.getJSONArray("messages");
+
+            if (errors.length() > 0) {
+                StringBuilder builder = new StringBuilder("Contrast error: ");
+
+                for (int i = 0; i < errors.length(); i++) {
+                    builder.append(errors.getString(i)).append(", ");
+                }
+
+                builder.setLength(builder.length() - 2);
+
+                return builder.toString();
+            }
+        }
+
+        return null;
     }
 }

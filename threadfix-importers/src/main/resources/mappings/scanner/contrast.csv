@@ -1,0 +1,10 @@
+1/6/2015 12:15:00
+type.info,,,
+Contrast,http://www1.contrastsecurity.com/,1,Use as a Remote Provider
+type.vulnerabilities,,,
+Reflected Cross-Site Scripting,reflected-xss,79,
+type.severities,,,
+Information,Information,1,1
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2

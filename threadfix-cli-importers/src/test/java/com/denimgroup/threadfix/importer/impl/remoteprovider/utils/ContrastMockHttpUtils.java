@@ -53,8 +53,9 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
 
         if (url.equals(APPS_URL)) {
             return HttpResponse.success(200, getStream("contrast/apps.json"));
-        } else if (url.equals(TRACES_URL)) {
-            return HttpResponse.success(200, getStream("contrast/vulns.json"));
+        } else if (url.startsWith(TRACES_URL)) {
+            String endSection = url.substring(url.indexOf(TRACES_URL) + TRACES_URL.length());
+            return HttpResponse.success(200, getStream("contrast/" + endSection + ".json"));
         }
 
         throw new IllegalStateException("A URL other than " + APPS_URL + " and " + TRACES_URL + " was entered: " + url);
