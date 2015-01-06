@@ -221,7 +221,6 @@ public class RemoteProvidersIT extends BaseDataTest {
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
 
-    //TODO Update when new ids are added
     @Test
     public void importWhiteHatScan() {
         remoteProvidersIndexPage.clickConfigureWhiteHat()

@@ -44,7 +44,7 @@ public class AnalyticsEntIT extends BaseDataTest {
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickEnterpriseTab(true)
+                .clickComplianceTab(true)
                 .selectComplianceType("PCI");
     }
 
@@ -55,7 +55,7 @@ public class AnalyticsEntIT extends BaseDataTest {
 
         loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .clickEnterpriseTab(true)
+                .clickComplianceTab(true)
                 .selectComplianceType("HIPAA");
     }
 

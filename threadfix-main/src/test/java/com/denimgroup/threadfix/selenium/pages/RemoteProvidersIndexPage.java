@@ -89,6 +89,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectWhiteHatImportStyle();
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
+        sleep(30000);
         waitForElement(driver.findElementById("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}

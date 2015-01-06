@@ -204,7 +204,7 @@ public class SystemSettingsEntIT extends BaseDataTest {
                 .login(LDAP_USERNAME, LDAP_USERPASSWORD)
                 .clickTeamsTab();
 
-        assertTrue("The error Log wasn't showed", teamIndexPage.errorAlert().
+        assertTrue("The error Log wasn't shown", teamIndexPage.errorAlert().
                 contains("You don't have permission to access any ThreadFix applications or to create one for yourself." +
                         " Contact your administrator to get help."));
     }
