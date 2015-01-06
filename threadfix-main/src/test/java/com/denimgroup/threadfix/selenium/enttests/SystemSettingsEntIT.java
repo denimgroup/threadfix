@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.selenium.enttests;
 
 import com.denimgroup.threadfix.EnterpriseTests;
+import com.denimgroup.threadfix.selenium.pages.ApplicationDetailPage;
 import com.denimgroup.threadfix.selenium.pages.DashboardPage;
 import com.denimgroup.threadfix.selenium.pages.SystemSettingsPage;
 import com.denimgroup.threadfix.selenium.pages.TeamIndexPage;
@@ -31,6 +32,7 @@ import com.denimgroup.threadfix.selenium.tests.BaseDataTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openqa.selenium.By;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -187,6 +189,8 @@ public class SystemSettingsEntIT extends BaseDataTest {
 
     @Test
     public void testReadAccessLDAPRole() {
+        initializeTeamAndApp();
+
         systemSettingsPage.expandLDAPSettings()
                 .setLDAPSearchBase(LDAP_SEARCHBASE)
                 .setLDAPUserDN(LDAP_USERDN)
@@ -198,15 +202,14 @@ public class SystemSettingsEntIT extends BaseDataTest {
                 .setRole("Read Access")
                 .clickSaveChanges();
 
-        assertTrue("Save validation alert was not present." ,systemSettingsPage.isSaveSuccessful());
+        assertTrue("Save validation alert was not present.", systemSettingsPage.isSaveSuccessful());
 
-        TeamIndexPage teamIndexPage = systemSettingsPage.logout()
-                .login(LDAP_USERNAME, LDAP_USERPASSWORD)
-                .clickTeamsTab();
+        systemSettingsPage.logout().login(LDAP_USERNAME, LDAP_USERPASSWORD)
+                .clickTeamsTab().expandTeamRowByName(teamName)
+                .clickViewAppLink(appName, teamName)
+                .clickActionButton();
 
-        assertTrue("The error Log wasn't shown", teamIndexPage.errorAlert().
-                contains("You don't have permission to access any ThreadFix applications or to create one for yourself." +
-                        " Contact your administrator to get help."));
+        assertTrue("There are non-read-access-only options available", driver.findElements(By.linkText("Edit / Delete")).isEmpty());
     }
 
     @Test
