@@ -149,7 +149,13 @@
                         <tr>
                             <td class="no-color">Proxy Port</td>
                             <td class="no-color">
-                                <form:input id="proxyPort" path="proxyPort" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyPort }"/>
+                                <form:input id="proxyPort"
+                                            path="proxyPort"
+                                            type="number"
+                                            cssClass="focus"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.proxyPort }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="proxyPort" id="proxyPortErrors" cssClass="errors" />
@@ -282,6 +288,6 @@
         </div>
 
 		<br/>
-		<button class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
+		<button ng-disabled="form.$invalid" class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
 	</form:form>
 </body>
