@@ -1260,3 +1260,6 @@ div.remote-provider-config-modal a {
     display:inherit;
 }
 
+input.wide {
+	width:300px;
+}
