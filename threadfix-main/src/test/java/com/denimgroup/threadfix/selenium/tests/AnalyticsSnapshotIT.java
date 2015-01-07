@@ -45,7 +45,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .sleepOnArrival(15000)
                 .clickSnapshotTab(true);
 
         analyticsPage.expandTeamApplicationFilter("snapshotFilterDiv")
@@ -172,7 +172,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
                 .clickSnapshotTab(true)
-                .sleepOnArrival(2500);
+                .sleepOnArrival(12500);
 
         analyticsPage.clickSVGElement("pointInTimeInfoArc");
 
@@ -348,18 +348,18 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         AnalyticsPage analyticsPage = loginPage.defaultLogin()
                 .clickAnalyticsLink()
-                .sleepOnArrival(10000)
+                .sleepOnArrival(15000)
                 .clickSnapshotTab(true)
-                .sleepOnArrival(10000)
+                .sleepOnArrival(15000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .expandTeamApplicationFilter("snapshotFilterDiv")
                 .addTeamFilter(teamName, "snapshotFilterDiv")
                 .saveCurrentFilter(filterName, "snapshotFilterDiv");
 
         analyticsPage.clickAnalyticsLink()
-                .sleepOnArrival(5000)
+                .sleepOnArrival(15000)
                 .clickSnapshotTab(false)
-                .sleepOnArrival(5000)
+                .sleepOnArrival(15000)
                 .selectDropDownReport("Progress By Vulnerability")
                 .loadFilter(filterName,"snapshotFilterDiv");
 

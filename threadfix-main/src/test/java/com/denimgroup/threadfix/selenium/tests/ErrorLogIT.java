@@ -47,13 +47,15 @@ public class ErrorLogIT extends BaseDataTest {
         int initialCount = driver.findElements(By.partialLinkText("Report To ThreadFix Team"))
                 .toArray().length;
 
-        DatabaseUtils.createErrorLog();
-        errorLogPage.refreshPage();
+        if(initialCount < 40) {
+            DatabaseUtils.createErrorLog();
+            errorLogPage.refreshPage();
 
-        int afterCount = driver.findElements(By.partialLinkText("Report To ThreadFix Team"))
-                .toArray().length;
+            int afterCount = driver.findElements(By.partialLinkText("Report To ThreadFix Team"))
+                    .toArray().length;
 
-        assertTrue("A new error was not added.", initialCount + 1 == afterCount);
+            assertTrue("A new error was not added.", initialCount + 1 == afterCount);
+        }
     }
 
     @Test

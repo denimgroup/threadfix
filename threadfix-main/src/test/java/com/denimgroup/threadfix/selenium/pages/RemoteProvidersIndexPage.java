@@ -76,6 +76,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	public RemoteProvidersIndexPage saveVera(){
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
+        sleep(30000);
 		waitForElement(driver.findElementById("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
