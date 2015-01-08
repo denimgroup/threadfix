@@ -154,8 +154,7 @@ public class RoleEntIT extends BaseDataTest {
 	public void addApplicationOnlyRoleTest(){
 		String roleName = createSpecificPermissionRole("canManageApplications");
 		String userName = createSpecificRoleUser(roleName);
-		String teamName = createTeam();
-		String appName = getName();
+		initializeTeamAndApp();
 
 		ApplicationDetailPage applicationDetailPage = loginPage.login(userName, testPassword)
                 .clickOrganizationHeaderLink()

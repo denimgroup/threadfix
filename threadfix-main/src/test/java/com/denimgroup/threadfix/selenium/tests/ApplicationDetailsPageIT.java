@@ -263,9 +263,7 @@ public class ApplicationDetailsPageIT extends BaseDataTest {
     public void top10VulnerabilitiesPresentTest() {
         initialize();
 
-        applicationDetailPage.takeScreenShot();
-
-        applicationDetailPage.waitForCWEBar(teamName, appName, "CWE89");
+        applicationDetailPage.waitForCWEBar(teamName, appName, "CWE20");
 
         assertTrue("Bar for vulnerability CWE-20 is missing", applicationDetailPage.isCWEBarPresent(teamName, appName, "CWE20"));
     }

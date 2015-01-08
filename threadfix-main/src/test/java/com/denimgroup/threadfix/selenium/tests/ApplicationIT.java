@@ -148,8 +148,7 @@ public class ApplicationIT extends BaseDataTest {
 
     @Test
     public void testCreateBasicApplicationDuplicateValidation() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         String duplicateError = "That name is already taken.";
 
@@ -963,8 +962,7 @@ public class ApplicationIT extends BaseDataTest {
     @Ignore
     @Test
     public void testManualFindingValidation() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
         String cwe = "Improper Validation of Certificate Expiration";
         String parameter = "Test Parameter";
         String description = "Test Description.";

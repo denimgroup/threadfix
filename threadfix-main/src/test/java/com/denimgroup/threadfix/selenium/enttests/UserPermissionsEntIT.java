@@ -76,8 +76,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void addPermissionsFieldValidation() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         String userName = createRegularUser();
 
@@ -104,8 +103,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void duplicatePermissionsFieldValidation() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         String userName = createRegularUser();
         String teamRole = "Administrator";
@@ -183,8 +181,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void deletePermissionsTest() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         String userName = createRegularUser();
         String role = "Administrator";
@@ -536,8 +533,7 @@ public class UserPermissionsEntIT extends BaseDataTest{
 
     @Test
     public void checkManageApplicationsPermission() {
-        String teamName = createTeam();
-        String appName = createApplication(teamName);
+        initializeTeamAndApp();
 
         createRestrictedUser("canManageApplications");
 
