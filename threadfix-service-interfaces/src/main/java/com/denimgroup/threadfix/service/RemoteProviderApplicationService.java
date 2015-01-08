@@ -84,12 +84,6 @@ public interface RemoteProviderApplicationService {
 	 * @return
 	 */
 	List<RemoteProviderApplication> loadAllWithMappings();
-	
-
-	/**
-	 * 
-	 */
-	void addBulkImportToQueue(RemoteProviderType remoteProviderType);
 
 	/**
 	 * 
