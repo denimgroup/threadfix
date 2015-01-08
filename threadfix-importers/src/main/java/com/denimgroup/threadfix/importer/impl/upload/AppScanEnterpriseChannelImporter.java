@@ -193,10 +193,7 @@ public class AppScanEnterpriseChannelImporter extends AbstractChannelImporter {
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	
 	    	if (testStatus == null) {
-	    		if (!hasFindings)
-		    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    		else 
-	    			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    	}
 	    }
 

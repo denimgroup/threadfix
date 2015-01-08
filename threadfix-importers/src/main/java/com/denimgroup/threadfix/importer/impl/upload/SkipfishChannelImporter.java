@@ -484,9 +484,6 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
                 returnValue = ScanImportStatus.WRONG_FORMAT_ERROR;
             }
 
-            if (returnValue == null && map.size() == 0)
-                returnValue = ScanImportStatus.EMPTY_SCAN_ERROR;
-
             if (returnValue == null) {
                 checkMap(map);
 

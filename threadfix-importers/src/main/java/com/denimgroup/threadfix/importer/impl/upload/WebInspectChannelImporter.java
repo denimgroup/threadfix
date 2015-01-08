@@ -276,8 +276,6 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	else if (!hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
 	    	else if (testStatus == null)
 	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }

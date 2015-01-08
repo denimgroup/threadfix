@@ -367,9 +367,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 	    	else if (hasDate)
 	    		testStatus = checkTestDate();
-	    	if (ScanImportStatus.SUCCESSFUL_SCAN == testStatus && !hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
+			if (testStatus == null)
 	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 
