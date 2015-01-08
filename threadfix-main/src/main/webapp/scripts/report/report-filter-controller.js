@@ -53,7 +53,8 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             || $scope.showDateControls
             || $scope.showDateRange
             || $scope.showTypeAndMergedControls
-            || $scope.showTagControls) {
+            || $scope.showTagControls
+            || $scope.showOWasp) {
             $scope.showTeamAndApplicationControls = false;
             $scope.showDetailsControls = false;
             $scope.showDateControls = false;
@@ -61,6 +62,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.showSaveFilter = false;
             $scope.showTypeAndMergedControls = false;
             $scope.showTagControls = false;
+            $scope.showOWasp = false;
         } else {
             $scope.showTeamAndApplicationControls = true;
             $scope.showDetailsControls = true;
@@ -69,6 +71,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.showSaveFilter = true;
             $scope.showTypeAndMergedControls = true;
             $scope.showTagControls = true;
+            $scope.showOWasp = true;
         }
     };
 
@@ -176,6 +179,15 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
         $scope.selectedFilter = filter;
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
+
+        if ($scope.parameters.selectedOwasp
+            && $scope.$parent.OWASP_TOP10) {
+            $scope.$parent.OWASP_TOP10.forEach(function(owasp, index){
+                if (owasp.year === $scope.parameters.selectedOwasp.year)
+                    $scope.parameters.selectedOwasp = $scope.$parent.OWASP_TOP10[index];
+            });
+        }
+
         if (!filter.defaultTrending) {
             $scope.parameters.defaultTrending = false;
         }
@@ -185,7 +197,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.parameters.endDate = new Date($scope.parameters.endDate);
 
         $rootScope.$broadcast("resetParameters", $scope.parameters);
-//        $scope.currentFilterNameInput = $scope.selectedFilter.name;
+
     };
 
     $scope.saveCurrentFilters = function() {
@@ -229,6 +241,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
     $scope.exportCSV = function(reportId) {
 
         if (reportId === 3) {
+            // Progress By Vulnerability report
             $scope.$parent.exportCSV();
         } else {
             $log.info('Downloading vulnerabilities list');
@@ -236,6 +249,17 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             var parameters = angular.copy($scope.parameters);
 
             vulnSearchParameterService.updateParameters($scope, parameters);
+
+            // OWASP TOP 10 report
+            if (reportId === 11 && parameters.selectedOwasp) {
+                parameters.genericVulnerabilities = [];
+                parameters.selectedOwasp.top10.forEach(function(owaspVuln){
+                    owaspVuln.members.forEach(function(cweId){
+                        parameters.genericVulnerabilities.push({id: cweId})
+
+                    });
+                });
+            }
 
             $http.post(tfEncoder.encode("/reports/search/export/csv"), parameters).
                 success(function(data, status, headers, config, response) {

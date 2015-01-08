@@ -402,7 +402,6 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                 if ((startIndex===-1 || startIndex <= index)
                     && (endIndex===-1 || endIndex >= index))
                     $scope.trendingScansData.push(_scan);
-
             });
 
             if ($scope.trendingScansData.length===1 && $scope.trendingStartDate == $scope.trendingEndDate) {

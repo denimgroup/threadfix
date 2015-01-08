@@ -150,7 +150,7 @@
 </div>
 
 <!-- Field Controls: Type, path, parameter, etc. -->
-<div class="accordion-group">
+<div class="accordion-group"  ng-hide="reportId && reportId == OWASP_Report_Id">
     <div class="accordion-heading" ng-click="showDetailsControls = !showDetailsControls">
         <span id="showFieldControls" class="icon" ng-class="{ 'icon-minus': showDetailsControls, 'icon-plus': !showDetailsControls }"></span> Field Controls
     </div>
@@ -276,7 +276,7 @@
 </div>
 
 <!-- Date Range -->
-<div class="accordion-group" ng-hide="snapshotActive">
+<div class="accordion-group" ng-hide="snapshotActive && reportId != OWASP_Report_Id">
     <div class="accordion-heading" ng-click="showDateRange = !showDateRange">
         <span id="showDateRange" class="icon" ng-class="{ 'icon-minus': showDateRange, 'icon-plus': !showDateRange }"></span> Date Range
     </div>
@@ -285,7 +285,7 @@
             <h4>Start Date</h4>
             <div class="col-md-6">
                 <p class="input-group">
-                    <input id="startDateInput" type="text" class="form-control" ng-model="startDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="startDate"
+                    <input id="startDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="parameters.startDate"
                            is-open="startDateOpened" min-date="minDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
@@ -300,7 +300,7 @@
             <h4>End Date</h4>
             <div class="col-md-6">
                 <p class="input-group">
-                    <input id="endDateInput" type="text" class="form-control" ng-model="endDate" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="endDate"
+                    <input id="endDateInput" type="text" class="form-control" style="width:135px;margin-bottom:0" datepicker-popup="dd-MMMM-yyyy" ng-model="parameters.endDate"
                            is-open="endDateOpened" min-date="startDate" max-date="maxDate" date-disabled="disabled(date, mode)" close-text="Close"
                            ng-change="refresh()"
                             />
@@ -310,6 +310,18 @@
                 </p>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- OWASP versions -->
+<div class="accordion-group" ng-show="reportId && reportId == OWASP_Report_Id">
+    <div class="accordion-heading" ng-click="showOWasp = !showOWasp">
+        <span id="showOwasp" class="icon" ng-class="{ 'icon-minus': showOWasp, 'icon-plus': !showOWasp }"></span> OWASP Top 10
+    </div>
+    <div class="filter-group-body" ng-show="showOWasp">
+        <span ng-repeat="owaspVer in OWASP_TOP10">
+            <input id="owasp{{owaspVer.year}}" type="radio" ng-model="parameters.selectedOwasp" ng-value="owaspVer" ng-change="refresh()"/>{{owaspVer.year}}<br>
+        </span>
     </div>
 </div>
 
@@ -364,13 +376,13 @@
 
 <!-- Export buttons -->
 <security:authorize ifAnyGranted="ROLE_CAN_GENERATE_REPORTS">
-    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3">
+    <div class="accordion-group" ng-show="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11">
         <div class="accordion-heading" style="text-align:center">
             <a id="exportCSVButton" ng-click="exportCSV(reportId)" class="btn">Export CSV</a>
         </div>
     </div>
 
-    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication || reportId === 3">
+    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11">
         <div class="accordion-heading" style="text-align:center">
             <a id="exportPNGButtonReport" class="btn"
                ng-click="exportPNG()">Export PNG</a>

@@ -10,12 +10,182 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     $scope.PIT_Report_Id = 2;
     $scope.PBV_Report_Id = 3;
     $scope.MVA_Report_Id = 10;
+    $scope.OWASP_Report_Id = 11;
 
     $scope.snapshotOptions = [
         { name: "Point in Time", id: $scope.PIT_Report_Id },
         { name: "Progress By Vulnerability", id: $scope.PBV_Report_Id },
-        { name: "Most Vulnerable Applications", id: $scope.MVA_Report_Id }
+        { name: "Most Vulnerable Applications", id: $scope.MVA_Report_Id },
+        { name: "OWASP Top 10", id: $scope.OWASP_Report_Id }
     ];
+
+    $scope.OWASP_TOP10 = [
+        {
+            year: 2013,
+            top10: [
+                {
+                    id: 'A1',
+                    name: 'A1-Injection',
+                    members: [77, 78, 88, 89, 90, 91, 929]
+                },
+                {
+                    id: 'A2',
+                    name: "A2 - Broken Authentication and Session Management",
+                    members: [256, 287, 311, 319, 384, 522, 523, 613, 620, 640, 930]
+                },
+                {
+                    id: 'A3',
+                    name: "A3 - Cross-Site Scripting (XSS)",
+                    members: [79, 931]
+                },
+                {
+                    id: 'A4',
+                    name: "A4 - Insecure Direct Object References",
+                    members: [22, 99, 639, 932]
+                },
+                {
+                    id: 'A5',
+                    name: "A5 - Security Misconfiguration",
+                    members: [2, 16, 209, 215, 548, 933]
+                },
+                {
+                    id: 'A6',
+                    name: "A6 - Sensitive Data Exposure",
+                    members: [310, 311, 312, 319, 320, 325, 326, 327, 328, 934]
+                },
+                {
+                    id: 'A7',
+                    name: "A7 - Missing Function Level Access Control",
+                    members: [285, 287, 935]
+                },
+                {
+                    id: 'A8',
+                    name: "A8 - Cross-Site Request Forgery (CSRF)",
+                    members: [352, 936]
+                },
+                {
+                    id: 'A9',
+                    name: "A9 - Using Components with Known Vulnerabilities",
+                    members: [937]
+                },
+                {
+                    id: 'A10',
+                    name: "A10 - Unvalidated Redirects and Forwards",
+                    members: [601, 938]
+                }
+            ]
+        },
+        {
+            year: 2010,
+            top10: [
+                {
+                    id: 'A1',
+                    name: 'A1-Injection',
+                    members: [78, 88, 89, 90, 91, 810]
+                },
+                {
+                    id: 'A2',
+                    name: "A2 - Cross-Site Scripting (XSS)",
+                    members: [79, 811]
+
+                },
+                {
+                    id: 'A3',
+                    name: "A3 - Broken Authentication and Session Management",
+                    members: [287, 306, 307, 798, 812]
+                },
+                {
+                    id: 'A4',
+                    name: "A4 - Insecure Direct Object References",
+                    members: [22, 99, 434, 639, 829, 862, 863, 813]
+                },
+                {
+                    id: 'A5',
+                    name: "A5 - Cross-Site Request Forgery(CSRF)",
+                    members: [352, 814]
+                },
+                {
+                    id: 'A6',
+                    name: "A6 - Security Misconfiguration",
+                    members: [209, 219, 250, 538, 552, 732, 815]
+                },
+                {
+                    id: 'A7',
+                    name: "A7 - Insecure Cryptographic Storage",
+                    members: [311, 312, 326, 327, 759, 816]
+                },
+                {
+                    id: 'A8',
+                    name: "A8 - Failure to Restrict URL Access",
+                    members: [285, 862, 863, 817]
+                },
+                {
+                    id: 'A9',
+                    name: "A9 - Insufficient Transport Layer Protection",
+                    members: [311, 319, 818]
+                },
+                {
+                    id: 'A10',
+                    name: "A10 - Unvalidated Redirects and Forwards",
+                    members: [601, 819]
+                }
+            ]
+        },
+        {
+            year: 2007,
+            top10: [
+                {
+                    id: 'A1',
+                    name: 'A1 - Cross Site Scripting (XSS)',
+                    members: [79, 712]
+                },
+                {
+                    id: 'A2',
+                    name: "A2 - Injection Flaws",
+                    members: [77, 89, 90, 91, 93, 713]
+                },
+                {
+                    id: 'A3',
+                    name: "A3 - Malicious File Execution",
+                    members: [78, 95, 98, 434, 714]
+                },
+                {
+                    id: 'A4',
+                    name: "A4 - Insecure Direct Object Reference",
+                    members: [22, 472, 639, 715]
+                },
+                {
+                    id: 'A5',
+                    name: "A5 - Cross Site Request Forgery (CSRF)",
+                    members: [352, 716]
+                },
+                {
+                    id: 'A6',
+                    name: "A6 - Information Leakage and Improper Error Handling",
+                    members: [200, 203, 209, 215, 717]
+                },
+                {
+                    id: 'A7',
+                    name: "A7 - Broken Authentication and Session Management",
+                    members: [287, 301, 522, 718]
+                },
+                {
+                    id: 'A8',
+                    name: "A8 - Insecure Cryptographic Storage",
+                    members: [311, 321, 325, 326, 719]
+                },
+                {
+                    id: 'A9',
+                    name: "A9 - Insecure Communications",
+                    members: [311, 321, 325, 326, 720]
+                },
+                {
+                    id: 'A10',
+                    name: "A10 - Failure to Restrict URL Access",
+                    members: [285, 288, 425, 721]
+                }
+            ]
+        }];
 
     $scope.resetFilters = function() {
         $scope.parameters = {
@@ -40,7 +210,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             showDefectOpen: false,
             showDefectClosed: false,
             endDate: undefined,
-            startDate: undefined
+            startDate: undefined,
+            selectedOwasp: $scope.OWASP_TOP10[0]
         };
     };
 
@@ -117,6 +288,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             processPBVData($scope.filterVulns);
         } else if ($scope.reportId === $scope.MVA_Report_Id) {
             filterMVABySeverity();
+        } else if ($scope.reportId === $scope.OWASP_Report_Id) {
+            processOWASPData();
         }
     });
 
@@ -136,6 +309,12 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     $scope.loadReport = function() {
         $scope.reportId = parseInt($scope.reportId);
+
+        if ($scope.reportId !== $scope.OWASP_Report_Id) {
+            $scope.parameters.startDate = undefined;
+            $scope.parameters.endDate = undefined;
+        }
+
         if ($scope.reportId === $scope.PBV_Report_Id) {
             if (!$scope.allCWEvulns) {
                 $scope.allCWEvulns = $scope.allVulns.filter(function (vuln) {
@@ -169,6 +348,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
             }
         } else if ($scope.reportId === $scope.MVA_Report_Id) {
             processMVAData();
+        } else if ($scope.reportId === $scope.OWASP_Report_Id) {
+            processOWASPData();
         }
     }
 
@@ -245,6 +426,8 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         } else if ($scope.reportId === $scope.MVA_Report_Id) {
             processMVAData();
             reportUtilities.createTeamAppNames($scope);
+        } else if ($scope.reportId === $scope.OWASP_Report_Id) {
+            processOWASPData();
         }
 
         if ($scope.filterVulns.length === 0) {
@@ -442,13 +625,28 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
 
     };
 
+    var processOWASPData = function() {
+
+        $scope.loading = true;
+
+        var parameters = angular.copy($scope.parameters);
+        vulnSearchParameterService.updateParameters($scope, parameters);
+
+        parameters.owasp = parameters.selectedOwasp;
+
+        $scope.$broadcast("refreshVulnSearchTree", parameters);
+        $scope.loading = false;
+
+
+    };
+
     var filterMVABySeverity = function() {
 
         $scope.topAppsData = angular.copy($scope._topAppsData);
 
         $scope.topAppsData.forEach(function(app) {
             if (!$scope.parameters.severities.critical)
-             app["Critical"] = 0;
+                app["Critical"] = 0;
             if (!$scope.parameters.severities.high)
                 app["High"] = 0;
             if (!$scope.parameters.severities.medium)
