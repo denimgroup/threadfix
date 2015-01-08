@@ -218,8 +218,8 @@ public class TeamIndexPageIT extends BaseDataTest {
         TeamIndexPage teamIndexPage = loginPage.defaultLogin()
                 .clickOrganizationHeaderLink()
                 .expandTeamRowByName(teamName);
-        teamIndexPage.hoverOverSVGElement(teamName + "InfoArc");
-        sleep(2500);
+        teamIndexPage.hoverRealOverSVGElement(teamName + "InfoArc");
+        System.out.println(driver.findElement(By.id("pointInTimeTip")).getText());
         String numTip = driver.findElement(By.id("pointInTimeTip")).getText().split("\\s+")[1];
 
         assertTrue("Tip value at level Info does not match badge",

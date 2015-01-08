@@ -53,6 +53,8 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
 
         analyticsPage.waitForElement(driver.findElement(By.id("totalBadgeCritical")));
 
+        analyticsPage.takeScreenShot();
+
         assertTrue("Only 10 critical vulnerabilities should be shown.",
                 analyticsPage.isVulnerabilityCountCorrect("Critical", "10"));
         assertTrue("Only 9 medium vulnerabilities should be shown.",

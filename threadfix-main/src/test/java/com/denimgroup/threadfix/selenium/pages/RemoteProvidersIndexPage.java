@@ -76,7 +76,7 @@ public class RemoteProvidersIndexPage extends BasePage {
 	public RemoteProvidersIndexPage saveVera(){
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
-        sleep(30000);
+        takeScreenShot();
 		waitForElement(driver.findElementById("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -90,7 +90,7 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectWhiteHatImportStyle();
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
-        sleep(30000);
+        takeScreenShot();
         waitForElement(driver.findElementById("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
