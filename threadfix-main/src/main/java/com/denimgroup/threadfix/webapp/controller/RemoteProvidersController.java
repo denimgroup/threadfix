@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.service.RemoteProviderApplicationService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService.ResponseCode;
 import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
@@ -67,7 +68,9 @@ public class RemoteProvidersController {
     @Autowired
 	private OrganizationService organizationService;
     @Autowired
-    ScheduledRemoteProviderImportService scheduledRemoteProviderImportService;
+    private ScheduledRemoteProviderImportService scheduledRemoteProviderImportService;
+	@Autowired
+	private QueueSender queueSender;
 
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
@@ -132,8 +135,13 @@ public class RemoteProvidersController {
 	public @ResponseBody RestResponse<String> importAllScans(@PathVariable("typeId") int typeId) {
 		log.info("Processing request for RemoteProviderType bulk import.");
 		RemoteProviderType remoteProviderType = remoteProviderTypeService.load(typeId);
-		
-		remoteProviderApplicationService.addBulkImportToQueue(remoteProviderType);
+
+		if (remoteProviderType.getHasConfiguredApplications()) {
+			log.info("At least one application is configured.");
+			queueSender.addRemoteProviderImport(remoteProviderType);
+		} else {
+			log.error("No apps were configured with applications.");
+		}
 		
 		return RestResponse.success("Importing scans.");
 	}
