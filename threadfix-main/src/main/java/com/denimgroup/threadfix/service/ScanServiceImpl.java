@@ -137,113 +137,112 @@ public class ScanServiceImpl implements ScanService {
 
         ScanCheckResultBean result = importer.checkFile();
 
-        if ((!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)
-                && !result.getScanCheckResult().equals(ScanImportStatus.EMPTY_SCAN_ERROR))) {
+        if (!result.getScanCheckResult().equals(ScanImportStatus.SUCCESSFUL_SCAN)) {
             importer.deleteScanFile();
         }
 
         Calendar scanQueueDate = applicationChannelDao.getMostRecentQueueScanTime(channel.getId());
-		
-		if (scanQueueDate != null && result.getTestDate() != null &&
-				!result.getTestDate().after(scanQueueDate)) {
-			LOG.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
-			return new ScanCheckResultBean(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE, result.getTestDate());
-		}
 
-		return result;
-	}
+        if (scanQueueDate != null && result.getTestDate() != null &&
+                !result.getTestDate().after(scanQueueDate)) {
+            LOG.warn(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE.toString());
+            return new ScanCheckResultBean(ScanImportStatus.MORE_RECENT_SCAN_ON_QUEUE, result.getTestDate());
+        }
 
-	@Override
-	public Integer saveEmptyScanAndGetId(Integer channelId, String fileName) {
-			
-		if (fileName == null) {
+        return result;
+    }
+
+    @Override
+    public Integer saveEmptyScanAndGetId(Integer channelId, String fileName) {
+
+        if (fileName == null) {
             LOG.warn("Saving the empty file failed. Check filesystem permissions.");
             return null;
         } else if (!ApplicationChannel.matchesFileHandleFormat(fileName)) {
             String message = "Bad file name (" + fileName + ") passed into addFileToQueue. Exiting.";
             LOG.error(message);
             throw new IllegalArgumentException(message);
-		} else {
-			EmptyScan emptyScan = new EmptyScan();
-			emptyScan.setApplicationChannel(applicationChannelDao.retrieveById(channelId));
-			emptyScan.setAlreadyProcessed(false);
-			emptyScan.setDateUploaded(Calendar.getInstance());
-			emptyScan.setFileName(fileName);
-			emptyScanDao.saveOrUpdate(emptyScan);
-			return emptyScan.getId();
-		}
-	}
-	
-	@Override
-	public void addEmptyScanToQueue(Integer emptyScanId) {
-		EmptyScan emptyScan = emptyScanDao.retrieveById(emptyScanId);
-		
-		if (emptyScan.getAlreadyProcessed() ||
-				emptyScan.getApplicationChannel() == null ||
-				emptyScan.getApplicationChannel().getId() == null ||
-				emptyScan.getApplicationChannel().getApplication() == null ||
-				emptyScan.getApplicationChannel().getApplication().getId() == null ||
-				emptyScan.getApplicationChannel().getApplication().getOrganization() == null ||
-				emptyScan.getApplicationChannel().getApplication().getOrganization().getId() == null ||
-				emptyScan.getFileName() == null) {
-			LOG.warn("The empty scan was not added to the queue. It was either already processed or incorrectly configured.");
-			return;
-		}
-		
-		ApplicationChannel applicationChannel = emptyScan.getApplicationChannel();
-		
-		Integer appId = applicationChannel.getApplication().getId();
-		Integer orgId = applicationChannel.getApplication()
-				.getOrganization().getId();
+        } else {
+            EmptyScan emptyScan = new EmptyScan();
+            emptyScan.setApplicationChannel(applicationChannelDao.retrieveById(channelId));
+            emptyScan.setAlreadyProcessed(false);
+            emptyScan.setDateUploaded(Calendar.getInstance());
+            emptyScan.setFileName(fileName);
+            emptyScanDao.saveOrUpdate(emptyScan);
+            return emptyScan.getId();
+        }
+    }
 
-		String fileName = emptyScan.getFileName();
-		
-		queueSender.addScanToQueue(fileName, applicationChannel.getId(), orgId, appId, null, applicationChannel);
-	
-		emptyScan.setAlreadyProcessed(true);
-		emptyScanDao.saveOrUpdate(emptyScan);
-	}
-	
-	@Override
-	public void deleteEmptyScan(Integer emptyScanId) {
-		EmptyScan emptyScan = emptyScanDao.retrieveById(emptyScanId);
-		
-		if (emptyScan != null) {
-			emptyScan.setAlreadyProcessed(true);
-			File file = new File(emptyScan.getFileName());
-			if (file.exists()) {
-				if (!file.delete())
-					file.deleteOnExit();
-			}
-			
-			emptyScanDao.saveOrUpdate(emptyScan);
-		}
-	}
-	
-	@Override
-	public long getFindingCount(Integer scanId) {
-		return scanDao.getFindingCount(scanId);
-	}
+    @Override
+    public void addEmptyScanToQueue(Integer emptyScanId) {
+        EmptyScan emptyScan = emptyScanDao.retrieveById(emptyScanId);
 
-	@Override
-	public long getUnmappedFindingCount(Integer scanId) {
-		return scanDao.getFindingCountUnmapped(scanId);
-	}
+        if (emptyScan.getAlreadyProcessed() ||
+                emptyScan.getApplicationChannel() == null ||
+                emptyScan.getApplicationChannel().getId() == null ||
+                emptyScan.getApplicationChannel().getApplication() == null ||
+                emptyScan.getApplicationChannel().getApplication().getId() == null ||
+                emptyScan.getApplicationChannel().getApplication().getOrganization() == null ||
+                emptyScan.getApplicationChannel().getApplication().getOrganization().getId() == null ||
+                emptyScan.getFileName() == null) {
+            LOG.warn("The empty scan was not added to the queue. It was either already processed or incorrectly configured.");
+            return;
+        }
 
-	// TODO bounds checking
-	@Override
-	public void loadStatistics(Scan scan) {
-		if (scan == null || scan.getId() == null) {
-			return;
-		}
-		scan.setNumWithoutGenericMappings((int) scanDao.getNumberWithoutGenericMappings(scan.getId()));
-		scan.setTotalNumberSkippedResults((int) scanDao.getTotalNumberSkippedResults(scan.getId()));
-		scan.setNumWithoutChannelVulns((int) scanDao.getNumberWithoutChannelVulns(scan.getId()));
-		scan.setTotalNumberFindingsMergedInScan((int) scanDao.getTotalNumberFindingsMergedInScan(scan.getId()));
-	}
-	
-	@Override
-	public List<Scan> loadMostRecentFiltered(int number) {
+        ApplicationChannel applicationChannel = emptyScan.getApplicationChannel();
+
+        Integer appId = applicationChannel.getApplication().getId();
+        Integer orgId = applicationChannel.getApplication()
+                .getOrganization().getId();
+
+        String fileName = emptyScan.getFileName();
+
+        queueSender.addScanToQueue(fileName, applicationChannel.getId(), orgId, appId, null, applicationChannel);
+
+        emptyScan.setAlreadyProcessed(true);
+        emptyScanDao.saveOrUpdate(emptyScan);
+    }
+
+    @Override
+    public void deleteEmptyScan(Integer emptyScanId) {
+        EmptyScan emptyScan = emptyScanDao.retrieveById(emptyScanId);
+
+        if (emptyScan != null) {
+            emptyScan.setAlreadyProcessed(true);
+            File file = new File(emptyScan.getFileName());
+            if (file.exists()) {
+                if (!file.delete())
+                    file.deleteOnExit();
+            }
+
+            emptyScanDao.saveOrUpdate(emptyScan);
+        }
+    }
+
+    @Override
+    public long getFindingCount(Integer scanId) {
+        return scanDao.getFindingCount(scanId);
+    }
+
+    @Override
+    public long getUnmappedFindingCount(Integer scanId) {
+        return scanDao.getFindingCountUnmapped(scanId);
+    }
+
+    // TODO bounds checking
+    @Override
+    public void loadStatistics(Scan scan) {
+        if (scan == null || scan.getId() == null) {
+            return;
+        }
+        scan.setNumWithoutGenericMappings((int) scanDao.getNumberWithoutGenericMappings(scan.getId()));
+        scan.setTotalNumberSkippedResults((int) scanDao.getTotalNumberSkippedResults(scan.getId()));
+        scan.setNumWithoutChannelVulns((int) scanDao.getNumberWithoutChannelVulns(scan.getId()));
+        scan.setTotalNumberFindingsMergedInScan((int) scanDao.getTotalNumberFindingsMergedInScan(scan.getId()));
+    }
+
+    @Override
+    public List<Scan> loadMostRecentFiltered(int number) {
 
         if (permissionService != null) {
             if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
@@ -257,10 +256,10 @@ public class ScanServiceImpl implements ScanService {
         } else {
             return scanDao.retrieveMostRecent(number, null, null);
         }
-	}
-	
-	@Override
-	public int getScanCount() {
+    }
+
+    @Override
+    public int getScanCount() {
         if (permissionService != null) {
             if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
                 return scanDao.getScanCount();
@@ -273,10 +272,10 @@ public class ScanServiceImpl implements ScanService {
         } else {
             return scanDao.getScanCount(null, null);
         }
-	}
-	
-	@Override
-	public List<Scan> getTableScans(Integer page) {
+    }
+
+    @Override
+    public List<Scan> getTableScans(Integer page) {
         if (permissionService != null) {
             if (permissionService.isAuthorized(Permission.READ_ACCESS, null, null)) {
                 return scanDao.getTableScans(page);
@@ -289,6 +288,6 @@ public class ScanServiceImpl implements ScanService {
         } else {
             return scanDao.getTableScans(page, null, null);
         }
-	}
-	
+    }
+
 }

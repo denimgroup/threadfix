@@ -261,9 +261,7 @@ class BrakemanChannelImporter extends AbstractChannelImporter {
 		} else if (hasDate) {
 			testStatus = checkTestDate();
 		}
-    	if (ScanImportStatus.SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings) {
-			testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-		} else if (testStatus == null) {
+    	if (testStatus == null) {
 			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 		}
     	
