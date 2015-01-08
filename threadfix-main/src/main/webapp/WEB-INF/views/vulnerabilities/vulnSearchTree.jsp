@@ -26,11 +26,12 @@
                 <td colspan="2">
                     {{ category.name }}
                     <span id="totalBadge{{ category.name }}" ng-style="badgeWidth" class="badge" ng-class="{
-                                            'badge-critical': category.intValue === 5,
-                                            'badge-high': category.intValue === 4,
-                                            'badge-medium': category.intValue === 3,
-                                            'badge-low': category.intValue === 2,
-                                            'badge-info': category.intValue === 1
+                                            'badge-critical': category.intValue === 5 && category.total !== 0,
+                                            'badge-high': category.intValue === 4 && category.total !== 0,
+                                            'badge-medium': category.intValue === 3 && category.total !== 0,
+                                            'badge-low': category.intValue === 2 && category.total !== 0,
+                                            'badge-info': category.intValue === 1 && category.total !== 0,
+                                            'badge-inform': category.total === 0
                                             }">
                         {{ category.total }}
                     </span>

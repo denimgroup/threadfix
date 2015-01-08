@@ -1252,6 +1252,10 @@ div.remote-provider-config-modal a {
     background-color:#014B6E
 }
 
+.badge-inform {
+	background-color:#808080;
+}
+
 .hide-wrapper {
     display:none;
 }
