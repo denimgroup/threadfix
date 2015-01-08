@@ -180,9 +180,7 @@ public class CppcheckChannelImporter extends AbstractChannelImporter {
 		    if (!foundCppCheck || !foundResults || !"2".equals(xmlVersion))
 	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
 
-	    	if (ScanImportStatus.SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings)
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	else if (testStatus == null)
+			if (testStatus == null)
 	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    }
 

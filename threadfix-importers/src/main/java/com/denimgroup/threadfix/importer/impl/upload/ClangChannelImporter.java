@@ -252,8 +252,8 @@ public class ClangChannelImporter extends AbstractChannelImporter {
 		    Integer findingCount = getFindingCount(zipFile);
 		    if (findingCount == null)
 			    return new ScanCheckResultBean(ScanImportStatus.WRONG_FORMAT_ERROR);
-		    else if (findingCount < 1)
-			    return new ScanCheckResultBean(ScanImportStatus.EMPTY_SCAN_ERROR);
+//		    else if (findingCount < 1)
+//			    return new ScanCheckResultBean(ScanImportStatus.EMPTY_SCAN_ERROR);
 
 		    testDate = getTestDate(indexHtml);
 

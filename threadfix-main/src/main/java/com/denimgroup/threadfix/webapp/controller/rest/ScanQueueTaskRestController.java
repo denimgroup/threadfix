@@ -264,11 +264,6 @@ public class ScanQueueTaskRestController extends RestController {
 				this.scanQueueService.completeTask(scanQueueTaskId);
 				log.info("Results from scan queue task: " + myTask.getId() + " saved successfully.");
 				return RestResponse.success(myTask);
-			} else if (ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
-				String message = "Task appeared to complete successfully, but results provided were empty.";
-				this.scanQueueService.failTask(scanQueueTaskId, message);
-				log.warn("When saving scan queue task: " + myTask.getId() + ": " + message);
-				return RestResponse.failure(message);
 			} else {
 				String message = "Task appeared to complete successfully, but the scan upload attempt returned this message: " + returnValue.getScanCheckResult();
 				this.scanQueueService.failTask(scanQueueTaskId, message);

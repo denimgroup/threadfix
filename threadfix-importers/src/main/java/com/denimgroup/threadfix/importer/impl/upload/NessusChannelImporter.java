@@ -367,9 +367,7 @@ public class NessusChannelImporter extends AbstractChannelImporter {
 	    		testStatus = checkTestDate();
 	    	}
 
-	    	if ((testStatus == null || ScanImportStatus.SUCCESSFUL_SCAN == testStatus) && !hasFindings) {
-	    		testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-	    	} else if (testStatus == null) {
+			if (testStatus == null) {
 	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 	    	}
 	    }
