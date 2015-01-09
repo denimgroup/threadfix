@@ -112,7 +112,7 @@ public class RestExceptionControllerAdvice {
 
         log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
-        ModelAndView mav = new ModelAndView("exception", "uuid", exceptionLog.getUUID());
+        ModelAndView mav = new ModelAndView("exception", "time", format.format(exceptionLog.getTime().getTime()));
         mav.addObject("logId", exceptionLog.getId());
         return mav;
     }
