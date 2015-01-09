@@ -238,9 +238,15 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
 
     $scope.openAppModal = function(provider, app) {
 
+        //filter any teams that have no apps attached
+        $scope.teams = $scope.teams.filter(function(team) {
+            return team.applications.length > 0;
+        });
+
         var filterActiveApp = function(app) {
             return app.active;
         };
+
         $scope.teams.forEach(function(team) {
             team.applications = team.applications.filter(filterActiveApp);
         });
@@ -274,7 +280,7 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                             return app.id === appId;
                         };
 
-                        var team = $scope.teams.filter(filterTeam)[0]
+                        var team = $scope.teams.filter(filterTeam)[0];
                         team.applications = team.applications.filter(filterActiveApp);
                         var application = team.applications.filter(filterApp)[0];
 
