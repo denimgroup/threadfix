@@ -6,8 +6,8 @@
 
 <h2>System error</h2>
 
-<c:if test="${ not empty uuid }">
-	A system error occurred and has been logged to the database with id <c:out value="${ uuid }"/>.
+<c:if test="${ not empty time }">
+	A system error occurred and has been logged to the database at <c:out value="${ time }"/>.
 	<security:authorize ifAnyGranted="ROLE_CAN_VIEW_ERROR_LOGS">
 		<spring:url value="/configuration/logs/{logId}" var="logUrl">
 			<spring:param name="logId" value="${ logId }"/>	
@@ -16,7 +16,7 @@
 	</security:authorize>
 </c:if>
 
-<c:if test="${ empty uuid }">
+<c:if test="${ empty time }">
 	A system error occurred.
 </c:if>
 

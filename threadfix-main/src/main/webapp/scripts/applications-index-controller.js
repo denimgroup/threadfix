@@ -144,7 +144,10 @@ myAppModule.controller('ApplicationsIndexController',
     };
 
     $scope.showAppLimitMessage = function(number) {
-        alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
+        if (number != -1)
+            alert('You have reached the application limit of ' + number + ' for your current license. To upgrade your license, please contact Denim Group.');
+        else
+            alert('It appears that your license file is not valid, the operation is currently not available. Please contact Denim Group.');
     };
 
     $scope.openAppModal = function (team) {
