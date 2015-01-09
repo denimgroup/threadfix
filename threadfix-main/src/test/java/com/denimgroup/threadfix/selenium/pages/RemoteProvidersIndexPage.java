@@ -62,7 +62,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 	
 	public RemoteProvidersIndexPage saveQualys(){
 		driver.findElementById("submit").click();
-        waitForSuccessMessage();
+        int i = 1;
+        while(driver.findElements(By.id("configure0")).isEmpty() && i++ < 5) {
+            sleep(20000);
+        }
         waitForElement(driver.findElementById("configure0"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -76,7 +79,10 @@ public class RemoteProvidersIndexPage extends BasePage {
 	public RemoteProvidersIndexPage saveVera(){
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
-        takeScreenShot();
+        int i = 1;
+        while(driver.findElements(By.id("clearConfig2")).isEmpty() && i++ < 5) {
+            sleep(20000);
+        }
 		waitForElement(driver.findElementById("clearConfig2"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -90,7 +96,10 @@ public class RemoteProvidersIndexPage extends BasePage {
         selectWhiteHatImportStyle();
 		driver.findElementById("submit").click();
         waitForSuccessMessage();
-        takeScreenShot();
+        int i = 1;
+        while(driver.findElements(By.id("clearConfig1")).isEmpty() && i++ < 5) {
+            sleep(20000);
+        }
         waitForElement(driver.findElementById("clearConfig1"));
 		return new RemoteProvidersIndexPage(driver);
 	}
