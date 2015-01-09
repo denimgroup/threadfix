@@ -66,6 +66,27 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 return vuln.id;
             });
 
+            for (var k in $scope.fieldsMap) {
+                if (Object.prototype.toString.call($scope.fieldsMap[k]) === '[object Date]') {
+                    $scope.stdFormTemplate.forEach(function(templateField){
+
+                        // Date type for HPQC
+                        if (k === templateField.model && templateField.placeholder === "yyyy-MM-dd") {
+                            var d = $scope.fieldsMap[k];
+                            //$scope.fieldsMap[k] = d.getFullYear() + "-" + d.getMonth()+1 + "-" + (d.getDate()+1);
+
+                            var dd = d.getDate(); var mm = d.getMonth()+1; //January is 0!
+                            var yyyy = d.getFullYear();
+                            if(dd<10){dd='0'+dd}
+                            if(mm<10){mm='0'+mm}
+                            $scope.fieldsMap[k] = yyyy+'-'+mm+'-'+dd;
+
+
+                        }
+                    })
+                }
+            }
+
             $scope.object.fieldsMapStr = JSON.stringify($scope.fieldsMap);
             threadFixModalService.post(url, $scope.object).
                 success(function(data, status, headers, config) {

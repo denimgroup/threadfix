@@ -252,7 +252,10 @@ angular.module('dynform', [])
                     newElement = workingElement;
                   }
                 }
-                
+                else if (field.type === 'date' && angular.isDefined(field.placeholder)) {
+                  newElement.attr('type', 'text');
+                  newElement.attr('datepicker-popup', field.placeholder);
+                }
                 //  Common attributes; radio already applied these...
                 if (field.type !== "radio") {
                   if (angular.isDefined(field['class'])) {newElement.attr('ng-class', field['class']);}
