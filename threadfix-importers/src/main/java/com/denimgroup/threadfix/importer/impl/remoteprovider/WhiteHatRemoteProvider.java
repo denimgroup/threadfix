@@ -48,7 +48,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
 	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
-	private static final String EXTRA_PARAMS = "&display_attack_vectors=1&query_site=";
+	private static final String EXTRA_PARAMS = "&display_description=1&display_attack_vectors=1&query_site=";
 	
 	private String apiKey = null;
 	
@@ -308,13 +308,23 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		private Map<FindingKey, String> map = new EnumMap<>(FindingKey.class);
 		
 		private boolean creatingVuln = false;
-		
+
 		private DateStatus dateStatus = null;
 
         private String vulnTag = null;
-        private boolean inAttackVector = false;
+		private String currentDisplayId = null;
+
+        private boolean getDescription = false;
+        private boolean getValue = false;
+        private boolean inAttackRequest = false;
+        private boolean inAttackResponse = false;
+
+		private StringBuffer currentDescTag = new StringBuffer();
         private StringBuffer currentRawFinding = new StringBuffer();
-		
+        private StringBuffer currentAttackRequest = new StringBuffer();
+        private StringBuffer currentAttackResponse = new StringBuffer();
+
+
 		private void addFinding() {
 			Finding finding = constructFinding(map);
 			
@@ -355,12 +365,16 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		map.clear();
 
                 String nativeId = atts.getValue("id");
+				currentDisplayId = nativeId;
                 String siteId = atts.getValue("site");
 
                 map.put(FindingKey.NATIVE_ID, nativeId);
 	    		map.put(FindingKey.VULN_CODE, atts.getValue("class"));
 	    		map.put(FindingKey.SEVERITY_CODE, atts.getValue("severity"));
                 map.put(FindingKey.URL_REFERENCE, buildUrlReference(siteId, nativeId));
+	    	} else if ("description".equals(qName)) {
+                getDescription = true;
+				currentDescTag.append(makeTag(name, qName, atts));
 	    	} else if ("attack_vector".equals(qName)) {
                 currentRawFinding.append(makeTag(name, qName , atts));
 	    		map.put(FindingKey.PATH, null);
@@ -381,30 +395,104 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    	}
 	    	else if (creatingVuln) {
                 currentRawFinding.append(makeTag(name, qName , atts));
-                if (qName.equals("request")) {
-		    		map.put(FindingKey.PATH, getPath(atts.getValue("url")));
-		    	} else if (qName.equals("param")) {
-		    		map.put(FindingKey.PARAMETER, atts.getValue("name"));
-		    	}
+                switch (qName) {
+                    case "request":
+                        inAttackRequest = true;
+                        map.put(FindingKey.PATH, getPath(atts.getValue("url")));
+                        break;
+                    case "param":
+                        map.put(FindingKey.PARAMETER, atts.getValue("name"));
+                        break;
+                    case "response":
+                        inAttackResponse = true;
+                        break;
+                    case "value":
+                        getValue = true;
+                        break;
+                }
+
+                if(inAttackRequest) {
+                    currentAttackRequest.append(makeTag(name, qName , atts));
+                }
+
+                if(inAttackResponse) {
+                    currentAttackResponse.append(makeTag(name, qName , atts));
+                }
 	    	}
 	    }
 	    
 	    @Override
 	    public void endElement (String uri, String localName, String qName) throws SAXException {
+            if(qName.equals("value")) {
+                String value = getBuilderText();
+                currentAttackRequest.append(value);
+                getValue = false;
+            }
+
             if (creatingVuln) {
                 currentRawFinding.append("</").append(qName).append(">");
             }
 
-            if (qName.equals("attack_vector")) {
-                currentRawFinding.append("\n</").append("vulnerability").append(">");
-                map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
-	    		addFinding();
-	    		creatingVuln = false;
-                currentRawFinding.setLength(0);
-	    	}
+            if(inAttackRequest) {
+                currentAttackRequest.append("</").append(qName).append(">");
+            }
+
+            if(inAttackResponse) {
+                currentAttackResponse.append("</").append(qName).append(">");
+            }
+
+            if(qName.equals("request")) {
+                map.put(FindingKey.REQUEST, currentAttackRequest.toString());
+                currentAttackRequest.setLength(0);
+                inAttackRequest = false;
+            }
+
+            if(qName.equals("response")) {
+                map.put(FindingKey.RESPONSE, currentAttackResponse.toString());
+                currentAttackResponse.setLength(0);
+                inAttackResponse = false;
+            }
+
+			if (qName.equals("attack_vector")) {
+				currentRawFinding.append("\n</").append("vulnerability").append(">");
+				map.put(FindingKey.RAWFINDING, vulnTag + currentRawFinding.toString());
+				addFinding();
+				creatingVuln = false;
+				currentRawFinding.setLength(0);
+			}
+
+			if (qName.equals("description")) {
+				String description = getBuilderText();
+				currentDescTag.append(description).append("</").append(qName).append(">");
+
+				String descriptionTag = currentDescTag.toString();
+
+				for (Finding finding : findingDateStatusMap.keySet()) {
+					if(finding.getDisplayId().equals(currentDisplayId)) {
+						//set description in raw finding
+						String rawFinding = finding.getRawFinding();
+						int indexOfEndVulnTag = rawFinding.indexOf("</vulnerability>");
+						rawFinding = new StringBuffer(rawFinding).insert(indexOfEndVulnTag, descriptionTag).toString();
+
+						finding.setRawFinding(rawFinding);
+						finding.setLongDescription(description);
+
+					}
+				}
+
+				getDescription = false;
+				currentDisplayId = null;
+				currentDescTag.setLength(0);
+			}
 
             if ("vulnerability".equals(qName)) {
                 vulnTag = null;
+            }
+	    }
+
+        public void characters (char ch[], int start, int length) {
+            if (getDescription || getValue) {
+                addTextToBuilder(ch, start, length);
             }
 	    }
 	}
@@ -437,7 +525,7 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		private DateStatus dateStatus = null;
 
         private String vulnTag = null;
-        private StringBuffer currentRawFinding	  = new StringBuffer();
+        private StringBuffer currentRawFinding = new StringBuffer();
 
 		private void addFinding() {
 			Finding finding = constructFinding(map);
