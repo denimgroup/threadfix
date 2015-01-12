@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -42,6 +42,8 @@ import com.mysql.jdbc.PacketTooBigException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ws.client.WebServiceTransportException;
 
+import java.text.SimpleDateFormat;
+
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
 
 /**
@@ -55,6 +57,8 @@ public class RestExceptionControllerAdvice {
 
     private static final SanitizedLogger log = new SanitizedLogger(HandlerExceptionResolver.class);
 
+    private static final SimpleDateFormat format = new SimpleDateFormat("MMM d, y h:mm:ss a");
+
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = RestException.class)
     public @ResponseBody RestResponse<String> resolveRestException(Exception ex) {
@@ -63,7 +67,7 @@ public class RestExceptionControllerAdvice {
 
         exceptionLogService.storeExceptionLog(exceptionLog);
 
-        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
         assert ex instanceof RestException;
 
@@ -78,7 +82,7 @@ public class RestExceptionControllerAdvice {
 
         exceptionLogService.storeExceptionLog(exceptionLog);
 
-        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
         if(ex.getRootCause().getClass().equals(PacketTooBigException.class)){
             return failure("Scan is too large to be handled by your MySQL Server. You can remediate this " +
@@ -106,9 +110,9 @@ public class RestExceptionControllerAdvice {
 
         exceptionLogService.storeExceptionLog(exceptionLog);
 
-        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
-        ModelAndView mav = new ModelAndView("exception", "uuid", exceptionLog.getUUID());
+        ModelAndView mav = new ModelAndView("exception", "time", format.format(exceptionLog.getTime().getTime()));
         mav.addObject("logId", exceptionLog.getId());
         return mav;
     }
@@ -120,7 +124,7 @@ public class RestExceptionControllerAdvice {
         ExceptionLog exceptionLog = new ExceptionLog(ex);
         exceptionLogService.storeExceptionLog(exceptionLog);
 
-        log.error("Uncaught exception - logging with ID " + exceptionLog.getUUID() + ".");
+        log.error("Uncaught exception - logging at " + format.format(exceptionLog.getTime().getTime()) + ".");
 
         if(ex.getMessage().contains("401")){
             return failure("GRC Credentials not valid.");

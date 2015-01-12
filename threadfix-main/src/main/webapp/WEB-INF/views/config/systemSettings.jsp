@@ -62,36 +62,63 @@
                 <div class="panel-body" ng-show="editLdapSettings">
                     <table>
                         <tr>
-                            <td style="width:150px" class="no-color">LDAP Search Base</td>
+                            <td style="width:150px" class="no-color">Search Base</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryBase" path="activeDirectoryBase" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryBase }"/>
+                                <form:input placeholder="cn=threadfix-ldap,cn=internal,dc=net"
+                                            id="activeDirectoryBase"
+                                            path="activeDirectoryBase"
+                                            cssClass="focus wide"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.activeDirectoryBase }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryBase" cssClass="errors" />
                             </td>
                         </tr>
                         <tr>
-                            <td class="no-color">LDAP User DN</td>
+                            <td class="no-color">sAMAccountName</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryUsername" path="activeDirectoryUsername" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryUsername }"/>
+                                <form:input placeholder="ldap_lookup_account@organization.com"
+                                            id="activeDirectoryUsername"
+                                            path="activeDirectoryUsername"
+                                            cssClass="wide"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.activeDirectoryUsername }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryUsername" cssClass="errors" />
                             </td>
                         </tr>
                         <tr>
-                            <td class="no-color">LDAP Password</td>
+                            <td class="no-color">Password</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryCredentials" type="password" path="activeDirectoryCredentials" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryCredentials }"/>
+                                <form:input class="wide"
+                                            placeholder="ldap_lookup_account password"
+                                            id="activeDirectoryCredentials"
+                                            type="password"
+                                            path="activeDirectoryCredentials"
+                                            cssClass="wide"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.activeDirectoryCredentials }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryCredentials" cssClass="errors" />
                             </td>
                         </tr>
                         <tr>
-                            <td class="no-color">LDAP URL</td>
+                            <td class="no-color">URL</td>
                             <td class="no-color">
-                                <form:input id="activeDirectoryURL" path="activeDirectoryURL" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.activeDirectoryURL }"/>
+                                <form:input class="wide"
+                                            placeholder="ldap://my-ldap-server:389/"
+                                            id="activeDirectoryURL"
+                                            path="activeDirectoryURL"
+                                            cssClass="wide"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.activeDirectoryURL }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="activeDirectoryURL" cssClass="errors" />
@@ -122,7 +149,13 @@
                         <tr>
                             <td class="no-color">Proxy Port</td>
                             <td class="no-color">
-                                <form:input id="proxyPort" path="proxyPort" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.proxyPort }"/>
+                                <form:input id="proxyPort"
+                                            path="proxyPort"
+                                            type="number"
+                                            cssClass="focus"
+                                            size="60"
+                                            maxlength="255"
+                                            value="${ defaultConfiguration.proxyPort }"/>
                             </td>
                             <td class="no-color" style="padding-left: 5px">
                                 <form:errors path="proxyPort" id="proxyPortErrors" cssClass="errors" />
@@ -255,6 +288,6 @@
         </div>
 
 		<br/>
-		<button class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
+		<button ng-disabled="form.$invalid" class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
 	</form:form>
 </body>

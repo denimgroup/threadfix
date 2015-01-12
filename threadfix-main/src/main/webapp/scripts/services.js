@@ -241,19 +241,16 @@ threadfixModule.factory('vulnSearchParameterService', function() {
             }
         });
 
-        parameters.endDate = undefined;
-        parameters.startDate = undefined;
-
         var date;
 
-        if ($scope.endDate) {
-            date = new Date($scope.endDate);
+        if (parameters.endDate) {
+            date = new Date(parameters.endDate);
             if (date) {
                 parameters.endDate = date.getTime();
             }
         }
-        if ($scope.startDate) {
-            date = new Date($scope.startDate);
+        if (parameters.startDate) {
+            date = new Date(parameters.startDate);
             if (date) {
                 parameters.startDate = date.getTime();
             }
@@ -295,8 +292,8 @@ threadfixModule.factory('vulnSearchParameterService', function() {
 
         $scope.parameters.genericVulnerabilities = filterParameters.genericVulnerabilities;
 
-        $scope.endDate = filterParameters.endDate;
-        $scope.startDate = filterParameters.startDate;
+        //$scope.endDate = filterParameters.endDate;
+        //$scope.startDate = filterParameters.startDate;
 
     };
 
@@ -418,22 +415,60 @@ threadfixModule.factory('vulnTreeTransformer', function() {
         }
     };
 
-    transformer.transform = function(serverResponse) {
-        var initialCategories = [getCategory('Critical', 5), getCategory('High', 4), getCategory('Medium', 3), getCategory('Low', 2), getCategory('Info', 1)];
+    transformer.transform = function(serverResponse, owasp) {
 
-        serverResponse.forEach(function(element) {
-            var newTreeCategory = initialCategories[5 - element.intValue]; // use the int value backwards to get the index
-            newTreeCategory.total = newTreeCategory.total + element.numResults;
-            newTreeCategory.entries.push(element);
-        });
-
+        var initialCategories = [];
         var newTree = [];
 
-        initialCategories.forEach(function(category) {
-            if (category.total > 0) {
-                newTree.push(category);
-            }
-        });
+        // OWASP TOP 10 report
+        if (owasp) {
+
+            var vulnSum = {}, vulnList = [];
+            serverResponse.forEach(function(element) {
+                var oldNum = 0;
+                if (vulnSum[element.genericVulnerability.displayId])
+                    oldNum = vulnSum[element.genericVulnerability.displayId].numResults;
+                vulnSum[element.genericVulnerability.displayId] = {
+                    genericVulnerability: element.genericVulnerability,
+                    numResults: oldNum + element.numResults
+                }
+            });
+
+            for (var k in vulnSum)
+                vulnList.push(vulnSum[k]);
+
+            owasp.top10.forEach(function(owaspVuln){
+
+                var newTreeCategory = getCategory(owaspVuln.name, 5);
+                vulnList.forEach(function(element) {
+                    if (owaspVuln.members.indexOf(element.genericVulnerability.displayId) > -1) {
+                        newTreeCategory.total = newTreeCategory.total + element.numResults;
+                        newTreeCategory.entries.push(element);
+                    }
+                });
+                newTreeCategory.entries.sort(function(a, b) {
+                    return b.numResults - a.numResults;
+                });
+                initialCategories.push(newTreeCategory);
+            });
+
+            newTree = initialCategories;
+
+        } else {
+            initialCategories = [getCategory('Critical', 5), getCategory('High', 4), getCategory('Medium', 3), getCategory('Low', 2), getCategory('Info', 1)];
+
+            serverResponse.forEach(function(element) {
+                var newTreeCategory = initialCategories[5 - element.intValue]; // use the int value backwards to get the index
+                newTreeCategory.total = newTreeCategory.total + element.numResults;
+                newTreeCategory.entries.push(element);
+            });
+
+            initialCategories.forEach(function(category) {
+                if (category.total > 0) {
+                    newTree.push(category);
+                }
+            });
+        }
 
         if (newTree.length === 1) {
             newTree[0].expanded = true;

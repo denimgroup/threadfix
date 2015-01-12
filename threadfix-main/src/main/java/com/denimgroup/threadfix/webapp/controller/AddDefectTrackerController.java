@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -115,7 +115,8 @@ public class AddDefectTrackerController {
 						new String [] { defectTracker.getDefectTrackerType().getId().toString() }, null );
 			} else if (!defectTrackerService.checkUrl(defectTracker, result)) {
                 if (!result.hasFieldErrors("url")) {
-                    result.rejectValue("url", MessageConstants.ERROR_INVALID, new String [] { "URL" }, null);
+                    result.rejectValue("url", MessageConstants.ERROR_INVALID, new String [] { "URL" },
+							"URL is not associated with selected defect tracker.");
                 } else if (result.getFieldError("url").getDefaultMessage() != null &&
                         result.getFieldError("url").getDefaultMessage().equals(
                                 AbstractDefectTracker.INVALID_CERTIFICATE) ){

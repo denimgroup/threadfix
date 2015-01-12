@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -236,6 +236,10 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
             genericField.setError("required", "This field cannot be empty.");
             genericField.setError("maxlength", "Input up to " + hpqcField.getSize() +" characters only.");
+
+            // Set placeholder for Date type is YYYY-MM-DD
+            if (hpqcField.getType().equalsIgnoreCase("date"))
+                genericField.setPlaceholder("yyyy-MM-dd");
 
             dynamicFormFields.add(genericField);
         }

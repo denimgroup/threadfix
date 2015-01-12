@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -483,9 +483,6 @@ public class SkipfishChannelImporter extends AbstractChannelImporter {
                 log.error("Map returned from samples file was null. Returning WRONG_FORMAT_ERROR");
                 returnValue = ScanImportStatus.WRONG_FORMAT_ERROR;
             }
-
-            if (returnValue == null && map.size() == 0)
-                returnValue = ScanImportStatus.EMPTY_SCAN_ERROR;
 
             if (returnValue == null) {
                 checkMap(map);

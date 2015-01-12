@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.impl.upload;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.annotations.ScanFormat;
 import com.denimgroup.threadfix.annotations.ScanImporter;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
@@ -238,7 +239,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 									}
 								}
 							}
-							finding.setDataFlowElements(Arrays.asList(element));
+							finding.setDataFlowElements(CollectionUtils.list(element));
 						}
 						
 						scan.getFindings().add(finding);
@@ -261,9 +262,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 		} else if (hasDate) {
 			testStatus = checkTestDate();
 		}
-    	if (ScanImportStatus.SUCCESSFUL_SCAN.equals(testStatus) && !hasFindings) {
-			testStatus = ScanImportStatus.EMPTY_SCAN_ERROR;
-		} else if (testStatus == null) {
+    	if (testStatus == null) {
 			testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
 		}
     	

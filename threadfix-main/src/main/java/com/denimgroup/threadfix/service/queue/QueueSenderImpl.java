@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -50,24 +50,14 @@ import java.util.List;
 public class QueueSenderImpl implements QueueSender {
 	protected final SanitizedLogger log = new SanitizedLogger(QueueSenderImpl.class);
 
-	private JmsTemplate jmsTemplate = null;
-	private JobStatusService jobStatusService = null;
-
-    @Autowired
-    RemoteProviderTypeService remoteProviderTypeService;
-	
-	
-	String jmsErrorString = "The JMS system encountered an error that prevented the message from being correctly created.";
-
-	/**
-	 * @param jmsTemplate
-	 * @param jobStatusService
-	 */
 	@Autowired
-	public QueueSenderImpl(JmsTemplate jmsTemplate, JobStatusService jobStatusService) {
-		this.jmsTemplate = jmsTemplate;
-		this.jobStatusService = jobStatusService;
-	}
+	private JmsTemplate jmsTemplate = null;
+	@Autowired
+	private JobStatusService jobStatusService = null;
+    @Autowired
+    private RemoteProviderTypeService remoteProviderTypeService;
+
+	String jmsErrorString = "The JMS system encountered an error that prevented the message from being correctly created.";
 
 	/*
 	 * (non-Javadoc)

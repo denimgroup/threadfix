@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -45,25 +45,14 @@ public class RemoteProviderApplicationServiceImpl implements
 	
 	private final SanitizedLogger log = new SanitizedLogger("RemoteProviderApplicationService");
 	
-	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
-	private ApplicationDao applicationDao = null;
-	private ApplicationChannelDao applicationChannelDao = null;
-	private QueueSender queueSender = null;
-    private RemoteProviderFactory remoteProviderFactory = null;
-	
 	@Autowired
-	public RemoteProviderApplicationServiceImpl(
-			RemoteProviderApplicationDao remoteProviderApplicationDao,
-			ApplicationDao applicationDao,
-			QueueSender queueSender,
-            RemoteProviderFactory remoteProviderFactory,
-			ApplicationChannelDao applicationChannelDao) {
-		this.remoteProviderApplicationDao = remoteProviderApplicationDao;
-		this.applicationDao = applicationDao;
-		this.applicationChannelDao = applicationChannelDao;
-		this.queueSender = queueSender;
-        this.remoteProviderFactory = remoteProviderFactory;
-	}
+	private RemoteProviderApplicationDao remoteProviderApplicationDao = null;
+	@Autowired
+	private ApplicationDao applicationDao = null;
+	@Autowired
+	private ApplicationChannelDao applicationChannelDao = null;
+    @Autowired
+    private RemoteProviderFactory remoteProviderFactory = null;
 	
 	@Override
 	public RemoteProviderApplication load(int id) {
@@ -276,22 +265,6 @@ public class RemoteProviderApplicationServiceImpl implements
 	@Override
 	public List<RemoteProviderApplication> loadAllWithMappings() {
 		return remoteProviderApplicationDao.retrieveAllWithMappings();
-	}
-
-	@Override
-	public void addBulkImportToQueue(RemoteProviderType remoteProviderType) {
-		if (remoteProviderType == null || remoteProviderType.getRemoteProviderApplications() == null ||
-				remoteProviderType.getRemoteProviderApplications().isEmpty()) {
-			log.error("Null remote provider type passed to addBulkImportToQueue. Something went wrong.");
-			return;
-		}
-		
-		if (remoteProviderType.getHasConfiguredApplications()) {
-			log.info("At least one application is configured.");
-			queueSender.addRemoteProviderImport(remoteProviderType);
-		} else {
-			log.error("No apps were configured with applications.");
-		}
 	}
 
 	@Override
