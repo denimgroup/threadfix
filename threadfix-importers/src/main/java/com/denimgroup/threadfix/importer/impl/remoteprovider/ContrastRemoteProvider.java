@@ -141,9 +141,15 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
         Map<FindingKey, String> findingMap = map (
             FindingKey.SEVERITY_CODE, object.getString("severity"),
-            FindingKey.VULN_CODE, object.getString("rule-name"),
-            FindingKey.PATH, object.getJSONObject("request").getString("uri")
+            FindingKey.VULN_CODE, object.getString("rule-name")
         );
+
+        if (object.has("request") && object.getJSONObject("request").has("uri")) {
+            findingMap.put(FindingKey.PATH, object.getJSONObject("request").getString("uri"));
+        } else {
+            findingMap.put(FindingKey.PATH, "/");
+            LOG.info("URI not found.");
+        }
 
         Finding finding = constructFinding(findingMap);
 

@@ -62,7 +62,7 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-                    "shouldUseProxyCredentials", "sessionTimeout");
+					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though

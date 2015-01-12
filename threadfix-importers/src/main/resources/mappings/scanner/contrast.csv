@@ -3,6 +3,11 @@ type.info,,,
 Contrast,http://www1.contrastsecurity.com/,1,Use as a Remote Provider
 type.vulnerabilities,,,
 Reflected Cross-Site Scripting,reflected-xss,79,
+Insecure JSP Placement,insecure-jsp-access,
+Pages Without Anti-Clickjacking Controls,clickjacking-control-missing
+Parameter Pollution,parameter-pollution
+Forms Without Autocomplete Prevention,autocomplete-missing
+Session Rewriting,session-rewriting
 type.severities,,,
 Information,Information,1,1
 High,High,4,4
