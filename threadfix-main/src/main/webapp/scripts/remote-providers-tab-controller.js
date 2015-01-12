@@ -200,6 +200,11 @@ module.controller('RemoteProvidersTabController', function($scope, $http, $modal
                     if (!provider.matchSourceNumbers) {
                         provider.matchSourceNumbers = false;
                     }
+                    if (provider.isQualys
+                        && $scope.qualysPlatforms
+                        && $scope.qualysPlatforms.length > 0) {
+                        provider.platform = $scope.qualysPlatforms[0];
+                    }
                     return provider;
                 },
                 config: function() {
