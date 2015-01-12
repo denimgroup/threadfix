@@ -258,7 +258,8 @@ public class ScanQueueTaskRestController extends RestController {
 			
 			ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 			
-			if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+			if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()
+					|| ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
 				scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
 				//	Scan has been saved. Let's update the ScanQueueTask
 				this.scanQueueService.completeTask(scanQueueTaskId);

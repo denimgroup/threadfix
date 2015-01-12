@@ -261,7 +261,8 @@ public class ApplicationRestController extends RestController {
 
         ScanCheckResultBean returnValue = scanService.checkFile(myChannelId, fileName);
 
-        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()) {
+        if (ScanImportStatus.SUCCESSFUL_SCAN == returnValue.getScanCheckResult()
+                || ScanImportStatus.EMPTY_SCAN_ERROR == returnValue.getScanCheckResult()) {
             Scan scan = scanMergeService.saveRemoteScanAndRun(myChannelId, fileName);
             return writeSuccessObjectWithView(scan, AllViews.RestViewScan2_1.class);
         } else {
