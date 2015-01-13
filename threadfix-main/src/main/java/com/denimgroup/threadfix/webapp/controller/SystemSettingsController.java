@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.DashboardWidgetType;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -31,6 +32,7 @@ import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -63,7 +65,8 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-                    "shouldUseProxyCredentials", "sessionTimeout");
+                    "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeft", "dashboardTopRight",
+					"dashboardBottomLeft", "dashboardBottomRight");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -74,6 +77,11 @@ public class SystemSettingsController {
 	@ModelAttribute
 	public List<Role> populateRoles() {
 		return roleService.loadAll();
+	}
+
+	@ModelAttribute("dashboardWidgetTypes")
+	public DashboardWidgetType[] populateDashboardWidgetTypes() {
+		return DashboardWidgetType.values();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

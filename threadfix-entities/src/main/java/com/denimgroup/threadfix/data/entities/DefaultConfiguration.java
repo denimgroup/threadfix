@@ -55,6 +55,8 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Integer sessionTimeout = null;
 
+    private String dashboardTopLeft, dashboardTopRight, dashboardBottomLeft, dashboardBottomRight;
+
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
         config.setDefaultRoleId(1);
@@ -74,6 +76,41 @@ public class DefaultConfiguration extends BaseEntity {
         this.sessionTimeout = sessionTimeout;
     }
 
+    @Column
+    public String getDashboardTopLeft() {
+        return dashboardTopLeft;
+    }
+
+    public void setDashboardTopLeft(String dashboardTopLeft) {
+        this.dashboardTopLeft = dashboardTopLeft;
+    }
+
+    @Column
+    public String getDashboardTopRight() {
+        return dashboardTopRight;
+    }
+
+    public void setDashboardTopRight(String dashboardTopRight) {
+        this.dashboardTopRight = dashboardTopRight;
+    }
+
+    @Column
+    public String getDashboardBottomLeft() {
+        return dashboardBottomLeft;
+    }
+
+    public void setDashboardBottomLeft(String dashboardBottomLeft) {
+        this.dashboardBottomLeft = dashboardBottomLeft;
+    }
+
+    @Column
+    public String getDashboardBottomRight() {
+        return dashboardBottomRight;
+    }
+
+    public void setDashboardBottomRight(String dashboardBottomRight) {
+        this.dashboardBottomRight = dashboardBottomRight;
+    }
 
     @Column
     public Boolean getHasAddedScheduledImports() {
