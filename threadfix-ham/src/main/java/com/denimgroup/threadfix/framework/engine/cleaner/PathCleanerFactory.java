@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPPathCleaner;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
+import com.denimgroup.threadfix.framework.impl.struts.StrutsPathCleaner;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -46,6 +47,8 @@ public class PathCleanerFactory {
 			returnCleaner = new SpringPathCleaner(partialMappings);
         } else if (frameworkType == FrameworkType.JSP) {
             returnCleaner = new JSPPathCleaner(partialMappings);
+		} else if (frameworkType == FrameworkType.STRUTS) {
+			returnCleaner = new StrutsPathCleaner(partialMappings);
 		} else {
 			returnCleaner = new DefaultPathCleaner(partialMappings);
 		}
