@@ -50,7 +50,7 @@ public class StrutsEndpointMappings implements EndpointGenerator {
     private Collection<File> javaFiles;
     private List<StrutsPackage> strutsPackages;
     private String strutsActionExtension;
-//    private Map<String, Set<StrutsEndpoint>> urlToControllerMethodsMap;
+    private EntityMappings entityMappings;
     private List<Endpoint> endpoints;
 
     public StrutsEndpointMappings(@Nonnull File rootDirectory) {
@@ -58,6 +58,8 @@ public class StrutsEndpointMappings implements EndpointGenerator {
 //        urlToControllerMethodsMap = new HashMap<>();
         File strutsConfigFile = null;
         File strutsPropertiesFile = null;
+
+        entityMappings = new EntityMappings(rootDirectory);
 
         if (rootDirectory.exists()) {
             javaFiles = FileUtils.listFiles(rootDirectory,
@@ -111,17 +113,41 @@ public class StrutsEndpointMappings implements EndpointGenerator {
                     continue;
 
                 File actionFile = getJavaFileByName(strutsAction.getActClass());
+                String modelName = actionFile.getName().substring(0,actionFile.getName().lastIndexOf(".java"));
                 EntityParser entityParser = EntityParser.parse(actionFile);
                 String filePath = FilePathUtils.getRelativePath(actionFile, rootDirectory);
-                String urlPath = sbUrl.toString();
-                Set<ModelField> fieldMappings = entityParser.getFieldMappings();
+                Set<ModelField> fieldMappings = entityMappings.getPossibleParametersForModelType(modelName).getFieldSet();
                 List<String> httpMethods = list();
                 List<String> parameters = list();
-                httpMethods.add( "POST" );
-                for (ModelField mf : fieldMappings) {
-                    parameters.add( mf.getParameterKey() );
+
+                String urlPath = sbUrl.toString();
+
+                if (urlPath.contains("*")) { // wildcard
+                    for (String ep : entityParser.getMethods()) {
+                        urlPath = sbUrl.toString();
+                        httpMethods = list();
+                        parameters = list();
+                        if ("execute".equals(ep)) {
+                            urlPath = urlPath.replace("!*", "");
+                            urlPath = urlPath.replace("*", "");
+                            httpMethods.add("GET");
+                            endpoints.add(new StrutsEndpoint(filePath, urlPath, httpMethods, parameters));
+                        } else {
+                            urlPath = urlPath.replace("*", ep);
+                            httpMethods.add("POST");
+                            for (ModelField mf : fieldMappings) {
+                                parameters.add(mf.getParameterKey());
+                            }
+                            endpoints.add(new StrutsEndpoint(filePath, urlPath, httpMethods, parameters));
+                        }
+                    }
+                } else {
+                    httpMethods.add("POST");
+                    for (ModelField mf : fieldMappings) {
+                        parameters.add(mf.getParameterKey());
+                    }
+                    endpoints.add(new StrutsEndpoint(filePath, urlPath, httpMethods, parameters));
                 }
-                endpoints.add( new StrutsEndpoint(filePath, urlPath, httpMethods, parameters) );
             }
         }
 

@@ -144,7 +144,12 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
         if (useStatic && query.getStaticPath() != null) {
             String cleaned = pathCleaner.cleanStaticPath(query.getStaticPath());
-            resultSets.add(getValueOrEmptySet(cleaned, staticMap));
+
+            Set<Endpoint> staticPathResult = getValueOrEmptySet(cleaned, staticMap);
+
+            if (!staticPathResult.isEmpty()) {
+                resultSets.add(staticPathResult); // static location information is less reliable, needs more testing
+            }
         }
 
         if (query.getHttpMethod() != null) {

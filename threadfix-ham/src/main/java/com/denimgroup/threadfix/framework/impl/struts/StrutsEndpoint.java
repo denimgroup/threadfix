@@ -85,7 +85,7 @@ public class StrutsEndpoint extends AbstractEndpoint {
 
     @Override
     public boolean matchesLineNumber(int lineNumber) {
-        return false;
+        return true;
     }
 
     @Nonnull
