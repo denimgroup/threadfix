@@ -24,16 +24,9 @@
 package com.denimgroup.threadfix.framework.impl.struts;
 
 import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
-import com.denimgroup.threadfix.framework.engine.cleaner.PathCleaner;
 import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
-import com.denimgroup.threadfix.framework.util.CommonPathFinder;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -43,21 +36,14 @@ public class StrutsPathCleaner extends DefaultPathCleaner {
 
     public static final String JSESSIONID = ";jsessionid=";
 
-    private final String dynamicRoot;
 
     public StrutsPathCleaner(List<PartialMapping> partialMappings) {
         super(partialMappings);
-        dynamicRoot = "/roller"; //CommonPathFinder.findOrParseUrlPath(partialMappings);
     }
 
     @Override
     public String cleanDynamicPath(@Nonnull String urlPath) {
         String relativeUrlPath = super.cleanDynamicPath(urlPath);
-
-        if (dynamicRoot != null &&
-                urlPath.startsWith(dynamicRoot)) {
-            relativeUrlPath = urlPath.substring(dynamicRoot.length());
-        }
 
         String escaped = relativeUrlPath;
 
