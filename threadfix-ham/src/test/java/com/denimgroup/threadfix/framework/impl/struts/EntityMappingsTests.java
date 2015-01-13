@@ -24,11 +24,13 @@
 package com.denimgroup.threadfix.framework.impl.struts;
 
 import com.denimgroup.threadfix.framework.TestConstants;
+import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
 import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -183,4 +185,5 @@ public class EntityMappingsTests {
 		assertEquals("String", mediaFileBean.getField("originalPath").getType());
 
 	}
+
 }

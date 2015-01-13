@@ -42,6 +42,13 @@ public class EntityParserTests {
 
 	@Nonnull
 	EntityParser parser = EntityParser.parse(testFile);
+
+	@Nonnull
+    File profileBeanFile = new File(TestConstants.ROLLER_SOURCE_LOCATION
+            +"/app/src/main/java/org/apache/roller/weblogger/ui/struts2/core/ProfileBean.java");
+
+	@Nonnull
+	EntityParser profileBeanParser = EntityParser.parse(profileBeanFile);
 	
 	@Test
 	public void testBasicFieldEquivalence() {
@@ -49,7 +56,35 @@ public class EntityParserTests {
 				new ModelField("String", "term").equals(new ModelField("String", "term"))
 				);
 	}
-	
+
+	@Test
+	public void testProfileBean() {
+		Set<ModelField> profileBeanFieldMappings = profileBeanParser.getFieldMappings();
+
+		assertTrue("Model missed the id field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "id")));
+		assertTrue("Model missed the userName field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "userName")));
+		assertTrue("Model missed the password field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "password")));
+		assertTrue("Model missed the screenName field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "screenName")));
+		assertTrue("Model missed the fullName field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "fullName")));
+		assertTrue("Model missed the emailAddress field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "emailAddress")));
+		assertTrue("Model missed the locale field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "locale")));
+		assertTrue("Model missed the timeZone field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "timeZone")));
+		assertTrue("Model missed the openIdUrl field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "openIdUrl")));
+		assertTrue("Model missed the passwordText field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "passwordText")));
+		assertTrue("Model missed the passwordConfirm field.",
+				profileBeanFieldMappings.contains(new ModelField("String", "passwordConfirm")));
+	}
+
 	@Test
 	public void testSearchResultsModelClassName() {
 		assertTrue("Wrong class name. Expected SearchResultsModel, got " + parser.getClassName(),
@@ -74,5 +109,15 @@ public class EntityParserTests {
 				fieldMappings.contains(new ModelField("int", "getHits")));
 		assertTrue("Model missed the WeblogEntriesPager field.",
 				fieldMappings.contains(new ModelField("WeblogEntriesPager", "getWeblogEntriesPager")));
+	}
+
+	@Test
+	public void testExecutionPoints() {
+		File testFile = new File(TestConstants.ROLLER_SOURCE_LOCATION
+				+"/app/src/main/java/org/apache/roller/weblogger/ui/struts2/core/Register.java");
+		EntityParser parser = EntityParser.parse(testFile);
+		for (String ep : parser.getMethods() ) {
+			System.err.println(ep);
+		}
 	}
 }
