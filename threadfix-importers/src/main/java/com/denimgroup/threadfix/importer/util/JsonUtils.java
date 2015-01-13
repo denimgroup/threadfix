@@ -1,11 +1,13 @@
-package com.denimgroup.threadfix.service.defects.utils;
+package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Iterator;
 
 /**
  * Created by mac on 4/4/14.
@@ -87,5 +89,44 @@ public class JsonUtils {
             return null;
         }
     }
+
+    @Nonnull
+    public static Iterable<JSONObject> toJSONObjectIterable(final String jsonString) throws JSONException {
+        return toJSONObjectIterable(new JSONArray(jsonString));
+    }
+
+    @Nonnull
+    public static Iterable<JSONObject> toJSONObjectIterable(final JSONArray array) throws JSONException {
+        return new Iterable<JSONObject>() {
+
+            @Override
+            public Iterator<JSONObject> iterator() {
+                return new Iterator<JSONObject>() {
+
+                    int index = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        return index < array.length();
+                    }
+
+                    @Override
+                    public JSONObject next() {
+                        try {
+                            return array.getJSONObject(index++);
+                        } catch (JSONException e) {
+                            throw new ArrayIndexOutOfBoundsException();
+                        }
+                    }
+
+                    @Override
+                    public void remove() {
+                        index++;
+                    }
+                };
+            }
+        };
+    }
+
 
 }

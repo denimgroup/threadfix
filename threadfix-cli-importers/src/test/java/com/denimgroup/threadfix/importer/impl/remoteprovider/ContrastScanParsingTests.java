@@ -34,7 +34,9 @@ public class ContrastScanParsingTests {
     ScanComparisonUtils utils = null;
 
     String[] appNames = {
-            "c0a1a284-2c81-4b4b-b44a-52d7b8f71aae"
+            "c0a1a284-2c81-4b4b-b44a-52d7b8f71aae",
+            "bodgeit-full",
+            "testapp-full"
     };
 
     private RemoteProviderApplication getApplication(RemoteProviderType type, String nativeId) {
@@ -65,9 +67,11 @@ public class ContrastScanParsingTests {
 
         assert scans.size() == 1 : "Got " + scans.size() + " scans instead of 1 scan.";
 
-        String path = scans.get(0).getFindings().get(0).getSurfaceLocation().getPath();
-        assert path.equals("/threadfix/organizations/1/applications/1") :
-                "Path was " + path + " instead of \"/threadfix/organizations/1/applications/1\"";
+        if (nativeName.equals(appNames[0])) {
+            String path = scans.get(0).getFindings().get(0).getSurfaceLocation().getPath();
+            assert path.equals("/threadfix/organizations/1/applications/1") :
+                    "Path was " + path + " instead of \"/threadfix/organizations/1/applications/1\"";
+        }
     }
 
     @Test

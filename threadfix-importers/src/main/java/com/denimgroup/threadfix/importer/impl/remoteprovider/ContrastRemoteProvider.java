@@ -7,18 +7,22 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.map;
+import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
 /**
  * Created by mcollins on 1/5/15.
@@ -54,9 +58,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
                 List<RemoteProviderApplication> applicationList = list();
 
-                IterableJSONArray array = new IterableJSONArray(response.getBodyAsString());
-
-                for (JSONObject object : array) {
+                for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
                     applicationList.add(getApplicationFromJson(object));
                 }
 
@@ -107,9 +109,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
                 Scan scan = new Scan();
 
-                IterableJSONArray array = new IterableJSONArray(response.getBodyAsString());
-
-                for (JSONObject object : array) {
+                for (JSONObject object : toJSONObjectIterable(response.getBodyAsString())) {
                     findingList.add(getFindingFromObject(object));
                 }
 
@@ -172,7 +172,7 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
 
     private String getUrlReference(JSONObject object) throws JSONException {
 
-        for (JSONObject link : new IterableJSONArray(object.getJSONArray("links"))) {
+        for (JSONObject link : toJSONObjectIterable(object.getJSONArray("links"))) {
             if (link.has("rel") && "self".equals(link.get("rel"))) {
                 return link.getString("href");
             }
