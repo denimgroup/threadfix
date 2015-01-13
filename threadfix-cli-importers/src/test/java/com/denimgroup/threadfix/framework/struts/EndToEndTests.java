@@ -67,13 +67,9 @@ public class EndToEndTests {
             if (genericId != null && genericId.equals(79)) {
                 succeeded = true;
                 countXSS++;
-                System.out.println("Got it");
-            } else {
-                System.out.println("Got " + genericId);
             }
         }
-        System.err.println("countXSS = " + countXSS );
-        assert succeeded : "Didn't find 79.";
+        assert succeeded : "Didn't find a 79.";
     }
 
     @Test
@@ -85,7 +81,7 @@ public class EndToEndTests {
         assert scans.size() == 2 :
                 "Got " + scans.size() + " scans instead of 2.";
 
-        System.err.println("app.getVulns.size = " + application.getVulnerabilities().size() );
+        //  System.err.println("app.getVulns.size = " + application.getVulnerabilities().size() );
 
         boolean hasMergedXSSVuln = false;
         int countXSS = 0;
@@ -103,10 +99,10 @@ public class EndToEndTests {
             }
         }
 
-        System.err.println("countXSS = " + countXSS );
+        //  System.err.println("countXSS = " + countXSS );
 
         assert hasMergedXSSVuln : "Didn't find a merged vulnerability.";
-//        System.err.println("hasMergedXSSVuln is " + hasMergedXSSVuln);
+        //  System.err.println("hasMergedXSSVuln is " + hasMergedXSSVuln);
 
     }
 
