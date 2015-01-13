@@ -54,7 +54,7 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
     @Autowired
     private DefectTrackerUpdater        defectTrackerUpdater;
     @Autowired
-    WafsUpdater wafsUpdater;
+    private WafsUpdater wafsUpdater;
 
     private final SanitizedLogger log = new SanitizedLogger(ScannerMappingsUpdaterServiceImpl.class);
 
@@ -147,7 +147,8 @@ class ScannerMappingsUpdaterServiceImpl implements ScannerMappingsUpdaterService
         Calendar defectTrackerTime = harness.findMostRecentDate(defectTrackerUpdater);
         Calendar wafsTime = harness.findMostRecentDate(wafsUpdater);
 
-        return DateUtils.getLatestCalendar(genericMappingsTime, channelMappingsTime, defectTrackerTime, wafsTime);
+        return DateUtils.getLatestCalendar(
+                genericMappingsTime, channelMappingsTime, defectTrackerTime, wafsTime);
     }
 
 }

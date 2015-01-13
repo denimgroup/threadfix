@@ -1,4 +1,4 @@
-var myAppModule = angular.module('threadfix')
+var myAppModule = angular.module('threadfix');
 
 myAppModule.controller('DashboardController', function ($scope, $rootScope) {
 

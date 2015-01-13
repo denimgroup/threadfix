@@ -66,7 +66,6 @@ public interface ScanMergeService {
 	 * which is why this bypass is available.
 	 * 
 	 * @param channelId
-	 * @param scanContents
 	 * @param fileName
 	 * @return
 	 */

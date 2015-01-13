@@ -25,20 +25,21 @@
 package com.denimgroup.threadfix.service.defects;
 
 import com.denimgroup.threadfix.data.entities.Defect;
-import com.denimgroup.threadfix.data.entities.Finding;
-import com.denimgroup.threadfix.data.entities.SurfaceLocation;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import com.denimgroup.threadfix.service.defects.utils.MarshallingUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.HPQCUtils;
 import com.denimgroup.threadfix.service.defects.utils.hpqc.infrastructure.*;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
@@ -59,11 +60,12 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
         editableFieldsList = HPQCUtils.getEditableFields(getHPQCUrl(), username, password, projectName);
 
+        String description = metadata.getFullDescription();
+
         Map<String,Object> fieldsMap = metadata.getFieldsMap();
         if (fieldsMap.get("description") != null)
-            metadata.setPreamble(String.valueOf(fieldsMap.get("description")));
+            description = description + String.valueOf(fieldsMap.get("description"));
 
-        String description = makeDescription(vulnerabilities, metadata);
         fieldsMap.put("description", description);
 
         Entity defect = new Entity();
@@ -72,62 +74,6 @@ public class HPQualityCenterDefectTracker extends AbstractDefectTracker {
 
         String defectXml = MarshallingUtils.unmarshal(Entity.class, defect);
         return HPQCUtils.postDefect(getHPQCUrl(), getUsername(), getPassword(), getProjectName(), defectXml);
-    }
-
-    @Override
-    protected String makeDescription(List<Vulnerability> vulnerabilities, DefectMetadata metadata) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        String preamble = metadata.getPreamble();
-
-        if (preamble != null && !"".equals(preamble)) {
-            stringBuilder.append("General information\n");
-            stringBuilder.append(preamble);
-            stringBuilder.append('\n');
-        }
-
-        int vulnIndex = 0;
-
-        if (vulnerabilities != null) {
-            for (Vulnerability vulnerability : vulnerabilities) {
-                if (vulnerability.getGenericVulnerability() != null &&
-                        vulnerability.getSurfaceLocation() != null) {
-
-                    stringBuilder
-                            .append("Vulnerability[")
-                            .append(vulnIndex)
-                            .append("]:\n")
-                            .append(vulnerability.getGenericVulnerability().getName())
-                            .append('\n')
-                            .append("CWE-ID: ")
-                            .append(vulnerability.getGenericVulnerability().getId())
-                            .append('\n')
-                            .append("http://cwe.mitre.org/data/definitions/")
-                            .append(vulnerability.getGenericVulnerability().getId())
-                            .append(".html")
-                            .append('\n');
-
-                    SurfaceLocation surfaceLocation = vulnerability.getSurfaceLocation();
-                    stringBuilder
-                            .append("Vulnerability attack surface location:\n")
-                            .append("URL: ")
-                            .append(surfaceLocation.getUrl())
-                            .append("\n")
-                            .append("Parameter: ")
-                            .append(surfaceLocation.getParameter());
-
-                    List<Finding> findings = vulnerability.getFindings();
-                    if (findings != null && !findings.isEmpty()) {
-                        addUrlReferences(findings, stringBuilder);
-                        addNativeIds(findings, stringBuilder);
-                    }
-
-                    stringBuilder.append("\n\n");
-                    vulnIndex++;
-                }
-            }
-        }
-        return stringBuilder.toString();
     }
 
     private Entity.Fields createFields(Map<String,Object> fieldsMap) {

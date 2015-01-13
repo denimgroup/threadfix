@@ -21,9 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.defects;
-
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
+package com.denimgroup.threadfix.viewmodel;
 
 import javax.annotation.Nullable;
 import java.util.List;

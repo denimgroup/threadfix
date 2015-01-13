@@ -27,6 +27,8 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClient;
 import com.denimgroup.threadfix.service.defects.utils.bugzilla.BugzillaClientImpl;
+import com.denimgroup.threadfix.viewmodel.DefectMetadata;
+import com.denimgroup.threadfix.viewmodel.ProjectMetadata;
 import org.apache.xmlrpc.XmlRpcException;
 
 import javax.annotation.Nonnull;
@@ -84,7 +86,8 @@ public class BugzillaDefectTracker extends AbstractDefectTracker {
 				return null;
 			}
 
-			String description = makeDescription(vulnerabilities, metadata);
+            String description = metadata.getFullDescription();
+
 			if (description.length() > 65500) {
 				description = description.substring(0, 65499);
 			}

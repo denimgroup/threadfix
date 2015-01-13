@@ -21,37 +21,18 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.defects.utils.tfs;
+package com.denimgroup.threadfix.data.interfaces;
 
+import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by mac on 4/8/14.
+ * Created by mac on 11/12/14.
  */
-public interface TFSClient {
+public interface DefectSubmitter {
 
-    // Passing two maps and using mutable state is gross but we don't have to define an object
-    void updateDefectIdMaps(String ids, Map<String, String> stringStatusMap, Map<String, Boolean> openStatusMap);
-
-    List<String> getPriorities();
-
-    List<String> getDefectIds(String projectName);
-
-    enum ConnectionStatus {
-        VALID, INVALID, INVALID_CERTIFICATE
-    }
-
-    List<String> getProjectNames();
-
-    String getProjectId(String projectName);
-
-    ConnectionStatus configure(String url, String user, String password);
-
-    ConnectionStatus checkUrl(String url);
-
-    String createDefect(String projectName, DefectMetadata metadata, String description);
+    public String createDefect(List<Vulnerability> vulnerabilities, DefectMetadata metadata);
 
 }

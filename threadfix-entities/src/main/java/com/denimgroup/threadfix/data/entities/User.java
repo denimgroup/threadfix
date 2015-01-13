@@ -58,119 +58,119 @@ public class User extends AuditableEntity {
 	private String unencryptedPassword;
 	private String passwordConfirm;
 	private String currentPassword;
-	
+
 	private Role globalRole;
-	
-	private List<AccessControlTeamMap> accessControlTeamMaps;
 
-	@Column(length = NAME_LENGTH, nullable = false)
-    @JsonView(AllViews.TableRow.class)
-	public String getName() {
-		return name;
-	}
+    private List<AccessControlTeamMap> accessControlTeamMaps;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Column(length = NAME_LENGTH, nullable = false)
+    @JsonView({ AllViews.TableRow.class, AllViews.FormInfo.class})
+    public String getName() {
+        return name;
+    }
 
-	@Column(length = PASSWORD_LENGTH, nullable = false)
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Column(length = PASSWORD_LENGTH, nullable = false)
     @JsonIgnore
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Column(length = PASSWORD_LENGTH, nullable = false)
+    @Column(length = PASSWORD_LENGTH, nullable = false)
     @JsonIgnore
-	public String getSalt() {
-		return salt;
-	}
+    public String getSalt() {
+        return salt;
+    }
 
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
-	@Column(nullable = false)
+    @Column(nullable = false)
     @JsonIgnore
-	public boolean isApproved() {
-		return approved;
-	}
+    public boolean isApproved() {
+        return approved;
+    }
 
-	public void setApproved(boolean approved) {
-		this.approved = approved;
-	}
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
 
-	@Column(nullable = false)
+    @Column(nullable = false)
     @JsonIgnore
-	public boolean isLocked() {
-		return locked;
-	}
+    public boolean isLocked() {
+        return locked;
+    }
 
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     @JsonIgnore
-	public Date getLastPasswordChangedDate() {
-		return lastPasswordChangedDate;
-	}
+    public Date getLastPasswordChangedDate() {
+        return lastPasswordChangedDate;
+    }
 
-	public void setLastPasswordChangedDate(Date lastPasswordChangedDate) {
-		this.lastPasswordChangedDate = lastPasswordChangedDate;
-	}
+    public void setLastPasswordChangedDate(Date lastPasswordChangedDate) {
+        this.lastPasswordChangedDate = lastPasswordChangedDate;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     @JsonIgnore
-	public Date getLastLoginDate() {
-		return lastLoginDate;
-	}
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
 
-	public void setLastLoginDate(Date lastLoginDate) {
-		this.lastLoginDate = lastLoginDate;
-	}
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
 
-	@Column(nullable = false)
+    @Column(nullable = false)
     @JsonIgnore
-	public int getFailedPasswordAttempts() {
-		return failedPasswordAttempts;
-	}
+    public int getFailedPasswordAttempts() {
+        return failedPasswordAttempts;
+    }
 
-	public void setFailedPasswordAttempts(int failedPasswordAttempts) {
-		this.failedPasswordAttempts = failedPasswordAttempts;
-	}
+    public void setFailedPasswordAttempts(int failedPasswordAttempts) {
+        this.failedPasswordAttempts = failedPasswordAttempts;
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     @JsonIgnore
-	public Date getFailedPasswordAttemptWindowStart() {
-		return failedPasswordAttemptWindowStart;
-	}
+    public Date getFailedPasswordAttemptWindowStart() {
+        return failedPasswordAttemptWindowStart;
+    }
 
-	public void setFailedPasswordAttemptWindowStart(Date failedPasswordAttemptWindowStart) {
-		this.failedPasswordAttemptWindowStart = failedPasswordAttemptWindowStart;
-	}
+    public void setFailedPasswordAttemptWindowStart(Date failedPasswordAttemptWindowStart) {
+        this.failedPasswordAttemptWindowStart = failedPasswordAttemptWindowStart;
+    }
 
-	@Transient
+    @Transient
     @JsonIgnore
-	public String getUnencryptedPassword() {
-		return unencryptedPassword;
-	}
+    public String getUnencryptedPassword() {
+        return unencryptedPassword;
+    }
 
-	public void setUnencryptedPassword(String unencryptedPassword) {
-		this.unencryptedPassword = unencryptedPassword;
-	}
+    public void setUnencryptedPassword(String unencryptedPassword) {
+        this.unencryptedPassword = unencryptedPassword;
+    }
 
-	@Transient
+    @Transient
     @JsonIgnore
-	public String getPasswordConfirm() {
-		return passwordConfirm;
-	}
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
 
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
@@ -263,5 +263,7 @@ public class User extends AuditableEntity {
 	}
 
 	private boolean deletable, isThisUser;
+
+
 
 }

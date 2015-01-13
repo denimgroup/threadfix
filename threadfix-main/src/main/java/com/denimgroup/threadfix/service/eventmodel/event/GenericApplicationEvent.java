@@ -21,37 +21,23 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.service.defects.utils.tfs;
+package com.denimgroup.threadfix.service.eventmodel.event;
 
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.context.ApplicationEvent;
 
 /**
- * Created by mac on 4/8/14.
+ * Created by mac on 11/6/14.
  */
-public interface TFSClient {
+public class GenericApplicationEvent<T> extends ApplicationEvent {
 
-    // Passing two maps and using mutable state is gross but we don't have to define an object
-    void updateDefectIdMaps(String ids, Map<String, String> stringStatusMap, Map<String, Boolean> openStatusMap);
+    private T field;
 
-    List<String> getPriorities();
-
-    List<String> getDefectIds(String projectName);
-
-    enum ConnectionStatus {
-        VALID, INVALID, INVALID_CERTIFICATE
+    public GenericApplicationEvent(T source) {
+        super(source);
+        field = source;
     }
 
-    List<String> getProjectNames();
-
-    String getProjectId(String projectName);
-
-    ConnectionStatus configure(String url, String user, String password);
-
-    ConnectionStatus checkUrl(String url);
-
-    String createDefect(String projectName, DefectMetadata metadata, String description);
-
+    public T getObject() {
+        return field;
+    }
 }

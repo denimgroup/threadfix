@@ -25,8 +25,8 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.defects.utils.DynamicFormField;
 import org.codehaus.jackson.map.DeserializationConfig;
+import com.denimgroup.threadfix.viewmodel.DynamicFormField;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
