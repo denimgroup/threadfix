@@ -86,13 +86,15 @@ public class DashboardController {
 		model.addAttribute("teams", organizationList);
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
 
+        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+        model.addAttribute("config", config);
+
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {
                 for (Application app : organization.getActiveApplications()) {
                     vulnerabilityService.updateVulnerabilityReport(app);
                 }
             }
-            DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
             config.setHasCachedData(true);
             defaultConfigService.saveConfiguration(config);
         }

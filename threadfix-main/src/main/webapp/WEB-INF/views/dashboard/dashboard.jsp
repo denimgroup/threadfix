@@ -41,13 +41,13 @@
             <security:authorize ifAnyGranted="ROLE_READ_ACCESS, ROLE_CAN_GENERATE_REPORTS">
 				<div class="row-fluid">
 					<c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
-					<jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
-					<jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
+					<jsp:include page="/WEB-INF/views/applications/widgets/${config.dashboardTopLeft}.jsp"/>
+					<jsp:include page="/WEB-INF/views/applications/widgets/${config.dashboardTopRight}.jsp"/>
 			  	</div>
                 <div class="row-fluid">
                     <div class="row-fluid" style="padding-top:20px;">
-                        <jsp:include page="/WEB-INF/views/applications/widgets/recentUploads.jsp"/>
-                        <jsp:include page="/WEB-INF/views/applications/widgets/recentComments.jsp"/>
+                        <jsp:include page="/WEB-INF/views/applications/widgets/${config.dashboardBottomLeft}.jsp"/>
+                        <jsp:include page="/WEB-INF/views/applications/widgets/${config.dashboardBottomRight}.jsp"/>
                     </div>
                 </div>
             </security:authorize>
