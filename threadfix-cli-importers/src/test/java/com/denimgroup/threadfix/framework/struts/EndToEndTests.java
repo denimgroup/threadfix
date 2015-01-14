@@ -91,7 +91,7 @@ public class EndToEndTests {
                 countXSS++;
                 if (vulnerability.getFindings().size() == 2) {
                     hasMergedXSSVuln = true;
-                    System.out.println("Found it!");
+                    System.out.println("Found a XSS vuln[" + countXSS + "] with 2 findings!");
                 } else {
                     System.out.println("Found a XSS vuln[" + countXSS + "] but it didn't have 2 findings; " +
                             "it had " + vulnerability.getFindings().size() + ".");

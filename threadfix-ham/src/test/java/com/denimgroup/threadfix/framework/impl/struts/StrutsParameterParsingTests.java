@@ -50,8 +50,6 @@ public class StrutsParameterParsingTests {
     static ProjectConfig
 		defaultConfig = new ProjectConfig(FrameworkType.STRUTS, SourceCodeAccessLevel.FULL,
 			new File(TestConstants.ROLLER_SOURCE_LOCATION), null);
-//		noSourceConfig = new ProjectConfig(FrameworkType.STRUTS, SourceCodeAccessLevel.NONE,
-//				null, null);
 
     static {
         assert new File(TestConstants.ROLLER_SOURCE_LOCATION).exists() :
@@ -68,13 +66,12 @@ public class StrutsParameterParsingTests {
     static ParameterParser[] allParsers = {
 		factoryParser,
 		parser };
-//		new StrutsDataFlowParser(noSourceConfig) };
 
 	@Test
 	public void testBeanUserName() {
 
 		for (ParameterParser parser : allParsers) {
-			// These are from the PetClinic Fortify results
+			// These are from the Roller Fortify results
 			List<? extends CodePoint> basicModelElements = Arrays.asList(
 				new DefaultCodePoint("app/src/main/java/org/apache/roller/weblogger/ui/struts2/core/Register.java",422,
 						"public void setBean(ProfileBean bean) {"),
@@ -104,7 +101,6 @@ public class StrutsParameterParsingTests {
 	public void testScreenName() {
 
 		for (ParameterParser parser : allParsers) {
-			// These are from the PetClinic Fortify results
 			List<? extends CodePoint> basicModelElements = Arrays.asList(
 					new DefaultCodePoint("app/src/main/java/org/apache/roller/weblogger/pojos/User.java",147,
 							"public void setScreenName( String screenName ) {"),
@@ -130,7 +126,6 @@ public class StrutsParameterParsingTests {
 	public void testGroupPlanetDescription() {
 
 		for (ParameterParser parser : allParsers) {
-			// These are from the PetClinic Fortify results
 			List<? extends CodePoint> basicModelElements = Arrays.asList(
 					new DefaultCodePoint("app/src/main/java/org/apache/roller/weblogger/planet/ui/PlanetSubscriptions.java", 223,
 							"public void setGroup(PlanetGroup group) {"),
@@ -157,8 +152,8 @@ public class StrutsParameterParsingTests {
 		}
 	}
 
-//    @Test(expected= NullPointerException.class)
-//    public void testNullConstructorArg() {
-//        parser.parse(null);
-//    }
+    @Test(expected= NullPointerException.class)
+    public void testNullConstructorArg() {
+        parser.parse(null);
+    }
 }

@@ -155,10 +155,11 @@ public class StrutsDataFlowParser implements ParameterParser {
 		paramString = paramString.trim();
 		if (!paramString.matches("\\w+\\s+\\w+"))
 			return null;
-		String[] params = paramString.split(",");
-		if (params.length < 1)
-			return null;
-		String[] model = params[0].trim().split("\\s+");
+//		String[] params = paramString.split(",");
+//		if (params.length < 1)
+//			return null;
+//		String[] model = params[0].trim().split("\\s+");
+		String[] model = paramString.split("\\s+");
 		if (model.length == 2)
 			if (type)
 				string = model[0];
