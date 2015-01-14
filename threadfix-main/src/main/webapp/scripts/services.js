@@ -493,8 +493,9 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
                 return filter.name === $scope.currentFilterNameInput;
             });
 
-            if (matches && matches.length !== 0) {
+            if (matches && matches.length !== 0 && (!$scope.selectedFilter || $scope.selectedFilter.id !== matches[0].id)) {
                 $scope.saveFilterErrorMessage = "A filter with that name already exists.";
+                $scope.saveFilterSuccessMessage = undefined;
                 return;
             }
 
@@ -507,6 +508,9 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
             submissionObject.name = $scope.currentFilterNameInput;
             if ($scope.parameters.defaultTrending)
                 submissionObject.defaultTrending = true;
+
+            if ($scope.selectedFilter && $scope.selectedFilter.id)
+                submissionObject.id = $scope.selectedFilter.id;
 
             $http.post(tfEncoder.encode("/reports/filter/save"), submissionObject).
                 success(function(data, status, headers, config) {
@@ -529,21 +533,24 @@ threadfixModule.factory('filterService', function(tfEncoder, vulnSearchParameter
 
                         $scope.currentFilterNameInput = '';
                         $scope.saveFilterSuccessMessage = 'Successfully saved filter ' + submissionObject.name;
+                        $scope.saveFilterErrorMessage = undefined;
                     } else {
                         $scope.saveFilterErrorMessage = "Failure. Message was : " + data.message;
+                        $scope.saveFilterSuccessMessage = undefined;
                     }
 
                 }).
                 error(function(data, status, headers, config) {
                     $log.info("Failed to save filters.");
                     $scope.saveFilterErrorMessage = "Failed to save team. HTTP status was " + status;
+                    $scope.saveFilterSuccessMessage = undefined;
                     $scope.savingFilter = false;
                 });
         }
 
     };
 
-    filter.deleteCurrentFilter = function($scope, filterSavedFilters, $log) {
+    filter.deleteCurrentFilter = function($scope, filterSavedFilters) {
         if ($scope.selectedFilter) {
             $http.post(tfEncoder.encode("/reports/filter/delete/" + $scope.selectedFilter.id)).
                 success(function(data, status, headers, config) {
