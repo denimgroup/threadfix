@@ -10,7 +10,8 @@
 	<cbs:cachebustscript src="/scripts/grc-control-submission-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
-	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
+	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
+	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
@@ -48,7 +49,10 @@
         </div>
 
         <div class="container-fluid">
-            <%@include file="reports.jspf"%>
+            <div class="row-fluid">
+                <%@include file="widgets/vulnerabilityTrending.jsp"%>
+                <%@include file="widgets/mostVulnerableApps.jsp"%>
+            </div>
         </div>
 
         <tabset style="margin-top:10px;">
