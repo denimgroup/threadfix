@@ -31,24 +31,30 @@ package com.denimgroup.threadfix.data.entities;
 
 public enum DashboardWidgetType {
 
-    VULN_TRENDING("Vulnerability Trending"),
-    MOST_VULN_APPS("Most Vulnerable Applications"),
-    RECENT_UPLOADS("Recent Uploads"),
-    RECENT_COMMENTS("Recent Comments");
+    VULN_TRENDING("Vulnerability Trending", "vulnerabilityTrending"),
+    MOST_VULN_APPS("Most Vulnerable Applications", "mostVulnerableApps"),
+    RECENT_UPLOADS("Recent Uploads", "recentUploads"),
+    RECENT_COMMENTS("Recent Comments", "recentComments");
 
     private String widgetName;
+    private String widgetShortName;
 
     public String getWidgetName() {
         return this.widgetName;
     }
 
-    private DashboardWidgetType(String widgetName) {
-        this.widgetName = widgetName;
+    public String getWidgetShortName() {
+        return this.widgetShortName;
     }
 
-    public static DashboardWidgetType getWidgetType(String widgetName) {
+    private DashboardWidgetType(String widgetName, String widgetShortName) {
+        this.widgetName = widgetName;
+        this.widgetShortName = widgetShortName;
+    }
+
+    public static DashboardWidgetType getWidgetType(String widgetShortName) {
         for (DashboardWidgetType t: values()) {
-            if (widgetName.equals(t.getWidgetName())) {
+            if (widgetShortName.equals(t.getWidgetShortName())) {
                 return t;
             }
         }

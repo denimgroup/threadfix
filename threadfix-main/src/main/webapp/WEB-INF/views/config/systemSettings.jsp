@@ -305,7 +305,7 @@
                             <div>
                                 <form:select id="dashboardTopLeftSelect" path="dashboardTopLeft">
                                     <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetName" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
@@ -316,7 +316,7 @@
                             <div>
                                 <form:select id="dashboardTopRightSelect" path="dashboardTopRight">
                                     <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetName" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
@@ -327,7 +327,7 @@
                             <div>
                                 <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeft">
                                     <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetName" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
@@ -338,7 +338,7 @@
                             <div>
                                 <form:select id="dashboardBottomRightSelect" path="dashboardBottomRight">
                                     <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetName" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
