@@ -1,3 +1,5 @@
+<%@ include file="/common/taglibs.jsp"%>
+
 <div class="span6">
   <h4>Recent Comments</h4>
   <table class="table table-bordered thick-borders">

@@ -46,8 +46,8 @@
 			  	</div>
                 <div class="row-fluid">
                     <div class="row-fluid" style="padding-top:20px;">
-                        <%@include file="/WEB-INF/views/applications/widgets/recentUploads.jsp"%>
-                        <%@include file="/WEB-INF/views/applications/widgets/recentComments.jsp"%>
+                        <jsp:include page="/WEB-INF/views/applications/widgets/recentUploads.jsp"/>
+                        <jsp:include page="/WEB-INF/views/applications/widgets/recentComments.jsp"/>
                     </div>
                 </div>
             </security:authorize>
