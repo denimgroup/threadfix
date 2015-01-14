@@ -8,6 +8,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.*;
 import com.denimgroup.threadfix.importer.util.JsonUtils;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.json.JSONArray;
@@ -151,23 +152,40 @@ public class ContrastRemoteProvider extends AbstractRemoteProvider {
             LOG.info("URI not found.");
         }
 
+        String title = object.getString("title");
+        if (title.contains("\" Parameter")) {
+            findingMap.put(FindingKey.PARAMETER, getParamFrom(title));
+        }
+
         Finding finding = constructFinding(findingMap);
 
         assert finding != null : "Null finding received from constructFinding";
 
         finding.setNativeId(object.getString("uuid"));
 
-        finding.setRawFinding(object.toString());
+        finding.setRawFinding(object.toString(2));
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(object.getLong("last-time-seen"));
         finding.setScannedDate(calendar);
 
-        finding.setAttackRequest(object.getJSONObject("request").toString());
+        finding.setAttackRequest(object.getJSONObject("request").toString(2));
 
         finding.setUrlReference(getUrlReference(object));
 
         return finding;
+    }
+
+    private String getParamFrom(String title) {
+
+        int startIndex = title.indexOf("\"");
+        int endIndex = title.indexOf("\" Parameter");
+
+        if (startIndex > -1 && endIndex > -1) {
+            return title.substring(startIndex + 1, endIndex);
+        } else {
+            return null;
+        }
     }
 
     private String getUrlReference(JSONObject object) throws JSONException {
