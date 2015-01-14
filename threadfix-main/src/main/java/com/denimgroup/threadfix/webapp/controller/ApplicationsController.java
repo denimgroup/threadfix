@@ -105,6 +105,8 @@ public class ApplicationsController {
     private ReportService reportService;
     @Autowired
     private CacheBustService cacheBustService;
+    @Autowired
+    private GRCToolService grcToolService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -149,6 +151,9 @@ public class ApplicationsController {
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
+
+        //update controls associated to application onload
+        grcToolService.updateControlsFromGRCTool(appId);
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
 
