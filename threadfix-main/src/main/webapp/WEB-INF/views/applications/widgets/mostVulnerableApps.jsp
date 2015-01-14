@@ -1,4 +1,6 @@
-<div class="span6" ng-controller="RightReportController" ng-init="csrfToken = '<c:out value="${ emptyUrl }"/>'">
+<%@ include file="/common/taglibs.jsp"%>
+
+<div class="span6" ng-controller="RightReportController" ng-init="csrfToken = '${ csrfToken }'">
   <c:if test="${ canGenerateReports }">
     <h4>{{ rightReportTitle }}<span style="font-size:12px;float:right;">
       <a id="rightViewMore" ng-href="{{ urlRoot }}/reports/10{{ seeMoreExtension }}{{ csrfToken }}">View More</a></span>

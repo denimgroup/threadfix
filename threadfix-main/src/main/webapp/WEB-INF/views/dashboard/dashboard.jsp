@@ -40,8 +40,9 @@
         <c:if test="${ not empty teams }">
             <security:authorize ifAnyGranted="ROLE_READ_ACCESS, ROLE_CAN_GENERATE_REPORTS">
 				<div class="row-fluid">
-					<%@include file="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"%>
-					<%@include file="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"%>
+					<c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
+					<jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
+					<jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
 			  	</div>
                 <div class="row-fluid">
                     <div class="row-fluid" style="padding-top:20px;">

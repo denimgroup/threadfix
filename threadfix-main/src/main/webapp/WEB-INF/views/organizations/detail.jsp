@@ -59,8 +59,9 @@
 
     <div class="container-fluid">
         <div class="row-fluid">
-            <%@include file="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"%>
-            <%@include file="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"%>
+            <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
+            <jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
+            <jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
         </div>
     </div>
 
