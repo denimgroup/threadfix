@@ -235,4 +235,35 @@ public class SystemSettingsEntIT extends BaseDataTest {
                 .setTimeout("30")
                 .clickSaveChanges();
     }
+
+    @Test
+    public void testClearLDAPConfiguration() {
+        systemSettingsPage.expandLDAPSettings()
+                .setLDAPSearchBase(LDAP_SEARCHBASE)
+                .setLDAPUserDN(LDAP_USERDN)
+                .setLDAPPassword(LDAP_PASSWORD)
+                .setLDAPUrl(LDAP_URL)
+                .clickSaveChanges();
+
+        systemSettingsPage.refreshPage();
+
+        systemSettingsPage.expandLDAPSettings()
+                .setLDAPSearchBase("")
+                .setLDAPUserDN("")
+                .setLDAPPassword("")
+                .setLDAPUrl("")
+                .clickSaveChanges();
+
+        systemSettingsPage.refreshPage();
+        systemSettingsPage.expandLDAPSettings();
+
+        assertTrue("\"Search Base\" field is still populated after clear",
+                driver.findElement(By.id("activeDirectoryBase")).getAttribute("value").equals(""));
+        assertTrue("\"sAMAccountName\" field is still populated after clear",
+                driver.findElement(By.id("activeDirectoryUsername")).getAttribute("value").equals(""));
+        assertTrue("\"Password\" field is still populated after clear",
+                driver.findElement(By.id("activeDirectoryCredentials")).getAttribute("value").equals(""));
+        assertTrue("\"URL\" field is still populated after clear",
+                driver.findElement(By.id("activeDirectoryURL")).getAttribute("value").equals(""));
+    }
 }
