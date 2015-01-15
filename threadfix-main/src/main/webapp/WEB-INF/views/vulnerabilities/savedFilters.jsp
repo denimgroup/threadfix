@@ -16,6 +16,13 @@
     <div ng-show="savedFilters && savedFilters.length > 0">
         <hr>
 
+        <a id="copyFilterButton"
+           class="btn"
+           ng-disabled="!selectedFilter"
+           ng-click="copyCurrentFilter()">
+            Copy Selected Filter
+        </a>
+
         <!-- Delete button and delete button with spinner. -->
         <a id="deleteFilterButton"
            class="btn btn-danger"

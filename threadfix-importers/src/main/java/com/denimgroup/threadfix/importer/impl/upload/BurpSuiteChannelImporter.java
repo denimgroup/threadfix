@@ -97,7 +97,7 @@ public class BurpSuiteChannelImporter extends AbstractChannelImporter {
 			while ((line = reader.readLine()) != null) {
 				while (line.contains("]]]"))
 					line = line.replace("]]]", "] ]]");
-				buffer.append(line);
+				buffer.append(line).append("\n");
 			}
 			fullString = buffer.toString();
 		} catch (IOException e) {

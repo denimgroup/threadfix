@@ -231,7 +231,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@OneToMany(mappedBy = "finding")
 	@Cascade({ org.hibernate.annotations.CascadeType.ALL })
 	@OrderBy("sequence DESC")
-    @JsonView({ AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class })
+    @JsonView({ AllViews.RestView2_1.class, AllViews.VulnerabilityDetail.class, AllViews.UIVulnSearch.class })
 	public List<DataFlowElement> getDataFlowElements() {
 		return dataFlowElements;
 	}
@@ -344,7 +344,7 @@ public class Finding extends AuditableEntity implements FindingLike {
         this.attackString = attackString;
     }
 
-    @JsonView(AllViews.RestView2_1.class)
+    @JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class})
     @Column(length = ATTACK_REQUEST_LENGTH)
 	public String getAttackRequest() {
 		return attackRequest;
@@ -354,7 +354,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.attackRequest = attackRequest;
 	}
 
-    @JsonView(AllViews.RestView2_1.class)
+	@JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class})
     @Column(length = ATTACK_RESPONSE_LENGTH)
 	public String getAttackResponse() {
 		return attackResponse;

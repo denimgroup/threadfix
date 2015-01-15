@@ -14,6 +14,10 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
         $scope.$parent.resetFilters();
         $scope.parameters = $scope.$parent.parameters;
         $scope.selectedFilter = $scope.$parent.savedDefaultTrendingFilter ? $scope.$parent.savedDefaultTrendingFilter : undefined;
+        if ($scope.selectedFilter)
+            $scope.currentFilterNameInput = $scope.selectedFilter;
+        else
+            $scope.currentFilterNameInput = null;
         $rootScope.$broadcast("resetParameters", $scope.parameters)
     };
 
@@ -179,6 +183,7 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
 
         $scope.selectedFilter = filter;
         $scope.parameters = JSON.parse($scope.selectedFilter.json);
+        $scope.currentFilterNameInput = filter.name;
 
         if ($scope.parameters.selectedOwasp
             && $scope.$parent.OWASP_TOP10) {
@@ -197,6 +202,13 @@ module.controller('ReportFilterController', function($http, $scope, $rootScope, 
             $scope.parameters.endDate = new Date($scope.parameters.endDate);
 
         $rootScope.$broadcast("resetParameters", $scope.parameters);
+
+    };
+
+    $scope.copyCurrentFilter = function() {
+
+        $scope.currentFilterNameInput = $scope.selectedFilter.name + '~copy';
+        $scope.selectedFilter = undefined;
 
     };
 

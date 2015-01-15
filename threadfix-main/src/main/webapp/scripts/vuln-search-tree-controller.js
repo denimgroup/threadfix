@@ -249,6 +249,10 @@ module.controller('VulnSearchTreeController', function($log, $scope, $rootScope,
             default :
                 return false;
         }
-    }
+    };
+
+    $scope.toggleFinding = function(finding) {
+        $scope['isShowFlow' + finding.id] = $scope['isShowFlow' + finding.id] ? false : true;
+    };
 
 });

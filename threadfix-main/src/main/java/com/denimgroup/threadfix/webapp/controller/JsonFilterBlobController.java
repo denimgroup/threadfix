@@ -44,9 +44,13 @@ public class JsonFilterBlobController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public @ResponseBody RestResponse<List<FilterJsonBlob>> save(@ModelAttribute FilterJsonBlob filterJsonBlob) {
-        if (filterJsonBlobService.nameExists(filterJsonBlob.getName())) {
+
+        FilterJsonBlob dbBlob = filterJsonBlobService.loadByName(filterJsonBlob.getName());
+
+        if (dbBlob != null && dbBlob.isActive() && (filterJsonBlob.getId() == null || dbBlob.getId().compareTo(filterJsonBlob.getId()) != 0)) {
             return RestResponse.failure("A filter with that name already exists.");
         } else {
+            LOG.info("Saving filter " + filterJsonBlob.getName());
             if (filterJsonBlob.getDefaultTrending()) {
                 // Update the old default trending to non-default trending filter
                 int filtersNo = filterJsonBlobService.updateDefaultTrendingFilter();

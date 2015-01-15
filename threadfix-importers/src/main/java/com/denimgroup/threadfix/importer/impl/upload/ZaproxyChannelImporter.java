@@ -275,7 +275,7 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	public class ZaproxySAXValidator extends HandlerWithBuilder {
 		private boolean hasFindings = false;
 		private boolean hasDate = false;
-		private boolean correctFormat = false;
+		private boolean atStart = true, startsWithReport = false, correctFormat = false;
 		private boolean getDate = false;
 		
 	    private void setTestStatus() {
@@ -323,12 +323,15 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 	    		getDate = false;
 	    	}
 	    	
-	    	if ("report".equals(qName)) {
+	    	if (atStart && "report".equals(qName)) {
 	    		getDate = true;
-	    		correctFormat = true;
-	    	}
+				startsWithReport = true;
+	    	} else if (startsWithReport && "alertitem".equals(qName)) {
+				correctFormat = true;
+			}
 
-			if ("OWASPZAPReport".equals(qName)) {
+
+			if (atStart && "OWASPZAPReport".equals(qName)) {
 
 				String tempDateString = atts.getValue("generated");
 				log.debug("Attempting to get scan date from text '" + tempDateString + "'");
@@ -350,6 +353,8 @@ public class ZaproxyChannelImporter extends AbstractChannelImporter {
 
 				correctFormat = true;
 			}
+
+			atStart = false;
 
 	    	if ("alertitem".equals(qName)) {
 	    		hasFindings = true;

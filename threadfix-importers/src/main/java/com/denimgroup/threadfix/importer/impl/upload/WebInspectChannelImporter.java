@@ -33,6 +33,7 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -75,12 +76,15 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	
 	public class WebInspectSAXParser extends HandlerWithBuilder {
 
+		private static final String CWE_PATTERN = "CWE-(.*)";
+
         private String currentChannelVulnName;
         private String currentUrl;
         private String currentParam;
         private String currentChannelSeverityName;
         private String currentResponseText;
         private String currentAttackHTTPRequest;
+		private String currentCWE;
         private StringBuffer currentRawFinding = new StringBuffer();
 
         private Map<FindingKey, String> findingMap = new HashMap<>();
@@ -141,7 +145,13 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                     grabTypeId = true;
                 } else if ("AttackHTTPRequest".equals(qName)){
                     grabAttackHTTPRequest = true;
-                }
+                } else if ("Classification".equals(qName)) {
+					if ("CWE".equalsIgnoreCase(atts.getValue("kind"))
+							&& atts.getValue("identifier") != null
+							&& currentCWE == null) {
+						currentCWE = RegexUtils.getRegexResult(atts.getValue("identifier"), CWE_PATTERN);
+					}
+				}
 
             } else {
                 if ("URL".equals(qName)) {
@@ -216,6 +226,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                     findingMap.put(FindingKey.SEVERITY_CODE, currentChannelSeverityName);
                     findingMap.put(FindingKey.REQUEST, currentAttackHTTPRequest);
                     findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+					findingMap.put(FindingKey.CWE, currentCWE);
 
 	    			Finding finding = constructFinding(findingMap);
 
@@ -230,6 +241,7 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                 issue = false;
                 currentRawFinding.setLength(0);
                 currentAttackHTTPRequest = null;
+				currentCWE = null;
 
 	    	}
 	    	
