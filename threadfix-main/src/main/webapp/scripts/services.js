@@ -1,4 +1,4 @@
-var threadfixModule = angular.module('threadfix')
+var threadfixModule = angular.module('threadfix');
 
 threadfixModule.factory('tfEncoder', function($rootScope, $location) {
 
