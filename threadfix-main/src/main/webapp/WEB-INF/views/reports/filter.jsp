@@ -5,6 +5,7 @@
         <tab heading="Filters" ng-click="$parent.showFilterSections = true; $parent.showSavedFilters = false">
         </tab>
         <tab heading="Load Filters" ng-click="$parent.showFilterSections = false; $parent.showSavedFilters = true">
+            <span ng-if="!savedFilters || savedFilters.length == 0">No saved filters found.</span>
         </tab>
     </tabset>
 
