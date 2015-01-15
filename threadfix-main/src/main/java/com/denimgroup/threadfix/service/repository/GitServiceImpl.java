@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service.repository;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.GitService;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
@@ -41,6 +42,8 @@ import java.io.IOException;
 
 @Service
 public class GitServiceImpl implements GitService {
+
+    private static final SanitizedLogger LOG = new SanitizedLogger(GitServiceImpl.class);
 
 	// Cursory testing indicates that this works.
     @Override
@@ -64,19 +67,21 @@ public class GitServiceImpl implements GitService {
 //                    }
 					return git.getRepository().getWorkTree();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JGitInternalException e) {
-				e.printStackTrace();
-            }
+			} catch (IOException | JGitInternalException e) {
+				LOG.error("Exception", e);
+			}
 		} else {
 			try {
+                LOG.info("Attempting to clone application from repository.");
                 Git result = clone(application, fileLocation);
 				if (result != null) {
+                    LOG.info("Application was successfully cloned from repository.");
 					return result.getRepository().getWorkTree();
 				}
+                LOG.error("Failed to clone application from repository.");
 			} catch (JGitInternalException e) {
 				e.printStackTrace();
+                LOG.error("Failed to clone application from repository.", e);
 			}
 		}
 		return null;
