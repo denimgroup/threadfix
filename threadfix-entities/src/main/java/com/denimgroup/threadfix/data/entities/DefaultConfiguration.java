@@ -37,6 +37,8 @@ import java.util.Map;
 public class DefaultConfiguration extends BaseEntity {
 	
 	private static final long serialVersionUID = 2584623185996706729L;
+
+    public static final String MASKED_PASSWORD = "dbnH3rDuZC2Nib";
 	
 	private Boolean globalGroupEnabled = null;
     private Boolean hasAddedScheduledImports = null;

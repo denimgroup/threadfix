@@ -77,21 +77,35 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
 
         try {
             if (config.getProxyPassword() != null && !config.getProxyPassword().trim().equals("")) {
-               config.setProxyPasswordEncrypted(ESAPI.encryptor().encrypt(config.getProxyPassword()));
+
+                if (!config.getProxyPassword().equals(DefaultConfiguration.MASKED_PASSWORD)) {
+                    config.setProxyPasswordEncrypted(ESAPI.encryptor().encrypt(config.getProxyPassword()));
+                }
+
+            } else {
+                config.setProxyPasswordEncrypted(null);
             }
 
-            if (config.getProxyUsername() != null && !config.getProxyPassword().trim().equals("")) {
-                config.setProxyUsernameEncrypted(ESAPI.encryptor().encrypt(config.getProxyPassword()));
+            if (config.getProxyUsername() != null && !config.getProxyUsername().trim().equals("")) {
+                config.setProxyUsernameEncrypted(ESAPI.encryptor().encrypt(config.getProxyUsername()));
+            } else {
+                config.setProxyUsernameEncrypted(null);
             }
 
             if (!config.getActiveDirectoryUsername().trim().isEmpty()) {
                 config.setActiveDirectoryUsernameEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryUsername()));
                 config.setActiveDirectoryUsername(null);
+            } else {
+                config.setActiveDirectoryUsernameEncrypted(null);
             }
 
             if (!config.getActiveDirectoryCredentials().trim().isEmpty()) {
-                config.setActiveDirectoryCredentialsEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryCredentials()));
+                if (!config.getActiveDirectoryCredentials().equals(DefaultConfiguration.MASKED_PASSWORD)) {
+                    config.setActiveDirectoryCredentialsEncrypted(ESAPI.encryptor().encrypt(config.getActiveDirectoryCredentials()));
+                }
                 config.setActiveDirectoryCredentials(null);
+            } else {
+                config.setActiveDirectoryCredentialsEncrypted(null);
             }
 
         } catch (EncryptionException e) {
@@ -107,20 +121,22 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         assert config != null;
 
         try {
-            if (config.getProxyPasswordEncrypted() != null) {
+            if (config.getProxyPasswordEncrypted() != null && !"".equals(config.getProxyPasswordEncrypted())) {
                 config.setProxyPassword(ESAPI.encryptor().decrypt(config.getProxyPasswordEncrypted()));
             }
 
-            if (config.getProxyUsernameEncrypted() != null) {
-                config.setProxyUsername(ESAPI.encryptor().decrypt(config.getProxyPasswordEncrypted()));
+            if (config.getProxyUsernameEncrypted() != null && !"".equals(config.getProxyUsernameEncrypted())) {
+                config.setProxyUsername(ESAPI.encryptor().decrypt(config.getProxyUsernameEncrypted()));
             }
 
-            if (config.getActiveDirectoryUsernameEncrypted() != null) {
-                config.setActiveDirectoryUsername(ESAPI.encryptor().decrypt(config.getActiveDirectoryUsernameEncrypted()));
+            String usernameEncrypted = config.getActiveDirectoryUsernameEncrypted();
+            if (usernameEncrypted != null && !"".equals(usernameEncrypted)) {
+                config.setActiveDirectoryUsername(ESAPI.encryptor().decrypt(usernameEncrypted));
             }
 
-            if (config.getActiveDirectoryCredentialsEncrypted() != null) {
-                config.setActiveDirectoryCredentials(ESAPI.encryptor().decrypt(config.getActiveDirectoryCredentialsEncrypted()));
+            String passwordEncrypted = config.getActiveDirectoryCredentialsEncrypted();
+            if (passwordEncrypted != null && !"".equals(passwordEncrypted)) {
+                config.setActiveDirectoryCredentials(ESAPI.encryptor().decrypt(passwordEncrypted));
             }
 
         } catch (EncryptionException e) {

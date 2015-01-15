@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,12 +86,40 @@ public class SystemSettingsController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processForm(@ModelAttribute DefaultConfiguration configModel,
-			HttpServletRequest request) {
-		
-		defaultConfigService.saveConfiguration(configModel);
-		ControllerUtils.addSuccessMessage(request, "Configuration was saved successfully.");
-		
-		return "redirect:/configuration/settings";
+							  BindingResult bindingResult,
+							  Model model,
+							  HttpServletRequest request) {
+		addModelAttributes(model, request);
+		if (bindingResult.hasErrors()) {
+
+			// TODO look into this
+			if (bindingResult.hasFieldErrors("proxyPort")) {
+				bindingResult.reject("proxyPort", new Object[]{}, "Please enter a valid port number.");
+			}
+
+			return "config/systemSettings";
+		} else {
+			defaultConfigService.saveConfiguration(configModel);
+			ControllerUtils.addSuccessMessage(request, "Configuration was saved successfully.");
+
+			return "redirect:/configuration/settings";
+		}
+
+	}
+
+	private void addModelAttributes(Model model, HttpServletRequest request) {
+		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
+		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+
+		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
+			configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
+		}
+		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
+			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
+		}
+
+		model.addAttribute("defaultConfiguration", configuration);
+		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 	}
 	
 }
