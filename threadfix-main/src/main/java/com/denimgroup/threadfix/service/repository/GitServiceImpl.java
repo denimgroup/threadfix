@@ -26,12 +26,12 @@ package com.denimgroup.threadfix.service.repository;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.GitService;
-import org.eclipse.jgit.api.CloneCommand;
-import org.eclipse.jgit.api.CreateBranchCommand;
-import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
@@ -45,7 +45,45 @@ public class GitServiceImpl implements GitService {
 
     private static final SanitizedLogger LOG = new SanitizedLogger(GitServiceImpl.class);
 
-	// Cursory testing indicates that this works.
+    @Override
+    public boolean testGitConfiguration(Application application) throws GitAPIException {
+
+        InitCommand initCommand = new InitCommand();
+        File applicationDirectory = new File(baseDirectory + application.getId() + "-test");
+        initCommand.setDirectory(applicationDirectory);
+
+        Git otherGit = initCommand.call();
+
+        otherGit.getRepository().getConfig().setString("remote", "origin", "url", application.getRepositoryUrl());
+
+        String targetRefSpec =
+                application.getRepositoryBranch() == null ?
+                        "fakebranch" :
+                        application.getRepositoryBranch();
+
+        FetchCommand fetchCommand = otherGit.fetch()
+                .setCredentialsProvider(getUnencryptedApplicationCredentials(application))
+                .setDryRun(true)
+                .setRefSpecs(new RefSpec(targetRefSpec))
+                .setRemote("origin");
+
+        fetchCommand.call();
+
+        return true;
+    }
+
+    private CredentialsProvider getUnencryptedApplicationCredentials(Application application) {
+        if (application.getRepositoryUserName() != null
+                && application.getRepositoryPassword() != null) {
+            return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
+                    application.getRepositoryPassword());
+        }
+
+        return null;
+    }
+
+
+    // Cursory testing indicates that this works.
     @Override
 	public File cloneGitTreeToDirectory(Application application, File fileLocation) {
 		
@@ -93,13 +131,8 @@ public class GitServiceImpl implements GitService {
             CloneCommand clone = Git.cloneRepository();
             clone.setURI(application.getRepositoryUrl())
                     .setDirectory(fileLocation);
-            if (application.getRepositoryEncryptedUserName() != null
-                    && application.getRepositoryEncryptedPassword() != null) {
-                decryptRepositoryCredentials(application);
-                UsernamePasswordCredentialsProvider credentials = new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
-                        application.getRepositoryPassword());
-                clone.setCredentialsProvider(credentials);
-            }
+
+            clone.setCredentialsProvider(getApplicationCredentials(application));
 
             if (application.getRepositoryBranch() != null) {
                 application.setRepositoryDBBranch(application.getRepositoryBranch());
@@ -122,6 +155,16 @@ public class GitServiceImpl implements GitService {
         }
         return git;
 
+    }
+
+    private UsernamePasswordCredentialsProvider getApplicationCredentials(Application application) {
+        if (application.getRepositoryEncryptedUserName() != null
+                && application.getRepositoryEncryptedPassword() != null) {
+            decryptRepositoryCredentials(application);
+            return new UsernamePasswordCredentialsProvider(application.getRepositoryUserName(),
+                    application.getRepositoryPassword());
+        }
+        return null;
     }
 
     private static Application decryptRepositoryCredentials(Application application) {
@@ -165,5 +208,5 @@ public class GitServiceImpl implements GitService {
 
         return applicationDirectory;
     }
-	
+
 }
