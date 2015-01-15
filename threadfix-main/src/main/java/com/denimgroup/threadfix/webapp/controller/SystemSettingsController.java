@@ -107,7 +107,16 @@ public class SystemSettingsController {
 
 	private void addModelAttributes(Model model, HttpServletRequest request) {
 		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
-		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
+		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+
+		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
+			configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
+		}
+		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
+			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
+		}
+
+		model.addAttribute("defaultConfiguration", configuration);
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 	}
 
