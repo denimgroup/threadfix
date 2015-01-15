@@ -164,7 +164,7 @@ public class QueueSenderImpl implements QueueSender {
 
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		log.info("User " + userName + " is adding a GRC Tool controls update for application with ID " + appId + ".");
+		log.info("User " + userName + " is adding a GRC Controls update for application with ID " + appId + ".");
 
 		if (appId == null)
 			return;
