@@ -97,7 +97,8 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             success(function(data, status, headers, config) {
                 timeoutService.cancel();
                 if (data.success) {
-                    $scope.successMessage = data.object;
+                    $scope.$parent.successMessage = data.object;
+                    $scope.apply();
                 } else {
                     $log.info("Request to update GRC controls failed. Error was " + data.message);
                 }
