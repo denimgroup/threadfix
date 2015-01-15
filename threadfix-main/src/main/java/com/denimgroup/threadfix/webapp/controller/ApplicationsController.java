@@ -152,9 +152,6 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 
-        //update controls associated to application onload
-        grcToolService.updateControlsFromGRCTool(appId);
-
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
 
         model.addAttribute("config", config);
