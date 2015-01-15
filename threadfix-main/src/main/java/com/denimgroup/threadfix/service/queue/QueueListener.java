@@ -114,6 +114,11 @@ public class QueueListener implements MessageListener {
 						processDefectTrackerUpdateRequest(map.getInt("appId"),
 								map.getInt("jobStatusId"));
 						break;
+
+					case QueueConstants.GRC_CONTROLS_UPDATE_TYPE:
+						processGrcControlsUpdateRequest(map.getInt("appId"),
+								map.getInt("jobStatusId"));
+						break;
 						
 					case QueueConstants.SUBMIT_DEFECT_TYPE:
 						processSubmitDefect(map.getObject("vulnerabilityIds"),
@@ -225,7 +230,7 @@ public class QueueListener implements MessageListener {
 
 		for (Application application : apps) {
 			if (application != null && application.getGrcTool() != null) {
-				grcToolService.updateControlsFromGRCTool(application.getId());
+				grcToolService.updateControlsFromGrcTool(application.getId());
 			}
 		}
 
@@ -364,6 +369,27 @@ public class QueueListener implements MessageListener {
 			closeJobStatus(jobStatusId, "Vulnerabilities successfully updated.");
 		} else {
 			closeJobStatus(jobStatusId, "Vulnerability update failed.");
+		}
+	}
+
+	/**
+	 * @param appId
+	 * @param jobStatusId
+	 */
+	@Transactional(readOnly=false)
+	private void processGrcControlsUpdateRequest(Integer appId, Integer jobStatusId) {
+		if (appId == null) {
+			closeJobStatus(jobStatusId, "GRC Controls update failed because it received a null application ID");
+			return;
+		}
+
+		jobStatusService.updateJobStatus(jobStatusId, "Processing GRC Controls update request.");
+		boolean result = grcToolService.updateControlsFromGrcTool(appId);
+
+		if (result) {
+			closeJobStatus(jobStatusId, "GRC Controls successfully updated.");
+		} else {
+			closeJobStatus(jobStatusId, "GRC Control update failed.");
 		}
 	}
 
