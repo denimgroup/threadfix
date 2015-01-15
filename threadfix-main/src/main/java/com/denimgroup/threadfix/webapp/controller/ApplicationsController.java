@@ -97,8 +97,6 @@ public class ApplicationsController {
 	private ChannelVulnerabilityService channelVulnerabilityService;
     @Autowired
     private ChannelTypeService channelTypeService;
-    @Autowired
-    private GRCToolService grcToolService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -142,9 +140,6 @@ public class ApplicationsController {
 		if (application.getPassword() != null && !"".equals(application.getPassword())) {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
-
-        //update controls associated to application onload
-        grcToolService.updateControlsFromGRCTool(appId);
 
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);

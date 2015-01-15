@@ -58,9 +58,16 @@ public interface QueueSender {
 			Calendar calendar, ApplicationChannel applicationChannel);
 
 	/**
+	 * @param orgId
 	 * @param appId
 	 */
 	void addDefectTrackerVulnUpdate(Integer orgId, Integer appId);
+
+	/**
+	 * @param orgId
+	 * @param appId
+	 */
+	void addGrcToolVulnUpdate(Integer orgId, Integer appId);
 
 	/**
 	 * @param vulns
