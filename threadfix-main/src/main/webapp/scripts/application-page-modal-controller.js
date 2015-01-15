@@ -110,6 +110,25 @@ myAppModule.controller('ApplicationPageModalController', function($scope, $rootS
             });
     };
 
+    $scope.updateControlStatus = function() {
+        timeoutService.timeout();
+        $http.get(tfEncoder.encode(currentUrl + "/controls/update")).
+            success(function(data, status, headers, config) {
+                timeoutService.cancel();
+                if (data.success) {
+                    $scope.successMessage = data.object;
+                } else {
+                    $log.info("Request to update GRC controls failed. Error was " + data.message);
+                }
+            }).
+            error(function(data, status, headers, config) {
+                timeoutService.cancel();
+                $log.info("HTTP request for form objects failed.");
+                // TODO improve error handling and pass something back to the users
+                $scope.errorMessage = "Request to server failed. Got " + status + " response code.";
+            });
+    };
+
     // Handle the complex modal interactions on the edit application modal
     $scope.$on('modalSwitch', function(event, name) {
         $scope.currentModal.dismiss('modalChanged');
