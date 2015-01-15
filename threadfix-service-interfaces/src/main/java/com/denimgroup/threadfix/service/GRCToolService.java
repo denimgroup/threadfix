@@ -105,5 +105,5 @@ public interface GRCToolService {
      * @param appId
      * @return boolean
      */
-    public boolean updateControlsFromGRCTool(Integer appId);
+    public boolean updateControlsFromGrcTool(Integer appId);
 }
