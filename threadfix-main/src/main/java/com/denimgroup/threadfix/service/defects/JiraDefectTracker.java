@@ -68,7 +68,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
     // The double slash is the Jira newline wiki syntax.
     private static final String NEW_LINE_REGEX = "\\\\n",
             DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ",
-            METADATA_EXTENSION = "issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=";
+            METADATA_EXTENSION = "issue/createmeta?expand=projects.issuetypes.fields&projectKeys=";
 
     private static final String CONTENT_TYPE = "application/json";
 
@@ -297,9 +297,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         return DynamicFormFieldParser.getFields(response, retriever);
     }
 
-    JiraJsonMetadataResponse.Project getJiraMetadata() {
+    JiraJsonMetadataResponse.Project getJiraMetadata(String issuetype) {
         String response =
-                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
+                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId() + "&issuetypeIds=" + issuetype ,
                             getUsername(), getPassword());
 
         log.debug(response);
@@ -389,7 +389,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
     private String getPayload(Map<String, Object> objectMap) {
 
-        DefectPayload payload = new DefectPayload(objectMap, getJiraMetadata());
+        DefectPayload payload = new DefectPayload(objectMap, getJiraMetadata(objectMap.get("issuetype").toString()));
 
         try {
             return new ObjectMapper().writeValueAsString(payload);

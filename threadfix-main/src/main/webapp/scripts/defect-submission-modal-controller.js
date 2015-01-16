@@ -166,10 +166,18 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 fieldForm.errorsMap = field.errorsMap;
             }
 
+            if (field.show) {
+                fieldForm.show = field.show;
+            }
             if (type === "text")
                 fieldForm.maxLength = field.maxLength;
             $scope.stdFormTemplate.push(fieldForm)
         });
+
+        if ($scope.config.editableFields.length === 1) {
+            $scope.errorMessage = "Please check your project configuration because we couldn't retrieve any dynamic fields from issue submit form."
+        }
+
     };
 
     /**
