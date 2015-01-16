@@ -42,6 +42,7 @@ public class LdapAuthenticator implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) {
         try {
+            log.debug("Attempting to authenticate with LDAP authenticator.");
             return ldapService != null ? ldapService.authenticate(authentication) : null;
         } catch (ThreadFixActiveDirectoryAuthenticationException e) {
             log.debug("Failed LDAP authentication.");

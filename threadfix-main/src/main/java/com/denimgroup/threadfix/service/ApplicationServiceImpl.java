@@ -32,6 +32,7 @@ import com.denimgroup.threadfix.service.beans.TableSortBean;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 	@Autowired private DefectDao defectDao;
 	@Autowired private ScanMergeService scanMergeService;
     @Autowired private GenericVulnerabilityDao genericVulnerabilityDao;
+	@Autowired private GitService gitService;
+	@Autowired private ExceptionLogService exceptionLogService;
 
     @Nullable
 	@Autowired(required = false)
@@ -365,7 +368,39 @@ public class ApplicationServiceImpl implements ApplicationService {
 				result.rejectValue("repositoryFolder", null, null, "Invalid directory");
 				return;
 			}
-		}		
+		}
+
+		if (application.getRepositoryUrl() != null && !"".equals(application.getRepositoryUrl())) {
+			try {
+				if (!gitService.testGitConfiguration(application)) {
+                    result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
+                }
+			} catch (GitAPIException e) {
+
+				boolean shouldLog = true;
+
+				if (e.getMessage().contains("not authorized")) {
+					result.rejectValue("repositoryUrl", null, null, "Authorization failed.");
+				}
+
+				if (application.getRepositoryBranch() != null) {
+					String missingBranchError = "Remote does not have " + application.getRepositoryBranch() + " available for fetch";
+					if (e.getMessage().contains(missingBranchError)) {
+						result.rejectValue("repositoryUrl", null, null, "Supplied branch wasn't found.");
+					}
+				} else if (e.getMessage().contains("Remote does not have fakebranch available for fetch")) {
+					// this is expected behavior, let's not return an error.
+					shouldLog = false;
+				} else {
+					result.rejectValue("repositoryUrl", null, null, "Unable to clone repository");
+				}
+
+				if (shouldLog) {
+					log.info("Got an error from the Git server, logging to database (visible under View Error Logs)");
+					exceptionLogService.storeExceptionLog(new ExceptionLog(e));
+				}
+			}
+		}
 
 		Application databaseApplication = decryptCredentials(loadApplication(application.getName().trim(),
                 application.getOrganization().getId()));

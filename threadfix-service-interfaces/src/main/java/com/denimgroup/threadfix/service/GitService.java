@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 
@@ -31,6 +32,8 @@ import java.io.File;
  * Created by mac on 7/29/14.
  */
 public interface GitService {
+
+    boolean testGitConfiguration(Application application) throws GitAPIException;
 
     // Cursory testing indicates that this works.
     File cloneGitTreeToDirectory(Application application, File fileLocation);
