@@ -38,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.denimgroup.threadfix.importer.config.SpringConfiguration.getSpringBean;
+import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.ScanImporterHarness.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -62,11 +64,6 @@ public class QualysScanParsingTests {
         application.setRemoteProviderType(type);
         application.setApplicationChannel(new ApplicationChannel());
         return application;
-    }
-
-    public static void test(String nativeName) {
-        // @Transactional requires Spring AOP, which requires a Spring Bean. Lots of steps to get DB access
-        SpringConfiguration.getContext().getBean(QualysScanParsingTests.class).testInner(nativeName);
     }
 
     @Transactional(readOnly = false)
@@ -100,5 +97,9 @@ public class QualysScanParsingTests {
         for (String application : appNames) {
             test(application);
         }
+    }
+
+    public static void test(String nativeName) {
+        getSpringBean(QualysScanParsingTests.class).testInner(nativeName);
     }
 }

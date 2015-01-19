@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.RestIOException;
-import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;

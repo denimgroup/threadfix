@@ -53,7 +53,7 @@ public class RemoteProviderApplicationServiceImpl implements
 	private ApplicationChannelDao applicationChannelDao = null;
     @Autowired
     private RemoteProviderFactory remoteProviderFactory = null;
-	
+
 	@Override
 	public RemoteProviderApplication load(int id) {
 		return remoteProviderApplicationDao.retrieveById(id);
