@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.VeracodeMockHttpUtils;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
@@ -38,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.ScanImporterHarness.test;
+import static com.denimgroup.threadfix.importer.config.SpringConfiguration.getSpringBean;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -46,7 +45,7 @@ import static org.junit.Assert.assertTrue;
  * Created by mac on 6/3/14.
  */
 @Component
-public class VeracodeScanParsingTests implements RemoteProviderScanParser {
+public class VeracodeScanParsingTests {
 
     @Autowired
     RemoteProviderFactory factory = null;
@@ -96,7 +95,11 @@ public class VeracodeScanParsingTests implements RemoteProviderScanParser {
     @Test
     public void testAllScans() {
         for (String application : appNames) {
-            test(getClass(), application);
+            test(application);
         }
+    }
+
+    public static void test(String nativeName) {
+        getSpringBean(VeracodeScanParsingTests.class).testInner(nativeName);
     }
 }

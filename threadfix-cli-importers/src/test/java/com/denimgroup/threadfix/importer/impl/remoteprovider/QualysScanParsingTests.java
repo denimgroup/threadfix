@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderApplication;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.QualysMockHttpUtils;
 import com.denimgroup.threadfix.importer.interop.RemoteProviderFactory;
 import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
@@ -39,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.denimgroup.threadfix.importer.config.SpringConfiguration.getSpringBean;
-import static com.denimgroup.threadfix.importer.impl.remoteprovider.utils.ScanImporterHarness.test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
