@@ -389,7 +389,16 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
     private String getPayload(Map<String, Object> objectMap) {
 
-        DefectPayload payload = new DefectPayload(objectMap, getJiraMetadata(objectMap.get("issuetype").toString()));
+        Object issueType = objectMap.get("issuetype");
+
+        DefectPayload payload;
+        if (issueType != null) {
+            payload = new DefectPayload(objectMap, getJiraMetadata(issueType.toString()));
+        } else {
+            // if we're missing a value, default to old behavior
+            payload = new DefectPayload(objectMap, getJiraMetadata("1"));
+        }
+
 
         try {
             return new ObjectMapper().writeValueAsString(payload);
