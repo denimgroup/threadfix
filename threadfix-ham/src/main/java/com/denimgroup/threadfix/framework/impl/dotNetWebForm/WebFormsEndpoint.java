@@ -49,7 +49,7 @@ public class WebFormsEndpoint extends AbstractEndpoint {
     private Set<String> httpMethods;
 
     public WebFormsEndpoint(File aspxRoot, AspxParser aspxParser, AspxCsParser aspxCsParser) {
-        if (!(aspxParser.aspName + ".cs").equals(aspxCsParser.aspName)) {
+        if (!checkArguments(aspxParser.aspName, aspxCsParser.aspName)) {
             throw new IllegalArgumentException("Invalid aspx mappings pairs passed to WebFormsEndpoint constructor: " +
                     aspxParser.aspName + " and " + aspxCsParser.aspName);
         }
@@ -64,6 +64,19 @@ public class WebFormsEndpoint extends AbstractEndpoint {
         collectParameters();
 
         setHttpMethod();
+    }
+
+    private boolean checkArguments(String aspName, String aspCsName) {
+
+        String shortName = aspName.endsWith(".aspx") ? aspName.substring(0, aspName.length() - 5) : aspName;
+
+        boolean aspxCsMatch = aspCsName.endsWith(".aspx.cs") &&
+                shortName.equals(aspCsName.substring(0, aspCsName.indexOf(".aspx.cs")));
+
+        boolean csMatch = aspCsName.endsWith(".cs") &&
+                shortName.equals(aspCsName.substring(0, aspCsName.indexOf(".cs")));
+
+        return aspxCsMatch || csMatch;
     }
 
     private void setHttpMethod() {

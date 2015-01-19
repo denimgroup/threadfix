@@ -49,12 +49,14 @@ public class DotNetFrameworkChecker extends FrameworkChecker {
 
         LOG.info("Got " + csFiles.size() + " .cs files from the directory.");
 
-        Collection aspxFiles = FileUtils.listFiles(directory.getDirectory(),
-                new FileExtensionFileFilter("aspx.cs"), TrueFileFilter.INSTANCE);
+        Collection routeConfig = FileUtils.listFiles(directory.getDirectory(),
+                new FileExtensionFileFilter("RouteConfig.cs"), TrueFileFilter.INSTANCE);
 
-        LOG.info("Got " + aspxFiles.size() + " .aspx.cs files from the directory.");
+        LOG.info("Got " + routeConfig.size() + " RouteConfig.cs files from the directory.");
 
-        return csFiles.isEmpty() || !aspxFiles.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
+        FrameworkType type = csFiles.isEmpty() || routeConfig.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
+
+        return type;
     }
 
 }
