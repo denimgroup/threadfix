@@ -115,6 +115,7 @@ angular.module('dynform', [])
                   if (angular.isDefined(field.maxLength) && field.maxLength !== 0) {newElement.attr('ng-maxlength', field.maxLength);}
                   if (angular.isDefined(field.validate)) {newElement.attr('ng-pattern', "/" + field.validate + "/");}
                   if (angular.isDefined(field.placeholder)) {newElement.attr('placeholder', field.placeholder);}
+
                 }
                 
                 //  Special cases
@@ -312,6 +313,18 @@ angular.module('dynform', [])
                         });
                     }
 
+                    if (angular.isDefined(field.show)) {
+                      var isShow = 'true';
+                      field.show.split("&").forEach(function(str){
+                        var attrPair = str.split("=");
+                        if (attrPair.length === 2) {
+                          isShow = isShow + " && " + ((attrs.ngModel + "['" + attrPair[0] + "']==") + attrPair[1]);
+                        }
+                      });
+
+                      divElement.attr('ng-show', isShow);
+                      if (angular.isDefined(field.required)) {newElement.attr('ng-required', field.required + " && " + isShow);}
+                    }
 
                     newElement = divElement;
                   }

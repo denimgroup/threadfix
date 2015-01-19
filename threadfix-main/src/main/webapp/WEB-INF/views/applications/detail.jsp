@@ -14,7 +14,6 @@
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
-    <cbs:cachebustscript src="/scripts/vuln-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/document-form-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-agent-tasks-tab-controller.js"/>
 	<cbs:cachebustscript src="/scripts/bulk-operations-controller.js"/>
