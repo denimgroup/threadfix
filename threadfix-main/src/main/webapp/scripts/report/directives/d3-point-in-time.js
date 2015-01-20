@@ -24,7 +24,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
 
                 scope.$watch('exportReportId', function() {
                     scope.export();
-                });
+                }, true);
 
                 scope.$watch('label', function(newVals) {
                     scope.render(scope.data);
@@ -114,11 +114,11 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                 };
 
                 scope.export = function(){
-                    if (scope.exportReportId==2) {
+                    if (scope.exportReportId && scope.exportReportId.id==2) {
                         var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
                         var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
                         reportExporter.exportPDFSvg(d3, svg, pieDim.w, pieDim.h,
-                                "PointInTime" + teamsName + appsName);
+                                "PointInTime" + teamsName + appsName, scope.exportReportId.isPDF);
                     }
                 };
             }

@@ -76,7 +76,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         trendingUtilities.updateDisplayData($scope);
     });
 
-    $scope.exportPNG = function(){
+    $scope.exportPNG = function(isPDF){
         if (!$scope.exportInfo) {
             $scope.exportInfo = {
                 id: reportConstants.reportTypes.trending.id
@@ -91,6 +91,7 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.teams = $scope.title.teams;
         $scope.exportInfo.apps = $scope.title.apps;
         $scope.exportInfo.tags = undefined;
+        $scope.exportInfo.isPDF = isPDF;
     };
 
 });

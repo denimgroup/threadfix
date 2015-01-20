@@ -674,11 +674,18 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         return str.indexOf(prefix) == 0;
     };
 
-    $scope.exportPNG = function(){
-        if ( $scope.exportReportId === $scope.reportId)
-            $scope.exportReportId = "" + $scope.reportId;
-        else
-            $scope.exportReportId = $scope.reportId;
+    $scope.exportPNG = function(isPDF){
+        if (!$scope.exportInfo) {
+            $scope.exportInfo = {
+                id: $scope.reportId
+            }
+        } else {
+            if ($scope.exportInfo.id  === $scope.reportId)
+                $scope.exportInfo.id  = "" +  $scope.reportId;
+            else
+                $scope.exportInfo.id  = $scope.reportId;
+        }
+        $scope.exportInfo.isPDF = isPDF;
     };
 
     $scope.exportCSV = function() {

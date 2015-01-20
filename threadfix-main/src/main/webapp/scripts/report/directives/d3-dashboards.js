@@ -215,14 +215,14 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                 scope.$watch('exportReportId', function() {
                     scope.export();
-                });
+                }, true);
 
                 scope.export = function(){
-                    if (scope.exportReportId==10) {
+                    if (scope.exportReportId && scope.exportReportId.id==10) {
                         var teamsName = (scope.label.teams) ? "_" + scope.label.teams : "";
                         var appsName = (scope.label.apps) ? "_" + scope.label.apps : "";
                         reportExporter.exportPDFSvg(d3, svg, scope.width, scope.height,
-                                "TopVulnerableApplications" + teamsName + appsName);
+                                "TopVulnerableApplications" + teamsName + appsName, scope.exportReportId.isPDF);
                     }
                 };
 

@@ -30,6 +30,7 @@
         <cbs:cachebustscript src="/scripts/init-controller.js"/>
         <cbs:cachebustscript src="/scripts/directives.js"/>
         <cbs:cachebustscript src="/scripts/angular-multi-select.js"/>
+        <cbs:cachebustscript src="/scripts/jspdf.debug.js"/>
 
         <cbs:cachebustscript src="/scripts/report/directives/d3-dashboards.js"/>
         <cbs:cachebustscript src="/scripts/report/directives/d3-trending-scans.js"/>
