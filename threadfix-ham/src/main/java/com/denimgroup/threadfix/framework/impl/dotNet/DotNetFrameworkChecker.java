@@ -48,13 +48,15 @@ public class DotNetFrameworkChecker extends FrameworkChecker {
                 new FileExtensionFileFilter("cs"), TrueFileFilter.INSTANCE);
 
         LOG.info("Got " + csFiles.size() + " .cs files from the directory.");
-
+        
         Collection routeConfig = FileUtils.listFiles(directory.getDirectory(),
-                new FileExtensionFileFilter("RouteConfig.cs"), TrueFileFilter.INSTANCE);
+                new FileExtensionFileFilter("Controller.cs"), TrueFileFilter.INSTANCE);
 
-        LOG.info("Got " + routeConfig.size() + " RouteConfig.cs files from the directory.");
+        LOG.info("Got " + routeConfig.size() + " Controller files from the directory.");
 
-        FrameworkType type = csFiles.isEmpty() || routeConfig.isEmpty() ? FrameworkType.NONE : FrameworkType.DOT_NET_MVC;
+        FrameworkType type = csFiles.isEmpty() || routeConfig.isEmpty() ?
+                FrameworkType.NONE :
+                FrameworkType.DOT_NET_MVC;
 
         return type;
     }
