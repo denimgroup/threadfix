@@ -65,6 +65,10 @@ public class CSVToSSVLParser {
     }
 
     public static String parse(Reader reader, String... format) {
+        return parse(reader, true, format);
+    }
+
+    public static String parse(Reader reader, boolean skipHeader, String... format) {
         try {
             CSVParser parse;
 
@@ -75,7 +79,7 @@ public class CSVToSSVLParser {
                 parse = CSVFormat.DEFAULT.withSkipHeaderRecord(false).parse(reader);
 
             } else {
-                parse = CSVFormat.DEFAULT.withSkipHeaderRecord().withHeader(format).parse(reader);
+                parse = CSVFormat.DEFAULT.withSkipHeaderRecord(skipHeader).withHeader(format).parse(reader);
             }
 
             return RecordToXMLSerializer.getFromReader(parse);
