@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -31,7 +32,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Entity
 @Table(name = "RemoteProviderType")
@@ -298,4 +302,45 @@ public class RemoteProviderType extends BaseEntity  {
     public boolean getMatchSourceNumbersNullSafe() {
         return matchSourceNumbers != null && matchSourceNumbers;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //                                 Helpers
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    public void setAuthField(String key, String value) {
+        setAuthField(key, value, false);
+    }
+
+    private void setAuthField(String key, String value, boolean secret) {
+        RemoteProviderAuthenticationField newField = new RemoteProviderAuthenticationField();
+
+        newField.setName(key);
+        newField.setValue(value);
+        newField.setSecret(secret);
+
+        if (getAuthenticationFields() == null) {
+            setAuthenticationFields(new ArrayList<RemoteProviderAuthenticationField>());
+        }
+
+        getAuthenticationFields().add(newField);
+    }
+
+    public String getAuthenticationFieldValue(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Can't pass a null key to getAuthenticationFieldValue");
+        }
+
+        assert authenticationFields != null : "Authentication fields were null.";
+
+        for (RemoteProviderAuthenticationField authenticationField : authenticationFields) {
+            if (key.equals(authenticationField.getName())) {
+                return authenticationField.getValue();
+            }
+        }
+
+        assert false : "No value found for key " + key;
+        return null;
+    }
+
 }

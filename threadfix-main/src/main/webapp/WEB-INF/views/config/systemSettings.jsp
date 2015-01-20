@@ -236,6 +236,14 @@
                             <td><form:checkbox path="shouldProxyWhiteHat" value="${ defaultConfiguration.shouldProxyWhiteHat }"/></td>
                         </tr>
                         <tr>
+                            <td>Trustwave Hailstorm</td>
+                            <td><form:checkbox path="shouldProxyTrustwaveHailstorm" value="${ defaultConfiguration.shouldProxyTrustwaveHailstorm }"/></td>
+                        </tr>
+                        <tr>
+                            <td>Contrast</td>
+                            <td><form:checkbox path="shouldProxyContrast" value="${ defaultConfiguration.shouldProxyContrast }"/></td>
+                        </tr>
+                        <tr>
                             <td>TFS</td>
                             <td><form:checkbox path="shouldProxyTFS" value="${ defaultConfiguration.shouldProxyTFS }"/></td>
                         </tr>
@@ -254,10 +262,6 @@
                         <tr>
                             <td>HP Quality Center</td>
                             <td><form:checkbox path="shouldProxyHPQC" value="${ defaultConfiguration.shouldProxyHPQC }"/></td>
-                        </tr>
-                        <tr>
-                            <td>Trustwave Hailstorm</td>
-                            <td><form:checkbox path="shouldProxyTrustwaveHailstorm" value="${ defaultConfiguration.shouldProxyTrustwaveHailstorm }"/></td>
                         </tr>
                     </table>
                 </div>

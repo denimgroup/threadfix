@@ -44,6 +44,7 @@ public class DynamicFormField {
     boolean active;
     boolean editable;
     boolean supportsMultivalue;
+    String show;
 
     Map<String, String> optionsMap;
     Map<String, String> errorsMap;
@@ -164,11 +165,18 @@ public class DynamicFormField {
         this.supportsMultivalue = supportsMultivalue;
     }
 
+    public String getShow() {
+        return show;
+    }
+
+    public void setShow(String show) {
+        this.show = show;
+    }
 
     /*
-     * Java method to sort Map in Java by value e.g. HashMap or Hashtable
-     * It also sort values even if they are duplicates
-     */
+         * Java method to sort Map in Java by value e.g. HashMap or Hashtable
+         * It also sort values even if they are duplicates
+         */
     public static <K extends Comparable<K>,V extends Comparable<V>> Map<K,V> sortByValues(Map<K,V> map){
         if (map == null)
             return null;
