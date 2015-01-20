@@ -110,6 +110,7 @@ class SSVLChannelImporter extends AbstractChannelImporter {
 	    private void parseTypeAndSeverity(Attributes atts) {
 	    	findingMap.put(FindingKey.VULN_CODE,     atts.getValue("CWE"));
 	    	findingMap.put(FindingKey.SEVERITY_CODE, atts.getValue("Severity"));
+	    	findingMap.put(FindingKey.ISSUE_ID,      atts.getValue("IssueID"));
 	    }
 	    
 	    private void parseNativeId(Attributes atts) {

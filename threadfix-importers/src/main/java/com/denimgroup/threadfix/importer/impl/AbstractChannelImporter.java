@@ -83,7 +83,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected enum FindingKey {
         VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
-        RECOMMENDATION, RAWFINDING, URL_REFERENCE, DESCRIPTION
+        RECOMMENDATION, RAWFINDING, URL_REFERENCE, DESCRIPTION, ISSUE_ID
     }
 
     // A stream pointing to the scan's contents. Set with either setFile or
@@ -308,11 +308,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             return null;
         }
 
-        String url = findingMap.get(FindingKey.PATH);
-        String parameter = findingMap.get(FindingKey.PARAMETER);
-        String channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE);
-        String channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE);
-        String cweCode = findingMap.get(FindingKey.CWE);
+        String url = findingMap.get(FindingKey.PATH),
+                parameter = findingMap.get(FindingKey.PARAMETER),
+                channelVulnerabilityCode = findingMap.get(FindingKey.VULN_CODE),
+                channelSeverityCode = findingMap.get(FindingKey.SEVERITY_CODE),
+                cweCode = findingMap.get(FindingKey.CWE),
+                issueId = findingMap.get(FindingKey.ISSUE_ID);
 
         if (channelVulnerabilityCode == null || channelVulnerabilityCode.isEmpty()) {
             return null;
@@ -320,6 +321,12 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         Finding finding = new Finding();
         SurfaceLocation location = new SurfaceLocation();
+
+        if (issueId != null && issueId.length() > Finding.ISSUE_ID_LENGTH) {
+            log.error("Issue ID too long for field!");
+        } else {
+            finding.setIssueId(issueId);
+        }
 
         // unify URLs
         Map<String,String> patterns = new HashMap<String,String>();
