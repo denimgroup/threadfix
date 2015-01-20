@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraCustomFieldsConstants.*;
 import static com.denimgroup.threadfix.service.defects.utils.jira.JiraJsonMetadataResponse.*;
 
@@ -56,8 +57,6 @@ public class DynamicFormFieldParser {
         objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
     }
-
-//    private static final String TIME_TRACKING
 
     private static final SanitizedLogger LOG = new SanitizedLogger(DynamicFormFieldParser.class);
 
@@ -92,16 +91,34 @@ public class DynamicFormFieldParser {
             List<DynamicFormField> fieldList = list();
 
             if (project != null) {
+
+                DynamicFormField issueTypeField = new DynamicFormField();
+                issueTypeField.setRequired(true);
+                issueTypeField.setError("required", "This field cannot be empty.");
+                issueTypeField.setName("issuetype");
+                issueTypeField.setLabel("Issue Type");
+                issueTypeField.setActive(true);
+                issueTypeField.setEditable(true);
+                issueTypeField.setType("select");
+                Map<String, String> issueTypeValuesMap = newMap();
+                addField(issueTypeField, fieldList, null);
+
                 for (IssueType issueType : project.getIssuetypes()) {
+                    issueTypeValuesMap.put(issueType.getId(), issueType.getName());
                     for (Map.Entry<String, Field> entry : issueType.getFields().entrySet()) {
                         Field jsonField = entry.getValue();
                         String type = jsonField.getSchema().getType();
+
+                        if ("issuelink".equals(type))
+                            type = "string";
 
                         if ("array".equals(type) && "attachment".equals(jsonField.getSchema().getItems())) {
                             continue; // you can't make attachments required and we don't support uploads.
                         }
 
                         DynamicFormField field = new DynamicFormField();
+
+                        field.setShow("issuetype=" + issueType.getId());
 
                         field.setRequired(jsonField.isRequired());
                         if (jsonField.isRequired()) {
@@ -199,9 +216,10 @@ public class DynamicFormFieldParser {
 
                         LOG.debug("Adding new field with label " + field.getLabel() + " and type " + field.getType());
 
-                        fieldList.add(field);
+                        addField(field, fieldList, issueTypeField);
                     }
                 }
+                issueTypeField.setOptionsMap(issueTypeValuesMap);
             }
 
             return fieldList;
@@ -214,5 +232,9 @@ public class DynamicFormFieldParser {
         }
     }
 
+    private static void addField(DynamicFormField newField, List<DynamicFormField> toList, DynamicFormField oldField) {
+        if (oldField == null || !oldField.getName().equals(newField.getName()))
+            toList.add(newField);
+    }
 
 }

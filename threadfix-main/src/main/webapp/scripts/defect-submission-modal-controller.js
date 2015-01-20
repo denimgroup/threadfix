@@ -148,11 +148,14 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "type" : type,
                 "label" : field.required ? field.label + " *" : field.label,
                 "required" : field.required,
-                "empty" : "Select",
                 "labelClass" : field.required ? "errors" : null,
                 "options" : calculateOptions(field),
                 "multiple" : field.supportsMultivalue
             };
+
+            if (!field.required) {
+                fieldForm.empty = "Select";
+            }
 
             if (field.placeholder) {
                 fieldForm.placeholder = field.placeholder;
@@ -166,10 +169,18 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 fieldForm.errorsMap = field.errorsMap;
             }
 
+            if (field.show) {
+                fieldForm.show = field.show;
+            }
             if (type === "text")
                 fieldForm.maxLength = field.maxLength;
             $scope.stdFormTemplate.push(fieldForm)
         });
+
+        if ($scope.config.editableFields.length === 1) {
+            $scope.errorMessage = "Please check your project configuration because we couldn't retrieve any dynamic fields from issue submit form."
+        }
+
     };
 
     /**
@@ -204,6 +215,11 @@ myAppModule.controller('DefectSubmissionModalController', function ($scope, $roo
                 "label" : field.optionsMap[key]
             };
             options[key] = value;
+
+            // Default the first element in dropdown list
+            if (!$scope.fieldsMap[field.name] && field.required)
+                $scope.fieldsMap[field.name] = key;
+
         };
         return options;
     };

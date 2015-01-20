@@ -56,8 +56,7 @@ public class ScanComparisonUtils {
         SpringConfiguration.getContext().getBean(ScanComparisonUtils.class).compareInternal(array, filePath);
     }
 
-    @Transactional(readOnly = false)
-    public void compareInternal(String[][] array, String filePath) {
+    public void performUpdateCheck() {
         if (needsUpdating) {
             try {
                 mappingsUpdaterService.updateMappings(SpringConfiguration.getContext());
@@ -67,6 +66,11 @@ public class ScanComparisonUtils {
                 throw new IllegalStateException("Encountered exception while updating channel vulns. Fix it.", e);
             }
         }
+    }
+
+    @Transactional(readOnly = false)
+    public void compareInternal(String[][] array, String filePath) {
+        performUpdateCheck();
         compare(array, scanParser.getScan(filePath));
     }
 

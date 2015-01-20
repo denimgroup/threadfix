@@ -77,9 +77,9 @@ public class RestUtilsMock implements RestUtils {
         urlToResponseMap.put("/rest/api/2/issue/NCT-38", "jira/issue-status-NCT-38");
         urlToResponseMap.put("/rest/api/2/issue/PDP-60", "jira/issue-status-PDP-60");
         urlToResponseMap.put("/rest/api/2/user?username=threadfix", "jira/user-search");
-        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
-        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
-        urlToResponseMap.put("/rest/api/2/issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=TEST", "jira/custom-fields");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields&projectKeys=NCT", "jira/issuemetadata");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields&projectKeys=NCT&issuetypeIds=1", "jira/issuemetadata");
+        urlToResponseMap.put("/rest/api/2/issue/createmeta?expand=projects.issuetypes.fields&projectKeys=TEST", "jira/custom-fields");
         urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=NCT&permissions=ASSIGNABLE_USER&username", "jira/users");
         urlToResponseMap.put("/rest/api/2/user/permission/search?projectKey=TEST&permissions=ASSIGNABLE_USER&username", "jira/users");
 
@@ -94,6 +94,9 @@ public class RestUtilsMock implements RestUtils {
     }
 
     private String getResponse(String urlString, String username, String password) {
+
+        System.out.println("Got request for " + urlString);
+
         if (JIRA_USERNAME.equals(username) && JIRA_PASSWORD.equals(password)) {
             for (Map.Entry<String, String> entry : urlToResponseMap.entrySet()) {
                 if ((JIRA_BASE_URL + entry.getKey()).equals(urlString)) {

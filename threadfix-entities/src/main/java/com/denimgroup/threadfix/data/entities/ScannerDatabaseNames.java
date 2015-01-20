@@ -58,5 +58,6 @@ public final class ScannerDatabaseNames {
         MANUAL_DB_NAME = "Manual",
         PMD_DB_NAME = "PMD",
         CLANG_DB_NAME = "Clang",
-		CPPCHECK_DB_NAME = "Cppcheck";
+		CPPCHECK_DB_NAME = "Cppcheck",
+        CONTRAST_DB_NAME = "Contrast";
 }
