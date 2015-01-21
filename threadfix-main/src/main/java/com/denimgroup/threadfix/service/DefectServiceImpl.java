@@ -433,13 +433,22 @@ public class DefectServiceImpl implements DefectService {
 		Application application = applicationDao.retrieveById(appId);
 
 		if (application == null) {
+			log.error("Somehow updateScannerSuppliedStatuses was called with an invalid application ID. Throwing exception.");
 			throw new IllegalStateRestException("Unable to find an application with ID " + appId);
+		}
+
+		if (application.getDefectTracker() == null) {
+			log.debug("In updateScannerSuppliedStatuses but didn't have a Defect Tracker attached.");
+			return;
 		}
 
 		boolean needsUpdate = setDefectIdsFromScanners(application);
 
 		if (needsUpdate) {
+			log.debug("Created new defects, getting status updates from the server.");
 			updateVulnsFromDefectTracker(appId);
+		} else {
+			log.debug("Didn't find any scanner-supplied defect IDs, exiting.");
 		}
 	}
 
@@ -457,6 +466,7 @@ public class DefectServiceImpl implements DefectService {
 					if (issueId != null) {
 						Defect defect = new Defect();
 						defect.setNativeId(issueId);
+						log.debug("Creating new Defect with ID " + issueId + " for vulnerability with ID " + vulnerability.getId());
 
 						String url = application.getDefectTracker().getUrl();
 						defect.setDefectURL(tracker.getBugURL(url, issueId));

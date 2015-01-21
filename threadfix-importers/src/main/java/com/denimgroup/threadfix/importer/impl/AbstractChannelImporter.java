@@ -323,7 +323,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         SurfaceLocation location = new SurfaceLocation();
 
         if (issueId != null && issueId.length() > Finding.ISSUE_ID_LENGTH) {
-            log.error("Issue ID too long for field!");
+            log.error("Issue ID too long for field (" + Finding.ISSUE_ID_LENGTH + " character max): " + issueId);
         } else {
             finding.setIssueId(issueId);
         }
