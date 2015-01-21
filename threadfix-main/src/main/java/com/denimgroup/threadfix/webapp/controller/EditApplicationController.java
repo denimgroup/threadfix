@@ -251,9 +251,7 @@ public class EditApplicationController {
             return FormRestResponse.failure("Invalid data.", result);
 			
 		} else {
-
             PermissionUtils.addPermissions(model, orgId, appId, Permission.CAN_MANAGE_APPLICATIONS);
-
 
 			applicationService.storeApplication(application);
 
