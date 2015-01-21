@@ -59,6 +59,7 @@ public class RecordToXMLSerializer {
             String severity = map.get(Strings.SEVERITY);
             String cweId = map.get(Strings.CWE);
             String urlString = map.get(Strings.URL);
+            String issueId = map.get(Strings.ISSUE_ID);
 
             String parameterString = map.get(Strings.PARAMETER);
             parameterString = parameterString == null ? "" : parameterString;
@@ -70,7 +71,14 @@ public class RecordToXMLSerializer {
                 cweId = Strings.DEFAULT_CWE;
             }
 
-            builder.append("\t<Vulnerability CWE=\"").append(cweId).append("\" Severity=\"").append(severity).append("\">\n");
+            builder.append("\t<Vulnerability ")
+                    .append("CWE=\"").append(cweId).append("\" ");
+
+            if (issueId != null) {
+                builder.append("IssueID=\"").append(issueId).append("\" ");
+            }
+
+            builder.append("Severity=\"").append(severity).append("\">\n");
 
             appendTagIfPresent(map, builder, "ShortDescription", Strings.SHORT_DESCRIPTION);
             appendTagIfPresent(map, builder, "LongDescription", Strings.LONG_DESCRIPTION);

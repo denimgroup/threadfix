@@ -25,8 +25,6 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import com.denimgroup.threadfix.data.interfaces.DefectSubmitter;
-import com.denimgroup.threadfix.viewmodel.DefectMetadata;
 
 import java.util.List;
 import java.util.Map;
@@ -110,5 +108,7 @@ public interface DefectService {
 	 * @return
 	 */
 	boolean mergeDefect(List<Vulnerability> vulnerabilities, String id);
-	
+
+	void updateScannerSuppliedStatuses(int appId);
+
 }

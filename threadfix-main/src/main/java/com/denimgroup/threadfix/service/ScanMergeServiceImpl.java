@@ -64,6 +64,8 @@ public class ScanMergeServiceImpl implements ScanMergeService {
     private ChannelImporterFactory channelImporterFactory;
     @Autowired
     private VulnerabilityService vulnerabilityService;
+	@Autowired
+	private DefectService defectService;
 
 	@Override
 	public Scan saveRemoteScanAndRun(Integer channelId, String fileName) {
@@ -79,6 +81,7 @@ public class ScanMergeServiceImpl implements ScanMergeService {
 		}
 		
 		updateScanCounts(scan);
+		defectService.updateScannerSuppliedStatuses(scan.getApplication().getId());
 		vulnerabilityFilterService.updateVulnerabilities(scan);
 
 		return scan;

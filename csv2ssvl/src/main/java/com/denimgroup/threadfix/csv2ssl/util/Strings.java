@@ -46,6 +46,7 @@ public final class Strings {
             NATIVE_ID = getParameter("fields.nativeId"),
             LONG_DESCRIPTION = getParameter("fields.longDescription"),
             SHORT_DESCRIPTION = getParameter("fields.shortDescription"),
+            ISSUE_ID = getParameter("fields.issueID"),
             IGNORE = getParameter("fields.ignore"),
             TARGET_FILE = getParameter("arguments.targetFile"),
             OUTPUT_FILE = getParameter("arguments.outputFile"),
