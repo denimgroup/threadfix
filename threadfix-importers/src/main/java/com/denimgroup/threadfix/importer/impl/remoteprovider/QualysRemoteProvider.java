@@ -301,7 +301,7 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 
         while (keepGoing) {
 
-            HttpResponse connection = utils.postUrlWithConfigurer(appsUrl, getRequestConfigurer(4, currentId));
+            HttpResponse connection = utils.postUrlWithConfigurer(appsUrl, getRequestConfigurer(1000, currentId));
 
             InputStream stream;
             if (connection.isValid()) {
