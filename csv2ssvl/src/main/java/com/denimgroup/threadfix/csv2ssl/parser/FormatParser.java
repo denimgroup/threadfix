@@ -8,7 +8,7 @@
 //     http://www.mozilla.org/MPL/
 //
 //     Software distributed under the License is distributed on an "AS IS"
-//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     basis, WITHOUT WARRANTY OF ANY KIND, Option express or implied. See the
 //     License for the specific language governing rights and limitations
 //     under the License.
 //
@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
-import com.denimgroup.threadfix.csv2ssl.util.Either;
+import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
 import java.io.File;
@@ -38,7 +38,7 @@ import java.nio.file.Paths;
  */
 public class FormatParser {
 
-    public static Either<String[], String> getHeaders(String[] args, boolean allowHeaderInFile) {
+    public static Option<String[]> getHeaders(String[] args) {
         for (String arg : args) {
             if (arg.startsWith(Strings.FORMAT_STRING)) {
                 return parseFromString(arg);
@@ -48,17 +48,13 @@ public class FormatParser {
         }
 
         if (Strings.DEFAULT_HEADERS.isValid()) {
-            return Either.success(Strings.DEFAULT_HEADERS.getValue().split(","));
+            return Option.success(Strings.DEFAULT_HEADERS.getValue().split(","));
         }
 
-        if (allowHeaderInFile) {
-            return Either.success(new String[]{});
-        } else {
-            throw new IllegalStateException("Neither format string was found in the arguments. This indicates a coding error.");
-        }
+        return Option.failure("Didn't find the format string.");
     }
 
-    private static Either<String[], String> parseFromFile(String arg) {
+    private static Option<String[]> parseFromFile(String arg) {
         String fileName = arg.substring(arg.indexOf(Strings.FORMAT_STRING));
 
         File file = new File(fileName);
@@ -72,7 +68,7 @@ public class FormatParser {
                 if (content.length() > 0) {
                     error = "No content found in file " + arg;
                 } else {
-                    return getStrings(content);
+                    return getStringsOrError(content);
                 }
             } catch (IOException e) {
                 error = "Encountered IOException while attempting to read file " + fileName;
@@ -82,7 +78,7 @@ public class FormatParser {
             error = "Invalid file: " + fileName;
         }
 
-        return Either.failure(error);
+        return Option.failure(error);
     }
 
     private static String readFile(File file, Charset encoding)
@@ -92,19 +88,19 @@ public class FormatParser {
         return new String(encoded, encoding);
     }
 
-    private static Either<String[], String> parseFromString(String arg) {
+    private static Option<String[]> parseFromString(String arg) {
         String formatSection = arg.substring(Strings.FORMAT_STRING.length());
 
         assert formatSection.length() > 0 : "Format string was empty.";
 
-        return getStrings(formatSection);
+        return getStringsOrError(formatSection);
     }
 
-    private static Either<String[], String> getStrings(String inputString) {
+    public static Option<String[]> getStringsOrError(String inputString) {
         String[] strings = inputString.split(",");
         
         if (strings.length == 0) {
-            return Either.failure("Only " + strings.length + " sections found.");
+            return Option.failure("Only " + strings.length + " sections found.");
         }
 
         boolean isValid = true;
@@ -135,9 +131,9 @@ public class FormatParser {
 
         // interestingly, the ternary equivalent breaks Java 7's type inference system
         if (isValid) {
-            return Either.success(cleanedHeaders);
+            return Option.success(cleanedHeaders);
         } else {
-            return Either.failure(errorBuilder.toString());
+            return Option.failure(errorBuilder.toString());
         }
     }
 }

@@ -21,28 +21,35 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.csv2ssl;
+package com.denimgroup.threadfix.csv2ssl.parser;
 
-import java.io.InputStream;
-import java.net.URL;
+import com.denimgroup.threadfix.csv2ssl.util.Option;
+import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
 /**
- * Created by mac on 12/2/14.
+ * Created by mac on 12/3/14.
  */
-public class ResourceLoader {
+public class ArgumentParser {
 
-    public static InputStream getResource(String name) {
-        InputStream resourceAsStream = ResourceLoader.class.getClassLoader().getResourceAsStream(name);
+    private ArgumentParser(){}
 
-        assert resourceAsStream != null : "Unable to find " + name + " by classloading.";
-
-        return resourceAsStream;
+    public static Option<String> parseTargetFileName(String[] args) {
+        return getArgumentValue(Strings.OUTPUT_FILE, args);
     }
 
-    public static String getFilePath(String name) {
-        URL resource = ResourceLoader.class.getClassLoader().getResource(name);
-        assert resource != null : "Unable to locate " + name + ".";
-        return resource.getFile();
+    public static Option<String> parseSourceFileName(String[] args) {
+        return getArgumentValue(Strings.TARGET_FILE, args);
+    }
+
+    private static Option<String> getArgumentValue(String key, String[] args) {
+        for (String arg : args) {
+            if (arg.startsWith(key)) {
+                String fileName = arg.substring(key.length());
+                return Option.success(fileName);
+            }
+        }
+
+        return Option.failure("No result found for " + "");
     }
 
 }

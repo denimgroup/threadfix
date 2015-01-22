@@ -45,13 +45,14 @@ public class RecordToXMLSerializer {
                 "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
                 "        xsi:noNamespaceSchemaLocation=\"ssvl.xsd\">\n");
 
+        int i = 0;
         for (CSVRecord strings : parser) {
-
             Map<String, String> map = strings.toMap();
 
             String nativeId = map.get(Strings.NATIVE_ID);
 
             if (nativeId == null || nativeId.isEmpty()) {
+                System.out.println("Missing native ID for line " + i + ", no vulnerability created.");
                 continue;
             }
 
@@ -95,6 +96,7 @@ public class RecordToXMLSerializer {
                     .append("\"/>\n\t\t</Finding>\n");
 
             builder.append("\t</Vulnerability>\n");
+            i++;
         }
 
         builder.append("</Vulnerabilities>");

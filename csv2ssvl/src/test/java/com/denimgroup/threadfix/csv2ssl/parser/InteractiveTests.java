@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,25 +23,36 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
-import com.denimgroup.threadfix.csv2ssl.util.Strings;
+import com.denimgroup.threadfix.csv2ssl.Main;
+import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
+import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
+import org.junit.Test;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 /**
- * Created by mac on 12/3/14.
+ * Created by mcollins on 1/21/15.
  */
-public class FileNameParser {
+public class InteractiveTests {
 
-    private FileNameParser(){}
+    @Test
+    public void testBasicDialog() {
 
-    public static String parseFileName(String[] args) {
-        for (String arg : args) {
-            if (arg.startsWith(Strings.TARGET_FILE)) {
-                return arg.substring(Strings.TARGET_FILE.length());
-            }
-        }
+        // define inputs
+        String dialog =
+                "n\n" +
+                "CWE,url,Parameter,LongDescription,NativeID,Source\n" +
+                "y\n" +
+                ResourceLoader.getFilePath("basic.csv") + "\n" +
+                ResourceLoader.getFilePath("out.ssvl") + "\n";
 
-        throw new IllegalStateException(
-                "The target file argument was not found. " +
-                "This should have been caught by a format checker.");
+        InteractionUtils.reader = new BufferedReader(new StringReader(dialog));
+
+        String s = Main.doParsing(new String[]{});
+
+        assert s.contains("<Vulnerability") : "Didn't have any vulnerabilities.";
+
     }
 
 }

@@ -26,17 +26,52 @@ package com.denimgroup.threadfix.csv2ssl.util;
 /**
  * Created by mac on 12/5/14.
  */
-public class Option<C> extends Either<C, String> {
+public class Option<T> {
 
-    private Option(C value, String error) {
-        super(value, error);
+    private final T value;
+    private final String error;
+
+    public T getValue() {
+        if (value == null) {
+            throw new IllegalStateException("getValue() called on error option. Check using isValid() first.");
+        }
+        return value;
     }
 
-    public static <T, E> Either<T, E> failure(E error) {
-        return new Either<T, E>(null, error);
+    public String getErrorMessage() {
+        if (error == null) {
+            throw new IllegalStateException("getErrorMessage() called with no error message.");
+        }
+        return error;
     }
 
-    public static <T, E> Either<T, E> success(T value) {
-        return new Either<T, E>(value, null);
+    public boolean isValid() {
+        return value != null;
     }
+
+    private Option(T value, String error) {
+        this.value = value;
+        this.error = error;
+    }
+
+    public static <T> Option<T> failure(String error) {
+        if (error == null) {
+            throw new IllegalArgumentException("Null passed as argument to Either.failure()");
+        }
+
+        return new Option<T>(null, error);
+    }
+
+    public static <T, E> Option<T> success(T value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Null passed as argument to Either.success()");
+        }
+
+        return new Option<T>(value, null);
+    }
+
+    public Option<T> orElse(T t) {
+        return isValid() ? this : new Option<T>(t, null);
+    }
+
 }

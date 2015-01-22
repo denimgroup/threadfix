@@ -23,13 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl;
 
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
-import com.denimgroup.threadfix.csv2ssl.util.Either;
+import com.denimgroup.threadfix.csv2ssl.checker.InteractiveConfiguration;
+import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
 
-import static com.denimgroup.threadfix.csv2ssl.checker.ArgumentChecker.checkArguments;
-import static com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser.parse;
-import static com.denimgroup.threadfix.csv2ssl.parser.FileNameParser.parseFileName;
-import static com.denimgroup.threadfix.csv2ssl.parser.FormatParser.getHeaders;
+import static com.denimgroup.threadfix.csv2ssl.checker.Configuration.CONFIG;
 
 /**
  * Created by mac on 12/2/14.
@@ -37,21 +36,39 @@ import static com.denimgroup.threadfix.csv2ssl.parser.FormatParser.getHeaders;
 public class Main {
 
     public static void main(String[] args) {
-        if (checkArguments(args)) {
+        doParsing(args);
+    }
 
-            Either<String[], String> headers = getHeaders(args, true);
+    // public testing
+    public static String doParsing(String[] args) {
+        configure(args);
 
-            if (headers.isValid()) {
-                String xmlResult = parse(parseFileName(args), headers.getValue());
+        String xmlResult = CSVToSSVLParser.parse(CONFIG.csvFile.getAbsolutePath(), CONFIG.headers);
 
-                if (FormatChecker.checkFormat(xmlResult)) {
-                    System.out.println(xmlResult);
-                }
+        if (FormatChecker.checkFormat(xmlResult)) {
+            System.out.println(xmlResult);
+        }
 
-            } else {
-                System.out.println(headers.getErrorMessage());
+        return xmlResult;
+    }
+
+    private static void configure(String[] args) {
+        Configuration.setFromArguments(args);
+
+        WHILE: while (true) {
+            switch (Configuration.getCurrentState()) {
+                case VALID:
+                    break WHILE;
+                case NEEDS_HEADERS:
+                    InteractiveConfiguration.configureHeaders();
+                    break;
+                case NEEDS_INPUT_FILE:
+                    InteractiveConfiguration.configureInputFile();
+                    break;
+                case NEEDS_OUTPUT_FILE:
+                    InteractiveConfiguration.configureOutputFile();
+                    break;
             }
         }
     }
-
 }
