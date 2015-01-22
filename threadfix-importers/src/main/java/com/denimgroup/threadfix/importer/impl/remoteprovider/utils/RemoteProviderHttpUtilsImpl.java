@@ -87,37 +87,40 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
 
     @Override
     public HttpResponse postUrl(String url, String[] paramNames, String[] paramVals) {
-        return postUrl(url, paramNames, paramVals, null, null);
+        return postUrlWithConfigurer(url, new DefaultRequestConfigurer()
+                .withPostParameters(paramNames, paramVals));
     }
 
     @Override
     public HttpResponse postUrl(String url, String[] paramNames, String[] paramVals, String username, String password) {
-        return postUrl(url, paramNames, paramVals, username, password, new String[]{}, new String[]{});
+        return postUrlWithConfigurer(url, new DefaultRequestConfigurer()
+                .withPostParameters(paramNames, paramVals)
+                .withUsernamePassword(username, password));
     }
 
     @Override
     public HttpResponse postUrl(String url, String[] paramNames, String[] paramVals, String username, String password, String[] headerNames, String[] headerVals) {
-        assert url != null;
+        return postUrlWithConfigurer(url, new DefaultRequestConfigurer()
+                .withPostParameters(paramNames, paramVals)
+                .withHeaders(headerNames, headerVals)
+                .withUsernamePassword(username, password));
+    }
+
+    @Override
+    public HttpResponse postUrlWithConfigurer(String url, RequestConfigurer requestConfigurer) {
+        if (url == null) {
+            throw new IllegalArgumentException("Null url passed to postUrlWithConfigurer.");
+        }
+
+        if (requestConfigurer == null) {
+            throw new IllegalArgumentException("Null configurer passed to postUrlWithConfigurer.");
+        }
 
         PostMethod post = new PostMethod(url);
 
-        post.setRequestHeader("Content-type", "text/xml; charset=UTF-8");
-
-        if (username != null && password != null) {
-            String login = username + ":" + password;
-            String encodedLogin = new String(Base64.encodeBase64(login.getBytes()));
-
-            post.setRequestHeader("Authorization", "Basic " + encodedLogin);
-        }
-
-        for (int i = 0; i < headerNames.length; i++) {
-            post.setRequestHeader(headerNames[i], headerVals[i]);
-        }
+        requestConfigurer.configure(post);
 
         try {
-            for (int i = 0; i < paramNames.length; i++) {
-                post.addParameter(paramNames[i], paramVals[i]);
-            }
 
             HttpClient client = getConfiguredHttpClient(classInstance);
 
@@ -138,7 +141,7 @@ public class RemoteProviderHttpUtilsImpl<T> extends SpringBeanAutowiringSupport 
         return HttpResponse.failure();
     }
 
-    protected <T> HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
+    protected HttpClient getConfiguredHttpClient(Class<T> classToProxy) {
         if (HttpClientInstance == null) {
             if (proxyService == null) {
                 HttpClientInstance = new HttpClient();

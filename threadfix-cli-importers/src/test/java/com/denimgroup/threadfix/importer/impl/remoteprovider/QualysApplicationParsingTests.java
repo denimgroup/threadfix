@@ -74,5 +74,33 @@ public class QualysApplicationParsingTests {
         assertTrue("Applications weren't null.", applications == null);
     }
 
+    @Test
+    public void testPaginationParsingEmpty() {
+        QualysRemoteProvider.QualysAppsParser qualysAppsParser = getAppsParserForResource("qualys/apps-authenticated.xml");
+
+        assertFalse("hasMoreRecords was true!", qualysAppsParser.hasMoreRecords);
+        assertTrue("lastId wasn't 0! It was " + qualysAppsParser.lastId, qualysAppsParser.lastId == 0L);
+    }
+
+    @Test
+    public void testPaginationParsing() {
+        QualysRemoteProvider.QualysAppsParser qualysAppsParser = getAppsParserForResource("qualys/apps-with-pagination.xml");
+
+        assertTrue("hasMoreRecords was false!", qualysAppsParser.hasMoreRecords);
+        assertTrue("lastId wasn't 5917053! It was " + qualysAppsParser.lastId, qualysAppsParser.lastId == 59170563L);
+    }
+
+    private QualysRemoteProvider.QualysAppsParser getAppsParserForResource(String resourcePath) {
+        RemoteProvider provider = getQualysImporterWithMock(VeracodeMockHttpUtils.GOOD_USERNAME,
+                VeracodeMockHttpUtils.GOOD_PASSWORD);
+
+        QualysRemoteProvider qualys = (QualysRemoteProvider) provider;
+
+        QualysRemoteProvider.QualysAppsParser qualysAppsParser = qualys.new QualysAppsParser();
+
+        qualys.parse(QualysApplicationParsingTests.class.getClassLoader().getResourceAsStream(resourcePath), qualysAppsParser);
+        return qualysAppsParser;
+    }
+
 
 }

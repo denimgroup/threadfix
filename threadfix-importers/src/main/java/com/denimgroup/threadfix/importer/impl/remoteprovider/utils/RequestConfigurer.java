@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,23 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
+import org.apache.commons.httpclient.HttpMethodBase;
+
 /**
- * Created by mac on 6/2/14.
+ * Created by mcollins on 1/22/15.
  */
-public interface RemoteProviderHttpUtils {
-
-    HttpResponse getUrl(String url);
-
-    HttpResponse getUrl(String url, String username, String password);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password);
-
-    HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password,
-                         String[] headerNames, String[] headerVals);
-
-    HttpResponse postUrlWithConfigurer(String url, RequestConfigurer requestConfigurer);
-
-
+public interface RequestConfigurer {
+    void configure(HttpMethodBase method);
 }

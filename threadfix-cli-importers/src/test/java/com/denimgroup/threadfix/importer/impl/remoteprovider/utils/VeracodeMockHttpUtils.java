@@ -84,4 +84,9 @@ public class VeracodeMockHttpUtils implements RemoteProviderHttpUtils {
     public HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password, String[] headerNames, String[] headerVals) {
         return null;
     }
+
+    @Override
+    public HttpResponse postUrlWithConfigurer(String url, RequestConfigurer requestConfigurer) {
+        return null;
+    }
 }
