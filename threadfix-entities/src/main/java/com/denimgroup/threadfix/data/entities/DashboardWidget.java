@@ -35,6 +35,8 @@ import javax.persistence.Table;
 @Table(name = "DashboardWidget")
 public class DashboardWidget extends BaseEntity {
 
+    private static final long serialVersionUID = -1612233741957801615L;
+
     private String widgetName;
     private String jspFilePath;
     private String jsFilePath;

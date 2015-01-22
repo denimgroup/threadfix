@@ -90,6 +90,7 @@ public class DashboardController {
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
         model.addAttribute("config", config);
+        model.addAttribute("dashboardWidgets", dashboardWidgetService.loadAll());
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {

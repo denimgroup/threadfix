@@ -24,15 +24,16 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.DashboardWidget;
 import com.denimgroup.threadfix.data.entities.DashboardWidgetType;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DashboardWidgetService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -56,6 +57,8 @@ public class SystemSettingsController {
 	private RoleService roleService = null;
 	@Autowired
     private DefaultConfigService defaultConfigService = null;
+	@Autowired
+	private DashboardWidgetService dashboardWidgetService = null;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -65,8 +68,8 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-                    "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeft", "dashboardTopRight",
-					"dashboardBottomLeft", "dashboardBottomRight");
+                    "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", "dashboardTopRightId",
+					"dashboardBottomLeftId", "dashboardBottomRightId");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -79,9 +82,9 @@ public class SystemSettingsController {
 		return roleService.loadAll();
 	}
 
-	@ModelAttribute("dashboardWidgetTypes")
-	public DashboardWidgetType[] populateDashboardWidgetTypes() {
-		return DashboardWidgetType.values();
+	@ModelAttribute("dashboardWidgets")
+	public List<DashboardWidget> populateDashboardWidgetTypes() {
+		return dashboardWidgetService.loadAll();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

@@ -303,9 +303,8 @@
                                 <b>Top Left</b>
                             </div>
                             <div>
-                                <form:select id="dashboardTopLeftSelect" path="dashboardTopLeft">
-                                    <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
+                                <form:select id="dashboardTopLeftSelect" path="dashboardTopLeftId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
@@ -314,9 +313,8 @@
                                 <b>Top Right</b>
                             </div>
                             <div>
-                                <form:select id="dashboardTopRightSelect" path="dashboardTopRight">
-                                    <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
+                                <form:select id="dashboardTopRightSelect" path="dashboardTopRightId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
@@ -325,9 +323,8 @@
                                 <b>Bottom Left</b>
                             </div>
                             <div>
-                                <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeft">
-                                    <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
+                                <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeftId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>
@@ -336,9 +333,8 @@
                                 <b>Bottom Right</b>
                             </div>
                             <div>
-                                <form:select id="dashboardBottomRightSelect" path="dashboardBottomRight">
-                                    <%--<form:option value="" label="" />--%>
-                                    <form:options items="${ dashboardWidgetTypes }" itemValue="widgetShortName" itemLabel="widgetName" />
+                                <form:select id="dashboardBottomRightSelect" path="dashboardBottomRightId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
                                 </form:select>
                             </div>
                         </td>

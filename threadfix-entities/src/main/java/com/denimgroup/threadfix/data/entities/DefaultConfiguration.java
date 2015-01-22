@@ -78,7 +78,7 @@ public class DefaultConfiguration extends BaseEntity {
         return dashboardTopLeftId;
     }
 
-    public void setDashboardTopLeftId(Integer dashboardTopLeft) {
+    public void setDashboardTopLeftId(Integer dashboardTopLeftId) {
         this.dashboardTopLeftId = dashboardTopLeftId;
     }
 
