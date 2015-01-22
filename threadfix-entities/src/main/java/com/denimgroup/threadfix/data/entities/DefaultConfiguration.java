@@ -24,10 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +52,7 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Integer sessionTimeout = null;
 
-    private String dashboardTopLeft, dashboardTopRight, dashboardBottomLeft, dashboardBottomRight;
+    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId, dashboardBottomRightId;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -77,39 +74,39 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Column
-    public String getDashboardTopLeft() {
-        return dashboardTopLeft;
+    public Integer getDashboardTopLeftId() {
+        return dashboardTopLeftId;
     }
 
-    public void setDashboardTopLeft(String dashboardTopLeft) {
-        this.dashboardTopLeft = dashboardTopLeft;
-    }
-
-    @Column
-    public String getDashboardTopRight() {
-        return dashboardTopRight;
-    }
-
-    public void setDashboardTopRight(String dashboardTopRight) {
-        this.dashboardTopRight = dashboardTopRight;
+    public void setDashboardTopLeftId(Integer dashboardTopLeft) {
+        this.dashboardTopLeftId = dashboardTopLeftId;
     }
 
     @Column
-    public String getDashboardBottomLeft() {
-        return dashboardBottomLeft;
+    public Integer getDashboardTopRightId() {
+        return dashboardTopRightId;
     }
 
-    public void setDashboardBottomLeft(String dashboardBottomLeft) {
-        this.dashboardBottomLeft = dashboardBottomLeft;
+    public void setDashboardTopRightId(Integer dashboardTopRightId) {
+        this.dashboardTopRightId = dashboardTopRightId;
     }
 
     @Column
-    public String getDashboardBottomRight() {
-        return dashboardBottomRight;
+    public Integer getDashboardBottomLeftId() {
+        return dashboardBottomLeftId;
     }
 
-    public void setDashboardBottomRight(String dashboardBottomRight) {
-        this.dashboardBottomRight = dashboardBottomRight;
+    public void setDashboardBottomLeftId(Integer dashboardBottomLeftId) {
+        this.dashboardBottomLeftId = dashboardBottomLeftId;
+    }
+
+    @Column
+    public Integer getDashboardBottomRightId() {
+        return dashboardBottomRightId;
+    }
+
+    public void setDashboardBottomRightId(Integer dashboardBottomRightId) {
+        this.dashboardBottomRightId = dashboardBottomRightId;
     }
 
     @Column

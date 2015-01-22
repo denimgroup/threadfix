@@ -72,6 +72,8 @@ public class DashboardController {
 	private OrganizationService organizationService;
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
+    @Autowired
+    private DashboardWidgetService dashboardWidgetService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
