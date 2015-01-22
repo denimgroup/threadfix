@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.annotations.RemoteProvider;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.QualysPlatform;
+import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.DefaultRequestConfigurer;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.HttpResponse;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtils;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.utils.RemoteProviderHttpUtilsImpl;
@@ -288,31 +289,70 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 
 		// POST with no parameters
 		// TODO include filters
-		HttpResponse connection = utils.postUrl(getAppsUrl(remoteProviderType), new String[]{}, new String[]{}, username, password);
+        String appsUrl = getAppsUrl(remoteProviderType);
 
-		InputStream stream;
-        if (connection.isValid()) {
-            stream = connection.getInputStream();
-        } else {
-            LOG.warn("Failed to retrieve the applications. Check your credentials. status code was " +
-                    connection.getStatus());
-            return null;
+        boolean keepGoing = true;
+        long currentId = 0L;
+
+        List<RemoteProviderApplication> applications = list();
+
+        int tooManyTimes = 200;
+        int currentTimes = 0;
+
+        while (keepGoing) {
+
+            HttpResponse connection = utils.postUrlWithConfigurer(appsUrl, getRequestConfigurer(4, currentId));
+
+            InputStream stream;
+            if (connection.isValid()) {
+                stream = connection.getInputStream();
+            } else {
+                LOG.warn("Failed to retrieve the applications. Check your credentials. status code was " +
+                        connection.getStatus());
+                return null;
+            }
+
+            QualysAppsParser parser = new QualysAppsParser();
+
+            parse(stream, parser);
+
+            if (parser.list.size() > 0) {
+                LOG.info("Number of Qualys applications: " + parser.list.size());
+                applications.addAll(parser.list);
+            } else {
+                LOG.warn("No Qualys applications were found. Check your configuration.");
+            }
+
+            keepGoing = parser.lastId != currentId && ++currentTimes < tooManyTimes && parser.hasMoreRecords;
+            currentId = parser.lastId;
+        }
+		
+		return applications;
+	}
+
+    private DefaultRequestConfigurer getRequestConfigurer(int numResults, long lastId) {
+
+        String contents =
+                "<ServiceRequest>\n" +
+                "  <preferences>\n" +
+                "    <limitResults>" + numResults + "</limitResults>\n" +
+                "  </preferences>\n";
+
+        if (lastId > 0) {
+            contents = contents +
+                    "  <filters>\n" +
+                    "    <Criteria field=\"id\" operator=\"GREATER\">" + lastId + "</Criteria>\n" +
+                    "  </filters>\n";
         }
 
-		QualysAppsParser parser = new QualysAppsParser();
-		
-		parse(stream, parser);
-		
-		if (parser.list.size() > 0) {
-			LOG.info("Number of Qualys applications: " + parser.list.size());
-		} else {
-			LOG.warn("No Qualys applications were found. Check your configuration.");
-		}
-		
-		return parser.list;
-	}
-	
-	public List<String> mostRecentScanForApp(RemoteProviderApplication app) {
+        contents = contents + "</ServiceRequest>";
+
+        return new DefaultRequestConfigurer()
+                .withUsernamePassword(username, password)
+                .withRequestBody(contents, null);
+    }
+
+    public List<String> mostRecentScanForApp(RemoteProviderApplication app) {
 		if (app == null || app.getNativeName() == null) {
 			return null;
 		}
@@ -400,17 +440,24 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 
 	// PARSER CLASSES
 
-	private class QualysAppsParser extends HandlerWithBuilder {
+	class QualysAppsParser extends HandlerWithBuilder {
 
         @Nonnull
 		public List<RemoteProviderApplication> list = list();
-		
-		private boolean getName = false;
+
+        public boolean hasMoreRecords;
+        public long lastId = 0L;
+
+		private boolean getName = false, getHasMoreRecords = false, getLastId = false;
 
 	    public void startElement (String uri, String name, String qName, Attributes atts) throws SAXException {	    	
 	    	if (qName.equals("name")) {
 	    		getName = true;
-	    	}
+	    	} else if (qName.equals("hasMoreRecords")) {
+                getHasMoreRecords = true;
+            } else if (qName.equals("lastId")) {
+                getLastId = true;
+            }
 	    }
 	    
 	    public void endElement(String uri, String name, String qName) {
@@ -423,11 +470,19 @@ public class QualysRemoteProvider extends AbstractRemoteProvider {
 	    		list.add(remoteProviderApplication);
 
 	    		getName = false;
-	    	}
+	    	} else if (getHasMoreRecords) {
+                String text = getBuilderText();
+                hasMoreRecords = "true".equals(text);
+                getHasMoreRecords = false;
+            } else if (getLastId) {
+                String text = getBuilderText();
+                lastId = text != null && text.matches("[0-9]+") ? Long.valueOf(text) : 0L;
+                getLastId = false;
+            }
 	    }
 
 		public void characters (char ch[], int start, int length) {
-	    	if (getName) {
+	    	if (getName || getHasMoreRecords || getLastId) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
