@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.serializer;
 
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 import com.denimgroup.threadfix.csv2ssl.util.DateUtils;
 import org.apache.commons.csv.CSVParser;
@@ -49,24 +50,24 @@ public class RecordToXMLSerializer {
         for (CSVRecord strings : parser) {
             Map<String, String> map = strings.toMap();
 
-            String nativeId = map.get(Strings.NATIVE_ID);
+            String nativeId = get(map, Strings.NATIVE_ID);
 
             if (nativeId == null || nativeId.isEmpty()) {
                 System.out.println("Missing native ID for line " + i + ", no vulnerability created.");
                 continue;
             }
 
-            String sourceScanner = map.get(Strings.SOURCE);
-            String severity = map.get(Strings.SEVERITY);
-            String cweId = map.get(Strings.CWE);
-            String urlString = map.get(Strings.URL);
-            String issueId = map.get(Strings.ISSUE_ID);
+            String sourceScanner = get(map, Strings.SOURCE);
+            String severity = get(map, Strings.SEVERITY);
+            String cweId = get(map, Strings.CWE);
+            String urlString = get(map, Strings.URL);
+            String issueId = get(map, Strings.ISSUE_ID);
 
-            String parameterString = map.get(Strings.PARAMETER);
+            String parameterString = get(map, Strings.PARAMETER);
             parameterString = parameterString == null ? "" : parameterString;
             severity = severity == null || severity.trim().isEmpty() ? "Medium" : severity;
 
-            String dateString = map.get(Strings.FINDING_DATE);
+            String dateString = get(map, Strings.FINDING_DATE);
 
             if (cweId == null) {
                 cweId = Strings.DEFAULT_CWE;
@@ -105,12 +106,16 @@ public class RecordToXMLSerializer {
     }
 
     private static void appendTagIfPresent(Map<String, String> map, StringBuilder builder, String name, String key) {
-        String value = map.get(key);
+        String value = get(map, key);
         if (value != null) {
             builder.append("\t\t<").append(name).append(">\n\t\t\t")
                     .append(value).append("\n")
                     .append("\t\t</").append(name).append(">\n");
         }
+    }
+
+    private static String get(Map<String, String> map, String key) {
+        return map.get(Configuration.CONFIG.headerMap.get(key));
     }
 
 }

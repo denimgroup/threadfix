@@ -48,6 +48,7 @@ public final class Strings {
             SHORT_DESCRIPTION = getParameter("fields.shortDescription"),
             ISSUE_ID = getParameter("fields.issueID"),
             IGNORE = getParameter("fields.ignore"),
+            CONFIG_FILE = getParameter("arguments.configFile"),
             TARGET_FILE = getParameter("arguments.targetFile"),
             OUTPUT_FILE = getParameter("arguments.outputFile"),
             FORMAT_FILE = getParameter("arguments.formatFile"),

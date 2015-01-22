@@ -27,6 +27,9 @@ import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
 import com.denimgroup.threadfix.csv2ssl.checker.InteractiveConfiguration;
 import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
+import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
+
+import java.io.File;
 
 import static com.denimgroup.threadfix.csv2ssl.checker.Configuration.CONFIG;
 
@@ -37,6 +40,24 @@ public class Main {
 
     public static void main(String[] args) {
         doParsing(args);
+
+        boolean keepAsking = InteractionUtils.getYNAnswer("Would you like to save configuration? (y/n)");
+        while (keepAsking) {
+            System.out.println("Where would you like to save this file? Enter 'exit' to quit.");
+
+            String file = InteractionUtils.getLine();
+
+            if ("exit".equals(file)) {
+                break;
+            }
+
+            File actualFile = new File(file);
+
+            if (!actualFile.exists() || InteractionUtils.getYNAnswer("Overwrite current file? (y/n)")) {
+                Configuration.writeToFile(actualFile);
+                keepAsking = false;
+            }
+        }
     }
 
     // public testing
@@ -72,3 +93,5 @@ public class Main {
         }
     }
 }
+
+/// /Users/mcollins/git/threadfix/csv2ssvl/src/test/resources/withDifferentHeaderLine.csv

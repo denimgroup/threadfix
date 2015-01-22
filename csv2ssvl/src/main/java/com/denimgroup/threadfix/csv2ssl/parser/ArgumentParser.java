@@ -41,6 +41,10 @@ public class ArgumentParser {
         return getArgumentValue(Strings.TARGET_FILE, args);
     }
 
+    public static Option<String> parseConfigFileName(String[] args) {
+        return getArgumentValue(Strings.CONFIG_FILE, args);
+    }
+
     private static Option<String> getArgumentValue(String key, String[] args) {
         for (String arg : args) {
             if (arg.startsWith(key)) {

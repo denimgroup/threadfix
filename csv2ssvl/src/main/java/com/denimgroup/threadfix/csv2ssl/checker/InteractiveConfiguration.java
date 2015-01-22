@@ -23,10 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.checker;
 
+import com.denimgroup.threadfix.csv2ssl.util.Header;
 import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
-import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +57,8 @@ public class InteractiveConfiguration {
                 if (saveResult) {
                     CONFIG.headers = firstLine.split(",");
                     CONFIG.shouldSkipFirstLine = true;
+                    CONFIG.csvFile = file;
+                    checkConfiguredHeaders();
                 }
             }
         } else {
@@ -67,8 +70,31 @@ public class InteractiveConfiguration {
             if (saveResult) {
                 CONFIG.headers = headers.split(",");
                 CONFIG.shouldSkipFirstLine = false;
+                checkConfiguredHeaders();
             }
         }
+    }
+
+    private static void checkConfiguredHeaders() {
+
+        System.out.println("Checking configuration");
+
+        Set<String> headerStringSet = new HashSet<String>(Arrays.asList(CONFIG.headers));
+
+        for (Header header : Header.values()) {
+            String configuredName = CONFIG.headerMap.get(header.text);
+
+            if (headerStringSet.contains(configuredName)) {
+                System.out.println("Success: configured header '" + configuredName + "' for field '" + header.text + "' was found in headers.");
+            } else {
+                System.out.println("Failure: configured header '" + configuredName + "' for field '" + header.text + "' was not found in headers.");
+                if (header == Header.NATIVE_ID) {
+                    System.out.println("You must configure a value for native ID.");
+                }
+            }
+        }
+
+        configureHeaderNames();
     }
 
     private static File getCsvFile() {
@@ -81,8 +107,8 @@ public class InteractiveConfiguration {
 
     public static void configureHeaderNames() {
         boolean reconfigure = getYNAnswer(
-                "Would you like to update the header titles?\n" +
-                "For example, 'CWE' corresponds to 'Vulnerability Type' in the CSV, not 'CWE'. (y/n)");
+                "If you got Failures above for header names but the data is present in your CSV file, you should configure the column mappings.\n" +
+                "Configure mappings now? (y/n)");
 
         if (reconfigure) {
             Set<String> headerSet = new HashSet<String>();
@@ -93,30 +119,28 @@ public class InteractiveConfiguration {
                 }
             }
 
-            getNewHeaderName("CWE (number, ex. 79)", Strings.CWE, headerSet);
-            getNewHeaderName("Long Description", Strings.LONG_DESCRIPTION, headerSet);
-            getNewHeaderName("Native ID (identifying String, ex. 72457)", Strings.NATIVE_ID, headerSet);
-            getNewHeaderName("Parameter (String, ex. username)", Strings.PARAMETER, headerSet);
-            getNewHeaderName("Path (String, ex. /login.jsp)", Strings.URL, headerSet);
-            getNewHeaderName("Severity (String, one of 'Information', 'Low', 'Medium', 'High', 'Critical' or a number from 1 to 5)", Strings.SEVERITY, headerSet);
-            getNewHeaderName("FindingDate (Must be in the format " + Strings.DATE_FORMAT + ")", Strings.FINDING_DATE, headerSet);
-            getNewHeaderName("Issue ID (Jira, TFS, etc. ID format)", Strings.ISSUE_ID, headerSet);
+            for (Header header : Header.values()) {
+                getNewHeaderName(header, headerSet);
+            }
+
+            checkConfiguredHeaders();
         }
     }
     
-    private static void getNewHeaderName(String prompt, String key, Set<String> inputHeaders) {
+    private static void getNewHeaderName(Header header, Set<String> inputHeaders) {
 
         while (true) {
             System.out.println(
-                    "Please input the name of the header for " + prompt +
-                            " or 'skip' to keep default value (" + key + ")"
+                    "Please input the name of the header for " + header.description +
+                            " or 'skip' to keep default value (" + header.text + ")"
             );
             String input = getLine();
 
-            if (input.trim().equals("skipme")) {
+            if (input.trim().equals("skip")) {
                 return;
             } else if (inputHeaders.isEmpty() || inputHeaders.contains(input.trim())) {
-                CONFIG.headerMap.put(key, input.trim());
+                CONFIG.headerMap.put(header.text, input.trim());
+                return;
             } else {
                 System.out.println(input.trim() + " wasn't found in " + inputHeaders);
             }
@@ -129,6 +153,15 @@ public class InteractiveConfiguration {
     }
 
     public static void configureOutputFile() {
-        CONFIG.outputFile = InteractionUtils.getValidFileFromStdIn("output");
+        System.out.println("Where would you like output to go? Please enter a file path or 'stdout' for console output.");
+        String fileName = getLine();
+
+        if (fileName.trim().equals("stdout")) {
+            CONFIG.outputFile = null;
+            CONFIG.useStandardOut = true;
+        } else {
+            CONFIG.outputFile = new File(fileName);
+            CONFIG.useStandardOut = false;
+        }
     }
 }

@@ -36,6 +36,14 @@ import java.io.StringReader;
  */
 public class InteractiveTests {
 
+    private void testDialog(String dialog) {
+        InteractionUtils.reader = new BufferedReader(new StringReader(dialog));
+
+        String s = Main.doParsing(new String[]{});
+
+        assert s.contains("<Vulnerability") : "Didn't have any vulnerabilities.";
+    }
+
     @Test
     public void testBasicDialog() {
 
@@ -44,14 +52,73 @@ public class InteractiveTests {
                 "n\n" +
                 "CWE,url,Parameter,LongDescription,NativeID,Source\n" +
                 "y\n" +
+                "n\n" +
                 ResourceLoader.getFilePath("basic.csv") + "\n" +
                 ResourceLoader.getFilePath("out.ssvl") + "\n";
 
-        InteractionUtils.reader = new BufferedReader(new StringReader(dialog));
+        testDialog(dialog);
+    }
 
-        String s = Main.doParsing(new String[]{});
+    @Test
+    public void testWithColumnConfiguration() {
 
-        assert s.contains("<Vulnerability") : "Didn't have any vulnerabilities.";
+        // define inputs
+        String dialog =
+                "n\n" +
+                "1,2,3,4,5,6\n" +
+                "y\n" +
+                "y\n" +
+                "skip\n" +
+                "1\n" +
+                "6\n" +
+                "2\n" +
+                "3\n" +
+                "5\n" +
+                "4\n" +
+                "skip\n" +
+                "skip\n" +
+                "n\n" +
+                ResourceLoader.getFilePath("basic.csv") + "\n" +
+                "stdout\n";
+
+        testDialog(dialog);
+    }
+
+    @Test
+    public void testWithHeaderInFile() {
+
+        String dialog =
+                "y\n" +
+                ResourceLoader.getFilePath("withHeaderLine.csv") + "\n" +
+                "y\n" +
+                "n\n" +
+                "stdout\n";
+
+        testDialog(dialog);
+    }
+
+    @Test
+    public void testWithDifferentHeadersInFile() {
+        String dialog =
+                "y\n" +
+                ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\n" +
+                "y\n" +
+                "y\n" +
+                "skip\n" +
+                "VulnType\n" +
+                "Scanner\n" +
+                "Location\n" +
+                "Injection Point\n" +
+                "ID\n" +
+                "Text\n" +
+                "skip\n" +
+                "skip\n" +
+                "n\n" +
+                "stdout\n";
+
+        testDialog(dialog);
+
+
 
     }
 

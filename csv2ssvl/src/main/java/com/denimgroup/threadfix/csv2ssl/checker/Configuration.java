@@ -25,7 +25,6 @@ package com.denimgroup.threadfix.csv2ssl.checker;
 
 import com.denimgroup.threadfix.csv2ssl.parser.ArgumentParser;
 import com.denimgroup.threadfix.csv2ssl.parser.FormatParser;
-import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
 import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
@@ -79,17 +78,24 @@ public class Configuration {
         }
     }
 
-    public static void writeToFile() {
-        File outputFile = new File("config.properties");
+    public static void writeToFile(File file) {
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(file);
 
-        if (outputFile.exists()) {
-            if (InteractionUtils.getYNAnswer("Overwrite existing configuration?")) {
-                writeInternal(outputFile);
+            toProperties().store(outputStream, "Saving contents.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } else {
-            writeInternal(outputFile);
         }
-
     }
 
     private static void writeInternal(File outputFile) {
@@ -139,9 +145,14 @@ public class Configuration {
         return properties;
     }
 
+    // TODO this is long
     public static void setFromArguments(String[] args) {
 
-        loadFromFile();
+        Option<String> configFile = ArgumentParser.parseConfigFileName(args);
+
+        if (configFile.isValid()) {
+            loadFromFile(configFile.getValue());
+        }
 
         Option<String[]> formatString = FormatParser.getHeaders(args);
 
@@ -177,7 +188,7 @@ public class Configuration {
         }
     }
 
-    private static void loadFromFile() {
+    private static void loadFromFile(String value) {
 
         File file = new File("config.properties");
 
@@ -220,7 +231,6 @@ public class Configuration {
 
         CONFIG.useStandardOut = "true".equalsIgnoreCase(properties.getProperty("useStandardOut"));
         CONFIG.shouldSkipFirstLine = "true".equalsIgnoreCase(properties.getProperty("shouldSkipFirstLine"));
-
     }
 
 }
