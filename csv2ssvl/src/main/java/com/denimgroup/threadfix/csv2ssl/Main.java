@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
 import com.denimgroup.threadfix.csv2ssl.checker.InteractiveConfiguration;
 import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
 import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
+import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
 import java.io.File;
 
@@ -39,29 +40,41 @@ import static com.denimgroup.threadfix.csv2ssl.checker.Configuration.CONFIG;
 public class Main {
 
     public static void main(String[] args) {
-        doParsing(args);
 
-        boolean keepAsking = InteractionUtils.getYNAnswer("Would you like to save configuration? (y/n)");
-        while (keepAsking) {
-            System.out.println("Where would you like to save this file? Enter 'exit' to quit.");
+        doConfigurationAndParsing(args);
 
-            String file = InteractionUtils.getLine();
+        offerToSaveIfAppropriate();
+    }
 
-            if ("exit".equals(file)) {
-                break;
-            }
+    private static void offerToSaveIfAppropriate() {
+        if (!Configuration.CONFIG.loadedFromFile) {
+            boolean keepAsking = InteractionUtils.getYNAnswer("Would you like to save configuration? (y/n)");
+            while (keepAsking) {
+                System.out.println("Where would you like to save this file? Enter 'exit' to quit.");
 
-            File actualFile = new File(file);
+                String file = InteractionUtils.getLine();
 
-            if (!actualFile.exists() || InteractionUtils.getYNAnswer("Overwrite current file? (y/n)")) {
-                Configuration.writeToFile(actualFile);
-                keepAsking = false;
+                if ("exit".equals(file)) {
+                    break;
+                }
+
+                File actualFile = new File(file);
+
+                if (!actualFile.exists() || InteractionUtils.getYNAnswer("Overwrite current file? (y/n)")) {
+                    Configuration.writeToFile(actualFile);
+                    keepAsking = false;
+                    System.out.println(
+                            "To start this program again with this configuration, use the options " +
+                                    Strings.CONFIG_FILE + actualFile.getAbsolutePath() + " " +
+                                    Strings.TARGET_FILE + "{path to CSV you want to convert}"
+                    );
+                }
             }
         }
     }
 
     // public testing
-    public static String doParsing(String[] args) {
+    public static String doConfigurationAndParsing(String[] args) {
         configure(args);
 
         String xmlResult = CSVToSSVLParser.parse(CONFIG.csvFile.getAbsolutePath(), CONFIG.headers);
@@ -94,4 +107,5 @@ public class Main {
     }
 }
 
-/// /Users/mcollins/git/threadfix/csv2ssvl/src/test/resources/withDifferentHeaderLine.csv
+/// /Users/mcollins/git/threadfix/csv2ssvl/src/test/resources/withHeaderLine.csv
+/// /Users/mcollins/git/threadfix/csv2ssvl/src/test/resources/basic.csv

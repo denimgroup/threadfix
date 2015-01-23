@@ -42,6 +42,7 @@ import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.newMap;
  */
 public class Configuration {
 
+
     public static enum State {
         VALID, NEEDS_HEADERS, NEEDS_INPUT_FILE, NEEDS_OUTPUT_FILE
     }
@@ -50,7 +51,7 @@ public class Configuration {
 
     public String[] headers;
 
-    public boolean useStandardOut = false, shouldSkipFirstLine = false;
+    public boolean loadedFromFile = false, useStandardOut = false, shouldSkipFirstLine = false;
 
     public File csvFile, outputFile;
 
@@ -190,18 +191,17 @@ public class Configuration {
 
     private static void loadFromFile(String value) {
 
-        File file = new File("config.properties");
+        File file = new File(value);
 
         if (file.exists() && file.isFile()) {
             Properties properties = new Properties();
 
             try {
                 properties.load(new FileInputStream(file));
+                loadFromProperties(properties);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            loadFromProperties(properties);
         }
     }
 
@@ -231,6 +231,7 @@ public class Configuration {
 
         CONFIG.useStandardOut = "true".equalsIgnoreCase(properties.getProperty("useStandardOut"));
         CONFIG.shouldSkipFirstLine = "true".equalsIgnoreCase(properties.getProperty("shouldSkipFirstLine"));
+        CONFIG.loadedFromFile = true;
     }
 
 }

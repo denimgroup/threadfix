@@ -69,7 +69,8 @@ public class RecordToXMLSerializer {
 
             String dateString = get(map, Strings.FINDING_DATE);
 
-            if (cweId == null) {
+            if (cweId == null || !cweId.matches("^[0-9]+$")) {
+                System.out.println("Invalid CWE value found on line " + i + ", using the default CWE value (" + Strings.DEFAULT_CWE + ")");
                 cweId = Strings.DEFAULT_CWE;
             }
 

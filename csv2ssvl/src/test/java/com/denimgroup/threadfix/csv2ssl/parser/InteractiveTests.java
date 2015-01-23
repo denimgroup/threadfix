@@ -39,7 +39,7 @@ public class InteractiveTests {
     private void testDialog(String dialog) {
         InteractionUtils.reader = new BufferedReader(new StringReader(dialog));
 
-        String s = Main.doParsing(new String[]{});
+        String s = Main.doConfigurationAndParsing(new String[]{});
 
         assert s.contains("<Vulnerability") : "Didn't have any vulnerabilities.";
     }
