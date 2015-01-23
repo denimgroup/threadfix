@@ -12,6 +12,9 @@
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
 	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
+    <cbs:cachebustscript src="/scripts/graph-config-modal-controller.js"/>
+    <cbs:cachebustscript src="/scripts/mitigation-progress-report.js"/>
+    <cbs:cachebustscript src="/scripts/d3.min.js"/>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
@@ -53,6 +56,9 @@
                 <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
                 <jsp:include page="widgets/vulnerabilityTrending.jsp"/>
                 <jsp:include page="widgets/mostVulnerableApps.jsp"/>
+            </div>
+            <div class="row-fluid">
+                <jsp:include page="widgets/mitigationReport.jsp"/>
             </div>
         </div>
 
