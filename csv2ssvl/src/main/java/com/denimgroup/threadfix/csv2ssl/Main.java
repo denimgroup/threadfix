@@ -31,6 +31,9 @@ import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static com.denimgroup.threadfix.csv2ssl.checker.Configuration.CONFIG;
 
@@ -80,10 +83,24 @@ public class Main {
         String xmlResult = CSVToSSVLParser.parse(CONFIG.csvFile.getAbsolutePath(), CONFIG.headers);
 
         if (FormatChecker.checkFormat(xmlResult)) {
-            System.out.println(xmlResult);
+            write(xmlResult);
         }
 
         return xmlResult;
+    }
+
+    private static void write(String xmlResult) {
+
+        if (CONFIG.useStandardOut) {
+            System.out.println(xmlResult);
+        } else if (CONFIG.outputFile != null) {
+            try {
+                Files.write(Paths.get(CONFIG.outputFile.getAbsolutePath()), xmlResult.getBytes());
+            } catch (IOException e) {
+                System.out.println("Failed to write the SSVL contents to a file. Printing the stack trace.");
+                e.printStackTrace();
+            }
+        }
     }
 
     private static void configure(String[] args) {
@@ -106,6 +123,3 @@ public class Main {
         }
     }
 }
-
-/// /Users/mcollins/git/threadfix/csv2ssvl/src/test/resources/withHeaderLine.csv
-/// /Users/mcollins/git/threadfix/csv2ssvl/src/test/resources/basic.csv

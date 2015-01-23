@@ -33,6 +33,7 @@ public enum Header {
     URL(Strings.URL, "Path (String, ex. /login.jsp)"),
     PARAMETER(Strings.PARAMETER, "Parameter (String, ex. username)"),
     NATIVE_ID(Strings.NATIVE_ID, "ID (identifying String, ex. 72457)"),
+    SHORT_DESCRIPTION(Strings.SHORT_DESCRIPTION, "Short Description"),
     LONG_DESCRIPTION(Strings.LONG_DESCRIPTION, "Long Description"),
     ISSUE_ID(Strings.ISSUE_ID, "Issue ID(Jira, TFS, etc. ID format)"),
     FINDING_DATE(Strings.FINDING_DATE, "Finding Date (Must be in the format " + Strings.DATE_FORMAT + ")");

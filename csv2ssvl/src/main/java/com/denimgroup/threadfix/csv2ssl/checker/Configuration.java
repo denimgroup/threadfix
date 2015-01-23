@@ -42,7 +42,6 @@ import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.newMap;
  */
 public class Configuration {
 
-
     public static enum State {
         VALID, NEEDS_HEADERS, NEEDS_INPUT_FILE, NEEDS_OUTPUT_FILE
     }
@@ -137,11 +136,14 @@ public class Configuration {
 
         properties.setProperty("headers", builder.toString());
 
-        properties.setProperty("csvFile", CONFIG.csvFile == null ? "" : CONFIG.csvFile.getAbsolutePath());
         properties.setProperty("outputFile", CONFIG.outputFile  == null ? "" : CONFIG.outputFile.getAbsolutePath());
 
         properties.setProperty("shouldSkipFirstLine", String.valueOf(CONFIG.shouldSkipFirstLine));
         properties.setProperty("useStandardOut", String.valueOf(CONFIG.useStandardOut));
+
+        for (Map.Entry<String, String> headerEntry : CONFIG.headerMap.entrySet()) {
+            properties.setProperty(headerEntry.getKey(), headerEntry.getValue());
+        }
 
         return properties;
     }
@@ -229,7 +231,13 @@ public class Configuration {
             }
         }
 
-        CONFIG.useStandardOut = "true".equalsIgnoreCase(properties.getProperty("useStandardOut"));
+        for (String key : CONFIG.headerMap.keySet()) {
+            if (properties.containsKey(key)) {
+                CONFIG.headerMap.put(key, properties.getProperty(key));
+            }
+        }
+
+        CONFIG.useStandardOut      = "true".equalsIgnoreCase(properties.getProperty("useStandardOut"));
         CONFIG.shouldSkipFirstLine = "true".equalsIgnoreCase(properties.getProperty("shouldSkipFirstLine"));
         CONFIG.loadedFromFile = true;
     }

@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import com.denimgroup.threadfix.importer.util.ResourceUtils;
+import org.apache.commons.validator.UrlValidator;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -45,7 +46,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +77,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 		Calendar lastDate = null;
 		
 		private boolean getText = false;
-		private String description = null;
+		private String description = null, longDescription = null;
 
 		private List<DataFlowElement> dataFlowElementList = list();
 		private DataFlowElement lastDataFlowElement = null;
@@ -105,6 +105,7 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    		case "Finding"            : parseNativeId(atts);        break;
 	    		case "SurfaceLocation"    : parseSurfaceLocation(atts); break;
 	    		case "FindingDescription" : getText = true;             break;
+	    		case "LongDescription"    : getText = true;             break;
 	    	}
 	    }
 	    
@@ -126,7 +127,25 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    
 	    private void parseSurfaceLocation(Attributes atts) {
 	    	findingMap.put(FindingKey.PARAMETER, atts.getValue("value"));
-	    	findingMap.put(FindingKey.PATH,      atts.getValue("url"));
+			String urlString = atts.getValue("url");
+
+			UrlValidator validator = new UrlValidator();
+
+			try {
+				if (validator.isValid(urlString)) {
+					URL url = new URL(urlString);
+					findingMap.put(FindingKey.PATH, url.getPath());
+				} else if (validator.isValid("http://" + urlString)) {
+					URL url = new URL("http://" + urlString);
+					findingMap.put(FindingKey.PATH, url.getPath());
+				}
+			} catch (MalformedURLException e) {
+				log.info("URL string passed UrlValidator but threw MalformedURLException when ");
+			} finally {
+				if (!findingMap.containsKey(FindingKey.PATH)) {
+					findingMap.put(FindingKey.PATH, urlString);
+				}
+			}
 	    }
 	    
 	    @Override
@@ -136,11 +155,17 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
 	    		case "Finding"            : finalizeFinding();         break;
 	    		case "LineText"           : addLineText();             break;
 	    		case "DataFlowElement"    : finalizeDataFlowElement(); break;
-	    		case "FindingDescription" : addDescription();          break;
+				case "LongDescription"    : addLongDescription();      break;
+				case "FindingDescription" : addDescription();          break;
 	    	}
 	    }
 
-	    private void finalizeDataFlowElement() {
+		private void addLongDescription() {
+			longDescription = getBuilderText();
+			getText = false;
+		}
+
+		private void finalizeDataFlowElement() {
 			if (lastDataFlowElement != null) {
 				lastDataFlowElement.setLineText(getBuilderText());
 				dataFlowElementList.add(lastDataFlowElement);
@@ -182,13 +207,18 @@ public class SSVLChannelImporter extends AbstractChannelImporter {
                         finding.setDataFlowElements(dataFlowElementList);
                         dataFlowElementList = list();
                     }
-                    if (description != null) {
-                        finding.setLongDescription(description);
+                    if (longDescription != null) {
+                        finding.setLongDescription(longDescription);
                     }
+					if (description != null) {
+						finding.setScannerDetail(description);
+					}
+
                     add(finding);
                 }
 				findingMap = new HashMap<>();
 				description = null;
+				longDescription = null;
 			}
 			lastDate = null;
 		}

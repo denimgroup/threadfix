@@ -28,8 +28,11 @@ import com.denimgroup.threadfix.csv2ssl.util.Strings;
 import com.denimgroup.threadfix.csv2ssl.util.DateUtils;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.Map;
+
+import static com.denimgroup.threadfix.csv2ssl.util.CollectionUtils.map;
 
 /**
  * Created by mac on 12/2/14.
@@ -38,6 +41,16 @@ public class RecordToXMLSerializer {
 
     private RecordToXMLSerializer(){}
 
+    private static Map<String, String> severities = map(
+            "1", "Info",
+            "2", "Low",
+            "3", "Medium",
+            "4", "High",
+            "5", "Critical"
+    );
+
+    // TODO switch to a real XML library instead of using StringEscapeUtils.escapeXml
+    // this code got really messy
     public static String getFromReader(CSVParser parser) {
         StringBuilder builder = new StringBuilder("<?xml version=\"1.0\"?>\n" +
                 "<Vulnerabilities SpecVersion=\"0.2\"\n" +
@@ -46,8 +59,9 @@ public class RecordToXMLSerializer {
                 "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
                 "        xsi:noNamespaceSchemaLocation=\"ssvl.xsd\">\n");
 
-        int i = 0;
+        int i = -1;
         for (CSVRecord strings : parser) {
+            i++;
             Map<String, String> map = strings.toMap();
 
             String nativeId = get(map, Strings.NATIVE_ID);
@@ -65,7 +79,11 @@ public class RecordToXMLSerializer {
 
             String parameterString = get(map, Strings.PARAMETER);
             parameterString = parameterString == null ? "" : parameterString;
+
             severity = severity == null || severity.trim().isEmpty() ? "Medium" : severity;
+            if (severities.containsKey(severity.trim())) {
+                severity = severities.get(severity.trim());
+            }
 
             String dateString = get(map, Strings.FINDING_DATE);
 
@@ -75,30 +93,38 @@ public class RecordToXMLSerializer {
             }
 
             builder.append("\t<Vulnerability ")
-                    .append("CWE=\"").append(cweId).append("\" ");
+                    .append("CWE=\"").append(StringEscapeUtils.escapeXml(cweId)).append("\" ");
 
             if (issueId != null) {
-                builder.append("IssueID=\"").append(issueId).append("\" ");
+                builder.append("IssueID=\"").append(StringEscapeUtils.escapeXml(issueId)).append("\" ");
             }
 
-            builder.append("Severity=\"").append(severity).append("\">\n");
+            builder.append("Severity=\"").append(StringEscapeUtils.escapeXml(severity)).append("\">\n");
 
             appendTagIfPresent(map, builder, "ShortDescription", Strings.SHORT_DESCRIPTION);
             appendTagIfPresent(map, builder, "LongDescription", Strings.LONG_DESCRIPTION);
 
-            builder.append("\t\t<Finding NativeID=\"").append(nativeId).append("\" Source=\"").append(sourceScanner).append("\"");
+            builder.append("\t\t<Finding NativeID=\"").append(StringEscapeUtils.escapeXml(nativeId)).append("\"");
+
+            if (sourceScanner != null) {
+                builder.append(" Source=\"").append(StringEscapeUtils.escapeXml(sourceScanner)).append("\"");
+            }
 
             if (dateString != null) {
                 String newDate = DateUtils.toOurFormat(dateString);
-                builder.append(" IdentifiedTimestamp=\"").append(newDate).append("\"");
+                builder.append(" IdentifiedTimestamp=\"").append(StringEscapeUtils.escapeXml(newDate)).append("\"");
             }
 
             builder.append(">\n")
-                    .append("\t\t\t<SurfaceLocation url=\"").append(urlString).append("\" source=\"Parameter\" value=\"").append(parameterString)
-                    .append("\"/>\n\t\t</Finding>\n");
+                    .append("\t\t\t<SurfaceLocation url=\"").append(StringEscapeUtils.escapeXml(urlString)).append("\"");
+
+            if (!"".equals(parameterString)) {
+                builder.append(" source=\"Parameter\" value=\"").append(StringEscapeUtils.escapeXml(parameterString)).append("\"");
+            }
+
+            builder.append("/>\n\t\t</Finding>\n");
 
             builder.append("\t</Vulnerability>\n");
-            i++;
         }
 
         builder.append("</Vulnerabilities>");
@@ -109,9 +135,9 @@ public class RecordToXMLSerializer {
     private static void appendTagIfPresent(Map<String, String> map, StringBuilder builder, String name, String key) {
         String value = get(map, key);
         if (value != null) {
-            builder.append("\t\t<").append(name).append(">\n\t\t\t")
-                    .append(value).append("\n")
-                    .append("\t\t</").append(name).append(">\n");
+            builder.append("\t\t<").append(StringEscapeUtils.escapeXml(name)).append(">\n\t\t\t")
+                    .append(StringEscapeUtils.escapeXml(value)).append("\n")
+                    .append("\t\t</").append(StringEscapeUtils.escapeXml(name)).append(">\n");
         }
     }
 

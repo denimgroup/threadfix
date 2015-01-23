@@ -1,2 +1,2 @@
-CWE,url,Parameter,LongDescription,NativeID,Source
+CWE,url,parameter,LongDescription,NativeID,Source
 89,/login.jsp,parameter,This is a long description,NativeId,AppScan

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
@@ -113,7 +114,7 @@ public class FormatParser {
 
             boolean foundMatch = false;
 
-            for (String headerName : Strings.HEADER_NAMES) {
+            for (String headerName : Configuration.CONFIG.headerMap.values()) {
                 if (possibleHeader.equalsIgnoreCase(headerName)) {
                     foundMatch = true;
                     cleanedHeaders[index] = headerName;
