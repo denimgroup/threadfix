@@ -30,7 +30,6 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -51,99 +50,103 @@ public class CommandLineMigration {
     private static Map<String, String> tableMap = newMap();
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        if (!check(args))
+            return;
+
         long startTime = System.currentTimeMillis();
+
+        String inputScript = args[0];
+        String inputMySqlConfig = args[1];
+        String outputScript = "import.sql";
+        String outputMySqlConfigTemp = "jdbc_temp.properties";
+
+        copyFile(inputMySqlConfig, outputMySqlConfigTemp);
 
         ScriptRunner scriptRunner = SpringConfiguration.getContext().getBean(ScriptRunner.class);
 
-        String input = "threadfix.script";
-        String output = "import.sql";
+        File file = new File(inputScript);
+        List<String> lines = FileUtils.readLines(file);
+        StringBuffer sqlContent = new StringBuffer();
+        sqlContent.append("SET FOREIGN_KEY_CHECKS=0;\n");
 
-        System.out.println(check(new String[]{input}));
-//        scriptRunner.disableConstraintChecking();
-
-        Query query;
-        try {
-            //Delete old sql file if exist
-            File fouput = new File(output);
-            if (fouput.exists() && fouput.isFile())
-                if (fouput.delete())
-                    System.out.println("File " + output + " has been deleted");
-                else
-                    System.err.println("File " + output + " has not been deleted");
-
-            File file = new File(input);
-            List<String> lines = FileUtils.readLines(file);
-            StringBuffer sqlContent = new StringBuffer();
-            sqlContent.append("SET FOREIGN_KEY_CHECKS=0;\n");
-
-            String table;
-            for (String line : lines) {
-                if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
-                    table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
-                    System.out.println("table:" + table);
-                    String[] tableName = table.split("\\(", 2);
-                    if (tableName.length == 2) {
-                        StringBuffer fieldsStr = new StringBuffer();
-                        String[] fields = tableName[1].trim().split(",");
-                        fieldsStr.append(fields[0].split(" ")[0]);
-                        for (int i = 1; i< fields.length; i++) {
-                            if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
-                                fieldsStr.append(", " + fields[i].trim().split(" ")[0]);
-                        }
-                        tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
+        String table;
+        for (String line : lines) {
+            if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
+                table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
+                System.out.println("table:" + table);
+                String[] tableName = table.split("\\(", 2);
+                if (tableName.length == 2) {
+                    StringBuffer fieldsStr = new StringBuffer();
+                    String[] fields = tableName[1].trim().split(",");
+                    fieldsStr.append(fields[0].split(" ")[0]);
+                    for (int i = 1; i< fields.length; i++) {
+                        if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
+                            fieldsStr.append(", " + fields[i].trim().split(" ")[0]);
                     }
-                } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
-                    table = RegexUtils.getRegexResult(line, INSERT_PATTERN);
-                    if (tableMap.get(table) != null) {
-                        line = line.replaceFirst(" " + table + " ", " " + table + tableMap.get(table) + " ");
-                        if (line.contains(ACUNETIX_ESCAPE)) {
-                            line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
-                        }
-                        line = line + ";\n";
-                        sqlContent.append(line);
-//                        scriptRunner.execute(line);
-                    }
-
+                    tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
                 }
+            } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
+                table = RegexUtils.getRegexResult(line, INSERT_PATTERN);
+                if (tableMap.get(table) != null) {
+                    line = line.replaceFirst(" " + table + " ", " " + table + tableMap.get(table) + " ");
+                    if (line.contains(ACUNETIX_ESCAPE)) {
+                        line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
+                    }
+                    line = line + ";\n";
+                    sqlContent.append(line);
+//                    scriptRunner.execute(line);
+                }
+
             }
-            sqlContent.append("SET FOREIGN_KEY_CHECKS=1;\n");
-            FileUtils.writeStringToFile(new File(output), sqlContent.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        sqlContent.append("SET FOREIGN_KEY_CHECKS=1;\n");
 
-//        if (check(new String[]{output})) {
-//            LOGGER.info("Running script");
-//            scriptRunner.execute(output);
-//        }
+        System.out.println("Saving sql script file to " + outputScript);
+        FileUtils.writeStringToFile(new File(outputScript), sqlContent.toString());
 
+        System.out.println("Sending sql script file to MySQL server");
+        scriptRunner.run(outputScript, outputMySqlConfigTemp);
 
-//        scriptRunner.enableConstraintChecking();
+        deleteFile(outputMySqlConfigTemp);
+        deleteFile(outputScript);
         LOGGER.info("Initialization finished in " + (System.currentTimeMillis() - startTime) + " ms");
 
     }
 
     private static boolean check(String[] args) {
-        if (args.length != 1) {
-            System.out.println("This program accepts one argument, the scan file to be scanned.");
+        if (args.length != 2) {
+            System.out.println("This program accepts two argument, threadfix script and mysql config files.");
             return false;
         }
 
-        File scanFile = new File(args[0]);
-        System.out.println("Working Directory = " +
-                System.getProperty("user.dir"));
+        for (String arg: args) {
+            File file = new File(arg);
+            if (!file.exists()) {
+                System.out.println(arg + ": The file must exist.");
+                return false;
+            }
 
-        if (!scanFile.exists()) {
-            System.out.println("The file must exist.");
-            return false;
+            if (file.isDirectory()) {
+                System.out.println(arg + ": The file must not be a directory.");
+                return false;
+            }
         }
-
-        if (scanFile.isDirectory()) {
-            System.out.println("The file must not be a directory.");
-            return false;
-        }
-
         return true;
+    }
+
+    private static void copyFile(String oldFilePath, String newFilePath) throws IOException {
+        FileUtils.writeStringToFile(new File(newFilePath), FileUtils.readFileToString(new File(oldFilePath)));
+        System.out.println("Copied from " + oldFilePath + " to " + newFilePath);
+    }
+
+    private static void deleteFile(String oldFilePath) throws IOException {
+
+        File fouput = new File(oldFilePath);
+        if (fouput.exists() && fouput.isFile())
+            if (fouput.delete())
+                System.out.println("File " + oldFilePath + " has been deleted");
+            else
+                System.err.println("File " + oldFilePath + " has not been deleted");
     }
 }

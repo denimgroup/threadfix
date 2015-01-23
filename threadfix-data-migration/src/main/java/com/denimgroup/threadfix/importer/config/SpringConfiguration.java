@@ -30,7 +30,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("file:jdbc.properties")
+@PropertySource("file:jdbc_temp.properties")
 @ImportResource({"classpath:/offline-context.xml", "classpath:/applicationContext-hibernate.xml"})
 public class SpringConfiguration {
 

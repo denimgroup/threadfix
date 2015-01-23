@@ -10,7 +10,7 @@
             			   http://www.springframework.org/schema/tx
            				   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-    <context:property-placeholder location="file:jdbc.properties"/>
+    <context:property-placeholder location="file:jdbc_temp.properties"/>
 
     <!--
         Instructs Spring to perform declarative transaction management on
