@@ -142,7 +142,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     svg.selectAll('*').remove();
                     drawReport();
                     drawTable();
-                }
+                };
 
                 function drawReport(){
                     if (_data.length > 0) {
@@ -321,22 +321,22 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             .attr("class", "small_warning")
                             .text(listStr + "No Vulnerabilities");
                     }
-                };
+                }
 
                 function drawTable(){
                     if (scope.tableInfo && scope.sumTableDivId)
                         reportUtilities.drawTable(d3, scope.tableInfo, scope.sumTableDivId);
-                };
+                }
 
                 function prepareStackedData(data) {
                     return color.domain().map(function(name){
                         var values = [];
                         data.forEach(function(d){
                             values.push({date: d.importTime, noOfVulns: d[name]});
-                        })
+                        });
                         return {key: name, values: values};
                     })
-                };
+                }
 
                 function mousemove() {
                     var x0 = x.invert(d3.mouse(this)[0]),
@@ -366,7 +366,7 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                         }
 
                         time = d.values[i].date;
-                        tips.push("<strong>" + d.key + ":</strong> <span style='color:red'>" + d.values[i].noOfVulns + "</span>")
+                        tips.push("<strong>" + d.key + ":</strong> <span style='color:red'>" + d.values[i].noOfVulns + "</span>");
                         return 'translate(' + x(d.values[i].date) + ',' + y(d.values[i].noOfVulns + d.values[i].noOfVulns0) + ')';
                     });
 
@@ -376,12 +376,12 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                             (monthList[date.getMonth()]) + " " + date.getDate() + " " + date.getFullYear() + "</span>";
                         tips.forEach(function(tip) {
                             tipContent += "<br/>" + tip;
-                        })
+                        });
 
                         return tipContent;
                     });
                     tip.show();
-                };
+                }
 
                 function monthDiff(d1, d2) {
                     var months;
@@ -389,11 +389,11 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     months -= d1.getMonth() + 1;
                     months += d2.getMonth();
                     return months <= 0 ? 0 : months;
-                };
+                }
 
                 function getColor(key) {
                     return (reportConstants.vulnTypeColorMap[key] ? reportConstants.vulnTypeColorMap[key] : color(key));
-                };
+                }
 
                 scope.export = function(){
 
