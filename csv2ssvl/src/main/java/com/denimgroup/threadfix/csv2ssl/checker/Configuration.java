@@ -179,7 +179,7 @@ public class Configuration {
         if (configFile.isValid()) {
             loadFromFile(configFile.getValue());
         } else {
-            boolean hasConfigurationFile = InteractionUtils.getYNAnswer("Do have a configuration file you would like to use?");
+            boolean hasConfigurationFile = InteractionUtils.getYNAnswer("Do have a configuration file you would like to use? (y/n)");
             if (hasConfigurationFile) {
                 File configuration = InteractionUtils.getValidFileFromStdIn("configuration");
                 loadFromFile(configuration.getAbsolutePath());
