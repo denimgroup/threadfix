@@ -316,6 +316,15 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                 var height = 400;
                 var margin = {"left": 30, "bottom": 40, "right": 5};
 
+                // creating the main svg
+                var svg = d3.select("#mitRep")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("class", "svg");
+
+                svg.selectAll('*').remove();
+
                 // x scale
                 var xScale = d3.scale.linear()
                     .domain([0, totalNumVuln + 1])
@@ -335,13 +344,6 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                     .scale(yScale)
                     .ticks(totalNumVuln)
                     .orient("left");
-
-                // creating the main svg
-                var svg = d3.select("#mitRep")
-                    .append("svg")
-                    .attr("width", width)
-                    .attr("height", height)
-                    .attr("class", "svg");
 
                 svg.append("g")
                     .attr("class", "axis")
