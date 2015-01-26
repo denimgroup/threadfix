@@ -75,7 +75,6 @@ public class GRCControl extends AuditableEntity {
 
     @OneToOne
     @JoinColumn(name = "vulnerabilityId")
-    @JsonView({AllViews.TableRow.class})
     public Vulnerability getVulnerability() {
         return vulnerability;
     }
