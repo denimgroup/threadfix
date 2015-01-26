@@ -136,4 +136,16 @@ public class InteractiveTests {
         testDialog(dialog);
     }
 
+    @Test
+    public void testExcel() {
+        String dialog =
+                "y\n" +
+                ResourceLoader.getFilePath("fromJunit.properties") + "\n" +
+                "/Users/mcollins/Documents/clients/Pearson/sample_data.xls\n";
+
+        System.out.println(dialog);
+
+        testDialog(dialog);
+    }
+
 }
