@@ -52,7 +52,7 @@ public class InteractiveConfiguration {
                 System.out.println("Unable to read line from file.");
             } else {
                 System.out.println("Got " + firstLine);
-                boolean saveResult = getYNAnswer("Save this result?");
+                boolean saveResult = getYNAnswer("Save this result? (y/n)");
 
                 if (saveResult) {
                     CONFIG.headers = firstLine.split(",");
@@ -65,7 +65,7 @@ public class InteractiveConfiguration {
             System.out.println("Please enter the headers.");
             String headers = getLine();
             System.out.println("Got " + headers);
-            boolean saveResult = getYNAnswer("Save this result?");
+            boolean saveResult = getYNAnswer("Save this result? (y/n)");
 
             if (saveResult) {
                 CONFIG.headers = headers.split(",");
