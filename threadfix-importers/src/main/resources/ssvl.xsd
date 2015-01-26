@@ -46,6 +46,7 @@
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute type="CWE" name="CWE" use="optional"/>
+                        <xs:attribute type="xs:string" name="IssueID" use="optional"/>
                         <xs:attribute type="Severities" name="Severity" use="optional"/>
                     </xs:complexType>
                 </xs:element>

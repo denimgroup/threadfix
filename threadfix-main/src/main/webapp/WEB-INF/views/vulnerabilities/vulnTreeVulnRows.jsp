@@ -136,6 +136,11 @@
     <!-- Data Flow and Request/Response body  -->
     <br ng-show="vulnerability.showAttacks">
     <div ng-show="vulnerability.showAttacks">
+
+        <div ng-show="!vulnerability.staticFindings.length && !vulnerability.dynamicFindings.length || vulnerability.staticFindings.length+vulnerability.dynamicFindings.length===0">
+            <h4>No Data Flows or Request/Response Attacks found.</h4>
+        </div>
+
         <div ng-show="vulnerability.staticFindings.length > 1">
             <h4>Data Flow Variants</h4>
             <div ng-repeat="finding in vulnerability.staticFindings" ng-show="finding.dataFlowElements">

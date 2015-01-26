@@ -52,6 +52,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	public static final int NATIVE_ID_LENGTH = 50;
 	public static final int URL_REFERENCE_LENGTH = 256;
 	public static final int SOURCE_FILE_LOCATION_LENGTH = 128;
+	public static final int ISSUE_ID_LENGTH = 128;
 
     // TODO figure out the appropriate place for this
     public static final int NUMBER_ITEM_PER_PAGE = 100;
@@ -67,6 +68,10 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@Size(max = ATTACK_STRING_LENGTH, message = "{errors.maxlength} "
 			+ ATTACK_STRING_LENGTH + ".")
 	private String attackString;
+
+	@Size(max = ATTACK_STRING_LENGTH, message = "{errors.maxlength} "
+			+ ATTACK_STRING_LENGTH + ".")
+	private String issueId;
 
 	@Size(max = ATTACK_REQUEST_LENGTH, message = "{errors.maxlength} "
 			+ ATTACK_REQUEST_LENGTH + ".")
@@ -427,6 +432,16 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	public void setDependency(Dependency dependency) {
 		this.dependency = dependency;
+	}
+
+	@Column(length = ISSUE_ID_LENGTH)
+	@JsonIgnore
+	public String getIssueId() {
+		return issueId;
+	}
+
+	public void setIssueId(String issueId) {
+		this.issueId = issueId;
 	}
 
 	@Transient

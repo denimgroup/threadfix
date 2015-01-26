@@ -53,10 +53,10 @@ threadfixModule.factory('reportExporter', function($log) {
 
             $log.info(d3.select(this).attr("id"));
         });
-        reportExporter.exportPDFSvg(d3, svg, width, height, name);
+        reportExporter.exportPDFSvg(d3, svg, width, height, name, exportInfo.isPDF);
     };
 
-    reportExporter.exportPDFSvg = function(d3, svg, width, height, name) {
+    reportExporter.exportPDFSvg = function(d3, svg, width, height, name, isPDF) {
         var node = svg
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
@@ -82,13 +82,19 @@ threadfixModule.factory('reportExporter', function($log) {
 
             var canvasdata = canvas.toDataURL("image/png");
 
-            var pngimg = '<img src="'+canvasdata+'">';
-            d3.select("#pngdataurl").html(pngimg);
+            if (isPDF) {
+                var pdf = new jsPDF();
+                pdf.addImage(canvasdata, 'PNG', 10, 10);
+                pdf.save(name + ".pdf");
+            } else {
+                var pngimg = '<img src="'+canvasdata+'">';
+                d3.select("#pngdataurl").html(pngimg);
 
-            var a = document.createElement("a");
-            a.download = name + ".png";
-            a.href = canvasdata;
-            a.click();
+                var a = document.createElement("a");
+                a.download = name + ".png";
+                a.href = canvasdata;
+                a.click();
+            }
         };
 
     };

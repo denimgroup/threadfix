@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.csv2ssl;
 
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Created by mac on 12/2/14.
@@ -36,6 +37,12 @@ public class ResourceLoader {
         assert resourceAsStream != null : "Unable to find " + name + " by classloading.";
 
         return resourceAsStream;
+    }
+
+    public static String getFilePath(String name) {
+        URL resource = ResourceLoader.class.getClassLoader().getResource(name);
+        assert resource != null : "Unable to locate " + name + ".";
+        return resource.getFile();
     }
 
 }
