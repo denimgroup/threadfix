@@ -2,7 +2,8 @@
 <div class="span6" ng-controller="MitigationProgressReport">
     <h4>Mitigation Progress</h4>
 
-    <div id="mitRep" style="float:left"></div>
+    <d3-mitigation data="mitigationVulnsData" style="float:left" width="400" height="400"></d3-mitigation>
+
     <div style="text-align: left; margin-left: 500px;">
         <table ng-repeat="s in activeResults">
             <tr>

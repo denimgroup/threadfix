@@ -33,6 +33,7 @@
 
         <cbs:cachebustscript src="/scripts/report/directives/d3-dashboards.js"/>
         <cbs:cachebustscript src="/scripts/report/directives/d3-trending-scans.js"/>
+        <cbs:cachebustscript src="/scripts/report/directives/d3-mitigation.js"/>
         <cbs:cachebustscript src="/scripts/report/d3.js"/>
         <cbs:cachebustscript src="/scripts/report/d3-donut.js"/>
         <cbs:cachebustscript src="/scripts/report/report-services.js"/>
