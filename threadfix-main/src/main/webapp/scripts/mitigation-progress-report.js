@@ -51,7 +51,12 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
         getConfig();
         // TODO for Fortify SSC getRemote();
     });
-    $scope.$on('vulnChanged', function(){$scope.activeResults.clear();  getData(); getConfig();});
+
+    $scope.$on('vulnChanged', function(){
+        $scope.activeResults.clear();
+        getData();
+        getConfig();
+    });
 
     var getChannels = function() {
         $http.post(tfEncoder.encode("/graphConfig/channels")).
@@ -64,14 +69,16 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
     var getConfig = function() {
         $http.post(tfEncoder.encode("/graphConfig/data")).
             success(function (data, status, headers, config) {
-                if(data.object.scanners.length == 0)
+                if(data.object.scanners.length == 0){
                     getChannels();
-                else
+                } else {
                     $scope.config = data.object.scanners;
+                }
+
             })
     };
 
-    var calculateSlevelsOpen = function(index, level){
+    var calculatesLevelsOpen = function(index, level){
         switch (level){
             case 1:
                 infoO[index]++;
@@ -93,7 +100,7 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
         }
     };
 
-    var calculateSlevelsClosed = function(index, level){
+    var calculatesLevelsClosed = function(index, level){
         switch (level){
             case 0:
                 closed[index]++;
@@ -129,23 +136,28 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                 closed.push(0);
                 criticalC.push(0);
                 criticalO.push($scope.remoteScan.numberCriticalVulnerabilities);
-                calculateSlevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 5);
+
+                calculatesLevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 5);
                 highC.push(0);
                 highO.push($scope.remoteScan.numberHighVulnerabilities);
-                calculateSlevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 4);
+
+                calculatesLevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 4);
                 medC.push(0);
                 medO.push($scope.remoteScan.numberMediumVulnerabilities);
-                calculateSlevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 3);
+
+                calculatesLevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 3);
                 lowC.push(0);
                 lowO.push($scope.remoteScan.numberLowVulnerabilities);
-                calculateSlevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 2);
+
+                calculatesLevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 2);
                 infoC.push(0);
                 infoO.push($scope.remoteScan.numberInfoVulnerabilities);
-                calculateSlevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 1);
+
+                calculatesLevelsOpen(scannerNames.indexOf($scope.remoteScan.scannerName), 1);
                 auditC.push(0);
                 auditO.push(0); //TODO fix JSON
-                totalNumVuln += $scope.remoteScan.numberTotalVulnerabilities;
 
+                totalNumVuln += $scope.remoteScan.numberTotalVulnerabilities;
             })
     };
 
@@ -155,7 +167,6 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
             success(function(data, status, headers, config) {
                 $scope.open = data.object.open;
                 $scope.closed = data.object.closed;
-
 
                 if(data.object.closed.length > 0) {
                     angular.forEach(data.object.closed, function (value) {
@@ -176,8 +187,8 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                             infoO.push(0);
                             auditO.push(0);
                         }
-                        calculateSlevelsClosed(scannerNames.indexOf(value.findings[0].scannerName), 0);
-                        calculateSlevelsClosed(scannerNames.indexOf(value.findings[0].scannerName), value.genericSeverity.intValue);
+                        calculatesLevelsClosed(scannerNames.indexOf(value.findings[0].scannerName), 0);
+                        calculatesLevelsClosed(scannerNames.indexOf(value.findings[0].scannerName), value.genericSeverity.intValue);
                         totalNumVuln++;
                     });
                 }
@@ -201,13 +212,14 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                         auditC.push(0);
                     }
 
-                    calculateSlevelsOpen(scannerNames.indexOf(value.findings[0].scannerName), value.genericSeverity.intValue);
+                    calculatesLevelsOpen(scannerNames.indexOf(value.findings[0].scannerName), value.genericSeverity.intValue);
                     totalNumVuln++;
                 });
 
-                $scope.results =[];
+                $scope.results = [];
 
-                for(var i = 0; i < scannerNames.length; i++){
+                var i;
+                for(i = 0; i < scannerNames.length; i++){
                     $scope.scan.scannerNames = scannerNames[i];
                     $scope.scan.scanId = scanID[i];
                     $scope.scan.total = criticalO[i] + highO[i] + medO[i] + lowO[i] + infoO[i] + auditO[i] + closed[i];
@@ -226,7 +238,6 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                     $scope.scan.auditC = auditC[i];
                     $scope.results.push(angular.copy($scope.scan));
                 }
-                JSON.stringify($scope.results);
 
                 angular.forEach($scope.config, function(value){
                     if(value.criticalVulns == true || value.highVulns == true || value.mediumVulns == true || value.lowVulns == true || value.infoVulns == true || value.auditable == true) {
@@ -255,7 +266,7 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                 $scope.totalCount = 0;
                 var avg = 0;
 
-                for(var i = 0; i < scannerN.length; i++){
+                for(i = 0; i < scannerN.length; i++){
                     var scannerIndex = 0;
                     for(var j = 0; j < $scope.results.length; j ++){
                         if($scope.results[j].scannerNames.indexOf(scannerN[i]) != -1 )
@@ -338,7 +349,8 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                     .style({ 'stroke': 'white', 'fill': 'none', 'stroke-width': '2px'})
                     .call(xAxis);
 
-                var xLabel = svg.append("text")
+                // x-label
+                svg.append("text")
                     .attr("x", 200)
                     .attr("y", 390)
                     .attr("class", "axis wcm-label")
@@ -353,7 +365,8 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                     .style({ 'stroke': 'white', 'fill': 'none', 'stroke-width': '2px'})
                     .call(yAxis);
 
-                var yLabel = svg.append("text")
+                // y-label
+                svg.append("text")
                     .attr("x", 10)
                     .attr("y", 200)
                     .attr("class", "axis wcm-label")
