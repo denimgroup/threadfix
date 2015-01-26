@@ -28,11 +28,10 @@ import com.denimgroup.threadfix.csv2ssl.parser.FormatParser;
 import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
 import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
+import org.apache.poi.POIXMLDocument;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 
@@ -70,12 +69,35 @@ public class Configuration {
     public static State getCurrentState() {
         if (CONFIG.headers == null) {
             return State.NEEDS_HEADERS;
-        } else if (CONFIG.csvFile == null) {
+        } else if (CONFIG.csvFile == null || isExcelOrMissing(CONFIG.csvFile)) {
             return State.NEEDS_INPUT_FILE;
         } else if (CONFIG.outputFile == null && !CONFIG.useStandardOut) {
             return State.NEEDS_OUTPUT_FILE;
         } else {
             return State.VALID;
+        }
+    }
+
+    private static boolean isExcelOrMissing(File csvFile) {
+        try (BufferedInputStream maybeExcelStream = new BufferedInputStream(new FileInputStream(csvFile))) {
+
+            boolean isExcelFile = POIXMLDocument.hasOOXMLHeader(maybeExcelStream);
+
+            isExcelFile = isExcelFile || POIFSFileSystem.hasPOIFSHeader(maybeExcelStream);
+
+            if (isExcelFile) {
+                System.out.println("We have detected an Excel file.");
+                System.out.println("Please open the file in Excel, click Save As..., select CSV as the type, then click Save.");
+                System.out.println("Then enter the path to the new CSV file in this dialog.");
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Somehow got a FileNotFoundException. Please try again.");
+            e.printStackTrace();
+            return true;
         }
     }
 
