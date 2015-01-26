@@ -660,7 +660,8 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
     };
 
     $scope.viewScan = function(id) {
-        window.location.href = tfEncoder.encode("/organizations/" + $scope.$parent.teamId + "/applications/" + $scope.$parent.appId + '/scans/' + id);
+        window.location.href = tfEncoder.encode("/organizations/" + $scope.$parent.teamId +
+                                    "/applications/" + $scope.$parent.appId + '/scans/' + id);
     };
 
     $scope.showEditModal = function() {
@@ -669,15 +670,13 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
             controller: 'GraphConfigModalController',
             resolve: {
                 url: function() {
-
                     return tfEncoder.encode("/graphConfig");
                 },
                 object: function () {
-                    var objCopy = angular.copy($scope.config);
-                    return objCopy;
+                    return angular.copy($scope.config);
                 },
                 config: function(){
-                    return $scope.config1;
+                    return $scope.config;
 
                 },
                 buttonText: function() {
