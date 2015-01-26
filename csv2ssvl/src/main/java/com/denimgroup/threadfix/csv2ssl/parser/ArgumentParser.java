@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,25 +23,37 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
+import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
 /**
  * Created by mac on 12/3/14.
  */
-public class FileNameParser {
+public class ArgumentParser {
 
-    private FileNameParser(){}
+    private ArgumentParser(){}
 
-    public static String parseFileName(String[] args) {
+    public static Option<String> parseTargetFileName(String[] args) {
+        return getArgumentValue(Strings.OUTPUT_FILE, args);
+    }
+
+    public static Option<String> parseSourceFileName(String[] args) {
+        return getArgumentValue(Strings.TARGET_FILE, args);
+    }
+
+    public static Option<String> parseConfigFileName(String[] args) {
+        return getArgumentValue(Strings.CONFIG_FILE, args);
+    }
+
+    private static Option<String> getArgumentValue(String key, String[] args) {
         for (String arg : args) {
-            if (arg.startsWith(Strings.TARGET_FILE)) {
-                return arg.substring(Strings.TARGET_FILE.length());
+            if (arg.startsWith(key)) {
+                String fileName = arg.substring(key.length());
+                return Option.success(fileName);
             }
         }
 
-        throw new IllegalStateException(
-                "The target file argument was not found. " +
-                "This should have been caught by a format checker.");
+        return Option.failure("No result found for " + "");
     }
 
 }

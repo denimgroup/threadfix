@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -24,7 +24,6 @@
 package com.denimgroup.threadfix.csv2ssl.parser;
 
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
-import com.denimgroup.threadfix.csv2ssl.util.Strings;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class BasicParserTest {
 
         Reader reader = new InputStreamReader(ResourceLoader.getResource("basic.csv"));
 
-        String output = CSVToSSVLParser.parse(reader, false,
+        String output = CSVToSSVLParser.parse(reader,
                 "CWE",
                 "url",
                 "parameter", "LongDescription", "NativeID", "Source");
@@ -58,7 +57,7 @@ public class BasicParserTest {
 
         Reader reader = new InputStreamReader(ResourceLoader.getResource("emptycolumn.csv"));
 
-        String output = CSVToSSVLParser.parse(reader, false, "CWE", "url", "parameter", "LongDescription", "", "NativeID", "Source");
+        String output = CSVToSSVLParser.parse(reader, "CWE", "url", "parameter", "LongDescription", "", "NativeID", "Source");
 
         assert FormatChecker.checkFormat(output);
         assert output.contains("<Vulnerability") : "Didn't have a starting Vulnerability tag.";
@@ -72,7 +71,7 @@ public class BasicParserTest {
 
         Reader reader = new InputStreamReader(ResourceLoader.getResource("withIssueId.csv"));
 
-        String output = CSVToSSVLParser.parse(reader, false, "CWE", "url", "parameter", "LongDescription", "NativeID", "Source", "IssueID");
+        String output = CSVToSSVLParser.parse(reader, "CWE", "url", "parameter", "LongDescription", "NativeID", "Source", "IssueID");
 
         assert FormatChecker.checkFormat(output);
         assert output.contains("<Vulnerability") : "Didn't have a starting Vulnerability tag.";

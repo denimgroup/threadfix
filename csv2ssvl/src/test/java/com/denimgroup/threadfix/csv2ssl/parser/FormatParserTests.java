@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
-import com.denimgroup.threadfix.csv2ssl.util.Either;
+import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class FormatParserTests {
 
     @Test
     public void testBasicFormat() {
-        Either<String[], String> stringOption = parseFromString("test,bad,data");
+        Option<String[]> stringOption = parseFromString("test,bad,data");
 
         if (!stringOption.isValid()) {
             System.out.println(stringOption.getErrorMessage());
@@ -45,7 +45,7 @@ public class FormatParserTests {
 
     @Test
     public void testContainsFormatEquals() {
-        Either<String[], String> stringOption = parseFromString("test,bad,data");
+        Option<String[]> stringOption = parseFromString("test,bad,data");
 
         assert !stringOption.isValid() : "Unexpectedly got valid for test,bad,data";
 
@@ -55,7 +55,7 @@ public class FormatParserTests {
     @Test
     public void testBasicSuccessCase() {
         String formatString = Strings.CWE + "," + Strings.PARAMETER;
-        Either<String[], String> stringOption = parseFromString(formatString);
+        Option<String[]> stringOption = parseFromString(formatString);
 
         assert stringOption.isValid() : "Unexpectedly got invalid for " + formatString;
     }
@@ -63,7 +63,7 @@ public class FormatParserTests {
     @Test
     public void testDowncaseSuccessCase() {
         String formatString = Strings.CWE.toLowerCase() + "," + Strings.NATIVE_ID.toLowerCase();
-        Either<String[], String> stringOption = parseFromString(formatString);
+        Option<String[]> stringOption = parseFromString(formatString);
 
         assert stringOption.isValid() : "Unexpectedly got invalid for " + formatString;
     }
@@ -71,13 +71,13 @@ public class FormatParserTests {
     @Test
     public void testSpaceSuccessCase() {
         String formatString = Strings.CWE.toLowerCase() + ", " + Strings.NATIVE_ID.toLowerCase();
-        Either<String[], String> stringOption = parseFromString(formatString);
+        Option<String[]> stringOption = parseFromString(formatString);
 
         assert stringOption.isValid() : "Unexpectedly got invalid for " + formatString;
     }
 
-    private Either<String[], String> parseFromString(String formatString) {
-        return FormatParser.getHeaders(new String[] {Strings.FORMAT_STRING + formatString}, false);
+    private Option<String[]> parseFromString(String formatString) {
+        return FormatParser.getHeaders(new String[] {Strings.FORMAT_STRING + formatString});
     }
 
 }

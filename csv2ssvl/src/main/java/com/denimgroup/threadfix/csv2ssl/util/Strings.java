@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -48,6 +48,7 @@ public final class Strings {
             SHORT_DESCRIPTION = getParameter("fields.shortDescription"),
             ISSUE_ID = getParameter("fields.issueID"),
             IGNORE = getParameter("fields.ignore"),
+            CONFIG_FILE = getParameter("arguments.configFile"),
             TARGET_FILE = getParameter("arguments.targetFile"),
             OUTPUT_FILE = getParameter("arguments.outputFile"),
             FORMAT_FILE = getParameter("arguments.formatFile"),
@@ -83,7 +84,9 @@ public final class Strings {
     );
 
     public static final Set<String> HEADER_NAMES = set(
-            SEVERITY, CWE, SOURCE, URL, PARAMETER, NATIVE_ID, LONG_DESCRIPTION
+            SEVERITY, CWE, SOURCE, URL,
+            PARAMETER, NATIVE_ID, LONG_DESCRIPTION, SHORT_DESCRIPTION,
+            ISSUE_ID, FINDING_DATE
     );
 
     private static Properties properties = null;

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -23,13 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl;
 
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
-import com.denimgroup.threadfix.csv2ssl.util.Either;
+import com.denimgroup.threadfix.csv2ssl.checker.InteractiveConfiguration;
+import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
+import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
+import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
-import static com.denimgroup.threadfix.csv2ssl.checker.ArgumentChecker.checkArguments;
-import static com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser.parse;
-import static com.denimgroup.threadfix.csv2ssl.parser.FileNameParser.parseFileName;
-import static com.denimgroup.threadfix.csv2ssl.parser.FormatParser.getHeaders;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static com.denimgroup.threadfix.csv2ssl.checker.Configuration.CONFIG;
 
 /**
  * Created by mac on 12/2/14.
@@ -37,21 +43,83 @@ import static com.denimgroup.threadfix.csv2ssl.parser.FormatParser.getHeaders;
 public class Main {
 
     public static void main(String[] args) {
-        if (checkArguments(args)) {
 
-            Either<String[], String> headers = getHeaders(args, true);
+        doConfigurationAndParsing(args);
 
-            if (headers.isValid()) {
-                String xmlResult = parse(parseFileName(args), headers.getValue());
+        offerToSaveIfAppropriate();
+    }
 
-                if (FormatChecker.checkFormat(xmlResult)) {
-                    System.out.println(xmlResult);
+    private static void offerToSaveIfAppropriate() {
+        if (!Configuration.CONFIG.loadedFromFile) {
+            boolean keepAsking = InteractionUtils.getYNAnswer("Would you like to save configuration? (y/n)");
+            while (keepAsking) {
+                System.out.println("Where would you like to save this file? Enter 'exit' to quit.");
+
+                String file = InteractionUtils.getLine();
+
+                if ("exit".equals(file)) {
+                    break;
                 }
 
-            } else {
-                System.out.println(headers.getErrorMessage());
+                File actualFile = new File(file);
+
+                if (!actualFile.exists() || InteractionUtils.getYNAnswer("Overwrite current file? (y/n)")) {
+                    Configuration.writeToFile(actualFile);
+                    keepAsking = false;
+                    System.out.println(
+                            "To start this program again with this configuration, use the options " +
+                                    Strings.CONFIG_FILE + actualFile.getAbsolutePath() + " " +
+                                    Strings.TARGET_FILE + "{path to CSV you want to convert}"
+                    );
+                }
             }
         }
     }
 
+    // public testing
+    public static String doConfigurationAndParsing(String[] args) {
+        configure(args);
+
+        String xmlResult = CSVToSSVLParser.parse(CONFIG.csvFile.getAbsolutePath(), CONFIG.headers);
+
+        if (FormatChecker.checkFormat(xmlResult)) {
+            write(xmlResult);
+        }
+
+        return xmlResult;
+    }
+
+    private static void write(String xmlResult) {
+
+        if (CONFIG.useStandardOut) {
+            System.out.println(xmlResult);
+        } else if (CONFIG.outputFile != null) {
+            try {
+                Files.write(Paths.get(CONFIG.outputFile.getAbsolutePath()), xmlResult.getBytes());
+            } catch (IOException e) {
+                System.out.println("Failed to write the SSVL contents to a file. Printing the stack trace.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void configure(String[] args) {
+        Configuration.setFromArguments(args);
+
+        WHILE: while (true) {
+            switch (Configuration.getCurrentState()) {
+                case VALID:
+                    break WHILE;
+                case NEEDS_HEADERS:
+                    InteractiveConfiguration.configureHeaders();
+                    break;
+                case NEEDS_INPUT_FILE:
+                    InteractiveConfiguration.configureInputFile();
+                    break;
+                case NEEDS_OUTPUT_FILE:
+                    InteractiveConfiguration.configureOutputFile();
+                    break;
+            }
+        }
+    }
 }
