@@ -112,7 +112,9 @@ public class RecordToXMLSerializer {
 
             if (dateString != null) {
                 String newDate = DateUtils.toOurFormat(dateString);
-                builder.append(" IdentifiedTimestamp=\"").append(StringEscapeUtils.escapeXml(newDate)).append("\"");
+                if (newDate != null) {
+                    builder.append(" IdentifiedTimestamp=\"").append(StringEscapeUtils.escapeXml(newDate)).append("\"");
+                }
             }
 
             builder.append(">\n")
