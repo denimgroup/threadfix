@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.csv2ssl.checker;
 
 import com.denimgroup.threadfix.csv2ssl.parser.ArgumentParser;
 import com.denimgroup.threadfix.csv2ssl.parser.FormatParser;
+import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
 import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
 
@@ -155,6 +156,13 @@ public class Configuration {
 
         if (configFile.isValid()) {
             loadFromFile(configFile.getValue());
+        } else {
+            boolean hasConfigurationFile = InteractionUtils.getYNAnswer("Do have a configuration file you would like to use?");
+            if (hasConfigurationFile) {
+                File configuration = InteractionUtils.getValidFileFromStdIn("configuration");
+                loadFromFile(configuration.getAbsolutePath());
+                System.out.println("In the future, you can start this program with this configuration automatically with the argument " + Strings.CONFIG_FILE + configuration.getAbsolutePath());
+            }
         }
 
         Option<String[]> formatString = FormatParser.getHeaders(args);

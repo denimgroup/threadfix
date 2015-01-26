@@ -50,6 +50,7 @@ public class InteractiveTests {
         // define inputs
         String dialog =
                 "n\n" +
+                "n\n" +
                 "CWE,url,Parameter,LongDescription,NativeID,Source\n" +
                 "y\n" +
                 "n\n" +
@@ -64,6 +65,7 @@ public class InteractiveTests {
 
         // define inputs
         String dialog =
+                "n\n" +
                 "n\n" +
                 "1,2,3,4,5,6\n" +
                 "y\n" +
@@ -88,6 +90,7 @@ public class InteractiveTests {
     public void testWithHeaderInFile() {
 
         String dialog =
+                "n\n" +
                 "y\n" +
                 ResourceLoader.getFilePath("withHeaderLine.csv") + "\n" +
                 "y\n" +
@@ -100,6 +103,7 @@ public class InteractiveTests {
     @Test
     public void testWithDifferentHeadersInFile() {
         String dialog =
+                "n\n" +
                 "y\n" +
                 ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\n" +
                 "y\n" +
@@ -113,13 +117,23 @@ public class InteractiveTests {
                 "Text\n" +
                 "skip\n" +
                 "skip\n" +
+                "skip\n" +
                 "n\n" +
                 "stdout\n";
 
         testDialog(dialog);
+    }
 
+    @Test
+    public void testConfigurationPrompt() {
+        String dialog =
+                "y\n" +
+                ResourceLoader.getFilePath("fromJunit.properties") + "\n" +
+                ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\n";
 
+        System.out.println(dialog);
 
+        testDialog(dialog);
     }
 
 }
