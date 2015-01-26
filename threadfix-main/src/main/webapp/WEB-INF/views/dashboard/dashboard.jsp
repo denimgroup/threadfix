@@ -3,8 +3,20 @@
 <head>
 	<title>Dashboard</title>
 	<cbs:cachebustscript src="/scripts/dashboard-controller.js"/>
-	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
-	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
+	<c:forEach items="${dashboardWidgets}" var="dashboardWidget">
+		<c:choose>
+			<c:when test="${dashboardWidget.widgetName == 'Vulnerability Trending'}">
+				<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
+			</c:when>
+			<c:when test="${dashboardWidget.widgetName == 'Most Vulnerable Applications'}">
+				<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
+			</c:when>
+			<c:when test="${dashboardWidget.widgetName == 'Mitigation Progress'}">
+				<cbs:cachebustscript src="/scripts/graph-config-modal-controller.js"/>
+				<cbs:cachebustscript src="/scripts/mitigation-progress-report.js"/>
+			</c:when>
+		</c:choose>
+	</c:forEach>
 	<cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
 </head>
 

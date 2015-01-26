@@ -39,7 +39,6 @@ public class DashboardWidget extends BaseEntity {
 
     private String widgetName;
     private String jspFilePath;
-    private String jsFilePath;
 
     public String getWidgetName() {
         return widgetName;
@@ -57,11 +56,4 @@ public class DashboardWidget extends BaseEntity {
         this.jspFilePath = jspFilePath;
     }
 
-    public String getJsFilePath() {
-        return jsFilePath;
-    }
-
-    public void setJsFilePath(String jsFilePath) {
-        this.jsFilePath = jsFilePath;
-    }
 }
