@@ -37,19 +37,19 @@ public class RemoteProvidersIndexPage extends BasePage {
 	/*------------------------------ Action Methods ------------------------------*/
 
     public RemoteProvidersIndexPage clickConfigureQualys(){
-		driver.findElementById("configure0").click();
+		driver.findElementById("configure1").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureVeracode(){
-		driver.findElementById("configure2").click();
+		driver.findElementById("configure3").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		driver.findElementById("configure3").click();
+		driver.findElementById("configure4").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
