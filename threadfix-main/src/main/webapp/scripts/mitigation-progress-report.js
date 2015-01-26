@@ -168,8 +168,8 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                 $scope.open = data.object.open;
                 $scope.closed = data.object.closed;
 
-                if(data.object.closed.length > 0) {
-                    angular.forEach(data.object.closed, function (value) {
+                if($scope.closed.length > 0) {
+                    angular.forEach($scope.closed, function (value) {
                         if (scannerNames.indexOf(value.findings[0].scannerName) == -1) {
                             scannerNames.push(value.findings[0].scannerName);
                             scanID.push(value.findings[0].scanId);
@@ -193,7 +193,7 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                     });
                 }
 
-                angular.forEach(data.object.open, function(value){
+                angular.forEach($scope.open, function(value){
                     if(scannerNames.indexOf(value.findings[0].scannerName) == -1) {
                         scannerNames.push(value.findings[0].scannerName);
                         scanID.push(value.findings[0].scanId);
