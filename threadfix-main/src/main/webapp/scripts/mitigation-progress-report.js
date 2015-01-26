@@ -66,6 +66,7 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
     };
 
     $scope.activeResults = [];
+
     var getConfig = function() {
         $http.post(tfEncoder.encode("/graphConfig/data")).
             success(function (data, status, headers, config) {
@@ -74,7 +75,6 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
                 } else {
                     $scope.config = data.object.scanners;
                 }
-
             })
     };
 
@@ -311,7 +311,6 @@ myAppModule.controller('MitigationProgressReport', function ($scope, $window, $m
 
                 $scope.totalCount = $scope.totalCount / avg;
 
-                d3.selectAll("svg").remove();
                 var width = 400;
                 var height = 400;
                 var margin = {"left": 30, "bottom": 40, "right": 5};
