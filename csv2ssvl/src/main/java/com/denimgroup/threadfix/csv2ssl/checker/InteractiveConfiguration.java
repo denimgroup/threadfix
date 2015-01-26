@@ -160,8 +160,18 @@ public class InteractiveConfiguration {
             CONFIG.outputFile = null;
             CONFIG.useStandardOut = true;
         } else {
-            CONFIG.outputFile = new File(fileName);
-            CONFIG.useStandardOut = false;
+            File file = new File(fileName);
+
+            if (file.isDirectory()) {
+                System.out.println("You seem to have input the name of a directory. Please try again.");
+                configureOutputFile();
+            } else if (file.exists() && !file.canWrite()) {
+                System.out.println("Java can't write to that file.");
+                configureOutputFile();
+            } else {
+                CONFIG.outputFile = file;
+                CONFIG.useStandardOut = false;
+            }
         }
     }
 }
