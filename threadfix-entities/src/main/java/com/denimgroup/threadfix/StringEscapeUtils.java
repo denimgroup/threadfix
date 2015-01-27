@@ -16,14 +16,11 @@
  */
 package com.denimgroup.threadfix;
 
+import com.denimgroup.threadfix.exception.RestIOException;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Locale;
-
-import com.denimgroup.threadfix.exception.RestIOException;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.lang.text.StrBuilder;
 
 /**
  * <p>Escapes and unescapes <code>String</code>s for
@@ -44,7 +41,6 @@ import org.apache.commons.lang.text.StrBuilder;
  * @version $Id: StringEscapeUtils.java 1057072 2011-01-10 01:55:57Z niallp $
  */
 public class StringEscapeUtils {
-
 
     /**
      * <p><code>StringEscapeUtils</code> instances should NOT be constructed in
@@ -122,41 +118,17 @@ public class StringEscapeUtils {
                             inUnicode = false;
                             hadSlash = false;
                         } catch (NumberFormatException var9) {
-                            throw new NestableRuntimeException("Unable to parse unicode value: " + unicode, var9);
+                            throw new RuntimeException("Unable to parse unicode value: " + unicode, var9);
                         }
                     }
                 } else if(hadSlash) {
                     hadSlash = false;
-                    switch(ch) {
-//                        case '\"':
-//                            out.write(34);
-//                            break;
-//                        case '\'':
-//                            out.write(39);
-//                            break;
-                        case '\\':
-                            out.write(92);
-                            break;
-//                        case 'b':
-//                            out.write(8);
-//                            break;
-//                        case 'f':
-//                            out.write(12);
-//                            break;
-//                        case 'n':
-//                            out.write(10);
-//                            break;
-//                        case 'r':
-//                            out.write(13);
-//                            break;
-//                        case 't':
-//                            out.write(9);
-//                            break;
-                        case 'u':
-                            inUnicode = true;
-                            break;
-                        default:
-                            out.write(ch);
+
+                    if (ch == 'u') {
+                        inUnicode = true;
+                    } else {
+                        out.write(92);
+                        out.write(ch);
                     }
                 } else if(ch == 92) {
                     hadSlash = true;
