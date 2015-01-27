@@ -57,7 +57,7 @@ public class ScriptRunner {
                     prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
 
             // Initialize object for ScripRunner
-            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, false);
+            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, true);
 
             // Give the input file to Reader
             Reader reader = new BufferedReader(
