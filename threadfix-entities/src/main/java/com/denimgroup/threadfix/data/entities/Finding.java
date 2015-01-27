@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.StringEscapeUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
@@ -336,7 +337,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	}
 
 	public String getLongDescription() {
-		return longDescription;
+		return StringEscapeUtils.unescapeJava(longDescription);
 	}
 
     @JsonView(AllViews.RestView2_1.class)
@@ -352,7 +353,7 @@ public class Finding extends AuditableEntity implements FindingLike {
     @JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class})
     @Column(length = ATTACK_REQUEST_LENGTH)
 	public String getAttackRequest() {
-		return attackRequest;
+		return StringEscapeUtils.unescapeJava(attackRequest);
 	}
 
 	public void setAttackRequest(String attackRequest) {
@@ -362,7 +363,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 	@JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class})
     @Column(length = ATTACK_RESPONSE_LENGTH)
 	public String getAttackResponse() {
-		return attackResponse;
+		return StringEscapeUtils.unescapeJava(attackResponse);
 	}
 
 	public void setAttackResponse(String attackResponse) {
@@ -371,7 +372,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
     @Column(length = SCANNER_DETAIL_LENGTH)
 	public String getScannerDetail() {
-		return scannerDetail;
+		return StringEscapeUtils.unescapeJava(scannerDetail);
 	}
 
 	public void setScannerDetail(String scannerDetail) {
@@ -380,7 +381,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
     @Column(length = SCANNER_RECOMMENDATION_LENGTH)
 	public String getScannerRecommendation() {
-		return scannerRecommendation;
+		return StringEscapeUtils.unescapeJava(scannerRecommendation);
 	}
 
 	public void setScannerRecommendation(String scannerRecommendation) {
@@ -398,7 +399,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@Column(length = RAW_FINDING_LENGTH)
 	public String getRawFinding() {
-		return rawFinding;
+		return StringEscapeUtils.unescapeJava(rawFinding);
 	}
 
 	public void setRawFinding(String rawFinding) {

@@ -31,7 +31,9 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +56,12 @@ public class CommandLineMigration {
         if (!check(args))
             return;
 
+        PrintStream errPrintStream = new PrintStream(new FileOutputStream(new File("error.log")));
+        System.setErr(errPrintStream);
+
+        PrintStream infoPrintStream = new PrintStream(new FileOutputStream(new File("info.log")));
+        System.setOut(infoPrintStream);
+
         long startTime = System.currentTimeMillis();
 
         String inputScript = args[0];
@@ -62,6 +70,7 @@ public class CommandLineMigration {
         String outputMySqlConfigTemp = "jdbc_temp.properties";
 
         copyFile(inputMySqlConfig, outputMySqlConfigTemp);
+        deleteFile(outputScript);
 
         ScriptRunner scriptRunner = SpringConfiguration.getContext().getBean(ScriptRunner.class);
 
@@ -69,6 +78,13 @@ public class CommandLineMigration {
         List<String> lines = FileUtils.readLines(file);
         StringBuffer sqlContent = new StringBuffer();
         sqlContent.append("SET FOREIGN_KEY_CHECKS=0;\n");
+//        sqlContent.append("SET NAMES utf8;\n");
+//        sqlContent.append("SET GLOBAL innodb_file_format=Barracuda;\n");
+//        sqlContent.append("SET GLOBAL innodb_file_per_table=1;\n");
+//        sqlContent.append("SET GLOBAL innodb_log_file_size=900M;\n");
+//
+////        sqlContent.append("SET GLOBAL innodb_log_file_size=503316480 ;\n");
+//        sqlContent.append("ALTER TABLE Document ROW_FORMAT=compressed;\n");
 
         String table;
         for (String line : lines) {
@@ -93,42 +109,42 @@ public class CommandLineMigration {
                     if (line.contains(ACUNETIX_ESCAPE)) {
                         line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
                     }
-                    line = line + ";\n";
+                    line = escapeString(line) + ";\n";
+
                     sqlContent.append(line);
-//                    scriptRunner.execute(line);
                 }
 
             }
         }
         sqlContent.append("SET FOREIGN_KEY_CHECKS=1;\n");
 
-        System.out.println("Saving sql script file to " + outputScript);
+        LOGGER.info("Saving sql script file to " + outputScript);
         FileUtils.writeStringToFile(new File(outputScript), sqlContent.toString());
 
-        System.out.println("Sending sql script file to MySQL server");
-        scriptRunner.run(outputScript, outputMySqlConfigTemp);
+        LOGGER.info("Sending sql script to MySQL server...");
+        boolean isSuccess = scriptRunner.run(outputScript, outputMySqlConfigTemp);
 
         deleteFile(outputMySqlConfigTemp);
-        deleteFile(outputScript);
-        LOGGER.info("Initialization finished in " + (System.currentTimeMillis() - startTime) + " ms");
+        if (isSuccess)
+            LOGGER.info("Migration finished in " + (System.currentTimeMillis() - startTime) + " ms");
 
     }
 
     private static boolean check(String[] args) {
         if (args.length != 2) {
-            System.out.println("This program accepts two argument, threadfix script and mysql config files.");
+            LOGGER.warn("This program accepts two argument, threadfix script and mysql config files.");
             return false;
         }
 
         for (String arg: args) {
             File file = new File(arg);
             if (!file.exists()) {
-                System.out.println(arg + ": The file must exist.");
+                LOGGER.warn(arg + ": The file must exist.");
                 return false;
             }
 
             if (file.isDirectory()) {
-                System.out.println(arg + ": The file must not be a directory.");
+                LOGGER.warn(arg + ": The file must not be a directory.");
                 return false;
             }
         }
@@ -137,7 +153,7 @@ public class CommandLineMigration {
 
     private static void copyFile(String oldFilePath, String newFilePath) throws IOException {
         FileUtils.writeStringToFile(new File(newFilePath), FileUtils.readFileToString(new File(oldFilePath)));
-        System.out.println("Copied from " + oldFilePath + " to " + newFilePath);
+        LOGGER.info("Copied from " + oldFilePath + " to " + newFilePath);
     }
 
     private static void deleteFile(String oldFilePath) throws IOException {
@@ -145,8 +161,23 @@ public class CommandLineMigration {
         File fouput = new File(oldFilePath);
         if (fouput.exists() && fouput.isFile())
             if (fouput.delete())
-                System.out.println("File " + oldFilePath + " has been deleted");
+                LOGGER.info("File " + oldFilePath + " has been deleted");
             else
-                System.err.println("File " + oldFilePath + " has not been deleted");
+                LOGGER.info("File " + oldFilePath + " has not been deleted");
+    }
+
+    private static String escapeString(String line) {
+        if (line.toUpperCase().contains("INSERT INTO APPLICATION(")
+                || line.toUpperCase().contains("INSERT INTO DEFAULTCONFIGURATION(")
+                || line.toUpperCase().contains("INSERT INTO USER(")
+//                || line.toUpperCase().contains("INSERT INTO FINDING(")
+                ){
+            line = org.apache.commons.lang.StringEscapeUtils.unescapeJava(line);
+        }
+
+        if (line.toUpperCase().contains("INSERT INTO FINDING"))
+            line = line.replace("\\", "\\\\");
+
+        return line;
     }
 }

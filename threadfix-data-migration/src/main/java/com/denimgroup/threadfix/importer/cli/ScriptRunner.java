@@ -24,7 +24,12 @@
 
 package com.denimgroup.threadfix.importer.cli;
 
+import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.io.FileUtils;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -35,43 +40,38 @@ import java.util.Properties;
 @Component
 public class ScriptRunner {
 
-//    @Autowired
-//    SessionFactory sessionFactory;
-//
-//    /**
-//     *
-//     * @param statement sql statement
-//     *
-//     */
-//    @Transactional(readOnly = false) // used to be true
-//    public void execute(@Nonnull String statement) {
-//
-//        disableConstraintChecking();
-//        sessionFactory.getCurrentSession()
-//                .createSQLQuery(statement)
-//                .executeUpdate();
-//
-//    }
+    @Autowired
+    SessionFactory sessionFactory;
 
-//    @Transactional(readOnly = false) // used to be true
-    public void run(@Nonnull String scriptFile, @Nonnull String sqlConfigFile) {
+    private static final SanitizedLogger LOGGER = new SanitizedLogger(ScriptRunner.class);
+
+    /**
+     *
+     * @param statement sql statement
+     *
+     */
+    @Transactional(readOnly = false) // used to be true
+    public int execute(@Nonnull String statement) {
+
+        disableConstraintChecking();
+        return sessionFactory.getCurrentSession()
+                .createSQLQuery(statement)
+                .executeUpdate();
+
+    }
+
+    //    @Transactional(readOnly = false) // used to be true
+    public boolean run(@Nonnull String scriptFile, @Nonnull String sqlConfigFile) {
 
         InputStream input = null;
-// Create MySql Connection
+        boolean isSuccess = true;
+        // Create MySql Connection
         try {
-
             Properties prop = new Properties();
             input = new FileInputStream(sqlConfigFile);
 
             // load a properties file
             prop.load(input);
-
-            // get the property value and print it out
-            System.out.println(prop.getProperty("jdbc.driverClassName"));
-            System.out.println(prop.getProperty("jdbc.url"));
-            System.out.println(prop.getProperty("jdbc.username"));
-            System.out.println(prop.getProperty("jdbc.password"));
-
 
             Class.forName(prop.getProperty("jdbc.driverClassName"));
 
@@ -79,7 +79,7 @@ public class ScriptRunner {
                     prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
 
             // Initialize object for ScripRunner
-            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, false);
+            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, true);
 
             // Give the input file to Reader
             Reader reader = new BufferedReader(
@@ -89,8 +89,11 @@ public class ScriptRunner {
             sr.runScript(reader);
 
         } catch (Exception e) {
-            System.err.println("Failed to Execute" + scriptFile
+            LOGGER.error("Failed to Execute" + scriptFile
                     + " The error is " + e.getMessage());
+            readErrorLog();
+            isSuccess = false;
+
         } finally {
             if (input != null) {
                 try {
@@ -100,22 +103,35 @@ public class ScriptRunner {
                 }
             }
         }
+        return isSuccess;
+    }
+
+    @Transactional(readOnly = false)
+    public void disableConstraintChecking() {
+        sessionFactory.getCurrentSession()
+                .createSQLQuery("SET FOREIGN_KEY_CHECKS=0;\n")
+                .executeUpdate();
+    }
+
+    @Transactional(readOnly = false)
+    public void enableConstraintChecking() {
+        sessionFactory.getCurrentSession()
+                .createSQLQuery("SET FOREIGN_KEY_CHECKS=1;\n")
+                .executeUpdate();
     }
 
 
-//    @Transactional(readOnly = false)
-//    public void disableConstraintChecking() {
-//        sessionFactory.getCurrentSession()
-//                .createSQLQuery("SET FOREIGN_KEY_CHECKS=0;\n")
-//                .executeUpdate();
-//    }
-//
-//    @Transactional(readOnly = false)
-//    public void enableConstraintChecking() {
-//        sessionFactory.getCurrentSession()
-//                .createSQLQuery("SET FOREIGN_KEY_CHECKS=1;\n")
-//                .executeUpdate();
-//    }
+    private void readErrorLog() {
+        try {
+            String error = FileUtils.readFileToString(new File("error.log"));
+            String detailMsg = "";
+            if (error != null)
+                detailMsg = " " + error.split("\\(ID")[0] + " with ID " + error.split("VALUES\\(")[1].split(",")[0] + ".";
 
+            LOGGER.error("Unable to migrate data." + detailMsg + " Check error.log for more details.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
