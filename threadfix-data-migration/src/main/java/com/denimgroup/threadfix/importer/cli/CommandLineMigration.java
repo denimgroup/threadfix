@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.cli;
 
+import com.denimgroup.threadfix.StringEscapeUtils;
 import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -78,19 +79,12 @@ public class CommandLineMigration {
         List<String> lines = FileUtils.readLines(file);
         StringBuffer sqlContent = new StringBuffer();
         sqlContent.append("SET FOREIGN_KEY_CHECKS=0;\n");
-//        sqlContent.append("SET NAMES utf8;\n");
-//        sqlContent.append("SET GLOBAL innodb_file_format=Barracuda;\n");
-//        sqlContent.append("SET GLOBAL innodb_file_per_table=1;\n");
-//        sqlContent.append("SET GLOBAL innodb_log_file_size=900M;\n");
-//
-////        sqlContent.append("SET GLOBAL innodb_log_file_size=503316480 ;\n");
-//        sqlContent.append("ALTER TABLE Document ROW_FORMAT=compressed;\n");
 
         String table;
         for (String line : lines) {
             if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
                 table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
-                System.out.println("table:" + table);
+                System.out.println("Create new table:" + table);
                 String[] tableName = table.split("\\(", 2);
                 if (tableName.length == 2) {
                     StringBuffer fieldsStr = new StringBuffer();
@@ -167,16 +161,22 @@ public class CommandLineMigration {
     }
 
     private static String escapeString(String line) {
+
+
         if (line.toUpperCase().contains("INSERT INTO APPLICATION(")
                 || line.toUpperCase().contains("INSERT INTO DEFAULTCONFIGURATION(")
                 || line.toUpperCase().contains("INSERT INTO USER(")
-//                || line.toUpperCase().contains("INSERT INTO FINDING(")
+                || line.toUpperCase().contains("INSERT INTO FINDING(")
                 ){
-            line = org.apache.commons.lang.StringEscapeUtils.unescapeJava(line);
+            line = StringEscapeUtils.unescapeUnicode(line);
         }
 
-        if (line.toUpperCase().contains("INSERT INTO FINDING"))
-            line = line.replace("\\", "\\\\");
+        if (line.toUpperCase().contains("INSERT INTO FINDING")) {
+            //Double backslash for multi backslash group
+            line = line.replaceAll("(\\\\[\\\\]+)", "$1$1");
+            // Double for single backslash
+            line = line.replaceAll("([^\\\\])(\\\\[^nrt\\\\])", "$1\\\\$2");
+        }
 
         return line;
     }

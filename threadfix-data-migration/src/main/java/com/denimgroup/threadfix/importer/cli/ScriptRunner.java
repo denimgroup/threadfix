@@ -26,10 +26,7 @@ package com.denimgroup.threadfix.importer.cli;
 
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -40,27 +37,8 @@ import java.util.Properties;
 @Component
 public class ScriptRunner {
 
-    @Autowired
-    SessionFactory sessionFactory;
-
     private static final SanitizedLogger LOGGER = new SanitizedLogger(ScriptRunner.class);
 
-    /**
-     *
-     * @param statement sql statement
-     *
-     */
-    @Transactional(readOnly = false) // used to be true
-    public int execute(@Nonnull String statement) {
-
-        disableConstraintChecking();
-        return sessionFactory.getCurrentSession()
-                .createSQLQuery(statement)
-                .executeUpdate();
-
-    }
-
-    //    @Transactional(readOnly = false) // used to be true
     public boolean run(@Nonnull String scriptFile, @Nonnull String sqlConfigFile) {
 
         InputStream input = null;
@@ -79,7 +57,7 @@ public class ScriptRunner {
                     prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
 
             // Initialize object for ScripRunner
-            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, true);
+            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, false);
 
             // Give the input file to Reader
             Reader reader = new BufferedReader(
@@ -104,20 +82,6 @@ public class ScriptRunner {
             }
         }
         return isSuccess;
-    }
-
-    @Transactional(readOnly = false)
-    public void disableConstraintChecking() {
-        sessionFactory.getCurrentSession()
-                .createSQLQuery("SET FOREIGN_KEY_CHECKS=0;\n")
-                .executeUpdate();
-    }
-
-    @Transactional(readOnly = false)
-    public void enableConstraintChecking() {
-        sessionFactory.getCurrentSession()
-                .createSQLQuery("SET FOREIGN_KEY_CHECKS=1;\n")
-                .executeUpdate();
     }
 
 

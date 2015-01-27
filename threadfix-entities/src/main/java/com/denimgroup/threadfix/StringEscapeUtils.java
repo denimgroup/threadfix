@@ -52,12 +52,10 @@ public class StringEscapeUtils {
      * <p>This constructor is public to permit tools that require a JavaBean
      * instance to operate.</p>
      */
+
     public StringEscapeUtils() {
         super();
     }
-
-
-
 
     /**
      * <p>Unescapes any Java literals found in the <code>String</code>.
@@ -68,14 +66,14 @@ public class StringEscapeUtils {
      * @param str  the <code>String</code> to unescape, may be null
      * @return a new unescaped <code>String</code>, <code>null</code> if null string input
      */
-    public static String unescapeJava(String str) {
+    public static String unescapeUnicode(String str) {
         if (str == null) {
             return null;
         }
         try {
             StringWriter writer = new StringWriter(str.length());
-            unescapeJava(writer, str);
-            return writer.toString();
+            unescapeUnicode(writer, str);
+            return writer.toString().replaceAll("\\n", "\\\\n").replaceAll("\\r", "\\\\r").replaceAll("\\t", "\\\\t");
         } catch (IOException ioe) {
             // this should never ever happen while writing to a StringWriter
             throw new RestIOException(ioe, "Encountered IOException while trying to escape data. Can't continue.");
@@ -97,7 +95,7 @@ public class StringEscapeUtils {
      * @throws IllegalArgumentException if the Writer is <code>null</code>
      * @throws IOException if error occurs on underlying Writer
      */
-    public static void unescapeJava(Writer out, String str) throws IOException {
+    public static void unescapeUnicode(Writer out, String str) throws IOException {
         if(out == null) {
             throw new IllegalArgumentException("The Writer must not be null");
         } else if(str != null) {
