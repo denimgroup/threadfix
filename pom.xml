@@ -27,6 +27,7 @@
         <module>threadfix-scanner-plugin/burp</module>
         <module>threadfix-cli-endpoints</module>
         <module>threadfix-cli-importers</module>
+        <module>threadfix-data-migration</module>
     </modules>
 
     <licenses>
