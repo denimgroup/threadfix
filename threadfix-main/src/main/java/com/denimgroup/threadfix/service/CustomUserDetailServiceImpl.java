@@ -107,7 +107,7 @@ public class CustomUserDetailServiceImpl implements UserDetailsService, CustomUs
             }
         }
 
-        ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getName(),
+        ThreadFixUserDetails userDetails = new ThreadFixUserDetails(user.getBestName(),
                 user.getPassword(), true, true, true, true, grantedAuthorities, user.getSalt(),
                 user.isHasChangedInitialPassword(), user.getIsLdapUser(),
                 user.getId(), orgMap, appMap);
