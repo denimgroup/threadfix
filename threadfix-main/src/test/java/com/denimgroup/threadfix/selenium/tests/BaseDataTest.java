@@ -45,6 +45,10 @@ public abstract class BaseDataTest extends BaseIT{
     protected static String QUALYS_USER = System.getProperty("QUALYS_USER");
     protected static String QUALYS_PASS = System.getProperty("QUALYS_PASS");
     protected static String QUALYS_PLATFORM = System.getProperty("QUALYS_PLATFORM");
+    protected static String CONTRAST_USER = System.getProperty("CONTRAST_USER");
+    protected static String CONTRAST_API_KEY = System.getProperty("CONTRAST_API_KEY");
+    protected static String CONTRAST_SERVICE_KEY = System.getProperty("CONTRAST_SERVICE_KEY");
+
 
     protected String teamName;
     protected String appName;

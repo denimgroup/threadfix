@@ -28,6 +28,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.rmi.Remote;
+
 public class RemoteProvidersIndexPage extends BasePage {
 
 	public RemoteProvidersIndexPage(WebDriver webDriver) {
@@ -35,6 +37,13 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 
 	/*------------------------------ Action Methods ------------------------------*/
+
+
+    public RemoteProvidersIndexPage clickConfigureContrast(){
+        driver.findElementById("configure0").click();
+        waitForElement(driver.findElementById("myModalLabel"));
+        return new RemoteProvidersIndexPage(driver);
+    }
 
     public RemoteProvidersIndexPage clickConfigureQualys(){
 		driver.findElementById("configure1").click();
@@ -87,6 +96,17 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 
+    public RemoteProvidersIndexPage saveContrast(){
+        driver.findElementById("submit").click();
+        waitForSuccessMessage();
+        int i = 1;
+        while(driver.findElements(By.id("clearConfig5")).isEmpty() && i++ < 5) {
+            sleep(20000);
+        }
+        waitForElement(driver.findElementById("clearConfig5"));
+        return new RemoteProvidersIndexPage(driver);
+    }
+
     public RemoteProvidersIndexPage selectWhiteHatImportStyle() {
         driver.findElementByLinkText("WhiteHat").click();
         return this;
@@ -104,6 +124,23 @@ public class RemoteProvidersIndexPage extends BasePage {
 		return new RemoteProvidersIndexPage(driver);
 	}
 
+    public RemoteProvidersIndexPage setContrastUser(String user) {
+        driver.findElementById("Username").clear();
+        driver.findElementById("Username").sendKeys(user);
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage setContrastAPI(String api) {
+        driver.findElementById("API Key").clear();
+        driver.findElementById("API Key").sendKeys(api);
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage setContrastService(String service) {
+        driver.findElementById("Service Key").clear();
+        driver.findElementById("Service Key").sendKeys(service);
+        return new RemoteProvidersIndexPage(driver);
+    }
 
 	public RemoteProvidersIndexPage setQualysUsername(String user){
 		driver.findElementById("usernameInput").clear();
@@ -164,6 +201,11 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new RemoteProvidersIndexPage(driver);
     }
 
+    public RemoteProvidersIndexPage clickEditMappingContrastButton(int row) {
+        driver.findElementById("provider5updateMapping" + row).click();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
 	public RemoteProvidersIndexPage mapWhiteHatToTeamAndApp(int appRow, String teamName, String appName){
 		clickEditWhiteHatButton(appRow);
         selectTeamMapping(teamName);
@@ -201,6 +243,15 @@ public class RemoteProvidersIndexPage extends BasePage {
 
     public ApplicationDetailPage clickQualysGuardImportScan(int appRow) {
         String elementToClick = "provider3import" + appRow;
+        waitForElement(driver.findElementById(elementToClick));
+        if (!tryClick(By.id(elementToClick))) {
+            throw new ElementNotVisibleException(elementToClick);
+        }
+        return new ApplicationDetailPage(driver);
+    }
+
+    public ApplicationDetailPage clickContrastImportScan(int appRow) {
+        String elementToClick = "provider5import" + appRow;
         waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
@@ -277,6 +328,12 @@ public class RemoteProvidersIndexPage extends BasePage {
         return new RemoteProvidersIndexPage(driver);
     }
 
+    public RemoteProvidersIndexPage clearContrast() {
+        driver.findElementById("clearConfig5").click();
+        handleAlert();
+        return new RemoteProvidersIndexPage(driver);
+    }
+
     public RemoteProvidersIndexPage clearVeraCode() {
         driver.findElementById("clearConfig2").click();
         handleAlert();
@@ -292,6 +349,14 @@ public class RemoteProvidersIndexPage extends BasePage {
     public RemoteProvidersIndexPage clickEditName(String provider, String appNum) {
         driver.findElementById("provider" + provider + "updateName" + appNum).click();
         waitForElement(driver.findElementById("myModalLabel"));
+        return new RemoteProvidersIndexPage(driver);
+    }
+
+    public RemoteProvidersIndexPage setNewName(String name) {
+        driver.findElementById("customName").clear();
+        driver.findElementById("customName").sendKeys(name);
+        driver.findElementById("submit").click();
+        sleep(500);
         return new RemoteProvidersIndexPage(driver);
     }
 
