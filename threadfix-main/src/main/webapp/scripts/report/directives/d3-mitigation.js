@@ -26,31 +26,31 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                 }, true);
 
                 scope.render = function (reportData) {
-                    var data = angular.copy(reportData);
+                    var _data = angular.copy(reportData);
 
-                    if (!data) return;
+                    if (!_data) return;
 
                     svg.selectAll('*').remove();
                     var margin = {"left": 30, "bottom": 40, "right": 5};
 
                     // x scale
                     var xScale = d3.scale.linear()
-                        .domain([0, data.totalNumVuln + 1])
+                        .domain([0, _data.totalNumVuln + 1])
                         .range([0, width - margin.left - margin.right]);
 
                     var xAxis = d3.svg.axis()
                         .scale(xScale)
-                        .ticks(data.totalNumVuln / 2)
+                        .ticks(_data.totalNumVuln / 2)
                         .orient("bottom");
 
                     // y scale
                     var yScale = d3.scale.linear()
-                        .domain([0, data.totalNumVuln + 1])
+                        .domain([0, _data.totalNumVuln + 1])
                         .range([height - margin.bottom, 0]);
 
                     var yAxis = d3.svg.axis()
                         .scale(yScale)
-                        .ticks(data.totalNumVuln)
+                        .ticks(_data.totalNumVuln)
                         .orient("left");
 
                     svg.append("g")
@@ -132,16 +132,16 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                     // creating the dividers
                     quadrant_group.append("line")
                         .attr("x1", 0)
-                        .attr("y1", yScale(data.totalNumVuln / 2))
-                        .attr("x2", xScale(data.totalNumVuln + 1))
-                        .attr("y2", yScale(data.totalNumVuln / 2))
+                        .attr("y1", yScale(_data.totalNumVuln / 2))
+                        .attr("x2", xScale(_data.totalNumVuln + 1))
+                        .attr("y2", yScale(_data.totalNumVuln / 2))
                         .attr("class", "divider")
                         .style({'stroke': '#D0D0D0', 'stroke-width': 1});
 
                     quadrant_group.append("line")
-                        .attr("x1", xScale(data.totalNumVuln / 2))
+                        .attr("x1", xScale(_data.totalNumVuln / 2))
                         .attr("y1", 0)
-                        .attr("x2", xScale(data.totalNumVuln / 2))
+                        .attr("x2", xScale(_data.totalNumVuln / 2))
                         .attr("y2", yScale(0))
                         .attr("class", "divider")
                         .style({'stroke': '#D0D0D0', 'stroke-width': 1});
@@ -215,7 +215,7 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                         .style("fill", "url(#gradient1)");
 
                     quadrant_group.selectAll("circle")
-                        .data(data.results)
+                        .data(_data.results)
                         .enter()
                         .append("circle")
                         .attr("cx", function (d) {
@@ -223,29 +223,29 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                             var ind = -1, criticalMit = 0, highMit = 0, medMit = 0,
                                 lowMit = 0, infoMit = 0, auditMit = 0;
 
-                            if (data.scanners.length > 0) {
-                                angular.forEach(data.scanners, function (value) {
+                            if (_data.scanners.length > 0) {
+                                angular.forEach(_data.scanners, function (value) {
                                     if (value.name == d.scannerNames) {
-                                        ind = data.scanners.indexOf(value);
+                                        ind = _data.scanners.indexOf(value);
                                     }
                                 });
 
-                                if (data.scanners[ind].criticalVulns == true) {
+                                if (_data.scanners[ind].criticalVulns == true) {
                                     criticalMit += d.criticalO;
                                 }
-                                if (data.scanners[ind].highVulns == true) {
+                                if (_data.scanners[ind].highVulns == true) {
                                     highMit += d.highO;
                                 }
-                                if (data.scanners[ind].mediumVulns == true) {
+                                if (_data.scanners[ind].mediumVulns == true) {
                                     medMit += d.medO;
                                 }
-                                if (data.scanners[ind].lowVulns == true) {
+                                if (_data.scanners[ind].lowVulns == true) {
                                     lowMit += d.lowO;
                                 }
-                                if (data.scanners[ind].infoVulns == true) {
+                                if (_data.scanners[ind].infoVulns == true) {
                                     infoMit += d.infoO;
                                 }
-                                if (data.scanners[ind].auditable == true) {
+                                if (_data.scanners[ind].auditable == true) {
                                     auditMit += d.auditableO;
                                 }
                             }
@@ -253,45 +253,45 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                                 if (d.closed == 0) {
                                     return xScale(2);
                                 } else if (d.closed < d.total && ((criticalMit + highMit + medMit + lowMit + infoMit + auditMit) + d.closed) == d.total) {
-                                    return xScale((d.closed * (data.totalNumVuln / d.total)) - ((criticalMit + highMit + medMit + lowMit + infoMit + auditMit) * (data.totalNumVuln / 2)));
+                                    return xScale((d.closed * (_data.totalNumVuln / d.total)) - ((criticalMit + highMit + medMit + lowMit + infoMit + auditMit) * (_data.totalNumVuln / 2)));
                                 } else {
-                                    return xScale(d.closed * ((data.totalNumVuln - (criticalMit + highMit + medMit + lowMit + infoMit + auditMit)) / d.total));
+                                    return xScale(d.closed * ((_data.totalNumVuln - (criticalMit + highMit + medMit + lowMit + infoMit + auditMit)) / d.total));
                                 }
                             }
                             else if ((criticalMit + highMit + medMit + lowMit + infoMit + auditMit) == 0) {
                                 if (d.closed == d.total)
-                                    return xScale(data.totalNumVuln - 1);
+                                    return xScale(_data.totalNumVuln - 1);
                                 else
-                                    return xScale((data.totalNumVuln / 2) + 1 + (d.closed / 2));
+                                    return xScale((_data.totalNumVuln / 2) + 1 + (d.closed / 2));
                             }
                             else {
-                                return xScale(d.closed * (data.totalNumVuln / d.total));
+                                return xScale(d.closed * (_data.totalNumVuln / d.total));
                             }
                         })
                         .attr("cy", function (d) {
                             var ind = -1, criticalMit = 0, highMit = 0, medMit = 0,
                                 lowMit = 0, infoMit = 0, auditMit = 0;
 
-                            if (data.scanners.length > 0) {
-                                angular.forEach(data.scanners, function (value) {
+                            if (_data.scanners.length > 0) {
+                                angular.forEach(_data.scanners, function (value) {
                                     if (value.name == d.scannerNames)
-                                        ind = data.scanners.indexOf(value);
+                                        ind = _data.scanners.indexOf(value);
                                 });
-                                if (data.scanners[ind].criticalVulns == true) {
+                                if (_data.scanners[ind].criticalVulns == true) {
                                     criticalMit += d.criticalO;
                                 }
-                                if (data.scanners[ind].highVulns == true) {
+                                if (_data.scanners[ind].highVulns == true) {
                                     highMit += d.highO;
                                 }
-                                if (data.scanners[ind].mediumVulns == true)
+                                if (_data.scanners[ind].mediumVulns == true)
                                     medMit += d.medO;
-                                if (data.scanners[ind].lowVulns == true) {
+                                if (_data.scanners[ind].lowVulns == true) {
                                     lowMit += d.lowO;
                                 }
-                                if (data.scanners[ind].infoVulns == true) {
+                                if (_data.scanners[ind].infoVulns == true) {
                                     infoMit += d.infoO;
                                 }
-                                if (data.scanners[ind].auditable == true) {
+                                if (_data.scanners[ind].auditable == true) {
                                     auditMit += d.auditableO;
                                 }
                             }
@@ -300,17 +300,17 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                                 if (d.closed == 0) {
                                     return yScale(2);
                                 } else if (d.closed < d.total) {
-                                    return yScale(d.closed * ((data.totalNumVuln - (criticalMit + highMit + medMit + lowMit + infoMit + auditMit)) / d.total));
+                                    return yScale(d.closed * ((_data.totalNumVuln - (criticalMit + highMit + medMit + lowMit + infoMit + auditMit)) / d.total));
                                 }
                             } else if ((criticalMit + highMit + medMit + lowMit + infoMit + auditMit) == 0) {
                                 if (d.closed == d.total) {
-                                    return yScale(data.totalNumVuln - 1);
+                                    return yScale(_data.totalNumVuln - 1);
                                 }
                                 else {
-                                    return yScale((data.totalNumVuln / 2) + 1 + (d.closed / 2));
+                                    return yScale((_data.totalNumVuln / 2) + 1 + (d.closed / 2));
                                 }
                             } else {
-                                return yScale(d.closed * (data.totalNumVuln / d.total));
+                                return yScale(d.closed * (_data.totalNumVuln / d.total));
                             }
                         })
                         .attr("r", function(d) {
@@ -323,7 +323,7 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                         })
                         .style("cursor", "pointer")
                         .on("click", function(d) {
-                            return data.viewScan(d.scanId)
+                            return _data.viewScan(d.scanId)
                         })
                         .style("fill", function(d) {
                             if (d.criticalO > 0) {
@@ -357,7 +357,7 @@ d3ThreadfixModule.directive('d3Mitigation', ['d3',
                         .style("opacity", 0.5)
                         .style("cursor", "pointer")
                         .on("click", function () {
-                            return data.showEditModal();
+                            return _data.showEditModal();
                         });
                 };
 
