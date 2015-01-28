@@ -695,4 +695,70 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
     }
+    
+    @Test
+    public void configureContrastTest() {
+        remoteProvidersIndexPage.clickConfigureContrast()
+                .setContrastUser(CONTRAST_USER)
+                .setContrastAPI(CONTRAST_API_KEY)
+                .setContrastService(CONTRAST_SERVICE_KEY)
+                .saveContrast();
+
+        assertTrue("Contrast Sentinel was not configured properly",
+                remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Contrast"));
+        assertTrue("Contrast Sentinel configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "Yes"));
+
+        remoteProvidersIndexPage.clearContrast();
+
+        assertTrue("Contrast configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Contrast configuration was cleared successfully."));
+        assertTrue("Contrast configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
+    }
+
+    @Test
+    public void updateContrastApplicationsTest() {
+        remoteProvidersIndexPage.clickConfigureContrast()
+                .setContrastUser(CONTRAST_USER)
+                .setContrastAPI(CONTRAST_API_KEY)
+                .setContrastService(CONTRAST_SERVICE_KEY)
+                .saveContrast();
+
+        remoteProvidersIndexPage.clickEditMappingContrastButton(0)
+                .selectTeamMapping(teamName)
+                .selectAppMapping(appName)
+                .clickUpdateMappings();
+
+        remoteProvidersIndexPage.clickContrastImportScan(0)
+                .checkForAlert();
+
+        assertTrue(driver.switchTo().alert().getText().contains("ThreadFix imported scans successfully."));
+        driver.switchTo().alert().dismiss();
+
+        remoteProvidersIndexPage.clearContrast();
+
+        assertTrue("Contrast configuration was not cleared properly",
+                remoteProvidersIndexPage.successAlert().contains("Contrast configuration was cleared successfully."));
+        assertTrue("Contrast configured message is not correct.",
+                remoteProvidersIndexPage.checkConfigurationMessage(0, "No"));
+    }
+
+    @Test
+    public void editContrastApplicationName() {
+        String newName = getName();
+
+        remoteProvidersIndexPage.clickConfigureContrast()
+                .setContrastUser(CONTRAST_USER)
+                .setContrastAPI(CONTRAST_API_KEY)
+                .setContrastService(CONTRAST_SERVICE_KEY)
+                .saveContrast();
+
+        remoteProvidersIndexPage.clickEditName("5","0").setNewName(newName);
+
+        assertTrue("Application name did not update properly",
+                driver.findElement(By.id("provider5appid6")).getText().equals(newName));
+
+        remoteProvidersIndexPage.clearContrast();
+    }
 }
