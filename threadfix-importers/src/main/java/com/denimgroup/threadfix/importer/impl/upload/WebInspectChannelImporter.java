@@ -255,13 +255,12 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 
 	    	}
 	    	
-	    	if ("RawResponse".equals(qName)) {
-	    		date = DateUtils.attemptToParseDateFromHTTPResponse(currentResponseText);
-	    	}
-
 			if (grabResponse) {
-				if (currentResponseText == null)
+				if (currentResponseText == null) {
 					currentResponseText = getBuilderText();
+					if (date == null)
+						date = DateUtils.attemptToParseDateFromHTTPResponse(currentResponseText);
+				}
 				grabResponse = false;
 			}
 
