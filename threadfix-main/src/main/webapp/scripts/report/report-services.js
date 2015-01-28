@@ -778,18 +778,7 @@ threadfixModule.factory('mitigationUtils', function() {
         }
     };
 
-    var calcPercent = function(levelO, levelC){
-        if(levelC == 0 && levelO == 0) {
-            avg++;
-            $scope.totalCount += 100;
-            return 100;
-        }
-        else {
-            avg++;
-            $scope.totalCount += (levelC / (levelO + levelC)) * 100;
-            return (levelC / (levelO + levelC)) * 100;
-        }
-    };
+
 
     mitigationUtils.refreshRemoteVulns = function($scope){
         scannerNames.push($scope.remoteScan.scannerName);
@@ -823,6 +812,19 @@ threadfixModule.factory('mitigationUtils', function() {
 
     mitigationUtils.refreshVulns = function($scope){
         $scope.mitigationVulnsData = {};
+
+        var calcPercent = function(levelO, levelC){
+            if(levelC == 0 && levelO == 0) {
+                avg++;
+                $scope.totalCount += 100;
+                return 100;
+            }
+            else {
+                avg++;
+                $scope.totalCount += (levelC / (levelO + levelC)) * 100;
+                return (levelC / (levelO + levelC)) * 100;
+            }
+        };
 
         if($scope.closed.length > 0) {
             angular.forEach($scope.closed, function (value) {
