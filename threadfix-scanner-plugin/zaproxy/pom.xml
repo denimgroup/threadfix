@@ -53,19 +53,32 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>test</mainClass>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
+                            <descriptors>
+                                <descriptor>assembly/assembly.xml</descriptor>
+                            </descriptors>
+                            <finalName>threadfix-release-1.zap</finalName>
                         </configuration>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>PackageRename</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <move file="target/threadfix-release-1.zap-assembly.jar" tofile="target/threadfix-release-1.zap"/>
+                            </tasks>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
