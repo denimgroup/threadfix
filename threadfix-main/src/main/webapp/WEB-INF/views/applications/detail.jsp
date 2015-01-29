@@ -53,11 +53,11 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
-                <jsp:include page="widgets/vulnerabilityTrending.jsp"/>
-                <jsp:include page="widgets/mostVulnerableApps.jsp"/>
+                <jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
+                <jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
             </div>
             <div class="row-fluid">
-                <jsp:include page="widgets/mitigationReport.jsp"/>
+                <jsp:include page="/WEB-INF/views/applications/widgets/mitigationReport.jsp"/>
             </div>
         </div>
 
