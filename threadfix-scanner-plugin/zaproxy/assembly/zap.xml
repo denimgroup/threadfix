@@ -13,17 +13,33 @@
             <outputDirectory>/</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.SF</exclude>
+                </excludes>
+            </unpackOptions>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>
     <fileSets>
         <fileSet>
-            <useStrictFiltering>true</useStrictFiltering>
             <outputDirectory>/</outputDirectory>
-            <directory>src/org/zaproxy/zap/extension/threadfix</directory>
+            <directory>src/org/zaproxy/zap/extension/${zap.extension.name}</directory>
             <includes>
                 <include>ZapAddOn.xml</include>
             </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>org/zaproxy/zap/extension/${zap.extension.name}/</outputDirectory>
+            <directory>src/org/zaproxy/zap/extension/${zap.extension.name}</directory>
+            <includes>
+                <include>Messages*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>org/zaproxy/zap/extension/${zap.extension.name}/resources/</outputDirectory>
+            <directory>src/org/zaproxy/zap/extension/${zap.extension.name}/resources</directory>
         </fileSet>
     </fileSets>
 </assembly>
