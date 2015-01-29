@@ -116,6 +116,12 @@
             <version>${json.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.4.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

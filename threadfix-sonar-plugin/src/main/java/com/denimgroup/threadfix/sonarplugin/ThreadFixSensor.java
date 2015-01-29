@@ -23,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
+import com.denimgroup.threadfix.data.interfaces.Endpoint;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
+import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -30,6 +33,7 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
+import org.sonar.api.resources.ProjectFileSystem;
 
 import java.util.Map;
 
@@ -40,9 +44,28 @@ public class ThreadFixSensor implements Sensor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThreadFixSensor.class);
 
-    private final ThreadFixInfo info;
+    private ThreadFixInfo info = null;
 
-    public ThreadFixSensor(Settings settings) {
+    public ThreadFixSensor(Settings settings, ProjectFileSystem projectFileSystem) {
+        checkProperties(settings);
+        runHAM(projectFileSystem);
+    }
+
+    private void runHAM(ProjectFileSystem projectFileSystem) {
+
+        EndpointDatabase database = EndpointDatabaseFactory.getDatabase(projectFileSystem.getBasedir());
+
+        if (database != null) {
+            LOG.info("Got an EndpointDatabase successfully:");
+            for (Endpoint endpoint : database) {
+                LOG.info(endpoint.toString());
+            }
+        } else {
+            LOG.info("Failed to get an EndpointDatabase.");
+        }
+    }
+
+    private void checkProperties(Settings settings) {
         Map<String, String> properties = settings.getProperties();
 
         LOG.info("Starting ThreadFix configuration check.");
