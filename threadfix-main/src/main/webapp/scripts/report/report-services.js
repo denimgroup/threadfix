@@ -85,6 +85,36 @@ threadfixModule.factory('reportExporter', function($log) {
             if (isPDF) {
                 var pdf = new jsPDF();
                 pdf.addImage(canvasdata, 'PNG', 10, 10);
+
+                //Adding table
+                //pdf.cellInitialize();
+                //pdf.setFontSize(10);
+                //$.each( $('#vulnListDiv tr'), function (i, row){
+                //    $.each( $(row).find("td, th"), function(j, cell){
+                //        var txt = $(cell).text().trim() || " ";
+                //        var width = (j==4) ? 40 : 70; //make 4th column smaller
+                //        pdf.cell(10, 50, width, 30, txt, i);
+                //    });
+                //});
+                //
+                //d3.select('#vulnListDiv tr').forEach(function(row, i) {
+                //
+                //});
+
+                // We'll make our own renderer to skip this editor
+                var specialElementHandlers = {
+                    '#editor': function(element, renderer){
+                        return true;
+                    }
+                };
+
+                var table = d3.select('#vulnListDiv');
+                pdf.fromHTML(table[0][0], 15, 15, {
+                    'width': 170,
+                    'elementHandlers': specialElementHandlers
+                });
+
+
                 pdf.save(name + ".pdf");
             } else {
                 var pngimg = '<img src="'+canvasdata+'">';

@@ -32,6 +32,21 @@
         <%@ include file="/WEB-INF/views/vulnerabilities/vulnSearchTree.jsp"%>
     </div>
 
+    <div id="render_me">
+        <table id="StudentInfoListTable">
+            <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Dani</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 
