@@ -42,39 +42,33 @@ import com.denimgroup.threadfix.plugin.zap.dialog.ConfigurationDialogs;
 import com.denimgroup.threadfix.plugin.zap.dialog.UrlDialog;
 import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
-public class EndpointsAction extends JMenuItem {
+public abstract class EndpointsAction extends JMenuItem {
 
-	private static final long serialVersionUID = -3141841416510322529L;
-
-	private static final Logger logger = Logger.getLogger(EndpointsAction.class);
 	public static final String GENERIC_INT_SEGMENT = "\\{id\\}";
 
     private AttackThread attackThread = null;
 
     public EndpointsAction(final ViewDelegate view, final Model model) {
-        logger.info("Initializing ThreadFix endpoint menu item");
-        setText("ThreadFix: Import Endpoints");
+        getLogger().info("Initializing ThreadFix menu item: \"" + getMenuItemText() + "\"");
+        setText(getMenuItemText());
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
 
-                logger.info("About to show dialog.");
+                getLogger().info("About to show dialog.");
                 
-                boolean configured = ConfigurationDialogs.show(view);
+                boolean configured = ConfigurationDialogs.show(view, getDialogMode());
                 boolean completed = false;
                 
                 if (configured) {
-	                logger.info("Got application id, about to generate XML and use REST call.");
-	
-	                Endpoint.Info[] endpoints = new PluginClient(ZapPropertiesManager.INSTANCE)
-                            .getEndpoints(ZapPropertiesManager.INSTANCE.getAppId());
-	                
-	                if (endpoints.length == 0) {
-	                	view.showWarningDialog("Failed to retrieve endpoints from ThreadFix. Check your key and url.");
+	                Endpoint.Info[] endpoints = getEndpoints();
+
+                    if ((endpoints == null) || (endpoints.length == 0)) {
+	                	view.showWarningDialog(getNoEndpointsMessage());
 	                } else {
-	
-	                	logger.info("Got " + endpoints.length + " endpoints.");
+
+                        getLogger().info("Got " + endpoints.length + " endpoints.");
 	
 		                for (Endpoint.Info endpoint : endpoints) {
 		                    if (endpoint != null) {
@@ -109,7 +103,7 @@ public class EndpointsAction extends JMenuItem {
 			                    attack(new URL(url));
 			                    completed = true;
 			                } catch (MalformedURLException e1) {
-			                    logger.warn("Bad URL format.");
+                                getLogger().warn("Bad URL format.");
 			                    view.showWarningDialog("Invalid URL.");
 			                }
 		                }
@@ -117,18 +111,30 @@ public class EndpointsAction extends JMenuItem {
                 }
 
                 if (completed) {
-                	view.showMessageDialog("The endpoints were successfully imported from ThreadFix.");
+                	view.showMessageDialog(getCompletedMessage());
                 }
             }
         });
     }
 
+    protected abstract String getMenuItemText();
+
+    protected abstract String getNoEndpointsMessage();
+
+    protected abstract String getCompletedMessage();
+
+    protected abstract ConfigurationDialogs.DialogMode getDialogMode();
+
+    protected abstract Logger getLogger();
+
+    protected abstract Endpoint.Info[] getEndpoints();
+
     public void notifyProgress(AttackThread.Progress progress) {
-        logger.info("Status is " + progress);
+        getLogger().info("Status is " + progress);
     }
 
     public void attack (URL url) {
-        logger.info("Starting url " + url);
+        getLogger().info("Starting url " + url);
 
         if (attackThread != null && attackThread.isAlive()) {
             return;

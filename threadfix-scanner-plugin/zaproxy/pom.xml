@@ -334,12 +334,17 @@
             <artifactId>threadfix-entities</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-ham</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
         <zap.extension.name>threadfix</zap.extension.name>
         <zap.extension.type>release</zap.extension.type>
-        <zap.extension.version>1</zap.extension.version>
+        <zap.extension.version>2</zap.extension.version>
 
         <db.name>stonemill</db.name>
 
