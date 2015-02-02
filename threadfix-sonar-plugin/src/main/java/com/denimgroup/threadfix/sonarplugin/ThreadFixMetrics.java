@@ -25,8 +25,9 @@ package com.denimgroup.threadfix.sonarplugin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
+import org.sonar.api.measures.Metric.Builder;
+import org.sonar.api.measures.Metric.ValueType;
 import org.sonar.api.measures.Metrics;
 
 import java.util.Arrays;
@@ -39,18 +40,16 @@ public class ThreadFixMetrics implements Metrics {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThreadFixMetrics.class);
 
-    public static final Metric THREADFIX_STATISTICS=
-            new Metric.Builder(
-                    "threadfix_total_vulns", // metric identifier
-                    "Total ThreadFix Vulnerabilities", // metric name
-                    Metric.ValueType.INT) // metric data type
-                    .setDescription("Number of ThreadFix vulnerabilities for this application.")
-                    .setDomain(CoreMetrics.DOMAIN_GENERAL)
-                    .create();
-
+    public static Metric
+            TOTAL_VULNS = (new Builder("threadfix-total-vulns", "ThreadFix Total Vulnerabilities", ValueType.INT)).setDescription("ThreadFix Total Vulnerabilities").setDirection(1).setQualitative(true).setDomain("ThreadFix").setBestValue(0.0D).create(),
+            CRITICAL_VULNS = (new Builder("threadfix-critical-vulns", "ThreadFix Critical Vulnerabilities", ValueType.INT)).setDescription("ThreadFix Critical Vulnerabilities").setDirection(1).setQualitative(true).setDomain("ThreadFix").setBestValue(0.0D).create(),
+            HIGH_VULNS = (new Builder("threadfix-high-vulns", "ThreadFix High Vulnerabilities", ValueType.INT)).setDescription("ThreadFix High Vulnerabilities").setDirection(1).setQualitative(true).setDomain("ThreadFix").setBestValue(0.0D).create(),
+            MEDIUM_VULNS = (new Builder("threadfix-medium-vulns", "ThreadFix Medium Vulnerabilities", ValueType.INT)).setDescription("ThreadFix Medium Vulnerabilities").setDirection(1).setQualitative(true).setDomain("ThreadFix").setBestValue(0.0D).create(),
+            LOW_VULNS = (new Builder("threadfix-low-vulns", "ThreadFix Low Vulnerabilities", ValueType.INT)).setDescription("ThreadFix Low Vulnerabilities").setDirection(1).setQualitative(true).setDomain("ThreadFix").setBestValue(0.0D).create(),
+            INFO_VULNS = (new Builder("threadfix-info-vulns", "ThreadFix Informational Vulnerabilities", ValueType.INT)).setDescription("ThreadFix Informational Vulnerabilities").setDirection(1).setQualitative(true).setDomain("ThreadFix").setBestValue(0.0D).create();
 
     @Override
     public List<Metric> getMetrics() {
-        return Arrays.asList(THREADFIX_STATISTICS);
+        return Arrays.asList(TOTAL_VULNS, CRITICAL_VULNS, HIGH_VULNS, MEDIUM_VULNS, LOW_VULNS, INFO_VULNS);
     }
 }

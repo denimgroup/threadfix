@@ -38,7 +38,7 @@ import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.set;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 @Component
 public class ScanComparisonUtils {

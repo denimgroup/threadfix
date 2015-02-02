@@ -25,25 +25,34 @@ package com.denimgroup.threadfix.sonarplugin;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.BatchExtension;
+import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.InputStream;
 
-/**
- * Created by mcollins on 1/28/15.
- */
-public class ThreadFixPlugin extends SonarPlugin {
+public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtension {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixPlugin.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixMetrics.class);
+
+    public static final String REPOSITORY_KEY = "threadfix-rules";
+
+    private final RulesDefinitionXmlLoader xmlLoader;
+
+    public ThreadFixCWERulesDefinition() {
+        this.xmlLoader = new RulesDefinitionXmlLoader();
+    }
 
     @Override
-    public List getExtensions() {
-        LOG.error("Getting extensions");
-        return Arrays.asList(ThreadFixMetrics.class,
-                ThreadFixWidget.class,
-                ThreadFixSensor.class,
-                ThreadFixCWERulesDefinition.class,
-                ThreadFixQualityProfile.class);
+    public void define(Context context) {
+        NewRepository repo = context.createRepository(REPOSITORY_KEY, "java").setName("ThreadFix");
+        InputStream resourceAsStream = getClass().getResourceAsStream("/rules.xml");
+        if (resourceAsStream == null) {
+            LOG.info("Resource was null.");
+            xmlLoader.load(repo, resourceAsStream, "UTF-8");
+            repo.done();
+        } else {
+            LOG.info("Got a resource thing.");
+        }
     }
 }

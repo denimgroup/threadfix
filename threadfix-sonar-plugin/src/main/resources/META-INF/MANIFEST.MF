@@ -13,7 +13,6 @@ Plugin-License: MPL
 Plugin-Name: ThreadFix
 Plugin-Organization: Denim Group
 Plugin-OrganizationUrl: http://www.denimgroup.com
-Plugin-Parent: java
 Plugin-SourcesUrl: http://github.com/denimgroup/threadfix
-Plugin-Version: 1.3
-Sonar-Version: 3.7.3
+Plugin-Version: 1.0
+Sonar-Version: 4.5.1

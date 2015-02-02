@@ -41,7 +41,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Map;
 
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @Component

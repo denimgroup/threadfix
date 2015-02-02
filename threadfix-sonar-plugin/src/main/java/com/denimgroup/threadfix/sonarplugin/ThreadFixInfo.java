@@ -23,21 +23,68 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
+import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.remote.PluginClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * Created by mcollins on 1/28/15.
  */
 public class ThreadFixInfo {
 
-    private String url, apiKey, applicationName;
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixInfo.class);
+
+    private String url, apiKey, applicationName, applicationId;
+
+    private List<String> errors = list();
 
     public ThreadFixInfo(Map<String, String> properties) {
         this.url = properties.get("threadfix.url");
         this.apiKey = properties.get("threadfix.apiKey");
         this.applicationName = properties.get("threadfix.applicationName");
+        this.applicationId = properties.get("threadfix.applicationId");
+
+        this.errors = getErrors();
+
+        if (this.errors.isEmpty() && this.applicationId == null) {
+            this.applicationId = getApplicationId(this);
+        }
+    }
+
+    private String getApplicationId(ThreadFixInfo info) {
+        PluginClient client = new PluginClient(info.getUrl(), info.getApiKey());
+
+        Application.Info[] threadFixApplications = client.getThreadFixApplications();
+
+        LOG.debug("Looking for ThreadFix applications.");
+
+        String returnId = null;
+
+        for (Application.Info threadFixApplication : threadFixApplications) {
+            String applicationName = threadFixApplication.applicationName;
+
+            String id = threadFixApplication.getApplicationId();
+
+            LOG.debug("Application name " + applicationName + " has ID " + id);
+
+            if (info.getApplicationName().equals(threadFixApplication.getApplicationName())) {
+                LOG.debug("Found match: " + info.getApplicationName() + ", id=" + id);
+                returnId = id;
+            }
+        }
+
+        if (threadFixApplications.length == 0) {
+            LOG.error("No ThreadFix applications found, please set one up in ThreadFix and try again.");
+        }
+
+        return returnId;
     }
 
     public boolean valid() {
@@ -55,8 +102,8 @@ public class ThreadFixInfo {
             errors.add("ThreadFix API Key is null, please set the property threadfix.apiKey");
         }
 
-        if (applicationName == null) {
-            errors.add("ThreadFix Application name is null, please set the property threadfix.applicationName");
+        if (applicationName == null && applicationId == null) {
+            errors.add("ThreadFix Application name and ID are null, please set the property threadfix.applicationName or the property threadfix.applicationId");
         }
 
         return errors;
@@ -72,5 +119,9 @@ public class ThreadFixInfo {
 
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public String getApplicationId() {
+        return applicationId;
     }
 }

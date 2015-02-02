@@ -27,13 +27,13 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
-import javax.annotation.Nonnull;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Set;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SpringControllerEndpointParserTests {

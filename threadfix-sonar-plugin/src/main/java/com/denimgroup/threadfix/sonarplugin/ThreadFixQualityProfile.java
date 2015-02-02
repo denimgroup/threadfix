@@ -23,27 +23,33 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.SonarPlugin;
+import org.apache.commons.io.IOUtils;
+import org.sonar.api.profiles.ProfileDefinition;
+import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.utils.ValidationMessages;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
- * Created by mcollins on 1/28/15.
+ * Created by mcollins on 1/30/15.
  */
-public class ThreadFixPlugin extends SonarPlugin {
+public class ThreadFixQualityProfile extends ProfileDefinition {
+    private final XMLProfileParser parser;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixPlugin.class);
+    public ThreadFixQualityProfile(XMLProfileParser parser) {
+        this.parser = parser;
+    }
 
     @Override
-    public List getExtensions() {
-        LOG.error("Getting extensions");
-        return Arrays.asList(ThreadFixMetrics.class,
-                ThreadFixWidget.class,
-                ThreadFixSensor.class,
-                ThreadFixCWERulesDefinition.class,
-                ThreadFixQualityProfile.class);
+    public RulesProfile createProfile(ValidationMessages validationMessages) {
+        InputStream input = getClass().getResourceAsStream("/threadfix_profile.xml");
+        InputStreamReader reader = new InputStreamReader(input);
+        try {
+            return parser.parse(reader, validationMessages);
+        } finally {
+            IOUtils.closeQuietly(reader);
+        }
     }
 }
