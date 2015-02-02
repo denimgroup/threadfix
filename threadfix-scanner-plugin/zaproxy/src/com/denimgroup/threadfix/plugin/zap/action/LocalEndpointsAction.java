@@ -53,7 +53,6 @@ public class LocalEndpointsAction extends EndpointsAction {
 
     @Override
     protected String getNoEndpointsMessage() {
-        // TODO: should this message be more dynamic based on what inputs were given?
         return "Failed to retrieve endpoints from the source. Check your inputs.";
     }
 
@@ -76,7 +75,6 @@ public class LocalEndpointsAction extends EndpointsAction {
     protected Endpoint.Info[] getEndpoints() {
         getLogger().info("Got source information, about to generate endpoints.");
 
-        // TODO: endpointDatabase should be generated based on source info in properties, could be a directory name or a repo URL
         EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(ZapPropertiesManager.INSTANCE.getSourceFolder());
 
         Endpoint.Info[] endpoints = null;
