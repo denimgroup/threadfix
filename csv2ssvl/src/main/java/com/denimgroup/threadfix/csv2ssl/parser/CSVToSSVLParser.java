@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -28,6 +28,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 
 import java.io.*;
+
+import static com.denimgroup.threadfix.csv2ssl.checker.Configuration.CONFIG;
 
 /**
  * Created by mac on 12/2/14.
@@ -69,13 +71,12 @@ public class CSVToSSVLParser {
             CSVParser parse;
 
             if (format.length == 0) { // headers must be in the first line of the file
-
                 // Use header row as set of headers? not sure why I have to spell it out like this
 
-                parse = CSVFormat.DEFAULT.withSkipHeaderRecord(false).parse(reader);
+                parse = CSVFormat.DEFAULT.withSkipHeaderRecord(CONFIG.shouldSkipFirstLine).parse(reader);
 
             } else {
-                parse = CSVFormat.DEFAULT.withSkipHeaderRecord().withHeader(format).parse(reader);
+                parse = CSVFormat.DEFAULT.withSkipHeaderRecord(CONFIG.shouldSkipFirstLine).withHeader(format).parse(reader);
             }
 
             return RecordToXMLSerializer.getFromReader(parse);
@@ -84,3 +85,8 @@ public class CSVToSSVLParser {
         }
     }
 }
+
+
+// CWE,Path,Parameter,LongDescription,NativeId,Source
+// /Users/mcollins/git/csv2ssl/csv2ssvl/csv2ssvl/src/test/resources/basic.csv
+// /Users/mcollins/git/csv2ssl/csv2ssvl/csv2ssvl/src/test/resources/out.ssvl

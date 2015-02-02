@@ -41,4 +41,7 @@ public interface RemoteProviderHttpUtils {
     HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password,
                          String[] headerNames, String[] headerVals);
 
+    HttpResponse postUrlWithConfigurer(String url, RequestConfigurer requestConfigurer);
+
+
 }

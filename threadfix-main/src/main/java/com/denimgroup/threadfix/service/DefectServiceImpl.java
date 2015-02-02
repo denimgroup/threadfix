@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.DefectDao;
 import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.exception.IllegalStateRestException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.defects.DefectTrackerFactory;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -54,9 +57,11 @@ public class DefectServiceImpl implements DefectService {
 	private ApplicationService applicationService;
     @Autowired
     private DefectSubmissionServiceImpl defectSubmissionService;
+	@Autowired
+	private ApplicationDao applicationDao;
 
 	private final SanitizedLogger log = new SanitizedLogger(DefectService.class);
-	
+
 	@Override
 	public List<Defect> loadAll() {
 		return defectDao.retrieveAll();
@@ -420,5 +425,65 @@ public class DefectServiceImpl implements DefectService {
 		log.info("Successfully merged vulns to Defect ID" + id + ".");
 
 		return true;
+	}
+
+	@Override
+	public void updateScannerSuppliedStatuses(int appId) {
+
+		Application application = applicationDao.retrieveById(appId);
+
+		if (application == null) {
+			log.error("Somehow updateScannerSuppliedStatuses was called with an invalid application ID. Throwing exception.");
+			throw new IllegalStateRestException("Unable to find an application with ID " + appId);
+		}
+
+		if (application.getDefectTracker() == null) {
+			log.debug("In updateScannerSuppliedStatuses but didn't have a Defect Tracker attached.");
+			return;
+		}
+
+		boolean needsUpdate = setDefectIdsFromScanners(application);
+
+		if (needsUpdate) {
+			log.debug("Created new defects, getting status updates from the server.");
+			updateVulnsFromDefectTracker(appId);
+		} else {
+			log.debug("Didn't find any scanner-supplied defect IDs, exiting.");
+		}
+	}
+
+	// TODO a simple hql query could make this much faster
+	// from finding where issueid != null and issueid.vuln.app = application
+	public boolean setDefectIdsFromScanners(@Nonnull Application application) {
+
+		boolean hadAnyStatuses = false;
+		AbstractDefectTracker tracker = DefectTrackerFactory.getTracker(application);
+
+		if (tracker != null && application.getVulnerabilities() != null) {
+			for (Vulnerability vulnerability : application.getVulnerabilities()) {
+				for (Finding finding : vulnerability.getFindings()) {
+					String issueId = finding.getIssueId();
+					if (issueId != null) {
+						Defect defect = new Defect();
+						defect.setNativeId(issueId);
+						log.debug("Creating new Defect with ID " + issueId + " for vulnerability with ID " + vulnerability.getId());
+
+						String url = application.getDefectTracker().getUrl();
+						defect.setDefectURL(tracker.getBugURL(url, issueId));
+						defect.setVulnerabilities(list(vulnerability));
+						defect.setStatus("Open");
+						defect.setApplication(application);
+
+						vulnerability.setDefect(defect);
+
+						hadAnyStatuses = true;
+						defectDao.saveOrUpdate(defect);
+						vulnerabilityDao.saveOrUpdate(vulnerability);
+					}
+				}
+			}
+		}
+
+		return hadAnyStatuses;
 	}
 }

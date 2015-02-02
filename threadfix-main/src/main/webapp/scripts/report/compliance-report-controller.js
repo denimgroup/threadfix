@@ -124,7 +124,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.resetFilters();
     });
 
-    $scope.exportPNG = function(){
+    $scope.exportPNG = function(isPDF){
         var reportType = getReportType();
         if (!$scope.exportInfo) {
             $scope.exportInfo = {
@@ -140,6 +140,7 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.exportInfo.tags = $scope.title.tags;
         $scope.exportInfo.teams = undefined;
         $scope.exportInfo.apps = undefined;
+        $scope.exportInfo.isPDF = isPDF;
     };
 
     var getReportType = function() {

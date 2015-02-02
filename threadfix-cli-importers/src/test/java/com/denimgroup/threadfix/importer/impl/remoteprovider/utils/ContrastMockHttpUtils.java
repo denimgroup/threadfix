@@ -84,4 +84,9 @@ public class ContrastMockHttpUtils implements RemoteProviderHttpUtils {
     public HttpResponse postUrl(String url, String[] parameters, String[] values, String username, String password, String[] headerNames, String[] headerVals) {
         return postUrl(url, parameters, values, username, password);
     }
+
+    @Override
+    public HttpResponse postUrlWithConfigurer(String url, RequestConfigurer requestConfigurer) {
+        return null;
+    }
 }
