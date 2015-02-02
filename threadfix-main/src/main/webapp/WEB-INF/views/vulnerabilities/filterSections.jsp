@@ -394,6 +394,8 @@
         <div class="accordion-heading" style="text-align:center">
             <a id="exportPNGButtonReport" class="btn"
                ng-click="exportPNG()">Export PNG</a>
+            <a id="exportPDFButtonReport" class="btn"
+               ng-click="exportPNG(true)">Export PDF</a>
         </div>
     </div>
 </security:authorize>

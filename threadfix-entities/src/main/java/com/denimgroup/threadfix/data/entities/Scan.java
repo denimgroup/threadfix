@@ -56,6 +56,12 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
 			numberMediumVulnerabilities = 0L, numberHighVulnerabilities = 0L,
             numberCriticalVulnerabilities = 0L;
 
+	private Long numberAuditedInfoVulnerabilities = 0L, numberAuditedLowVulnerabilities = 0L,
+			numberAuditedMediumVulnerabilities = 0L, numberAuditedHighVulnerabilities = 0L,
+			numberAuditedCriticalVulnerabilities = 0L, numberTotalAuditedVulnerabilities = 0L;
+
+	private Boolean lockedMetadata = false;
+
     private User user;
 
     private List<ScanRepeatFindingMap>       scanRepeatFindingMaps;
@@ -525,4 +531,69 @@ public class Scan extends BaseEntity implements Iterable<Finding> {
         }
         return maps;
     }
+
+	// Audited stuff
+	@Column
+	public Long getNumberAuditedInfoVulnerabilities() {
+		return numberAuditedInfoVulnerabilities;
+	}
+
+	public void setNumberAuditedInfoVulnerabilities(Long numberAuditedInfoVulnerabilities) {
+		this.numberAuditedInfoVulnerabilities = numberAuditedInfoVulnerabilities;
+	}
+
+	@Column
+	public Long getNumberAuditedLowVulnerabilities() {
+		return numberAuditedLowVulnerabilities;
+	}
+
+	public void setNumberAuditedLowVulnerabilities(Long numberAuditedLowVulnerabilities) {
+		this.numberAuditedLowVulnerabilities = numberAuditedLowVulnerabilities;
+	}
+
+	@Column
+	public Long getNumberAuditedMediumVulnerabilities() {
+		return numberAuditedMediumVulnerabilities;
+	}
+
+	public void setNumberAuditedMediumVulnerabilities(Long numberAuditedMediumVulnerabilities) {
+		this.numberAuditedMediumVulnerabilities = numberAuditedMediumVulnerabilities;
+	}
+
+	@Column
+	public Long getNumberAuditedHighVulnerabilities() {
+		return numberAuditedHighVulnerabilities;
+	}
+
+	public void setNumberAuditedHighVulnerabilities(Long numberAuditedHighVulnerabilities) {
+		this.numberAuditedHighVulnerabilities = numberAuditedHighVulnerabilities;
+	}
+
+	@Column
+	public Long getNumberAuditedCriticalVulnerabilities() {
+		return numberAuditedCriticalVulnerabilities;
+	}
+
+	public void setNumberAuditedCriticalVulnerabilities(Long numberAuditedCriticalVulnerabilities) {
+		this.numberAuditedCriticalVulnerabilities = numberAuditedCriticalVulnerabilities;
+	}
+
+	@Column
+	public Long getNumberTotalAuditedVulnerabilities() {
+		return numberTotalAuditedVulnerabilities;
+	}
+
+	public void setNumberTotalAuditedVulnerabilities(Long numberTotalAuditedVulnerabilities) {
+		this.numberTotalAuditedVulnerabilities = numberTotalAuditedVulnerabilities;
+	}
+
+	// this can be used to suppress changes to these scans by other parts of ThreadFix
+	@Column
+	public Boolean getLockedMetadata() {
+		return lockedMetadata;
+	}
+
+	public void setLockedMetadata(Boolean lockedMetadata) {
+		this.lockedMetadata = lockedMetadata;
+	}
 }

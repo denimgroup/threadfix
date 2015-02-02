@@ -26,7 +26,6 @@ package com.denimgroup.threadfix.webservices.tests;
 
 import com.denimgroup.threadfix.WebServiceTests;
 import com.denimgroup.threadfix.properties.PropertiesManager;
-import junit.framework.Assert;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -34,6 +33,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,7 +53,7 @@ public class HttpRestUtilsIT {
             Configuration properties = new PropertiesConfiguration("threadfix.properties");
             assertEquals(TestUtils.URL, properties.getString("url"));
         } catch (ConfigurationException e) {
-            Assert.fail();
+            assertFalse(true);
         }
     }
 
@@ -65,7 +65,7 @@ public class HttpRestUtilsIT {
             Configuration properties = new PropertiesConfiguration("threadfix.properties");
             assertEquals(TestUtils.API_KEY, properties.getString("key"));
         } catch (ConfigurationException e) {
-            Assert.fail();
+            assertFalse(true);
         }
     }
 }
