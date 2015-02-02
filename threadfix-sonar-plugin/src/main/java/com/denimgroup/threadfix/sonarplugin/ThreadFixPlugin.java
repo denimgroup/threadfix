@@ -39,11 +39,11 @@ public class ThreadFixPlugin extends SonarPlugin {
 
     @Override
     public List getExtensions() {
-        LOG.error("Getting extensions");
+        LOG.error("Getting 5 extensions");
         return Arrays.asList(ThreadFixMetrics.class,
                 ThreadFixWidget.class,
                 ThreadFixSensor.class,
-                ThreadFixCWERulesDefinition.class,
-                ThreadFixQualityProfile.class);
+                ThreadFixQualityProfile.class,
+                ThreadFixCWERulesDefinition.class);
     }
 }

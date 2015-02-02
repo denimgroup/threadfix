@@ -33,15 +33,9 @@ import java.io.InputStream;
 
 public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtension {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixMetrics.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixCWERulesDefinition.class);
 
     public static final String REPOSITORY_KEY = "threadfix-rules";
-
-    private final RulesDefinitionXmlLoader xmlLoader;
-
-    public ThreadFixCWERulesDefinition() {
-        this.xmlLoader = new RulesDefinitionXmlLoader();
-    }
 
     @Override
     public void define(Context context) {
@@ -49,10 +43,13 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
         InputStream resourceAsStream = getClass().getResourceAsStream("/rules.xml");
         if (resourceAsStream == null) {
             LOG.info("Resource was null.");
-            xmlLoader.load(repo, resourceAsStream, "UTF-8");
-            repo.done();
         } else {
             LOG.info("Got a resource thing.");
+            new RulesDefinitionXmlLoader().load(repo, resourceAsStream, "UTF-8");
+            int size = repo.rules().size();
+            LOG.info("Got " + size + " new rules.");
+
+            repo.done();
         }
     }
 }

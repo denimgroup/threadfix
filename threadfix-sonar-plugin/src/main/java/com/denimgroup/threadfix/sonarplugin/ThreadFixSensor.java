@@ -155,12 +155,17 @@ public class ThreadFixSensor implements Sensor {
             Issuable issuable = this.resourcePerspectives.as(Issuable.class, resource);
             if(issuable != null) {
 
-                RuleKey key = RuleKey.of(REPOSITORY_KEY, "cwe-79");
+                RuleKey key = RuleKey.of(REPOSITORY_KEY, "cwe-" + vulnerability.getGenericVulnId());
 
                 String lineNumber = vulnerability.getLineNumber();
                 lineNumber = "-1".equals(lineNumber) || "0".equals(lineNumber) ? "1" : lineNumber;
-                Issue issue = issuable.newIssueBuilder().ruleKey(key).line(Integer.valueOf(lineNumber)).message(vulnerability.getGenericVulnName()).build();
-                if(issuable.addIssue(issue)) {
+                Issue issue = issuable
+                        .newIssueBuilder()
+                        .ruleKey(key)
+                        .line(Integer.valueOf(lineNumber))
+                        .message(vulnerability.getGenericVulnName()).build();
+
+                if (issuable.addIssue(issue)) {
                     LOG.debug("Successfully added issue " + issue);
                 } else {
                     LOG.debug("Failed to add issue " + issue);
