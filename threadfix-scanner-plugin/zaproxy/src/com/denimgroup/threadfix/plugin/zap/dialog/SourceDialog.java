@@ -33,28 +33,12 @@ import java.awt.*;
 
 public class SourceDialog {
 
-    private static final String
-            PASSWORD_PLACEHOLDER = "PASSWORD";
-
     private static final Logger logger = Logger.getLogger(SourceDialog.class);
 
     public static boolean show(ViewDelegate view) {
         logger.info("Attempting to show dialog.");
-        JTextField repositoryUrlField = new JTextField(40);
-        repositoryUrlField.setText(ZapPropertiesManager.INSTANCE.getRepositoryUrl());
-        JTextField repositoryBranchField = new JTextField(40);
-        repositoryBranchField.setText(ZapPropertiesManager.INSTANCE.getRepositoryBranch());
-        JTextField repositoryUserNameField = new JTextField(40);
-        repositoryUserNameField.setText(ZapPropertiesManager.INSTANCE.getRepositoryUserName());
-        JPasswordField repositoryPasswordField = new JPasswordField(40);
-        char[] repositoryPassword = ZapPropertiesManager.INSTANCE.getRepositoryPassword();
-        if (repositoryPassword == null) {
-            repositoryPasswordField.setText("");
-        } else {
-            repositoryPasswordField.setText(PASSWORD_PLACEHOLDER);
-        }
-        JTextField repositoryFolderField = new JTextField(40);
-        repositoryFolderField.setText(ZapPropertiesManager.INSTANCE.getRepositoryFolder());
+        JTextField sourceFolderField = new JTextField(40);
+        sourceFolderField.setText(ZapPropertiesManager.INSTANCE.getSourceFolder());
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -70,33 +54,8 @@ public class SourceDialog {
 
         JPanel myPanel = new JPanel();
         myPanel.setLayout(experimentLayout);
-
-        myPanel.add(new JLabel("Source Code URL"), labelConstraints);
-        myPanel.add(repositoryUrlField, textBoxConstraints);
-
-        labelConstraints.gridy++;
-        textBoxConstraints.gridy++;
-
-        myPanel.add(new JLabel("Source Code Revision"), labelConstraints);
-        myPanel.add(repositoryBranchField, textBoxConstraints);
-
-        labelConstraints.gridy++;
-        textBoxConstraints.gridy++;
-
-        myPanel.add(new JLabel("Source Code User Name"), labelConstraints);
-        myPanel.add(repositoryUserNameField, textBoxConstraints);
-
-        labelConstraints.gridy++;
-        textBoxConstraints.gridy++;
-
-        myPanel.add(new JLabel("Source Code Password"), labelConstraints);
-        myPanel.add(repositoryPasswordField, textBoxConstraints);
-
-        labelConstraints.gridy++;
-        textBoxConstraints.gridy++;
-
         myPanel.add(new JLabel("Source Code Folder"), labelConstraints);
-        myPanel.add(repositoryFolderField, textBoxConstraints);
+        myPanel.add(sourceFolderField, textBoxConstraints);
 
         String attempt = SourceDialog.class.getProtectionDomain().getCodeSource().getLocation().getFile() + "/dg-icon.png";
 
@@ -106,17 +65,12 @@ public class SourceDialog {
 
         int result = JOptionPane.showConfirmDialog(view.getMainFrame(),
                 myPanel,
-                "Please enter the appropriate information for accessing the source code",
+                "Please enter the location of the source code",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
         if (result == JOptionPane.OK_OPTION) {
-            ZapPropertiesManager.setRepositoryInformation(repositoryUrlField.getText(), repositoryBranchField.getText(), repositoryUserNameField.getText(), repositoryFolderField.getText());
-            repositoryPassword = repositoryPasswordField.getPassword();
-            logger.info("Password Field: " + repositoryPassword);
-            if ((repositoryPassword.length > 0) && !(repositoryPassword.equals(PASSWORD_PLACEHOLDER.toCharArray()))) {
-                ZapPropertiesManager.setRepositoryPassword(repositoryPassword);
-            }
+            ZapPropertiesManager.setSourceFolder(sourceFolderField.getText());
             logger.info("Got properties and saved.");
             return true;
         } else {

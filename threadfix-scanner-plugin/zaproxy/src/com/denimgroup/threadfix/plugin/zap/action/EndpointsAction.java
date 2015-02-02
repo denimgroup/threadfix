@@ -69,8 +69,9 @@ public abstract class EndpointsAction extends JMenuItem {
 	                } else {
 
                         getLogger().info("Got " + endpoints.length + " endpoints.");
-	
+
 		                for (Endpoint.Info endpoint : endpoints) {
+		                    getLogger().debug("  " + endpoint.getCsvLine());
 		                    if (endpoint != null) {
 
 		                    	String urlPath = endpoint.getUrlPath();

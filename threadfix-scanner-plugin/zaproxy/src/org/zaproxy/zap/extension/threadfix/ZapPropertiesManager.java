@@ -49,11 +49,7 @@ public class ZapPropertiesManager extends PropertiesManager {
             API_KEY_KEY = "key",
             URL_KEY = "url",
             APP_ID_KEY = "application-id",
-            REPOSITORY_URL_KEY = "repository-url",
-            REPOSITORY_BRANCH_KEY = "repository-branch",
-            REPOSITORY_USER_NAME_KEY = "repository-user-name",
-            REPOSITORY_PASSWORD_KEY = "repository-password",
-            REPOSITORY_FOLDER_KEY = "repository-folder",
+            SOURCE_FOLDER_KEY = "source-folder",
             SAVE_MESSAGE = "Saving ZAP properties.";
 
     @Override
@@ -77,38 +73,10 @@ public class ZapPropertiesManager extends PropertiesManager {
         return url;
     }
 
-    public String getRepositoryUrl() {
-        String repositoryUrl = getProperties().getProperty(REPOSITORY_URL_KEY);
-        logger.info("returning source code url " + repositoryUrl);
-        return repositoryUrl;
-    }
-
-    public String getRepositoryBranch() {
-        String repositoryBranch = getProperties().getProperty(REPOSITORY_BRANCH_KEY);
-        logger.info("returning source code branch " + repositoryBranch);
-        return repositoryBranch;
-    }
-
-    public String getRepositoryUserName() {
-        String repositoryUserName = getProperties().getProperty(REPOSITORY_USER_NAME_KEY);
-        logger.info("returning source code user name " + repositoryUserName);
-        return repositoryUserName;
-    }
-
-    public char[] getRepositoryPassword() {
-        String repositoryPassword = getProperties().getProperty(REPOSITORY_PASSWORD_KEY);
-        logger.info("returning source code password");
-        if (repositoryPassword != null) {
-            return repositoryPassword.toCharArray();
-        } else {
-            return null;
-        }
-    }
-
-    public String getRepositoryFolder() {
-        String repositoryFolder = getProperties().getProperty(REPOSITORY_FOLDER_KEY);
-        logger.info("returning source code folder " + repositoryFolder);
-        return repositoryFolder;
+    public String getSourceFolder() {
+        String sourceFolder = getProperties().getProperty(SOURCE_FOLDER_KEY);
+        logger.info("returning source code folder " + sourceFolder);
+        return sourceFolder;
     }
 
     public static void setKeyAndUrl(String newKey, String newUrl) {
@@ -124,18 +92,9 @@ public class ZapPropertiesManager extends PropertiesManager {
         saveProperties(properties);
     }
 
-    public static void setRepositoryInformation(String repositoryUrl, String repositoryBranch, String repositoryUserName, String repositoryFolder) {
+    public static void setSourceFolder(String sourceFolder) {
         Properties properties = getProperties();
-        properties.setProperty(REPOSITORY_URL_KEY, repositoryUrl);
-        properties.setProperty(REPOSITORY_BRANCH_KEY, repositoryBranch);
-        properties.setProperty(REPOSITORY_USER_NAME_KEY, repositoryUserName);
-        properties.setProperty(REPOSITORY_FOLDER_KEY, repositoryFolder);
-        saveProperties(properties);
-    }
-
-    public static void setRepositoryPassword(char[] repositoryPassword) {
-        Properties properties = getProperties();
-        properties.setProperty(REPOSITORY_PASSWORD_KEY, String.valueOf(repositoryPassword));
+        properties.setProperty(SOURCE_FOLDER_KEY, sourceFolder);
         saveProperties(properties);
     }
 

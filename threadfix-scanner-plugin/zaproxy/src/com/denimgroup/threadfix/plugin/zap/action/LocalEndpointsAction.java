@@ -77,7 +77,7 @@ public class LocalEndpointsAction extends EndpointsAction {
         getLogger().info("Got source information, about to generate endpoints.");
 
         // TODO: endpointDatabase should be generated based on source info in properties, could be a directory name or a repo URL
-        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(ZapPropertiesManager.INSTANCE.getRepositoryFolder());
+        EndpointDatabase endpointDatabase = EndpointDatabaseFactory.getDatabase(ZapPropertiesManager.INSTANCE.getSourceFolder());
 
         Endpoint.Info[] endpoints = null;
         if (endpointDatabase != null) {
