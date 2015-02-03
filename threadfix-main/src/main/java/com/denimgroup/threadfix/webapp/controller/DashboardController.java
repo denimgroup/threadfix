@@ -90,21 +90,7 @@ public class DashboardController {
 		model.addAttribute("teams", organizationList);
         model.addAttribute("config", config);
         model.addAttribute("dashboardWidgets", dashboardWidgets);
-
-        List<String> reportJsPaths = list();
-
-        for (DashboardWidget dashboardWidget : dashboardWidgets) {
-
-            String jsFilePath = dashboardWidget.getJsFilePath();
-
-            if(jsFilePath != null && !jsFilePath.isEmpty()){
-                String filteredJsPath = cacheBustService.filteredAsset(request, jsFilePath);
-                reportJsPaths.add(filteredJsPath);
-            }
-        }
-
-        model.addAttribute("reportJsPaths", reportJsPaths);
-
+        model.addAttribute("reportJsPaths", cacheBustService.uncachedJsPaths(request, dashboardWidgets));
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {
