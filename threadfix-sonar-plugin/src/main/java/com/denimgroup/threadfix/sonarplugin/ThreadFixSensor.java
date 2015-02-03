@@ -23,7 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
@@ -46,6 +48,7 @@ import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
+import org.sonar.api.rule.Severity;
 import org.springframework.context.annotation.AutoProxyRegistrar;
 
 import java.net.URL;
@@ -53,6 +56,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.map;
 import static com.denimgroup.threadfix.sonarplugin.ThreadFixCWERulesDefinition.REPOSITORY_KEY;
 
 /**
@@ -196,7 +200,8 @@ public class ThreadFixSensor implements Sensor {
                         .newIssueBuilder()
                         .ruleKey(key)
                         .line(Integer.valueOf(lineNumber))
-                        .message(vulnerability.getGenericVulnName()).build();
+                        .severity(getSeverity(vulnerability))
+                        .message(buildMessage(vulnerability)).build();
 
                 if (issuable.addIssue(issue)) {
                     LOG.debug("Successfully added issue " + issue);
@@ -207,6 +212,30 @@ public class ThreadFixSensor implements Sensor {
         } else {
             LOG.debug("Got null resource for path " + vulnerability.getFilePath());
         }
+    }
+
+    // fancy
+    Map<String, String> severityMap = map(
+            GenericSeverity.CRITICAL, Severity.BLOCKER,
+            GenericSeverity.HIGH, Severity.CRITICAL,
+            GenericSeverity.MEDIUM, Severity.MAJOR,
+            GenericSeverity.LOW, Severity.MINOR,
+            GenericSeverity.INFO, Severity.INFO);
+
+    private String getSeverity(VulnerabilityMarker vulnerability) {
+        String severity = vulnerability.getSeverity();
+        return severityMap.containsKey(severity) ? severityMap.get(severity) : Severity.MAJOR;
+    }
+
+    private String buildMessage(VulnerabilityMarker vulnerability) {
+        StringBuilder returnString = new StringBuilder().append("Scanners: ").append(CollectionUtils.join(",", vulnerability.getScanners()));
+
+        String parameter = vulnerability.getParameter();
+        if (parameter != null) {
+            returnString.append("; Parameter: ").append(parameter);
+        }
+
+        return returnString.append("; Type: ").append(vulnerability.getGenericVulnName()).toString();
     }
 
     private Resource resourceOf(SensorContext context, final VulnerabilityMarker vulnerability) {

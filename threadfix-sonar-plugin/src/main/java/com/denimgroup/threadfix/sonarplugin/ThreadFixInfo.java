@@ -32,8 +32,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Created by mcollins on 1/28/15.
@@ -50,7 +52,7 @@ public class ThreadFixInfo {
 
     private String localFiles, localDirectories;
 
-    private List<String> files = list();
+    private Set<String> files = set();
 
     private Mode mode = Mode.SERVER;
 
@@ -180,7 +182,7 @@ public class ThreadFixInfo {
             String[] splitDirectories = localDirectories.split(",");
 
             for (String splitDirectory : splitDirectories) {
-                File directory = new File(splitDirectory);
+                File directory = new File(splitDirectory.trim());
 
                 if (!directory.exists()) {
                     errors.add("\"" + splitDirectory + "\" wasn't found.");
@@ -188,7 +190,6 @@ public class ThreadFixInfo {
                     errors.add("\"" + splitDirectory + "\" isn't a directory.");
                 } else {
                     File[] files = directory.listFiles();
-
                     if (files == null) {
                         errors.add("No files found in directory " + splitDirectory);
                         continue;
@@ -207,7 +208,7 @@ public class ThreadFixInfo {
             String[] splitFiles = localFiles.split(",");
 
             for (String splitFile : splitFiles) {
-                File file = new File(splitFile);
+                File file = new File(splitFile.trim());
 
                 if (!file.exists()) {
                     errors.add("\"" + splitFile + "\" wasn't found.");
@@ -251,7 +252,7 @@ public class ThreadFixInfo {
         return applicationId;
     }
 
-    public List<String> getFiles() {
+    public Set<String> getFiles() {
         return files;
     }
 

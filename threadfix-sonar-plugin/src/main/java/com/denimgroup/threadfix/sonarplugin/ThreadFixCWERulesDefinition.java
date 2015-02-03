@@ -44,10 +44,10 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
         if (resourceAsStream == null) {
             LOG.info("Resource was null.");
         } else {
-            LOG.info("Got a resource thing.");
+            LOG.debug("Got rules.xml as a resource.");
             new RulesDefinitionXmlLoader().load(repo, resourceAsStream, "UTF-8");
             int size = repo.rules().size();
-            LOG.info("Got " + size + " new rules.");
+            LOG.debug("Got " + size + " new rules.");
 
             repo.done();
         }
