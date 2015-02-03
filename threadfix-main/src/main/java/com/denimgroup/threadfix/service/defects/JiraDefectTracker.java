@@ -502,7 +502,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
         int MAX_RESULTS = 1000;
         int startAt = 0;
-        int totalReturned = 0;
+        int totalAvailable = 0;
         List<JSONArray> returnArrays = list();
         List<Defect> defectList = list();
 
@@ -518,13 +518,13 @@ public class JiraDefectTracker extends AbstractDefectTracker {
                 MAX_RESULTS = Integer.valueOf(maxResults);
             String total = JsonUtils.getStringProperty(result, "total");
             if (total != null)
-                totalReturned = Integer.valueOf(total);
+                totalAvailable = Integer.valueOf(total);
             String issuesString = JsonUtils.getStringProperty(result, "issues");
             JSONArray returnArray = JsonUtils.getJSONArray(issuesString);
             int amountReturned = returnArray != null ? returnArray.length() : 0;
             returnArrays.add(returnArray);
 
-            if (totalReturned > MAX_RESULTS) {
+            if (totalAvailable > MAX_RESULTS) {
                 while ((amountReturned >= MAX_RESULTS)) {
                     startAt += MAX_RESULTS;
                     payload = "{\"jql\":\"project='" + projectName
