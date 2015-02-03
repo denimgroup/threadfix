@@ -21,39 +21,26 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin;
+package com.denimgroup.threadfix.sonarplugin.profiles;
 
-import com.denimgroup.threadfix.sonarplugin.profiles.CSharpProfile;
-import com.denimgroup.threadfix.sonarplugin.profiles.JavaProfile;
-import com.denimgroup.threadfix.sonarplugin.profiles.JavaScriptProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.SonarPlugin;
-
-import java.util.List;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
+import com.denimgroup.threadfix.sonarplugin.ThreadFixQualityProfile;
+import org.sonar.api.profiles.ProfileDefinition;
+import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.utils.ValidationMessages;
 
 /**
- * Created by mcollins on 1/28/15.
+ * Created by mcollins on 2/3/15.
  */
-public class ThreadFixPlugin extends SonarPlugin {
+public class JavaScriptProfile extends ProfileDefinition {
+    private XMLProfileParser parser;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixPlugin.class);
-
-    @Override
-    public List getExtensions() {
-        LOG.error("Getting 5 extensions");
-
-        return list(ThreadFixMetrics.class,
-                ThreadFixWidget.class,
-                ThreadFixSensor.class,
-                ThreadFixCWERulesDefinition.class,
-
-                CSharpProfile.class,
-                JavaProfile.class,
-                JavaScriptProfile.class
-        );
+    public JavaScriptProfile(XMLProfileParser parser) {
+        this.parser = parser;
     }
 
+    @Override
+    public RulesProfile createProfile(ValidationMessages validation) {
+        return ThreadFixQualityProfile.createProfile(parser, "js", validation);
+    }
 }

@@ -37,9 +37,30 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
 
     public static final String REPOSITORY_KEY = "threadfix-rules";
 
+    String[] languages = { "cs", "java", "js" };
+
     @Override
     public void define(Context context) {
-        NewRepository repo = context.createRepository(REPOSITORY_KEY, "java").setName("ThreadFix");
+        // make a repo for each defined language
+        for (String language : languages) {
+            NewRepository repository = getRepositoryForLanguage(context, language);
+            repository.done();
+        }
+    }
+
+    private NewRepository getRepositoryForLanguage(Context context, String language) {
+        NewRepository newRepository = context
+                .createRepository(getKey(language), language)
+                .setName("ThreadFix");
+        loadRulesInto(newRepository);
+        return newRepository;
+    }
+
+    public static String getKey(String language) {
+        return REPOSITORY_KEY + "-" + language;
+    }
+
+    private void loadRulesInto(NewRepository repo) {
         InputStream resourceAsStream = getClass().getResourceAsStream("/rules.xml");
         if (resourceAsStream == null) {
             LOG.info("Resource was null.");
@@ -48,8 +69,6 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
             new RulesDefinitionXmlLoader().load(repo, resourceAsStream, "UTF-8");
             int size = repo.rules().size();
             LOG.debug("Got " + size + " new rules.");
-
-            repo.done();
         }
     }
 }

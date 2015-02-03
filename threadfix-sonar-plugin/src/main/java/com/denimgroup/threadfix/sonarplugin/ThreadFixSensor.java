@@ -55,7 +55,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.map;
-import static com.denimgroup.threadfix.sonarplugin.ThreadFixCWERulesDefinition.REPOSITORY_KEY;
 
 /**
  * Created by mcollins on 1/28/15.
@@ -185,8 +184,9 @@ public class ThreadFixSensor implements Sensor {
             Issuable issuable = this.resourcePerspectives.as(Issuable.class, resource);
             if(issuable != null) {
 
-                RuleKey key = RuleKey.of(REPOSITORY_KEY, "cwe-" + vulnerability.getGenericVulnId());
-                
+                String repositoryKey = ThreadFixCWERulesDefinition.getKey(resource.getLanguage().getKey());
+                RuleKey key = RuleKey.of(repositoryKey, "cwe-" + vulnerability.getGenericVulnId());
+
                 String lineNumber = vulnerability.getLineNumber();
                 lineNumber = "-1".equals(lineNumber) || "0".equals(lineNumber) ? "1" : lineNumber;
                 Issue issue = issuable

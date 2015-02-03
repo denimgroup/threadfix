@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
+import com.denimgroup.threadfix.sonarplugin.util.InputStreamLanguageDecorator;
 import org.apache.commons.io.IOUtils;
-import org.sonar.api.profiles.ProfileDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
@@ -35,19 +37,24 @@ import java.io.InputStreamReader;
 /**
  * Created by mcollins on 1/30/15.
  */
-public class ThreadFixQualityProfile extends ProfileDefinition {
-    private final XMLProfileParser parser;
+public abstract class ThreadFixQualityProfile {
 
-    public ThreadFixQualityProfile(XMLProfileParser parser) {
-        this.parser = parser;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixQualityProfile.class);
 
-    @Override
-    public RulesProfile createProfile(ValidationMessages validationMessages) {
-        InputStream input = getClass().getResourceAsStream("/threadfix_profile.xml");
-        InputStreamReader reader = new InputStreamReader(input);
+    public static RulesProfile createProfile(XMLProfileParser parser,
+                                             String languageKey,
+                                             ValidationMessages validationMessages) {
+        InputStream input = ThreadFixQualityProfile.class.getResourceAsStream("/threadfix_profile.xml");
+        InputStreamReader reader = new InputStreamReader(
+                new InputStreamLanguageDecorator(input, languageKey)
+        );
         try {
-            return parser.parse(reader, validationMessages);
+            RulesProfile parse = parser.parse(reader, validationMessages);
+
+            LOG.info("Got " + parse.getActiveRules().size() + " active rules for " + languageKey + ".");
+            LOG.info("Got " + parse.getLanguage() + " for language.");
+
+            return parse;
         } finally {
             IOUtils.closeQuietly(reader);
         }
