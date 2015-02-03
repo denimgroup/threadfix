@@ -45,6 +45,7 @@ public class DashboardWidget extends BaseEntity {
     public final static int FILE_PATH_LENGTH = 255;
 
     private Boolean available;
+    private Boolean nativeReport;
     private String displayName;
     private String widgetName;
     private String jspFilePath;
@@ -57,6 +58,14 @@ public class DashboardWidget extends BaseEntity {
 
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+
+    public Boolean getNativeReport() {
+        return nativeReport != null && nativeReport;
+    }
+
+    public void setNativeReport(Boolean nativeReport) {
+        this.nativeReport = nativeReport;
     }
 
     @Column(nullable = false)

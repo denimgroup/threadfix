@@ -38,6 +38,10 @@ public interface DashboardWidgetDao extends GenericNamedObjectDao<DashboardWidge
 
     List<DashboardWidget> retrieveAllAvailable();
 
+    List<DashboardWidget> retrieveAllNativeReports();
+
+    List<DashboardWidget> retrieveAllNonNativeReports();
+
     void delete(DashboardWidget dashboardWidget);
 
     void delete(Integer dashboardWidgetId);

@@ -57,6 +57,16 @@ public class DashboardWidgetServiceImpl implements DashboardWidgetService {
     }
 
     @Override
+    public List<DashboardWidget> loadAllNativeReports() {
+        return dashboardWidgetDao.retrieveAllNativeReports();
+    }
+
+    @Override
+    public List<DashboardWidget> loadAllNonNativeReports() {
+        return dashboardWidgetDao.retrieveAllNonNativeReports();
+    }
+
+    @Override
     public DashboardWidget load(int dashboardWidgetId) {
         return dashboardWidgetDao.retrieveById(dashboardWidgetId);
     }

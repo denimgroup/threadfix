@@ -48,6 +48,16 @@ public interface DashboardWidgetService {
     List<DashboardWidget> loadByIds(List<Integer> dashboardWidgetIds);
 
     /**
+     * @return List<DashboardWidget>
+     */
+    List<DashboardWidget> loadAllNativeReports();
+
+    /**
+     * @return List<DashboardWidget>
+     */
+    List<DashboardWidget> loadAllNonNativeReports();
+
+    /**
      * @param dashboardWidgetId
      * @return DashboardWidget
      */

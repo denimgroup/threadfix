@@ -60,8 +60,27 @@ public class HibernateDashboardWidgetDao
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<DashboardWidget> retrieveAllAvailable() {
         return (List<DashboardWidget>) getAvailableCriteria().list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<DashboardWidget> retrieveAllNativeReports() {
+        return (List<DashboardWidget>) sessionFactory.getCurrentSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("nativeReport", true))
+                .list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<DashboardWidget> retrieveAllNonNativeReports() {
+        return (List<DashboardWidget>) sessionFactory.getCurrentSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("nativeReport", false))
+                .list();
     }
 
     private Criteria getAvailableCriteria() {
@@ -71,12 +90,11 @@ public class HibernateDashboardWidgetDao
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<DashboardWidget> retrieveByIds(List<Integer> dashboardWidgetIds) {
-
         return (List<DashboardWidget>) getAvailableCriteria()
                 .add(Restrictions.in("id", dashboardWidgetIds))
                 .list();
-
     }
 
     @Override
