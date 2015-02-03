@@ -115,7 +115,10 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
         // set dashboard reports' availability that were not found in annotations to false
         for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
             if (!availableReportPlugins.get(dashboardWidget)){
-                dashboardWidget.setAvailable(false);
+                if(dashboardWidget.getAvailable()){
+                    dashboardWidget.setAvailable(false);
+                    dashboardWidgetService.store(dashboardWidget);
+                }
             }
         }
     }
