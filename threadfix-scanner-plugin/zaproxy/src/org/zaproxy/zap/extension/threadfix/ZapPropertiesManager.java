@@ -33,6 +33,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.parosproxy.paros.Constant;
+
 /**
  * Created by mac on 9/23/13.
  */
@@ -101,7 +103,7 @@ public class ZapPropertiesManager extends PropertiesManager {
     private static Properties getProperties() {
         Properties properties = new Properties();
 
-        File file = new File(FILE_NAME);
+        File file = new File(Constant.getZapHome(), FILE_NAME);
 
         logger.info("Properties file is at " + file.getAbsolutePath());
 
@@ -129,7 +131,7 @@ public class ZapPropertiesManager extends PropertiesManager {
     }
 
     private static void saveProperties(Properties properties) {
-        try (FileWriter writer = new FileWriter(new File(FILE_NAME))) {
+        try (FileWriter writer = new FileWriter(new File(Constant.getZapHome(), FILE_NAME))) {
             properties.store(writer, SAVE_MESSAGE);
         } catch (IOException e) {
             logger.warn(e.getMessage(), e);
