@@ -51,7 +51,7 @@ public class HibernateDashboardWidgetDao
     public DashboardWidget retrieveByName(String name) {
         return (DashboardWidget) sessionFactory.getCurrentSession()
                 .createCriteria(getClassReference())
-                .add(Restrictions.eq("name", name))
+                .add(Restrictions.eq("displayName", name))
                 .uniqueResult();
     }
 
