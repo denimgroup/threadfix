@@ -12,7 +12,6 @@
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
 	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
-    <cbs:cachebustscript src="/scripts/graph-config-modal-controller.js"/>
     <cbs:cachebustscript src="/scripts/mitigation-progress-report.js"/>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
