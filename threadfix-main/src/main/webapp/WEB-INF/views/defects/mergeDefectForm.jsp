@@ -22,6 +22,7 @@
                                name = "id"
                                ng-model="object.id"
                                typeahead="defect for defect in config.defects | filter:$viewValue | limitTo:10"
+                               typeahead-editable="false"
                                class="form-control"/>
                     </td>
                 </tr>
