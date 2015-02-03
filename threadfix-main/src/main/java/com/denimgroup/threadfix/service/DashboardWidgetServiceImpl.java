@@ -47,6 +47,16 @@ public class DashboardWidgetServiceImpl implements DashboardWidgetService {
     }
 
     @Override
+    public List<DashboardWidget> loadAllAvailable() {
+        return dashboardWidgetDao.retrieveAllAvailable();
+    }
+
+    @Override
+    public List<DashboardWidget> loadByIds(List<Integer> dashboardWidgetIds) {
+        return dashboardWidgetDao.retrieveByIds(dashboardWidgetIds);
+    }
+
+    @Override
     public DashboardWidget load(int dashboardWidgetId) {
         return dashboardWidgetDao.retrieveById(dashboardWidgetId);
     }

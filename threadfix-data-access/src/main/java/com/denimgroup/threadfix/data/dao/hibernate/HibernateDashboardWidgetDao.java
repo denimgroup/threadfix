@@ -27,11 +27,15 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.DashboardWidgetDao;
 import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author zabdisubhan
@@ -53,6 +57,26 @@ public class HibernateDashboardWidgetDao
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("displayName", name))
                 .uniqueResult();
+    }
+
+    @Override
+    public List<DashboardWidget> retrieveAllAvailable() {
+        return (List<DashboardWidget>) getAvailableCriteria().list();
+    }
+
+    private Criteria getAvailableCriteria() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(getClassReference())
+                .add(Restrictions.eq("available", true));
+    }
+
+    @Override
+    public List<DashboardWidget> retrieveByIds(List<Integer> dashboardWidgetIds) {
+
+        return (List<DashboardWidget>) getAvailableCriteria()
+                .add(Restrictions.in("id", dashboardWidgetIds))
+                .list();
+
     }
 
     @Override

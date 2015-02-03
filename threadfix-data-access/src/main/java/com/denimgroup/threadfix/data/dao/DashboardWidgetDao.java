@@ -26,10 +26,17 @@ package com.denimgroup.threadfix.data.dao;
 
 import com.denimgroup.threadfix.data.entities.DashboardWidget;
 
+import java.util.List;
+
 /**
  * @author zabdisubhan
  */
+
 public interface DashboardWidgetDao extends GenericNamedObjectDao<DashboardWidget> {
+
+    List<DashboardWidget> retrieveByIds(List<Integer> dashboardWidgetIds);
+
+    List<DashboardWidget> retrieveAllAvailable();
 
     void delete(DashboardWidget dashboardWidget);
 

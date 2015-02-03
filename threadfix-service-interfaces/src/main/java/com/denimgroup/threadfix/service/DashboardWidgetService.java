@@ -37,6 +37,16 @@ public interface DashboardWidgetService {
      */
     List<DashboardWidget> loadAll();
 
+   /**
+     * @return List<DashboardWidget>
+     */
+    List<DashboardWidget> loadAllAvailable();
+
+    /**
+     * @return List<DashboardWidget>
+     */
+    List<DashboardWidget> loadByIds(List<Integer> dashboardWidgetIds);
+
     /**
      * @param dashboardWidgetId
      * @return DashboardWidget

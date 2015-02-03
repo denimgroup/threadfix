@@ -76,9 +76,9 @@ public class DashboardController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(Model model, HttpServletRequest request) {
 
-        List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAll();
-        List<Organization> organizationList = organizationService.loadAllActiveFilter();
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+        List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadByIds(config.getDashboardWidgetIds());
+        List<Organization> organizationList = organizationService.loadAllActiveFilter();
 
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
 		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecentFiltered(5));

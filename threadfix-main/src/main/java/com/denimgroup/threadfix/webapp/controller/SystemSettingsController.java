@@ -83,7 +83,7 @@ public class SystemSettingsController {
 
 	@ModelAttribute("dashboardWidgets")
 	public List<DashboardWidget> populateDashboardWidgetTypes() {
-		return dashboardWidgetService.loadAll();
+		return dashboardWidgetService.loadAllAvailable();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

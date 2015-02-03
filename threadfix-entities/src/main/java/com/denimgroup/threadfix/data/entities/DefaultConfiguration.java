@@ -27,7 +27,10 @@ package com.denimgroup.threadfix.data.entities;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Entity
 @Table(name="DefaultConfiguration")
@@ -311,6 +314,18 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("QualysRemoteProvider", getShouldProxyQualys());
         map.put("TrustwaveHailstormRemoteProvider", getShouldProxyTrustwaveHailstorm());
         return map;
+    }
+
+    @Transient
+    public List<Integer> getDashboardWidgetIds() {
+        List<Integer> dashboardWidgetIds = list();
+
+        dashboardWidgetIds.add(getDashboardTopLeftId());
+        dashboardWidgetIds.add(getDashboardTopRightId());
+        dashboardWidgetIds.add(getDashboardBottomLeftId());
+        dashboardWidgetIds.add(getDashboardBottomRightId());
+
+        return dashboardWidgetIds;
     }
 
     @Column
