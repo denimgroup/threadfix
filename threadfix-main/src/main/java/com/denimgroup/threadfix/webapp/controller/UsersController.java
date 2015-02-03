@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
@@ -58,20 +57,13 @@ import java.util.Map;
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_USERS')")
 public class UsersController {
 
+	@Autowired
 	private UserService userService = null;
+	@Autowired
 	private RoleService roleService = null;
-	private DefaultConfigService defaultConfigService = null;
+
 	private final SanitizedLogger log = new SanitizedLogger(UsersController.class);
 
-	@Autowired
-	public UsersController(RoleService roleService, 
-			DefaultConfigService defaultConfigurationService,
-			UserService userService) {
-		this.userService = userService;
-		this.roleService = roleService;
-		this.defaultConfigService = defaultConfigurationService;
-	}
-	
 	public UsersController(){}
 	
 	@InitBinder

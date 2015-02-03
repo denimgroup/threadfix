@@ -12,11 +12,18 @@
         <table class="modal-form-table dataTable">
             <tbody>
                 <tr>
-                    <td>User</td>
+                    <td>Username</td>
                     <td class="inputValue">
                         <input ng-model="user.name" required type="text" name="name" id="name"/>
                         <span id="name.errors.required" class="errors" ng-show="form.name.$dirty && form.name.$error.required">Name is required.</span>
                         <span id="name.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Display Name</td>
+                    <td class="inputValue">
+                        <input ng-model="user.displayName" type="text" name="displayName" id="displayName"/>
+                        <span id="displayName.errors" class="errors" ng-show="user.name_error"> {{ user.name_error }}</span>
                     </td>
                 </tr>
                 <tr ng-if="!user.isLdapUser">
@@ -69,7 +76,7 @@
                         </select>
                     </td>
                     <td class="no-color" style="border: 0 solid black; background-color: white; padding-left: 5px">
-                        <errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" />
+                        <errors id="hasGlobalGroupAccessErrors" path="hasGlobalGroupAccess" cssClass="errors" ></errors>
                     </td>
                 </tr>
                 </security:authorize>
