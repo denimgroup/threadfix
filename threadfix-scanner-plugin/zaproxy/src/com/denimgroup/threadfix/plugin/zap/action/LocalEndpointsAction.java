@@ -37,8 +37,7 @@ import java.util.List;
 
 public class LocalEndpointsAction extends EndpointsAction {
 
-    // TODO: generate a new serialVersionUID
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = Logger.getLogger(LocalEndpointsAction.class);
 

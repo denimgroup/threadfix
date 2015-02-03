@@ -39,7 +39,7 @@ import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class ImportAction extends JMenuItem {
 
-	private static final long serialVersionUID = 7496536214677590654L;
+	private static final long serialVersionUID = 1L;
 	
 	private static final Logger logger = Logger.getLogger(ImportAction.class);
 

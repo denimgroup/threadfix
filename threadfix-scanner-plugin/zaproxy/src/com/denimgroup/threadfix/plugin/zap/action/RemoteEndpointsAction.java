@@ -34,8 +34,7 @@ import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class RemoteEndpointsAction extends EndpointsAction {
 
-    // TODO: generate a new serialVersionUID
-    private static final long serialVersionUID = 0;
+    private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = Logger.getLogger(RemoteEndpointsAction.class);
 
