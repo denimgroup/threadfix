@@ -35,10 +35,29 @@ public class SourceDialog {
 
     private static final Logger logger = Logger.getLogger(SourceDialog.class);
 
-    public static boolean show(ViewDelegate view) {
+    public static boolean show(final ViewDelegate view) {
         logger.info("Attempting to show dialog.");
-        JTextField sourceFolderField = new JTextField(40);
+        final JLabel sourceFolderLabel = new JLabel("Source Code Folder");
+        final JTextField sourceFolderField = new JTextField(40);
         sourceFolderField.setText(ZapPropertiesManager.INSTANCE.getSourceFolder());
+        final JButton browseButton = new JButton("Browse");
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                String currentDirectory = sourceFolderField.getText();
+                if ((currentDirectory == null) || (currentDirectory.trim().equals(""))) {
+                    currentDirectory = System.getProperty("user.home");
+                }
+                chooser.setCurrentDirectory(new java.io.File(currentDirectory));
+                chooser.setDialogTitle("Select A Source Code Folder");
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                chooser.setAcceptAllFileFilterUsed(false);
+                if (chooser.showOpenDialog(view.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
+                    sourceFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
+                }
+            }
+        });
 
         GridBagLayout experimentLayout = new GridBagLayout();
         GridBagConstraints labelConstraints = new GridBagConstraints();
@@ -51,11 +70,17 @@ public class SourceDialog {
         textBoxConstraints.gridx = 1;
         textBoxConstraints.gridy = 0;
         textBoxConstraints.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints browseButtonConstraints = new GridBagConstraints();
+        browseButtonConstraints.gridwidth = 1;
+        browseButtonConstraints.gridx = 5;
+        browseButtonConstraints.gridy = 0;
+        browseButtonConstraints.fill = GridBagConstraints.HORIZONTAL;
 
         JPanel myPanel = new JPanel();
         myPanel.setLayout(experimentLayout);
-        myPanel.add(new JLabel("Source Code Folder"), labelConstraints);
+        myPanel.add(sourceFolderLabel, labelConstraints);
         myPanel.add(sourceFolderField, textBoxConstraints);
+        myPanel.add(browseButton, browseButtonConstraints);
 
         String attempt = SourceDialog.class.getProtectionDomain().getCodeSource().getLocation().getFile() + "/dg-icon.png";
 
