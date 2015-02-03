@@ -12,10 +12,6 @@
                 <tr class="left-align">
                     <td style="padding:5px;">Select Defect</td>
                     <td style="padding:5px;">
-                        <!--
-                        <select style="margin-bottom:0;" ng-model="object.id" id="defectId" name="id" ng-options="defect for defect in config.defects" required>
-                        </select>
-                        -->
                         <input id="defectId"
                                required style="z-index:4000;width:500px"
                                type="text"
