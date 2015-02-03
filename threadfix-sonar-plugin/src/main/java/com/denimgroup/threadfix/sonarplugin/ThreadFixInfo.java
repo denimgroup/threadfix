@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.remote.PluginClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +40,19 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
  */
 public class ThreadFixInfo {
 
+    enum Mode {
+        SERVER, LOCAL
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(ThreadFixInfo.class);
 
     private String url, apiKey, applicationName, applicationId;
 
-    private List<String> errors = list();
+    private String localFiles, localDirectories;
+
+    private List<String> files = list();
+
+    private Mode mode = Mode.SERVER;
 
     public ThreadFixInfo(Map<String, String> properties) {
         this.url = properties.get("threadfix.url");
@@ -51,9 +60,12 @@ public class ThreadFixInfo {
         this.applicationName = properties.get("threadfix.applicationName");
         this.applicationId = properties.get("threadfix.applicationId");
 
-        this.errors = getErrors();
+        this.localDirectories = properties.get("threadfix.localDirectories");
+        this.localFiles = properties.get("threadfix.localFiles");
 
-        if (this.errors.isEmpty() && this.applicationId == null) {
+        List<String> errors = getErrors();
+
+        if (errors.isEmpty() && mode == Mode.SERVER && this.applicationId == null) {
             this.applicationId = getApplicationId(this);
         }
     }
@@ -92,7 +104,55 @@ public class ThreadFixInfo {
     }
 
     public List<String> getErrors() {
+
+        LOG.info("Checking ThreadFix configuration.");
+
         List<String> errors = new ArrayList<>();
+
+        boolean emptyLocal = allEmpty(localDirectories, localFiles),
+                emptyServer = allEmpty(url, apiKey, applicationName, applicationId);
+
+        if (emptyLocal && emptyServer) {
+            errors.add("No ThreadFix configuration found.");
+            errors.add("Use the properties threadfix.localFiles or threadfix.localDirectories to use local scans");
+            errors.add("Use the properties threadfix.url, threadfix.apiKey, and either threadfix.applicationName or threadfix.applicationId to use a ThreadFix server instance");
+        } else if (emptyLocal) {
+            errors.addAll(testServer());
+        } else if (emptyServer) {
+            errors.addAll(testLocal());
+            mode = Mode.LOCAL;
+        } else {
+            LOG.info("Both server and local configurations found.");
+
+            List<String>
+                    localErrors  = testLocal(),
+                    serverErrors = testServer();
+
+            if (localErrors.isEmpty() && serverErrors.isEmpty()) {
+                LOG.info("Both server and local configurations were valid. ");
+                LOG.info("Defaulting to server, please remove server configuration to use local files.");
+            } else if (localErrors.isEmpty()) {
+                for (String serverError : serverErrors) {
+                    LOG.debug(serverError);
+                }
+                LOG.info("Incomplete server configuration. Using local settings.");
+                mode = Mode.LOCAL;
+            } else if (serverErrors.isEmpty()) {
+                for (String localError : localErrors) {
+                    LOG.debug(localError);
+                }
+                LOG.info("There were errors with the local configuration, using server configuration.");
+            } else {
+                errors.addAll(serverErrors);
+                errors.addAll(localErrors);
+            }
+        }
+
+        return errors;
+    }
+
+    private List<String> testServer() {
+        List<String> errors = list();
 
         if (url == null) {
             errors.add("ThreadFix URL is null, please set the property threadfix.url");
@@ -106,7 +166,73 @@ public class ThreadFixInfo {
             errors.add("ThreadFix Application name and ID are null, please set the property threadfix.applicationName or the property threadfix.applicationId");
         }
 
+        // TODO make a request here
+
         return errors;
+    }
+
+    // tons of validation code
+    private List<String> testLocal() {
+
+        List<String> errors = list();
+
+        if (localDirectories != null) {
+            String[] splitDirectories = localDirectories.split(",");
+
+            for (String splitDirectory : splitDirectories) {
+                File directory = new File(splitDirectory);
+
+                if (!directory.exists()) {
+                    errors.add("\"" + splitDirectory + "\" wasn't found.");
+                } else if (!directory.isDirectory()) {
+                    errors.add("\"" + splitDirectory + "\" isn't a directory.");
+                } else {
+                    File[] files = directory.listFiles();
+
+                    if (files == null) {
+                        errors.add("No files found in directory " + splitDirectory);
+                        continue;
+                    }
+                    
+                    for (File file : files) {
+                        if (file.isFile()) {
+                            this.files.add(file.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (localFiles != null) {
+            String[] splitFiles = localFiles.split(",");
+
+            for (String splitFile : splitFiles) {
+                File file = new File(splitFile);
+
+                if (!file.exists()) {
+                    errors.add("\"" + splitFile + "\" wasn't found.");
+                } else if (!file.isFile()) {
+                    errors.add("\"" + splitFile + "\" isn't a file.");
+                } else {
+                    this.files.add(file.getAbsolutePath());
+                }
+            }
+        }
+
+        if (errors.isEmpty() && this.files.isEmpty()) {
+            errors.add("No files found.");
+        }
+
+        return errors;
+    }
+
+    private boolean allEmpty(String... properties) {
+        for (String property : properties) {
+            if (property != null && !property.equals("")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String getUrl() {
@@ -123,5 +249,13 @@ public class ThreadFixInfo {
 
     public String getApplicationId() {
         return applicationId;
+    }
+
+    public List<String> getFiles() {
+        return files;
+    }
+
+    public Mode getMode() {
+        return mode;
     }
 }

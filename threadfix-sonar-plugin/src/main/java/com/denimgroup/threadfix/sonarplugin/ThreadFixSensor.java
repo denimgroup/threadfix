@@ -23,11 +23,14 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.remote.PluginClient;
+import com.denimgroup.threadfix.service.merge.Merger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -43,8 +46,11 @@ import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
+import org.springframework.context.annotation.AutoProxyRegistrar;
 
+import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static com.denimgroup.threadfix.sonarplugin.ThreadFixCWERulesDefinition.REPOSITORY_KEY;
@@ -55,6 +61,7 @@ import static com.denimgroup.threadfix.sonarplugin.ThreadFixCWERulesDefinition.R
 public class ThreadFixSensor implements Sensor {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThreadFixSensor.class);
+    private final FileSystem moduleFileSystem;
 
     private ThreadFixInfo info = null;
     private final ResourcePerspectives resourcePerspectives;
@@ -66,7 +73,8 @@ public class ThreadFixSensor implements Sensor {
                            SonarIndex sonarIndex) {
         this.sonarIndex = sonarIndex;
         checkProperties(settings);
-        runHAM(moduleFileSystem);
+        this.moduleFileSystem = moduleFileSystem;
+        runHAM(this.moduleFileSystem);
 
         if (resourcePerspectives == null) {
             LOG.error("Got null resources perspective from autowiring. Will probably die.");
@@ -91,8 +99,6 @@ public class ThreadFixSensor implements Sensor {
     private void checkProperties(Settings settings) {
         Map<String, String> properties = settings.getProperties();
 
-        LOG.info("Starting ThreadFix configuration check.");
-
         ThreadFixInfo info = new ThreadFixInfo(properties);
 
         if (!info.valid()) {
@@ -101,6 +107,9 @@ public class ThreadFixSensor implements Sensor {
                 LOG.info(error);
             }
             this.info = null;
+        } else if (info.getMode() == ThreadFixInfo.Mode.LOCAL) {
+            LOG.info("Using ThreadFix filesystem properties.");
+            this.info = info;
         } else if (testConnection(info)) {
             LOG.info("ThreadFix connection was valid.");
             this.info = info;
@@ -118,9 +127,8 @@ public class ThreadFixSensor implements Sensor {
     public void analyse(Project project, SensorContext sensorContext) {
 
         if (info != null) {
-            PluginClient client = getConfiguredClient();
 
-            VulnerabilityMarker[] endpoints = client.getVulnerabilityMarkers(info.getApplicationId());
+            VulnerabilityMarker[] endpoints = getEndpoints();
 
             for (VulnerabilityMarker vulnerabilityMarker : endpoints) {
                 LOG.debug("Got endpoint " + vulnerabilityMarker);
@@ -138,6 +146,31 @@ public class ThreadFixSensor implements Sensor {
             measure1.setPersistenceMode(PersistenceMode.FULL);
             sensorContext.saveMeasure(measure1);
         }
+    }
+
+    private VulnerabilityMarker[] getEndpoints() {
+        if (info.getMode() == ThreadFixInfo.Mode.SERVER) {
+            PluginClient client = getConfiguredClient();
+
+            return client.getVulnerabilityMarkers(info.getApplicationId());
+        } else {
+            Application application = getApplication(moduleFileSystem.baseDir().getAbsolutePath(), info.getFiles());
+
+            List<VulnerabilityMarker> markers = application.getMarkers();
+            return markers.toArray(new VulnerabilityMarker[markers.size()]);
+        }
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException {
+        URL location = AutoProxyRegistrar.class.getProtectionDomain().getCodeSource().getLocation();
+        System.out.println(location);
+    }
+
+    public static Application getApplication(String sourceRoot, Collection<String> filePaths) {
+
+        SpringConfiguration.initializeWithClassLoader(ThreadFixSensor.class.getClassLoader());
+
+        return SpringConfiguration.getSpringBean(Merger.class).mergeFromDifferentScannersInternal(sourceRoot, filePaths);
     }
 
     private void processMarker(VulnerabilityMarker vulnerabilityMarker, SensorContext sensorContext) {

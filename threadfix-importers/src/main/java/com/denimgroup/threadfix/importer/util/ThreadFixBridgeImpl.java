@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.parser;
+package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelSeverityDao;
@@ -42,11 +42,13 @@ import com.denimgroup.threadfix.importer.interop.ScanTypeCalculationService;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXParseException;
 
 import java.io.File;
 import java.lang.reflect.Field;
 
+/**
+ * This class is used for non-web-context ThreadFix merging.
+ */
 @Service
 public class ThreadFixBridgeImpl implements ThreadFixBridge {
 

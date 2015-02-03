@@ -26,9 +26,9 @@ package com.denimgroup.threadfix.importer.utils;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
-import com.denimgroup.threadfix.importer.cli.ScanParser;
-import com.denimgroup.threadfix.importer.cli.ScanSerializer;
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.util.ScanParser;
+import com.denimgroup.threadfix.importer.util.ScanSerializer;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

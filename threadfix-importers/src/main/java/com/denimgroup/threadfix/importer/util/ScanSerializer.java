@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.cli;
+package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -30,6 +30,9 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * This class is used for non-web-context ThreadFix merging.
+ */
 public class ScanSerializer {
 
     // We only want to throw errors if we're testing. Otherwise let's have defaults.

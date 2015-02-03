@@ -25,11 +25,11 @@
 package com.denimgroup.threadfix.importer.check;
 
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
-import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
+import com.denimgroup.threadfix.importer.util.ThreadFixBridge;
 import com.denimgroup.threadfix.importer.utils.FolderMappings;
 import org.junit.Test;
 import org.springframework.stereotype.Component;

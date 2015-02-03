@@ -22,7 +22,7 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.parser;
+package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.entities.Scan;
@@ -32,6 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
+/**
+ * This class is used for non-web-context ThreadFix merging.
+ */
 public interface ThreadFixBridge  {
 
     public ScannerType getType(File file);

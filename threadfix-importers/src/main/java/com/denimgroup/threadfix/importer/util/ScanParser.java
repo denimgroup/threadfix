@@ -22,16 +22,14 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.importer.cli;
+package com.denimgroup.threadfix.importer.util;
 
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.ScanImportStatus;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
-import com.denimgroup.threadfix.importer.parser.ThreadFixBridge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nonnull;
 import java.io.File;
 
+/**
+ * This class is used for non-web-context ThreadFix merging.
+ */
 @Component
 public class ScanParser {
 

@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.parser.DependencyCheckTests;
+import com.denimgroup.threadfix.service.merge.Merger;
 import org.junit.Test;
 
 import java.util.List;
