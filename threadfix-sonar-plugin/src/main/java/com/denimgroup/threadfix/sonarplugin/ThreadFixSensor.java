@@ -49,9 +49,7 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.rule.Severity;
-import org.springframework.context.annotation.AutoProxyRegistrar;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -165,11 +163,6 @@ public class ThreadFixSensor implements Sensor {
         }
     }
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        URL location = AutoProxyRegistrar.class.getProtectionDomain().getCodeSource().getLocation();
-        System.out.println(location);
-    }
-
     public static Application getApplication(String sourceRoot, Collection<String> filePaths) {
 
         SpringConfiguration.initializeWithClassLoader(ThreadFixSensor.class.getClassLoader());
@@ -193,7 +186,7 @@ public class ThreadFixSensor implements Sensor {
             if(issuable != null) {
 
                 RuleKey key = RuleKey.of(REPOSITORY_KEY, "cwe-" + vulnerability.getGenericVulnId());
-
+                
                 String lineNumber = vulnerability.getLineNumber();
                 lineNumber = "-1".equals(lineNumber) || "0".equals(lineNumber) ? "1" : lineNumber;
                 Issue issue = issuable
@@ -228,7 +221,7 @@ public class ThreadFixSensor implements Sensor {
     }
 
     private String buildMessage(VulnerabilityMarker vulnerability) {
-        StringBuilder returnString = new StringBuilder().append("Scanners: ").append(CollectionUtils.join(",", vulnerability.getScanners()));
+        StringBuilder returnString = new StringBuilder().append("Scanners: ").append(CollectionUtils.join(", ", vulnerability.getScanners()));
 
         String parameter = vulnerability.getParameter();
         if (parameter != null) {
