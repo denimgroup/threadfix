@@ -43,6 +43,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 /**
  * @author bbeverly
  * @author mcollins
@@ -70,6 +72,8 @@ public class DashboardController {
     private FilterJsonBlobService filterJsonBlobService;
     @Autowired
     private DashboardWidgetService dashboardWidgetService;
+    @Autowired
+    private CacheBustService cacheBustService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
@@ -86,6 +90,21 @@ public class DashboardController {
 		model.addAttribute("teams", organizationList);
         model.addAttribute("config", config);
         model.addAttribute("dashboardWidgets", dashboardWidgets);
+
+        List<String> reportJsPaths = list();
+
+        for (DashboardWidget dashboardWidget : dashboardWidgets) {
+
+            String jsFilePath = dashboardWidget.getJsFilePath();
+
+            if(jsFilePath != null && !jsFilePath.isEmpty()){
+                String filteredJsPath = cacheBustService.filteredAsset(request, jsFilePath);
+                reportJsPaths.add(filteredJsPath);
+            }
+        }
+
+        model.addAttribute("reportJsPaths", reportJsPaths);
+
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {
