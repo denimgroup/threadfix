@@ -5,13 +5,13 @@
 	<cbs:cachebustscript src="/scripts/dashboard-controller.js"/>
 	<c:forEach items="${dashboardWidgets}" var="dashboardWidget">
 		<c:choose>
-			<c:when test="${dashboardWidget.widgetName == 'Vulnerability Trending'}">
+			<c:when test="${dashboardWidget.widgetName == 'vulnerabilityTrending'}">
 				<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
 			</c:when>
-			<c:when test="${dashboardWidget.widgetName == 'Most Vulnerable Applications'}">
+			<c:when test="${dashboardWidget.widgetName == 'mostVulnerableApps'}">
 				<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
 			</c:when>
-			<c:when test="${dashboardWidget.widgetName == 'Mitigation Progress'}">
+			<c:when test="${dashboardWidget.widgetName == 'mitigationProgress'}">
 				<cbs:cachebustscript src="/scripts/graph-config-modal-controller.js"/>
 				<cbs:cachebustscript src="/scripts/mitigation-progress-report.js"/>
 			</c:when>

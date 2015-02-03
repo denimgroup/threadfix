@@ -24,8 +24,12 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 /**
  * @author zabdisubhan
@@ -37,9 +41,36 @@ public class DashboardWidget extends BaseEntity {
 
     private static final long serialVersionUID = -1612233741957801615L;
 
+    public final static int NAME_LENGTH = 60;
+    public final static int FILE_PATH_LENGTH = 255;
+
+    private Boolean available;
+    private String displayName;
     private String widgetName;
     private String jspFilePath;
+    private String jsFilePath;
 
+
+    public Boolean getAvailable() {
+        return available != null && available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+    @Column(nullable = false)
+    @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Column(nullable = false)
+    @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
     public String getWidgetName() {
         return widgetName;
     }
@@ -48,6 +79,9 @@ public class DashboardWidget extends BaseEntity {
         this.widgetName = widgetName;
     }
 
+    @Column(nullable = false)
+    @NotEmpty(message = "{errors.required}")
+    @Size(max = FILE_PATH_LENGTH, message = "{errors.maxlength} " + FILE_PATH_LENGTH + ".")
     public String getJspFilePath() {
         return jspFilePath;
     }
@@ -56,4 +90,28 @@ public class DashboardWidget extends BaseEntity {
         this.jspFilePath = jspFilePath;
     }
 
+    @Column(nullable = true)
+    @Size(max = FILE_PATH_LENGTH, message = "{errors.maxlength} " + FILE_PATH_LENGTH + ".")
+    public String getJsFilePath() {
+        return jsFilePath;
+    }
+
+    public void setJsFilePath(String jsFilePath) {
+        this.jsFilePath = jsFilePath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DashboardWidget)) return false;
+
+        DashboardWidget that = (DashboardWidget) o;
+
+        return widgetName.equals(that.widgetName);
+    }
+
+    @Override
+    public int hashCode() {
+        return widgetName.hashCode();
+    }
 }

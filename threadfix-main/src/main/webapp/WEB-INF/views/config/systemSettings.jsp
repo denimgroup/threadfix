@@ -304,7 +304,7 @@
                             </div>
                             <div>
                                 <form:select id="dashboardTopLeftSelect" path="dashboardTopLeftId">
-                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
                         </td>
@@ -314,7 +314,7 @@
                             </div>
                             <div>
                                 <form:select id="dashboardTopRightSelect" path="dashboardTopRightId">
-                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
                         </td>
@@ -324,7 +324,7 @@
                             </div>
                             <div>
                                 <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeftId">
-                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
                         </td>
@@ -334,7 +334,7 @@
                             </div>
                             <div>
                                 <form:select id="dashboardBottomRightSelect" path="dashboardBottomRightId">
-                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="widgetName" />
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
                         </td>
