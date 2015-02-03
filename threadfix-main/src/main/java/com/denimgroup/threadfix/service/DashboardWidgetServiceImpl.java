@@ -33,10 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional(readOnly=true)
 public class DashboardWidgetServiceImpl implements DashboardWidgetService {
 
     private final SanitizedLogger log = new SanitizedLogger(DashboardWidgetServiceImpl.class);
-
 
     @Autowired
     private DashboardWidgetDao dashboardWidgetDao;
@@ -86,16 +86,13 @@ public class DashboardWidgetServiceImpl implements DashboardWidgetService {
     @Transactional(readOnly = false)
     public void deleteById(int dashboardWidgetId) {
         log.info("Deleting Dashboard Widget with ID " + dashboardWidgetId);
-
         dashboardWidgetDao.delete(dashboardWidgetId);
-
     }
 
     @Override
     @Transactional(readOnly = false)
     public void delete(DashboardWidget dashboardWidget) {
         log.info("Deleting Dashboard Widget '" + dashboardWidget.getWidgetName() +"'.");
-
         dashboardWidgetDao.delete(dashboardWidget);
     }
 
