@@ -24,7 +24,10 @@
 
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.data.entities.DashboardWidget;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author zabdisubhan
@@ -32,4 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface CacheBustService {
 
     public String filteredAsset(HttpServletRequest request, String relUrl);
+
+    public List<String> uncachedJsPaths(HttpServletRequest request, List<DashboardWidget> dashboardWidgets);
 }
