@@ -585,11 +585,6 @@
             <artifactId>complete</artifactId>
             <version>0.1.6</version>
         </dependency>
-        <dependency>
-            <groupId>com.denimgroup.threadfix</groupId>
-            <artifactId>axway-mitigation-report</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <profiles>
