@@ -39,19 +39,19 @@ import org.zaproxy.zap.extension.threadfix.ZapPropertiesManager;
 
 public class ImportAction extends JMenuItem {
 
-	private static final long serialVersionUID = 7496536214677590654L;
+	private static final long serialVersionUID = 1L;
 	
 	private static final Logger logger = Logger.getLogger(ImportAction.class);
 
     public ImportAction(final ViewDelegate view, final Model model) {
-        logger.info("Initializing ThreadFix scan export menu item");
+		logger.info("Initializing ThreadFix menu item: \"ThreadFix: Export Scan\"");
         setText("ThreadFix: Export Scan");
 
         addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
 
-                boolean configured = ConfigurationDialogs.show(view);
+                boolean configured = ConfigurationDialogs.show(view, ConfigurationDialogs.DialogMode.THREADFIX_APPLICATION);
                 
                 if (configured) {
 	
