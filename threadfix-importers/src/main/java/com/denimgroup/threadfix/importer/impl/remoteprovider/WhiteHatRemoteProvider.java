@@ -49,7 +49,8 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	private static final String SITES_URL = "https://sentinel.whitehatsec.com/api/site/";
 	private static final String VULNS_URL = "https://sentinel.whitehatsec.com/api/vuln/";
 	private static final String EXTRA_PARAMS = "&display_description=1&display_attack_vectors=1&query_site=";
-	
+	private static final int PAGE_LIMIT = 1000;
+
 	private String apiKey = null;
 	
 	private List<Calendar> scanDateList = null;
@@ -170,12 +171,15 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			LOG.warn("Insufficient credentials.");
 			return null;
 		}
-		
+
 		apiKey = remoteProviderType.getApiKey();
+
+        int pageOffset = 0;
+        String paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
 		
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
 
-        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey);
+        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
 
         if (response.isValid()) {
 		    parse(response.getInputStream(), parser);
@@ -183,6 +187,23 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
             LOG.error("Unable to retrieve applications due to " + response.getStatus() +
                     " response status from WhiteHat servers.");
             return null;
+        }
+
+        int totalSitesAvailable = parser.getTotalSites();
+
+        while (parser.getApplications().size() < totalSitesAvailable) {
+            pageOffset += PAGE_LIMIT;
+            paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
+
+            response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
+
+            if (response.isValid()) {
+                parse(response.getInputStream(), parser);
+            } else {
+                LOG.error("Unable to retrieve applications due to " + response.getStatus() +
+                        " response status from WhiteHat servers.");
+                return null;
+            }
         }
 
 		return parser.getApplications();
@@ -262,7 +283,10 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 		
 		private String currentId = null;
 		private boolean grabLabel;
-		
+
+        private boolean grabTotalSites;
+        private String totalSites = null;
+
 		public List<RemoteProviderApplication> getApplications() {
 			List<RemoteProviderApplication> apps = list();
 			for (String label : map.keySet()) {
@@ -274,12 +298,26 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 			}
 			return apps;
 		}
-		
+
+        public int getTotalSites() {
+            int total = 0;
+            if (totalSites != null) {
+                try {
+                    total = Integer.valueOf(totalSites);
+                } catch (NumberFormatException e) {
+                    total = 0;
+                }
+            }
+            return total;
+        }
+
 	    public void startElement(String uri, String name, String qName, Attributes atts) throws SAXException {
 	    	if ("site".equals(qName)) {
 	    		currentId = atts.getValue("id");
 	    	} else if ("label".equals(qName)) {
 	    		grabLabel = true;
+	    	} else if ("total_sites".equals(qName)) {
+                grabTotalSites = true;
 	    	}
 	    }
 	    
@@ -292,10 +330,17 @@ public class WhiteHatRemoteProvider extends RemoteProvider {
 	    		currentId = null;
 	    		grabLabel = false;
 	    	}
+            if (grabTotalSites) {
+                totalSites = getBuilderText();
+                grabTotalSites = false;
+	        }
 	    }
 	    
 	    public void characters (char ch[], int start, int length) {
 	    	if (grabLabel) {
+	    		addTextToBuilder(ch, start, length);
+	    	}
+            if (grabTotalSites) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 	    }
