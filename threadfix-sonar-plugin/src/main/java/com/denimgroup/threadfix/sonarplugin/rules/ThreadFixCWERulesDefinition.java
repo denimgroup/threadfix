@@ -55,8 +55,6 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
             for (Language language : languages.all()) {
                 this.languages.add(language.getKey());
             }
-
-            this.languages.add(ThreadFixLanguage.LANGUAGE_KEY);
         }
     }
 

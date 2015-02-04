@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.sonarplugin.profiles;
 
 import com.denimgroup.threadfix.sonarplugin.ThreadFixLanguage;
+import org.sonar.api.config.Settings;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.resources.Languages;
 
@@ -31,7 +32,7 @@ import org.sonar.api.resources.Languages;
  * Created by mcollins on 2/4/15.
  */
 public class ThreadFixProfile extends AbstractTFQualityProfile {
-    public ThreadFixProfile(Languages languages, XMLProfileParser parser) {
-        super(languages, parser, ThreadFixLanguage.LANGUAGE_KEY);
+    public ThreadFixProfile(Settings settings, Languages languages, XMLProfileParser parser) {
+        super(settings, languages, parser, ThreadFixLanguage.LANGUAGE_KEY);
     }
 }

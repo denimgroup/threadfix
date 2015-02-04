@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.sonarplugin.util.InputStreamLanguageDecorator;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.config.Settings;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
@@ -41,11 +42,13 @@ import java.io.InputStreamReader;
  */
 public abstract class AbstractTFQualityProfile extends ProfileDefinition {
 
+    private Settings settings;
     private Languages languages;
     private XMLProfileParser parser;
     private String languageKey;
 
-    public AbstractTFQualityProfile(Languages languages, XMLProfileParser parser, String languageKey) {
+    public AbstractTFQualityProfile(Settings settings, Languages languages, XMLProfileParser parser, String languageKey) {
+        this.settings = settings;
         this.languages = languages;
         this.parser = parser;
         this.languageKey = languageKey;
@@ -56,7 +59,19 @@ public abstract class AbstractTFQualityProfile extends ProfileDefinition {
     @Override
     public RulesProfile createProfile(ValidationMessages validationMessages) {
 
+
         if (languages.get(languageKey) != null) {
+            String string = settings.getString("threadfix.profiles");
+
+            if (string == null) {
+                LOG.info("No explicit profile configuration found, ThreadFix will submit profiles for all configured languages.");
+                LOG.info("To change this behavior, set the property threadfix.profiles for this sonar installation.");
+            } else if (csvContains(string, languageKey)) {
+                LOG.info("Configuration was found and contained " + languageKey + ", continuing.");
+            } else {
+                LOG.info("Profiles were configured for ThreadFix and " + languageKey + " wasn't found in the list. Returning null.");
+                return null;
+            }
 
             InputStream input = AbstractTFQualityProfile.class.getResourceAsStream("/threadfix_profile.xml");
             InputStreamReader reader = new InputStreamReader(
@@ -75,5 +90,22 @@ public abstract class AbstractTFQualityProfile extends ProfileDefinition {
             LOG.info("No language found for key " + languageKey + ", skipping.");
             return null;
         }
+    }
+
+    private boolean csvContains(String string, String languageKey) {
+
+        if (string.contains(",")) {
+            String[] split = string.split(",");
+
+            for (String s : split) {
+                if (languageKey.equals(s)) {
+                    return true;
+                }
+            }
+        } else if (string.equals(languageKey)) {
+            return true;
+        }
+
+        return false;
     }
 }

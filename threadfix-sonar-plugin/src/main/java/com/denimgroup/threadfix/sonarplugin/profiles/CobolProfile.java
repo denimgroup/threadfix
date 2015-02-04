@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin.profiles;
 
+import org.sonar.api.config.Settings;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.resources.Languages;
 
@@ -30,7 +31,7 @@ import org.sonar.api.resources.Languages;
  * Created by mcollins on 2/4/15.
  */
 public class CobolProfile extends AbstractTFQualityProfile {
-    public CobolProfile(Languages languages, XMLProfileParser parser) {
-        super(languages, parser, "cobol");
+    public CobolProfile(Settings settings, Languages languages, XMLProfileParser parser) {
+        super(settings, languages, parser, "cobol");
     }
 }

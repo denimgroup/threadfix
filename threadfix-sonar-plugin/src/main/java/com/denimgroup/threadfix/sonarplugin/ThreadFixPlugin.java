@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.sonarplugin.rules.ThreadFixCWERulesDefinition;
 import com.denimgroup.threadfix.sonarplugin.sensor.ThreadFixSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 
 import java.util.List;
@@ -37,6 +38,7 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 /**
  * Created by mcollins on 1/28/15.
  */
+@Property(key="threadfix.profiles", name="ThreadFix Profiles")
 public class ThreadFixPlugin extends SonarPlugin {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThreadFixPlugin.class);

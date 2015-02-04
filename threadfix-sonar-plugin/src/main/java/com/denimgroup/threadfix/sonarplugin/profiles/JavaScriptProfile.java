@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin.profiles;
 
+import org.sonar.api.config.Settings;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.resources.Languages;
 
@@ -30,7 +31,7 @@ import org.sonar.api.resources.Languages;
  * Created by mcollins on 2/3/15.
  */
 public class JavaScriptProfile extends AbstractTFQualityProfile {
-    public JavaScriptProfile(Languages languages, XMLProfileParser parser) {
-        super(languages, parser, "js");
+    public JavaScriptProfile(Settings settings, Languages languages, XMLProfileParser parser) {
+        super(settings, languages, parser, "js");
     }
 }
