@@ -35,9 +35,9 @@ import javax.persistence.*;
 @Table(name = "RemoteProviderAuthenticationField")
 public class RemoteProviderAuthenticationField extends BaseEntity {
 
-    String name, value;
+    String name, value, encryptedValue;
 
-    boolean secret = false;
+    Boolean secret = false, required = false;
 
     RemoteProviderType remoteProviderType;
 
@@ -63,11 +63,11 @@ public class RemoteProviderAuthenticationField extends BaseEntity {
 
     @Column
     @JsonView(Object.class)
-    public boolean isSecret() {
+    public Boolean isSecret() {
         return secret;
     }
 
-    public void setSecret(boolean secret) {
+    public void setSecret(Boolean secret) {
         this.secret = secret;
     }
 
@@ -82,4 +82,23 @@ public class RemoteProviderAuthenticationField extends BaseEntity {
         this.remoteProviderType = remoteProviderType;
     }
 
+    @Column(length = 1024)
+    @JsonIgnore
+    public String getEncryptedValue() {
+        return encryptedValue;
+    }
+
+    public void setEncryptedValue(String encryptedValue) {
+        this.encryptedValue = encryptedValue;
+    }
+
+    @Column
+    @JsonView(Object.class)
+    public Boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
 }
