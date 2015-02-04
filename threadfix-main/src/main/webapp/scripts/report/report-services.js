@@ -108,7 +108,7 @@ threadfixModule.factory('reportExporter', function($log) {
                     }
                 };
 
-                var table = d3.select('#vulnListDiv');
+                var table = d3.select('#customers');
                 pdf.fromHTML(table[0][0], 15, 15, {
                     'width': 170,
                     'elementHandlers': specialElementHandlers

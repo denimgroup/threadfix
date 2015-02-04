@@ -38,6 +38,10 @@
         <cbs:cachebustscript src="/scripts/report/d3-donut.js"/>
         <cbs:cachebustscript src="/scripts/report/report-services.js"/>
 
+        <%--<cbs:cachebustscript src="/scripts/lib/sprintf.js"/>--%>
+        <%--<cbs:cachebustscript src="/scripts/lib/jspdf.js"/>--%>
+        <%--<cbs:cachebustscript src="/scripts/lib/base64.js"/>--%>
+
         <!--[if lt IE 7]>
             <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/styles/ie6.css"/>
             <cbs:cachebustscript src="/scripts/iepngfix_tilebg.js"/>
