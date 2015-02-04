@@ -353,6 +353,14 @@
                        ng-model="currentFilterNameInput"
                        type="text"/>
 
+                <div ng-show="trendingActive">
+                    <input id="defaultTrendingSelReport" type="checkbox" class="btn" ng-model="parameters.defaultTrending"/>
+                    Default Trending Field Controls And Date Range
+                    <br>
+                </div>
+
+                <br>
+
                 <!-- Save button and save button with spinner. -->
                 <a id="saveFilterButton"
                    class="btn btn-primary"
@@ -360,14 +368,14 @@
                    ng-hide="savingFilter"
                    ng-disabled="!currentFilterNameInput"
                    ng-click="saveCurrentFilters()">
-                    Save
+                    {{selectedFilter && selectedFilter.id ? 'Update' : 'Save'}}
                 </a>
                 <button id="savingFilterButton"
                         ng-show="savingFilter"
                         disabled="disabled"
                         class="btn btn-primary">
                     <span class="spinner"></span>
-                    Saving
+                    {{selectedFilter && selectedFilter.id ? 'Updating' : 'Saving'}}
                 </button>
             </div>
         </div>
@@ -386,6 +394,8 @@
         <div class="accordion-heading" style="text-align:center">
             <a id="exportPNGButtonReport" class="btn"
                ng-click="exportPNG()">Export PNG</a>
+            <a id="exportPDFButtonReport" class="btn"
+               ng-click="exportPNG(true)">Export PDF</a>
         </div>
     </div>
 </security:authorize>

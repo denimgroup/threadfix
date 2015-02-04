@@ -62,7 +62,7 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
 
     private List<AspxCsParser> getAspxCsParsers(File rootDirectory) {
         Collection aspxCsFiles = FileUtils.listFiles(rootDirectory,
-                new FileExtensionFileFilter("aspx.cs"), TrueFileFilter.INSTANCE);
+                new FileExtensionFileFilter(".cs"), TrueFileFilter.INSTANCE);
 
         List<AspxCsParser> aspxCsParsers = list();
 
@@ -143,9 +143,11 @@ public class WebFormsEndpointGenerator implements EndpointGenerator {
         }
 
         for (Map.Entry<String, AspxParser> entry : aspxParserMap.entrySet()) {
-            String key = entry.getKey() + ".cs";
+            String key = entry.getKey() + ".cs", key2 = entry.getKey().replaceFirst("\\.aspx", ".cs");
             if (aspxCsParserMap.containsKey(key)) {
                 endpoints.add(new WebFormsEndpoint(aspxRootDirectory, entry.getValue(), aspxCsParserMap.get(key)));
+            } else if (aspxCsParserMap.containsKey(key2)) {
+                endpoints.add(new WebFormsEndpoint(aspxRootDirectory, entry.getValue(), aspxCsParserMap.get(key2)));
             }
         }
     }

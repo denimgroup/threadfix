@@ -27,12 +27,11 @@ import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.AccessControlMapService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -55,17 +54,14 @@ public class EditUserController {
 
 	private UserService userService = null;
 	private RoleService roleService = null;
-	private AccessControlMapService accessControlMapService = null;
 	private boolean ldapPluginInstalled = false;
 
 	private final SanitizedLogger log = new SanitizedLogger(EditUserController.class);
 
 	@Autowired
-	public EditUserController(AccessControlMapService accessControlMapService,
-			RoleService roleService, UserService userService) {
+	public EditUserController(RoleService roleService, UserService userService) {
 		this.userService = userService;
 		this.roleService = roleService;
-		this.accessControlMapService = accessControlMapService;
 		ldapPluginInstalled = EnterpriseTest.isEnterprise();
 	}
 	
@@ -74,16 +70,16 @@ public class EditUserController {
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		if(ldapPluginInstalled && EnterpriseTest.isEnterprise()){
-			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+			dataBinder.setAllowedFields("name", "displayName", "globalRole.id", "unencryptedPassword",
 					"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
 		} else if(ldapPluginInstalled) {
-			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+			dataBinder.setAllowedFields("name", "displayName", "globalRole.id", "unencryptedPassword",
 					"passwordConfirm", "isLdapUser");
 		} else if (EnterpriseTest.isEnterprise()) {
-			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+			dataBinder.setAllowedFields("name", "displayName", "globalRole.id", "unencryptedPassword",
 					"passwordConfirm", "hasGlobalGroupAccess");
 		} else {
-			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
+			dataBinder.setAllowedFields("name", "displayName", "globalRole.id", "unencryptedPassword",
 					"passwordConfirm", "hasGlobalGroupAccess");
 		}
 	}

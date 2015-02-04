@@ -67,8 +67,8 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-                    "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", "dashboardTopRightId",
-					"dashboardBottomLeftId", "dashboardBottomRightId");
+					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", 
+                    "dashboardTopRightId", "dashboardBottomLeftId", "dashboardBottomRightId");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -117,7 +117,16 @@ public class SystemSettingsController {
 
 	private void addModelAttributes(Model model, HttpServletRequest request) {
 		model.addAttribute("isEnterprise", EnterpriseTest.isEnterprise());
-		model.addAttribute("defaultConfiguration", defaultConfigService.loadCurrentConfiguration());
+		DefaultConfiguration configuration = defaultConfigService.loadCurrentConfiguration();
+
+		if (configuration.getProxyPassword() != null && !configuration.getProxyPassword().isEmpty()) {
+			configuration.setProxyPassword(DefaultConfiguration.MASKED_PASSWORD);
+		}
+		if (configuration.getActiveDirectoryCredentials() != null && !configuration.getActiveDirectoryCredentials().isEmpty()) {
+			configuration.setActiveDirectoryCredentials(DefaultConfiguration.MASKED_PASSWORD);
+		}
+
+		model.addAttribute("defaultConfiguration", configuration);
 		model.addAttribute("successMessage", ControllerUtils.getSuccessMessage(request));
 	}
 

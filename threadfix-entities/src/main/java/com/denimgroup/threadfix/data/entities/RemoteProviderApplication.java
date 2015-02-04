@@ -51,6 +51,9 @@ public class RemoteProviderApplication extends AuditableEntity  {
 
     @Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
 	private String customName;
+
+	@Size(max = NATIVE_NAME_LENGTH, message = "{errors.maxlength} " + NATIVE_NAME_LENGTH + ".")
+	private String reportUrl;
 	
 	private RemoteProviderType remoteProviderType;
 	
@@ -132,4 +135,14 @@ public class RemoteProviderApplication extends AuditableEntity  {
     public void setCustomName(String customName) {
         this.customName = customName;
     }
+
+	@Column
+	@JsonView(AllViews.TableRow.class)
+	public String getReportUrl() {
+		return reportUrl;
+	}
+
+	public void setReportUrl(String reportUrl) {
+		this.reportUrl = reportUrl;
+	}
 }

@@ -25,6 +25,7 @@ package com.denimgroup.threadfix.data.entities;
 
 import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonView;
 
 import javax.persistence.*;
@@ -41,6 +42,7 @@ public class User extends AuditableEntity {
 	public static final int PASSWORD_LENGTH = 256;
 
 	private String name;
+	private String displayName;
 	private String password;
 	private String salt;
 	private boolean approved = true;
@@ -235,7 +237,16 @@ public class User extends AuditableEntity {
 		this.isLdapUser = isLdapUser;
 	}
 
-	@Transient
+    @Column(length = PASSWORD_LENGTH, nullable = true)
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Transient
 	public boolean getIsDeletable() {
 		return deletable;
 	}
@@ -264,6 +275,9 @@ public class User extends AuditableEntity {
 
 	private boolean deletable, isThisUser;
 
-
-
+    @Transient
+    @JsonProperty("bestName")
+    public String getBestName() {
+        return displayName == null ? name : displayName;
+    }
 }

@@ -54,7 +54,9 @@ public enum ScannerType {
     SENTINEL("whitehat", "WhiteHat Sentinel", SENTINEL_DB_NAME, "https://source.whitehatsec.com/site_vuln_detail.html"),
     SSVL("ssvl", "SSVL", SSVL_DB_NAME),
     VERACODE("veracode", "Veracode", VERACODE_DB_NAME),
-    MANUAL("manual", "Manual", MANUAL_DB_NAME);
+    MANUAL("manual", "Manual", MANUAL_DB_NAME),
+    CONTRAST("contrast", "Contrast", CONTRAST_DB_NAME),
+    SONATYPE("sonatype", "Sonatype", SONATYPE_DB_NAME);
 
 	private String fullName;
 	private String shortName;

@@ -136,6 +136,7 @@ class FindingProcessorFactory extends SpringBeanAutowiringSupport {
 			if (file != null && file.exists()) {
 				return file;
 			} else {
+				LOG.error("Unable to get repository from GIT");
 				return applicationDirectory;
 			}
 		} else if (application.getRepositoryFolder() != null && !application.getRepositoryFolder().trim().isEmpty()) {

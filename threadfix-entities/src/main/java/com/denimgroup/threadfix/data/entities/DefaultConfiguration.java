@@ -37,6 +37,8 @@ import static com.denimgroup.threadfix.CollectionUtils.list;
 public class DefaultConfiguration extends BaseEntity {
 	
 	private static final long serialVersionUID = 2584623185996706729L;
+
+    public static final String MASKED_PASSWORD = "dbnH3rDuZC2Nib";
 	
 	private Boolean globalGroupEnabled = null;
     private Boolean hasAddedScheduledImports = null;
@@ -297,8 +299,10 @@ public class DefaultConfiguration extends BaseEntity {
 
     @Transient
     public <T> boolean shouldUseProxy(Class<T> classToProxy) {
-        Boolean aBoolean = getProxySupportMap().get(classToProxy.getSimpleName());
-        return aBoolean != null && aBoolean;
+        Map<String, Boolean> proxySupportMap = getProxySupportMap();
+        String key = classToProxy.getSimpleName();
+        Boolean result = proxySupportMap.get(key);
+        return result != null && result;
     }
 
     @Transient
@@ -313,6 +317,7 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("VeracodeRemoteProvider", getShouldProxyVeracode());
         map.put("QualysRemoteProvider", getShouldProxyQualys());
         map.put("TrustwaveHailstormRemoteProvider", getShouldProxyTrustwaveHailstorm());
+        map.put("ContrastRemoteProvider", getShouldProxyContrast());
         return map;
     }
 
@@ -427,5 +432,16 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setShouldProxyTrustwaveHailstorm(Boolean shouldProxyTrustwaveHailstorm) {
         this.shouldProxyTrustwaveHailstorm = shouldProxyTrustwaveHailstorm;
+    }
+    
+    Boolean shouldProxyContrast = false;
+
+    @Column
+    public Boolean getShouldProxyContrast() {
+        return shouldProxyContrast;
+    }
+
+    public void setShouldProxyContrast(Boolean shouldProxyContrast) {
+        this.shouldProxyContrast = shouldProxyContrast;
     }
 }

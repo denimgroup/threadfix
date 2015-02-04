@@ -1,0 +1,52 @@
+[
+  {
+    "name": "threadfix",
+    "path": "/threadfix",
+    "language": "Java",
+    "license": "Trial",
+    "views": 174,
+    "components": [
+      {
+        "componentId": 128673,
+        "host": "In Memory (alias): localhost",
+        "vendor": "",
+        "type": "db",
+        "links": []
+      }
+    ],
+    "technologies": [
+      "JSP",
+      "Bootstrap",
+      "Flash",
+      "Spring MVC"
+    ],
+    "links": [
+      {
+        "rel": "self",
+        "href": "https://app.contrastsecurity.com/Contrast/api/applications/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae"
+      },
+      {
+        "rel": "traces",
+        "href": "https://app.contrastsecurity.com/Contrast/api/traces/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae"
+      },
+      {
+        "rel": "servers",
+        "href": "https://app.contrastsecurity.com/Contrast/api/applications/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae/servers"
+      },
+      {
+        "rel": "sitemap-activity",
+        "href": "https://app.contrastsecurity.com/Contrast/api/applications/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae/sitemap/activity"
+      },
+      {
+        "rel": "reset-application",
+        "href": "https://app.contrastsecurity.com/Contrast/api/applications/c0a1a284-2c81-4b4b-b44a-52d7b8f71aae"
+      }
+    ],
+    "app-id": "c0a1a284-2c81-4b4b-b44a-52d7b8f71aae",
+    "application-code": null,
+    "group-name": null,
+    "platform-version": null,
+    "platform-vulnerabilities": [],
+    "last-seen": 1420491476000
+  }
+]

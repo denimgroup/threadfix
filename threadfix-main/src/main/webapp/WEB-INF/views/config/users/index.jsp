@@ -28,7 +28,8 @@
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th class="medium first">User</th>
+				<th class="medium first">Name</th>
+				<th class="medium">Display Name</th>
 				<th class="short">Edit / Delete</th>
 				<security:authorize ifAnyGranted="ROLE_ENTERPRISE">
 				    <th class="short">Edit Permissions</th>
@@ -42,6 +43,9 @@
 			<tr ng-repeat="user in users" class="bodyRow">
 				<td id="name{{ user.name }}">
 					{{ user.name }}
+				</td>
+				<td id="displayName{{ user.displayName }}">
+					{{ user.displayName }}
 				</td>
 				<td>
 					<a id="editUserModal{{ user.name }}" class="btn" ng-click="openEditModal(user)">

@@ -25,7 +25,7 @@ package com.denimgroup.threadfix.service.defects.utils.jira;
 
 import com.denimgroup.threadfix.exception.RestIOException;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import org.json.JSONArray;
 import org.json.JSONException;

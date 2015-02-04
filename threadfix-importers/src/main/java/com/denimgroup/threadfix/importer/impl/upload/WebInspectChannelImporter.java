@@ -33,11 +33,14 @@ import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,7 +60,7 @@ import java.util.Map;
 public class WebInspectChannelImporter extends AbstractChannelImporter {
 	
 	private String bestPractices = "Best Practices";
-		
+
 	public WebInspectChannelImporter() {
 		super(ScannerType.WEBINSPECT);
 	}
@@ -75,16 +78,23 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	
 	public class WebInspectSAXParser extends HandlerWithBuilder {
 
+		private static final String CWE_PATTERN = "CWE-(.*)";
+
         private String currentChannelVulnName;
         private String currentUrl;
         private String currentParam;
         private String currentChannelSeverityName;
         private String currentResponseText;
+		private String currentRequestText;
         private String currentAttackHTTPRequest;
+		private String currentCWE;
         private StringBuffer currentRawFinding = new StringBuffer();
 
         private Map<FindingKey, String> findingMap = new HashMap<>();
 
+		private List<Finding> sessionFindings = new ArrayList<>();
+
+		private boolean hasIssues         = false;
         private boolean grabUrlText       = false;
         private boolean grabVulnNameText  = false;
         private boolean grabSeverityText  = false;
@@ -92,6 +102,8 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
         private boolean grabDate          = false;
         private boolean grabTypeId        = false;
         private boolean grabAttackHTTPRequest = false;
+		private boolean grabResponse      = false;
+		private boolean grabRequest       = false;
 
         private boolean ignoreFinding = false;
 
@@ -99,16 +111,18 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 
         private final String[] paramChars = {"[", "]", "%"};
 
-        private String cleanParam(String param) {
-            if (param == null || param.isEmpty())
-                return null;
+
+		private String cleanParam(String param) {
+            if (param == null || param.isEmpty()) {
+				return null;
+			}
 
             String editedParam = param;
 
             for (String character : paramChars)
-                if (editedParam.contains(character))
-                    editedParam = editedParam.substring(0, editedParam.indexOf(character));
-
+                if (editedParam.contains(character)) {
+					editedParam = editedParam.substring(0, editedParam.indexOf(character));
+				}
             return editedParam;
         }
 
@@ -120,28 +134,40 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
             }
         }
 
-        ////////////////////////////////////////////////////////////////////
+
+		////////////////////////////////////////////////////////////////////
         // Event handlers.
         ////////////////////////////////////////////////////////////////////
 
         public void startElement(String uri, String name,
                                  String qName, Attributes atts) {
-            if ("Issues".equals(qName))
-                issues = true;
-            if ("Issue".equals(qName))
-                issue = true;
+            if ("Issues".equals(qName)) {
+				hasIssues = true;
+				issues = true;
+			}
+
+            if ("Issue".equals(qName)) {
+				issue = true;
+			}
 
             if (issues && issue) {
                 if ("Name".equals(qName)) {
-                    if (currentChannelVulnName == null)
-                        grabVulnNameText = true;
+                    if (currentChannelVulnName == null) {
+						grabVulnNameText = true;
+					}
                 } else if ("Severity".equals(qName)) {
                     grabSeverityText = true;
                 } else if ("CheckTypeID".equals(qName)) {
                     grabTypeId = true;
                 } else if ("AttackHTTPRequest".equals(qName)){
                     grabAttackHTTPRequest = true;
-                }
+                } else if ("Classification".equals(qName)) {
+					if ("CWE".equalsIgnoreCase(atts.getValue("kind"))
+							&& atts.getValue("identifier") != null
+							&& currentCWE == null) {
+						currentCWE = RegexUtils.getRegexResult(atts.getValue("identifier"), CWE_PATTERN);
+					}
+				}
 
             } else {
                 if ("URL".equals(qName)) {
@@ -151,12 +177,18 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                 }
             }
 
-            if (date == null && "RawResponse".equals(qName))
-                grabDate = true;
+            if ("RawResponse".equals(qName)) {
+				grabResponse = true;
+			}
+
+			if("RawRequest".equals(qName)) {
+				grabRequest = true;
+			}
 
             if (issue){
                 currentRawFinding.append(makeTag(name, qName , atts));
             }
+
         }
 
         public void endElement(String uri, String name, String qName) {
@@ -184,11 +216,6 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                 // that are sometimes tacked on. Right now we do.
                 currentParam = cleanParam(currentParam);
                 grabParameterText = false;
-	    	} else if (grabDate) {
-	    		if (currentResponseText == null)
-	    			currentResponseText = getBuilderText();
-	    		else
-	    			currentResponseText = currentResponseText.concat(getBuilderText());
 	    	} else if (grabTypeId) {
 	    		String temp = getBuilderText().trim();
 	    		ignoreFinding = temp.equals(bestPractices);
@@ -198,15 +225,18 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                 grabAttackHTTPRequest = false;
             }
 	    	
-	    	if ("Issues".equals(qName))
-	    		issues = false;
+	    	if ("Issues".equals(qName)) {
+				issues = false;
+			}
 	    	
-	    	if ("AttackParamDescriptor".equals(qName))
-	    		grabParameterText = false;
+	    	if ("AttackParamDescriptor".equals(qName)) {
+				grabParameterText = false;
+			}
 	    	
 	    	if ("Issue".equals(qName)) {
-	    		if (currentUrl == null)
-	    			return;
+	    		if (currentUrl == null) {
+					return;
+				}
 	    		
 	    		if (!ignoreFinding) {
 
@@ -214,41 +244,70 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
                     findingMap.put(FindingKey.PARAMETER, currentParam);
                     findingMap.put(FindingKey.VULN_CODE, currentChannelVulnName);
                     findingMap.put(FindingKey.SEVERITY_CODE, currentChannelSeverityName);
-                    findingMap.put(FindingKey.REQUEST, currentAttackHTTPRequest);
+                    findingMap.put(FindingKey.ATTACK_STRING, currentAttackHTTPRequest);
                     findingMap.put(FindingKey.RAWFINDING, currentRawFinding.toString());
+					findingMap.put(FindingKey.CWE, currentCWE);
 
 	    			Finding finding = constructFinding(findingMap);
 
-		    		add(finding);
+					sessionFindings.add(finding);
+					add(finding);
 	    		}
 		
 	    		currentChannelSeverityName = null;
 	    		currentChannelVulnName = null;
 	    		currentParam = null;
-	    		currentUrl = null;
 	    		ignoreFinding = false;
                 issue = false;
                 currentRawFinding.setLength(0);
                 currentAttackHTTPRequest = null;
+				currentCWE = null;
 
 	    	}
 	    	
-	    	if (grabDate && "RawResponse".equals(qName)) {
-	    		grabDate = false;
-	    		date = DateUtils.attemptToParseDateFromHTTPResponse(currentResponseText);
-	    		currentResponseText = "";
-	    	}
+			if (grabResponse) {
+				if (currentResponseText == null) {
+					currentResponseText = getBuilderText();
+					if (date == null) {
+						date = DateUtils.attemptToParseDateFromHTTPResponse(currentResponseText);
+					}
+				}
+				grabResponse = false;
+			}
+
+			if (grabRequest) {
+				if (currentRequestText == null) {
+					currentRequestText = getBuilderText();
+				}
+				grabRequest = false;
+			}
+
+			if ("Session".equals(qName) && hasIssues) {
+				for (Finding sessionFinding : sessionFindings) {
+					sessionFinding.setAttackRequest(currentRequestText);
+					sessionFinding.setAttackResponse(currentResponseText);
+				}
+
+				currentUrl = null;
+				currentRequestText = null;
+				currentResponseText = null;
+
+				hasIssues = false;
+
+				sessionFindings.clear();
+			}
 	    }
 
 	    public void characters (char ch[], int start, int length)
 	    {
 	    	if (grabUrlText || grabVulnNameText || grabSeverityText || grabParameterText
-	    			|| grabDate || grabTypeId || grabAttackHTTPRequest) {
+	    			|| grabDate || grabTypeId || grabAttackHTTPRequest || grabRequest || grabResponse) {
 	    		addTextToBuilder(ch, start, length);
 	    	}
 
-            if (issue)
-                currentRawFinding.append(ch,start,length);
+            if (issue) {
+				currentRawFinding.append(ch, start, length);
+			}
 	    }
 	}
 
@@ -272,12 +331,15 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 				"Host","Port","AttackParamDescriptor"};
 				
 	    private void setTestStatus() {
-	    	if (!correctFormat)
-	    		testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
-	    	else if (hasDate)
-	    		testStatus = checkTestDate();
-	    	else if (testStatus == null)
-	    		testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+	    	if (!correctFormat) {
+				testStatus = ScanImportStatus.WRONG_FORMAT_ERROR;
+			}
+	    	else if (hasDate) {
+				testStatus = checkTestDate();
+			}
+	    	else if (testStatus == null) {
+				testStatus = ScanImportStatus.SUCCESSFUL_SCAN;
+			}
 	    }
 
 	    ////////////////////////////////////////////////////////////////////
@@ -296,11 +358,13 @@ public class WebInspectChannelImporter extends AbstractChannelImporter {
 	    		correctFormat = passedTags;
 	    	}
 	    	
-	    	if ("Issue".equals(qName))
-	    		hasFindings = true;
+	    	if ("Issue".equals(qName)) {
+				hasFindings = true;
+			}
 	    	
-	    	if (!hasDate && "RawResponse".equals(qName))
-	    		grabDate = true;
+	    	if (!hasDate && "RawResponse".equals(qName)) {
+				grabDate = true;
+			}
 	    }
 	    
 	    public void endElement (String uri, String name, String qName) throws SAXException

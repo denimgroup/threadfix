@@ -27,7 +27,7 @@ import com.denimgroup.threadfix.data.entities.Defect;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
 import com.denimgroup.threadfix.exception.DefectTrackerFormatException;
 import com.denimgroup.threadfix.exception.RestIOException;
-import com.denimgroup.threadfix.service.defects.utils.JsonUtils;
+import com.denimgroup.threadfix.importer.util.JsonUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtils;
 import com.denimgroup.threadfix.service.defects.utils.RestUtilsImpl;
 import com.denimgroup.threadfix.service.defects.utils.jira.DefectPayload;
@@ -68,7 +68,7 @@ public class JiraDefectTracker extends AbstractDefectTracker {
     // The double slash is the Jira newline wiki syntax.
     private static final String NEW_LINE_REGEX = "\\\\n",
             DOUBLE_SLASH_NEW_LINE = " \\\\\\\\\\\\\\\\ ",
-            METADATA_EXTENSION = "issue/createmeta?issuetypeIds=1&expand=projects.issuetypes.fields&projectKeys=";
+            METADATA_EXTENSION = "issue/createmeta?expand=projects.issuetypes.fields&projectKeys=";
 
     private static final String CONTENT_TYPE = "application/json";
 
@@ -297,9 +297,9 @@ public class JiraDefectTracker extends AbstractDefectTracker {
         return DynamicFormFieldParser.getFields(response, retriever);
     }
 
-    JiraJsonMetadataResponse.Project getJiraMetadata() {
+    JiraJsonMetadataResponse.Project getJiraMetadata(String issuetype) {
         String response =
-                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId(),
+                restUtils.getUrlAsString(getUrlWithRest() + METADATA_EXTENSION + getProjectId() + "&issuetypeIds=" + issuetype ,
                             getUsername(), getPassword());
 
         log.debug(response);
@@ -389,7 +389,16 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 
     private String getPayload(Map<String, Object> objectMap) {
 
-        DefectPayload payload = new DefectPayload(objectMap, getJiraMetadata());
+        Object issueType = objectMap.get("issuetype");
+
+        DefectPayload payload;
+        if (issueType != null) {
+            payload = new DefectPayload(objectMap, getJiraMetadata(issueType.toString()));
+        } else {
+            // if we're missing a value, default to old behavior
+            payload = new DefectPayload(objectMap, getJiraMetadata("1"));
+        }
+
 
         try {
             return new ObjectMapper().writeValueAsString(payload);
@@ -489,27 +498,59 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	}
 
 	@Override
-	public List<Defect> getDefectList() {		
+	public List<Defect> getDefectList() {
 
-		String payload = "{\"jql\":\"project='" + projectName + "'\",\"fields\":[\"key\"]}";
+        int MAX_RESULTS = 1000;
+        int startAt = 0;
+        int totalAvailable = 0;
+        List<JSONArray> returnArrays = list();
+        List<Defect> defectList = list();
+
+		String payload = "{\"jql\":\"project='" + projectName
+                + "'\",\"startAt\":" + startAt
+                + ",\"maxResults\":" + MAX_RESULTS
+                + ",\"fields\":[\"key\"]}";
+
 		String result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
-		List<Defect> defectList = list();
 		try {
+            String maxResults = JsonUtils.getStringProperty(result, "maxResults");
+            if (maxResults != null)
+                MAX_RESULTS = Integer.valueOf(maxResults);
+            String total = JsonUtils.getStringProperty(result, "total");
+            if (total != null)
+                totalAvailable = Integer.valueOf(total);
             String issuesString = JsonUtils.getStringProperty(result, "issues");
-
             JSONArray returnArray = JsonUtils.getJSONArray(issuesString);
+            int amountReturned = returnArray != null ? returnArray.length() : 0;
+            returnArrays.add(returnArray);
 
-            if (returnArray != null) {
-                for (int i = 0; i < returnArray.length(); i++) {
-                    Defect defect = new Defect();
-                    defect.setNativeId(returnArray.getJSONObject(i).getString("key"));
-                    defectList.add(defect);
+            if (totalAvailable > MAX_RESULTS) {
+                while ((amountReturned >= MAX_RESULTS)) {
+                    startAt += MAX_RESULTS;
+                    payload = "{\"jql\":\"project='" + projectName
+                            + "'\",\"startAt\":" + startAt
+                            + ",\"maxResults\":" + MAX_RESULTS
+                            + ",\"fields\":[\"key\"]}";
+                    result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
+                    issuesString = JsonUtils.getStringProperty(result, "issues");
+                    returnArray = JsonUtils.getJSONArray(issuesString);
+                    amountReturned = returnArray != null ? returnArray.length() : 0;
+                    returnArrays.add(returnArray);
+                }
+            }
+
+            for (JSONArray ra : returnArrays) {
+                if (ra != null) {
+                    for (int i = 0; i < ra.length(); i++) {
+                        Defect defect = new Defect();
+                        defect.setNativeId(ra.getJSONObject(i).getString("key"));
+                        defectList.add(defect);
+                    }
                 }
             }
         } catch (JSONException e) {
             log.warn("JSON parsing failed when trying to get defect list.");
         }
-					
 		return defectList;
 	}
 
