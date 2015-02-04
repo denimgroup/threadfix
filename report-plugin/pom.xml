@@ -9,8 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>axway-mitigation-report</artifactId>
-    <description>Contains functionality for displaying mitigation progress report.</description>
+    <!--rename artifact ID on name of plugin-->
+    <artifactId>plugin-name-report</artifactId>
+    <!--add description for plugin-->
+    <description>Contains functionality for...</description>
 
     <repositories>
         <repository>
