@@ -53,6 +53,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(ContextRefreshedEvent event) {
+
         List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAllNonNativeReports();
         Map<DashboardWidget, Boolean> availableReportPlugins = newMap();
 
@@ -66,6 +67,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 AnnotationLoader.getMap(
                         ReportPlugin.class,
                         "com.denimgroup.threadfix");
+
+        log.info("ReportPlugin map has " +  typeMap.entrySet().size() + " entries.");
 
         for (Map.Entry<Class<?>, ReportPlugin> entry : typeMap.entrySet()) {
             ReportPlugin annotation = entry.getValue();
@@ -89,7 +92,10 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                     // set previously unavailable report plugin to true
                     // now that plugin has be re-added to Threadfix
                     if (!dashboardWidget.getAvailable()){
+                        log.info("Plugin for existing Dashboard Widget ["+ dashboardWidget.getDisplayName() +
+                                "] was found. Setting availability to true.");
                         dashboardWidget.setAvailable(true);
+                        dashboardWidgetService.store(dashboardWidget);
                     }
                 }
             }
@@ -108,7 +114,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
             dashboardWidget.setJspFilePath(annotation.jspRelFilePath());
             dashboardWidget.setJsFilePath(annotation.jsRelFilePath());
 
-            log.info("Storing new Dashboard Widget: " + annotation.displayName());
+            log.info("Storing new Dashboard Widget [" + annotation.displayName() + "].");
             dashboardWidgetService.store(dashboardWidget);
         }
 
@@ -116,6 +122,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
         for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
             if (!availableReportPlugins.get(dashboardWidget)){
                 if(dashboardWidget.getAvailable()){
+                    log.info("Plugin for existing Dashboard Widget ["+ dashboardWidget.getDisplayName() +
+                            "] not found. Setting availability to false.");
                     dashboardWidget.setAvailable(false);
                     dashboardWidgetService.store(dashboardWidget);
                 }
