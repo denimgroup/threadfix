@@ -21,11 +21,9 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin;
+package com.denimgroup.threadfix.sonarplugin.sensor;
 
-import com.denimgroup.threadfix.CollectionUtils;
 import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.GenericSeverity;
 import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
@@ -33,6 +31,10 @@ import com.denimgroup.threadfix.framework.engine.full.EndpointDatabaseFactory;
 import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.remote.PluginClient;
 import com.denimgroup.threadfix.service.merge.Merger;
+import com.denimgroup.threadfix.sonarplugin.ThreadFixMetrics;
+import com.denimgroup.threadfix.sonarplugin.configuration.Mode;
+import com.denimgroup.threadfix.sonarplugin.configuration.ThreadFixInfo;
+import com.denimgroup.threadfix.sonarplugin.util.SonarTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -41,20 +43,14 @@ import org.sonar.api.batch.SonarIndex;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issue;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
-import org.sonar.api.rule.RuleKey;
-import org.sonar.api.rule.Severity;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * Created by mcollins on 1/28/15.
@@ -108,7 +104,7 @@ public class ThreadFixSensor implements Sensor {
                 LOG.info(error);
             }
             this.info = null;
-        } else if (info.getMode() == ThreadFixInfo.Mode.LOCAL) {
+        } else if (info.getMode() == Mode.LOCAL) {
             LOG.info("Using ThreadFix filesystem properties.");
             this.info = info;
         } else if (testConnection(info)) {
@@ -150,7 +146,7 @@ public class ThreadFixSensor implements Sensor {
     }
 
     private VulnerabilityMarker[] getEndpoints() {
-        if (info.getMode() == ThreadFixInfo.Mode.SERVER) {
+        if (info.getMode() == Mode.SERVER) {
             PluginClient client = getConfiguredClient();
 
             return client.getVulnerabilityMarkers(info.getApplicationId());
@@ -171,103 +167,14 @@ public class ThreadFixSensor implements Sensor {
 
     private void processMarker(VulnerabilityMarker vulnerabilityMarker, SensorContext sensorContext) {
 
-        Resource resource = resourceOf(sensorContext, vulnerabilityMarker);
+        Resource resource = SonarTools.resourceOf(sonarIndex,
+                sensorContext,
+                vulnerabilityMarker.getFilePath());
 
-        addIssue(resource, vulnerabilityMarker);
+        SonarTools.addIssue(resourcePerspectives, resource, vulnerabilityMarker);
     }
 
-    private void addIssue(Resource resource, VulnerabilityMarker vulnerability) {
-        if (resource != null) {
 
-            LOG.debug("Got a resource properly.");
-
-            Issuable issuable = this.resourcePerspectives.as(Issuable.class, resource);
-            if(issuable != null) {
-
-                String repositoryKey = ThreadFixCWERulesDefinition.getKey(resource.getLanguage().getKey());
-                RuleKey key = RuleKey.of(repositoryKey, "cwe-" + vulnerability.getGenericVulnId());
-
-                String lineNumber = vulnerability.getLineNumber();
-                lineNumber = "-1".equals(lineNumber) || "0".equals(lineNumber) ? "1" : lineNumber;
-                Issue issue = issuable
-                        .newIssueBuilder()
-                        .ruleKey(key)
-                        .line(Integer.valueOf(lineNumber))
-                        .severity(getSeverity(vulnerability))
-                        .message(buildMessage(vulnerability)).build();
-
-                if (issuable.addIssue(issue)) {
-                    LOG.debug("Successfully added issue " + issue);
-                } else {
-                    LOG.debug("Failed to add issue " + issue);
-                }
-            }
-        } else {
-            LOG.debug("Got null resource for path " + vulnerability.getFilePath());
-        }
-    }
-
-    // fancy
-    Map<String, String> severityMap = map(
-            GenericSeverity.CRITICAL, Severity.BLOCKER,
-            GenericSeverity.HIGH, Severity.CRITICAL,
-            GenericSeverity.MEDIUM, Severity.MAJOR,
-            GenericSeverity.LOW, Severity.MINOR,
-            GenericSeverity.INFO, Severity.INFO);
-
-    private String getSeverity(VulnerabilityMarker vulnerability) {
-        String severity = vulnerability.getSeverity();
-        return severityMap.containsKey(severity) ? severityMap.get(severity) : Severity.MAJOR;
-    }
-
-    private String buildMessage(VulnerabilityMarker vulnerability) {
-        StringBuilder returnString = new StringBuilder().append("Scanners: ").append(CollectionUtils.join(", ", vulnerability.getScanners()));
-
-        String parameter = vulnerability.getParameter();
-        if (parameter != null) {
-            returnString.append("; Parameter: ").append(parameter);
-        }
-
-        return returnString.append("; Type: ").append(vulnerability.getGenericVulnName()).toString();
-    }
-
-    private Resource resourceOf(SensorContext context, final VulnerabilityMarker vulnerability) {
-
-        vulnerability.getFilePath();
-
-        Resource resource = searchAllResources(vulnerability.getFilePath());
-
-        if (context.getResource(resource) != null) {
-            return resource;
-        } else {
-            LOG.debug("File \"{}\" is not indexed. Skip it.", vulnerability.getFilePath());
-            return null;
-        }
-    }
-
-    private Resource searchAllResources(final String componentKey) {
-        if (componentKey == null || "".equals(componentKey)) {
-            LOG.debug("Empty marker passed to searchAllResources.");
-            return null;
-        }
-
-        final Collection<Resource> resources = this.sonarIndex.getResources();
-
-        for (final Resource resource : resources) {
-            if (resource.getKey().endsWith(componentKey) || componentKey.endsWith(resource.getKey())) {
-                LOG.debug("Found resource for [" + componentKey + "]");
-                LOG.debug("Resource class type: [" + resource.getClass().getName() + "]");
-                LOG.debug("Resource key: [" + resource.getKey() + "]");
-                LOG.debug("Resource id: [" + resource.getId() + "]");
-                return resource;
-            } else {
-                LOG.debug("no match for " + resource.getKey());
-            }
-        }
-
-        LOG.debug("No resource found for component [" + componentKey + "]");
-        return null;
-    }
 
     public PluginClient getConfiguredClient() {
         return new PluginClient(info.getUrl(), info.getApiKey());

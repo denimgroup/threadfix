@@ -26,6 +26,8 @@ package com.denimgroup.threadfix.sonarplugin;
 import com.denimgroup.threadfix.sonarplugin.profiles.CSharpProfile;
 import com.denimgroup.threadfix.sonarplugin.profiles.JavaProfile;
 import com.denimgroup.threadfix.sonarplugin.profiles.JavaScriptProfile;
+import com.denimgroup.threadfix.sonarplugin.rules.ThreadFixCWERulesDefinition;
+import com.denimgroup.threadfix.sonarplugin.sensor.ThreadFixSensor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.SonarPlugin;

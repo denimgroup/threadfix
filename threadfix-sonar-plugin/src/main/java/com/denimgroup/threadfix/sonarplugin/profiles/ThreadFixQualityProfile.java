@@ -21,12 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin;
+package com.denimgroup.threadfix.sonarplugin.profiles;
 
 import com.denimgroup.threadfix.sonarplugin.util.InputStreamLanguageDecorator;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
@@ -37,13 +38,20 @@ import java.io.InputStreamReader;
 /**
  * Created by mcollins on 1/30/15.
  */
-public abstract class ThreadFixQualityProfile {
+public abstract class ThreadFixQualityProfile extends ProfileDefinition {
+
+    private XMLProfileParser parser;
+    private String languageKey;
+
+    public ThreadFixQualityProfile(XMLProfileParser parser, String languageKey) {
+        this.parser = parser;
+        this.languageKey = languageKey;
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(ThreadFixQualityProfile.class);
 
-    public static RulesProfile createProfile(XMLProfileParser parser,
-                                             String languageKey,
-                                             ValidationMessages validationMessages) {
+    @Override
+    public RulesProfile createProfile(ValidationMessages validationMessages) {
         InputStream input = ThreadFixQualityProfile.class.getResourceAsStream("/threadfix_profile.xml");
         InputStreamReader reader = new InputStreamReader(
                 new InputStreamLanguageDecorator(input, languageKey)

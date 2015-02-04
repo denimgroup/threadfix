@@ -21,15 +21,11 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin.profiles;
-
-import org.sonar.api.profiles.XMLProfileParser;
+package com.denimgroup.threadfix.sonarplugin.configuration;
 
 /**
- * Created by mcollins on 2/3/15.
+ * Created by mcollins on 2/4/15.
  */
-public class CSharpProfile extends ThreadFixQualityProfile {
-    public CSharpProfile(XMLProfileParser parser) {
-        super(parser, "cs");
-    }
+public enum Mode {
+    SERVER, LOCAL
 }

@@ -21,98 +21,43 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin;
+package com.denimgroup.threadfix.sonarplugin.configuration;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.remote.PluginClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
- * Created by mcollins on 1/28/15.
+ * Created by mcollins on 2/4/15.
  */
-public class ThreadFixInfo {
+public class ConfigurationCheck {
 
-    enum Mode {
-        SERVER, LOCAL
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigurationCheck.class);
+
+    private ConfigurationCheck() {}
+
+    ThreadFixInfo info;
+
+    public static List<String> getErrors(ThreadFixInfo info) {
+        ConfigurationCheck check = new ConfigurationCheck();
+        check.info = info;
+
+        return check.getErrors();
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixInfo.class);
-
-    private String url, apiKey, applicationName, applicationId;
-
-    private String localFiles, localDirectories;
-
-    private Set<String> files = set();
-
-    private Mode mode = Mode.SERVER;
-
-    public ThreadFixInfo(Map<String, String> properties) {
-        this.url = properties.get("threadfix.url");
-        this.apiKey = properties.get("threadfix.apiKey");
-        this.applicationName = properties.get("threadfix.applicationName");
-        this.applicationId = properties.get("threadfix.applicationId");
-
-        this.localDirectories = properties.get("threadfix.localDirectories");
-        this.localFiles = properties.get("threadfix.localFiles");
-
-        List<String> errors = getErrors();
-
-        if (errors.isEmpty() && mode == Mode.SERVER && this.applicationId == null) {
-            this.applicationId = getApplicationId(this);
-        }
-    }
-
-    private String getApplicationId(ThreadFixInfo info) {
-        PluginClient client = new PluginClient(info.getUrl(), info.getApiKey());
-
-        Application.Info[] threadFixApplications = client.getThreadFixApplications();
-
-        LOG.debug("Looking for ThreadFix applications.");
-
-        String returnId = null;
-
-        for (Application.Info threadFixApplication : threadFixApplications) {
-            String applicationName = threadFixApplication.applicationName;
-
-            String id = threadFixApplication.getApplicationId();
-
-            LOG.debug("Application name " + applicationName + " has ID " + id);
-
-            if (info.getApplicationName().equals(threadFixApplication.getApplicationName())) {
-                LOG.debug("Found match: " + info.getApplicationName() + ", id=" + id);
-                returnId = id;
-            }
-        }
-
-        if (threadFixApplications.length == 0) {
-            LOG.error("No ThreadFix applications found, please set one up in ThreadFix and try again.");
-        }
-
-        return returnId;
-    }
-
-    public boolean valid() {
-        return getErrors().isEmpty();
-    }
-
-    public List<String> getErrors() {
+    private List<String> getErrors() {
 
         LOG.info("Checking ThreadFix configuration.");
 
         List<String> errors = new ArrayList<>();
 
-        boolean emptyLocal = allEmpty(localDirectories, localFiles),
-                emptyServer = allEmpty(url, apiKey, applicationName, applicationId);
+        boolean emptyLocal = allEmpty(info.localDirectories, info.localFiles),
+                emptyServer = allEmpty(info.url, info.apiKey, info.applicationName, info.applicationId);
 
         if (emptyLocal && emptyServer) {
             errors.add("No ThreadFix configuration found.");
@@ -122,7 +67,7 @@ public class ThreadFixInfo {
             errors.addAll(testServer());
         } else if (emptyServer) {
             errors.addAll(testLocal());
-            mode = Mode.LOCAL;
+            info.mode = Mode.LOCAL;
         } else {
             LOG.info("Both server and local configurations found.");
 
@@ -138,7 +83,7 @@ public class ThreadFixInfo {
                     LOG.debug(serverError);
                 }
                 LOG.info("Incomplete server configuration. Using local settings.");
-                mode = Mode.LOCAL;
+                info.mode = Mode.LOCAL;
             } else if (serverErrors.isEmpty()) {
                 for (String localError : localErrors) {
                     LOG.debug(localError);
@@ -156,15 +101,15 @@ public class ThreadFixInfo {
     private List<String> testServer() {
         List<String> errors = list();
 
-        if (url == null) {
+        if (info.url == null) {
             errors.add("ThreadFix URL is null, please set the property threadfix.url");
         }
 
-        if (apiKey == null) {
+        if (info.apiKey == null) {
             errors.add("ThreadFix API Key is null, please set the property threadfix.apiKey");
         }
 
-        if (applicationName == null && applicationId == null) {
+        if (info.applicationName == null && info.applicationId == null) {
             errors.add("ThreadFix Application name and ID are null, please set the property threadfix.applicationName or the property threadfix.applicationId");
         }
 
@@ -178,8 +123,8 @@ public class ThreadFixInfo {
 
         List<String> errors = list();
 
-        if (localDirectories != null) {
-            String[] splitDirectories = localDirectories.split(",");
+        if (info.localDirectories != null) {
+            String[] splitDirectories = info.localDirectories.split(",");
 
             for (String splitDirectory : splitDirectories) {
                 File directory = new File(splitDirectory.trim());
@@ -194,18 +139,18 @@ public class ThreadFixInfo {
                         errors.add("No files found in directory " + splitDirectory);
                         continue;
                     }
-                    
+
                     for (File file : files) {
                         if (file.isFile()) {
-                            this.files.add(file.getAbsolutePath());
+                            info.files.add(file.getAbsolutePath());
                         }
                     }
                 }
             }
         }
 
-        if (localFiles != null) {
-            String[] splitFiles = localFiles.split(",");
+        if (info.localFiles != null) {
+            String[] splitFiles = info.localFiles.split(",");
 
             for (String splitFile : splitFiles) {
                 File file = new File(splitFile.trim());
@@ -215,12 +160,12 @@ public class ThreadFixInfo {
                 } else if (!file.isFile()) {
                     errors.add("\"" + splitFile + "\" isn't a file.");
                 } else {
-                    this.files.add(file.getAbsolutePath());
+                    info.files.add(file.getAbsolutePath());
                 }
             }
         }
 
-        if (errors.isEmpty() && this.files.isEmpty()) {
+        if (errors.isEmpty() && info.files.isEmpty()) {
             errors.add("No files found.");
         }
 
@@ -236,27 +181,6 @@ public class ThreadFixInfo {
         return true;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public String getApiKey() {
-        return apiKey;
-    }
 
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public String getApplicationId() {
-        return applicationId;
-    }
-
-    public Set<String> getFiles() {
-        return files;
-    }
-
-    public Mode getMode() {
-        return mode;
-    }
 }

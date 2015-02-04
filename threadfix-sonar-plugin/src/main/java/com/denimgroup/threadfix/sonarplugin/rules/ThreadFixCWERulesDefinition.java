@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin;
+package com.denimgroup.threadfix.sonarplugin.rules;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

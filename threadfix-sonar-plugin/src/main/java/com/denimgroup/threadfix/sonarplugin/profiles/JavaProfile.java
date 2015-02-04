@@ -23,24 +23,13 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin.profiles;
 
-import com.denimgroup.threadfix.sonarplugin.ThreadFixQualityProfile;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.utils.ValidationMessages;
 
 /**
  * Created by mcollins on 2/3/15.
  */
-public class JavaProfile extends ProfileDefinition {
-    private XMLProfileParser parser;
-
+public class JavaProfile extends ThreadFixQualityProfile {
     public JavaProfile(XMLProfileParser parser) {
-        this.parser = parser;
-    }
-
-    @Override
-    public RulesProfile createProfile(ValidationMessages validation) {
-        return ThreadFixQualityProfile.createProfile(parser, "java", validation);
+        super(parser, "java");
     }
 }
