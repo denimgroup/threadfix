@@ -43,6 +43,7 @@ import org.sonar.api.batch.SonarIndex;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
+import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.resources.Project;
@@ -171,7 +172,19 @@ public class ThreadFixSensor implements Sensor {
                 sensorContext,
                 vulnerabilityMarker.getFilePath());
 
-        SonarTools.addIssue(resourcePerspectives, resource, vulnerabilityMarker);
+        if (resource != null) {
+
+            Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
+
+            if (issuable != null) {
+                SonarTools.addIssue(issuable, resource, vulnerabilityMarker);
+            } else {
+                LOG.error("Failed to get issuable for resource " + resource);
+            }
+        } else {
+            LOG.debug("Got null resource for path " + vulnerabilityMarker.getFilePath());
+        }
+
     }
 
 

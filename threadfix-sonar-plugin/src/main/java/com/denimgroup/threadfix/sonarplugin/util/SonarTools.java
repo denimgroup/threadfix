@@ -30,12 +30,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.SonarIndex;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
 
+import javax.annotation.Nonnull;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -83,35 +87,78 @@ public class SonarTools {
         return null;
     }
 
-    public static void addIssue(ResourcePerspectives resourcePerspectives, Resource resource, VulnerabilityMarker vulnerability) {
-        if (resource != null) {
+    public static void addIssue(@Nonnull Issuable issuable, @Nonnull Resource resource, VulnerabilityMarker vulnerability) {
 
-            LOG.debug("Got a resource properly.");
+        String repositoryKey = ThreadFixCWERulesDefinition.getKey(resource.getLanguage().getKey());
+        RuleKey key = RuleKey.of(repositoryKey, "cwe-" + vulnerability.getGenericVulnId());
 
-            Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
-            if(issuable != null) {
+        Integer line = getLineNumber(vulnerability);
 
-                String repositoryKey = ThreadFixCWERulesDefinition.getKey(resource.getLanguage().getKey());
-                RuleKey key = RuleKey.of(repositoryKey, "cwe-" + vulnerability.getGenericVulnId());
+        File file = getValidFile(resource);
+        Integer lineCount = file == null ? 0 : getLineCount(file);
 
-                String lineNumber = vulnerability.getLineNumber();
-                lineNumber = "-1".equals(lineNumber) || "0".equals(lineNumber) ? "1" : lineNumber;
-                Issue issue = issuable
-                        .newIssueBuilder()
-                        .ruleKey(key)
-                        .line(Integer.valueOf(lineNumber))
-                        .severity(ThreadFixTools.getSonarSeverity(vulnerability))
-                        .message(buildMessage(vulnerability)).build();
+        if (lineCount != 0) {
+            if (lineCount < line) {
+                LOG.debug("Mismatched line numbers! Data says " + line + ", total line count is " + lineCount);
+                line = lineCount - 1;
+            }
 
-                if (issuable.addIssue(issue)) {
-                    LOG.debug("Successfully added issue " + issue);
-                } else {
-                    LOG.debug("Failed to add issue " + issue);
-                }
+            Issue issue = issuable
+                    .newIssueBuilder()
+                    .ruleKey(key)
+                    .line(line)
+                    .severity(ThreadFixTools.getSonarSeverity(vulnerability))
+                    .message(buildMessage(vulnerability)).build();
+
+            if (issuable.addIssue(issue)) {
+                LOG.debug("Successfully added issue " + issue);
+            } else {
+                LOG.debug("Failed to add issue " + issue);
             }
         } else {
-            LOG.debug("Got null resource for path " + vulnerability.getFilePath());
+            LOG.debug("Got 0 lines for resource " + resource + ", not filing an issue.");
         }
+    }
+
+    private static Integer getLineNumber(VulnerabilityMarker vulnerability) {
+        String lineNumber = vulnerability.getLineNumber();
+        lineNumber = "-1".equals(lineNumber) || "0".equals(lineNumber) ? "1" : lineNumber;
+
+        if (!lineNumber.matches("^[0-9]+$")) {
+            lineNumber = "1";
+        }
+
+        return Integer.valueOf(lineNumber);
+    }
+
+    private static File getValidFile(Resource resource) {
+
+        if (resource.getPath() != null) {
+            File file = new File(resource.getPath());
+
+            if (file.exists()) {
+                LOG.info("Found file at " + file.getAbsolutePath());
+
+                return file;
+            } else {
+                LOG.info("No file found for " + file.getPath());
+            }
+        } else {
+            LOG.info("Path was null for " + resource);
+        }
+
+        return null;
+    }
+
+    private static Integer getLineCount(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            int lines = 0;
+            while (reader.readLine() != null) lines++;
+            return lines;
+        } catch (IOException e) {
+            LOG.error("Got IOException trying to read from file " + file, e);
+        }
+        return 0;
     }
 
     private static String buildMessage(VulnerabilityMarker vulnerability) {
