@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.sonarplugin;
 import com.denimgroup.threadfix.sonarplugin.profiles.CSharpProfile;
 import com.denimgroup.threadfix.sonarplugin.profiles.JavaProfile;
 import com.denimgroup.threadfix.sonarplugin.profiles.JavaScriptProfile;
+import com.denimgroup.threadfix.sonarplugin.profiles.ThreadFixProfile;
 import com.denimgroup.threadfix.sonarplugin.rules.ThreadFixCWERulesDefinition;
 import com.denimgroup.threadfix.sonarplugin.sensor.ThreadFixSensor;
 import org.slf4j.Logger;
@@ -47,14 +48,21 @@ public class ThreadFixPlugin extends SonarPlugin {
     public List getExtensions() {
         LOG.error("Getting 5 extensions");
 
-        return list(ThreadFixMetrics.class,
+        return list(
+                // metrics, UI, sensor
+                ThreadFixMetrics.class,
                 ThreadFixWidget.class,
                 ThreadFixSensor.class,
                 ThreadFixCWERulesDefinition.class,
 
+                // add custom language
+                ThreadFixLanguage.class,
+
+                // language profiles
                 CSharpProfile.class,
                 JavaProfile.class,
-                JavaScriptProfile.class
+                JavaScriptProfile.class,
+                ThreadFixProfile.class
         );
     }
 

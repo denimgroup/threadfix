@@ -37,7 +37,7 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
 
     public static final String REPOSITORY_KEY = "threadfix-rules";
 
-    String[] languages = { "cs", "java", "js" };
+    String[] languages = { "cs", "java", "js", "threadfix" };
 
     @Override
     public void define(Context context) {

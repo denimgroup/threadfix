@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.resources.Languages;
 import org.sonar.api.utils.ValidationMessages;
 
 import java.io.InputStream;
@@ -38,33 +39,42 @@ import java.io.InputStreamReader;
 /**
  * Created by mcollins on 1/30/15.
  */
-public abstract class ThreadFixQualityProfile extends ProfileDefinition {
+public abstract class AbstractTFQualityProfile extends ProfileDefinition {
 
+    private Languages languages;
     private XMLProfileParser parser;
     private String languageKey;
 
-    public ThreadFixQualityProfile(XMLProfileParser parser, String languageKey) {
+    public AbstractTFQualityProfile(Languages languages, XMLProfileParser parser, String languageKey) {
+        this.languages = languages;
         this.parser = parser;
         this.languageKey = languageKey;
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThreadFixQualityProfile.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractTFQualityProfile.class);
 
     @Override
     public RulesProfile createProfile(ValidationMessages validationMessages) {
-        InputStream input = ThreadFixQualityProfile.class.getResourceAsStream("/threadfix_profile.xml");
-        InputStreamReader reader = new InputStreamReader(
-                new InputStreamLanguageDecorator(input, languageKey)
-        );
-        try {
-            RulesProfile parse = parser.parse(reader, validationMessages);
 
-            LOG.info("Got " + parse.getActiveRules().size() + " active rules for " + languageKey + ".");
-            LOG.info("Got " + parse.getLanguage() + " for language.");
+        if (languages.get(languageKey) != null) {
 
-            return parse;
-        } finally {
-            IOUtils.closeQuietly(reader);
+            InputStream input = AbstractTFQualityProfile.class.getResourceAsStream("/threadfix_profile.xml");
+            InputStreamReader reader = new InputStreamReader(
+                    new InputStreamLanguageDecorator(input, languageKey)
+            );
+            try {
+                RulesProfile parse = parser.parse(reader, validationMessages);
+
+                LOG.info("Got " + parse.getActiveRules().size() + " active rules for " + languageKey + ".");
+                LOG.info("Got " + parse.getLanguage() + " for language.");
+
+                return parse;
+            } finally {
+                IOUtils.closeQuietly(reader);
+            }
+        } else {
+            LOG.info("No language found for key " + languageKey + ", skipping.");
+            return null;
         }
     }
 }

@@ -23,14 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin.profiles;
 
+import com.denimgroup.threadfix.sonarplugin.ThreadFixLanguage;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.resources.Languages;
 
 /**
- * Created by mcollins on 2/3/15.
+ * Created by mcollins on 2/4/15.
  */
-public class CSharpProfile extends AbstractTFQualityProfile {
-    public CSharpProfile(Languages languages, XMLProfileParser parser) {
-        super(languages, parser, "cs");
+public class ThreadFixProfile extends AbstractTFQualityProfile {
+    public ThreadFixProfile(Languages languages, XMLProfileParser parser) {
+        super(languages, parser, ThreadFixLanguage.LANGUAGE_KEY);
     }
 }

@@ -21,16 +21,28 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.sonarplugin.profiles;
+package com.denimgroup.threadfix.sonarplugin;
 
-import org.sonar.api.profiles.XMLProfileParser;
-import org.sonar.api.resources.Languages;
+import org.sonar.api.resources.AbstractLanguage;
 
 /**
- * Created by mcollins on 2/3/15.
+ *
+ * Having this as a language allows sonar analysis for projects that aren't in the included set of profiles.
+ *
+ * Using it will require two analysis runs.
+ *
+ * Created by mcollins on 2/4/15
  */
-public class CSharpProfile extends AbstractTFQualityProfile {
-    public CSharpProfile(Languages languages, XMLProfileParser parser) {
-        super(languages, parser, "cs");
+public class ThreadFixLanguage extends AbstractLanguage {
+
+    public static final String LANGUAGE_KEY = "threadfix";
+
+    public ThreadFixLanguage() {
+        super(LANGUAGE_KEY, "ThreadFix");
+    }
+
+    @Override
+    public String[] getFileSuffixes() {
+        return new String[0];
     }
 }

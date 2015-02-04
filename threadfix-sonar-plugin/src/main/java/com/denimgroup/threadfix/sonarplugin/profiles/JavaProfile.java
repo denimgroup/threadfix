@@ -24,12 +24,13 @@
 package com.denimgroup.threadfix.sonarplugin.profiles;
 
 import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.resources.Languages;
 
 /**
  * Created by mcollins on 2/3/15.
  */
-public class JavaProfile extends ThreadFixQualityProfile {
-    public JavaProfile(XMLProfileParser parser) {
-        super(parser, "java");
+public class JavaProfile extends AbstractTFQualityProfile {
+    public JavaProfile(Languages languages, XMLProfileParser parser) {
+        super(languages, parser, "java");
     }
 }

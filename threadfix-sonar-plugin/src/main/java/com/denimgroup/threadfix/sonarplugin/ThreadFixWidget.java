@@ -23,8 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.web.AbstractRubyTemplate;
 import org.sonar.api.web.Description;
 import org.sonar.api.web.RubyRailsWidget;
@@ -37,21 +35,17 @@ import org.sonar.api.web.UserRole;
 @Description("Shows ThreadFix statistics.")
 public class ThreadFixWidget extends AbstractRubyTemplate implements RubyRailsWidget {
 
-        private static final Logger LOG = LoggerFactory.getLogger(ThreadFixWidget.class);
-
-
         public String getId() {
                 return "threadfix";
         }
+
         public String getTitle() {
                 return "ThreadFix";
         }
-        protected String getTemplatePath() {
-                // uncomment next line for change reloading during development
-                //return "c:/projects/xxxxx/src/main/resources/xxxxx/sonar/idemetadata/idemetadata_widget.html.erb";
-                LOG.info("Getting fully qualified path to erb");
 
-                return "/Users/mcollins/git/threadfix/threadfix-sonar-plugin/src/main/resources/test.html.erb";
-//                return "/test.html.erb";
+        protected String getTemplatePath() {
+                // changing this to a fully qualified path allows you to hot-reload the widget
+
+                return "/test.html.erb";
         }
 }
