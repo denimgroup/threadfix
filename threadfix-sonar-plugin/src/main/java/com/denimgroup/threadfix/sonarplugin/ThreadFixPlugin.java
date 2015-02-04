@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin;
 
-import com.denimgroup.threadfix.sonarplugin.profiles.CSharpProfile;
-import com.denimgroup.threadfix.sonarplugin.profiles.JavaProfile;
-import com.denimgroup.threadfix.sonarplugin.profiles.JavaScriptProfile;
-import com.denimgroup.threadfix.sonarplugin.profiles.ThreadFixProfile;
+import com.denimgroup.threadfix.sonarplugin.profiles.*;
 import com.denimgroup.threadfix.sonarplugin.rules.ThreadFixCWERulesDefinition;
 import com.denimgroup.threadfix.sonarplugin.sensor.ThreadFixSensor;
 import org.slf4j.Logger;
@@ -46,7 +43,7 @@ public class ThreadFixPlugin extends SonarPlugin {
 
     @Override
     public List getExtensions() {
-        LOG.error("Getting 5 extensions");
+        LOG.debug("Getting extensions");
 
         return list(
                 // metrics, UI, sensor
@@ -59,9 +56,27 @@ public class ThreadFixPlugin extends SonarPlugin {
                 ThreadFixLanguage.class,
 
                 // language profiles
+                AbapProfile.class,
+                CobolProfile.class,
+                CppProfile.class,
+                CProfile.class,
                 CSharpProfile.class,
+                CssProfile.class,
+                FlexProfile.class,
                 JavaProfile.class,
                 JavaScriptProfile.class,
+                ObjcProfile.class,
+                PhpProfile.class,
+                PliProfile.class,
+                PLSQLProfile.class,
+                PythonProfile.class,
+                RpgProfile.class,
+                VbNetProfile.class,
+                VbProfile.class,
+                WebProfile.class,
+                XmlProfile.class,
+
+                // default extra language
                 ThreadFixProfile.class
         );
     }

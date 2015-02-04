@@ -66,7 +66,6 @@ public abstract class AbstractTFQualityProfile extends ProfileDefinition {
                 RulesProfile parse = parser.parse(reader, validationMessages);
 
                 LOG.info("Got " + parse.getActiveRules().size() + " active rules for " + languageKey + ".");
-                LOG.info("Got " + parse.getLanguage() + " for language.");
 
                 return parse;
             } finally {

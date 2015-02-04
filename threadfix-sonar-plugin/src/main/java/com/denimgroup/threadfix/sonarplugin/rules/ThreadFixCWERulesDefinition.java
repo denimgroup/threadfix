@@ -23,13 +23,19 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.sonarplugin.rules;
 
+import com.denimgroup.threadfix.sonarplugin.ThreadFixLanguage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.BatchExtension;
+import org.sonar.api.resources.Language;
+import org.sonar.api.resources.Languages;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 
 import java.io.InputStream;
+import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtension {
 
@@ -37,12 +43,29 @@ public class ThreadFixCWERulesDefinition implements RulesDefinition, BatchExtens
 
     public static final String REPOSITORY_KEY = "threadfix-rules";
 
-    String[] languages = { "cs", "java", "js", "threadfix" };
+    List<String> languages = list(
+            ThreadFixLanguage.LANGUAGE_KEY, "pli", "abap", "py", "vbnet", "php", "vb", "cs", "rpg", "js",
+            "cobol", "c", "cpp", "objc", "web", "xml", "flex", "plsql", "java", "css"
+    );
+
+    public ThreadFixCWERulesDefinition(Languages languages) {
+        if (languages != null) {
+            LOG.info("Got injected languages, reading now.");
+            this.languages.clear();
+            for (Language language : languages.all()) {
+                this.languages.add(language.getKey());
+            }
+
+            this.languages.add(ThreadFixLanguage.LANGUAGE_KEY);
+        }
+    }
 
     @Override
     public void define(Context context) {
+
         // make a repo for each defined language
         for (String language : languages) {
+            LOG.info("Creating rules for key " + language);
             NewRepository repository = getRepositoryForLanguage(context, language);
             repository.done();
         }
