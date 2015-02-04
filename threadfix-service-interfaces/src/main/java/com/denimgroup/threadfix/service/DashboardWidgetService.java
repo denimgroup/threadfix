@@ -32,6 +32,11 @@ import java.util.List;
  *
  */
 public interface DashboardWidgetService {
+
+    boolean isInitialized();
+
+    void setInitialized(boolean initialized);
+
     /**
      * @return List<DashboardWidget>
      */

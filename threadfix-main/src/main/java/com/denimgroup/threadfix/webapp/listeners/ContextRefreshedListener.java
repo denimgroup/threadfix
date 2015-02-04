@@ -54,78 +54,83 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAllNonNativeReports();
-        Map<DashboardWidget, Boolean> availableReportPlugins = newMap();
+        if(!dashboardWidgetService.isInitialized()) {
 
-        for (DashboardWidget dashboardWidget : dashboardWidgets) {
-            if (dashboardWidget.getAvailable()){
-                availableReportPlugins.put(dashboardWidget, false);
-            }
-        }
+            dashboardWidgetService.setInitialized(true);
 
-        Map<Class<?>, ReportPlugin> typeMap =
-                AnnotationLoader.getMap(
-                        ReportPlugin.class,
-                        "com.denimgroup.threadfix");
-
-        log.info("ReportPlugin map has " +  typeMap.entrySet().size() + " entries.");
-
-        for (Map.Entry<Class<?>, ReportPlugin> entry : typeMap.entrySet()) {
-            ReportPlugin annotation = entry.getValue();
-
-            if (annotation.displayName().isEmpty() || annotation.jspRelFilePath().isEmpty()
-                    || annotation.reportName().isEmpty()) {
-
-                log.warn("Required attrs for ReportPlugin were empty. Skip to next ReportPlugin.");
-                continue;
-            }
-
-            DashboardWidget widget = null;
+            List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAllNonNativeReports();
+            Map<DashboardWidget, Boolean> availableReportPlugins = newMap();
 
             for (DashboardWidget dashboardWidget : dashboardWidgets) {
-                if (dashboardWidget.getWidgetName().equals(annotation.reportName())){
-
-                    // note that report plugin is available to Threadfix
-                    widget = dashboardWidget;
-                    availableReportPlugins.put(dashboardWidget, true);
-
-                    // set previously unavailable report plugin to true
-                    // now that plugin has be re-added to Threadfix
-                    if (!dashboardWidget.getAvailable()){
-                        log.info("Plugin for existing Dashboard Widget ["+ dashboardWidget.getDisplayName() +
-                                "] was found. Setting availability to true.");
-                        dashboardWidget.setAvailable(true);
-                        dashboardWidgetService.store(dashboardWidget);
-                    }
+                if (dashboardWidget.getAvailable()) {
+                    availableReportPlugins.put(dashboardWidget, false);
                 }
             }
 
-            if(widget != null && availableReportPlugins.get(widget)) {
-                log.info("ReportPlugin already exists as a Dashboard Widget. Skip to next ReportPlugin.");
-                continue;
+            Map<Class<?>, ReportPlugin> typeMap =
+                    AnnotationLoader.getMap(
+                            ReportPlugin.class,
+                            "com.denimgroup.threadfix");
+
+            log.info("ReportPlugin map has " + typeMap.entrySet().size() + " entries.");
+
+            for (Map.Entry<Class<?>, ReportPlugin> entry : typeMap.entrySet()) {
+                ReportPlugin annotation = entry.getValue();
+
+                if (annotation.displayName().isEmpty() || annotation.jspRelFilePath().isEmpty()
+                        || annotation.reportName().isEmpty()) {
+
+                    log.warn("Required attrs for ReportPlugin were empty. Skip to next ReportPlugin.");
+                    continue;
+                }
+
+                DashboardWidget widget = null;
+
+                for (DashboardWidget dashboardWidget : dashboardWidgets) {
+                    if (dashboardWidget.getWidgetName().equals(annotation.reportName())) {
+
+                        // note that report plugin is available to Threadfix
+                        widget = dashboardWidget;
+                        availableReportPlugins.put(dashboardWidget, true);
+
+                        // set previously unavailable report plugin to true
+                        // now that plugin has be re-added to Threadfix
+                        if (!dashboardWidget.getAvailable()) {
+                            log.info("Plugin for existing Dashboard Widget [" + dashboardWidget.getDisplayName() +
+                                    "] was found. Setting availability to true.");
+                            dashboardWidget.setAvailable(true);
+                            dashboardWidgetService.store(dashboardWidget);
+                        }
+                    }
+                }
+
+                if (widget != null && availableReportPlugins.get(widget)) {
+                    log.info("ReportPlugin already exists as a Dashboard Widget. Skip to next ReportPlugin.");
+                    continue;
+                }
+
+                DashboardWidget dashboardWidget = new DashboardWidget();
+
+                dashboardWidget.setAvailable(true);
+                dashboardWidget.setNativeReport(false);
+                dashboardWidget.setWidgetName(annotation.reportName());
+                dashboardWidget.setDisplayName(annotation.displayName());
+                dashboardWidget.setJspFilePath(annotation.jspRelFilePath());
+                dashboardWidget.setJsFilePath(annotation.jsRelFilePath());
+
+                log.info("Storing new Dashboard Widget [" + annotation.displayName() + "].");
+                dashboardWidgetService.store(dashboardWidget);
             }
 
-            DashboardWidget dashboardWidget = new DashboardWidget();
-
-            dashboardWidget.setAvailable(true);
-            dashboardWidget.setNativeReport(false);
-            dashboardWidget.setWidgetName(annotation.reportName());
-            dashboardWidget.setDisplayName(annotation.displayName());
-            dashboardWidget.setJspFilePath(annotation.jspRelFilePath());
-            dashboardWidget.setJsFilePath(annotation.jsRelFilePath());
-
-            log.info("Storing new Dashboard Widget [" + annotation.displayName() + "].");
-            dashboardWidgetService.store(dashboardWidget);
-        }
-
-        // set dashboard reports' availability that were not found in annotations to false
-        for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
-            if (!availableReportPlugins.get(dashboardWidget)){
-                if(dashboardWidget.getAvailable()){
-                    log.info("Plugin for existing Dashboard Widget ["+ dashboardWidget.getDisplayName() +
-                            "] not found. Setting availability to false.");
-                    dashboardWidget.setAvailable(false);
-                    dashboardWidgetService.store(dashboardWidget);
+            // set dashboard reports' availability that were not found in annotations to false
+            for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
+                if (!availableReportPlugins.get(dashboardWidget)) {
+                    if (dashboardWidget.getAvailable()) {
+                        log.info("Plugin for existing Dashboard Widget [" + dashboardWidget.getDisplayName() +
+                                "] not found. Setting availability to false.");
+                        dashboardWidget.setAvailable(false);
+                        dashboardWidgetService.store(dashboardWidget);
+                    }
                 }
             }
         }

@@ -40,7 +40,17 @@ public class DashboardWidgetServiceImpl implements DashboardWidgetService {
 
     @Autowired
     private DashboardWidgetDao dashboardWidgetDao;
-    
+
+    private boolean initialized = false;
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
     @Override
     public List<DashboardWidget> loadAll() {
         return dashboardWidgetDao.retrieveAll();
