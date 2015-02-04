@@ -53,6 +53,9 @@ public class Dependency extends AuditableEntity {
     @Size(max = 1024000)
     private String description = null;
 
+    @Size(max = 20, message = "{errors.maxlength} 20.")
+    private String source;
+
     @Nullable
     @Column(nullable = true)
     @JsonView(AllViews.UIVulnSearch.class)
@@ -86,13 +89,24 @@ public class Dependency extends AuditableEntity {
     }
 
     @Column(length = 20)
-    @JsonView(Object.class)
+    @JsonIgnore
     public String getCve() {
         return cve;
     }
 
     public void setCve(String cve) {
         this.cve = cve;
+    }
+
+    @Nullable
+    @Column(length = 20)
+    @JsonView(Object.class)
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     /**
@@ -112,5 +126,25 @@ public class Dependency extends AuditableEntity {
                 ", componentName='" + componentName + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Transient
+    @JsonView(Object.class)
+    public String getRefLink() {
+        if (getSource() != null && getSource().toUpperCase().equals("OSVDB")) {
+            return "http://osvdb.org/" + getCve();
+        } else {
+            return "http://cve.mitre.org/cgi-bin/cvename.cgi?name=" + getCve();
+        }
+    }
+
+    @Transient
+    @JsonView(Object.class)
+    public String getRefId() {
+        if (getSource() != null && getSource().toUpperCase().equals("OSVDB")) {
+            return "osvdb-" + getCve();
+        } else {
+            return getCve();
+        }
     }
 }

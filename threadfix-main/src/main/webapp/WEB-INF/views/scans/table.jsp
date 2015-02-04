@@ -41,8 +41,8 @@
             <td ng-hide="finding.dependency" class="long-path-word-wrap" id="mappedPath{{ index }}">{{ finding.surfaceLocation.path }}</td>
             <td ng-hide="finding.dependency" id="mappedParameter{{ index }}">{{ finding.surfaceLocation.parameter }}</td>
             <td ng-show="finding.dependency" colspan="2" class="pointer">
-                {{ finding.dependency.cve }}
-                (<a target="_blank" id="cve{{ index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ finding.dependency.cve }}">View</a>)
+                {{ finding.dependency.refId }}
+                (<a target="_blank" id="cve{{ index }}" href="{{ finding.dependency.refLink }}">View</a>)
             </td>
             <td>{{ finding.numberMergedResults }}</td>
             <td class="pointer">
