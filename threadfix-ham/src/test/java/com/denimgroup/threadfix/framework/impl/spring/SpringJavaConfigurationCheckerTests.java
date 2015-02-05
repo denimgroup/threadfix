@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mac on 1/7/14.

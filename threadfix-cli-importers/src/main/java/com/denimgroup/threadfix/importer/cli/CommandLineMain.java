@@ -24,7 +24,8 @@
 
 package com.denimgroup.threadfix.importer.cli;
 
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
+import com.denimgroup.threadfix.importer.util.ScanParser;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Component;
 

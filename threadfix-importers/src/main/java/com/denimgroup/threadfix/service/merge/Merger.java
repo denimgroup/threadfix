@@ -21,34 +21,36 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.importer.merge;
+package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.importer.ScanLocationManager;
-import com.denimgroup.threadfix.importer.cli.ScanParser;
-import com.denimgroup.threadfix.service.merge.ScanMerger;
+import com.denimgroup.threadfix.importer.util.ScanParser;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.CollectionUtils.listOf;
-import static com.denimgroup.threadfix.importer.config.SpringConfiguration.getSpringBean;
 
 /**
+ * This class's primary use is for non-web-context ThreadFix merging.
+ *
  * Created by mac on 7/28/14.
  */
 @Component
 public class Merger extends SpringBeanAutowiringSupport {
 
     @Autowired
-    private ScanParser     scanParser;
+    private ScanParser scanParser;
     @Autowired
     private ScanMerger     scanMerger;
     @Autowired
@@ -100,19 +102,23 @@ public class Merger extends SpringBeanAutowiringSupport {
     }
 
     public static List<Scan> getScanListFromPaths(Application application, ScannerType scannerName, String... filePaths) {
-        return getSpringBean(Merger.class).getScanListInternal(application, scannerName, filePaths);
+        return SpringConfiguration.getSpringBean(Merger.class).getScanListInternal(application, scannerName, filePaths);
     }
 
     public static List<Scan> getScanListFromPaths(ScannerType scannerName, String... filePaths) {
-        return getSpringBean(Merger.class).getScanListInternal(new Application(), scannerName, filePaths);
+        return SpringConfiguration.getSpringBean(Merger.class).getScanListInternal(new Application(), scannerName, filePaths);
     }
 
     public static Application mergeFromDifferentScanners(String sourceRoot,  String... filePaths) {
-        return getSpringBean(Merger.class).mergeFromDifferentScannersInternal(sourceRoot, filePaths);
+        return mergeFromDifferentScanners(sourceRoot, Arrays.asList(filePaths));
+    }
+
+    public static Application mergeFromDifferentScanners(String sourceRoot, Collection<String> filePaths) {
+        return SpringConfiguration.getSpringBean(Merger.class).mergeFromDifferentScannersInternal(sourceRoot, filePaths);
     }
 
     @Transactional(readOnly = true)
-    public Application mergeFromDifferentScannersInternal(String sourceRoot,  String... filePaths) {
+    public Application mergeFromDifferentScannersInternal(String sourceRoot, Collection<String> filePaths) {
         assert scanMerger != null : "No Merger found, fix your Spring context.";
         assert scanParser != null : "No Parser found, fix your Spring context.";
 
@@ -126,7 +132,7 @@ public class Merger extends SpringBeanAutowiringSupport {
         applicationDao.saveOrUpdate(application);
 
         for (String file : filePaths) {
-            Scan resultScan = scanParser.getScan(ScanLocationManager.getRoot() + file);
+            Scan resultScan = scanParser.getScan(file);
             resultScan.getApplicationChannel().setApplication(application);
             application.getChannelList().add(resultScan.getApplicationChannel());
             scanMerger.merge(resultScan, resultScan.getApplicationChannel());

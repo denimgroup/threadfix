@@ -128,8 +128,8 @@ public class CollectionUtils {
             builder.append(separator);
         }
 
-        if (builder.length() > 0) {
-            return builder.substring(0, builder.length() - 1);
+        if (builder.length() > separator.length()) {
+            return builder.substring(0, builder.length() - separator.length());
         } else {
             return "";
         }
