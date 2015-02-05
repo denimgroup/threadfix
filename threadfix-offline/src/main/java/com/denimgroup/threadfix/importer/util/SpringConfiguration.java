@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.util;
 
+import com.denimgroup.threadfix.CollectionUtils;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -39,8 +40,6 @@ import org.springframework.util.ClassUtils;
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Properties;
-
-import static com.denimgroup.threadfix.CollectionUtils.map;
 
 /**
  * This class is used for non-web-context ThreadFix merging.
@@ -129,7 +128,7 @@ public class SpringConfiguration {
         bean.setDataSource(dataSource());
         bean.setPackagesToScan("com.denimgroup.threadfix.data.entities");
         bean.setHibernateProperties(getHibernateProperties());
-        Map<String, Object> merge = map("merge", (Object) new IdTransferringMergeEventListener());
+        Map<String, Object> merge = CollectionUtils.map("merge", (Object) new IdTransferringMergeEventListener());
         bean.setEventListeners(merge);
 
         return bean;
