@@ -32,18 +32,20 @@ import com.denimgroup.threadfix.service.report.ReportsService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
 
 /**
  * @author bbeverly
@@ -70,27 +72,19 @@ public class DashboardController {
 	private OrganizationService organizationService;
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
-    @Autowired
-    private DashboardWidgetService dashboardWidgetService;
-    @Autowired
-    private CacheBustService cacheBustService;
 
 	private final SanitizedLogger log = new SanitizedLogger(DashboardController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(Model model, HttpServletRequest request) {
-
-        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
-        List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadByIds(config.getDashboardWidgetIds());
-        List<Organization> organizationList = organizationService.loadAllActiveFilter();
-
-        PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
+	public String index(Model model) {
+		
 		model.addAttribute("recentComments", vulnerabilityCommentService.loadMostRecentFiltered(5));
 		model.addAttribute("recentScans", scanService.loadMostRecentFiltered(5));
+
+        List<Organization> organizationList = organizationService.loadAllActiveFilter();
+
 		model.addAttribute("teams", organizationList);
-        model.addAttribute("config", config);
-        model.addAttribute("dashboardWidgets", dashboardWidgets);
-        model.addAttribute("reportJsPaths", cacheBustService.uncachedJsPaths(request, dashboardWidgets));
+        PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {
@@ -98,6 +92,7 @@ public class DashboardController {
                     vulnerabilityService.updateVulnerabilityReport(app);
                 }
             }
+            DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
             config.setHasCachedData(true);
             defaultConfigService.saveConfiguration(config);
         }

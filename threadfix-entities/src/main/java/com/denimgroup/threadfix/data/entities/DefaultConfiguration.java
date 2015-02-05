@@ -24,13 +24,13 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Entity
 @Table(name="DefaultConfiguration")
@@ -57,8 +57,6 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Integer sessionTimeout = null;
 
-    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId, dashboardBottomRightId;
-
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
         config.setDefaultRoleId(1);
@@ -78,41 +76,6 @@ public class DefaultConfiguration extends BaseEntity {
         this.sessionTimeout = sessionTimeout;
     }
 
-    @Column
-    public Integer getDashboardTopLeftId() {
-        return dashboardTopLeftId;
-    }
-
-    public void setDashboardTopLeftId(Integer dashboardTopLeftId) {
-        this.dashboardTopLeftId = dashboardTopLeftId;
-    }
-
-    @Column
-    public Integer getDashboardTopRightId() {
-        return dashboardTopRightId;
-    }
-
-    public void setDashboardTopRightId(Integer dashboardTopRightId) {
-        this.dashboardTopRightId = dashboardTopRightId;
-    }
-
-    @Column
-    public Integer getDashboardBottomLeftId() {
-        return dashboardBottomLeftId;
-    }
-
-    public void setDashboardBottomLeftId(Integer dashboardBottomLeftId) {
-        this.dashboardBottomLeftId = dashboardBottomLeftId;
-    }
-
-    @Column
-    public Integer getDashboardBottomRightId() {
-        return dashboardBottomRightId;
-    }
-
-    public void setDashboardBottomRightId(Integer dashboardBottomRightId) {
-        this.dashboardBottomRightId = dashboardBottomRightId;
-    }
 
     @Column
     public Boolean getHasAddedScheduledImports() {
@@ -319,18 +282,6 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("TrustwaveHailstormRemoteProvider", getShouldProxyTrustwaveHailstorm());
         map.put("ContrastRemoteProvider", getShouldProxyContrast());
         return map;
-    }
-
-    @Transient
-    public List<Integer> getDashboardWidgetIds() {
-        List<Integer> dashboardWidgetIds = list();
-
-        dashboardWidgetIds.add(getDashboardTopLeftId());
-        dashboardWidgetIds.add(getDashboardTopRightId());
-        dashboardWidgetIds.add(getDashboardBottomLeftId());
-        dashboardWidgetIds.add(getDashboardBottomRightId());
-
-        return dashboardWidgetIds;
     }
 
     @Column
