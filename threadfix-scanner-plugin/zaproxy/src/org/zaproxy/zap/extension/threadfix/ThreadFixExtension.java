@@ -24,8 +24,9 @@
 
 package org.zaproxy.zap.extension.threadfix;
 
-import com.denimgroup.threadfix.plugin.zap.action.EndpointsAction;
 import com.denimgroup.threadfix.plugin.zap.action.ImportAction;
+import com.denimgroup.threadfix.plugin.zap.action.LocalEndpointsAction;
+import com.denimgroup.threadfix.plugin.zap.action.RemoteEndpointsAction;
 import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ExtensionAdaptor;
 import org.parosproxy.paros.extension.ExtensionHook;
@@ -37,7 +38,7 @@ import java.util.ResourceBundle;
 
 public class ThreadFixExtension extends ExtensionAdaptor {
 
-    private JMenuItem importAction = null, endpointsAction = null;
+    private JMenuItem importAction = null, remoteEndpointsAction = null, localEndpointsAction = null;
     private ResourceBundle messages = null;
 
     private static final Logger logger = Logger.getLogger(ThreadFixExtension.class);
@@ -89,7 +90,8 @@ public class ThreadFixExtension extends ExtensionAdaptor {
             // Register our top menu item, as long as we're not running as a daemon
             // Use one of the other methods to add to a different menu list
             extensionHook.getHookMenu().addToolsMenuItem(getImportAction());
-            extensionHook.getHookMenu().addToolsMenuItem(getEndpointsAction());
+            extensionHook.getHookMenu().addToolsMenuItem(getRemoteEndpointsAction());
+            extensionHook.getHookMenu().addToolsMenuItem(getLocalEndpointsAction());
         }
 
     }
@@ -102,12 +104,20 @@ public class ThreadFixExtension extends ExtensionAdaptor {
         return importAction;
     }
 
-    private JMenuItem getEndpointsAction() {
+    private JMenuItem getRemoteEndpointsAction() {
        logger.info("Getting menu");
-        if (endpointsAction == null) {
-            endpointsAction = new EndpointsAction(getView(), getModel());
+        if (remoteEndpointsAction == null) {
+            remoteEndpointsAction = new RemoteEndpointsAction(getView(), getModel());
         }
-        return endpointsAction;
+        return remoteEndpointsAction;
+    }
+
+    private JMenuItem getLocalEndpointsAction() {
+        logger.info("Getting menu");
+        if (localEndpointsAction == null) {
+            localEndpointsAction = new LocalEndpointsAction(getView(), getModel());
+        }
+        return localEndpointsAction;
     }
 
     public String getMessageString(String key) {

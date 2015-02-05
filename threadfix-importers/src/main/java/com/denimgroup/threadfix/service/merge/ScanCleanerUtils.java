@@ -44,7 +44,7 @@ public class ScanCleanerUtils {
 	@Autowired
 	private VulnerabilityDao vulnerabilityDao;
 	
-    private final SanitizedLogger log = new SanitizedLogger("ScanCleanerUtils");
+    private static final SanitizedLogger log = new SanitizedLogger("ScanCleanerUtils");
 
     private static final Set<String> VULNS_WITH_PARAMETERS_SET =
             Collections.unmodifiableSet(set(GenericVulnerability.VULNS_WITH_PARAMS));
@@ -174,7 +174,9 @@ public class ScanCleanerUtils {
 			finding.setLongDescription(trim(finding.getLongDescription(), Finding.LONG_DESCRIPTION_LENGTH));
 			finding.setNativeId(trim(finding.getNativeId(), Finding.NATIVE_ID_LENGTH));
 			finding.setSourceFileLocation(trim(finding.getSourceFileLocation(), Finding.SOURCE_FILE_LOCATION_LENGTH));
-			
+			finding.setAttackResponse(trim(finding.getAttackResponse(), Finding.ATTACK_RESPONSE_LENGTH));
+			finding.setAttackRequest(trim(finding.getAttackRequest(), Finding.ATTACK_REQUEST_LENGTH));
+
 
 			if (finding.getSurfaceLocation() != null) {
 				SurfaceLocation location = finding.getSurfaceLocation();

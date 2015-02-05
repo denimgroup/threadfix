@@ -103,7 +103,7 @@ public final class ExceptionLog extends BaseEntity {
 		this.type = type;
 	}
 	
-	@Column(length = 256)
+	@Column(length = 512)
 	public String getMessage() {
 		return message;
 	}

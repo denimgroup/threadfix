@@ -398,7 +398,8 @@ public class Finding extends AuditableEntity implements FindingLike {
 
 	@Column(length = RAW_FINDING_LENGTH)
 	public String getRawFinding() {
-		return rawFinding;
+		return  rawFinding;
+
 	}
 
 	public void setRawFinding(String rawFinding) {
