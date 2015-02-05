@@ -24,11 +24,11 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DashboardWidgetService;
+import com.denimgroup.threadfix.service.ReportService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
@@ -57,7 +57,7 @@ public class SystemSettingsController {
 	@Autowired
     private DefaultConfigService defaultConfigService = null;
 	@Autowired
-	private DashboardWidgetService dashboardWidgetService = null;
+	private ReportService reportService = null;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -81,9 +81,9 @@ public class SystemSettingsController {
 		return roleService.loadAll();
 	}
 
-	@ModelAttribute("dashboardWidgets")
-	public List<DashboardWidget> populateDashboardWidgetTypes() {
-		return dashboardWidgetService.loadAllAvailable();
+	@ModelAttribute("reports")
+	public List<Report> populateReportTypes() {
+		return reportService.loadAllAvailable();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

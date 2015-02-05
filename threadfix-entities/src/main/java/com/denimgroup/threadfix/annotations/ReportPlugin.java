@@ -40,7 +40,7 @@ public @interface ReportPlugin {
 
     public String jspRelFilePath();
 
-    public String reportName();
+    public String shortName();
 
     public String displayName();
 }

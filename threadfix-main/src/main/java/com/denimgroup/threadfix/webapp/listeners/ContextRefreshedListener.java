@@ -25,10 +25,10 @@
 package com.denimgroup.threadfix.webapp.listeners;
 
 import com.denimgroup.threadfix.annotations.ReportPlugin;
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.importer.loader.AnnotationLoader;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DashboardWidgetService;
+import com.denimgroup.threadfix.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -49,21 +49,21 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     private final SanitizedLogger log = new SanitizedLogger(ContextRefreshedListener.class);
 
     @Autowired
-    private DashboardWidgetService dashboardWidgetService;
+    private ReportService reportService;
 
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if(!dashboardWidgetService.isInitialized()) {
+        if(!reportService.isInitialized()) {
 
-            dashboardWidgetService.setInitialized(true);
+            reportService.setInitialized(true);
 
-            List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAllNonNativeReports();
-            Map<DashboardWidget, Boolean> availableReportPlugins = newMap();
+            List<Report> reports = reportService.loadAllNonNativeReports();
+            Map<Report, Boolean> availableReportPlugins = newMap();
 
-            for (DashboardWidget dashboardWidget : dashboardWidgets) {
-                if (dashboardWidget.getAvailable()) {
-                    availableReportPlugins.put(dashboardWidget, false);
+            for (Report report : reports) {
+                if (report.getAvailable()) {
+                    availableReportPlugins.put(report, false);
                 }
             }
 
@@ -78,58 +78,58 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 ReportPlugin annotation = entry.getValue();
 
                 if (annotation.displayName().isEmpty() || annotation.jspRelFilePath().isEmpty()
-                        || annotation.reportName().isEmpty()) {
+                        || annotation.shortName().isEmpty()) {
 
                     log.warn("Required attrs for ReportPlugin were empty. Skip to next ReportPlugin.");
                     continue;
                 }
 
-                DashboardWidget widget = null;
+                Report r = null;
 
-                for (DashboardWidget dashboardWidget : dashboardWidgets) {
-                    if (dashboardWidget.getWidgetName().equals(annotation.reportName())) {
+                for (Report report : reports) {
+                    if (report.getShortName().equals(annotation.shortName())) {
 
                         // note that report plugin is available to Threadfix
-                        widget = dashboardWidget;
-                        availableReportPlugins.put(dashboardWidget, true);
+                        r = report;
+                        availableReportPlugins.put(report, true);
 
                         // set previously unavailable report plugin to true
                         // now that plugin has be re-added to Threadfix
-                        if (!dashboardWidget.getAvailable()) {
-                            log.info("Plugin for existing Dashboard Widget [" + dashboardWidget.getDisplayName() +
+                        if (!report.getAvailable()) {
+                            log.info("Plugin for existing Report [" + report.getDisplayName() +
                                     "] was found. Setting availability to true.");
-                            dashboardWidget.setAvailable(true);
-                            dashboardWidgetService.store(dashboardWidget);
+                            report.setAvailable(true);
+                            reportService.store(report);
                         }
                     }
                 }
 
-                if (widget != null && availableReportPlugins.get(widget)) {
-                    log.info("ReportPlugin already exists as a Dashboard Widget. Skip to next ReportPlugin.");
+                if (r != null && availableReportPlugins.get(r)) {
+                    log.info("ReportPlugin already exists as a Report. Skip to next ReportPlugin.");
                     continue;
                 }
 
-                DashboardWidget dashboardWidget = new DashboardWidget();
+                Report report = new Report();
 
-                dashboardWidget.setAvailable(true);
-                dashboardWidget.setNativeReport(false);
-                dashboardWidget.setWidgetName(annotation.reportName());
-                dashboardWidget.setDisplayName(annotation.displayName());
-                dashboardWidget.setJspFilePath(annotation.jspRelFilePath());
-                dashboardWidget.setJsFilePath(annotation.jsRelFilePath());
+                report.setAvailable(true);
+                report.setNativeReport(false);
+                report.setShortName(annotation.shortName());
+                report.setDisplayName(annotation.displayName());
+                report.setJspFilePath(annotation.jspRelFilePath());
+                report.setJsFilePath(annotation.jsRelFilePath());
 
-                log.info("Storing new Dashboard Widget [" + annotation.displayName() + "].");
-                dashboardWidgetService.store(dashboardWidget);
+                log.info("Storing new Report [" + annotation.displayName() + "].");
+                reportService.store(report);
             }
 
             // set dashboard reports' availability that were not found in annotations to false
-            for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
-                if (!availableReportPlugins.get(dashboardWidget)) {
-                    if (dashboardWidget.getAvailable()) {
-                        log.info("Plugin for existing Dashboard Widget [" + dashboardWidget.getDisplayName() +
+            for (Report report : availableReportPlugins.keySet()) {
+                if (!availableReportPlugins.get(report)) {
+                    if (report.getAvailable()) {
+                        log.info("Plugin for existing Report [" + report.getDisplayName() +
                                 "] not found. Setting availability to false.");
-                        dashboardWidget.setAvailable(false);
-                        dashboardWidgetService.store(dashboardWidget);
+                        report.setAvailable(false);
+                        reportService.store(report);
                     }
                 }
             }

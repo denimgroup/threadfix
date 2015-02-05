@@ -322,15 +322,15 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Transient
-    public List<Integer> getDashboardWidgetIds() {
-        List<Integer> dashboardWidgetIds = list();
+    public List<Integer> getDashboardReportIds() {
+        List<Integer> dashboardReportIds = list();
 
-        dashboardWidgetIds.add(getDashboardTopLeftId());
-        dashboardWidgetIds.add(getDashboardTopRightId());
-        dashboardWidgetIds.add(getDashboardBottomLeftId());
-        dashboardWidgetIds.add(getDashboardBottomRightId());
+        dashboardReportIds.add(getDashboardTopLeftId());
+        dashboardReportIds.add(getDashboardTopRightId());
+        dashboardReportIds.add(getDashboardBottomLeftId());
+        dashboardReportIds.add(getDashboardBottomRightId());
 
-        return dashboardWidgetIds;
+        return dashboardReportIds;
     }
 
     @Column

@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.Report;
 
 import java.util.List;
 
@@ -31,62 +31,62 @@ import java.util.List;
  * @author zabdisubhan
  *
  */
-public interface DashboardWidgetService {
+public interface ReportService {
 
     boolean isInitialized();
 
     void setInitialized(boolean initialized);
 
     /**
-     * @return List<DashboardWidget>
+     * @return List<Report>
      */
-    List<DashboardWidget> loadAll();
+    List<Report> loadAll();
 
    /**
-     * @return List<DashboardWidget>
+     * @return List<Report>
      */
-    List<DashboardWidget> loadAllAvailable();
+    List<Report> loadAllAvailable();
 
     /**
-     * @return List<DashboardWidget>
+     * @return List<Report>
      */
-    List<DashboardWidget> loadByIds(List<Integer> dashboardWidgetIds);
+    List<Report> loadByIds(List<Integer> reportIds);
 
     /**
-     * @return List<DashboardWidget>
+     * @return List<Report>
      */
-    List<DashboardWidget> loadAllNativeReports();
+    List<Report> loadAllNativeReports();
 
     /**
-     * @return List<DashboardWidget>
+     * @return List<Report>
      */
-    List<DashboardWidget> loadAllNonNativeReports();
+    List<Report> loadAllNonNativeReports();
 
     /**
-     * @param dashboardWidgetId
-     * @return DashboardWidget
+     * @param reportId
+     * @return Report
      */
-    DashboardWidget load(int dashboardWidgetId);
+    Report load(int reportId);
 
     /**
-     * @param widgetName
-     * @return DashboardWidget
+     * @param shortName
+     * @return Report
      */
-    DashboardWidget load(String widgetName);
+    Report load(String shortName);
 
     /**
-     * @param dashboardWidget
+     * @param report
      */
-    void store(DashboardWidget dashboardWidget);
+    void store(Report report);
 
     /**
-     * @param dashboardWidget
+     * @param report
      */
-    void delete(DashboardWidget dashboardWidget);
+    void delete(Report report);
 
     /**
-     * @param dashboardWidgetId
+     * @param reportId
      */
-    void deleteById(int dashboardWidgetId);
+    void deleteById(int reportId);
 
 }

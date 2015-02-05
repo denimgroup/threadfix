@@ -25,12 +25,11 @@
 package com.denimgroup.threadfix.data.dao.hibernate;
 
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
-import com.denimgroup.threadfix.data.dao.DashboardWidgetDao;
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.dao.ReportDao;
+import com.denimgroup.threadfix.data.entities.Report;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -42,18 +41,18 @@ import java.util.List;
  */
 
 @Repository
-public class HibernateDashboardWidgetDao
-        extends AbstractObjectDao<DashboardWidget>
-        implements DashboardWidgetDao {
+public class HibernateReportDao
+        extends AbstractObjectDao<Report>
+        implements ReportDao {
 
     @Autowired
-    public HibernateDashboardWidgetDao(SessionFactory sessionFactory) {
+    public HibernateReportDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 
     @Override
-    public DashboardWidget retrieveByName(String name) {
-        return (DashboardWidget) sessionFactory.getCurrentSession()
+    public Report retrieveByName(String name) {
+        return (Report) sessionFactory.getCurrentSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("displayName", name))
                 .uniqueResult();
@@ -61,14 +60,14 @@ public class HibernateDashboardWidgetDao
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DashboardWidget> retrieveAllAvailable() {
-        return (List<DashboardWidget>) getAvailableCriteria().list();
+    public List<Report> retrieveAllAvailable() {
+        return (List<Report>) getAvailableCriteria().list();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DashboardWidget> retrieveAllNativeReports() {
-        return (List<DashboardWidget>) sessionFactory.getCurrentSession()
+    public List<Report> retrieveAllNativeReports() {
+        return (List<Report>) sessionFactory.getCurrentSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("nativeReport", true))
                 .list();
@@ -76,8 +75,8 @@ public class HibernateDashboardWidgetDao
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DashboardWidget> retrieveAllNonNativeReports() {
-        return (List<DashboardWidget>) sessionFactory.getCurrentSession()
+    public List<Report> retrieveAllNonNativeReports() {
+        return (List<Report>) sessionFactory.getCurrentSession()
                 .createCriteria(getClassReference())
                 .add(Restrictions.eq("nativeReport", false))
                 .list();
@@ -91,30 +90,30 @@ public class HibernateDashboardWidgetDao
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DashboardWidget> retrieveByIds(List<Integer> dashboardWidgetIds) {
-        return (List<DashboardWidget>) getAvailableCriteria()
-                .add(Restrictions.in("id", dashboardWidgetIds))
+    public List<Report> retrieveByIds(List<Integer> reportIds) {
+        return (List<Report>) getAvailableCriteria()
+                .add(Restrictions.in("id", reportIds))
                 .list();
     }
 
     @Override
-    public void delete(DashboardWidget dashboardWidget) {
-        sessionFactory.getCurrentSession().delete(dashboardWidget);
+    public void delete(Report report) {
+        sessionFactory.getCurrentSession().delete(report);
     }
 
     // This HQL is relatively simple and probably more memory-efficient than pulling objects into memory
     @Override
-    public void delete(Integer dashboardWidgetId) {
+    public void delete(Integer reportId) {
         Session session = sessionFactory.getCurrentSession();
 
         String hql;
 
-        hql = "delete from DashboardWidget where id = :id";
-        session.createQuery(hql).setInteger("id", dashboardWidgetId).executeUpdate();
+        hql = "delete from Report where id = :id";
+        session.createQuery(hql).setInteger("id", reportId).executeUpdate();
     }
 
     @Override
-    protected Class<DashboardWidget> getClassReference() {
-        return DashboardWidget.class;
+    protected Class<Report> getClassReference() {
+        return Report.class;
     }
 }

@@ -23,8 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.dao.DashboardWidgetDao;
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.dao.ReportDao;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,12 +34,12 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly=true)
-public class DashboardWidgetServiceImpl implements DashboardWidgetService {
+public class ReportServiceImpl implements ReportService {
 
-    private final SanitizedLogger log = new SanitizedLogger(DashboardWidgetServiceImpl.class);
+    private final SanitizedLogger log = new SanitizedLogger(ReportServiceImpl.class);
 
     @Autowired
-    private DashboardWidgetDao dashboardWidgetDao;
+    private ReportDao reportDao;
 
     private boolean initialized = false;
 
@@ -52,58 +52,58 @@ public class DashboardWidgetServiceImpl implements DashboardWidgetService {
     }
 
     @Override
-    public List<DashboardWidget> loadAll() {
-        return dashboardWidgetDao.retrieveAll();
+    public List<Report> loadAll() {
+        return reportDao.retrieveAll();
     }
 
     @Override
-    public List<DashboardWidget> loadAllAvailable() {
-        return dashboardWidgetDao.retrieveAllAvailable();
+    public List<Report> loadAllAvailable() {
+        return reportDao.retrieveAllAvailable();
     }
 
     @Override
-    public List<DashboardWidget> loadByIds(List<Integer> dashboardWidgetIds) {
-        return dashboardWidgetDao.retrieveByIds(dashboardWidgetIds);
+    public List<Report> loadByIds(List<Integer> reportIds) {
+        return reportDao.retrieveByIds(reportIds);
     }
 
     @Override
-    public List<DashboardWidget> loadAllNativeReports() {
-        return dashboardWidgetDao.retrieveAllNativeReports();
+    public List<Report> loadAllNativeReports() {
+        return reportDao.retrieveAllNativeReports();
     }
 
     @Override
-    public List<DashboardWidget> loadAllNonNativeReports() {
-        return dashboardWidgetDao.retrieveAllNonNativeReports();
+    public List<Report> loadAllNonNativeReports() {
+        return reportDao.retrieveAllNonNativeReports();
     }
 
     @Override
-    public DashboardWidget load(int dashboardWidgetId) {
-        return dashboardWidgetDao.retrieveById(dashboardWidgetId);
+    public Report load(int reportId) {
+        return reportDao.retrieveById(reportId);
     }
 
     @Override
-    public DashboardWidget load(String name) {
-        return dashboardWidgetDao.retrieveByName(name);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void store(DashboardWidget dashboardWidget) {
-        dashboardWidgetDao.saveOrUpdate(dashboardWidget);
+    public Report load(String name) {
+        return reportDao.retrieveByName(name);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void deleteById(int dashboardWidgetId) {
-        log.info("Deleting Dashboard Widget with ID " + dashboardWidgetId);
-        dashboardWidgetDao.delete(dashboardWidgetId);
+    public void store(Report report) {
+        reportDao.saveOrUpdate(report);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void delete(DashboardWidget dashboardWidget) {
-        log.info("Deleting Dashboard Widget '" + dashboardWidget.getWidgetName() +"'.");
-        dashboardWidgetDao.delete(dashboardWidget);
+    public void deleteById(int reportId) {
+        log.info("Deleting Report with ID " + reportId);
+        reportDao.delete(reportId);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(Report report) {
+        log.info("Deleting Report '" + report.getShortName() +"'.");
+        reportDao.delete(report);
     }
 
 }

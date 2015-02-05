@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -89,13 +88,13 @@ public class CacheBustServiceImpl implements CacheBustService {
 
 
     @Override
-    public List<String> uncachedJsPaths(HttpServletRequest request, List<DashboardWidget> dashboardWidgets) {
+    public List<String> uncachedJsPaths(HttpServletRequest request, List<Report> reports) {
 
         List<String> uncachedJs = list();
 
-        for (DashboardWidget dashboardWidget : dashboardWidgets) {
+        for (Report report : reports) {
 
-            String jsFilePath = dashboardWidget.getJsFilePath();
+            String jsFilePath = report.getJsFilePath();
 
             if(jsFilePath != null && !jsFilePath.isEmpty()){
                 String filteredJsPath = filteredAsset(request, jsFilePath);

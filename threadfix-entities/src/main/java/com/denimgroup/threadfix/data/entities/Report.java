@@ -36,8 +36,8 @@ import javax.validation.constraints.Size;
  *
  */
 @Entity
-@Table(name = "DashboardWidget")
-public class DashboardWidget extends BaseEntity {
+@Table(name = "Report")
+public class Report extends BaseEntity {
 
     private static final long serialVersionUID = -1612233741957801615L;
 
@@ -47,7 +47,7 @@ public class DashboardWidget extends BaseEntity {
     private Boolean available;
     private Boolean nativeReport;
     private String displayName;
-    private String widgetName;
+    private String shortName;
     private String jspFilePath;
     private String jsFilePath;
 
@@ -80,12 +80,12 @@ public class DashboardWidget extends BaseEntity {
 
     @Column(nullable = false)
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
-    public String getWidgetName() {
-        return widgetName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setWidgetName(String widgetName) {
-        this.widgetName = widgetName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     @Column(nullable = false)
@@ -112,15 +112,15 @@ public class DashboardWidget extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DashboardWidget)) return false;
+        if (!(o instanceof Report)) return false;
 
-        DashboardWidget that = (DashboardWidget) o;
+        Report that = (Report) o;
 
-        return widgetName.equals(that.widgetName);
+        return shortName.equals(that.shortName);
     }
 
     @Override
     public int hashCode() {
-        return widgetName.hashCode();
+        return shortName.hashCode();
     }
 }

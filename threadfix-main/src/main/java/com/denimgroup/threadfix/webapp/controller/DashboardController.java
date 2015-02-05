@@ -71,7 +71,7 @@ public class DashboardController {
     @Autowired
     private FilterJsonBlobService filterJsonBlobService;
     @Autowired
-    private DashboardWidgetService dashboardWidgetService;
+    private ReportService reportService;
     @Autowired
     private CacheBustService cacheBustService;
 
@@ -81,7 +81,7 @@ public class DashboardController {
 	public String index(Model model, HttpServletRequest request) {
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
-        List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadByIds(config.getDashboardWidgetIds());
+        List<Report> reports = reportService.loadByIds(config.getDashboardReportIds());
         List<Organization> organizationList = organizationService.loadAllActiveFilter();
 
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
@@ -89,8 +89,8 @@ public class DashboardController {
 		model.addAttribute("recentScans", scanService.loadMostRecentFiltered(5));
 		model.addAttribute("teams", organizationList);
         model.addAttribute("config", config);
-        model.addAttribute("dashboardWidgets", dashboardWidgets);
-        model.addAttribute("reportJsPaths", cacheBustService.uncachedJsPaths(request, dashboardWidgets));
+        model.addAttribute("reports", reports);
+        model.addAttribute("reportJsPaths", cacheBustService.uncachedJsPaths(request, reports));
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {

@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.Report;
 
 import java.util.List;
 
@@ -32,18 +32,18 @@ import java.util.List;
  * @author zabdisubhan
  */
 
-public interface DashboardWidgetDao extends GenericNamedObjectDao<DashboardWidget> {
+public interface ReportDao extends GenericNamedObjectDao<Report> {
 
-    List<DashboardWidget> retrieveByIds(List<Integer> dashboardWidgetIds);
+    List<Report> retrieveByIds(List<Integer> reportIds);
 
-    List<DashboardWidget> retrieveAllAvailable();
+    List<Report> retrieveAllAvailable();
 
-    List<DashboardWidget> retrieveAllNativeReports();
+    List<Report> retrieveAllNativeReports();
 
-    List<DashboardWidget> retrieveAllNonNativeReports();
+    List<Report> retrieveAllNonNativeReports();
 
-    void delete(DashboardWidget dashboardWidget);
+    void delete(Report report);
 
-    void delete(Integer dashboardWidgetId);
+    void delete(Integer reportId);
 
 }
