@@ -38,7 +38,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -69,24 +68,13 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		LOG.info("Retrieving a WhiteHat scan.");
 
 		apiKey = remoteProviderApplication.getRemoteProviderType().getApiKey();
-
-        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey);
-
-		InputStream labelSiteIdStream;
-		if (response.isValid()) {
-            labelSiteIdStream = response.getInputStream();
-        } else {
-			LOG.warn("Received a " + response.getStatus() + " status code from WhiteHat servers while trying " +
-                    "to get scans for " + remoteProviderApplication.getNativeName() + ", returning null.");
-			return null;
-		}
 		
 		String appName = remoteProviderApplication.getNativeName();
-		
-		WhiteHatSitesParser parser = new WhiteHatSitesParser();
-		
-		parse(labelSiteIdStream, parser);
-		
+
+		// TODO take these calls out entirely and save the data in the RemoteProviderApplication object instead
+		// we need to follow through with this pagination too.
+		WhiteHatSitesParser parser = getParserWithAllApps();
+
 		String siteId = parser.map.get(appName);
 		if (siteId == null) {
 			LOG.warn("No build ID was parsed.");
@@ -99,7 +87,7 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 		
 		LOG.info("Requesting site ID " + siteId);
 
-        response = utils.getUrl(url);
+        HttpResponse response = utils.getUrl(url);
         if (response.isValid()) {
             inputStream = response.getInputStream();
         } else {
@@ -176,24 +164,33 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
 
 		apiKey = remoteProviderType.getApiKey();
 
-        int pageOffset = 0;
-        String paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
-		
+		WhiteHatSitesParser parser = getParserWithAllApps();
+		if (parser == null) {
+			return null;
+		}
+
+		return parser.getApplications();
+	}
+
+	private WhiteHatSitesParser getParserWithAllApps() {
+		int pageOffset = 0;
+		String paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
+
 		WhiteHatSitesParser parser = new WhiteHatSitesParser();
 
-        HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
+		HttpResponse response = utils.getUrl(SITES_URL + "?key=" + apiKey + paginationSettings);
 
-        if (response.isValid()) {
-		    parse(response.getInputStream(), parser);
+		if (response.isValid()) {
+            parse(response.getInputStream(), parser);
         } else {
             LOG.error("Unable to retrieve applications due to " + response.getStatus() +
                     " response status from WhiteHat servers.");
-            return null;
+			return null;
         }
 
-        int totalSitesAvailable = parser.getTotalSites();
+		int totalSitesAvailable = parser.getTotalSites();
 
-        while (parser.getApplications().size() < totalSitesAvailable) {
+		while (parser.getApplications().size() < totalSitesAvailable) {
             pageOffset += PAGE_LIMIT;
             paginationSettings = "&page:limit=" + PAGE_LIMIT + "&page:offset=" + pageOffset;
 
@@ -204,11 +201,10 @@ public class WhiteHatRemoteProvider extends AbstractRemoteProvider {
             } else {
                 LOG.error("Unable to retrieve applications due to " + response.getStatus() +
                         " response status from WhiteHat servers.");
-                return null;
+				return null;
             }
         }
-
-		return parser.getApplications();
+		return parser;
 	}
 
 	/**
