@@ -36,6 +36,10 @@ import com.denimgroup.threadfix.importer.util.IntegerUtils;
 import com.denimgroup.threadfix.importer.util.ScanUtils;
 import com.denimgroup.threadfix.importer.util.ZipFileUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +48,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
+import java.lang.annotation.Annotation;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
@@ -60,6 +65,11 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
     private boolean initialized = false;
 
+	private static final List<String> REMOTE_PROVIDERS = Arrays.asList(
+			"QualysGuard WAS",
+			"Veracode",
+			"Contrast");
+
     @Autowired
 	private ApplicationDao applicationDao;
     @Autowired
@@ -74,6 +84,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         String returnValue = getScannerType(file.getOriginalFilename(), TEMP_FILE_NAME);
 
         deleteFile(TEMP_FILE_NAME);
+
+		if (REMOTE_PROVIDERS.contains(returnValue)) {
+			throw new RestIOException("Import " + returnValue + " scans using the Remote Provider functionality.", -1);
+		}
 
         return returnValue;
 	}
@@ -91,8 +105,7 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
         if (ScanUtils.isZip(fileName)) {
             returnString = figureOutZip(fileName);
         } else if (originalName.endsWith("json")){
-            //probably brakeman
-            returnString = ScannerType.BRAKEMAN.getFullName();
+			returnString = figureOutJson(fileName);
         } else if (originalName.endsWith(".html")) {
             //probably clang
             returnString = ScannerType.CLANG.getFullName();
@@ -116,6 +129,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
     }
 
     private static final Set<Entry<String, String[]>> map = new HashSet<>();
+	private static final Set<Entry<String, Annotation>> jsonMap = new HashSet<>();
+	private static void addToJSONMap(String name, Annotation annotation) {
+		jsonMap.add(new SimpleEntry<>(name, annotation));
+	}
     private static void addToMap(String name, String... tags) {
         map.add(new SimpleEntry<>(name, tags));
     }
@@ -129,6 +146,17 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
         for (Entry<Class<?>, ScanImporter> entry : typeMap.entrySet()) {
             ScanImporter annotation = entry.getValue();
+
+			if (annotation.format() == ScanFormat.JSON) {
+				boolean addedEntry = false;
+
+				if (annotation.jsonStructure() != ScanImporter.JSONStructure.NONE) {
+					addToJSONMap(annotation.scannerName(), annotation);
+					addedEntry = true;
+				}
+
+				assert addedEntry : "Failed to add an JSON path for scanner " + annotation.scannerName();
+			}
 
             if (annotation.format() == ScanFormat.XML) {
                 boolean addedEntry = false;
@@ -190,6 +218,55 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
             throw new RestIOException(e, "Unable to determine scan type.");
 		}
 	}
+
+	private String figureOutJson(String filename) {
+		String result = null;
+		JSONObject jsonObject = null;
+		JSONArray jsonArray = null;
+
+		try {
+			String jsonInput = IOUtils.toString(new FileInputStream(filename));
+			if ('[' == (jsonInput.trim().charAt(0))) {
+				jsonArray = new JSONArray(jsonInput);
+			} else if ('{' == (jsonInput.trim().charAt(0))) {
+				jsonObject = new JSONObject(jsonInput);
+			}
+		} catch (JSONException | IOException e) {
+			log.debug("Error attempting to determine first element type of JSON input.", e);
+		}
+
+		for (Entry<String, Annotation> entry : jsonMap) {
+			ScanImporter scanImporter = (ScanImporter) entry.getValue();
+
+			if (jsonObject != null && scanImporter.jsonStructure() == ScanImporter.JSONStructure.OBJECT) {
+				if (matchProperties(scanImporter.jsonProperties(), jsonObject)) {
+					result = entry.getKey();
+				}
+			} else if (jsonArray != null && scanImporter.jsonStructure() == ScanImporter.JSONStructure.LIST_OF_OBJECTS) {
+				try {
+					jsonObject = jsonArray.getJSONObject(0);
+				} catch (JSONException e) {
+					log.debug("Unable to get first object from JSON array. Check file format.", e);
+				}
+
+				if (matchProperties(scanImporter.jsonProperties(), jsonObject)) {
+					result =  entry.getKey();
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private boolean matchProperties(String[] properties ,JSONObject jsonObject) {
+		for (String property : properties) {
+			if (!jsonObject.has(property)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	private String getType(List<String> scanTags) {
 		
