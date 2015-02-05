@@ -28,22 +28,36 @@ import org.apache.log4j.Logger;
 import org.parosproxy.paros.extension.ViewDelegate;
 
 public class ConfigurationDialogs {
+
+    public static enum DialogMode {
+        THREADFIX_APPLICATION, SOURCE;
+    }
 	
 	private static final Logger logger = Logger.getLogger(ConfigurationDialogs.class);
 
 	private ConfigurationDialogs() {}
 	
-	public static boolean show(ViewDelegate view) {
-		logger.info("About to show dialog.");
+	public static boolean show(ViewDelegate view, DialogMode mode) {
+        if (mode == DialogMode.THREADFIX_APPLICATION) {
+            logger.info("About to show dialog.");
 
-        boolean shouldContinue = ParametersDialog.show(view);
-        
-        if (shouldContinue) {
-            logger.info("Got url and key settings. About to show Application selection.");
-	
-            shouldContinue = ApplicationDialog.show(view);
+            boolean shouldContinue = ParametersDialog.show(view);
+
+            if (shouldContinue) {
+                logger.info("Got url and key settings. About to show Application selection.");
+
+                shouldContinue = ApplicationDialog.show(view);
+            }
+
+            return shouldContinue;
+        } else if (mode == DialogMode.SOURCE) {
+            logger.info("About to show dialog.");
+
+            boolean shouldContinue = SourceDialog.show(view);
+
+            return shouldContinue;
+        } else {
+            return false;
         }
-        
-        return shouldContinue;
 	}
 }

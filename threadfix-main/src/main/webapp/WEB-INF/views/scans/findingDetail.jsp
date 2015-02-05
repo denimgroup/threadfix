@@ -108,10 +108,10 @@
 			</c:if>
 			<c:if test="${ not empty finding.dependency }">			
 				<tr>
-					<td class="bold">CVE ID</td>
+					<td class="bold">Reference</td>
 					<td class="inputValue" id="dependency">
-						<c:out value="${ finding.dependency.cve } "/>
-						(<a target="_blank" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=<c:out value="${ finding.dependency.cve }"/>">View</a>)
+						<c:out value="${ finding.dependency.refId } "/>
+						(<a target="_blank" href="<c:out value="${ finding.dependency.refLink }"/>">View</a>)
 					</td>	
 				</tr>
                 <tr>
