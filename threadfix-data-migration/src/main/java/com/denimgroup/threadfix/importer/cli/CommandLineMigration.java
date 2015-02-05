@@ -54,7 +54,6 @@ public class CommandLineMigration {
         if (!check(args))
             return;
 
-        PrintStream errPrintStream = null;
         try {
             String inputScript = args[0];
             String inputMySqlConfig = args[1];
@@ -74,10 +73,6 @@ public class CommandLineMigration {
             deleteFile(infoLogFile);
             deleteFile(rollbackScript);
 
-            errPrintStream = new PrintStream(new FileOutputStream(new File(errorLogFile)));
-
-            System.setErr(errPrintStream);
-
             PrintStream infoPrintStream = new PrintStream(new FileOutputStream(new File(infoLogFile)));
             System.setOut(infoPrintStream);
 
@@ -92,6 +87,10 @@ public class CommandLineMigration {
             convert(inputScript, outputScript);
 
             startTime = printTimeConsumed(startTime);
+
+            PrintStream errPrintStream = new PrintStream(new FileOutputStream(new File(errorLogFile)));
+            System.setErr(errPrintStream);
+
 
             LOGGER.info("Sending sql script to MySQL server ...");
             scriptRunner.run(outputScript, outputMySqlConfigTemp);
@@ -133,44 +132,43 @@ public class CommandLineMigration {
             fos = new FileOutputStream(outputFile);
 
 
-        OutputStreamWriter osw = new OutputStreamWriter(fos);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
 
-        List<String> lines = FileUtils.readLines(file);
+            List<String> lines = FileUtils.readLines(file);
 
-        osw.write("SET FOREIGN_KEY_CHECKS=0;\n");
+            osw.write("SET FOREIGN_KEY_CHECKS=0;\n");
 
-        String table;
-        for (String line : lines) {
-            if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
-                table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
-                System.out.println("Create new table:" + table);
-                String[] tableName = table.split("\\(", 2);
-                if (tableName.length == 2) {
-                    StringBuffer fieldsStr = new StringBuffer();
-                    String[] fields = tableName[1].trim().split(",");
-                    fieldsStr.append(fields[0].split(" ")[0]);
-                    for (int i = 1; i< fields.length; i++) {
-                        if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
-                            fieldsStr.append(", " + fields[i].trim().split(" ")[0]);
+            String table;
+            for (String line : lines) {
+                if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
+                    table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
+                    System.out.println("Create new table:" + table);
+                    String[] tableName = table.split("\\(", 2);
+                    if (tableName.length == 2) {
+                        StringBuffer fieldsStr = new StringBuffer();
+                        String[] fields = tableName[1].trim().split(",");
+                        fieldsStr.append(fields[0].split(" ")[0]);
+                        for (int i = 1; i< fields.length; i++) {
+                            if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
+                                fieldsStr.append(", " + fields[i].trim().split(" ")[0]);
+                        }
+                        tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
                     }
-                    tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
-                }
-            } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
-                table = RegexUtils.getRegexResult(line, INSERT_PATTERN);
-                if (tableMap.get(table) != null) {
-                    line = line.replaceFirst(" " + table + " ", " " + table + tableMap.get(table) + " ");
-                    if (line.contains(ACUNETIX_ESCAPE)) {
-                        line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
-                    }
-                    line = escapeString(line) + ";\n";
+                } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
+                    table = RegexUtils.getRegexResult(line, INSERT_PATTERN);
+                    if (tableMap.get(table) != null) {
+                        line = line.replaceFirst(" " + table + " ", " " + table + tableMap.get(table) + " ");
+                        if (line.contains(ACUNETIX_ESCAPE)) {
+                            line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
+                        }
+                        line = escapeString(line) + ";\n";
 
-                    osw.write(line);
+                        osw.write(line);
+                    }
                 }
             }
-        }
-        osw.write("SET FOREIGN_KEY_CHECKS=1;\n");
-
-        osw.close();
+            osw.write("SET FOREIGN_KEY_CHECKS=1;\n");
+            osw.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
