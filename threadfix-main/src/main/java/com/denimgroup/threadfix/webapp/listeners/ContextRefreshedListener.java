@@ -26,9 +26,11 @@ package com.denimgroup.threadfix.webapp.listeners;
 
 import com.denimgroup.threadfix.annotations.ReportPlugin;
 import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.importer.loader.AnnotationLoader;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.service.DashboardWidgetService;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -51,12 +53,78 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     @Autowired
     private DashboardWidgetService dashboardWidgetService;
 
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+
+    private DashboardWidget createAndSaveDashboardWidget(Boolean nativeReport, String widgetName, String displayName,
+                                              String jspFilePath) {
+        return createAndSaveDashboardWidget(nativeReport, widgetName, displayName, jspFilePath, null);
+    }
+
+    private DashboardWidget createAndSaveDashboardWidget(Boolean nativeReport, String widgetName, String displayName,
+                                              String jspFilePath, String jsFilePath) {
+        DashboardWidget dashboardWidget = new DashboardWidget();
+
+        dashboardWidget.setAvailable(true);
+        dashboardWidget.setNativeReport(nativeReport);
+        dashboardWidget.setWidgetName(widgetName);
+        dashboardWidget.setDisplayName(displayName);
+        dashboardWidget.setJspFilePath(jspFilePath);
+
+        if(jsFilePath != null && !jsFilePath.isEmpty()) {
+            dashboardWidget.setJsFilePath(jsFilePath);
+        }
+
+        log.info("Storing new Dashboard Widget [" + dashboardWidget.getDisplayName() + "].");
+        dashboardWidgetService.store(dashboardWidget);
+
+        return dashboardWidget;
+    }
+
+    private void addNativeDashboardWidgets() {
+
+        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+
+        config.setDashboardTopLeftId(createAndSaveDashboardWidget(
+                true,
+                "vulnerabilityTrending",
+                "Vulnerability Trending",
+                "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
+                "/scripts/left-report-controller.js").getId());
+
+        config.setDashboardTopRightId(createAndSaveDashboardWidget(
+                true,
+                "mostVulnerableApps",
+                "Most Vulnerable Applications",
+                "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
+                "/scripts/right-report-controller.js").getId());
+
+        config.setDashboardBottomLeftId(createAndSaveDashboardWidget(
+                true,
+                "recentUploads",
+                "Recent Uploads",
+                "/WEB-INF/views/applications/widgets/recentUploads.jsp").getId());
+
+        config.setDashboardBottomRightId(createAndSaveDashboardWidget(
+                true,
+                "recentComments",
+                "Recent Comments",
+                "/WEB-INF/views/applications/widgets/recentComments.jsp").getId());
+
+        defaultConfigService.saveConfiguration(config);
+        log.info("Setting native Dashboard Widgets positions in Default Configuration.");
+    }
+
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         if(!dashboardWidgetService.isInitialized()) {
 
             dashboardWidgetService.setInitialized(true);
+
+            if (dashboardWidgetService.loadAllNativeReports().size() == 0) {
+                addNativeDashboardWidgets();
+            }
 
             List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAllNonNativeReports();
             Map<DashboardWidget, Boolean> availableReportPlugins = newMap();
@@ -109,20 +177,11 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                     continue;
                 }
 
-                DashboardWidget dashboardWidget = new DashboardWidget();
-
-                dashboardWidget.setAvailable(true);
-                dashboardWidget.setNativeReport(false);
-                dashboardWidget.setWidgetName(annotation.reportName());
-                dashboardWidget.setDisplayName(annotation.displayName());
-                dashboardWidget.setJspFilePath(annotation.jspRelFilePath());
-                dashboardWidget.setJsFilePath(annotation.jsRelFilePath());
-
-                log.info("Storing new Dashboard Widget [" + annotation.displayName() + "].");
-                dashboardWidgetService.store(dashboardWidget);
+                createAndSaveDashboardWidget(false, annotation.reportName(), annotation.displayName(),
+                        annotation.jspRelFilePath(), annotation.jsRelFilePath());
             }
 
-            // set dashboard reports' availability that were not found in annotations to false
+            // set dashboard reports" availability that were not found in annotations to false
             for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
                 if (!availableReportPlugins.get(dashboardWidget)) {
                     if (dashboardWidget.getAvailable()) {
