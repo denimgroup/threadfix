@@ -291,6 +291,62 @@
             </div>
         </div>
 
+		<div class="panel panel-default">
+            <div id="defaultDashboardSettingsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDashboardSettings = !editDashboardSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editDashboardSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editDashboardSettings" class="icon icon-chevron-down"></span>
+                    Dashboard Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editDashboardSettings">
+                <table>
+                    <tr>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Left</b>
+                            </div>
+                            <div>
+                                <form:select id="dashboardTopLeftSelect" path="dashboardTopLeftId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Right</b>
+                            </div>
+                            <div>
+                                <form:select id="dashboardTopRightSelect" path="dashboardTopRightId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Bottom Left</b>
+                            </div>
+                            <div>
+                                <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeftId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Bottom Right</b>
+                            </div>
+                            <div>
+                                <form:select id="dashboardBottomRightSelect" path="dashboardBottomRightId">
+                                    <form:options items="${ dashboardWidgets }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
 		<br/>
 		<button ng-disabled="form.$invalid" class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
 	</form:form>
