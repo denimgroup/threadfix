@@ -133,11 +133,6 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>${jdbc.groupId}</groupId>
-            <artifactId>${jdbc.artifactId}</artifactId>
-            <version>${jdbc.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>${apache.activemq.version}</version>
@@ -343,6 +338,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
             <version>${springsecurity.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

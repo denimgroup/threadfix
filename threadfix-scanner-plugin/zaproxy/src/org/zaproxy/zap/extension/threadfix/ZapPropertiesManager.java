@@ -33,6 +33,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.parosproxy.paros.Constant;
+
 /**
  * Created by mac on 9/23/13.
  */
@@ -49,6 +51,7 @@ public class ZapPropertiesManager extends PropertiesManager {
             API_KEY_KEY = "key",
             URL_KEY = "url",
             APP_ID_KEY = "application-id",
+            SOURCE_FOLDER_KEY = "source-folder",
             SAVE_MESSAGE = "Saving ZAP properties.";
 
     @Override
@@ -72,6 +75,12 @@ public class ZapPropertiesManager extends PropertiesManager {
         return url;
     }
 
+    public String getSourceFolder() {
+        String sourceFolder = getProperties().getProperty(SOURCE_FOLDER_KEY);
+        logger.info("returning source code folder " + sourceFolder);
+        return sourceFolder;
+    }
+
     public static void setKeyAndUrl(String newKey, String newUrl) {
         Properties properties = getProperties();
         properties.setProperty(API_KEY_KEY, newKey);
@@ -85,10 +94,16 @@ public class ZapPropertiesManager extends PropertiesManager {
         saveProperties(properties);
     }
 
+    public static void setSourceFolder(String sourceFolder) {
+        Properties properties = getProperties();
+        properties.setProperty(SOURCE_FOLDER_KEY, sourceFolder);
+        saveProperties(properties);
+    }
+
     private static Properties getProperties() {
         Properties properties = new Properties();
 
-        File file = new File(FILE_NAME);
+        File file = new File(Constant.getZapHome(), FILE_NAME);
 
         logger.info("Properties file is at " + file.getAbsolutePath());
 
@@ -116,7 +131,7 @@ public class ZapPropertiesManager extends PropertiesManager {
     }
 
     private static void saveProperties(Properties properties) {
-        try (FileWriter writer = new FileWriter(new File(FILE_NAME))) {
+        try (FileWriter writer = new FileWriter(new File(Constant.getZapHome(), FILE_NAME))) {
             properties.store(writer, SAVE_MESSAGE);
         } catch (IOException e) {
             logger.warn(e.getMessage(), e);

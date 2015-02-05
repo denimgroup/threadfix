@@ -1,0 +1,9 @@
+<%
+  total_vulns = format_measure('threadfix-total-vulns')
+
+%>
+
+<div class="dashbox">
+    <h3>ThreadFix Statistics for <%= @project.name %></h3>
+    <h3><%= total_vulns  %> Total Vulnerabilities</h3>
+</div>

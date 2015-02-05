@@ -21,32 +21,17 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
+package com.denimgroup.threadfix.sonarplugin.profiles;
 
-package com.denimgroup.threadfix.importer.config;
+import org.sonar.api.config.Settings;
+import org.sonar.api.profiles.XMLProfileParser;
+import org.sonar.api.resources.Languages;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
-
-@Configuration
-@PropertySource("classpath:/jdbc.properties")
-@ImportResource({"classpath:/offline-context.xml", "classpath:/applicationContext-hibernate.xml"})
-public class SpringConfiguration {
-
-    private static AnnotationConfigApplicationContext context = null;
-
-    public static AnnotationConfigApplicationContext getContext() {
-        if (context == null) {
-            context = new AnnotationConfigApplicationContext();
-            context.register(SpringConfiguration.class);
-            context.refresh();
-        }
-        return context;
+/**
+ * Created by mcollins on 2/4/15.
+ */
+public class WebProfile extends AbstractTFQualityProfile {
+    public WebProfile(Settings settings, Languages languages, XMLProfileParser parser) {
+        super(settings, languages, parser, "web");
     }
-
-    public static <T> T getSpringBean(Class<T> targetClass) {
-        return getContext().getBean(targetClass);
-    }
-
 }

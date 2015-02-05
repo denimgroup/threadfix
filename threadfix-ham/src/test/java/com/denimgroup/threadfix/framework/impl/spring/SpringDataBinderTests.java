@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 // TODO add more tests?
 public class SpringDataBinderTests {

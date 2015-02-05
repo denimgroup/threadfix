@@ -32,7 +32,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <finalName>threadfix-release-1</finalName>
+                    <finalName>${zap.extension.fullname}</finalName>
                 </configuration>
                 <executions>
                     <execution>
@@ -50,22 +50,35 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly/zap.xml</descriptor>
+                    </descriptors>
+                    <finalName>${zap.extension.fullname}</finalName>
+                </configuration>
                 <executions>
                     <execution>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>test</mainClass>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>PackageRename</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="target/${zap.extension.fullname}-zap.jar" tofile="target/${zap.extension.fullname}.zap"/>
+                            </tasks>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -320,9 +333,19 @@
             <artifactId>threadfix-entities</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.denimgroup.threadfix</groupId>
+            <artifactId>threadfix-ham</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>
+        <zap.extension.name>threadfix</zap.extension.name>
+        <zap.extension.type>release</zap.extension.type>
+        <zap.extension.version>2</zap.extension.version>
+        <zap.extension.fullname>${zap.extension.name}-${zap.extension.type}-${zap.extension.version}</zap.extension.fullname>
+
         <db.name>stonemill</db.name>
 
         <!-- Framework dependency versions -->

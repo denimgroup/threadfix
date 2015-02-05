@@ -48,6 +48,11 @@ public class PluginClient {
         propertiesManager.setMemoryKey(key);
         propertiesManager.setUrl(url);
         httpRestUtils = new HttpRestUtils(propertiesManager);
+
+        String baseUrl = httpRestUtils.propertiesManager.getUrl();
+        if (!baseUrl.endsWith("/")) {
+            httpRestUtils.propertiesManager.setUrl(baseUrl + "/");
+        }
     }
 
     public PluginClient(PropertiesManager manager) {
