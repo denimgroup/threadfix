@@ -1,4 +1,4 @@
-var threadfixModule = angular.module('threadfix');
+var threadfixModule = angular.module('threadfix')
 
 threadfixModule.factory('reportExporter', function($log) {
 
@@ -14,11 +14,10 @@ threadfixModule.factory('reportExporter', function($log) {
         if(urlCreator) {
             // Try to use a download link
             var link = document.createElement("a");
-            var blob, url;
             if ("download" in link) {
                 // Prepare a blob URL
-                blob = new Blob([data], { type: contentType });
-                url = urlCreator.createObjectURL(blob);
+                var blob = new Blob([data], { type: contentType });
+                var url = urlCreator.createObjectURL(blob);
                 link.setAttribute("href", url);
 
                 // Set the download attribute (Supported in Chrome 14+ / Firefox 20+)
@@ -34,8 +33,8 @@ threadfixModule.factory('reportExporter', function($log) {
             } else {
                 // Prepare a blob URL
                 // Use application/octet-stream when using window.location to force download
-                blob = new Blob([data], { type: octetStreamMime });
-                url = urlCreator.createObjectURL(blob);
+                var blob = new Blob([data], { type: octetStreamMime });
+                var url = urlCreator.createObjectURL(blob);
                 window.location = url;
 
                 $log.info("window.location Success");
@@ -118,7 +117,7 @@ threadfixModule.factory('reportExporter', function($log) {
                     }
                 }
             }
-        }
+        };
 
         var s = document.createElement('style');
         s.setAttribute('type', 'text/css');
@@ -139,17 +138,17 @@ threadfixModule.factory('d3Service', function() {
     d3Service.getColorScale = function(d3, range) {
         return d3.scale.ordinal()
             .range(range);
-    };
+    }
 
     d3Service.getScaleOrdinalRangeBand = function(d3, range, scale) {
         return d3.scale.ordinal()
             .rangeRoundBands(range, scale);
-    };
+    }
 
     d3Service.getScaleLinearRange = function(d3, range) {
         return d3.scale.linear()
             .rangeRound(range);
-    };
+    }
 
     d3Service.getAxis = function(d3, scale, orient) {
         return  d3.svg.axis()
@@ -167,7 +166,7 @@ threadfixModule.factory('d3Service', function() {
         return d3.select(elementId).append("svg")
             .attr("width", w)
             .attr("height", h);
-    };
+    }
 
     d3Service.getExistingSvg = function(d3, elementId, w, h) {
         var svgs = d3.select(elementId).selectAll("svg");
@@ -176,14 +175,14 @@ threadfixModule.factory('d3Service', function() {
         return d3.select(elementId).append("svg")
             .attr("width", w)
             .attr("height", h);
-    };
+    }
 
     d3Service.getTip = function(d3, clazz, offset, tipId) {
         return d3.tip()
             .attr('class', clazz)
             .attr('id', tipId)
             .offset(offset);
-    };
+    }
 
     return d3Service;
 
@@ -227,22 +226,20 @@ threadfixModule.factory('reportUtilities', function() {
     var drawingDuration = 500;
 
     reportUtilities.drawTitle = function(svg, w, label, title, y) {
-        var teams, apps, tags, i = 0;
-
+        var teams, apps, tags;
         if (label) {
             teams = label.teams;
             apps = label.apps;
             tags = label.tags;
         }
-
         svg.append("g")
             .append("text")
             .attr("x", w/2)
             .attr("y", y)
             .attr("class", "header")
             .attr("id", title+"_Title")
-            .text(title);
-
+            .text(title)
+        var i = 0;
         if (teams) {
             svg.append("g")
                 .append("text")
@@ -253,7 +250,6 @@ threadfixModule.factory('reportUtilities', function() {
                 .text("Team: " + teams);
             i++;
         }
-
         if (apps) {
             svg.append("g")
                 .append("text")
@@ -264,7 +260,6 @@ threadfixModule.factory('reportUtilities', function() {
                 .text("Application: " + apps);
             i++;
         }
-
         if (tags) {
             svg.append("g")
                 .append("text")
@@ -274,11 +269,12 @@ threadfixModule.factory('reportUtilities', function() {
                 .attr("id", title+"_Tags")
                 .text("Tags: " + tags)
         }
-    };
+    }
 
     reportUtilities.createTeamAppNames = function($scope) {
-        var teams, apps, tags, i;
-
+        var teams;
+        var apps;
+        var tags;
         if ($scope.parameters.teams && $scope.parameters.applications)
             if ($scope.parameters.teams.length === 0
                 && $scope.parameters.applications.length === 0) {
@@ -288,6 +284,7 @@ threadfixModule.factory('reportUtilities', function() {
                 if ($scope.parameters.teams.length > 0) {
                     teams = $scope.parameters.teams[0].name;
                 }
+                var i;
                 for (i=1; i<$scope.parameters.teams.length; i++) {
                     teams += ", " + $scope.parameters.teams[i].name;
                 }
@@ -307,6 +304,7 @@ threadfixModule.factory('reportUtilities', function() {
                 if ($scope.parameters.tags.length > 0) {
                     tags = $scope.parameters.tags[0].name;
                 }
+                var i;
                 for (i=1; i<$scope.parameters.tags.length; i++) {
                     tags += ", " + $scope.parameters.tags[i].name;
                 }
@@ -318,7 +316,7 @@ threadfixModule.factory('reportUtilities', function() {
         $scope.title.teams = teams;
         $scope.title.apps = apps;
         $scope.title.tags = tags;
-    };
+    }
 
     reportUtilities.drawTable = function(d3, tableData, divId) {
 
@@ -347,7 +345,7 @@ threadfixModule.factory('reportUtilities', function() {
             .enter().append("td")
             .attr("id", function(d, index){return index})
             .text(function(d) {return d});
-    };
+    }
 
     return reportUtilities;
 
@@ -390,9 +388,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
 
     trendingUtilities.updateDisplayData = function($scope){
         var hashBefore, hashAfter;
-        firstHashInList = null;
-        lastHashInList = null;
-
+        firstHashInList = null, lastHashInList = null;
         reportUtilities.createTeamAppNames($scope);
         $scope.trendingScansData = [];
         $scope.totalVulnsByChannelMap = {};
@@ -401,7 +397,6 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         $scope.mediumVulnsByChannelMap = {};
         $scope.highVulnsByChannelMap = {};
         $scope.criticalVulnsByChannelMap = {};
-
         if (startIndex!==-1 && endIndex!==-1) {
             $scope.filterScans.forEach(function(scan, index){
                 var _scan = trendingUtilities.filterDisplayData(scan, $scope);
@@ -433,14 +428,11 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         };
         if ($scope.trendingScansData.length===0)
             return startHash;
-
         firstHashInList = $scope.trendingScansData[0];
 
-        var keys;
-
         if (!hashBefore) {
-            startHash.importTime = $scope.trendingStartDate;
-            keys = Object.keys(firstHashInList);
+            startHash.importTime=  $scope.trendingStartDate;
+            var keys = Object.keys(firstHashInList);
             keys.forEach(function(key){
                 if (key != "importTime")
                     startHash[key] = 0;
@@ -449,20 +441,18 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         } else {
             var rate1 = (firstHashInList.importTime)-(hashBefore.importTime);
             var rate2 = $scope.trendingStartDate-(hashBefore.importTime);
-
-            startHash.importTime = $scope.trendingStartDate;
-
-            keys = Object.keys(firstHashInList);
+            startHash.importTime=  $scope.trendingStartDate;
+            var keys = Object.keys(firstHashInList);
             keys.forEach(function(key){
                 if (key != "importTime") {
-                    startHash[key] = Math.round(hashBefore[key] +
-                        (firstHashInList[key] - hashBefore[key]) / rate1 * rate2);
+                    var value = Math.round(hashBefore[key] + (firstHashInList[key] - hashBefore[key]) / rate1 * rate2);
+                    startHash[key] = value;
                 }
             });
             firstHashInList = hashBefore;
         }
         return startHash;
-    };
+    }
 
     var createEndHash = function(hashAfter, $scope) {
         var endHash = {
@@ -470,14 +460,11 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         };
         if ($scope.trendingScansData.length===0)
             return endHash;
-
         lastHashInList = $scope.trendingScansData[$scope.trendingScansData.length-1];
-
-        var keys;
 
         if (!hashAfter) {
             endHash.importTime=  $scope.trendingEndDate;
-            keys = Object.keys(lastHashInList);
+            var keys = Object.keys(lastHashInList);
             keys.forEach(function(key){
                 if (key != "importTime")
                     endHash[key] = lastHashInList[key];
@@ -485,41 +472,35 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
         } else {
             var rate1 = (hashAfter.importTime)-(lastHashInList.importTime);
             var rate2 = $scope.trendingEndDate-(hashAfter.importTime);
-
-            endHash.importTime = $scope.trendingEndDate;
-
-            keys = Object.keys(lastHashInList);
+            endHash.importTime=  $scope.trendingEndDate;
+            var keys = Object.keys(lastHashInList);
             keys.forEach(function(key){
                 if (key != "importTime") {
-                    endHash[key] = Math.round(lastHashInList[key] +
-                        (hashAfter[key] - lastHashInList[key]) / rate1 * rate2);
+                    var value = Math.round(lastHashInList[key] + (hashAfter[key] - lastHashInList[key]) / rate1 * rate2);
+                    endHash[key] = value;
                 }
             });
         }
         return endHash;
-    };
+    }
 
     trendingUtilities.filterDisplayData = function(scan, $scope) {
         var data = {};
         data.importTime = scan.importTime;
-        if ($scope.parameters.showNew) {
+        if ($scope.parameters.showNew)
             data.New = scan.numberNewVulnerabilities;
-        }
-        if ($scope.parameters.showResurfaced){
+        if ($scope.parameters.showResurfaced)
             data.Resurfaced = scan.numberResurfacedVulnerabilities;
-        }
         if ($scope.parameters.showTotal) {
             data.Total = calculateTotal(scan, $scope);
         }
-        if ($scope.parameters.showClosed){
+        if ($scope.parameters.showClosed)
             data.Closed = scan.numberClosedVulnerabilities;
-        }
-        if ($scope.parameters.showOld) {
+        if ($scope.parameters.showOld)
             data.Old = scan.numberOldVulnerabilities;
-        }
-        if ($scope.parameters.showHidden) {
+        if ($scope.parameters.showHidden)
             data.Hidden = scan.numberHiddenVulnerabilities;
-        }
+
         if ($scope.parameters.severities.info) {
             data.Info = calculateInfo(scan, $scope);
         }
@@ -536,34 +517,34 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             data.Critical = calculateCritical(scan, $scope);
         }
         return data;
-    };
+    }
 
     var calculateTotal = function(scan, $scope) {
         var adjustedTotal = scan.numberTotalVulnerabilities -
             scan.numberOldVulnerabilities +
             scan.numberOldVulnerabilitiesInitiallyFromThisChannel;
         return trendingTotal($scope.totalVulnsByChannelMap, scan, adjustedTotal);
-    };
+    }
 
     var calculateInfo = function(scan, $scope) {
         return trendingTotal($scope.infoVulnsByChannelMap, scan, scan.numberInfoVulnerabilities);
-    };
+    }
 
     var calculateLow = function(scan, $scope) {
         return trendingTotal($scope.lowVulnsByChannelMap, scan, scan.numberLowVulnerabilities);
-    };
+    }
 
     var calculateMedium = function(scan, $scope) {
         return trendingTotal($scope.mediumVulnsByChannelMap, scan, scan.numberMediumVulnerabilities);
-    };
+    }
 
     var calculateHigh = function(scan, $scope) {
         return trendingTotal($scope.highVulnsByChannelMap, scan, scan.numberHighVulnerabilities);
-    };
+    }
 
     var calculateCritical = function(scan, $scope) {
         return trendingTotal($scope.criticalVulnsByChannelMap, scan, scan.numberCriticalVulnerabilities);
-    };
+    }
 
     var trendingTotal = function(map, scan, newNum) {
         if (scan.applicationChannelId) {
@@ -580,7 +561,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             }
         }
         return numTotal;
-    };
+    }
 
     trendingUtilities.filterByTeamAndApp = function($scope) {
 
@@ -634,7 +615,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
                 $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 11, 1);
             } else if ($scope.parameters.daysOldModifier === "LastQuarter") {
                 $scope.trendingStartDate = new Date($scope.trendingEndDate.getFullYear(), $scope.trendingEndDate.getMonth() - 2, 1);
-            }
+            };
         } else {
             if ($scope.parameters.endDate) {
                 $scope.trendingEndDate = $scope.parameters.endDate;
@@ -642,7 +623,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             if ($scope.parameters.startDate) {
                 $scope.trendingStartDate = $scope.parameters.startDate;
             }
-        }
+        };
 
         if (!$scope.trendingStartDate) {
             startIndex = 0;
@@ -709,3 +690,4 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
 
     return trendingUtilities;
 });
+
