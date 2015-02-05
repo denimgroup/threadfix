@@ -234,6 +234,8 @@
                 protected-regex ^/configuration/scanqueue/scanQueueTask/[0-9]+/delete$,
         		protected-regex ^/configuration/scanqueue/organizations/[0-9]+/applications/[0-9]+/scanQueueTask/[0-9]+/delete$,
         		protected-regex ^/configuration/scanqueue/organizations/[0-9]+/applications/[0-9]+/addScanQueueTask$,
+                protected-regex ^/graphConfig$, protected-regex ^/graphConfig/table$, protected-regex ^/graphConfig/channels$,
+                protected-regex ^/graphConfig/data,
         	</param-value>
 		</init-param>
 	</filter>
