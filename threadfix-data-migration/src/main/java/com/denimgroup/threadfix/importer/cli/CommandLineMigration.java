@@ -31,10 +31,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -53,75 +50,134 @@ public class CommandLineMigration {
     private static Map<String, String> tableMap = newMap();
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if (!check(args))
             return;
 
-        PrintStream errPrintStream = new PrintStream(new FileOutputStream(new File("error.log")));
-        System.setErr(errPrintStream);
+        try {
+            String inputScript = args[0];
+            String inputMySqlConfig = args[1];
+            String outputScript = "import.sql";
+            String outputMySqlConfigTemp = "jdbc_temp.properties";
+            String errorLogFile = "error.log";
+            String fixedSqlFile = "error_sql.sql";
+            String errorLogAttemp1 = "error1.log";
+            String infoLogFile = "info.log";
+            String rollbackScript = "rollback.sql";
 
-        PrintStream infoPrintStream = new PrintStream(new FileOutputStream(new File("info.log")));
-        System.setOut(infoPrintStream);
+            deleteFile(outputScript);
+            deleteFile(errorLogFile);
+            deleteFile(errorLogFile);
+            deleteFile(fixedSqlFile);
+            deleteFile(errorLogAttemp1);
+            deleteFile(infoLogFile);
+            deleteFile(rollbackScript);
 
-        long startTime = System.currentTimeMillis();
+            PrintStream infoPrintStream = new PrintStream(new FileOutputStream(new File(infoLogFile)));
+            System.setOut(infoPrintStream);
 
-        String inputScript = args[0];
-        String inputMySqlConfig = args[1];
-        String outputScript = "import.sql";
-        String outputMySqlConfigTemp = "jdbc_temp.properties";
+            long startTime = System.currentTimeMillis();
 
-        copyFile(inputMySqlConfig, outputMySqlConfigTemp);
-        deleteFile(outputScript);
+            copyFile(inputMySqlConfig, outputMySqlConfigTemp);
 
-        ScriptRunner scriptRunner = SpringConfiguration.getContext().getBean(ScriptRunner.class);
+            LOGGER.info("Creating threadfix table in mySql database ...");
+            ScriptRunner scriptRunner = SpringConfiguration.getContext().getBean(ScriptRunner.class);
 
-        File file = new File(inputScript);
-        List<String> lines = FileUtils.readLines(file);
-        StringBuffer sqlContent = new StringBuffer();
-        sqlContent.append("SET FOREIGN_KEY_CHECKS=0;\n");
+            startTime = printTimeConsumed(startTime);
+            convert(inputScript, outputScript);
 
-        String table;
-        for (String line : lines) {
-            if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
-                table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
-                System.out.println("Create new table:" + table);
-                String[] tableName = table.split("\\(", 2);
-                if (tableName.length == 2) {
-                    StringBuffer fieldsStr = new StringBuffer();
-                    String[] fields = tableName[1].trim().split(",");
-                    fieldsStr.append(fields[0].split(" ")[0]);
-                    for (int i = 1; i< fields.length; i++) {
-                        if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
-                            fieldsStr.append(", " + fields[i].trim().split(" ")[0]);
-                    }
-                    tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
+            startTime = printTimeConsumed(startTime);
+
+            PrintStream errPrintStream = new PrintStream(new FileOutputStream(new File(errorLogFile)));
+            System.setErr(errPrintStream);
+
+
+            LOGGER.info("Sending sql script to MySQL server ...");
+            scriptRunner.run(outputScript, outputMySqlConfigTemp);
+
+            boolean isSuccess = scriptRunner.checkRunning(errorLogFile, fixedSqlFile);
+
+            if (!isSuccess) {
+                //Reset error log file
+                errPrintStream = new PrintStream(new FileOutputStream(new File(errorLogAttemp1)));
+                System.setErr(errPrintStream);
+
+                LOGGER.info("Found error statement. Sending fixed sql script to MySQL server ...");
+                scriptRunner.run(fixedSqlFile, outputMySqlConfigTemp);
+                if (!scriptRunner.checkRunning(errorLogAttemp1, fixedSqlFile)){
+                    scriptRunner.readErrorLog(errorLogAttemp1);
+                    rollbackData(scriptRunner, outputMySqlConfigTemp, rollbackScript);
+                }  else {
+                    printTimeConsumed(startTime);
+                    LOGGER.info("Migration successfully finished");
                 }
-            } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
-                table = RegexUtils.getRegexResult(line, INSERT_PATTERN);
-                if (tableMap.get(table) != null) {
-                    line = line.replaceFirst(" " + table + " ", " " + table + tableMap.get(table) + " ");
-                    if (line.contains(ACUNETIX_ESCAPE)) {
-                        line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
-                    }
-                    line = escapeString(line) + ";\n";
-
-                    sqlContent.append(line);
-                }
-
             }
+
+            deleteFile(outputMySqlConfigTemp);
+
+        } catch (Exception e) {
+            LOGGER.error("Error: ", e);
         }
-        sqlContent.append("SET FOREIGN_KEY_CHECKS=1;\n");
+    }
 
-        LOGGER.info("Saving sql script file to " + outputScript);
-        FileUtils.writeStringToFile(new File(outputScript), sqlContent.toString());
+    private static void convert(String inputScript, String outputScript) {
+        File file = new File(inputScript);
 
-        LOGGER.info("Sending sql script to MySQL server...");
-        boolean isSuccess = scriptRunner.run(outputScript, outputMySqlConfigTemp);
+        LOGGER.info("Converting threadfix script to mySql script " + outputScript + " ...");
 
-        deleteFile(outputMySqlConfigTemp);
-        if (isSuccess)
-            LOGGER.info("Migration finished in " + (System.currentTimeMillis() - startTime) + " ms");
+        File outputFile = new File(outputScript);
 
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(outputFile);
+
+
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+            List<String> lines = FileUtils.readLines(file);
+
+            osw.write("SET FOREIGN_KEY_CHECKS=0;\n");
+
+            String table;
+            for (String line : lines) {
+                if (line != null && line.toUpperCase().startsWith("CREATE MEMORY TABLE ")) {
+                    table = RegexUtils.getRegexResult(line, TABLE_PATTERN);
+                    System.out.println("Create new table:" + table);
+                    String[] tableName = table.split("\\(", 2);
+                    if (tableName.length == 2) {
+                        StringBuffer fieldsStr = new StringBuffer();
+                        String[] fields = tableName[1].trim().split(",");
+                        fieldsStr.append(fields[0].split(" ")[0]);
+                        for (int i = 1; i< fields.length; i++) {
+                            if (!"CONSTRAINT".equalsIgnoreCase(fields[i].trim().split(" ")[0]))
+                                fieldsStr.append(", " + fields[i].trim().split(" ")[0]);
+                        }
+                        tableMap.put(tableName[0].toUpperCase(), "(" + fieldsStr.toString() + ")");
+                    }
+                } else if (line != null && line.toUpperCase().startsWith("INSERT INTO ")) {
+                    table = RegexUtils.getRegexResult(line, INSERT_PATTERN);
+                    if (tableMap.get(table) != null) {
+                        line = line.replaceFirst(" " + table + " ", " " + table + tableMap.get(table) + " ");
+                        if (line.contains(ACUNETIX_ESCAPE)) {
+                            line = line.replace(ACUNETIX_ESCAPE, ACUNETIX_ESCAPE_REPLACE);
+                        }
+                        line = escapeString(line) + ";\n";
+
+                        osw.write(line);
+                    }
+                }
+            }
+            osw.write("SET FOREIGN_KEY_CHECKS=1;\n");
+            osw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static long printTimeConsumed(long startTime) {
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("Finished in " + (endTime - startTime) + " ms");
+        return endTime;
     }
 
     private static boolean check(String[] args) {
@@ -162,7 +218,6 @@ public class CommandLineMigration {
 
     private static String escapeString(String line) {
 
-
         if (line.toUpperCase().contains("INSERT INTO APPLICATION(")
                 || line.toUpperCase().contains("INSERT INTO DEFAULTCONFIGURATION(")
                 || line.toUpperCase().contains("INSERT INTO USER(")
@@ -180,4 +235,15 @@ public class CommandLineMigration {
 
         return line;
     }
+
+    private static void rollbackData(ScriptRunner runner, String jdbcConfig, String rollbackScript) {
+        try {
+            LOGGER.info("Rolling back data...");
+            FileUtils.writeStringToFile(new File(rollbackScript), "DROP DATABASE threadfix;");
+            runner.run(rollbackScript, jdbcConfig);
+        } catch (IOException e) {
+            LOGGER.error("Error", e);
+        }
+    }
+
 }
