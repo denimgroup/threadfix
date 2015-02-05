@@ -65,6 +65,7 @@ public class ThreadFixPlugin extends SonarPlugin {
                 CSharpProfile.class,
                 CssProfile.class,
                 FlexProfile.class,
+                GroovyProfile.class,
                 JavaProfile.class,
                 JavaScriptProfile.class,
                 ObjcProfile.class,
