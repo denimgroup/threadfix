@@ -196,7 +196,21 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
         List<Finding> findings = list();
         try {
-            String pathName = object.getString("pathnames");
+
+            if (!object.has("pathnames") || "null".equals(object.getString("pathnames")))
+                return findings;
+
+            Iterable<JSONObject> ite = toJSONObjectIterable(object.getString("pathnames"));
+
+            JSONArray jsonArray = object.getJSONArray("pathnames");
+            if (jsonArray.length() < 1)
+                return findings;
+
+            // Get only first component in the list
+            String pathName = jsonArray.getString(0);
+            pathName = pathName.replace("\\", "/");
+            String component = pathName.split("/")[pathName.split("/").length - 1];
+
             Map<FindingKey, String> findingMap = map (
                     FindingKey.PATH, pathName,
                     FindingKey.VULN_CODE, "Configuration"
@@ -217,7 +231,7 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
                     Dependency dependency = new Dependency();
                     dependency.setCve(issue.getString("reference"));
                     dependency.setSource(issue.getString("source"));
-                    dependency.setComponentName(pathName);
+                    dependency.setComponentName(component);
                     dependency.setComponentFilePath(pathName);
                     findingMap.put(FindingKey.SEVERITY_CODE, getSeverity(issue));
                     Finding finding = constructFinding(findingMap);
