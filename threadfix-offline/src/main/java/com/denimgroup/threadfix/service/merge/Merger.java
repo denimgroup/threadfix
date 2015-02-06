@@ -174,6 +174,7 @@ public class Merger extends SpringBeanAutowiringSupport {
                 channel = resultScan.getApplicationChannel();
                 channel.setChannelType(channelTypeDao.retrieveByName(channel.getChannelType().getName()));
                 channel.setApplication(application);
+                channel.setScanList(listOf(Scan.class));
                 application.getChannelList().add(channel);
                 applicationChannelDao.saveOrUpdate(channel);
             }
@@ -181,6 +182,8 @@ public class Merger extends SpringBeanAutowiringSupport {
             scanMerger.merge(resultScan, channel);
             application.getScans().add(resultScan);
             scanDao.saveOrUpdate(resultScan);
+
+            channel.getScanList().add(resultScan);
         }
 
         return application;

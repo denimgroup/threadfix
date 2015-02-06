@@ -36,10 +36,16 @@ import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getApp
  */
 public class RemappingTests {
 
+    public String
+            UNMAPPED = "singlescan.ssvl",
+            NO_VULNS = "noVulns.ssvl",
+            ALREADY_MAPPED = "correctSingleVulnScan.ssvl";
+
+
     @Test
     public void testSingleScan() {
         Application application =
-                getApplicationWith("1932", "89", "singlescan.ssvl");
+                getApplicationWith("1932", "89", UNMAPPED);
 
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Got " + size + " results instead of 1.";
@@ -48,23 +54,48 @@ public class RemappingTests {
     @Test
     public void testTwoUnmappedScans() {
         Application application =
-                getApplicationWith("1932", "89", "singlescan.ssvl", "singlescan.ssvl");
+                getApplicationWith("1932", "89", UNMAPPED, UNMAPPED);
 
-        int size = application.getVulnerabilities().size();
-        assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
-
-        List<Scan> scans = application.getScans();
-
-        Scan scan = application.getVulnerabilities().get(0).getOriginalFinding().getScan();
-
-        assert scan == scans.get(0) : "The original finding was set to the wrong scan.";
+        testTwoScansOneVuln(application);
     }
 
     @Test
     public void testTwoScansUnmappedFirst() {
         Application application =
-                getApplicationWith("1932", "89", "singlescan.ssvl", "correctSingleVulnScan.ssvl");
+                getApplicationWith("1932", "89", UNMAPPED, ALREADY_MAPPED);
 
+        testTwoScansOneVuln(application);
+    }
+
+    @Test
+    public void testTwoScansUnmappedSecond() {
+        Application application =
+                getApplicationWith("1932", "89", ALREADY_MAPPED, UNMAPPED);
+
+        testTwoScansOneVuln(application);
+    }
+
+    @Test
+    public void testClosedAtEndNewVuln() {
+        Application application =
+                getApplicationWith("1932", "89", UNMAPPED, NO_VULNS);
+
+        testTwoScansOneVuln(application, false);
+    }
+
+    @Test
+    public void testClosedAtEnd() {
+        Application application =
+                getApplicationWith("1932", "89", ALREADY_MAPPED, UNMAPPED, NO_VULNS);
+
+        testTwoScansOneVuln(application, false);
+    }
+
+    private void testTwoScansOneVuln(Application application) {
+        testTwoScansOneVuln(application, true);
+    }
+
+    private void testTwoScansOneVuln(Application application, boolean open) {
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
 
@@ -73,6 +104,8 @@ public class RemappingTests {
         Scan scan = application.getVulnerabilities().get(0).getOriginalFinding().getScan();
 
         assert scan == scans.get(0) : "The original finding was set to the wrong scan.";
+
+        assert application.getVulnerabilities().get(0).isActive() == open: "Vulnerability status was wrong, expecting open == " + open + ".";
     }
 
     @Test
