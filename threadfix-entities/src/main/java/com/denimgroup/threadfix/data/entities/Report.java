@@ -124,13 +124,8 @@ public class Report extends BaseEntity {
         if (this == o) return true;
         if (!(o instanceof Report)) return false;
 
-        Report that = (Report) o;
+        Report report = (Report) o;
 
-        return shortName.equals(that.shortName);
-    }
-
-    @Override
-    public int hashCode() {
-        return shortName.hashCode();
+        return getId().equals(report.getId());
     }
 }
