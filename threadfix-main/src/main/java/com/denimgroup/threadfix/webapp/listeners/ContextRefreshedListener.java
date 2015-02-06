@@ -24,10 +24,13 @@
 
 package com.denimgroup.threadfix.webapp.listeners;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.annotations.ReportPlugin;
+import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.importer.loader.AnnotationLoader;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -51,12 +54,84 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+
+    private Report createAndSaveReport(Boolean nativeReport, String shortName, String displayName,
+                                                     String jspFilePath, ReportLocation location) {
+        return createAndSaveReport(nativeReport, shortName, displayName, jspFilePath, location, null);
+    }
+
+    private Report createAndSaveReport(Boolean nativeReport, String shortName, String displayName,
+                                                     String jspFilePath, ReportLocation location, String jsFilePath) {
+        Report report = new Report();
+
+        report.setAvailable(true);
+        report.setNativeReport(nativeReport);
+        report.setShortName(shortName);
+        report.setDisplayName(displayName);
+        report.setJspFilePath(jspFilePath);
+        report.setJspFilePath(jspFilePath);
+        report.setLocation(location);
+
+        if(jsFilePath != null && !jsFilePath.isEmpty()) {
+            report.setJsFilePath(jsFilePath);
+        }
+
+        log.info("Storing new Report (" + report.getDisplayName() + " [" + report.getLocation() + "]).");
+        reportService.store(report);
+
+        return report;
+    }
+
+    private void addNativeReports() {
+
+        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+
+        config.setDashboardTopLeftId(createAndSaveReport(
+                true,
+                "vulnerabilityTrending",
+                "Vulnerability Trending",
+                "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
+                ReportLocation.DASHBOARD,
+                "/scripts/left-report-controller.js").getId());
+
+        config.setDashboardTopRightId(createAndSaveReport(
+                true,
+                "mostVulnerableApps",
+                "Most Vulnerable Applications",
+                "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
+                ReportLocation.DASHBOARD,
+                "/scripts/right-report-controller.js").getId());
+
+        config.setDashboardBottomLeftId(createAndSaveReport(
+                true,
+                "recentUploads",
+                "Recent Uploads",
+                "/WEB-INF/views/applications/widgets/recentUploads.jsp",
+                ReportLocation.DASHBOARD).getId());
+
+        config.setDashboardBottomRightId(createAndSaveReport(
+                true,
+                "recentComments",
+                "Recent Comments",
+                "/WEB-INF/views/applications/widgets/recentComments.jsp",
+                ReportLocation.DASHBOARD).getId());
+
+        defaultConfigService.saveConfiguration(config);
+        log.info("Setting native Dashboard Reports positions in Default Configuration.");
+    }
+
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         if(!reportService.isInitialized()) {
 
             reportService.setInitialized(true);
+
+            if (reportService.loadAllNativeReports().size() == 0) {
+                addNativeReports();
+            }
 
             List<Report> reports = reportService.loadAllNonNativeReports();
             Map<Report, Boolean> availableReportPlugins = newMap();
@@ -78,7 +153,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 ReportPlugin annotation = entry.getValue();
 
                 if (annotation.displayName().isEmpty() || annotation.jspRelFilePath().isEmpty()
-                        || annotation.shortName().isEmpty()) {
+                        || annotation.shortName().isEmpty() || annotation.locations().length == 0) {
 
                     log.warn("Required attrs for ReportPlugin were empty. Skip to next ReportPlugin.");
                     continue;
@@ -96,8 +171,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                         // set previously unavailable report plugin to true
                         // now that plugin has be re-added to Threadfix
                         if (!report.getAvailable()) {
-                            log.info("Plugin for existing Report [" + report.getDisplayName() +
-                                    "] was found. Setting availability to true.");
+                            log.info("Plugin for existing Report (" + report.getDisplayName() +
+                                    " [" + report.getLocation() + "]) was found. Setting availability to true.");
                             report.setAvailable(true);
                             reportService.store(report);
                         }
@@ -109,25 +184,19 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                     continue;
                 }
 
-                Report report = new Report();
-
-                report.setAvailable(true);
-                report.setNativeReport(false);
-                report.setShortName(annotation.shortName());
-                report.setDisplayName(annotation.displayName());
-                report.setJspFilePath(annotation.jspRelFilePath());
-                report.setJsFilePath(annotation.jsRelFilePath());
-
-                log.info("Storing new Report [" + annotation.displayName() + "].");
-                reportService.store(report);
+                // create as many report obj as the plugin has locations for
+                for (ReportLocation location : annotation.locations()){
+                    createAndSaveReport(false, annotation.shortName(), annotation.displayName(),
+                            annotation.jspRelFilePath(), location, annotation.jsRelFilePath());
+                }
             }
 
-            // set dashboard reports' availability that were not found in annotations to false
+            // set dashboard reports' availability that were not found as plugins to false
             for (Report report : availableReportPlugins.keySet()) {
                 if (!availableReportPlugins.get(report)) {
                     if (report.getAvailable()) {
-                        log.info("Plugin for existing Report [" + report.getDisplayName() +
-                                "] not found. Setting availability to false.");
+                        log.info("Plugin for existing Report (" + report.getDisplayName() +
+                                " [" + report.getLocation() + "]) not found. Setting availability to false.");
                         report.setAvailable(false);
                         reportService.store(report);
                     }

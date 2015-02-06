@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.dao.ReportDao;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
@@ -74,6 +75,11 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<Report> loadAllNonNativeReports() {
         return reportDao.retrieveAllNonNativeReports();
+    }
+
+    @Override
+    public List<Report> loadByLocationType(ReportLocation location) {
+        return reportDao.retrieveReportsByLocation(location);
     }
 
     @Override

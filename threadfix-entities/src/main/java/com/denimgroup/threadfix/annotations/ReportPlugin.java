@@ -43,4 +43,6 @@ public @interface ReportPlugin {
     public String shortName();
 
     public String displayName();
+
+    public ReportLocation[] locations();
 }

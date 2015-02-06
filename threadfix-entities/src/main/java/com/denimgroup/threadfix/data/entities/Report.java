@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -50,6 +51,7 @@ public class Report extends BaseEntity {
     private String shortName;
     private String jspFilePath;
     private String jsFilePath;
+    private ReportLocation location;
 
 
     public Boolean getAvailable() {
@@ -107,6 +109,14 @@ public class Report extends BaseEntity {
 
     public void setJsFilePath(String jsFilePath) {
         this.jsFilePath = jsFilePath;
+    }
+
+    public ReportLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(ReportLocation location) {
+        this.location = location;
     }
 
     @Override

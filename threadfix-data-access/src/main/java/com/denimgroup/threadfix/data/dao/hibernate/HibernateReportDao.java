@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.dao.hibernate;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ReportDao;
 import com.denimgroup.threadfix.data.entities.Report;
@@ -93,6 +94,14 @@ public class HibernateReportDao
     public List<Report> retrieveByIds(List<Integer> reportIds) {
         return (List<Report>) getAvailableCriteria()
                 .add(Restrictions.in("id", reportIds))
+                .list();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Report> retrieveReportsByLocation(ReportLocation location) {
+        return (List<Report>) getAvailableCriteria()
+                .add(Restrictions.eq("location", location))
                 .list();
     }
 

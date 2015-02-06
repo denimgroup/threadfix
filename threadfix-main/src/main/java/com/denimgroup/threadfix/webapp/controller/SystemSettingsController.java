@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
@@ -81,9 +82,9 @@ public class SystemSettingsController {
 		return roleService.loadAll();
 	}
 
-	@ModelAttribute("reports")
-	public List<Report> populateReportTypes() {
-		return reportService.loadAllAvailable();
+	@ModelAttribute("dashboardReports")
+	public List<Report> populateDashboardReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.DASHBOARD);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.data.entities.Report;
 
 import java.util.List;
@@ -61,6 +62,11 @@ public interface ReportService {
      * @return List<Report>
      */
     List<Report> loadAllNonNativeReports();
+
+    /**
+     * @return List<Report>
+     */
+    List<Report> loadByLocationType(ReportLocation location);
 
     /**
      * @param reportId

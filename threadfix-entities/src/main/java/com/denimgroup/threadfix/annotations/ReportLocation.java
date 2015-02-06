@@ -22,31 +22,11 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.data.dao;
-
-import com.denimgroup.threadfix.annotations.ReportLocation;
-import com.denimgroup.threadfix.data.entities.Report;
-
-import java.util.List;
+package com.denimgroup.threadfix.annotations;
 
 /**
  * @author zabdisubhan
  */
-
-public interface ReportDao extends GenericNamedObjectDao<Report> {
-
-    List<Report> retrieveByIds(List<Integer> reportIds);
-
-    List<Report> retrieveAllAvailable();
-
-    List<Report> retrieveAllNativeReports();
-
-    List<Report> retrieveAllNonNativeReports();
-
-    List<Report> retrieveReportsByLocation(ReportLocation location);
-
-    void delete(Report report);
-
-    void delete(Integer reportId);
-
+public enum ReportLocation {
+    DASHBOARD
 }
