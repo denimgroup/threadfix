@@ -194,11 +194,13 @@ public class ApplicationRestController extends RestController {
     public @ResponseBody Object applicationLookup(HttpServletRequest request,
                                                   @PathVariable("teamId") String teamName) throws IOException {
         String appName = request.getParameter("name");
+        String appUniqueId = request.getParameter("uniqueId");
+
         String result = checkKey(request, LOOKUP);
         if (!result.equals(API_KEY_SUCCESS)) {
             return failure(result);
         }
-        if (appName == null) {
+        if ((appName == null) && (appUniqueId == null)) {
             return failure(APPLICATION_LOOKUP_FAILED);
         }
         log.info("Received REST request for Applications in team = " + teamName + ".");
@@ -216,14 +218,21 @@ public class ApplicationRestController extends RestController {
             if (org == null)
                 return failure(APPLICATION_LOOKUP_FAILED);
         }
-
+        Application application = null;
         int teamId = org.getId();
-        Application application = applicationService.loadApplication(appName, teamId);
+        if (appName != null)
+            application = applicationService.loadApplication(appName, teamId);
+        if (appUniqueId != null)
+            application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
 
         if (application == null) {
-            if (appName.contains("+")) {
+            if ((appName != null) && (appName.contains("+"))) {
                 appName = appName.replace("+", " ");
                 application = applicationService.loadApplication(appName, teamId);
+            }
+            if ((appUniqueId != null) && (appUniqueId.contains("+"))) {
+                appUniqueId = appUniqueId.replace("+", " ");
+                application = applicationService.loadApplicationByUniqueId(appUniqueId, teamId);
             }
             if (application == null) {
                 log.warn(APPLICATION_LOOKUP_FAILED);
