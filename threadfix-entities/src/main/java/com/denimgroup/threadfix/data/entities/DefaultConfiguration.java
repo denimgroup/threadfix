@@ -57,7 +57,8 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Integer sessionTimeout = null;
 
-    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId, dashboardBottomRightId;
+    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId,
+            dashboardBottomRightId, applicationTopLeftId, applicationTopRightId;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -76,6 +77,24 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setSessionTimeout(Integer sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
+    }
+
+    @Column
+    public Integer getApplicationTopLeftId() {
+        return applicationTopLeftId;
+    }
+
+    public void setApplicationTopLeftId(Integer applicationTopLeftId) {
+        this.applicationTopLeftId = applicationTopLeftId;
+    }
+
+    @Column
+    public Integer getApplicationTopRightId() {
+        return applicationTopRightId;
+    }
+
+    public void setApplicationTopRightId(Integer applicationTopRightId) {
+        this.applicationTopRightId = applicationTopRightId;
     }
 
     @Column
@@ -331,6 +350,16 @@ public class DefaultConfiguration extends BaseEntity {
         dashboardReportIds.add(getDashboardBottomRightId());
 
         return dashboardReportIds;
+    }
+
+    @Transient
+    public List<Integer> getApplicationReportIds() {
+        List<Integer> applicationReportIds = list();
+
+        applicationReportIds.add(getApplicationTopLeftId());
+        applicationReportIds.add(getApplicationTopRightId());
+
+        return applicationReportIds;
     }
 
     @Column

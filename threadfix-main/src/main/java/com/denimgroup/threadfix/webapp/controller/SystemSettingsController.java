@@ -69,7 +69,8 @@ public class SystemSettingsController {
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
 					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", 
-                    "dashboardTopRightId", "dashboardBottomLeftId", "dashboardBottomRightId");
+                    "dashboardTopRightId", "dashboardBottomLeftId", "dashboardBottomRightId",
+                    "applicationTopLeftId", "applicationTopRightId");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -85,6 +86,11 @@ public class SystemSettingsController {
 	@ModelAttribute("dashboardReports")
 	public List<Report> populateDashboardReportTypes() {
 		return reportService.loadByLocationType(ReportLocation.DASHBOARD);
+	}
+
+	@ModelAttribute("applicationReports")
+	public List<Report> populateApplicationReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.APPLICATION);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

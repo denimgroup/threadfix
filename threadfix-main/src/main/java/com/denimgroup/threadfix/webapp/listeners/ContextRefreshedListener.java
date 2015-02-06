@@ -104,6 +104,22 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 ReportLocation.DASHBOARD,
                 "/scripts/right-report-controller.js").getId());
 
+        config.setApplicationTopLeftId(createAndSaveReport(
+                true,
+                "vulnerabilityTrending",
+                "Vulnerability Trending",
+                "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
+                ReportLocation.APPLICATION,
+                "/scripts/left-report-controller.js").getId());
+
+        config.setApplicationTopRightId(createAndSaveReport(
+                true,
+                "mostVulnerableApps",
+                "Most Vulnerable Applications",
+                "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
+                ReportLocation.APPLICATION,
+                "/scripts/right-report-controller.js").getId());
+
         config.setDashboardBottomLeftId(createAndSaveReport(
                 true,
                 "recentUploads",
@@ -119,7 +135,7 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 ReportLocation.DASHBOARD).getId());
 
         defaultConfigService.saveConfiguration(config);
-        log.info("Setting native Dashboard Reports positions in Default Configuration.");
+        log.info("Setting native Dashboard & Application Detail Page Reports positions in Default Configuration.");
     }
 
     @SuppressWarnings("unchecked")
@@ -191,7 +207,8 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 }
             }
 
-            // set dashboard reports' availability that were not found as plugins to false
+            // set the availability of dashboard & application detail page reports
+            // that were not found as plugins to false
             for (Report report : availableReportPlugins.keySet()) {
                 if (!availableReportPlugins.get(report)) {
                     if (report.getAvailable()) {

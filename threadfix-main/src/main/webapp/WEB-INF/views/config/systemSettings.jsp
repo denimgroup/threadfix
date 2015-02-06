@@ -17,7 +17,8 @@
 	<spring:url value="" var="emptyUrl"/>
 	<form:form modelAttribute="defaultConfiguration" name="formEditUser" action="${ fn:escapeXml(emptyUrl) }">
         <div class="panel panel-default">
-            <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px" ng-click="editDefaultPermissions = !editDefaultPermissions">
+            <div id="defaultPermissionsPanel" class="panel-heading pointer" style="width:200px"
+                 ng-click="editDefaultPermissions = !editDefaultPermissions">
                 <h3 class="panel-title">
                     <span ng-hide="editDefaultPermissions" class="icon icon-chevron-right"></span>
                     <span ng-show="editDefaultPermissions" class="icon icon-chevron-down"></span>
@@ -52,7 +53,8 @@
 
         <c:if test="${ isEnterprise }">
             <div class="panel panel-default">
-                <div id="ldapSettingsPanel" class="panel-heading pointer" style="width:150px" ng-click="editLdapSettings = !editLdapSettings">
+                <div id="ldapSettingsPanel" class="panel-heading pointer" style="width:150px"
+                     ng-click="editLdapSettings = !editLdapSettings">
                     <h3 class="panel-title">
                         <span ng-hide="editLdapSettings" class="icon icon-chevron-right"></span>
                         <span ng-show="editLdapSettings" class="icon icon-chevron-down"></span>
@@ -128,7 +130,8 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div id="proxySettingsPanel" class="panel-heading pointer" style="width:150px" ng-click="configureProxySettings = !configureProxySettings">
+                <div id="proxySettingsPanel" class="panel-heading pointer" style="width:150px"
+                     ng-click="configureProxySettings = !configureProxySettings">
                     <h3 class="panel-title">
                         <span ng-hide="configureProxySettings" class="icon icon-chevron-right"></span>
                         <span ng-show="configureProxySettings" class="icon icon-chevron-down"></span>
@@ -164,7 +167,8 @@
                         <tr>
                             <td>Use Proxy Credentials</td>
                             <td ng-init="shouldUseProxyCredentials = <c:out value="${ defaultConfiguration.shouldUseProxyCredentials }"/>">
-                                <form:checkbox path="shouldUseProxyCredentials" ng-model="shouldUseProxyCredentials" value="${ defaultConfiguration.shouldUseProxyCredentials }"/>
+                                <form:checkbox path="shouldUseProxyCredentials" ng-model="shouldUseProxyCredentials"
+                                               value="${ defaultConfiguration.shouldUseProxyCredentials }"/>
                             </td>
                         </tr>
                         <tr>
@@ -269,7 +273,8 @@
         </c:if>
 
         <div class="panel panel-default">
-            <div id="defaultSessionTimeoutPermissionsPanel" class="panel-heading pointer" style="width:200px" ng-click="editSessionTimeoutPermissions = !editSessionTimeoutPermissions">
+            <div id="defaultSessionTimeoutPermissionsPanel" class="panel-heading pointer" style="width:200px"
+                 ng-click="editSessionTimeoutPermissions = !editSessionTimeoutPermissions">
                 <h3 class="panel-title">
                     <span ng-hide="editSessionTimeoutPermissions" class="icon icon-chevron-right"></span>
                     <span ng-show="editSessionTimeoutPermissions" class="icon icon-chevron-down"></span>
@@ -281,7 +286,9 @@
                     <tr>
                         <td style="width:150px" class="no-color">Session Timeout</td>
                         <td class="no-color">
-                            <form:input id="sessionTimeout" type="number" max="30" min="1" path="sessionTimeout" placeholder="(in minutes)" cssClass="focus" size="60" maxlength="255" value="${ defaultConfiguration.sessionTimeout }"/>
+                            <form:input id="sessionTimeout" type="number" max="30" min="1" path="sessionTimeout"
+                                        placeholder="(in minutes)" cssClass="focus" size="60" maxlength="255"
+                                        value="${ defaultConfiguration.sessionTimeout }"/>
                         </td>
                         <td class="no-color" style="padding-left: 5px">
                             <form:errors path="sessionTimeout" cssClass="errors" />
@@ -304,7 +311,7 @@
                     <tr>
                         <td style="padding-left: 5px">
                             <div>
-                                <b>Top Left</b>
+                                <b>Top Left Report</b>
                             </div>
                             <div>
                                 <form:select id="dashboardTopLeftSelect" path="dashboardTopLeftId">
@@ -314,7 +321,7 @@
                         </td>
                         <td style="padding-left: 5px">
                             <div>
-                                <b>Top Right</b>
+                                <b>Top Right Report</b>
                             </div>
                             <div>
                                 <form:select id="dashboardTopRightSelect" path="dashboardTopRightId">
@@ -324,7 +331,7 @@
                         </td>
                         <td style="padding-left: 5px">
                             <div>
-                                <b>Bottom Left</b>
+                                <b>Bottom Left Report</b>
                             </div>
                             <div>
                                 <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeftId">
@@ -334,7 +341,7 @@
                         </td>
                         <td style="padding-left: 5px">
                             <div>
-                                <b>Bottom Right</b>
+                                <b>Bottom Right Report</b>
                             </div>
                             <div>
                                 <form:select id="dashboardBottomRightSelect" path="dashboardBottomRightId">
@@ -343,6 +350,42 @@
                             </div>
                         </td>
                     </tr>
+                </table>
+            </div>
+        </div>
+
+		<div class="panel panel-default">
+            <div id="defaultApplicationDetailPageSettingsPanel" class="panel-heading pointer" style="width:300px"
+                 ng-click="editApplicationDetailPageSettings = !editApplicationDetailPageSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editApplicationDetailPageSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editApplicationDetailPageSettings" class="icon icon-chevron-down"></span>
+                    Application Detail Page Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editApplicationDetailPageSettings">
+                <table>
+                    <tr>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Left Report</b>
+                            </div>
+                            <div>
+                                <form:select id="applicationTopLeftSelect" path="applicationTopLeftId">
+                                    <form:options items="${ applicationReports }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Right Report</b>
+                            </div>
+                            <div>
+                                <form:select id="applicationTopRightSelect" path="applicationTopRightId">
+                                    <form:options items="${ applicationReports }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
                 </table>
             </div>
         </div>

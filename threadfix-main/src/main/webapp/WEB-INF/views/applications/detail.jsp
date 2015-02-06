@@ -10,8 +10,6 @@
 	<cbs:cachebustscript src="/scripts/grc-control-submission-modal-controller.js"/>
 	<cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/edit-application-modal-controller.js"/>
-	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
-	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-table-controller.js"/>
 	<cbs:cachebustscript src="/scripts/upload-scan-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scheduled-scan-tab-controller.js"/>
@@ -23,6 +21,9 @@
     <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
 	<cbs:cachebustscript src="/scripts/scan-unmapped-finding-table-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
+    <c:forEach items="${ reportJsPaths }" var="reportJs">
+        <script type="text/javascript" src="${ reportJs }"></script>
+    </c:forEach>
 </head>
 
 <body ng-controller="ApplicationDetailPageController"
@@ -50,8 +51,14 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
-                <jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
-                <jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
+                <c:forEach items="${ reports }" var="report">
+                    <c:if test="${ report.id == config.applicationTopLeftId }">
+                        <jsp:include page="${ report.jspFilePath }"/>
+                    </c:if>
+                    <c:if test="${ report.id == config.applicationTopRightId }">
+                        <jsp:include page="${ report.jspFilePath }"/>
+                    </c:if>
+                </c:forEach>
             </div>
         </div>
 
