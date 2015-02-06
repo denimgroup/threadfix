@@ -36,6 +36,7 @@ import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
@@ -94,9 +95,90 @@ public class RemappingService {
 
         for (Vulnerability newVulnerability : newVulnerabilities) {
             application.addVulnerability(newVulnerability);
+            fixStateAndMappings(channel, type, newVulnerability);
             vulnerabilityDao.saveOrUpdate(newVulnerability);
         }
     }
+
+    enum Event {
+        OLD_FINDING, NEW_FINDING, CLOSE, REOPEN
+    }
+
+    private void fixStateAndMappings(ApplicationChannel channel,
+                                     ChannelVulnerability channelVulnerability,
+                                     Vulnerability newVulnerability) {
+        setFirstFindingForVuln(newVulnerability);
+
+//
+//        Map<Calendar, Event> scannerEventMap = getScannerEventMap(channelVulnerability, newVulnerability);
+//
+//        List<Calendar> dates = listFrom(scannerEventMap.keySet());
+//
+//        Collections.sort(dates);
+//
+//        boolean first = true;
+//
+//        for (Calendar date : dates) {
+//
+//        }
+
+
+
+    }
+
+    // there has to be a better algorithm for this
+    // or maybe we can sidestep by setting this in a different spot?
+    private void setFirstFindingForVuln(Vulnerability newVulnerability) {
+        if (newVulnerability.getFindings().size() == 0) {
+            return;
+        }
+
+
+        Finding currentOriginalFinding = null;
+        Finding oldestFinding = null;
+        Calendar oldestDate = null;
+
+        for (Finding finding : newVulnerability.getFindings()) {
+            if (oldestDate == null || finding.getScan().getImportTime().before(oldestDate)) {
+                oldestDate = finding.getScan().getImportTime();
+                oldestFinding = finding;
+            }
+
+            if (finding.isFirstFindingForVuln()) {
+                currentOriginalFinding = finding;
+            }
+        }
+
+        if (currentOriginalFinding != oldestFinding) {
+            if (currentOriginalFinding != null) {
+                currentOriginalFinding.setFirstFindingForVuln(false);
+            }
+
+            oldestFinding.setFirstFindingForVuln(true);
+        }
+    }
+
+//    private Map<Calendar, Event> getScannerEventMap(ChannelVulnerability channelVulnerability, Vulnerability newVulnerability) {
+//        Map<Calendar, Event> scannerEvents = newMap();
+//
+//        for (Finding finding : newVulnerability.getFindings()) {
+//            if (finding.getChannelVulnerability().equals(channelVulnerability)) {
+//                scannerEvents.put(finding.getScannedDate(), Event.NEW_FINDING);
+//            } else {
+//                scannerEvents.put(finding.getScannedDate(), Event.OLD_FINDING);
+//            }
+//        }
+//
+//        for (ScanCloseVulnerabilityMap closeMap : newVulnerability.getScanCloseVulnerabilityMaps()) {
+//            scannerEvents.put(closeMap.getScan().getImportTime(), Event.CLOSE);
+//        }
+//
+//        for (ScanReopenVulnerabilityMap reopenMap : newVulnerability.getScanReopenVulnerabilityMaps()) {
+//            scannerEvents.put(reopenMap.getScan().getImportTime(), Event.REOPEN);
+//        }
+//
+//        return scannerEvents;
+//    }
 
     private void attemptToAddFromCache(VulnerabilityCache cache, Finding finding) {
         Iterable<Vulnerability> possibilities = cache.getPossibilities(finding);

@@ -24,7 +24,10 @@
 package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.Scan;
 import org.junit.Test;
+
+import java.util.List;
 
 import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getApplicationWith;
 
@@ -43,9 +46,39 @@ public class RemappingTests {
     }
 
     @Test
-    public void testTwoScans() {
+    public void testTwoUnmappedScans() {
         Application application =
                 getApplicationWith("1932", "89", "singlescan.ssvl", "singlescan.ssvl");
+
+        int size = application.getVulnerabilities().size();
+        assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
+
+        List<Scan> scans = application.getScans();
+
+        Scan scan = application.getVulnerabilities().get(0).getOriginalFinding().getScan();
+
+        assert scan == scans.get(0) : "The original finding was set to the wrong scan.";
+    }
+
+    @Test
+    public void testTwoScansUnmappedFirst() {
+        Application application =
+                getApplicationWith("1932", "89", "singlescan.ssvl", "correctSingleVulnScan.ssvl");
+
+        int size = application.getVulnerabilities().size();
+        assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
+
+        List<Scan> scans = application.getScans();
+
+        Scan scan = application.getVulnerabilities().get(0).getOriginalFinding().getScan();
+
+        assert scan == scans.get(0) : "The original finding was set to the wrong scan.";
+    }
+
+    @Test
+    public void testTwoMergingVulnsOneScan() {
+        Application application =
+                getApplicationWith("1932", "89", "twoMergingVulns.ssvl");
 
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
