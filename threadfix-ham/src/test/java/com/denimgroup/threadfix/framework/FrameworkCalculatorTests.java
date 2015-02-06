@@ -26,6 +26,10 @@ package com.denimgroup.threadfix.framework;
 
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.framework.engine.framework.FrameworkCalculator;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.junit.Test;
 
 import java.io.File;
@@ -33,7 +37,16 @@ import java.io.File;
 import static org.junit.Assert.assertTrue;
 
 public class FrameworkCalculatorTests {
-	
+
+	static {
+		ConsoleAppender console = new ConsoleAppender(); //create appender
+		String pattern = "%d [%p|%c|%C{1}] %m%n";
+		console.setLayout(new PatternLayout(pattern));
+		console.setThreshold(Level.FATAL);
+		console.activateOptions();
+		Logger.getRootLogger().addAppender(console);
+	}
+
 	@Test
 	public void bodgeitTest() {
 		FrameworkType type = FrameworkCalculator.getType(new File(TestConstants.BODGEIT_SOURCE_LOCATION));

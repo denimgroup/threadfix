@@ -32,8 +32,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created with IntelliJ IDEA.

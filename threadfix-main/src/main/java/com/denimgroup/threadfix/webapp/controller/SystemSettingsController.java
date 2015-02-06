@@ -24,9 +24,11 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.DashboardWidget;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.DashboardWidgetService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
@@ -54,6 +56,8 @@ public class SystemSettingsController {
 	private RoleService roleService = null;
 	@Autowired
     private DefaultConfigService defaultConfigService = null;
+	@Autowired
+	private DashboardWidgetService dashboardWidgetService = null;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -63,7 +67,8 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout");
+					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", 
+                    "dashboardTopRightId", "dashboardBottomLeftId", "dashboardBottomRightId");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -74,6 +79,11 @@ public class SystemSettingsController {
 	@ModelAttribute
 	public List<Role> populateRoles() {
 		return roleService.loadAll();
+	}
+
+	@ModelAttribute("dashboardWidgets")
+	public List<DashboardWidget> populateDashboardWidgetTypes() {
+		return dashboardWidgetService.loadAllAvailable();
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

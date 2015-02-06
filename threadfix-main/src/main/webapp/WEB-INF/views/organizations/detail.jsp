@@ -3,7 +3,8 @@
 <head>
 	<title><c:out value="${ organization.name }"/></title>
 	<cbs:cachebustscript src="/scripts/team-detail-page-controller.js"/>
-	<cbs:cachebustscript src="/scripts/reports-controller.js"/>
+	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
+	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
@@ -57,7 +58,11 @@
     <%@ include file="/WEB-INF/views/successMessage.jspf" %>
 
     <div class="container-fluid">
-        <%@ include file="/WEB-INF/views/applications/reports.jspf" %>
+        <div class="row-fluid">
+            <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
+            <jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
+            <jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
+        </div>
     </div>
 
     <tabset style="margin-top:10px;">

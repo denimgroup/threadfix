@@ -56,6 +56,8 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
     private RemoteProviderTypeDao remoteProviderTypeDao;
     @Autowired
     private ChannelTypeDao        channelTypeDao;
+    @Autowired
+    private ChannelVulnerabilityUpdater channelVulnerabilityUpdater;
 
     @Override
     public int getOrder() {
@@ -90,7 +92,10 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             } else if (line.equals("type.authenticationfields")) {
                 currentState = State.AUTHENTICATION_FIELDS;
             } else if (currentState == State.NAME) {
-                name = line;
+                if (line != null) {
+                    name = line.split(",")[0];
+                    channelVulnerabilityUpdater.updateChannelTypeInfo(line);
+                }
             } else if (currentState == State.CREDENTIALS) {
                 usernamePassword = line.equalsIgnoreCase("usernamepassword");
             } else if (currentState == State.CHANNEL_TYPE) {
@@ -144,8 +149,8 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
 
     private RemoteProviderAuthenticationField parseField(String line) {
         String[] split = line.split(",");
-        if (split.length != 2) {
-            throw new IllegalArgumentException("Line " + line + " didn't have two parts separated by a comma.");
+        if (split.length < 2) {
+            throw new IllegalArgumentException("Line " + line + " didn't have at least two parts separated by a comma.");
         }
 
         RemoteProviderAuthenticationField field = new RemoteProviderAuthenticationField();
@@ -156,6 +161,14 @@ public class RemoteProviderUpdater extends SpringBeanAutowiringSupport implement
             default:
                 throw new IllegalArgumentException("The second section in " + line + " should be true or false.");
         }
+
+        if (split.length > 2)
+            switch (split[2]) {
+                case "true":  field.setRequired(true);  break;
+                case "false": field.setRequired(false); break;
+                default:
+                    throw new IllegalArgumentException("The third section in " + line + " should be true or false.");
+            }
 
         field.setName(split[0]);
 

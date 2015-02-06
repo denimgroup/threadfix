@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 public class TestUtils {
 

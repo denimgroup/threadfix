@@ -26,7 +26,7 @@ package com.denimgroup.threadfix.importer.utils;
 
 import com.denimgroup.threadfix.data.entities.Finding;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 public class SimpleFinding {
 

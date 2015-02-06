@@ -10,7 +10,7 @@ threadfix-main/src/main/resources/threadfix.license
 threadfix-scanagent/threadfix.log
 bin
 *.DS_Store
-
+*dependency-reduced-pom.xml
 *.iml
 
 .classpath

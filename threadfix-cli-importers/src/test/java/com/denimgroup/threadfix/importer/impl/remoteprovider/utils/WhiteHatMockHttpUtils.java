@@ -36,7 +36,7 @@ public class WhiteHatMockHttpUtils implements RemoteProviderHttpUtils {
 
     public static final String GOOD_API_KEY = "153473b2-5448-4b8d-b8ec-c70a9f4f13cf",
         BAD_API_KEY = "ANY_OTHER_INPUT",
-        SITE_PREFIX = "https://sentinel.whitehatsec.com/api/site/?key=" + GOOD_API_KEY,
+        SITE_PREFIX = "https://sentinel.whitehatsec.com/api/site/?key=" + GOOD_API_KEY + "&page:limit=1000&page:offset=0",
         SCAN_PREFIX = "https://sentinel.whitehatsec.com/api/vuln/?key=" + GOOD_API_KEY + "&display_attack_vectors=1&query_site=";
 
     @Override

@@ -65,22 +65,35 @@ public class FindingMatcher {
 		// iterate through the findings of the vulnerability and try to match
 		// them to the finding
 		for (Finding vulnFinding : vuln.getFindings()) {
-			if (!finding.getIsStatic()) {
-				if (!vulnFinding.getIsStatic()       && dynamicToDynamicMatch(finding, vulnFinding)) {
-					return true;
-				} else if (vulnFinding.getIsStatic() && dynamicToStaticMatch(finding, vulnFinding)) {
-					return true;
+			if (finding.getDependency() == null) {
+				if (!finding.getIsStatic()) {
+					if (!vulnFinding.getIsStatic() && dynamicToDynamicMatch(finding, vulnFinding)) {
+						return true;
+					} else if (vulnFinding.getIsStatic() && dynamicToStaticMatch(finding, vulnFinding)) {
+						return true;
+					}
+				} else {
+					if (!vulnFinding.getIsStatic() && dynamicToStaticMatch(vulnFinding, finding)) {
+						return true;
+					} else if (vulnFinding.getIsStatic() && staticToStaticMatch(finding, vulnFinding)) {
+						return true;
+					}
 				}
 			} else {
-				if (!vulnFinding.getIsStatic()       && dynamicToStaticMatch(vulnFinding, finding)) {
-					return true;
-				} else if (vulnFinding.getIsStatic() && staticToStaticMatch(finding, vulnFinding)) {
+				if (vulnFinding.getDependency() != null && dependencyToDependencyMatch(finding, vulnFinding)) {
 					return true;
 				}
 			}
 		}
 
 		return false;
+	}
+
+	private boolean dependencyToDependencyMatch(Finding newFinding, Finding oldFinding) {
+		return oldFinding != null && newFinding != null &&
+				compareDependencyComponent(oldFinding, newFinding) &&
+				compareDependencyReference(oldFinding, newFinding);
+
 	}
 
 	private boolean staticToStaticMatch(Finding oldFinding, Finding newFinding) {
@@ -184,6 +197,20 @@ public class FindingMatcher {
 		}
 		
 		return match;
+	}
+
+	private boolean compareDependencyReference(Finding oldFinding, Finding newFinding) {
+		return oldFinding.getDependency() != null
+				&& newFinding.getDependency() != null
+				&& oldFinding.getDependency().getRefId() != null
+				&& oldFinding.getDependency().getRefId().equals(newFinding.getDependency().getRefId());
+	}
+
+	private boolean compareDependencyComponent(Finding oldFinding, Finding newFinding) {
+		return oldFinding.getDependency() != null
+				&& newFinding.getDependency() != null
+				&& oldFinding.getDependency().getComponentName() != null
+				&& oldFinding.getDependency().getComponentName().equals(newFinding.getDependency().getComponentName());
 	}
 
 	private boolean compareDataFlows(Finding oldFinding, Finding newFinding) {

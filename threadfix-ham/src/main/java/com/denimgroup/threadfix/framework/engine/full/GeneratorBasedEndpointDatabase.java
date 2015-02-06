@@ -123,7 +123,7 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 	@Nonnull
     @Override
 	public Set<Endpoint> findAllMatches(@Nonnull EndpointQuery query) {
-		Set<Endpoint> resultingSet = new HashSet<>();
+		Set<Endpoint> resultingSet = set(), fromCodePoints = set();
 
         List<Set<Endpoint>> resultSets = list();
         boolean assignedInitial = false;
@@ -133,7 +133,8 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
 
         List<CodePoint> codePoints = query.getCodePoints();
         if (codePoints != null && !codePoints.isEmpty()) {
-            resultingSet = getFromCodePoints(codePoints);
+            fromCodePoints = getFromCodePoints(codePoints);
+            resultingSet.addAll(fromCodePoints);
             if (!resultingSet.isEmpty()) {
                 assignedInitial = true;
             }
@@ -184,6 +185,12 @@ class GeneratorBasedEndpointDatabase implements EndpointDatabase {
                     }
                 }
             }
+        }
+
+        // if we found static information from the data flow but it got erased
+        // later from static path matching, we still want to use the data flow result
+        if (useStatic && !fromCodePoints.isEmpty() && resultingSet.isEmpty()) {
+            resultingSet.addAll(fromCodePoints);
         }
 
 		return resultingSet;
