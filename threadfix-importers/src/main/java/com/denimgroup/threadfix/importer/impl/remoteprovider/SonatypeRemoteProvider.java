@@ -1,3 +1,27 @@
+////////////////////////////////////////////////////////////////////////
+//
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
+//
+//     The contents of this file are subject to the Mozilla Public License
+//     Version 2.0 (the "License"); you may not use this file except in
+//     compliance with the License. You may obtain a copy of the License at
+//     http://www.mozilla.org/MPL/
+//
+//     Software distributed under the License is distributed on an "AS IS"
+//     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+//     License for the specific language governing rights and limitations
+//     under the License.
+//
+//     The Original Code is ThreadFix.
+//
+//     The Initial Developer of the Original Code is Denim Group, Ltd.
+//     Portions created by Denim Group, Ltd. are Copyright (C)
+//     Denim Group, Ltd. All Rights Reserved.
+//
+//     Contributor(s): Denim Group, Ltd.
+//
+////////////////////////////////////////////////////////////////////////
+
 package com.denimgroup.threadfix.importer.impl.remoteprovider;
 
 import com.denimgroup.threadfix.annotations.RemoteProvider;
@@ -21,15 +45,17 @@ import static com.denimgroup.threadfix.importer.util.JsonUtils.getJSONObject;
 import static com.denimgroup.threadfix.importer.util.JsonUtils.toJSONObjectIterable;
 
 /**
- * Created by mcollins on 1/5/15.
+ * Created by stran on 1/30/15.
  */
 @RemoteProvider(name = "Sonatype")
 public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
     public static final String
-            APPS_REPORT_URL = "http://api.cs.sonatype.com:8070/api/v2/reports/applications",
-            APPS_URL = "http://api.cs.sonatype.com:8070/api/v2/applications",
-            TRACES_URL = "http://api.cs.sonatype.com:8070/";
+            URL = "URL",
+            PASSWORD = "Password",
+            USERNAME = "Username",
+            APPS_REPORT_URL = "api/v2/reports/applications",
+            APPS_URL = "api/v2/applications";
 
     private static final String APP_PATTERN = "api/v2/applications/(.*)/reports/";
 
@@ -51,7 +77,9 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
         getAppNamesMap();
 
-        HttpResponse response = httpUtils.getUrl(APPS_REPORT_URL, remoteProviderType.getUsername(), remoteProviderType.getPassword());
+        HttpResponse response = httpUtils.getUrl(getAuthenticationFieldValue(URL) + APPS_REPORT_URL,
+                getAuthenticationFieldValue(USERNAME),
+                getAuthenticationFieldValue(PASSWORD));
 
         try {
             if (response.isValid()) {
@@ -66,9 +94,9 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
             } else {
                 String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
+                log.info("Contents: " + body);
 
-                throw new RestIOException("Invalid response received from Contrast servers, check the logs for more details.", response.getStatus());
+                throw new RestIOException("Invalid response received from Sonatype servers, check the logs for more details.", response.getStatus());
             }
 
         } catch (JSONException e) {
@@ -77,7 +105,9 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
     }
 
     private void getAppNamesMap() {
-        HttpResponse response = httpUtils.getUrl(APPS_URL, remoteProviderType.getUsername(), remoteProviderType.getPassword());
+        HttpResponse response = httpUtils.getUrl(getAuthenticationFieldValue(URL) + APPS_URL,
+                getAuthenticationFieldValue(USERNAME),
+                getAuthenticationFieldValue(PASSWORD));
 
         try {
             if (response.isValid()) {
@@ -90,9 +120,9 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
             } else {
                 String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
+                log.info("Contents: " + body);
 
-                throw new RestIOException("Invalid response received from Contrast servers, check the logs for more details.", response.getStatus());
+                throw new RestIOException("Invalid response " + response.getStatus() + " received from Sonatype servers, check the logs for more details.", response.getStatus());
             }
 
         } catch (JSONException e) {
@@ -122,7 +152,9 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
     public List<Scan> getScans(RemoteProviderApplication remoteProviderApplication) {
         assert remoteProviderType != null : "Remote Provider Type was null.";
 
-        HttpResponse response = httpUtils.getUrl(TRACES_URL + remoteProviderApplication.getReportUrl(), remoteProviderType.getUsername(), remoteProviderType.getPassword());
+        HttpResponse response = httpUtils.getUrl(getUrl(getAuthenticationFieldValue(URL)) + remoteProviderApplication.getReportUrl(),
+                getAuthenticationFieldValue(USERNAME),
+                getAuthenticationFieldValue(PASSWORD));
 
         try {
             if (response.isValid()) {
@@ -143,9 +175,9 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
             } else {
                 String body = response.getBodyAsString();
-                log.info("Contents:\n" + body);
+                log.info("Contents: " + body);
 
-                throw new RestIOException("Invalid response received from Contrast servers, check the logs for more details.", response.getStatus());
+                throw new RestIOException("Invalid response received from Sonatype servers, check the logs for more details.", response.getStatus());
             }
 
         } catch (JSONException e) {
@@ -155,54 +187,93 @@ public class SonatypeRemoteProvider extends AbstractRemoteProvider {
 
     }
 
-    private List<Finding> getFindingsFromObject(JSONObject object) throws JSONException {
+
+    ////////////////////////////////////////////////////////////////////////
+    //                             Helpers
+    ////////////////////////////////////////////////////////////////////////
+
+    private List<Finding> getFindingsFromObject(JSONObject object) {
 
         List<Finding> findings = list();
-        String pathName = object.getString("pathnames");
-        Map<FindingKey, String> findingMap = map (
-                FindingKey.PATH, pathName,
-                FindingKey.VULN_CODE, "Configuration"
-        );
+        try {
 
-        JSONObject securityData = null;
-        if (object.has("securityData") && !"null".equals(object.getString("securityData")))
-            securityData = getJSONObject(object.getString("securityData"));
+            if (!object.has("pathnames") || "null".equals(object.getString("pathnames")))
+                return findings;
 
-        if (securityData == null)
-            return findings;
+            Iterable<JSONObject> ite = toJSONObjectIterable(object.getString("pathnames"));
 
-        String rawFinding = object.toString(2);
+            JSONArray jsonArray = object.getJSONArray("pathnames");
+            if (jsonArray.length() < 1)
+                return findings;
 
-        for (JSONObject issue : toJSONObjectIterable(securityData.getString("securityIssues"))) {
+            // Get only first component in the list
+            String pathName = jsonArray.getString(0);
+            pathName = pathName.replace("\\", "/");
+            String component = pathName.split("/")[pathName.split("/").length - 1];
 
-            if (issue.has("status") && "Open".equals(issue.getString("status"))) {
-                Dependency dependency = new Dependency();
-                dependency.setCve(issue.getString("reference"));
-                dependency.setSource(issue.getString("source"));
-                dependency.setComponentName(pathName);
-                dependency.setComponentFilePath(pathName);
-                findingMap.put(FindingKey.SEVERITY_CODE, getSeverity(issue.getInt("severity")));
-                Finding finding = constructFinding(findingMap);
-                assert finding != null : "Null finding received from constructFinding";
-                finding.setRawFinding(rawFinding);
-                finding.setDependency(dependency);
-                finding.setNativeId(object.getString("hash") + "-" + issue.getString("reference"));
-                finding.setIsStatic(true);
-                findings.add(finding);
+            Map<FindingKey, String> findingMap = map (
+                    FindingKey.PATH, pathName,
+                    FindingKey.VULN_CODE, "Configuration"
+            );
+
+            JSONObject securityData = null;
+            if (object.has("securityData") && !"null".equals(object.getString("securityData")))
+                securityData = getJSONObject(object.getString("securityData"));
+
+            if (securityData == null)
+                return findings;
+
+            String rawFinding = object.toString(2);
+
+            for (JSONObject issue : toJSONObjectIterable(securityData.getString("securityIssues"))) {
+
+                if (issue.has("status") && "Open".equals(issue.getString("status"))) {
+                    Dependency dependency = new Dependency();
+                    dependency.setCve(issue.getString("reference"));
+                    dependency.setSource(issue.getString("source"));
+                    dependency.setComponentName(component);
+                    dependency.setComponentFilePath(pathName);
+                    findingMap.put(FindingKey.SEVERITY_CODE, getSeverity(issue));
+                    Finding finding = constructFinding(findingMap);
+                    assert finding != null : "Null finding received from constructFinding";
+                    finding.setRawFinding(rawFinding);
+                    finding.setDependency(dependency);
+                    finding.setNativeId(object.getString("hash") + "-" + issue.getString("reference"));
+                    finding.setIsStatic(true);
+                    findings.add(finding);
+                }
             }
+        } catch (JSONException e) {
+            throw new RestIOException(e, "Invalid response received.");
         }
 
         return findings;
     }
 
-    private String getSeverity(int severity) {
-        if (severity>=7 && severity<=10)
-            return "Critical";
-        else if (severity >=4 && severity<7)
-            return "Severe";
-        else if (severity>=1 && severity <4)
-            return "Moderate";
-        else return "No Threat";
+    private String getSeverity(JSONObject issue) {
+        int severity = 1;
+        try {
+            if (issue.has("severity") && !"null".equals(issue.getString("severity")))
+                severity = issue.getInt("severity");
+            if (severity>=7 && severity<=10)
+                return "Critical";
+            else if (severity >=4 && severity<7)
+                return "Severe";
+            else if (severity>=1 && severity <4)
+                return "Moderate";
+            else return "No Threat";
+
+        } catch (JSONException e) {
+            throw new RestIOException(e, "Invalid response received.");
+        }
+
+    }
+
+    private String getUrl(String inputUrl) {
+        if (inputUrl != null && inputUrl.trim().endsWith("/"))
+            return inputUrl.trim();
+        else
+            return inputUrl.trim() + "/";
     }
 
 }

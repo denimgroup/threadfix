@@ -30,8 +30,8 @@ import com.denimgroup.threadfix.data.entities.VulnerabilityMarker;
 import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ResponseParserTests {
 
