@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.List;
 import java.util.Properties;
 
 @Component
@@ -57,19 +58,18 @@ public class ScriptRunner {
                     prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
 
             // Initialize object for ScripRunner
-            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, true);
+            com.ibatis.common.jdbc.ScriptRunner sr = new com.ibatis.common.jdbc.ScriptRunner(con, false, false);
 
             // Give the input file to Reader
             Reader reader = new BufferedReader(
                     new FileReader(scriptFile));
 
-            // Exctute script
+            // Execute script
             sr.runScript(reader);
 
         } catch (Exception e) {
             LOGGER.error("Failed to Execute" + scriptFile
                     + " The error is " + e.getMessage());
-            readErrorLog();
             isSuccess = false;
 
         } finally {
@@ -84,17 +84,52 @@ public class ScriptRunner {
         return isSuccess;
     }
 
+    public boolean checkRunning(String errorLogFile, String fixedSqlFile) {
 
-    private void readErrorLog() {
+        boolean result = true;
+        File outputFile = new File(fixedSqlFile);
+
+        FileOutputStream fos = null;
         try {
-            String error = FileUtils.readFileToString(new File("error.log"));
+            List<String> lines = FileUtils.readLines(new File(errorLogFile));
+
+            if (lines != null && lines.size() > 1) {
+                fos = new FileOutputStream(outputFile);
+                OutputStreamWriter osw = new OutputStreamWriter(fos);
+
+                String preLine = null;
+                osw.write("SET FOREIGN_KEY_CHECKS=0;\n");
+                for (String currentLine: lines) {
+
+                   if (currentLine.toLowerCase().contains("incorrect string value") && !currentLine.contains("Error executing: INSERT INTO")) {
+                       if (preLine != null) {
+                           String fixedStatement = preLine.replace("Error executing: ", "").replaceAll("[^\\x00-\\x7F]", "");
+                           osw.write(fixedStatement + ";\n");
+                       }
+                   }
+                  preLine = currentLine;
+                }
+
+                osw.write("SET FOREIGN_KEY_CHECKS=1;\n");
+                osw.close();
+                result = false;
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error", e);
+        }
+        return result;
+    }
+
+    public void readErrorLog(String errorLogAttemp1) {
+        try {
+            String error = FileUtils.readFileToString(new File(errorLogAttemp1));
             String detailMsg = "";
-            if (error != null)
+            if (error != null && error.split("VALUES\\(").length > 1)
                 detailMsg = " " + error.split("\\(ID")[0] + " with ID " + error.split("VALUES\\(")[1].split(",")[0] + ".";
 
-            LOGGER.error("Unable to migrate data." + detailMsg + " Check error.log for more details.");
+            LOGGER.error("Unable to migrate data." + detailMsg + " Check " + errorLogAttemp1 + " for more details.");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error", e);
         }
     }
 

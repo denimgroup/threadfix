@@ -242,6 +242,14 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 				type.setEncryptedUsername(ESAPI.encryptor().encrypt(type.getUsername()));
 				type.setEncryptedPassword(ESAPI.encryptor().encrypt(type.getPassword()));
 			}
+			if (type != null && type.getAuthenticationFields() != null) {
+				for (RemoteProviderAuthenticationField field: type.getAuthenticationFields()) {
+					if (field.isSecret()) {
+						field.setEncryptedValue(ESAPI.encryptor().encrypt(field.getValue()));
+						field.setValue(null);
+					}
+				}
+			}
 		} catch (EncryptionException e) {
 			LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
 		}
@@ -264,6 +272,13 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 					type.getEncryptedUsername() != null && type.getEncryptedPassword() != null) {
 				type.setUsername(ESAPI.encryptor().decrypt(type.getEncryptedUsername()));
 				type.setPassword(ESAPI.encryptor().decrypt(type.getEncryptedPassword()));
+			}
+
+			if (type != null && type.getAuthenticationFields() != null) {
+				for (RemoteProviderAuthenticationField field: type.getAuthenticationFields()) {
+					if (field.isSecret() && field.getEncryptedValue() != null)
+					field.setValue(ESAPI.encryptor().decrypt(field.getEncryptedValue()));
+				}
 			}
 		} catch (EncryptionException e) {
 			LOG.warn("Encountered an ESAPI encryption exception. Check your ESAPI configuration.", e);
@@ -455,6 +470,7 @@ public class RemoteProviderTypeServiceImpl implements RemoteProviderTypeService 
 
             for (RemoteProviderAuthenticationField field : type.getAuthenticationFields()) {
                 field.setValue(null);
+				field.setEncryptedValue(null);
             }
 
             store(type);

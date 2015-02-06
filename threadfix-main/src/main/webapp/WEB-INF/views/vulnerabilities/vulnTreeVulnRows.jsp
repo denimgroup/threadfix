@@ -28,10 +28,10 @@
 
     <!-- Dependency -->
     <div ng-if="vulnerability.dependency">
-        <div class="vuln-tree-label">CVE</div>
+        <div class="vuln-tree-label">Reference</div>
         <span id="cve{{ $index }}">
-            {{ vulnerability.dependency.cve }}
-            (<a target="_blank" id="linkCve{{ $index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vulnerability.dependency.cve }}">View</a>)
+            {{ vulnerability.dependency.refId }}
+            (<a target="_blank" id="linkCve{{ $index }}" href="{{ vulnerability.dependency.refLink }}">View</a>)
         </span>
         <br>
         <div class="vuln-tree-label">Component</div>

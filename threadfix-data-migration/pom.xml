@@ -367,7 +367,6 @@
             <artifactId>ibatis-sqlmap</artifactId>
             <version>2.3.0</version>
         </dependency>
-
     </dependencies>
 
     <properties>

@@ -31,7 +31,8 @@ import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
 import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
-import com.denimgroup.threadfix.importer.merge.Merger;
+import com.denimgroup.threadfix.importer.ScanLocationManager;
+import com.denimgroup.threadfix.service.merge.Merger;
 import com.denimgroup.threadfix.importer.utils.ParserUtils;
 import org.junit.Test;
 
@@ -105,7 +106,8 @@ public class EndToEndTests {
 
     @Test
     public void testXSSVulnsMerge() {
-        Application application = Merger.mergeFromDifferentScanners(TestConstants.WEB_FORMS_DROP_DOWN,
+        Application application = getApplication(TestConstants.WEB_FORMS_DROP_DOWN,
+                ScanLocationManager.getRoot(),
                 "SBIR/webform.xml", "SBIR/webform.fpr");
 
         List<Scan> scans = application.getScans();
@@ -127,6 +129,17 @@ public class EndToEndTests {
         }
 
         assert hasMergedXSSVuln : "Didn't find a merged vulnerability.";
+    }
+
+    private Application getApplication(String sourceLocation, String scanBase, String... scans) {
+
+        String[] newScans = new String[scans.length];
+
+        for (int i = 0; i < scans.length; i++) {
+            newScans[i] = scanBase + scans[i];
+        }
+
+        return Merger.mergeFromDifferentScanners(sourceLocation, newScans);
     }
 
 }

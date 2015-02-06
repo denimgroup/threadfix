@@ -129,7 +129,7 @@ module.controller('WafsPageController', function($scope, $http, $modal, $log, tf
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 
     $scope.goToWaf = function(waf) {
         window.location.href = tfEncoder.encode("/wafs/" + waf.id);
