@@ -80,19 +80,8 @@ public class RemappingService {
 
         for (Finding finding : findings) {
 
-            Iterable<Vulnerability> possibilities = cache.getPossibilities(finding);
-
-            if (possibilities.iterator().hasNext()) { // not empty
-
-                FindingMatcher findingMatcher = new FindingMatcher(finding.getScan());
-
-                for (Vulnerability vulnerability : possibilities) {
-
-                    if (findingMatcher.doesMatch(finding, vulnerability)) {
-                        VulnerabilityParser.addToVuln(vulnerability, finding);
-                    }
-                }
-            }
+            attemptToAddFromCache(cache, finding);
+            attemptToAddFromCache(newCache, finding);
 
             if (finding.getVulnerability() == null) {
                 Vulnerability parse = VulnerabilityParser.parse(finding);
@@ -106,6 +95,22 @@ public class RemappingService {
         for (Vulnerability newVulnerability : newVulnerabilities) {
             application.addVulnerability(newVulnerability);
             vulnerabilityDao.saveOrUpdate(newVulnerability);
+        }
+    }
+
+    private void attemptToAddFromCache(VulnerabilityCache cache, Finding finding) {
+        Iterable<Vulnerability> possibilities = cache.getPossibilities(finding);
+
+        if (possibilities.iterator().hasNext()) { // not empty
+
+            FindingMatcher findingMatcher = new FindingMatcher(finding.getScan());
+
+            for (Vulnerability vulnerability : possibilities) {
+
+                if (findingMatcher.doesMatch(finding, vulnerability)) {
+                    VulnerabilityParser.addToVuln(vulnerability, finding);
+                }
+            }
         }
     }
 }
