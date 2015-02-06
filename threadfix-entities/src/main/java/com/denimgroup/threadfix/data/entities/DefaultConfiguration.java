@@ -57,8 +57,8 @@ public class DefaultConfiguration extends BaseEntity {
 
     private Integer sessionTimeout = null;
 
-    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId,
-            dashboardBottomRightId, applicationTopLeftId, applicationTopRightId;
+    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId, dashboardBottomRightId,
+            applicationTopLeftId, applicationTopRightId, teamTopLeftId, teamTopRightId;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -77,6 +77,24 @@ public class DefaultConfiguration extends BaseEntity {
 
     public void setSessionTimeout(Integer sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
+    }
+
+    @Column
+    public Integer getTeamTopLeftId() {
+        return teamTopLeftId;
+    }
+
+    public void setTeamTopLeftId(Integer teamTopLeftId) {
+        this.teamTopLeftId = teamTopLeftId;
+    }
+
+    @Column
+    public Integer getTeamTopRightId() {
+        return teamTopRightId;
+    }
+
+    public void setTeamTopRightId(Integer teamTopRightId) {
+        this.teamTopRightId = teamTopRightId;
     }
 
     @Column
@@ -360,6 +378,16 @@ public class DefaultConfiguration extends BaseEntity {
         applicationReportIds.add(getApplicationTopRightId());
 
         return applicationReportIds;
+    }
+
+    @Transient
+    public List<Integer> getTeamReportIds() {
+        List<Integer> teamReportIds = list();
+
+        teamReportIds.add(getTeamTopLeftId());
+        teamReportIds.add(getTeamTopRightId());
+
+        return teamReportIds;
     }
 
     @Column

@@ -23,10 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.Application;
-import com.denimgroup.threadfix.data.entities.ApplicationCriticality;
-import com.denimgroup.threadfix.data.entities.Organization;
-import com.denimgroup.threadfix.data.entities.Permission;
+import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.data.enums.FrameworkType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
@@ -76,6 +73,12 @@ public class TeamDetailPageController {
     private LicenseService licenseService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private CacheBustService cacheBustService;
 
     @RequestMapping(method=RequestMethod.GET)
     public ModelAndView detail(@PathVariable("orgId") int orgId,
@@ -110,6 +113,12 @@ public class TeamDetailPageController {
                 mav.addObject("canAddApps", true);
             }
 
+            DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+            List<Report> reports = reportService.loadByIds(config.getTeamReportIds());
+
+            mav.addObject("config", config);
+            mav.addObject("reports", reports);
+            mav.addObject("reportJsPaths", cacheBustService.uncachedJsPaths(request, reports));
             mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());

@@ -390,6 +390,42 @@
             </div>
         </div>
 
+		<div class="panel panel-default">
+            <div id="defaultTeamDetailPageSettingsPanel" class="panel-heading pointer" style="width:250px"
+                 ng-click="editTeamDetailPageSettings = !editTeamDetailPageSettings">
+                <h3 class="panel-title">
+                    <span ng-hide="editTeamDetailPageSettings" class="icon icon-chevron-right"></span>
+                    <span ng-show="editTeamDetailPageSettings" class="icon icon-chevron-down"></span>
+                    Team Detail Page Settings
+                </h3>
+            </div>
+            <div class="panel-body" ng-show="editTeamDetailPageSettings">
+                <table>
+                    <tr>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Left Report</b>
+                            </div>
+                            <div>
+                                <form:select id="teamTopLeftSelect" path="teamTopLeftId">
+                                    <form:options items="${ teamReports }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                        <td style="padding-left: 5px">
+                            <div>
+                                <b>Top Right Report</b>
+                            </div>
+                            <div>
+                                <form:select id="teamTopRightSelect" path="teamTopRightId">
+                                    <form:options items="${ teamReports }" itemValue="id" itemLabel="displayName" />
+                                </form:select>
+                            </div>
+                        </td>
+                </table>
+            </div>
+        </div>
+
 		<br/>
 		<button ng-disabled="form.$invalid" class="btn btn-primary" type="submit" id="updateDefaultsButton">Save Changes</button>
 	</form:form>

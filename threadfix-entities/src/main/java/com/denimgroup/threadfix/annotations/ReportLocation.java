@@ -28,5 +28,5 @@ package com.denimgroup.threadfix.annotations;
  * @author zabdisubhan
  */
 public enum ReportLocation {
-    DASHBOARD, APPLICATION
+    DASHBOARD, APPLICATION, TEAM
 }

@@ -88,37 +88,40 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
 
-        config.setDashboardTopLeftId(createAndSaveReport(
-                true,
-                "vulnerabilityTrending",
-                "Vulnerability Trending",
-                "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
-                ReportLocation.DASHBOARD,
-                "/scripts/left-report-controller.js").getId());
+        Map<ReportLocation, Report> vulnTrendReports = newMap();
+        Map<ReportLocation, Report> mostVulnAppsReports = newMap();
 
-        config.setDashboardTopRightId(createAndSaveReport(
-                true,
-                "mostVulnerableApps",
-                "Most Vulnerable Applications",
-                "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
-                ReportLocation.DASHBOARD,
-                "/scripts/right-report-controller.js").getId());
+        for (ReportLocation location : ReportLocation.values()) {
+            vulnTrendReports.put(location,
+                 createAndSaveReport(
+                     true,
+                     "vulnerabilityTrending",
+                     "Vulnerability Trending",
+                     "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
+                     location,
+                     "/scripts/left-report-controller.js"));
 
-        config.setApplicationTopLeftId(createAndSaveReport(
-                true,
-                "vulnerabilityTrending",
-                "Vulnerability Trending",
-                "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
-                ReportLocation.APPLICATION,
-                "/scripts/left-report-controller.js").getId());
+            mostVulnAppsReports.put(location,
+                    createAndSaveReport(
+                        true,
+                        "mostVulnerableApps",
+                        "Most Vulnerable Applications",
+                        "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
+                        location,
+                        "/scripts/right-report-controller.js"));
+        }
 
-        config.setApplicationTopRightId(createAndSaveReport(
-                true,
-                "mostVulnerableApps",
-                "Most Vulnerable Applications",
-                "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
-                ReportLocation.APPLICATION,
-                "/scripts/right-report-controller.js").getId());
+        config.setDashboardTopLeftId(vulnTrendReports.get(ReportLocation.DASHBOARD).getId());
+
+        config.setDashboardTopRightId(mostVulnAppsReports.get(ReportLocation.DASHBOARD).getId());
+
+        config.setApplicationTopLeftId(vulnTrendReports.get(ReportLocation.APPLICATION).getId());
+
+        config.setApplicationTopRightId(mostVulnAppsReports.get(ReportLocation.APPLICATION).getId());
+
+        config.setTeamTopLeftId(vulnTrendReports.get(ReportLocation.TEAM).getId());
+
+        config.setTeamTopRightId(mostVulnAppsReports.get(ReportLocation.TEAM).getId());
 
         config.setDashboardBottomLeftId(createAndSaveReport(
                 true,
