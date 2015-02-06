@@ -45,6 +45,14 @@ public interface ApplicationDao extends GenericObjectDao<Application> {
     public Application retrieveByName(String name, int teamId);
 
     /**
+	 *
+     * @param uniqueId
+     * @param teamId
+     * @return
+     */
+    public Application retrieveByUniqueId(String uniqueId, int teamId);
+
+    /**
 	 * 
 	 * @param authenticatedTeamIds
 	 * @return
