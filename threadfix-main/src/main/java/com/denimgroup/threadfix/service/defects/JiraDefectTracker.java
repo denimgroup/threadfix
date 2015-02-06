@@ -43,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -436,10 +437,21 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 		}
 		
 		log.info("Updating status for defect " + defect.getNativeId());
-		
-		String result = restUtils.getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(),
+
+        String result = null;
+        try {
+            result = restUtils.getUrlAsString(getUrlWithRest() + "issue/" + defect.getNativeId(),
                 getUsername(), getPassword());
-		
+
+        } catch (RestIOException e) {
+            if (e.getCause() instanceof FileNotFoundException) { // invalid issue key
+                log.error("Issue " + defect.getNativeId() + " not found. Invalid Jira " +
+                        "installations and invalid scanner-supplied defect IDs can " +
+                        "cause this error.");
+                return null;
+            }
+        }
+
 		if (result != null) {
 			try {
 				JSONObject resultObject = new JSONObject(result);
