@@ -31,9 +31,6 @@ import com.denimgroup.threadfix.data.entities.ScannerDatabaseNames;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 
-/**
- * Created by daniel on 2/4/15.
- */
 
 @ScanImporter(
         scannerName = ScannerDatabaseNames.CONTRAST_DB_NAME,
@@ -52,11 +49,11 @@ public class ContrastChannelImporter extends AbstractChannelImporter{
 
     @Override
     public Scan parseInput() {
-        return null;
+        throw new UnsupportedOperationException("This scan should be uploaded via Remote Provider.");
     }
 
     @Override
     public ScanCheckResultBean checkFile() {
-        return null;
+        throw new UnsupportedOperationException("This scan should be uploaded via Remote Provider.");
     }
 }

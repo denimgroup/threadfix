@@ -33,9 +33,6 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by daniel on 2/2/15.
- */
 @ScanImporter(
         scannerName = ScannerDatabaseNames.QUALYSGUARD_WAS_DB_NAME,
         startingXMLTags = { "WAS_SCAN_REPORT", "HEADER", "NAME", "DESCRIPTION", "GENERATION_DATETIME", "COMPANY_INFO"})
@@ -46,23 +43,12 @@ public class QualysWebImporter extends AbstractChannelImporter {
 
     @Override
     public Scan parseInput() {
-        return parseSAXInput(new QualysSaxParser());
-    }
-
-    public class QualysSaxParser extends HandlerWithBuilder {
-        public QualysSaxParser() {
-            super();
-        }
-
+        throw new UnsupportedOperationException("This scan should be uploaded via Remote Provider.");
     }
 
     @Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
-        return testSAXInput(new QualysSaxValidator());
-    }
-
-    public class QualysSaxValidator extends HandlerWithBuilder {
-
+        throw new UnsupportedOperationException("This scan should be uploaded via Remote Provider.");
     }
 }

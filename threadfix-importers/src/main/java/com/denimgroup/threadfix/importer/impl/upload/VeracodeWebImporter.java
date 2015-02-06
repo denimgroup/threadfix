@@ -33,9 +33,6 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by daniel on 2/2/15.
- */
 @ScanImporter(
         scannerName = ScannerDatabaseNames.VERACODE_DB_NAME,
         startingXMLTags = {"detailedreport", "static-analysis", "modules", "module"})
@@ -44,22 +41,13 @@ public class VeracodeWebImporter extends AbstractChannelImporter{
 
     @Override
     public Scan parseInput() {
-        return parseSAXInput(new VeracodeSaxParser());
-    }
-
-    public class VeracodeSaxParser extends HandlerWithBuilder {
-        public VeracodeSaxParser() {
-            super();
-        }
+        throw new UnsupportedOperationException("This should be uploaded via Remote Provider.");
     }
 
     @Nonnull
     @Override
     public ScanCheckResultBean checkFile() {
-        return testSAXInput(new VeracodeSaxValidator());
+        throw new UnsupportedOperationException("This should be uploaded via Remote Provider.");
     }
 
-    public class VeracodeSaxValidator extends HandlerWithBuilder {
-
-    }
 }
