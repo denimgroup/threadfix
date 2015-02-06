@@ -298,7 +298,7 @@
         <commons.io.version>1.4</commons.io.version>
         <commons.lang.version>3.1</commons.lang.version>
         <commons.logging.version>1.1.1</commons.logging.version>
-        <commons.validator.version>1.3.1</commons.validator.version>
+        <commons.validator.version>1.4.0</commons.validator.version>
         <diffutils.version>1.2.1</diffutils.version>
         <esapi.version>2.1.0-SNAPSHOT</esapi.version>
         <ezmorph.version>1.0.6</ezmorph.version>

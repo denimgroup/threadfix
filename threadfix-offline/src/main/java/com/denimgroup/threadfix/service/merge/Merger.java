@@ -23,8 +23,10 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.merge;
 
+import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
+import com.denimgroup.threadfix.data.dao.ScanDao;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.importer.util.ScanParser;
 import com.denimgroup.threadfix.importer.util.SpringConfiguration;
@@ -57,6 +59,10 @@ public class Merger extends SpringBeanAutowiringSupport {
     private ApplicationDao applicationDao;
     @Autowired
     private ChannelTypeDao channelTypeDao;
+    @Autowired
+    private ApplicationChannelDao applicationChannelDao;
+    @Autowired
+    private ScanDao scanDao;
 
     /**
      * This is public because @Transactional doesn't work for private methods. Don't call it yourself.
@@ -137,6 +143,44 @@ public class Merger extends SpringBeanAutowiringSupport {
             application.getChannelList().add(resultScan.getApplicationChannel());
             scanMerger.merge(resultScan, resultScan.getApplicationChannel());
             application.getScans().add(resultScan);
+        }
+
+        return application;
+    }
+
+    public Application mergeSeries(String sourceRoot, Collection<String> filePaths) {
+        return SpringConfiguration.getSpringBean(Merger.class).mergeSeriesInternal(sourceRoot, filePaths);
+    }
+
+    @Transactional(readOnly = true)
+    public Application mergeSeriesInternal(String sourceRoot, Collection<String> filePaths) {
+        assert scanMerger != null : "No Merger found, fix your Spring context.";
+        assert scanParser != null : "No Parser found, fix your Spring context.";
+
+        Application application = new Application();
+        application.setVulnerabilities(listOf(Vulnerability.class));
+        application.setChannelList(new ArrayList<ApplicationChannel>());
+        application.setRepositoryFolder(sourceRoot);
+        application.setName("MergeApplication");
+        application.setScans(new ArrayList<Scan>());
+
+        applicationDao.saveOrUpdate(application);
+
+        ApplicationChannel channel = null;
+
+        for (String file : filePaths) {
+            Scan resultScan = scanParser.getScan(file);
+            if (channel == null) {
+                channel = resultScan.getApplicationChannel();
+                channel.setChannelType(channelTypeDao.retrieveByName(channel.getChannelType().getName()));
+                channel.setApplication(application);
+                application.getChannelList().add(channel);
+                applicationChannelDao.saveOrUpdate(channel);
+            }
+
+            scanMerger.merge(resultScan, channel);
+            application.getScans().add(resultScan);
+            scanDao.saveOrUpdate(resultScan);
         }
 
         return application;

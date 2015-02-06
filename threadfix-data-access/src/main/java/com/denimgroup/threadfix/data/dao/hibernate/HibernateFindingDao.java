@@ -259,4 +259,14 @@ public class HibernateFindingDao
                 .addOrder(Order.asc("surface.path"))
                 .list();
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Finding> retrieveByChannelVulnerability(Integer channelVulnerabilityId) {
+		return (List<Finding>) getSession()
+				.createCriteria(Finding.class)
+				.createAlias("channelVulnerability", "typeAlias")
+				.add(Restrictions.eq("typeAlias.id", channelVulnerabilityId))
+				.list();
+	}
 }
