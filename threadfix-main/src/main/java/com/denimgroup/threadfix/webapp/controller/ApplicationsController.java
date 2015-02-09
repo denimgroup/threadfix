@@ -155,7 +155,7 @@ public class ApplicationsController {
 
         model.addAttribute("config", config);
         model.addAttribute("reports", reports);
-        model.addAttribute("reportJsPaths", cacheBustService.uncachedJsPaths(request, reports));
+        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
         model.addAttribute("tagList", application.getTags());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);

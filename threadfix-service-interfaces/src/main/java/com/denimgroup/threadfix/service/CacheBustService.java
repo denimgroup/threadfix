@@ -34,7 +34,7 @@ import java.util.List;
  */
 public interface CacheBustService {
 
-    public String filteredAsset(HttpServletRequest request, String relUrl);
+    public String notCachedAsset(HttpServletRequest request, String relUrl);
 
-    public List<String> uncachedJsPaths(HttpServletRequest request, List<Report> reports);
+    public List<String> notCachedJsPaths(HttpServletRequest request, List<Report> reports);
 }

@@ -90,7 +90,7 @@ public class DashboardController {
 		model.addAttribute("teams", organizationList);
         model.addAttribute("config", config);
         model.addAttribute("reports", reports);
-        model.addAttribute("reportJsPaths", cacheBustService.uncachedJsPaths(request, reports));
+        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {

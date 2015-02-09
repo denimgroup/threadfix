@@ -118,7 +118,7 @@ public class TeamDetailPageController {
 
             mav.addObject("config", config);
             mav.addObject("reports", reports);
-            mav.addObject("reportJsPaths", cacheBustService.uncachedJsPaths(request, reports));
+            mav.addObject("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
             mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());
