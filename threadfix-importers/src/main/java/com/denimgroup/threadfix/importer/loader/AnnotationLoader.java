@@ -128,8 +128,6 @@ public final class AnnotationLoader<T extends java.lang.annotation.Annotation> {
             }
         }
 
-        assert !savedMap.isEmpty() : "Map was empty after loading annotations from classpath.";
-
         return savedMap;
     }
 

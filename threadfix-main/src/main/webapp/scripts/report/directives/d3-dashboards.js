@@ -91,7 +91,6 @@ d3ThreadfixModule.directive('d3Vbars', ['$window', '$timeout', 'd3', 'd3Service'
                             return colDuration*drawTime; }) ;
 
                 };
-                ;
             }
         }
     }]);
