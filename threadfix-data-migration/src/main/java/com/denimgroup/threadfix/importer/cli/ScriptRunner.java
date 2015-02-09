@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.importer.cli;
 
+import com.denimgroup.threadfix.importer.util.RegexUtils;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
@@ -84,53 +85,145 @@ public class ScriptRunner {
         return isSuccess;
     }
 
-    public boolean checkRunning(String errorLogFile, String fixedSqlFile) {
+    public long checkRunningAndFixStatements(String errorLogFile, String fixedSqlFile) {
 
-        boolean result = true;
-        File outputFile = new File(fixedSqlFile);
+        long errorCount = 0;
+
+        File outputFixedScript = new File(fixedSqlFile);
 
         FileOutputStream fos = null;
         try {
             List<String> lines = FileUtils.readLines(new File(errorLogFile));
 
             if (lines != null && lines.size() > 1) {
-                fos = new FileOutputStream(outputFile);
+                fos = new FileOutputStream(outputFixedScript);
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
 
                 String preLine = null;
                 osw.write("SET FOREIGN_KEY_CHECKS=0;\n");
                 for (String currentLine: lines) {
 
-                   if (currentLine.toLowerCase().contains("incorrect string value") && !currentLine.contains("Error executing: INSERT INTO")) {
-                       if (preLine != null) {
-                           String fixedStatement = preLine.replace("Error executing: ", "").replaceAll("[^\\x00-\\x7F]", "");
-                           osw.write(fixedStatement + ";\n");
-                       }
-                   }
-                  preLine = currentLine;
+                    if (!currentLine.contains("Error executing: INSERT INTO")) {
+
+                        // Remove all weird characters if they cause 'incorrect string value' SQLExeption
+                        if (currentLine.toLowerCase().contains("incorrect string value")) {
+                            if (preLine != null) {
+                                String fixedStatement = preLine.replace("Error executing: ", "").replaceAll("[^\\x00-\\x7F]", "");
+                                osw.write(fixedStatement + ";\n");
+                            }
+                        }
+                        // If there is unknown column, then delete that column and its value
+                        else if (currentLine.contains("MySQLSyntaxErrorException: Unknown column")) {
+                            osw.write(getFixedUnknownColStatement(currentLine, preLine.replace("Error executing: ", "")));
+                        }
+                        // Unresolved-yet SQLException, then write whole statement to fixed Sql script
+                        else {
+                            if (preLine != null && preLine.contains("Error executing: INSERT INTO")) {
+                                osw.write(preLine.replace("Error executing: ", "") + ";\n");
+                            }
+                        }
+                    } else {
+                        errorCount += 1;
+                    }
+                    preLine = currentLine;
                 }
 
                 osw.write("SET FOREIGN_KEY_CHECKS=1;\n");
                 osw.close();
-                result = false;
             }
         } catch (IOException e) {
             LOGGER.error("Error", e);
         }
-        return result;
+        return errorCount;
     }
 
-    public void readErrorLog(String errorLogAttemp1) {
-        try {
-            String error = FileUtils.readFileToString(new File(errorLogAttemp1));
-            String detailMsg = "";
-            if (error != null && error.split("VALUES\\(").length > 1)
-                detailMsg = " " + error.split("\\(ID")[0] + " with ID " + error.split("VALUES\\(")[1].split(",")[0] + ".";
+    private String getFixedUnknownColStatement(String errorStr, String originalStatement) {
+        String ERROR_COL_PATTERN = "Unknown column '(.*)' in 'field list'";
+        String COL_LIST_PATTERN = "\\((.*)\\) VALUES\\(";
+        String VALUE_LIST_PATTERN = "\\) VALUES\\((.*)";
+        String TABLE_PATTERN = "INSERT INTO (.*)\\(ID";
+        String colName = RegexUtils.getRegexResult(errorStr, ERROR_COL_PATTERN);
+        String colListStr = RegexUtils.getRegexResult(originalStatement, COL_LIST_PATTERN);
+        String valueListStr = RegexUtils.getRegexResult(originalStatement, VALUE_LIST_PATTERN).trim();
+        if (valueListStr.endsWith(")"))
+            valueListStr = valueListStr.substring(0, valueListStr.length()-1);
+        String table = RegexUtils.getRegexResult(originalStatement, TABLE_PATTERN);
 
-            LOGGER.error("Unable to migrate data." + detailMsg + " Check " + errorLogAttemp1 + " for more details.");
-        } catch (Exception e) {
-            LOGGER.error("Error", e);
+        int colIndex = findColIndex(colListStr, colName);
+        String updatedColList = removeCol(colListStr, colIndex);
+        String updatedValList = removeValue(valueListStr, colIndex, colListStr.split(",").length);
+
+        String returnStr = "INSERT INTO " + table + "(" + updatedColList + ") VALUES" + "(" + updatedValList + ")";
+
+        return returnStr + ";\n";
+    }
+
+    private String removeCol(String valueListStr, Integer colIndex) {
+        if (colIndex == null)
+            return valueListStr;
+
+        String[] valList = valueListStr.split(",");
+        if (colIndex >= valList.length || valList.length < 2)
+            return valueListStr;
+
+        StringBuffer newStr = new StringBuffer();
+        for (int i =0 ;i<valList.length;i++)
+            if ( i != colIndex)
+                newStr.append("," + valList[i]);
+
+        return newStr.toString().replaceFirst(",", "");
+    }
+
+    private String removeValue(String valueListStr, Integer colIndex, Integer totalCol) {
+        if (colIndex == null)
+            return valueListStr;
+
+        String separator = ",";
+        int index = 1;
+        String inSearchStr = valueListStr.substring(valueListStr.indexOf(separator));
+        String needRemoveVal = valueListStr.substring(0, valueListStr.indexOf(separator));
+        StringBuffer buildingStr = new StringBuffer();
+
+        while (index <= colIndex) {
+
+            buildingStr.append(needRemoveVal);
+
+            if (index < totalCol - 1) {
+                if (inSearchStr.startsWith(",'")) {
+                    needRemoveVal = inSearchStr.substring(0, inSearchStr.indexOf("',") + 1);
+                    inSearchStr = inSearchStr.substring(inSearchStr.indexOf("',") + 1);
+                } else if (inSearchStr.startsWith(",")) {
+
+                    inSearchStr = inSearchStr.replaceFirst(",", "");
+                    needRemoveVal = "," + inSearchStr.substring(0, inSearchStr.indexOf(","));
+                    inSearchStr = inSearchStr.substring(inSearchStr.indexOf(","));
+                }
+            } else {
+                if (inSearchStr.startsWith(",'") || inSearchStr.startsWith(",")) {
+                    needRemoveVal = inSearchStr;
+                    inSearchStr = "";
+                } else needRemoveVal = null;
+
+            }
+
+            index ++;
         }
+
+        if (index == colIndex + 1 && needRemoveVal != null) {
+            buildingStr.append(inSearchStr);
+            return buildingStr.toString();
+        } else {
+            return valueListStr;
+        }
+
+    }
+
+    private Integer findColIndex(String colListStr, String colName) {
+        String[] colList = colListStr.split(",");
+        for (int i =0 ;i<colList.length;i++)
+            if (colList[i].trim().equalsIgnoreCase(colName))
+                return i;
+        return null;
     }
 
 }
