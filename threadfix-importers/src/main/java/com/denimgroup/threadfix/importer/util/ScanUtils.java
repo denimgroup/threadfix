@@ -123,11 +123,6 @@ public final class ScanUtils {
 		xmlReader.parse(source);
 	}
 
-	public static String readJSONInput(InputStream inputStream) {
-
-		return null;
-	}
-
 	public static boolean isZip(String fileName) {
 		try (RandomAccessFile file = new RandomAccessFile(new File(fileName), "r")) {
 			// these are the magic bytes for a zip file

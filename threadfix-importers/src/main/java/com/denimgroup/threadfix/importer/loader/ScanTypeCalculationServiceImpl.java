@@ -129,9 +129,9 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
     }
 
     private static final Set<Entry<String, String[]>> map = new HashSet<>();
-	private static final Set<Entry<String, Annotation>> jsonMap = new HashSet<>();
-	private static void addToJSONMap(String name, Annotation annotation) {
-		jsonMap.add(new SimpleEntry<>(name, annotation));
+	private static final Set<Entry<String, ScanImporter>> jsonMap = new HashSet<>();
+	private static void addToJSONMap(String name, ScanImporter scanImporter) {
+		jsonMap.add(new SimpleEntry<>(name, scanImporter));
 	}
     private static void addToMap(String name, String... tags) {
         map.add(new SimpleEntry<>(name, tags));
@@ -235,8 +235,8 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 			log.debug("Error attempting to determine first element type of JSON input.", e);
 		}
 
-		for (Entry<String, Annotation> entry : jsonMap) {
-			ScanImporter scanImporter = (ScanImporter) entry.getValue();
+		for (Entry<String, ScanImporter> entry : jsonMap) {
+			ScanImporter scanImporter = entry.getValue();
 
 			if (jsonObject != null && scanImporter.jsonStructure() == ScanImporter.JSONStructure.OBJECT) {
 				if (matchProperties(scanImporter.jsonProperties(), jsonObject)) {
