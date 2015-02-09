@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service.merge;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
 import org.junit.After;
 import org.junit.Test;
 
@@ -127,6 +128,23 @@ public class RemappingTests {
         List<ScanCloseVulnerabilityMap> maps = application.getScans().get(1).getScanCloseVulnerabilityMaps();
         assert maps == null || maps.size() == 0:
                 "Scan 1 had close map.";
+
+    }
+
+    @Test
+    public void testReopenMapMoved() {
+        Application application =
+                getApplicationWith(ALREADY_MAPPED, NO_VULNS, UNMAPPED, ALREADY_MAPPED);
+
+        testTwoScansOneVuln(application);
+
+        List<ScanReopenVulnerabilityMap> closeMaps = application.getScans().get(2).getScanReopenVulnerabilityMaps();
+        assert closeMaps != null && closeMaps.size() == 1 :
+                "Scan 3 didn't have reopen map.";
+
+        List<ScanReopenVulnerabilityMap> maps = application.getScans().get(3).getScanReopenVulnerabilityMaps();
+        assert maps == null || maps.size() == 0:
+                "Scan 4 had reopen map.";
 
     }
 

@@ -27,10 +27,7 @@ package com.denimgroup.threadfix.service.merge;
  * Created by mcollins on 2/5/15.
  */
 
-import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
-import com.denimgroup.threadfix.data.dao.ApplicationDao;
-import com.denimgroup.threadfix.data.dao.FindingDao;
-import com.denimgroup.threadfix.data.dao.VulnerabilityDao;
+import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +50,8 @@ public class RemappingService {
     ApplicationChannelDao applicationChannelDao;
     @Autowired
     VulnerabilityDao vulnerabilityDao;
+    @Autowired
+    ScanCloseReopenMappingDao scanCloseReopenMappingDao;
 
     public void remapFindings(ChannelVulnerability vulnerability) {
         List<Application> applications = applicationDao.retrieveAllActive();
@@ -173,21 +172,25 @@ public class RemappingService {
             if (closeMap.containsKey(date) && openEvent) {
                 lastMap = closeMap.get(date);
             } else if (!openEvent && lastMap != null) {
-                lastMap.getScan().getScanCloseVulnerabilityMaps().remove(lastMap);
-                Scan scan = scanTimeMap.get(date);
-                lastMap.setScan(scan);
-                if (scan.getScanCloseVulnerabilityMaps() == null) {
-                    scan.setScanCloseVulnerabilityMaps(listOf(ScanCloseVulnerabilityMap.class));
-                }
-                scan.getScanCloseVulnerabilityMaps().add(lastMap);
-
+                switchCloseMapTo(lastMap, scanTimeMap.get(date));
                 lastMap = null;
             }
 
             if (openEvent != shouldBeOpen) {
+                if (openEvent && !reopenMap.containsKey(date)) {
+                    new ScanReopenVulnerabilityMap(newVulnerability, scanTimeMap.get(date));
+                }
+
                 lastActionDate = date;
                 shouldBeOpen = openEvent;
+            } else if (reopenMap.containsKey(date)) {
+                ScanReopenVulnerabilityMap scanReopenVulnerabilityMap = reopenMap.get(date);
+                scanCloseReopenMappingDao.delete(scanReopenVulnerabilityMap);
             }
+        }
+
+        if (lastMap != null) {
+            scanCloseReopenMappingDao.delete(lastMap);
         }
 
         if (shouldBeOpen != null && shouldBeOpen != isOpen) {
@@ -197,6 +200,15 @@ public class RemappingService {
                 newVulnerability.closeVulnerability(scanTimeMap.get(lastActionDate), lastActionDate);
             }
         }
+    }
+
+    private void switchCloseMapTo(ScanCloseVulnerabilityMap lastMap, Scan scan) {
+        lastMap.getScan().getScanCloseVulnerabilityMaps().remove(lastMap);
+        lastMap.setScan(scan);
+        if (scan.getScanCloseVulnerabilityMaps() == null) {
+            scan.setScanCloseVulnerabilityMaps(listOf(ScanCloseVulnerabilityMap.class));
+        }
+        scan.getScanCloseVulnerabilityMaps().add(lastMap);
     }
 
     // there has to be a better algorithm for this
