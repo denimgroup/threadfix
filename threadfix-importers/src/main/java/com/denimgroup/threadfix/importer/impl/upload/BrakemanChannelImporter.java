@@ -50,7 +50,14 @@ import java.util.*;
  */
 @ScanImporter(
         scannerName = ScannerDatabaseNames.BRAKEMAN_DB_NAME,
-        format = ScanFormat.JSON
+        format = ScanFormat.JSON,
+		jsonStructure = ScanImporter.JSONStructure.OBJECT,
+		jsonProperties = {
+				"errors",
+				"scan_info",
+				"warnings"
+		}
+
 )
 public class BrakemanChannelImporter extends AbstractChannelImporter {
 
