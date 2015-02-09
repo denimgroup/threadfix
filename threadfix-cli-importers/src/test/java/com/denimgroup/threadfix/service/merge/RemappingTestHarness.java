@@ -27,6 +27,8 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.dao.ChannelTypeDao;
 import com.denimgroup.threadfix.data.dao.ChannelVulnerabilityDao;
 import com.denimgroup.threadfix.data.entities.Application;
+import com.denimgroup.threadfix.data.entities.ChannelType;
+import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 import com.denimgroup.threadfix.data.entities.ScannerType;
 import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.service.ChannelVulnerabilityService;
@@ -56,12 +58,38 @@ public class RemappingTestHarness {
     @Autowired
     ApplicationDao applicationDao;
 
-    public static Application getApplicationWith(String unmappedType, String cweId, String... paths) {
+    public static Application getApplicationWith(String... paths) {
         return SpringConfiguration.getSpringBean(RemappingTestHarness.class)
-                .getApplicationWithInternal(unmappedType, cweId, paths);
+                .getApplicationWithInternal(RemappingTests.FROM_ID, RemappingTests.TO_ID, paths);
+    }
+
+    public static void deleteNewVulnerability() {
+        SpringConfiguration.getSpringBean(RemappingTestHarness.class)
+                .deleteInternal();
     }
 
     @Transactional
+    public void deleteInternal() {
+
+        ChannelType channelType = channelTypeDao.retrieveByName(ScannerType.MANUAL.getDbName());
+
+        ChannelVulnerability channelVulnerability = channelVulnerabilityDao.retrieveByCode(channelType, RemappingTests.FROM_ID);
+
+        // bad
+        channelVulnerability.setName("te");
+        channelVulnerability.setCode("unusable");
+
+        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
+
+//        List<Application> applications = applicationDao.retrieveAllActive();
+//
+//        for (Application application : applications) {
+//            application.setActive(false);
+//            applicationDao.saveOrUpdate(application);
+//        }
+    }
+
+    @Transactional(readOnly = true)
     public Application getApplicationWithInternal(String unmappedType, String cweId, String... paths) {
         List<String> finalPaths = list();
 

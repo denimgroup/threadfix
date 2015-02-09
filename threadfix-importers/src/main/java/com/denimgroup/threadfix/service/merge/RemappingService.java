@@ -81,9 +81,11 @@ public class RemappingService {
                 cache = new VulnerabilityCache(application.getVulnerabilities()),
                 newCache = new VulnerabilityCache();
 
-        List<Vulnerability> newVulnerabilities = list();
+        List<Vulnerability>
+                newVulnerabilities = list(),
+                vulnerabilitiesToUpdate = list();
 
-        List<Finding> findings = findingDao.retrieveByChannelVulnerability(type.getId());
+        List<Finding> findings = findingDao.retrieveByChannelVulnerabilityAndApplication(type.getId(), application.getId());
 
         LOG.info("Got " + findings.size() + " results for this channel vulnerability.");
 
@@ -99,12 +101,16 @@ public class RemappingService {
                 newCache.add(parse);
             }
 
+            vulnerabilitiesToUpdate.add(finding.getVulnerability());
         }
 
         for (Vulnerability newVulnerability : newVulnerabilities) {
             application.addVulnerability(newVulnerability);
-            fixStateAndMappings(channel, newVulnerability);
-            vulnerabilityDao.saveOrUpdate(newVulnerability);
+        }
+
+        for (Vulnerability vulnerability : vulnerabilitiesToUpdate) {
+            fixStateAndMappings(channel, vulnerability);
+            vulnerabilityDao.saveOrUpdate(vulnerability);
         }
     }
 
@@ -123,27 +129,40 @@ public class RemappingService {
                                      Vulnerability newVulnerability) {
         setFirstFindingForVuln(newVulnerability);
 
-        Map<Calendar, Event> scannerEventMap = getScannerEventMap(newVulnerability);
+        // collectMaps
+        Map<Calendar, Event> scannerEventMap = getScannerEventMap(newVulnerability, channel);
         Map<Calendar, Scan> scanTimeMap = newMap();
-
         for (Scan scan : channel) {
             scanTimeMap.put(scan.getImportTime(), scan);
-            if (!scannerEventMap.containsKey(scan.getImportTime())) {
-                scannerEventMap.put(scan.getImportTime(), Event.SCAN_WITH_NO_DATA);
-            }
         }
+
+        Map<Calendar, ScanCloseVulnerabilityMap> closeMap = getCloseMap(newVulnerability);
+        Map<Calendar, ScanReopenVulnerabilityMap> reopenMap = getReopenMap(newVulnerability);
 
         List<Calendar> allDates = listFrom(scannerEventMap.keySet());
 
         Collections.sort(allDates);
 
+        processTimeline(newVulnerability, scannerEventMap, scanTimeMap, allDates, closeMap, reopenMap);
+    }
+
+    private void processTimeline(Vulnerability newVulnerability,
+                                 Map<Calendar, Event> scannerEventMap,
+                                 Map<Calendar, Scan> scanTimeMap,
+                                 List<Calendar> allDates,
+                                 Map<Calendar, ScanCloseVulnerabilityMap> closeMap,
+                                 Map<Calendar, ScanReopenVulnerabilityMap> reopenMap) {
         boolean isOpen = newVulnerability.isActive();
         Boolean shouldBeOpen = null;
         Calendar lastActionDate = null;
 
+        ScanCloseVulnerabilityMap lastMap = null;
+
         for (Calendar date : allDates) {
 
             Event event = scannerEventMap.get(date);
+
+            System.out.println(event);
 
             boolean openEvent = Event.isOpen(event);
 
@@ -151,12 +170,21 @@ public class RemappingService {
                 shouldBeOpen = openEvent;
             }
 
-            if (openEvent != shouldBeOpen) {
-                if (openEvent) {
-                    // need to reopen
-                } else {
-                    // need to close
+            if (closeMap.containsKey(date) && openEvent) {
+                lastMap = closeMap.get(date);
+            } else if (!openEvent && lastMap != null) {
+                lastMap.getScan().getScanCloseVulnerabilityMaps().remove(lastMap);
+                Scan scan = scanTimeMap.get(date);
+                lastMap.setScan(scan);
+                if (scan.getScanCloseVulnerabilityMaps() == null) {
+                    scan.setScanCloseVulnerabilityMaps(listOf(ScanCloseVulnerabilityMap.class));
                 }
+                scan.getScanCloseVulnerabilityMaps().add(lastMap);
+
+                lastMap = null;
+            }
+
+            if (openEvent != shouldBeOpen) {
                 lastActionDate = date;
                 shouldBeOpen = openEvent;
             }
@@ -202,7 +230,8 @@ public class RemappingService {
         }
     }
 
-    private Map<Calendar, Event> getScannerEventMap(Vulnerability newVulnerability) {
+    private Map<Calendar, Event> getScannerEventMap(Vulnerability newVulnerability,
+                                                    ApplicationChannel applicationChannel) {
         Map<Calendar, Event> scannerEvents = newMap();
 
         for (Finding finding : newVulnerability.getFindings()) {
@@ -215,15 +244,33 @@ public class RemappingService {
             }
         }
 
-        if (newVulnerability.getScanCloseVulnerabilityMaps() != null) {
-            for (ScanCloseVulnerabilityMap closeMap : newVulnerability.getScanCloseVulnerabilityMaps()) {
-                scannerEvents.put(closeMap.getScan().getImportTime(), Event.CLOSE);
+        for (Scan scan : applicationChannel) {
+            if (!scannerEvents.containsKey(scan.getImportTime())) {
+                scannerEvents.put(scan.getImportTime(), Event.SCAN_WITH_NO_DATA);
             }
         }
 
+        return scannerEvents;
+    }
+
+    private Map<Calendar, ScanCloseVulnerabilityMap> getCloseMap(Vulnerability newVulnerability) {
+        Map<Calendar, ScanCloseVulnerabilityMap> scannerEvents = newMap();
+
+        if (newVulnerability.getScanCloseVulnerabilityMaps() != null) {
+            for (ScanCloseVulnerabilityMap closeMap : newVulnerability.getScanCloseVulnerabilityMaps()) {
+                scannerEvents.put(closeMap.getScan().getImportTime(), closeMap);
+            }
+        }
+
+        return scannerEvents;
+    }
+
+    private Map<Calendar, ScanReopenVulnerabilityMap> getReopenMap(Vulnerability newVulnerability) {
+        Map<Calendar, ScanReopenVulnerabilityMap> scannerEvents = newMap();
+
         if (newVulnerability.getScanReopenVulnerabilityMaps() != null) {
             for (ScanReopenVulnerabilityMap reopenMap : newVulnerability.getScanReopenVulnerabilityMaps()) {
-                scannerEvents.put(reopenMap.getScan().getImportTime(), Event.REOPEN);
+                scannerEvents.put(reopenMap.getScan().getImportTime(), reopenMap);
             }
         }
 

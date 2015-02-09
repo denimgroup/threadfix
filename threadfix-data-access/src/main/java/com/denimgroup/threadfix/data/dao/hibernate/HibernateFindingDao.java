@@ -262,10 +262,13 @@ public class HibernateFindingDao
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Finding> retrieveByChannelVulnerability(Integer channelVulnerabilityId) {
+	public List<Finding> retrieveByChannelVulnerabilityAndApplication(Integer channelVulnerabilityId, Integer applicationId) {
 		return (List<Finding>) getSession()
 				.createCriteria(Finding.class)
 				.createAlias("channelVulnerability", "typeAlias")
+				.createAlias("scan", "scanAlias")
+				.createAlias("scanAlias.application", "applicationAlias")
+				.add(Restrictions.eq("applicationAlias.id", applicationId))
 				.add(Restrictions.eq("typeAlias.id", channelVulnerabilityId))
 				.list();
 	}

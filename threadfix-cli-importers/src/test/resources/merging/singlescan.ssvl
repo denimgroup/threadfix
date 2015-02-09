@@ -5,7 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="ssvl.xsd">
 	<Vulnerability CWE="1932" Severity="Medium" IssueID="1g134g13">
-		<Finding NativeID="12345" Source="IBM Rational AppScan 7.0" IdentifiedTimestamp="12/14/2010 3:42:16 AM -06:00">
+		<Finding NativeID="differentNativeId" Source="IBM Rational AppScan 7.0" IdentifiedTimestamp="12/14/2010 3:42:16 AM -06:00">
 			<SurfaceLocation url="http://www.site.com/Login.aspx" source="Parameter" value="txtUser"/>
 		</Finding>
 	</Vulnerability>

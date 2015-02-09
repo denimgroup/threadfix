@@ -25,6 +25,8 @@ package com.denimgroup.threadfix.service.merge;
 
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
+import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.List;
@@ -36,16 +38,17 @@ import static com.denimgroup.threadfix.service.merge.RemappingTestHarness.getApp
  */
 public class RemappingTests {
 
-    public String
+    public static final String
             UNMAPPED = "singlescan.ssvl",
             NO_VULNS = "noVulns.ssvl",
-            ALREADY_MAPPED = "correctSingleVulnScan.ssvl";
-
+            ALREADY_MAPPED = "correctSingleVulnScan.ssvl",
+            FROM_ID = "1932",
+            TO_ID = "89";
 
     @Test
     public void testSingleScan() {
         Application application =
-                getApplicationWith("1932", "89", UNMAPPED);
+                getApplicationWith(UNMAPPED);
 
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Got " + size + " results instead of 1.";
@@ -54,7 +57,7 @@ public class RemappingTests {
     @Test
     public void testTwoUnmappedScans() {
         Application application =
-                getApplicationWith("1932", "89", UNMAPPED, UNMAPPED);
+                getApplicationWith(UNMAPPED, UNMAPPED);
 
         testTwoScansOneVuln(application);
     }
@@ -62,15 +65,15 @@ public class RemappingTests {
     @Test
     public void testTwoScansUnmappedFirst() {
         Application application =
-                getApplicationWith("1932", "89", UNMAPPED, ALREADY_MAPPED);
+                getApplicationWith(UNMAPPED, ALREADY_MAPPED);
 
-        testTwoScansOneVuln(application);
+        testTwoScansOneVuln(application, true);
     }
 
     @Test
     public void testTwoScansUnmappedSecond() {
         Application application =
-                getApplicationWith("1932", "89", ALREADY_MAPPED, UNMAPPED);
+                getApplicationWith(ALREADY_MAPPED, UNMAPPED);
 
         testTwoScansOneVuln(application);
     }
@@ -78,7 +81,7 @@ public class RemappingTests {
     @Test
     public void testClosedAtEndNewVuln() {
         Application application =
-                getApplicationWith("1932", "89", UNMAPPED, NO_VULNS);
+                getApplicationWith(UNMAPPED, NO_VULNS);
 
         testTwoScansOneVuln(application, false);
     }
@@ -86,9 +89,45 @@ public class RemappingTests {
     @Test
     public void testClosedAtEnd() {
         Application application =
-                getApplicationWith("1932", "89", ALREADY_MAPPED, UNMAPPED, NO_VULNS);
+                getApplicationWith(ALREADY_MAPPED, UNMAPPED, NO_VULNS);
 
         testTwoScansOneVuln(application, false);
+    }
+
+    @Test
+    public void testReopen() {
+        Application application =
+                getApplicationWith(ALREADY_MAPPED, NO_VULNS, UNMAPPED);
+
+        testTwoScansOneVuln(application, true);
+    }
+
+    @Test
+    public void testOpenNewAndClose() {
+        Application application =
+                getApplicationWith(NO_VULNS, UNMAPPED, NO_VULNS);
+
+        testTwoScansOneVuln(application, false, 1);
+
+        assert application.getScans().get(2).getScanCloseVulnerabilityMaps().size() == 1 :
+                "Didn't have a close map.";
+    }
+
+    @Test
+    public void testCloseMapMoved() {
+        Application application =
+                getApplicationWith(ALREADY_MAPPED, UNMAPPED, NO_VULNS);
+
+        testTwoScansOneVuln(application, false);
+
+        List<ScanCloseVulnerabilityMap> closeMaps = application.getScans().get(2).getScanCloseVulnerabilityMaps();
+        assert closeMaps != null && closeMaps.size() == 1 :
+                "Didn't have a close map.";
+
+        List<ScanCloseVulnerabilityMap> maps = application.getScans().get(1).getScanCloseVulnerabilityMaps();
+        assert maps == null || maps.size() == 0:
+                "Scan 1 had close map.";
+
     }
 
     private void testTwoScansOneVuln(Application application) {
@@ -96,6 +135,10 @@ public class RemappingTests {
     }
 
     private void testTwoScansOneVuln(Application application, boolean open) {
+        testTwoScansOneVuln(application, open, 0);
+    }
+
+    private void testTwoScansOneVuln(Application application, boolean open, int scanBelongsTo) {
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
 
@@ -103,18 +146,22 @@ public class RemappingTests {
 
         Scan scan = application.getVulnerabilities().get(0).getOriginalFinding().getScan();
 
-        assert scan == scans.get(0) : "The original finding was set to the wrong scan.";
+        assert scan == scans.get(scanBelongsTo) : "The original finding was set to the wrong scan.";
 
         assert application.getVulnerabilities().get(0).isActive() == open: "Vulnerability status was wrong, expecting open == " + open + ".";
     }
 
     @Test
     public void testTwoMergingVulnsOneScan() {
-        Application application =
-                getApplicationWith("1932", "89", "twoMergingVulns.ssvl");
+        Application application = getApplicationWith("twoMergingVulns.ssvl");
 
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
+    }
+    
+    @After
+    public void cleanItUp() {
+        RemappingTestHarness.deleteNewVulnerability();
     }
 
 
