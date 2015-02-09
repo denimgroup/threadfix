@@ -198,11 +198,11 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppTip("Info", teamName, appName)
-                .equals("Info: 120"));
+                .equals("Info: 121"));
         assertTrue("Tip at level low does not match count", analyticsPage.mostVulnAppTip("Low",teamName,appName)
-                .equals("Low: 139"));
+                .equals("Low: 144"));
         assertTrue("Tip at level medium does not match count", analyticsPage.mostVulnAppTip("Medium",teamName,appName)
-                .equals("Medium: 115"));
+                .equals("Medium: 117"));
         assertTrue("Tip at level high does not match count", analyticsPage.mostVulnAppTip("High",teamName,appName)
                 .equals("High: 38"));
         assertTrue("Tip at level critical does not match count", analyticsPage.mostVulnAppTip("Critical",teamName,appName)
@@ -224,7 +224,7 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
         analyticsPage.selectDropDownReport("Most Vulnerable Applications");
 
         assertTrue("Tip at level info does not match count", analyticsPage.mostVulnAppModalHeader("Info", teamName, appName)
-                .equals("Info: 120"));
+                .equals("Info: 121"));
     }
 
     @Test
@@ -336,10 +336,10 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
                 driver.findElement(By.id("totalVuln1")).getText().equals("1") &&
                 driver.findElement(By.id("totalVuln2")).getText().equals("1") &&
-                driver.findElement(By.id("totalVuln3")).getText().equals("1") &&
+                driver.findElement(By.id("totalVuln3")).getText().equals("2") &&
                 driver.findElement(By.id("totalVuln4")).getText().equals("2") &&
-                driver.findElement(By.id("totalVuln5")).getText().equals("3") &&
-                driver.findElement(By.id("totalVuln6")).getText().equals("18"));
+                driver.findElement(By.id("totalVuln5")).getText().equals("2") &&
+                driver.findElement(By.id("totalVuln6")).getText().equals("2"));
     }
 
     @Test
@@ -371,10 +371,10 @@ public class AnalyticsSnapshotIT extends BaseDataTest{
                 driver.findElement(By.id("totalVuln0")).getText().equals("1") &&
                         driver.findElement(By.id("totalVuln1")).getText().equals("1") &&
                         driver.findElement(By.id("totalVuln2")).getText().equals("1") &&
-                        driver.findElement(By.id("totalVuln3")).getText().equals("1") &&
+                        driver.findElement(By.id("totalVuln3")).getText().equals("2") &&
                         driver.findElement(By.id("totalVuln4")).getText().equals("2") &&
-                        driver.findElement(By.id("totalVuln5")).getText().equals("3") &&
-                        driver.findElement(By.id("totalVuln6")).getText().equals("18"));
+                        driver.findElement(By.id("totalVuln5")).getText().equals("2") &&
+                        driver.findElement(By.id("totalVuln6")).getText().equals("2"));
     }
 
     @Test
