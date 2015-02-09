@@ -65,6 +65,8 @@
                 <c:if test="${ report.id == config.teamTopLeftId }">
                     <jsp:include page="${ report.jspFilePath }"/>
                 </c:if>
+            </c:forEach>
+            <c:forEach items="${ reports }" var="report">
                 <c:if test="${ report.id == config.teamTopRightId }">
                     <jsp:include page="${ report.jspFilePath }"/>
                 </c:if>
