@@ -53,6 +53,23 @@ public class BasicParserTest {
     }
 
     @Test
+    public void testBasicParserUnicode() {
+
+        Reader reader = new InputStreamReader(ResourceLoader.getResource("WebAdmin.csv"));
+
+        String output = CSVToSSVLParser.parse(reader,
+                "CWE",
+                "url",
+                "parameter", "LongDescription", "NativeID", "Source");
+
+        assert FormatChecker.checkFormat(output);
+        assert output.contains("<Vulnerability") : "Didn't have a starting Vulnerability tag.";
+
+        System.out.println("Was valid, got: ");
+        System.out.println(output);
+    }
+
+    @Test
     public void testParserWithEmptyColumn() {
 
         Reader reader = new InputStreamReader(ResourceLoader.getResource("emptycolumn.csv"));

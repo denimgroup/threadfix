@@ -52,7 +52,7 @@ public class RecordToXMLSerializer {
     // TODO switch to a real XML library instead of using StringEscapeUtils.escapeXml
     // this code got really messy
     public static String getFromReader(CSVParser parser) {
-        StringBuilder builder = new StringBuilder("<?xml version=\"1.0\"?>\n" +
+        StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
                 "<Vulnerabilities SpecVersion=\"0.2\"\n" +
                 "        ApplicationTag=\"Application Name\"\n" +
                 "        ExportTimestamp=\"" + DateUtils.getCurrentTimestamp() + "\"\n" +
