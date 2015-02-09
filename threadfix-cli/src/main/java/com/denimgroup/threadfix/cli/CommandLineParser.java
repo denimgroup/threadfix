@@ -248,8 +248,15 @@ public class CommandLineParser {
 					}
                     LOGGER.info("Searching for application with the name " + searchArgs[1] + " of team " + searchArgs[2]);
 					System.out.println(client.searchForApplicationByName(searchArgs[1], searchArgs[2]));
+                } else if ("uniqueId".equals(searchArgs[0])) {
+                    if (searchArgs.length != 3) {
+                        System.out.println("Wrong number of arguments. You need to input application uniqueId and team name as well.");
+                        return;
+                    }
+                    LOGGER.info("Searching for application with the uniqueId " + searchArgs[1] + " of team " + searchArgs[2]);
+                    System.out.println(client.searchForApplicationByUniqueId(searchArgs[1], searchArgs[2]));
 				} else {
-                    LOGGER.error("Unknown property argument. Try either id or name.");
+                    LOGGER.error("Unknown property argument. Try either id, uniqueId or name.");
 				}
 			
 			} else if (cmd.hasOption("r")) {
