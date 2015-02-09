@@ -122,7 +122,7 @@ public final class ScanUtils {
 		source.setEncoding("UTF-8");
 		xmlReader.parse(source);
 	}
-	
+
 	public static boolean isZip(String fileName) {
 		try (RandomAccessFile file = new RandomAccessFile(new File(fileName), "r")) {
 			// these are the magic bytes for a zip file

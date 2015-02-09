@@ -39,6 +39,14 @@ public @interface ScanImporter {
 
     public ScanFormat format() default ScanFormat.XML;
 
+    public enum JSONStructure {
+        OBJECT, LIST_OF_OBJECTS, NONE
+    }
+
+    public String[] jsonProperties() default {};
+
+    public JSONStructure jsonStructure() default JSONStructure.NONE;
+
     public String[] startingXMLTags() default {};
 
     public StartingTagSet[] startingXMLTagSets() default {};
