@@ -95,7 +95,7 @@ public class Organization extends AuditableEntity {
     }
 
     @Transient
-    @JsonView({AllViews.TableRow.class, AllViews.RestViewTeam2_1.class, AllViews.VulnSearchApplications.class })
+    @JsonView({AllViews.TableRow.class, AllViews.GRCToolsPage.class, AllViews.RestViewTeam2_1.class, AllViews.VulnSearchApplications.class })
     @JsonProperty("applications")
     public List<Application> getActiveApplications() {
         if (activeApps == null && this.applications != null) {
