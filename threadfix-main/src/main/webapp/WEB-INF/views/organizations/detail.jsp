@@ -3,13 +3,14 @@
 <head>
 	<title><c:out value="${ organization.name }"/></title>
 	<cbs:cachebustscript src="/scripts/team-detail-page-controller.js"/>
-	<cbs:cachebustscript src="/scripts/left-report-controller.js"/>
-	<cbs:cachebustscript src="/scripts/right-report-controller.js"/>
     <cbs:cachebustscript src="/scripts/modal-controller-with-config.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-controller.js"/>
     <cbs:cachebustscript src="/scripts/vuln-search-tree-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/report-filter-controller.js"/>
     <cbs:cachebustscript src="/scripts/report/vuln-summary-modal-controller.js"/>
+    <c:forEach items="${ reportJsPaths }" var="reportJs">
+        <script type="text/javascript" src="${ reportJs }"></script>
+    </c:forEach>
 </head>
 
 <body ng-controller="TeamDetailPageController"
@@ -60,8 +61,8 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
-            <jsp:include page="/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp"/>
-            <jsp:include page="/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp"/>
+            <jsp:include page="${ config.teamTopLeft.jspFilePath }"/>
+            <jsp:include page="${ config.teamTopRight.jspFilePath }"/>
         </div>
     </div>
 

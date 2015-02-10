@@ -24,13 +24,14 @@
 
 package com.denimgroup.threadfix.webapp.listeners;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.annotations.ReportPlugin;
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.importer.loader.AnnotationLoader;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DashboardWidgetService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
+import com.denimgroup.threadfix.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -51,87 +52,112 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     private final SanitizedLogger log = new SanitizedLogger(ContextRefreshedListener.class);
 
     @Autowired
-    private DashboardWidgetService dashboardWidgetService;
+    private ReportService reportService;
 
     @Autowired
     private DefaultConfigService defaultConfigService;
 
-    private DashboardWidget createAndSaveDashboardWidget(Boolean nativeReport, String widgetName, String displayName,
-                                              String jspFilePath) {
-        return createAndSaveDashboardWidget(nativeReport, widgetName, displayName, jspFilePath, null);
+    private Report createAndSaveReport(Boolean nativeReport, String shortName, String displayName,
+                                                     String jspFilePath, ReportLocation location) {
+        return createAndSaveReport(nativeReport, shortName, displayName, jspFilePath, location, null);
     }
 
-    private DashboardWidget createAndSaveDashboardWidget(Boolean nativeReport, String widgetName, String displayName,
-                                              String jspFilePath, String jsFilePath) {
-        DashboardWidget dashboardWidget = new DashboardWidget();
+    private Report createAndSaveReport(Boolean nativeReport, String shortName, String displayName,
+                                                     String jspFilePath, ReportLocation location, String jsFilePath) {
+        Report report = new Report();
 
-        dashboardWidget.setAvailable(true);
-        dashboardWidget.setNativeReport(nativeReport);
-        dashboardWidget.setWidgetName(widgetName);
-        dashboardWidget.setDisplayName(displayName);
-        dashboardWidget.setJspFilePath(jspFilePath);
+        report.setAvailable(true);
+        report.setNativeReport(nativeReport);
+        report.setShortName(shortName);
+        report.setDisplayName(displayName);
+        report.setJspFilePath(jspFilePath);
+        report.setJspFilePath(jspFilePath);
+        report.setLocation(location);
 
         if(jsFilePath != null && !jsFilePath.isEmpty()) {
-            dashboardWidget.setJsFilePath(jsFilePath);
+            report.setJsFilePath(jsFilePath);
         }
 
-        log.info("Storing new Dashboard Widget [" + dashboardWidget.getDisplayName() + "].");
-        dashboardWidgetService.store(dashboardWidget);
+        log.info("Storing new Report (" + report.getDisplayName() + " [" + report.getLocation() + "]).");
+        reportService.store(report);
 
-        return dashboardWidget;
+        return report;
     }
 
-    private void addNativeDashboardWidgets() {
+    private void addNativeReports() {
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
 
-        config.setDashboardTopLeftId(createAndSaveDashboardWidget(
-                true,
-                "vulnerabilityTrending",
-                "Vulnerability Trending",
-                "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
-                "/scripts/left-report-controller.js").getId());
+        Map<ReportLocation, Report> vulnTrendReports = newMap();
+        Map<ReportLocation, Report> mostVulnAppsReports = newMap();
 
-        config.setDashboardTopRightId(createAndSaveDashboardWidget(
-                true,
-                "mostVulnerableApps",
-                "Most Vulnerable Applications",
-                "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
-                "/scripts/right-report-controller.js").getId());
+        for (ReportLocation location : ReportLocation.values()) {
+            vulnTrendReports.put(location,
+                 createAndSaveReport(
+                     true,
+                     "vulnerabilityTrending",
+                     "Vulnerability Trending",
+                     "/WEB-INF/views/applications/widgets/vulnerabilityTrending.jsp",
+                     location,
+                     "/scripts/left-report-controller.js"));
 
-        config.setDashboardBottomLeftId(createAndSaveDashboardWidget(
+            mostVulnAppsReports.put(location,
+                    createAndSaveReport(
+                        true,
+                        "mostVulnerableApps",
+                        "Most Vulnerable Applications",
+                        "/WEB-INF/views/applications/widgets/mostVulnerableApps.jsp",
+                        location,
+                        "/scripts/right-report-controller.js"));
+        }
+
+        config.setDashboardTopLeft(vulnTrendReports.get(ReportLocation.DASHBOARD));
+
+        config.setDashboardTopRight(mostVulnAppsReports.get(ReportLocation.DASHBOARD));
+
+        config.setApplicationTopLeft(vulnTrendReports.get(ReportLocation.APPLICATION));
+
+        config.setApplicationTopRight(mostVulnAppsReports.get(ReportLocation.APPLICATION));
+
+        config.setTeamTopLeft(vulnTrendReports.get(ReportLocation.TEAM));
+
+        config.setTeamTopRight(mostVulnAppsReports.get(ReportLocation.TEAM));
+
+        config.setDashboardBottomLeft(createAndSaveReport(
                 true,
                 "recentUploads",
                 "Recent Uploads",
-                "/WEB-INF/views/applications/widgets/recentUploads.jsp").getId());
+                "/WEB-INF/views/applications/widgets/recentUploads.jsp",
+                ReportLocation.DASHBOARD));
 
-        config.setDashboardBottomRightId(createAndSaveDashboardWidget(
+        config.setDashboardBottomRight(createAndSaveReport(
                 true,
                 "recentComments",
                 "Recent Comments",
-                "/WEB-INF/views/applications/widgets/recentComments.jsp").getId());
+                "/WEB-INF/views/applications/widgets/recentComments.jsp",
+                ReportLocation.DASHBOARD));
 
         defaultConfigService.saveConfiguration(config);
-        log.info("Setting native Dashboard Widgets positions in Default Configuration.");
+        log.info("Setting native Dashboard, Application and Team Detail Page Reports positions in Default Configuration.");
     }
 
     @SuppressWarnings("unchecked")
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if(!dashboardWidgetService.isInitialized()) {
+        if(!reportService.isInitialized()) {
 
-            dashboardWidgetService.setInitialized(true);
+            reportService.setInitialized(true);
 
-            if (dashboardWidgetService.loadAllNativeReports().size() == 0) {
-                addNativeDashboardWidgets();
+            if (reportService.loadAllNativeReports().size() == 0) {
+                addNativeReports();
             }
 
-            List<DashboardWidget> dashboardWidgets = dashboardWidgetService.loadAllNonNativeReports();
-            Map<DashboardWidget, Boolean> availableReportPlugins = newMap();
+            List<Report> reports = reportService.loadAllNonNativeReports();
+            Map<Report, Boolean> availableReportPlugins = newMap();
 
-            for (DashboardWidget dashboardWidget : dashboardWidgets) {
-                if (dashboardWidget.getAvailable()) {
-                    availableReportPlugins.put(dashboardWidget, false);
+            for (Report report : reports) {
+                if (report.getAvailable()) {
+                    availableReportPlugins.put(report, false);
                 }
             }
 
@@ -146,49 +172,53 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                 ReportPlugin annotation = entry.getValue();
 
                 if (annotation.displayName().isEmpty() || annotation.jspRelFilePath().isEmpty()
-                        || annotation.reportName().isEmpty()) {
+                        || annotation.shortName().isEmpty() || annotation.locations().length == 0) {
 
                     log.warn("Required attrs for ReportPlugin were empty. Skip to next ReportPlugin.");
                     continue;
                 }
 
-                DashboardWidget widget = null;
+                Report r = null;
 
-                for (DashboardWidget dashboardWidget : dashboardWidgets) {
-                    if (dashboardWidget.getWidgetName().equals(annotation.reportName())) {
+                for (Report report : reports) {
+                    if (report.getShortName().equals(annotation.shortName())) {
 
                         // note that report plugin is available to Threadfix
-                        widget = dashboardWidget;
-                        availableReportPlugins.put(dashboardWidget, true);
+                        r = report;
+                        availableReportPlugins.put(report, true);
 
                         // set previously unavailable report plugin to true
                         // now that plugin has be re-added to Threadfix
-                        if (!dashboardWidget.getAvailable()) {
-                            log.info("Plugin for existing Dashboard Widget [" + dashboardWidget.getDisplayName() +
-                                    "] was found. Setting availability to true.");
-                            dashboardWidget.setAvailable(true);
-                            dashboardWidgetService.store(dashboardWidget);
+                        if (!report.getAvailable()) {
+                            log.info("Plugin for existing Report (" + report.getDisplayName() +
+                                    " [" + report.getLocation() + "]) was found. Setting availability to true.");
+                            report.setAvailable(true);
+                            reportService.store(report);
                         }
                     }
                 }
 
-                if (widget != null && availableReportPlugins.get(widget)) {
-                    log.info("ReportPlugin already exists as a Dashboard Widget. Skip to next ReportPlugin.");
+                if (r != null && availableReportPlugins.get(r)) {
+                    log.info("ReportPlugin already exists as a Report. Skip to next ReportPlugin.");
                     continue;
                 }
 
-                createAndSaveDashboardWidget(false, annotation.reportName(), annotation.displayName(),
-                        annotation.jspRelFilePath(), annotation.jsRelFilePath());
+                // create as many report obj as the plugin has locations for
+                for (ReportLocation location : annotation.locations()){
+                    createAndSaveReport(false, annotation.shortName(), annotation.displayName(),
+                            annotation.jspRelFilePath(), location, annotation.jsRelFilePath());
+                }
             }
 
-            // set dashboard reports" availability that were not found in annotations to false
-            for (DashboardWidget dashboardWidget : availableReportPlugins.keySet()) {
-                if (!availableReportPlugins.get(dashboardWidget)) {
-                    if (dashboardWidget.getAvailable()) {
-                        log.info("Plugin for existing Dashboard Widget [" + dashboardWidget.getDisplayName() +
-                                "] not found. Setting availability to false.");
-                        dashboardWidget.setAvailable(false);
-                        dashboardWidgetService.store(dashboardWidget);
+            // set the availability of dashboard & application detail page reports
+            // that were not found as plugins to false
+            for (Report report : availableReportPlugins.keySet()) {
+                if (!availableReportPlugins.get(report)) {
+                    if (report.getAvailable()) {
+                        log.info("Plugin for existing Report (" + report.getDisplayName() +
+                                " [" + report.getLocation() + "]) not found. Setting availability to false.");
+                        report.setAvailable(false);
+                        reportService.store(report);
                     }
                 }
             }

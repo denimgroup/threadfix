@@ -99,6 +99,12 @@ public class ApplicationsController {
     private ChannelTypeService channelTypeService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private CacheBustService cacheBustService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -144,6 +150,10 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 
+        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+
+        model.addAttribute("config", config);
+        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getApplicationReports()));
         model.addAttribute("tagList", application.getTags());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);

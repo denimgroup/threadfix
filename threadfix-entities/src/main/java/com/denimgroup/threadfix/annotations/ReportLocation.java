@@ -22,19 +22,11 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-package com.denimgroup.threadfix.service;
-
-import com.denimgroup.threadfix.data.entities.Report;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+package com.denimgroup.threadfix.annotations;
 
 /**
  * @author zabdisubhan
  */
-public interface CacheBustService {
-
-    public String notCachedAsset(HttpServletRequest request, String relUrl);
-
-    public List<String> notCachedJsPaths(HttpServletRequest request, List<Report> reports);
+public enum ReportLocation {
+    DASHBOARD, APPLICATION, TEAM
 }

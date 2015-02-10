@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -36,8 +37,8 @@ import javax.validation.constraints.Size;
  *
  */
 @Entity
-@Table(name = "DashboardWidget")
-public class DashboardWidget extends BaseEntity {
+@Table(name = "Report")
+public class Report extends BaseEntity {
 
     private static final long serialVersionUID = -1612233741957801615L;
 
@@ -47,9 +48,10 @@ public class DashboardWidget extends BaseEntity {
     private Boolean available;
     private Boolean nativeReport;
     private String displayName;
-    private String widgetName;
+    private String shortName;
     private String jspFilePath;
     private String jsFilePath;
+    private ReportLocation location;
 
 
     public Boolean getAvailable() {
@@ -80,12 +82,12 @@ public class DashboardWidget extends BaseEntity {
 
     @Column(nullable = false)
     @Size(max = NAME_LENGTH, message = "{errors.maxlength} " + NAME_LENGTH + ".")
-    public String getWidgetName() {
-        return widgetName;
+    public String getShortName() {
+        return shortName;
     }
 
-    public void setWidgetName(String widgetName) {
-        this.widgetName = widgetName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     @Column(nullable = false)
@@ -109,18 +111,21 @@ public class DashboardWidget extends BaseEntity {
         this.jsFilePath = jsFilePath;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof DashboardWidget)) return false;
+    public ReportLocation getLocation() {
+        return location;
+    }
 
-        DashboardWidget that = (DashboardWidget) o;
-
-        return widgetName.equals(that.widgetName);
+    public void setLocation(ReportLocation location) {
+        this.location = location;
     }
 
     @Override
-    public int hashCode() {
-        return widgetName.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Report)) return false;
+
+        Report report = (Report) o;
+
+        return getId().equals(report.getId());
     }
 }

@@ -24,11 +24,12 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.annotations.ReportLocation;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.service.DashboardWidgetService;
+import com.denimgroup.threadfix.service.ReportService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
@@ -57,7 +58,7 @@ public class SystemSettingsController {
 	@Autowired
     private DefaultConfigService defaultConfigService = null;
 	@Autowired
-	private DashboardWidgetService dashboardWidgetService = null;
+	private ReportService reportService = null;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -67,8 +68,9 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", 
-                    "dashboardTopRightId", "dashboardBottomLeftId", "dashboardBottomRightId");
+					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeft.id",
+                    "dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
+                    "applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -81,9 +83,19 @@ public class SystemSettingsController {
 		return roleService.loadAll();
 	}
 
-	@ModelAttribute("dashboardWidgets")
-	public List<DashboardWidget> populateDashboardWidgetTypes() {
-		return dashboardWidgetService.loadAllAvailable();
+	@ModelAttribute("dashboardReports")
+	public List<Report> populateDashboardReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.DASHBOARD);
+	}
+
+	@ModelAttribute("applicationReports")
+	public List<Report> populateApplicationReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.APPLICATION);
+	}
+
+	@ModelAttribute("teamReports")
+	public List<Report> populateTeamReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.TEAM);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
