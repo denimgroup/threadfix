@@ -68,9 +68,9 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeftId", 
-                    "dashboardTopRightId", "dashboardBottomLeftId", "dashboardBottomRightId",
-                    "applicationTopLeftId", "applicationTopRightId", "teamTopLeftId", "teamTopRightId");
+					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeft.id",
+                    "dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
+                    "applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though

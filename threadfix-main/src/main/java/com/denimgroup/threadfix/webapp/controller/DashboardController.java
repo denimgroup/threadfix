@@ -81,7 +81,6 @@ public class DashboardController {
 	public String index(Model model, HttpServletRequest request) {
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
-        List<Report> reports = reportService.loadByIds(config.getDashboardReportIds());
         List<Organization> organizationList = organizationService.loadAllActiveFilter();
 
         PermissionUtils.addPermissions(model, null, null, Permission.CAN_GENERATE_REPORTS);
@@ -89,8 +88,7 @@ public class DashboardController {
 		model.addAttribute("recentScans", scanService.loadMostRecentFiltered(5));
 		model.addAttribute("teams", organizationList);
         model.addAttribute("config", config);
-        model.addAttribute("reports", reports);
-        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
+        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getDashboardReports()));
 
         if (defaultConfigService.isReportCacheDirty()) {
             for (Organization organization : organizationList) {

@@ -56,9 +56,9 @@ public class DefaultConfiguration extends BaseEntity {
     private Calendar lastScannerMappingsUpdate;
 
     private Integer sessionTimeout = null;
-
-    private Integer dashboardTopLeftId, dashboardTopRightId, dashboardBottomLeftId, dashboardBottomRightId,
-            applicationTopLeftId, applicationTopRightId, teamTopLeftId, teamTopRightId;
+    
+    private Report dashboardTopLeft, dashboardTopRight, dashboardBottomLeft,dashboardBottomRight,
+            applicationTopLeft, applicationTopRight, teamTopLeft, teamTopRight;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -79,76 +79,84 @@ public class DefaultConfiguration extends BaseEntity {
         this.sessionTimeout = sessionTimeout;
     }
 
-    @Column
-    public Integer getTeamTopLeftId() {
-        return teamTopLeftId;
+    @OneToOne
+    @JoinColumn(name = "teamTopLeftId")
+    public Report getTeamTopLeft() {
+        return teamTopLeft;
     }
 
-    public void setTeamTopLeftId(Integer teamTopLeftId) {
-        this.teamTopLeftId = teamTopLeftId;
+    public void setTeamTopLeft(Report teamTopLeft) {
+        this.teamTopLeft = teamTopLeft;
     }
 
-    @Column
-    public Integer getTeamTopRightId() {
-        return teamTopRightId;
+    @OneToOne
+    @JoinColumn(name = "teamTopRightId")
+    public Report getTeamTopRight() {
+        return teamTopRight;
     }
 
-    public void setTeamTopRightId(Integer teamTopRightId) {
-        this.teamTopRightId = teamTopRightId;
+    public void setTeamTopRight(Report teamTopRight) {
+        this.teamTopRight = teamTopRight;
     }
 
-    @Column
-    public Integer getApplicationTopLeftId() {
-        return applicationTopLeftId;
+    @OneToOne
+    @JoinColumn(name = "applicationTopLeftId")
+    public Report getApplicationTopLeft() {
+        return applicationTopLeft;
     }
 
-    public void setApplicationTopLeftId(Integer applicationTopLeftId) {
-        this.applicationTopLeftId = applicationTopLeftId;
+    public void setApplicationTopLeft(Report applicationTopLeft) {
+        this.applicationTopLeft = applicationTopLeft;
     }
 
-    @Column
-    public Integer getApplicationTopRightId() {
-        return applicationTopRightId;
+    @OneToOne
+    @JoinColumn(name = "applicationTopRightId")
+    public Report getApplicationTopRight() {
+        return applicationTopRight;
     }
 
-    public void setApplicationTopRightId(Integer applicationTopRightId) {
-        this.applicationTopRightId = applicationTopRightId;
+    public void setApplicationTopRight(Report applicationTopRight) {
+        this.applicationTopRight = applicationTopRight;
     }
 
-    @Column
-    public Integer getDashboardTopLeftId() {
-        return dashboardTopLeftId;
+    @OneToOne
+    @JoinColumn(name = "dashboardTopLeftId")
+    public Report getDashboardTopLeft() {
+        return dashboardTopLeft;
     }
 
-    public void setDashboardTopLeftId(Integer dashboardTopLeftId) {
-        this.dashboardTopLeftId = dashboardTopLeftId;
+    public void setDashboardTopLeft(Report dashboardTopLeft) {
+        this.dashboardTopLeft = dashboardTopLeft;
     }
 
-    @Column
-    public Integer getDashboardTopRightId() {
-        return dashboardTopRightId;
+    @OneToOne
+    @JoinColumn(name = "dashboardTopRightId")
+    public Report getDashboardTopRight() {
+        return dashboardTopRight;
     }
 
-    public void setDashboardTopRightId(Integer dashboardTopRightId) {
-        this.dashboardTopRightId = dashboardTopRightId;
+    public void setDashboardTopRight(Report dashboardTopRight) {
+        this.dashboardTopRight = dashboardTopRight;
     }
 
-    @Column
-    public Integer getDashboardBottomLeftId() {
-        return dashboardBottomLeftId;
+    @OneToOne
+    @JoinColumn(name = "dashboardBottomLeftId")
+    public Report getDashboardBottomLeft() {
+        return dashboardBottomLeft;
     }
 
-    public void setDashboardBottomLeftId(Integer dashboardBottomLeftId) {
-        this.dashboardBottomLeftId = dashboardBottomLeftId;
+    public void setDashboardBottomLeft(Report dashboardBottomLeft) {
+        this.dashboardBottomLeft = dashboardBottomLeft;
     }
 
-    @Column
-    public Integer getDashboardBottomRightId() {
-        return dashboardBottomRightId;
+    @OneToOne
+    @JoinColumn(name = "dashboardBottomRightId")
+    public Report getDashboardBottomRight() {
+        return dashboardBottomRight;
     }
 
-    public void setDashboardBottomRightId(Integer dashboardBottomRightId) {
-        this.dashboardBottomRightId = dashboardBottomRightId;
+    public void setDashboardBottomRight(Report dashboardBottomRight) {
+        this.dashboardBottomRight = dashboardBottomRight;
     }
 
     @Column
@@ -359,35 +367,35 @@ public class DefaultConfiguration extends BaseEntity {
     }
 
     @Transient
-    public List<Integer> getDashboardReportIds() {
-        List<Integer> dashboardReportIds = list();
+    public List<Report> getDashboardReports() {
+        List<Report> dashboardReports = list();
 
-        dashboardReportIds.add(getDashboardTopLeftId());
-        dashboardReportIds.add(getDashboardTopRightId());
-        dashboardReportIds.add(getDashboardBottomLeftId());
-        dashboardReportIds.add(getDashboardBottomRightId());
+        dashboardReports.add(getDashboardTopLeft());
+        dashboardReports.add(getDashboardTopRight());
+        dashboardReports.add(getDashboardBottomLeft());
+        dashboardReports.add(getDashboardBottomRight());
 
-        return dashboardReportIds;
+        return dashboardReports;
     }
 
     @Transient
-    public List<Integer> getApplicationReportIds() {
-        List<Integer> applicationReportIds = list();
+    public List<Report> getApplicationReports() {
+        List<Report> applicationReports = list();
 
-        applicationReportIds.add(getApplicationTopLeftId());
-        applicationReportIds.add(getApplicationTopRightId());
+        applicationReports.add(getApplicationTopLeft());
+        applicationReports.add(getApplicationTopRight());
 
-        return applicationReportIds;
+        return applicationReports;
     }
 
     @Transient
-    public List<Integer> getTeamReportIds() {
-        List<Integer> teamReportIds = list();
+    public List<Report> getTeamReports() {
+        List<Report> teamReports = list();
 
-        teamReportIds.add(getTeamTopLeftId());
-        teamReportIds.add(getTeamTopRightId());
+        teamReports.add(getTeamTopLeft());
+        teamReports.add(getTeamTopRight());
 
-        return teamReportIds;
+        return teamReports;
     }
 
     @Column

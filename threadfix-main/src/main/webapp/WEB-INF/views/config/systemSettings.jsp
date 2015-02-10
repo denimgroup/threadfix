@@ -314,7 +314,7 @@
                                 <b>Top Left Report</b>
                             </div>
                             <div>
-                                <form:select id="dashboardTopLeftSelect" path="dashboardTopLeftId">
+                                <form:select id="dashboardTopLeftSelect" path="dashboardTopLeft.id">
                                     <form:options items="${ dashboardReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -324,7 +324,7 @@
                                 <b>Top Right Report</b>
                             </div>
                             <div>
-                                <form:select id="dashboardTopRightSelect" path="dashboardTopRightId">
+                                <form:select id="dashboardTopRightSelect" path="dashboardTopRight.id">
                                     <form:options items="${ dashboardReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -334,7 +334,7 @@
                                 <b>Bottom Left Report</b>
                             </div>
                             <div>
-                                <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeftId">
+                                <form:select id="dashboardBottomLeftSelect" path="dashboardBottomLeft.id">
                                     <form:options items="${ dashboardReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -344,7 +344,7 @@
                                 <b>Bottom Right Report</b>
                             </div>
                             <div>
-                                <form:select id="dashboardBottomRightSelect" path="dashboardBottomRightId">
+                                <form:select id="dashboardBottomRightSelect" path="dashboardBottomRight.id">
                                     <form:options items="${ dashboardReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -371,7 +371,7 @@
                                 <b>Top Left Report</b>
                             </div>
                             <div>
-                                <form:select id="applicationTopLeftSelect" path="applicationTopLeftId">
+                                <form:select id="applicationTopLeftSelect" path="applicationTopLeft.id">
                                     <form:options items="${ applicationReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -381,7 +381,7 @@
                                 <b>Top Right Report</b>
                             </div>
                             <div>
-                                <form:select id="applicationTopRightSelect" path="applicationTopRightId">
+                                <form:select id="applicationTopRightSelect" path="applicationTopRight.id">
                                     <form:options items="${ applicationReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -407,7 +407,7 @@
                                 <b>Top Left Report</b>
                             </div>
                             <div>
-                                <form:select id="teamTopLeftSelect" path="teamTopLeftId">
+                                <form:select id="teamTopLeftSelect" path="teamTopLeft.id">
                                     <form:options items="${ teamReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>
@@ -417,7 +417,7 @@
                                 <b>Top Right Report</b>
                             </div>
                             <div>
-                                <form:select id="teamTopRightSelect" path="teamTopRightId">
+                                <form:select id="teamTopRightSelect" path="teamTopRight.id">
                                     <form:options items="${ teamReports }" itemValue="id" itemLabel="displayName" />
                                 </form:select>
                             </div>

@@ -151,11 +151,9 @@ public class ApplicationsController {
 		}
 
         DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
-        List<Report> reports = reportService.loadByIds(config.getApplicationReportIds());
 
         model.addAttribute("config", config);
-        model.addAttribute("reports", reports);
-        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
+        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getApplicationReports()));
         model.addAttribute("tagList", application.getTags());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);

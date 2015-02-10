@@ -61,16 +61,8 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
-            <c:forEach items="${ reports }" var="report">
-                <c:if test="${ report.id == config.teamTopLeftId }">
-                    <jsp:include page="${ report.jspFilePath }"/>
-                </c:if>
-            </c:forEach>
-            <c:forEach items="${ reports }" var="report">
-                <c:if test="${ report.id == config.teamTopRightId }">
-                    <jsp:include page="${ report.jspFilePath }"/>
-                </c:if>
-            </c:forEach>
+            <jsp:include page="${ config.teamTopLeft.jspFilePath }"/>
+            <jsp:include page="${ config.teamTopRight.jspFilePath }"/>
         </div>
     </div>
 

@@ -114,11 +114,9 @@ public class TeamDetailPageController {
             }
 
             DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
-            List<Report> reports = reportService.loadByIds(config.getTeamReportIds());
 
             mav.addObject("config", config);
-            mav.addObject("reports", reports);
-            mav.addObject("reportJsPaths", cacheBustService.notCachedJsPaths(request, reports));
+            mav.addObject("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getTeamReports()));
             mav.addObject("isEnterprise", EnterpriseTest.isEnterprise());
             mav.addObject("application", new Application());
             mav.addObject("applicationTypes", FrameworkType.values());

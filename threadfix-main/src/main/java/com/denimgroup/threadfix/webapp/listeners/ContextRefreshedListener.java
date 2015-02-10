@@ -111,34 +111,34 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
                         "/scripts/right-report-controller.js"));
         }
 
-        config.setDashboardTopLeftId(vulnTrendReports.get(ReportLocation.DASHBOARD).getId());
+        config.setDashboardTopLeft(vulnTrendReports.get(ReportLocation.DASHBOARD));
 
-        config.setDashboardTopRightId(mostVulnAppsReports.get(ReportLocation.DASHBOARD).getId());
+        config.setDashboardTopRight(mostVulnAppsReports.get(ReportLocation.DASHBOARD));
 
-        config.setApplicationTopLeftId(vulnTrendReports.get(ReportLocation.APPLICATION).getId());
+        config.setApplicationTopLeft(vulnTrendReports.get(ReportLocation.APPLICATION));
 
-        config.setApplicationTopRightId(mostVulnAppsReports.get(ReportLocation.APPLICATION).getId());
+        config.setApplicationTopRight(mostVulnAppsReports.get(ReportLocation.APPLICATION));
 
-        config.setTeamTopLeftId(vulnTrendReports.get(ReportLocation.TEAM).getId());
+        config.setTeamTopLeft(vulnTrendReports.get(ReportLocation.TEAM));
 
-        config.setTeamTopRightId(mostVulnAppsReports.get(ReportLocation.TEAM).getId());
+        config.setTeamTopRight(mostVulnAppsReports.get(ReportLocation.TEAM));
 
-        config.setDashboardBottomLeftId(createAndSaveReport(
+        config.setDashboardBottomLeft(createAndSaveReport(
                 true,
                 "recentUploads",
                 "Recent Uploads",
                 "/WEB-INF/views/applications/widgets/recentUploads.jsp",
-                ReportLocation.DASHBOARD).getId());
+                ReportLocation.DASHBOARD));
 
-        config.setDashboardBottomRightId(createAndSaveReport(
+        config.setDashboardBottomRight(createAndSaveReport(
                 true,
                 "recentComments",
                 "Recent Comments",
                 "/WEB-INF/views/applications/widgets/recentComments.jsp",
-                ReportLocation.DASHBOARD).getId());
+                ReportLocation.DASHBOARD));
 
         defaultConfigService.saveConfiguration(config);
-        log.info("Setting native Dashboard & Application Detail Page Reports positions in Default Configuration.");
+        log.info("Setting native Dashboard, Application and Team Detail Page Reports positions in Default Configuration.");
     }
 
     @SuppressWarnings("unchecked")
