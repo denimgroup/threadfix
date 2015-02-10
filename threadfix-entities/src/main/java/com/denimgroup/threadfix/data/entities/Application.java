@@ -772,8 +772,15 @@ public class Application extends AuditableEntity {
 
     @Transient
     public void addVulnerability(Vulnerability vuln) {
-        if (!this.getVulnerabilities().contains(vuln))
-            this.getVulnerabilities().add(vuln);
+		if (vuln == null) {
+			throw new IllegalArgumentException("Null passed to addVulnerability");
+		}
+
+        if (!this.getVulnerabilities().contains(vuln)) {
+			this.getVulnerabilities().add(vuln);
+		}
+
+		vuln.setApplication(this);
     }
 
     // TODO exclude from default ObjectMapper

@@ -122,7 +122,10 @@ public class ScanTypeCalculationServiceImpl implements ScanTypeCalculationServic
 
         if (inputFile.exists() && !inputFile.isDirectory()) {
             String scannerName = getScannerType(inputFile.getAbsolutePath(), inputFile.getAbsolutePath());
-            type = ScannerType.getScannerType(scannerName);
+
+			if (scannerName != null) {
+				type = ScannerType.getScannerType(scannerName);
+			}
         }
 
         return type;

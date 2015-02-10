@@ -23,38 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-
-import java.util.Calendar;
+import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
+import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
 
 /**
- * Basic DAO class for the Channel entity.
- * 
- * @author mcollins
+ * Created by mcollins on 2/9/15.
  */
+public interface ScanCloseReopenMappingDao {
 
-public interface ApplicationChannelDao extends GenericObjectDao<ApplicationChannel> {
+    public void delete(ScanCloseVulnerabilityMap map);
 
-	/**
-	 * @param appId
-	 * @param channelId
-	 * @return
-	 */
-	ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId);
-	
-	/**
-	 *
-	 * @param channelId ID of the ApplicationChannel object
-	 * @return the time the last scan was uploaded to this channel
-	 */
-	Calendar getMostRecentQueueScanTime(Integer channelId);
-
-	/**
-	 *
-	 * @param channelId ID of the ApplicationChannel object
-	 * @return the time the last scan was uploaded to this channel
-	 */
-	Calendar getMostRecentScanTime(Integer channelId);
-
+    public void delete(ScanReopenVulnerabilityMap map);
 
 }

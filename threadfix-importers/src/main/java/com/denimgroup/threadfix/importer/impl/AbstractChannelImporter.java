@@ -383,6 +383,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
+
         if (channelVulnerability == null) {
             channelVulnerability = new ChannelVulnerability();
             channelVulnerability.setChannelType(getChannelType());
@@ -405,8 +406,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             }
         }
 
-        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         finding.setChannelVulnerability(channelVulnerability);
+        channelVulnerability.setFindings(list(finding));
+
+        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
 
         ChannelSeverity channelSeverity = null;
         if (channelSeverityCode != null) {

@@ -94,6 +94,10 @@ public enum ScannerType {
     }
 	
 	public static ScannerType getScannerType(String keyword) {
+        if (keyword == null) {
+            throw new IllegalArgumentException("Null passed to getScannerType");
+        }
+
 		ScannerType type = null;
 		for (ScannerType t: values()) {
 			if (keyword.equalsIgnoreCase(t.getShortName()) 

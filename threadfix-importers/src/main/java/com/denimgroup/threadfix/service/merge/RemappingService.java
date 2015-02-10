@@ -21,40 +21,13 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.data.dao;
+package com.denimgroup.threadfix.service.merge;
 
-import com.denimgroup.threadfix.data.entities.ApplicationChannel;
-
-import java.util.Calendar;
+import com.denimgroup.threadfix.data.entities.ChannelVulnerability;
 
 /**
- * Basic DAO class for the Channel entity.
- * 
- * @author mcollins
+ * Created by mcollins on 2/9/15.
  */
-
-public interface ApplicationChannelDao extends GenericObjectDao<ApplicationChannel> {
-
-	/**
-	 * @param appId
-	 * @param channelId
-	 * @return
-	 */
-	ApplicationChannel retrieveByAppIdAndChannelId(Integer appId, Integer channelId);
-	
-	/**
-	 *
-	 * @param channelId ID of the ApplicationChannel object
-	 * @return the time the last scan was uploaded to this channel
-	 */
-	Calendar getMostRecentQueueScanTime(Integer channelId);
-
-	/**
-	 *
-	 * @param channelId ID of the ApplicationChannel object
-	 * @return the time the last scan was uploaded to this channel
-	 */
-	Calendar getMostRecentScanTime(Integer channelId);
-
-
+public interface RemappingService {
+    void remapFindings(ChannelVulnerability vulnerability);
 }
