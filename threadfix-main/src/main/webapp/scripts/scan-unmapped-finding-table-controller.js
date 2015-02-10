@@ -109,6 +109,25 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         });
     };
 
+    $scope.createVulnerabilities = function(finding) {
+
+        var url = tfEncoder.encode("/scannerMappings/update/createVulnerabilities");
+
+        var object = {
+            channelVulnerabilityCode: finding.channelVulnerability.name,
+            channelName : finding.scannerName
+        };
+
+        $http.post(url, object).
+            success(function(data) {
+                $scope.successMessage = "Successfully created vulnerabilities. You should see the new Vulnerability in the Vulnerabilities tree.";
+                $scope.refresh(true, false);
+            }).
+            error(function(data, status) {
+                $scope.errorMessage = "Failed to create a vulnerability. HTTP status was " + status;
+            });
+    };
+
     $scope.goToPage = function(valid) {
         if (valid) {
             $scope.page = $scope.pageInput;
