@@ -30,6 +30,7 @@ package com.denimgroup.threadfix.service.merge;
 import com.denimgroup.threadfix.data.dao.*;
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.queue.QueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,17 +53,33 @@ public class RemappingServiceImpl implements RemappingService {
     VulnerabilityDao vulnerabilityDao;
     @Autowired
     ScanCloseReopenMappingDao scanCloseReopenMappingDao;
+    @Autowired(required = false) // not all environments have a queue
+    QueueSender queueSender;
 
     @Override
     public void remapFindings(ChannelVulnerability vulnerability) {
         List<Application> applications = applicationDao.retrieveAllActive();
 
+        if (queueSender == null) {
+            LOG.info("Queue sender was null, no statistics updates will be performed.");
+        }
+
         for (Application application : applications) {
-            remapFindings(application, vulnerability);
+            boolean shouldUpdate = remapFindings(application, vulnerability);
+
+            if (queueSender != null && shouldUpdate) {
+                queueSender.updateCachedStatistics(application.getId());
+            }
         }
     }
 
-    private void remapFindings(Application application, ChannelVulnerability type) {
+    /**
+     *
+     * @param application each application, in turn
+     * @param type the newly-mapped vulnerability
+     * @return whether or not updates were performed
+     */
+    private boolean remapFindings(Application application, ChannelVulnerability type) {
 
         Integer id = type.getChannelType().getId();
 
@@ -87,7 +104,9 @@ public class RemappingServiceImpl implements RemappingService {
 
         List<Finding> findings = findingDao.retrieveByChannelVulnerabilityAndApplication(type.getId(), application.getId());
 
-        LOG.info("Got " + findings.size() + " results for this channel vulnerability.");
+        LOG.info("Application " + application.getName() +
+                " got " + findings.size() +
+                " results for channel vulnerability " + type.getCode() + ".");
 
         for (Finding finding : findings) {
 
@@ -112,6 +131,8 @@ public class RemappingServiceImpl implements RemappingService {
             fixStateAndMappings(channel, vulnerability);
             vulnerabilityDao.saveOrUpdate(vulnerability);
         }
+
+        return !vulnerabilitiesToUpdate.isEmpty();
     }
 
     enum Event {
@@ -161,8 +182,6 @@ public class RemappingServiceImpl implements RemappingService {
         for (Calendar date : allDates) {
 
             Event event = scannerEventMap.get(date);
-
-            System.out.println(event);
 
             boolean openEvent = Event.isOpen(event);
 

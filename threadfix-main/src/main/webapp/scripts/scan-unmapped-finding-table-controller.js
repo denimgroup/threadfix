@@ -52,6 +52,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                         $scope.output = "Failure. Message was : " + data.message;
                     }
 
+                    $rootScope.$broadcast('newMappings');
+
                     $scope.loading = false;
                 }).
                 error(function(data, status) {
@@ -100,7 +102,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (object) {
-            $scope.successMessage = "Successfully created mapping. You should re-upload your scan.";
+            $scope.successMessage = "Successfully created mapping. You should see the new Vulnerability in the Vulnerabilities tree.";
             $scope.refresh(true, false);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
