@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.data.entities.ScanCloseVulnerabilityMap;
 import com.denimgroup.threadfix.data.entities.ScanReopenVulnerabilityMap;
-import org.junit.After;
 import org.junit.Test;
 
 import java.util.List;
@@ -176,11 +175,5 @@ public class RemappingTests {
         int size = application.getVulnerabilities().size();
         assert size == 1 : "Same scan twice yielded " + size + " vulnerabilities, expecting 1.";
     }
-    
-    @After
-    public void cleanItUp() {
-        RemappingTestHarness.deleteNewVulnerability();
-    }
-
 
 }
