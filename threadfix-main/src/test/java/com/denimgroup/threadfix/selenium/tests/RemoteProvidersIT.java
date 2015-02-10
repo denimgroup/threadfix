@@ -115,14 +115,14 @@ public class RemoteProvidersIT extends BaseDataTest {
 		assertTrue("WhiteHat Sentinel was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider WhiteHat Sentinel"));
         assertTrue("WhiteHat Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(4, "Yes"));
+                remoteProvidersIndexPage.checkConfigurationMessage(5, "Yes"));
 		
 		remoteProvidersIndexPage = remoteProvidersIndexPage.clearWhiteHat();
-		
+
 		assertTrue("WhiteHat Sentinel configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("WhiteHat Sentinel configuration was cleared successfully."));
         assertTrue("WhiteHat Sentinel configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(4, "No"));
+                remoteProvidersIndexPage.checkConfigurationMessage(5, "No"));
 	}
 
 	@Test
@@ -148,14 +148,14 @@ public class RemoteProvidersIT extends BaseDataTest {
         assertTrue("Veracode was not configured properly",
                 remoteProvidersIndexPage.successAlert().contains("Successfully edited remote provider Veracode"));
         assertTrue("Veracode configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(3, "Yes"));
+                remoteProvidersIndexPage.checkConfigurationMessage(4, "Yes"));
 
         remoteProvidersIndexPage = remoteProvidersIndexPage.clearVeraCode();
 
         assertTrue("Veracode configuration was not cleared properly",
                 remoteProvidersIndexPage.successAlert().contains("Veracode configuration was cleared successfully."));
         assertTrue("Veracode configured message is not correct.",
-                remoteProvidersIndexPage.checkConfigurationMessage(3, "No"));
+                remoteProvidersIndexPage.checkConfigurationMessage(4, "No"));
 	}
 	
 	@Test
@@ -754,10 +754,10 @@ public class RemoteProvidersIT extends BaseDataTest {
                 .setContrastService(CONTRAST_SERVICE_KEY)
                 .saveContrast();
 
-        remoteProvidersIndexPage.clickEditName("5","0").setNewName(newName);
+        remoteProvidersIndexPage.clickEditName("6","0").setNewName(newName);
 
         assertTrue("Application name did not update properly",
-                driver.findElement(By.id("provider5appid6")).getText().equals(newName));
+                driver.findElement(By.id("provider6appid1262")).getText().equals(newName));
 
         remoteProvidersIndexPage.clearContrast();
     }

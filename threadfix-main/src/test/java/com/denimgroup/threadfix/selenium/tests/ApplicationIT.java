@@ -704,7 +704,7 @@ public class ApplicationIT extends BaseDataTest {
                 .clickEditDeleteBtn()
                 .expandSourceCodeFields()
                 .setRemoteSourceCodeInformation(repositoryURLEdited, repositoryRevisionEdited, repositoryUserNameEdited, repositoryPasswordEdited)
-                .clickModalSubmit();
+                .clickModalSubmitInvalid();
 
         applicationDetailPage.clickEditDeleteBtn()
                 .expandSourceCodeFields();

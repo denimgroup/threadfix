@@ -52,13 +52,13 @@ public class RemoteProvidersIndexPage extends BasePage {
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureVeracode(){
-		driver.findElementById("configure3").click();
+		driver.findElementById("configure4").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
 	
 	public RemoteProvidersIndexPage clickConfigureWhiteHat(){
-		driver.findElementById("configure4").click();
+		driver.findElementById("configure5").click();
 		waitForElement(driver.findElementById("myModalLabel"));
 		return new RemoteProvidersIndexPage(driver);
 	}
@@ -100,10 +100,10 @@ public class RemoteProvidersIndexPage extends BasePage {
         driver.findElementById("submit").click();
         waitForSuccessMessage();
         int i = 1;
-        while(driver.findElements(By.id("clearConfig5")).isEmpty() && i++ < 5) {
+        while(driver.findElements(By.id("clearConfig6")).isEmpty() && i++ < 5) {
             sleep(20000);
         }
-        waitForElement(driver.findElementById("clearConfig5"));
+        waitForElement(driver.findElementById("clearConfig6"));
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -202,7 +202,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clickEditMappingContrastButton(int row) {
-        driver.findElementById("provider5updateMapping" + row).click();
+        driver.findElementById("provider6updateMapping" + row).click();
         return new RemoteProvidersIndexPage(driver);
     }
 
@@ -251,7 +251,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public ApplicationDetailPage clickContrastImportScan(int appRow) {
-        String elementToClick = "provider5import" + appRow;
+        String elementToClick = "provider6import" + appRow;
         waitForElement(driver.findElementById(elementToClick));
         if (!tryClick(By.id(elementToClick))) {
             throw new ElementNotVisibleException(elementToClick);
@@ -329,7 +329,7 @@ public class RemoteProvidersIndexPage extends BasePage {
     }
 
     public RemoteProvidersIndexPage clearContrast() {
-        driver.findElementById("clearConfig5").click();
+        driver.findElementById("clearConfig6").click();
         handleAlert();
         return new RemoteProvidersIndexPage(driver);
     }
