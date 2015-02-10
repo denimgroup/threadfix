@@ -42,25 +42,13 @@
             <security:authorize ifAnyGranted="ROLE_READ_ACCESS, ROLE_CAN_GENERATE_REPORTS">
 				<div class="row-fluid">
 					<c:set var="csrfToken" value="${ emptyUrl }" scope="request"/>
-					<c:forEach items="${dashboardWidgets}" var="dashboardWidget">
-						<c:if test="${dashboardWidget.id == config.dashboardTopLeftId}">
-							<jsp:include page="${dashboardWidget.jspFilePath}"/>
-						</c:if>
-						<c:if test="${dashboardWidget.id == config.dashboardTopRightId}">
-							<jsp:include page="${dashboardWidget.jspFilePath}"/>
-						</c:if>
-					</c:forEach>
+                    <jsp:include page="${ config.dashboardTopLeft.jspFilePath }"/>
+                    <jsp:include page="${ config.dashboardTopRight.jspFilePath }"/>
 			  	</div>
                 <div class="row-fluid">
                     <div class="row-fluid" style="padding-top:20px;">
-						<c:forEach items="${dashboardWidgets}" var="dashboardWidget">
-							<c:if test="${dashboardWidget.id == config.dashboardBottomLeftId}">
-								<jsp:include page="${dashboardWidget.jspFilePath}"/>
-							</c:if>
-							<c:if test="${dashboardWidget.id == config.dashboardBottomRightId}">
-								<jsp:include page="${dashboardWidget.jspFilePath}"/>
-							</c:if>
-						</c:forEach>
+                        <jsp:include page="${ config.dashboardBottomLeft.jspFilePath }"/>
+                        <jsp:include page="${ config.dashboardBottomRight.jspFilePath }"/>
                     </div>
                 </div>
             </security:authorize>

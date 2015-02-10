@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.DashboardWidget;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -48,62 +47,28 @@ public class CacheBustServiceImpl implements CacheBustService {
 
     private final SanitizedLogger log = new SanitizedLogger(CacheBustServiceImpl.class);
 
-    public String filteredAsset(HttpServletRequest request, String relUrl) {
+    public String notCachedAsset(HttpServletRequest request, String relUrl) {
 
-        String gitCommit = null;
-        String buildNumber = null;
-        String version = "2.2-SNAPSHOT";
-
-        try {
-            InputStream is =
-                request.getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF");
-            if (is == null) {
-                log.warn("/META-INF/MANIFEST.MF not found.");
-                return null;
-            } else {
-                Manifest mf = new Manifest();
-                mf.read(is);
-                Attributes attrs = mf.getMainAttributes();
-
-                if (attrs.getValue("Implementation-Version") != null) {
-                    version = attrs.getValue("Implementation-Version");
-                }
-
-                if (attrs.getValue("Implementation-Build") != null) {
-                    gitCommit = attrs.getValue("Implementation-Build");
-                }
-
-                // build fake git commit # for dev env
-                SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddhh");
-                gitCommit = (gitCommit != null) ? gitCommit : dt.format(Calendar.getInstance().getTime());
-
-                buildNumber = version + "-" + gitCommit;
-            }
-
-        } catch (IOException e) {
-            log.error("I/O Exception reading manifest: " + e.getMessage());
-        }
-
+        String buildNumber = (String) request.getAttribute("buildNumber");
         return request.getContextPath() + "/v/" + buildNumber + relUrl;
     }
 
-
     @Override
-    public List<String> uncachedJsPaths(HttpServletRequest request, List<DashboardWidget> dashboardWidgets) {
+    public List<String> notCachedJsPaths(HttpServletRequest request, List<Report> reports) {
 
-        List<String> uncachedJs = list();
+        List<String> notCachedJs = list();
 
-        for (DashboardWidget dashboardWidget : dashboardWidgets) {
+        for (Report report : reports) {
 
-            String jsFilePath = dashboardWidget.getJsFilePath();
+            String jsFilePath = report.getJsFilePath();
 
             if(jsFilePath != null && !jsFilePath.isEmpty()){
-                String filteredJsPath = filteredAsset(request, jsFilePath);
-                uncachedJs.add(filteredJsPath);
+                String filteredJsPath = notCachedAsset(request, jsFilePath);
+                notCachedJs.add(filteredJsPath);
             }
         }
 
-        return uncachedJs;
+        return notCachedJs;
 
     }
 }

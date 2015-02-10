@@ -90,6 +90,13 @@ public class HibernateApplicationDao implements ApplicationDao {
                 .uniqueResult();
     }
 
+    @Override
+    public Application retrieveByUniqueId(String uniqueId, int teamId) {
+        return (Application) getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId))
+                .add(Restrictions.eq("organization.id", teamId))
+                .uniqueResult();
+    }
+
     private Criteria getActiveAppCriteria() {
         return sessionFactory.getCurrentSession()
                 .createCriteria(Application.class)

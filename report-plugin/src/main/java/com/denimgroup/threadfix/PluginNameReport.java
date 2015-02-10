@@ -24,6 +24,7 @@
 
 package com.denimgroup.threadfix;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
 import com.denimgroup.threadfix.annotations.ReportPlugin;
 
 @ReportPlugin(
@@ -48,14 +49,21 @@ import com.denimgroup.threadfix.annotations.ReportPlugin;
          * 
          * Rename property based on name/description of plugin
          */
-        reportName = "pluginName",
+        shortName = "pluginName",
         
         /*
          * Name that is displayed in System Settings in reference to the report plugin
          * 
          * Rename based on name/description of plugin
          */
-        displayName = "Plugin Name")
+        displayName = "Plugin Name",
+
+        /*
+         * Notes all the places where this report plugin can show up
+         *
+         * Locations are noted in the ReportLocation enum (ex. ReportLocation.TEAM)
+         */
+        locations = { })
 /*
  * Empty class to hold report plugin metadata
  * 

@@ -62,6 +62,7 @@ public class CacheBustFilter extends GenericFilterBean {
         // If there was a build number defined in the war, then use it for the cache buster.
         req.setAttribute("gitCommit", gitCommit);
         req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.2-SNAPSHOT" + "-" + gitCommit);
+        req.setAttribute("buildNumber", (buildNumber != null) ? buildNumber : "2.2-SNAPSHOT" + "-" + gitCommit);
         req.setAttribute("buildDate", buildDate);
 
         chain.doFilter(request, response);
@@ -92,8 +93,7 @@ public class CacheBustFilter extends GenericFilterBean {
                 }
 
                 // build fake git commit # for dev env
-                SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddhh");
-                gitCommit = (gitCommit != null) ? gitCommit : dt.format(buildDate);
+                gitCommit = (gitCommit != null) ? gitCommit : Integer.toString(new Random().nextInt(10000000));
 
                 if (version != null){
                     buildNumber = version + "-" + gitCommit;

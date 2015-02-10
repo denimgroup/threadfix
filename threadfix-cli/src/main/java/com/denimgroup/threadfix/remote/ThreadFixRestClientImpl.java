@@ -183,7 +183,12 @@ public class ThreadFixRestClientImpl implements ThreadFixRestClient {
 		return httpRestUtils.httpGet("/applications/" + teamName + "/lookup",
 				"&name=" + name, Application.class);
 	}
-	
+
+    public RestResponse<Application> searchForApplicationByUniqueId(String uniqueId, String teamName) {
+        return httpRestUtils.httpGet("/applications/" + teamName + "/lookup",
+                "&uniqueId=" + uniqueId, Application.class);
+    }
+
 	public RestResponse<Organization> searchForTeamById(String id) {
 		return httpRestUtils.httpGet("/teams/" + id, Organization.class);
 	}
