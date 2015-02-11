@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////
 //
-//     Copyright (c) 2009-2014 Denim Group, Ltd.
+//     Copyright (c) 2009-2015 Denim Group, Ltd.
 //
 //     The contents of this file are subject to the Mozilla Public License
 //     Version 2.0 (the "License"); you may not use this file except in
@@ -36,8 +36,8 @@ public class WhiteHatMockHttpUtils implements RemoteProviderHttpUtils {
 
     public static final String GOOD_API_KEY = "153473b2-5448-4b8d-b8ec-c70a9f4f13cf",
         BAD_API_KEY = "ANY_OTHER_INPUT",
-        SITE_PREFIX = "https://sentinel.whitehatsec.com/api/site/?key=" + GOOD_API_KEY,
-        SCAN_PREFIX = "https://sentinel.whitehatsec.com/api/vuln/?key=" + GOOD_API_KEY + "&display_description=1&display_attack_vectors=1&query_site=";
+        SITE_PREFIX = "https://sentinel.whitehatsec.com/api/site/?key=" + GOOD_API_KEY + "&page:limit=1000&page:offset=0",
+        SCAN_PREFIX = "https://sentinel.whitehatsec.com/api/vuln/?key=" + GOOD_API_KEY + "&display_attack_vectors=1&query_site=";
 
     @Override
     public HttpResponse getUrl(String url) {
@@ -65,6 +65,11 @@ public class WhiteHatMockHttpUtils implements RemoteProviderHttpUtils {
     @Override
     public HttpResponse getUrl(String url, String username, String password) {
         return null;
+    }
+
+    @Override
+    public HttpResponse getUrlWithConfigurer(String url, RequestConfigurer configurer) {
+        return getUrl(url);
     }
 
     @Override
