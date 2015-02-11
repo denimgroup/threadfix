@@ -21,41 +21,36 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework;
+package com.denimgroup.threadfix.framework.impl.struts;
+
+import com.denimgroup.threadfix.framework.engine.cleaner.DefaultPathCleaner;
+import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-import java.io.File;
+/**
+ * Created by sgerick on 1/6/2015.
+ */
+public class StrutsPathCleaner extends DefaultPathCleaner {
 
-import static org.junit.Assert.assertTrue;
+    public static final String JSESSIONID = ";jsessionid=";
 
-public class ResourceManager {
 
-	@Nonnull
-    public static File getFile(String name) {
-		File file = new File(TestConstants.THREADFIX_SOURCE_ROOT + "threadfix-ham/target/test-classes/" + name);
-        assertTrue("File " + file.getAbsolutePath() + " didn't exist. Please fix your configuration.", file.exists());
-
-        return file;
+    public StrutsPathCleaner(List<PartialMapping> partialMappings) {
+        super(partialMappings);
     }
 
-	@Nonnull
-    public static File getSpringFile(String name) {
-		return getFile("code/spring/" + name);
-	}
+    @Override
+    public String cleanDynamicPath(@Nonnull String urlPath) {
+        String relativeUrlPath = super.cleanDynamicPath(urlPath);
 
-	@Nonnull
-    public static File getStrutsFile(String name) {
-		return getFile("code.struts/" + name);
-	}
+        String escaped = relativeUrlPath;
 
-    @Nonnull
-    public static File getDotNetMvcFile(String name) {
-        return getFile("code.dotNet.mvc/" + name);
-    }
+        if (escaped.contains(JSESSIONID)) {
+            escaped = escaped.substring(0, escaped.indexOf(JSESSIONID));
+        }
 
-    @Nonnull
-    public static File getDotNetWebFormsFile(String name) {
-        return getFile("code.dotNet.webforms/" + name);
+        return escaped;
     }
 }

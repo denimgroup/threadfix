@@ -27,6 +27,7 @@ import com.denimgroup.threadfix.framework.engine.ProjectConfig;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsParameterParser;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPDataFlowParser;
 import com.denimgroup.threadfix.framework.impl.spring.SpringDataFlowParser;
+import com.denimgroup.threadfix.framework.impl.struts.StrutsDataFlowParser;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 
 import javax.annotation.Nonnull;
@@ -43,6 +44,9 @@ public class ParameterParserFactory {
         switch (projectConfig.getFrameworkType()) {
             case SPRING_MVC:
                 parser = new SpringDataFlowParser(projectConfig);
+                break;
+            case STRUTS:
+                parser = new StrutsDataFlowParser(projectConfig);
                 break;
             case JSP:
                 parser = new JSPDataFlowParser(projectConfig);
