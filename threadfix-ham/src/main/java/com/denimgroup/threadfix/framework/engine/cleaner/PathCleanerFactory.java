@@ -29,6 +29,7 @@ import com.denimgroup.threadfix.framework.engine.partial.PartialMapping;
 import com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormsPathCleaner;
 import com.denimgroup.threadfix.framework.impl.jsp.JSPPathCleaner;
 import com.denimgroup.threadfix.framework.impl.spring.SpringPathCleaner;
+import com.denimgroup.threadfix.framework.impl.struts.StrutsPathCleaner;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -49,6 +50,8 @@ public class PathCleanerFactory {
             returnCleaner = new JSPPathCleaner(partialMappings);
         } else if (frameworkType == FrameworkType.DOT_NET_WEB_FORMS) {
             returnCleaner = new WebFormsPathCleaner(partialMappings);
+		} else if (frameworkType == FrameworkType.STRUTS) {
+			returnCleaner = new StrutsPathCleaner(partialMappings);
 		} else {
 			returnCleaner = new DefaultPathCleaner(partialMappings);
 		}

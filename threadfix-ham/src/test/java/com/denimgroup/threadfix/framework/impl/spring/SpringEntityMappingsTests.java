@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.framework.impl.spring;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.impl.model.ModelFieldSet;
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class SpringEntityMappingsTests {
 	@Test
 	public void testOwnerFields() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		EntityMappings mappings = new EntityMappings(file);
 		
 		ModelFieldSet ownerFields = mappings.getPossibleParametersForModelType("Owner");
 		
@@ -55,7 +56,7 @@ public class SpringEntityMappingsTests {
 	@Test
 	public void testPetFields() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		EntityMappings mappings = new EntityMappings(file);
 		
 		ModelFieldSet petFields = mappings.getPossibleParametersForModelType("Pet");
 		
@@ -69,7 +70,7 @@ public class SpringEntityMappingsTests {
 	@Test
 	public void testVetFields() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		EntityMappings mappings = new EntityMappings(file);
 		
 		ModelFieldSet vetFields = mappings.getPossibleParametersForModelType("Vet");
 		
@@ -83,7 +84,7 @@ public class SpringEntityMappingsTests {
 	@Test
 	public void testPetTypeFields() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		EntityMappings mappings = new EntityMappings(file);
 		
 		ModelFieldSet typeFields = mappings.getPossibleParametersForModelType("PetType");
 		
@@ -93,7 +94,7 @@ public class SpringEntityMappingsTests {
 	@Test
 	public void testMethodChainResolution() {
 		File file = new File(TestConstants.PETCLINIC_SOURCE_LOCATION);
-		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		EntityMappings mappings = new EntityMappings(file);
 		
 		List<ModelField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
 				new ModelField("Pet", "pet"));
@@ -113,7 +114,7 @@ public class SpringEntityMappingsTests {
 	@Test
 	public void testFakeFile() {
 		File file = new File(TestConstants.FAKE_FILE);
-		SpringEntityMappings mappings = new SpringEntityMappings(file);
+		EntityMappings mappings = new EntityMappings(file);
 		
 		List<ModelField> fields = mappings.getFieldsFromMethodCalls(".getOwner().getLastName()",
 				new ModelField("Pet", "pet"));

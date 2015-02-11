@@ -23,11 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service.queue;
 
-import java.util.Calendar;
-import java.util.List;
-
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
 import com.denimgroup.threadfix.data.entities.RemoteProviderType;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * @author bbeverly
@@ -55,7 +55,7 @@ public interface QueueSender {
 	 * @param channelId
 	 */
 	void addScanToQueue(String fileName, Integer channelId, Integer orgId, Integer appId,
-			Calendar calendar, ApplicationChannel applicationChannel);
+						Calendar calendar, ApplicationChannel applicationChannel);
 
 	/**
 	 * @param appId
@@ -70,9 +70,9 @@ public interface QueueSender {
 	 * @param version
 	 * @param severity
 	 */
-	void addSubmitDefect(List<Integer> vulns, String summary, String preamble, 
-			String component, String version, String severity, String priority, 
-			String status, Integer orgId, Integer applicationId);
+	void addSubmitDefect(List<Integer> vulns, String summary, String preamble,
+						 String component, String version, String severity, String priority,
+						 String status, Integer orgId, Integer applicationId);
 
 	/**
 	 * @param remoteProviderType

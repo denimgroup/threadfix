@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.spring;
+package com.denimgroup.threadfix.framework.util.java;
 
 import com.denimgroup.threadfix.framework.impl.model.ModelField;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizer;
@@ -30,19 +30,25 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class SpringEntityParser implements EventBasedTokenizer {
+public class EntityParser implements EventBasedTokenizer {
 
     @Nonnull
     private Set<ModelField> fieldMappings = new HashSet<>();
+
+    @Nonnull
+    private List<String> publicMethods = new ArrayList<>();
+
     @Nullable
     private String          className     = null, superClass = null, currentParamType = null;
 
     @Nonnull
-    public static SpringEntityParser parse(@Nonnull File file) {
-        SpringEntityParser parser = new SpringEntityParser();
+    public static EntityParser parse(@Nonnull File file) {
+        EntityParser parser = new EntityParser();
         EventBasedTokenizerRunner.run(file, parser);
         return parser;
     }
@@ -96,10 +102,14 @@ public class SpringEntityParser implements EventBasedTokenizer {
             case PARAM_TYPE:
                 if (currentParamType != null && stringValue != null && stringValue.startsWith("get") &&
                         stringValue.length() > 3) { // this is to avoid errors with methods named "get"
-				fieldMappings.add(new ModelField(currentParamType, stringValue));
-			}
-			state = State.START;
-			break;
+				    fieldMappings.add(new ModelField(currentParamType, stringValue));
+			    }
+                if (currentParamType != null && stringValue != null && !stringValue.startsWith("get")
+                    && stringValue.length() > 0 && currentParamType.equals("String")) { // public String method()
+                        publicMethods.add(stringValue);
+                }
+			    state = State.START;
+			    break;
 		}
 	}
 
@@ -108,7 +118,12 @@ public class SpringEntityParser implements EventBasedTokenizer {
 		return fieldMappings;
 	}
 
-	@Nullable
+    @Nonnull
+    public List<String> getMethods() {
+        return publicMethods;
+    }
+
+    @Nullable
     public String getClassName() {
 		return className;
 	}

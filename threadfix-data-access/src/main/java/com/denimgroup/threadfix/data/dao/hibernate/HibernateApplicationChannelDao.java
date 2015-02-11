@@ -26,9 +26,11 @@ package com.denimgroup.threadfix.data.dao.hibernate;
 import com.denimgroup.threadfix.data.dao.AbstractObjectDao;
 import com.denimgroup.threadfix.data.dao.ApplicationChannelDao;
 import com.denimgroup.threadfix.data.entities.ApplicationChannel;
+import com.denimgroup.threadfix.data.entities.Scan;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -95,5 +97,17 @@ public class HibernateApplicationChannelDao
 							 "where applicationChannel = :channelId and hasStartedProcessing is false " +
 							 "order by scanDate desc")
 				.setInteger("channelId", channelId).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public Calendar getMostRecentScanTime(Integer channelId) {
+
+		return (Calendar) sessionFactory
+				.getCurrentSession()
+				.createCriteria(Scan.class)
+				.addOrder(Order.desc("importTime"))
+				.setProjection(Projections.property("importTime"))
+				.setMaxResults(1)
+				.uniqueResult();
 	}
 }

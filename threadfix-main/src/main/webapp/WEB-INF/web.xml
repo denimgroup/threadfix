@@ -219,6 +219,8 @@
         		protected-regex ^/reports/parameters$,
                 protected-regex ^/reports/ajax/export/[0-9]+/[0-9]+/[0-9]+/[0-9]+$,
         		protected-regex ^/scans/table$,
+        		protected-regex ^/scannerMappings/update$,
+        		protected-regex ^/scannerMappings/update/createVulnerabilities$,
 		    	protected-regex ^/wafs/[0-9]+/edit/ajax$,
 		    	protected-regex ^/wafs/map$,
         		protected-regex ^/wafs/new/ajax$,

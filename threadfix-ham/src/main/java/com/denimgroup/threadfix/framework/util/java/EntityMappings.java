@@ -21,7 +21,7 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.framework.impl.spring;
+package com.denimgroup.threadfix.framework.util.java;
 
 import com.denimgroup.threadfix.framework.filefilter.FileExtensionFileFilter;
 import com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils;
@@ -38,29 +38,29 @@ import java.util.*;
 import static com.denimgroup.threadfix.CollectionUtils.list;
 import static com.denimgroup.threadfix.framework.impl.model.FieldSetLookupUtils.addSuperClassFieldsToModels;
 
-class SpringEntityMappings {
+public class EntityMappings {
 
     // This should be done by the end of the constructor
     @Nonnull
-    private final Collection<SpringEntityParser> entityParsers;
+    private final Collection<EntityParser> entityParsers;
 
     @Nonnull
     private final Map<String, ModelFieldSet> fieldMap = new HashMap<>();
 
     // This version will parse all the Java files in the directory.
     @SuppressWarnings("unchecked")
-    public SpringEntityMappings(@Nonnull File rootDirectory) {
+    public EntityMappings(@Nonnull File rootDirectory) {
 
         entityParsers = list();
 
         if (rootDirectory.exists() && rootDirectory.isDirectory()) {
 
             Collection<File> modelFiles = FileUtils.listFiles(rootDirectory,
-                    new FileExtensionFileFilter("java"), TrueFileFilter.INSTANCE);
+                    new FileExtensionFileFilter("java"), TrueFileFilter.TRUE);
 
             for (File file : modelFiles) {
                 if (file != null && file.exists() && file.isFile()) {
-                    entityParsers.add(SpringEntityParser.parse(file));
+                    entityParsers.add(EntityParser.parse(file));
                 }
             }
 
@@ -68,7 +68,7 @@ class SpringEntityMappings {
         }
     }
 
-    public SpringEntityMappings(@Nonnull Collection<SpringEntityParser> entityParsers) {
+    public EntityMappings(@Nonnull Collection<EntityParser> entityParsers) {
         this.entityParsers = entityParsers;
         generateMap();
     }
@@ -135,7 +135,7 @@ class SpringEntityMappings {
 	}
 
     private void addModelsToSuperClassAndFieldMaps(@Nonnull Map<String, String> superClassMap) {
-        for (SpringEntityParser entityParser : entityParsers) {
+        for (EntityParser entityParser : entityParsers) {
 
             if (entityParser.getClassName() != null) {
 
