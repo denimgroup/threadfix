@@ -265,5 +265,14 @@ public class SystemSettingsEntIT extends BaseDataTest {
                 driver.findElement(By.id("activeDirectoryCredentials")).getAttribute("value").equals(""));
         assertTrue("\"URL\" field is still populated after clear",
                 driver.findElement(By.id("activeDirectoryURL")).getAttribute("value").equals(""));
+
+        assertFalse("\"Search Base\" placeholder attribute still contains cleared info",
+                driver.findElement(By.id("activeDirectoryBase")).getAttribute("placeholder").equals(LDAP_SEARCHBASE));
+        assertFalse("\"sAMAccountName\" placeholder attribute still contains cleared info",
+                driver.findElement(By.id("activeDirectoryUsername")).getAttribute("placeholder").equals(LDAP_USERDN));
+        assertFalse("\"Password\" placeholder attribute still contains cleared info",
+                driver.findElement(By.id("activeDirectoryCredentials")).getAttribute("placeholder").equals(LDAP_PASSWORD));
+        assertFalse("\"URL\" placeholder attribute still contains cleared info",
+                driver.findElement(By.id("activeDirectoryURL")).getAttribute("placeholder").equals(LDAP_URL));
     }
 }
