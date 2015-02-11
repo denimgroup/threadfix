@@ -24,7 +24,7 @@
     </thead>
     <tbody>
         <tr ng-hide="findingList || loading" class="bodyRow">
-            <td colspan="6" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
+            <td colspan="7" style="text-align: center;"> All Findings were mapped to vulnerabilities.</td>
         </tr>
 
         <tr ng-repeat="finding in findingList" class="bodyRow" ng-class="{
@@ -47,9 +47,9 @@
                 <a class="pointer" ng-if="!finding.genericVulnerabilityName" id="createMapping{{ index }}" ng-click="createMapping(finding)">
                     Create Mapping
                 </a>
-                <div ng-if="finding.genericVulnerabilityName">
-                    {{ finding.genericVulnerabilityName }}
-                </div>
+                <a class="pointer" ng-if="finding.genericVulnerabilityName" id="createVulnerabilities{{ index }}" ng-click="createVulnerabilities(finding)">
+                    Create Vulnerabilities
+                </a>
             </td>
             <td class="pointer">
                 <a id="unmappedVulnType{{ index }}" ng-click="goTo(finding)">

@@ -49,4 +49,12 @@ public interface ApplicationChannelDao extends GenericObjectDao<ApplicationChann
 	 */
 	Calendar getMostRecentQueueScanTime(Integer channelId);
 
+	/**
+	 *
+	 * @param channelId ID of the ApplicationChannel object
+	 * @return the time the last scan was uploaded to this channel
+	 */
+	Calendar getMostRecentScanTime(Integer channelId);
+
+
 }

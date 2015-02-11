@@ -133,6 +133,11 @@ module.controller('VulnSearchController', function($scope, $rootScope, $window, 
         $scope.refreshHeading();
     });
 
+    $scope.$on('newMappings', function() {
+        $scope.refresh();
+        $scope.refreshHeading();
+    });
+
     $scope.refreshHeading = function() {
         $http.get(tfEncoder.encode("/reports/update/heading/"+ $scope.$parent.appId)).
             success(function(data, status, headers, config, response) {
