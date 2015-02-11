@@ -24,18 +24,13 @@
 package com.denimgroup.threadfix.framework.struts;
 
 import com.denimgroup.threadfix.data.entities.*;
-import com.denimgroup.threadfix.data.interfaces.Endpoint;
 import com.denimgroup.threadfix.framework.TestConstants;
-import com.denimgroup.threadfix.framework.engine.ThreadFixInterface;
-import com.denimgroup.threadfix.framework.engine.full.EndpointDatabase;
-import com.denimgroup.threadfix.importer.merge.Merger;
+import com.denimgroup.threadfix.importer.ScanLocationManager;
 import com.denimgroup.threadfix.importer.utils.ParserUtils;
+import com.denimgroup.threadfix.service.merge.Merger;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
-
-import static com.denimgroup.threadfix.framework.impl.dotNetWebForm.WebFormUtilities.getWebFormDatabase;
 
 /**
  * Created by sgerick on 12/19/14.
@@ -75,7 +70,8 @@ public class EndToEndTests {
     @Test
     public void testXSSVulnsMerge() {
         Application application = Merger.mergeFromDifferentScanners(TestConstants.ROLLER_SOURCE_LOCATION,
-                "SBIR/roller.xml", "SBIR/roller.fpr");
+                ScanLocationManager.getRoot() + "SBIR/roller.xml",
+                ScanLocationManager.getRoot() + "SBIR/roller.fpr");
 
         List<Scan> scans = application.getScans();
         assert scans.size() == 2 :
