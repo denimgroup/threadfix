@@ -217,6 +217,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Application> getTopAppsFromList(List<Integer> applicationIdList) {
         List<Application> apps = sessionFactory.getCurrentSession()
                 .createQuery("SELECT application " +
@@ -232,6 +233,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Object[]> getPointInTime(List<Integer> applicationIdList) {
         return sessionFactory
                 .getCurrentSession()

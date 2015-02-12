@@ -275,78 +275,59 @@
         <db.name>stonemill</db.name>
 
         <!-- Framework dependency versions -->
-        <apache.activemq.version>5.4.2</apache.activemq.version>
-        <apache.poi.version>3.8</apache.poi.version>
-        <apache.httpclient.version>4.3.6</apache.httpclient.version>
-        <apache.httpcore.version>4.1.2</apache.httpcore.version>
+        <apache.activemq.version>5.7.0</apache.activemq.version>
+        <apache.poi.version>3.11</apache.poi.version>
+        <apache.httpclient.version>4.4</apache.httpclient.version>
+        <apache.httpcore.version>4.4</apache.httpcore.version>
         <apache.xmlrpc.version>3.1.3</apache.xmlrpc.version>
-        <apache.xbean.version>3.5</apache.xbean.version>
-        <bouncycastle.bcmail.version>1.46</bouncycastle.bcmail.version>
-        <bouncycastle.bcprov.version>1.46</bouncycastle.bcprov.version>
-        <browserlauncher2.version>1.3</browserlauncher2.version>
+        <apache.xbean.version>3.18</apache.xbean.version>
         <codehaus.jackson.version>1.9.13</codehaus.jackson.version>
-        <cglib.version>2.2.2</cglib.version>
+        <cglib.version>3.1</cglib.version>
         <findbugs.jsr305.version>2.0.3</findbugs.jsr305.version>
-        <commons.beanutils.version>1.8.3</commons.beanutils.version>
-        <commons.codec.version>1.4</commons.codec.version>
+        <commons.beanutils.version>1.9.2</commons.beanutils.version>
+        <commons.codec.version>1.10</commons.codec.version>
         <commons.collections.version>3.2.1</commons.collections.version>
-        <commons.configuration.version>1.9</commons.configuration.version>
+        <commons.configuration.version>1.10</commons.configuration.version>
         <commons.csv.version>1.0</commons.csv.version>
-        <commons.digester.version>1.8.1</commons.digester.version>
+        <commons.digester.version>2.1</commons.digester.version>
         <commons.fileupload.version>1.3.1</commons.fileupload.version>
         <commons.httpclient.version>3.1</commons.httpclient.version>
-        <commons.io.version>1.4</commons.io.version>
-        <commons.lang.version>3.1</commons.lang.version>
-        <commons.logging.version>1.1.1</commons.logging.version>
-        <commons.validator.version>1.4.0</commons.validator.version>
-        <diffutils.version>1.2.1</diffutils.version>
+        <commons.io.version>2.4</commons.io.version>
+        <commons.lang.version>3.3.2</commons.lang.version>
+        <commons.logging.version>1.2</commons.logging.version>
+        <commons.validator.version>1.4.1</commons.validator.version>
         <esapi.version>2.1.0-SNAPSHOT</esapi.version>
-        <ezmorph.version>1.0.6</ezmorph.version>
-        <hibernate.version>3.5.4-Final</hibernate.version>
-        <hibernate-annotations.version>3.5.4-Final</hibernate-annotations.version>
-        <hibernate-validator.version>4.1.0.Final</hibernate-validator.version>
-        <itext.version>2.1.7</itext.version>
-        <java-getopt.version>1.0.13</java-getopt.version>
-        <javassist.version>3.12.0.GA</javassist.version>
-        <jdom.version>2.0.2</jdom.version>
-        <jericho.version>3.1</jericho.version>
-        <jgit.version>2.3.1.201302201838-r</jgit.version>
-        <jgoodies-looks.version>2.4.0</jgoodies-looks.version>
-        <jh.version>2.0</jh.version>
-        <json-lib.version>2.4</json-lib.version>
-        <json.version>20090211</json.version>
-        <jspf.version>1.0.2</jspf.version>
+        <hibernate.version>3.6.10.Final</hibernate.version>
+        <hibernate-annotations.version>3.5.6-Final</hibernate-annotations.version>
+        <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
+        <itext.version>4.2.1</itext.version>
+        <javassist.version>3.19.0-GA</javassist.version>
+        <jgit.version>3.6.2.201501210735-r</jgit.version>
+        <json.version>20140107</json.version>
         <jstl.version>1.2</jstl.version>
         <jsp-api.version>2.3.1</jsp-api.version>
         <jta.version>1.1</jta.version>
-        <lablib-checkboxtree.version>3.2</lablib-checkboxtree.version>
-        <log4j.version>1.2.16</log4j.version>
-        <owasp.jbrofuzz-encoder.version>2.5.1</owasp.jbrofuzz-encoder.version>
-        <owasp.jbrofuzz-parent.version>2.5.1</owasp.jbrofuzz-parent.version>
-        <persistence.version>1.0</persistence.version>
-        <quartz.version>1.8.6</quartz.version>
-        <rsyntaxtextarea.version>2.5.0</rsyntaxtextarea.version>
+        <log4j.version>1.2.17</log4j.version>
+        <persistence.version>1.0.2</persistence.version>
+        <quartz.version>2.2.1</quartz.version>
         <selenium.version>2.38.0</selenium.version>
-        <servlet-api.version>3.0.1</servlet-api.version>
+        <servlet-api.version>3.1.0</servlet-api.version>
         <sitemesh.version>2.4.2</sitemesh.version>
-        <slf4j.version>1.6.1</slf4j.version>
-        <spring.version>3.2.9.RELEASE</spring.version>
-        <spring-ldap.version>1.3.2.RELEASE</spring-ldap.version>
-        <springsecurity.version>3.1.4.RELEASE</springsecurity.version>
+        <slf4j.version>1.7.10</slf4j.version>
+        <spring.version>4.1.4.RELEASE</spring.version>
+        <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
+        <springsecurity.version>3.2.5.RELEASE</springsecurity.version>
         <spring-ws.version>2.2.0.RELEASE</spring-ws.version>
-        <swing-common.version>1.6.4</swing-common.version>
-        <swing-layout.version>1.0.3</swing-layout.version>
         <tfs-library.version>11.0.0</tfs-library.version>
-        <tuckey.version>3.1.0</tuckey.version>
-        <validation-api.version>1.0.0.GA</validation-api.version>
-        <xom.version>1.2.6</xom.version>
+        <tuckey.version>4.0.4</tuckey.version>
+        <validation-api.version>1.1.0.Final</validation-api.version>
         <zap.version>2.2.2</zap.version>
         <zaphelp.version>2.2.2</zaphelp.version>
         <dependencycheck.version>1.2.3</dependencycheck.version>
 
         <!-- Testing dependency versions -->
         <easymock.version>3.0</easymock.version>
-        <hsqldb.version>1.8.0.10</hsqldb.version>
+        <hsqldb.version>2.2.9</hsqldb.version>
         <mysql.version>5.1.26</mysql.version>
         <junit.version>4.11</junit.version>
         <selenium-client.version>1.0.2</selenium-client.version>

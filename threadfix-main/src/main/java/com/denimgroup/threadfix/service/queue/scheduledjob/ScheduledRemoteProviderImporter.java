@@ -26,8 +26,6 @@ package com.denimgroup.threadfix.service.queue.scheduledjob;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RemoteProviderTypeService;
 import com.denimgroup.threadfix.service.ScheduledRemoteProviderImportService;
@@ -36,20 +34,17 @@ import org.apache.commons.beanutils.BeanToPropertyValueTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.util.Strings;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
-import org.quartz.CronTrigger;
 
 import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 /**
  * Created by zabdisubhan on 8/14/14.
@@ -159,7 +154,7 @@ public class ScheduledRemoteProviderImporter {
         String groupName = createGroupName();
         String jobName = createJobName(scheduledRemoteProviderImport);
         try {
-            scheduler.deleteJob(jobName, groupName);
+            scheduler.deleteJob(JobKey.jobKey(jobName, groupName));
             log.info(groupName + "." + jobName + " was successfully deleted from scheduler");
         } catch (SchedulerException e) {
             log.error("Error when deleting job from scheduler", e);
@@ -174,8 +169,9 @@ public class ScheduledRemoteProviderImporter {
         String groupName = createGroupName();
         String jobName = createJobName(scheduledRemoteProviderImport);
 
-        JobDetail job = new JobDetail(jobName, groupName, ScheduledRemoteProviderImportJob.class);
-
+        JobDetail job = JobBuilder
+                .newJob(ScheduledRemoteProviderImportJob.class)
+                .withIdentity(jobName, groupName).build();
         List<RemoteProviderType> remoteProviderTypes = remoteProviderTypeService.loadAll();
         List<Integer> idList = (List<Integer>)CollectionUtils.collect(remoteProviderTypes, new BeanToPropertyValueTransformer("id"));
         String remoteProviderTypeIds = StringUtils.join(idList, ",");
@@ -188,15 +184,22 @@ public class ScheduledRemoteProviderImporter {
             if (cronExpression == null)
                 return false;
 
-            CronTrigger trigger = new CronTrigger(jobName, groupName, jobName, groupName, cronExpression);
+            Trigger trigger = TriggerBuilder.<CronTrigger>newTrigger()
+                    .forJob(jobName, groupName)
+                    .withIdentity(jobName, groupName)
+                    .withSchedule(cronSchedule(cronExpression))
+                    .build();
 
-            scheduler.addJob(job, true);
-            Date ft = scheduler.scheduleJob(trigger);
+            Date ft = scheduler.scheduleJob(job, trigger);
             log.info(job.getKey() + " has been scheduled to run at: " + ft
-                    + " and repeat based on expression: " + trigger.getCronExpression());
-        } catch (ParseException ex) {
-            log.error("Error when parsing trigger", ex);
-            return false;
+                    + " and repeat based on expression: " + cronExpression);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof ParseException) {
+                log.error("Got ParseException while parsing cron expression.", e.getCause());
+                return false;
+            } else {
+                throw e;
+            }
         } catch (SchedulerException scheEx) {
             log.error("Error when scheduling job", scheEx);
             return false;

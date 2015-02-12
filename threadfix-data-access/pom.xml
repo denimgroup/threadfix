@@ -117,8 +117,8 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>${hibernate-annotations.version}</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -128,7 +128,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javassist</groupId>
+            <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>${javassist.version}</version>
         </dependency>

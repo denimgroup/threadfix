@@ -44,7 +44,7 @@ public class ScheduledGRCToolUpdateJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        String jobName = context.getJobDetail().getFullName();
+        String jobName = context.getJobDetail().getDescription();
         log.info("ScheduledGRCToolUpdateJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();

@@ -39,14 +39,6 @@ import java.util.Map;
 public class FormRestResponse<T> extends RestResponse<T> {
 
     @JsonView(Object.class)
-    public String message = "";
-    @JsonView(Object.class)
-    public boolean success = false;
-    @JsonView(Object.class)
-    public int responseCode = -1;
-    @JsonView(Object.class)
-    public T object = null;
-    @JsonView(Object.class)
     public Map<String, String> errorMap;
 
     public static <T> FormRestResponse<T> failure(String response, Map<String, String> errorMap) {
