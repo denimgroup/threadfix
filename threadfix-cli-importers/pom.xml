@@ -334,6 +334,11 @@
             <version>${springsecurity.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>${javax-el.version}</version>
+        </dependency>
     </dependencies>
 
     <properties>

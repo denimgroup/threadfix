@@ -317,6 +317,7 @@
         <spring.version>4.1.4.RELEASE</spring.version>
         <spring-ldap.version>2.0.2.RELEASE</spring-ldap.version>
         <springsecurity.version>3.2.5.RELEASE</springsecurity.version>
+        <javax-el.version>2.2.4</javax-el.version>
         <spring-ws.version>2.2.0.RELEASE</spring-ws.version>
         <tfs-library.version>11.0.0</tfs-library.version>
         <tuckey.version>4.0.4</tuckey.version>
@@ -327,7 +328,7 @@
 
         <!-- Testing dependency versions -->
         <easymock.version>3.0</easymock.version>
-        <hsqldb.version>2.2.9</hsqldb.version>
+        <hsqldb.version>1.8.0.10</hsqldb.version>
         <mysql.version>5.1.26</mysql.version>
         <junit.version>4.11</junit.version>
         <selenium-client.version>1.0.2</selenium-client.version>
