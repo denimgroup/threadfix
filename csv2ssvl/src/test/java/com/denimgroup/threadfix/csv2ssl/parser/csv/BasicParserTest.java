@@ -21,10 +21,11 @@
 //     Contributor(s): Denim Group, Ltd.
 //
 ////////////////////////////////////////////////////////////////////////
-package com.denimgroup.threadfix.csv2ssl.parser;
+package com.denimgroup.threadfix.csv2ssl.parser.csv;
 
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
 import com.denimgroup.threadfix.csv2ssl.checker.FormatChecker;
+import com.denimgroup.threadfix.csv2ssl.parser.CSVToSSVLParser;
 import org.junit.Test;
 
 import java.io.InputStreamReader;

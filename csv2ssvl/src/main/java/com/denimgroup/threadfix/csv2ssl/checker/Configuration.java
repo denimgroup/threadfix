@@ -69,7 +69,7 @@ public class Configuration {
     public static State getCurrentState() {
         if (CONFIG.headers == null) {
             return State.NEEDS_HEADERS;
-        } else if (CONFIG.csvFile == null || isExcelOrMissing(CONFIG.csvFile)) {
+        } else if (CONFIG.csvFile == null || !CONFIG.csvFile.isFile()) {
             return State.NEEDS_INPUT_FILE;
         } else if (CONFIG.outputFile == null && !CONFIG.useStandardOut) {
             return State.NEEDS_OUTPUT_FILE;
@@ -78,7 +78,7 @@ public class Configuration {
         }
     }
 
-    private static boolean isExcelOrMissing(File csvFile) {
+    public static boolean isExcel(File csvFile) {
         try (BufferedInputStream maybeExcelStream = new BufferedInputStream(new FileInputStream(csvFile))) {
 
             boolean isExcelFile = POIXMLDocument.hasOOXMLHeader(maybeExcelStream);
@@ -109,26 +109,6 @@ public class Configuration {
             toProperties().store(outputStream, "Saving contents.");
 
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (outputStream != null) {
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static void writeInternal(File outputFile) {
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(outputFile);
-
-            toProperties().store(outputStream, "Saving contents.");
-
-        } catch (java.io.IOException e) {
             e.printStackTrace();
         } finally {
             if (outputStream != null) {
@@ -269,7 +249,7 @@ public class Configuration {
 
         CONFIG.useStandardOut      = "true".equalsIgnoreCase(properties.getProperty("useStandardOut"));
         CONFIG.shouldSkipFirstLine = "true".equalsIgnoreCase(properties.getProperty("shouldSkipFirstLine"));
-        CONFIG.loadedFromFile = true;
+        CONFIG.loadedFromFile      = true;
     }
 
 }
