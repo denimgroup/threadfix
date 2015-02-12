@@ -757,7 +757,7 @@ public class RemoteProvidersIT extends BaseDataTest {
         remoteProvidersIndexPage.clickEditName("6","0").setNewName(newName);
 
         assertTrue("Application name did not update properly",
-                driver.findElement(By.id("provider6appid1262")).getText().equals(newName));
+                driver.findElement(By.cssSelector("td[id^=provider6appid]")).getText().equals(newName));
 
         remoteProvidersIndexPage.clearContrast();
     }
