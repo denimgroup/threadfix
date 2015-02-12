@@ -142,6 +142,9 @@
 							</security:authorize>
 						</security:authorize>
                         <li class="normalLinks">
+                            <a id="viewDownloadPageLink" href="<spring:url value="/configuration/download" htmlEscape="true"/>">Download Tools</a>
+                        </li>
+                        <li class="normalLinks">
                             <a id="viewAboutPageLink" href="<spring:url value="/about" htmlEscape="true"/>">About</a>
                         </li>
 					</ul>
