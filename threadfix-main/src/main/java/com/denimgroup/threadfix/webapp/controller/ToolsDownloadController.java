@@ -42,7 +42,7 @@ public class ToolsDownloadController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ToolsDownloadController.class);
     private final static String CSV2SSVL_JAR = "CSV2SSVL-1.0-SNAPSHOT-jar-with-dependencies.jar";
-    private final static String TF_CLI_JAR = "threadfix-cli-2.0-jar-with-dependencies.jar";
+    private final static String TF_CLI_JAR = "threadfix-cli-2.2-jar-with-dependencies.jar";
     private final static String TF_SCAN_IMPORTER_JAR = "threadfix-cli-importers-2.2-SNAPSHOT.jar";
     private final static String TF_HAM_CLI_JAR = "threadfix-ham-2.2-SNAPSHOT.jar";
     private final static String TF_DATA_MIGRATION_JAR = "threadfix-data-migration-2.2-SNAPSHOT.jar";
@@ -61,9 +61,8 @@ public class ToolsDownloadController {
     }
 
     @RequestMapping(value="/tfcli")
-    public String doDownloadTFcli(HttpServletRequest request, HttpServletResponse response) {
+    public void doDownloadTFcli(HttpServletRequest request, HttpServletResponse response) {
         doDownload(request, response, TF_CLI_JAR);
-        return "config/download/index";
     }
 
     @RequestMapping(value="/tfscancli")
@@ -72,15 +71,13 @@ public class ToolsDownloadController {
     }
 
     @RequestMapping(value="/tfhamcli")
-    public String doDownloadTFhamcli(HttpServletRequest request, HttpServletResponse response) {
+    public void doDownloadTFhamcli(HttpServletRequest request, HttpServletResponse response) {
         doDownload(request, response, TF_HAM_CLI_JAR);
-        return "config/download/index";
     }
 
     @RequestMapping(value="/tfdatamigration")
-    public String doDownloadTFdatamigration(HttpServletRequest request, HttpServletResponse response) {
+    public void doDownloadTFdatamigration(HttpServletRequest request, HttpServletResponse response) {
         doDownload(request, response, TF_DATA_MIGRATION_JAR);
-        return "config/download/index";
     }
 
     private void doDownload(HttpServletRequest request, HttpServletResponse response, String jarName) {
