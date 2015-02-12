@@ -500,40 +500,47 @@ public class JiraDefectTracker extends AbstractDefectTracker {
 	@Override
 	public List<Defect> getDefectList() {
 
-        int MAX_RESULTS = 1000;
+        Long maxResults = 1000L;
         int startAt = 0;
-        int totalAvailable = 0;
+        Long totalAvailable = 0L;
         List<JSONArray> returnArrays = list();
         List<Defect> defectList = list();
 
 		String payload = "{\"jql\":\"project='" + projectName
                 + "'\",\"startAt\":" + startAt
-                + ",\"maxResults\":" + MAX_RESULTS
+                + ",\"maxResults\":" + maxResults
                 + ",\"fields\":[\"key\"]}";
 
 		String result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
 		try {
-            String maxResults = JsonUtils.getStringProperty(result, "maxResults");
-            if (maxResults != null)
-                MAX_RESULTS = Integer.valueOf(maxResults);
-            String total = JsonUtils.getStringProperty(result, "total");
-            if (total != null)
-                totalAvailable = Integer.valueOf(total);
-            String issuesString = JsonUtils.getStringProperty(result, "issues");
-            JSONArray returnArray = JsonUtils.getJSONArray(issuesString);
+
+            JSONObject object = JsonUtils.getJSONObject(result);
+
+            if (object == null) {
+                return list();
+            }
+
+            maxResults = object.getLong("maxResults");
+            totalAvailable = object.getLong("total");
+            JSONArray returnArray = object.getJSONArray("issues");
             int amountReturned = returnArray != null ? returnArray.length() : 0;
             returnArrays.add(returnArray);
 
-            if (totalAvailable > MAX_RESULTS) {
-                while ((amountReturned >= MAX_RESULTS)) {
-                    startAt += MAX_RESULTS;
+            if (totalAvailable > maxResults) {
+                while ((amountReturned >= maxResults)) {
+                    startAt += maxResults;
                     payload = "{\"jql\":\"project='" + projectName
                             + "'\",\"startAt\":" + startAt
-                            + ",\"maxResults\":" + MAX_RESULTS
+                            + ",\"maxResults\":" + maxResults
                             + ",\"fields\":[\"key\"]}";
                     result = restUtils.postUrlAsString(getUrlWithRest() + "search", payload, getUsername(), getPassword(), CONTENT_TYPE);
-                    issuesString = JsonUtils.getStringProperty(result, "issues");
-                    returnArray = JsonUtils.getJSONArray(issuesString);
+                    JSONObject jsonObject = JsonUtils.getJSONObject(result);
+
+                    if (jsonObject == null) {
+                        break;
+                    }
+
+                    returnArray = jsonObject.getJSONArray("issues");
                     amountReturned = returnArray != null ? returnArray.length() : 0;
                     returnArrays.add(returnArray);
                 }
