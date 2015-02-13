@@ -40,48 +40,6 @@
                 </div>
             </td>
         </tr>
-
-        <%--<tr ng-repeat-end class="grey-background" id="comments{{ $index }}" ng-if='vuln.vulnerabilityComments'>--%>
-        <%--<td >--%>
-        <%--&lt;%&ndash;<div collapse="!vuln.expanded"&ndash;%&gt;--%>
-        <%--&lt;%&ndash;id="vulnInfoDiv{{ $index }}"&ndash;%&gt;--%>
-        <%--&lt;%&ndash;class="collapse vulnerabilitySection"&ndash;%&gt;--%>
-        <%--&lt;%&ndash;ng-class="{ expanded: vuln.expanded }">&ndash;%&gt;--%>
-
-        <%--&lt;%&ndash;<div ng-if='vuln.vulnerabilityComments'>&ndash;%&gt;--%>
-        <%--<table id="vulnCommentTable{{ $index }}">--%>
-        <%--<thead>--%>
-        <%--<tr>--%>
-        <%--<th>User</th>--%>
-        <%--<th>Date</th>--%>
-        <%--<th>Comment</th>--%>
-        <%--<th>Tag</th>--%>
-        <%--<tr>--%>
-        <%--</thead>--%>
-        <%--<tbody>--%>
-        <%--<tr ng-repeat="comment in vuln.vulnerabilityComments" class="bodyRow left-align">--%>
-        <%--<td id="commentUser{{ $index }}">{{ comment.username }}</td>--%>
-        <%--<td id="commentDate{{ $index }}">{{ comment.time | date:'yyyy-MM-dd HH:mm' }}</td>--%>
-        <%--<td id="commentText{{ $index }}">--%>
-        <%--<div class="vuln-comment-word-wrap">--%>
-        <%--{{ comment.comment }}--%>
-        <%--</div>--%>
-        <%--</td>--%>
-        <%--<td class="left-align" >--%>
-        <%--<span ng-repeat="cmtTag in comment.tags">--%>
-        <%--<a class="pointer" id="cmtTag{{ $index }}" ng-click="goToTag(cmtTag)">{{cmtTag.name}}<span ng-hide="$index===comment.tags.length-1">,</span></a>--%>
-        <%--</span>--%>
-        <%--</td>--%>
-        <%--</tr>--%>
-        <%--</tbody>--%>
-        <%--</table>--%>
-        <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-        <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-        <%--</td>--%>
-        <%--<td></td>--%>
-        <%--<td></td>--%>
-        <%--<td></td>--%>
-        <%--</tr>--%>
         </tbody>
     </table>
 </div>
