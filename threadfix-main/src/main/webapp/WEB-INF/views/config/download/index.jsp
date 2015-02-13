@@ -43,7 +43,7 @@
                 <tr>
                     <td>ThreadFix Scan Importer CLI</td>
                     <td>
-                        Wiki
+                        &nbsp;
                     </td>
                     <td><a href="<spring:url value="/configuration/download/tfscancli" htmlEscape="true"/>">
                         Jar File</a></td>
@@ -51,7 +51,7 @@
                 <tr>
                     <td>ThreadFix HAM CLI</td>
                     <td>
-                        Wiki
+                        &nbsp;
                     </td>
                     <td><a href="<spring:url value="/configuration/download/tfhamcli" htmlEscape="true"/>">
                         Jar File</a></td>
