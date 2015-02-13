@@ -45,6 +45,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Controller
 @RequestMapping("/configuration/settings")
 @SessionAttributes("defaultConfiguration")
@@ -110,7 +112,24 @@ public class SystemSettingsController {
 							  Model model,
 							  HttpServletRequest request) {
 		addModelAttributes(model, request);
-		if (bindingResult.hasErrors()) {
+
+        List<String> errors = list();
+
+        if(defaultConfigService.reportDuplicateExists(configModel.getDashboardReports())) {
+            errors.add("Cannot set more than one Dashboard report placement to the same report.");
+        }
+
+        if(defaultConfigService.reportDuplicateExists(configModel.getApplicationReports())) {
+            errors.add("Cannot set more than one Application report placement to the same report.");
+        }
+
+        if(defaultConfigService.reportDuplicateExists(configModel.getTeamReports())) {
+            errors.add("Cannot set more than one Team report placement to the same report.");
+        }
+
+        model.addAttribute("errors", errors);
+
+        if (bindingResult.hasErrors() || errors.size() > 0) {
 
 			// TODO look into this
 			if (bindingResult.hasFieldErrors("proxyPort")) {
