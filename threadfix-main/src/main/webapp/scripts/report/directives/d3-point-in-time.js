@@ -22,9 +22,9 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
                     scope.render(newVals);
                 }, true);
 
-                scope.$watch('exportReportId', function() {
-                    scope.export();
-                }, true);
+                //scope.$watch('exportReportId', function() {
+                //    scope.export();
+                //}, true);
 
                 scope.$watch('label', function(newVals) {
                     scope.render(scope.data);
@@ -40,6 +40,7 @@ d3ThreadfixModule.directive('d3Pointintime', ['$window', '$timeout', 'd3', 'd3do
 
                     svg.selectAll('*').remove();
                     reportUtilities.drawTitle(svg, pieDim.w, scope.label, "Point in Time Report", 30);
+                    svg.attr("id", "pointInTimeGraph");
 
                     if (Object.keys(data).length === 0) {
                         svg.append("g")

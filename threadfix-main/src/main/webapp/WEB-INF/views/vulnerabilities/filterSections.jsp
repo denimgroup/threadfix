@@ -390,12 +390,20 @@
         </div>
     </div>
 
-    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication || reportId === 3 || reportId === 11">
+    <div class="accordion-group"  ng-hide="treeTeam || vulnSearch || treeApplication">
         <div class="accordion-heading" style="text-align:center">
-            <a id="exportPNGButtonReport" class="btn"
-               ng-click="exportPNG()">Export PNG</a>
+                <%--<a id="exportPNGButtonReport" class="btn"--%>
+                <%--ng-click="exportPNG()">Export PNG</a>--%>
             <a id="exportPDFButtonReport" class="btn"
-               ng-click="exportPNG(true)">Export PDF</a>
+               ng-hide="exportingPDF"
+               ng-click="exportPDF()">Export PDF</a>
+            <button id="exportingPDFButton"
+                    ng-show="exportingPDF"
+                    disabled="disabled"
+                    class="btn btn-primary">
+                <span class="spinner"></span>
+                Exporting
+            </button>
         </div>
     </div>
 </security:authorize>

@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService, trendingUtilities, reportConstants) {
+module.controller('TrendingReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, filterService, trendingUtilities, reportConstants, reportExporter) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
@@ -92,6 +92,16 @@ module.controller('TrendingReportController', function($scope, $rootScope, $wind
         $scope.exportInfo.apps = $scope.title.apps;
         $scope.exportInfo.tags = undefined;
         $scope.exportInfo.isPDF = isPDF;
+    };
+
+    $scope.exportPDF = function(){
+        $scope.exportInfo = {};
+        $scope.exportInfo.svgId = reportConstants.reportTypes.trending.name;
+        $scope.exportInfo.teams = $scope.title.teams;
+        $scope.exportInfo.apps = $scope.title.apps;
+        $scope.exportInfo.tags = undefined;
+        $scope.exportInfo.title = "Trending_Scans";
+        reportExporter.exportPDFTableFromId($scope.exportInfo)
     };
 
 });

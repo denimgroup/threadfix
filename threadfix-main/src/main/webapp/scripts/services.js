@@ -425,12 +425,15 @@ threadfixModule.factory('vulnTreeTransformer', function() {
 
             var vulnSum = {}, vulnList = [];
             serverResponse.forEach(function(element) {
-                var oldNum = 0;
-                if (vulnSum[element.genericVulnerability.displayId])
+                var oldNum = 0, oldVulns = [];
+                if (vulnSum[element.genericVulnerability.displayId]) {
                     oldNum = vulnSum[element.genericVulnerability.displayId].numResults;
+                    oldVulns = vulnSum[element.genericVulnerability.displayId].vulns;
+                }
                 vulnSum[element.genericVulnerability.displayId] = {
                     genericVulnerability: element.genericVulnerability,
-                    numResults: oldNum + element.numResults
+                    numResults: oldNum + element.numResults,
+                    vulns: oldVulns.concat(element.vulns)
                 }
             });
 

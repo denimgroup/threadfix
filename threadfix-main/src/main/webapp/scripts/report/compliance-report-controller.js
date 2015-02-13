@@ -1,6 +1,6 @@
 var module = angular.module('threadfix');
 
-module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants) {
+module.controller('ComplianceReportController', function($scope, $rootScope, $window, $http, tfEncoder, reportUtilities, trendingUtilities, reportConstants, reportExporter) {
 
     $scope.parameters = {};
     $scope.filterScans = [];
@@ -85,7 +85,6 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.$broadcast("updateTableVulnerabilities");
     };
 
-
     $scope.$on('updateDisplayData', function(event, parameters) {
         if (!$scope.$parent.complianceActive
             && !$scope.$parent.remediationEnterpriseActive)
@@ -143,6 +142,40 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.exportInfo.isPDF = isPDF;
     };
 
+    $scope.exportPDF = function(){
+
+        $scope.exportingPDF = true;
+
+        var reportType = getReportType();
+        $scope.numberVulnType = 0;
+        $scope.exportInfo = {};
+        $scope.exportInfo.svgId = reportType.name;
+        $scope.exportInfo.tableId = $scope.sumTableDivId + "Cmt";
+        $scope.exportInfo.tags = $scope.title.tags;
+        $scope.exportInfo.teams = undefined;
+        $scope.exportInfo.apps = undefined;
+        $scope.exportInfo.title = "Compliance_Report";
+
+    };
+
+    $scope.$on("finishedretrievingPdfExportAllTagsVuln", function(){
+       $scope.numberVulnType +=1;
+
+        // Done with loading both closed and open vulnerabilities
+        if ($scope.numberVulnType === 2) {
+            var reportType = getReportType();
+            $scope.exportInfo = {};
+            $scope.exportInfo.svgId = reportType.name;
+            $scope.exportInfo.tableId = $scope.sumTableDivId + "Cmt";
+            $scope.exportInfo.tags = $scope.title.tags;
+            $scope.exportInfo.teams = undefined;
+            $scope.exportInfo.apps = undefined;
+            $scope.exportInfo.title = "Compliance_Report";
+            reportExporter.exportPDFTableFromId($scope.exportInfo, $scope.tableInfo)
+            $scope.exportingPDF = false;
+        }
+    });
+
     var getReportType = function() {
         if ($scope.$parent.complianceActive)
             return reportConstants.reportTypes.compliance;
@@ -172,7 +205,6 @@ module.controller('ComplianceReportController', function($scope, $rootScope, $wi
         $scope.parameters.tags = [];
         $scope.parameters.tags.push({name: name});
         $scope.parameters.remediationType = $scope.remediationType;
-    }
-
+    };
 
 });

@@ -214,6 +214,8 @@
         		protected-regex ^/reports/search/delete/[0-9]+$,
         		protected-regex ^/reports/filter$,
         		protected-regex ^/reports/search$,
+				protected-regex ^/reports/search/export/pdf$,
+				protected-regex ^/reports/search/export/tag/pdf$,
         		protected-regex ^/reports/tree$,
                 protected-regex ^/reports/getTopApps$,
         		protected-regex ^/reports/parameters$,
