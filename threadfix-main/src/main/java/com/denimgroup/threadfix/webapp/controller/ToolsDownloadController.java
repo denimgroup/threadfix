@@ -32,17 +32,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 @Controller
 @RequestMapping("/configuration/download")
 public class ToolsDownloadController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ToolsDownloadController.class);
+
+    private final static String JAR_DOWNLOAD_DIR = "/WEB-INF/download/";
+
     private final static String CSV2SSVL_JAR = "CSV2SSVL-1.0-SNAPSHOT-jar-with-dependencies.jar";
-    private final static String TF_CLI_JAR = "threadfix-cli-2.2-jar-with-dependencies.jar";
+    private final static String TF_CLI_JAR = "threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar";
     private final static String TF_SCAN_IMPORTER_JAR = "threadfix-cli-importers-2.2-SNAPSHOT.jar";
     private final static String TF_HAM_CLI_JAR = "threadfix-ham-2.2-SNAPSHOT.jar";
     private final static String TF_DATA_MIGRATION_JAR = "threadfix-data-migration-2.2-SNAPSHOT.jar";
@@ -56,59 +59,81 @@ public class ToolsDownloadController {
 	}
 
     @RequestMapping(value="/csv2ssvl")
-    public void doDownloadCsv2ssvl(HttpServletRequest request, HttpServletResponse response) {
-        doDownload(request, response, CSV2SSVL_JAR);
+    public String doDownloadCsv2ssvl(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, CSV2SSVL_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
     }
 
     @RequestMapping(value="/tfcli")
-    public void doDownloadTFcli(HttpServletRequest request, HttpServletResponse response) {
-        doDownload(request, response, TF_CLI_JAR);
+    public String doDownloadTFcli(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_CLI_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
     }
 
     @RequestMapping(value="/tfscancli")
-    public void doDownloadTFscancli(HttpServletRequest request, HttpServletResponse response) {
-        doDownload(request, response, TF_SCAN_IMPORTER_JAR);
+    public String doDownloadTFscancli(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_SCAN_IMPORTER_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
     }
 
     @RequestMapping(value="/tfhamcli")
-    public void doDownloadTFhamcli(HttpServletRequest request, HttpServletResponse response) {
-        doDownload(request, response, TF_HAM_CLI_JAR);
+    public String doDownloadTFhamcli(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_HAM_CLI_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
     }
 
     @RequestMapping(value="/tfdatamigration")
-    public void doDownloadTFdatamigration(HttpServletRequest request, HttpServletResponse response) {
-        doDownload(request, response, TF_DATA_MIGRATION_JAR);
+    public String doDownloadTFdatamigration(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_DATA_MIGRATION_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
     }
 
-    private void doDownload(HttpServletRequest request, HttpServletResponse response, String jarName) {
+    private void doDownload(HttpServletRequest request, HttpServletResponse response, String jarName) throws IOException {
 
-        String jarResource = "/WEB-INF/download/" + jarName;
+        String jarResource = JAR_DOWNLOAD_DIR + jarName;
 
         InputStream in = request.getServletContext().getResourceAsStream(jarResource);
         if (in == null) {
             log.error("JAR File not found for download: " + jarResource);
-            return;
+            throw new FileNotFoundException("JAR File not found for download: " + jarResource);
         }
 
-        ServletOutputStream out;
+        ServletOutputStream out = response.getOutputStream();
+        int jarSize = request.getServletContext().getResource(jarResource).openConnection().getContentLength();
 
-        try {
-            out = response.getOutputStream();
-            int jarSize = request.getServletContext().getResource(jarResource).openConnection().getContentLength();
+        response.setContentType("application/java-archive");
+        response.setContentLength(jarSize);
+        response.addHeader("Content-Disposition", "attachment; filename=\"" + jarName + "\"");
 
-            response.setContentType("application/java-archive");
-            response.setContentLength(jarSize);
-
-            response.addHeader("Content-Disposition", "attachment; filename=\"" + jarName + "\"");
-
-            IOUtils.copy(in, out);
-            in.close();
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            log.error("IOException writing JAR File to client: " + jarName, e);
-        }
-
+        IOUtils.copy(in, out);
+        in.close();
+        out.flush();
+        out.close();
     }
 
 
