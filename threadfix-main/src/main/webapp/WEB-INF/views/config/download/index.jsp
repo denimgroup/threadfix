@@ -3,11 +3,10 @@
 <head>
 	<title>Download Tools</title>
 </head>
-
-<%@ include file="/WEB-INF/views/angular-init.jspf"%>
-<%@ include file="/WEB-INF/views/successMessage.jspf" %>
-<%@ include file="/WEB-INF/views/errorMessage.jsp" %>
-
+<body>
+    <%@ include file="/WEB-INF/views/angular-init.jspf"%>
+    <%@ include file="/WEB-INF/views/successMessage.jspf" %>
+    <%@ include file="/WEB-INF/views/errorMessage.jsp" %>
 
     <div id="helpText">
         Tools download page.<br/>
