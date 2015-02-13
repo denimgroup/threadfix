@@ -23,25 +23,40 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.importer.interop.ScannerMappingsUpdaterService;
-import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.FindingService;
+import com.denimgroup.threadfix.service.GenericVulnerabilityService;
 import com.denimgroup.threadfix.service.ScannerMappingsExportService;
+import com.denimgroup.threadfix.service.beans.TableSortBean;
+import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
 
 @Controller
-@RequestMapping("/scanplugin")
-public class ScanPluginController {
+@RequestMapping("/mappings")
+public class ScannerMappingsController {
 
     @Autowired
 	private ScannerMappingsUpdaterService scannerMappingsUpdaterService;
     @Autowired
     private ScannerMappingsExportService scannerMappingsExportService;
-
-	private final SanitizedLogger log = new SanitizedLogger(ScanPluginController.class);
+	@Autowired
+	private GenericVulnerabilityService genericVulnerabilityService;
+	@Autowired
+	private FindingService findingService;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(Model model) {
@@ -51,22 +66,49 @@ public class ScanPluginController {
 		model.addAttribute("exportText", scannerMappingsExportService.getUserAddedMappingsInCSV());
         model.addAttribute("canUpdate", scannerMappingsExportService.canUpdate());
 
-		return "scanplugin/channelVulnUpdate";
+		return "mappings/channelVulnUpdate";
 	}
 
-	@RequestMapping(value = "/updateChannelVuln", method = RequestMethod.GET)
-	public String doUpdate(Model model) {
-		log.info("Start updating Channel Vulnerabilities");
+	@RequestMapping(value = "/index/cwe", method = RequestMethod.GET)
+	@ResponseBody
+	public String getCweList() {
 
-        scannerMappingsUpdaterService.updateMappings();
-		
-		model.addAttribute("successMessage", "Vulnerability mappings were successfully updated.");
-		model.addAttribute("pluginCheckBean", scannerMappingsUpdaterService.checkPluginJar());
-        model.addAttribute("supportedScanners", scannerMappingsUpdaterService.getSupportedScanners());
-
-		log.info("Ended updating Vulnerabilities");
-		return "scanplugin/channelVulnUpdate";
+		return writeSuccessObjectWithView(
+				genericVulnerabilityService.loadAll(),
+				AllViews.TableRow.class);
 	}
 
+	@RequestMapping(value = "/index/unmappedTable", method = RequestMethod.POST)
+	@ResponseBody
+	public String unmappedScanTable(@ModelAttribute TableSortBean bean) throws IOException {
+
+		if (!PermissionUtils.isAuthorized(Permission.READ_ACCESS, null, null)) {
+			return "403";
+		}
+
+		// TODO remove repeated code from here + application page + scan page
+		long numFindings = findingService.getTotalUnmappedFindings();
+		long numPages = numFindings / 100;
+
+		if (numFindings % 100 == 0) {
+			numPages -= 1;
+		}
+
+		if (bean.getPage() >= numPages) {
+			bean.setPage((int) (numPages + 1));
+		}
+
+		if (bean.getPage() < 1) {
+			bean.setPage(1);
+		}
+
+		Map<String, Object> responseMap = new HashMap<>();
+		responseMap.put("numPages", numPages);
+		responseMap.put("page", bean.getPage());
+		responseMap.put("numFindings", numFindings);
+		responseMap.put("findingList", findingService.getUnmappedFindingTable(bean));
+
+		return writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
+	}
 }
 

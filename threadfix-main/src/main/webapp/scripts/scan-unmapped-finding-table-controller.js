@@ -102,7 +102,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (object) {
-            $scope.successMessage = "Successfully created mapping. You should see the new Vulnerability in the Vulnerabilities tree.";
+            $scope.successMessage = "Successfully created mapping. You should see new Vulnerabilities in the Vulnerabilities tree. Please export these mappings to Denim Group from the Scanner Mappings page.";
             $scope.refresh(true, false);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
@@ -120,7 +120,7 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
 
         $http.post(url, object).
             success(function(data) {
-                $scope.successMessage = "Successfully created vulnerabilities. You should see the new Vulnerability in the Vulnerabilities tree.";
+                $scope.successMessage = "Successfully created vulnerabilities. You should see the new Vulnerability in the Vulnerabilities tree. Please export these mappings to Denim Group from the Scanner Mappings page.";
                 $scope.refresh(true, false);
             }).
             error(function(data, status) {

@@ -31,6 +31,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -271,5 +272,14 @@ public class HibernateFindingDao
 				.add(Restrictions.eq("applicationAlias.id", applicationId))
 				.add(Restrictions.eq("typeAlias.id", channelVulnerabilityId))
 				.list();
+	}
+
+	@Override
+	public long getTotalUnmappedFindings() {
+		return (long) sessionFactory.getCurrentSession().createCriteria(Finding.class)
+				.add(Restrictions.eq("active", true))
+				.add(Restrictions.isNull("vulnerability"))
+				.setProjection(Projections.rowCount())
+				.uniqueResult();
 	}
 }
