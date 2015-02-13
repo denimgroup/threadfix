@@ -200,6 +200,7 @@ public class User extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getHasGlobalGroupAccess() {
 		return hasGlobalGroupAccess != null && hasGlobalGroupAccess;
 	}
@@ -210,7 +211,8 @@ public class User extends AuditableEntity {
 
 	@ManyToOne
     @JoinColumn(name = "roleId", nullable = true)
-	public Role getGlobalRole() {
+    @JsonView(AllViews.TableRow.class)
+    public Role getGlobalRole() {
 		return globalRole;
 	}
 
@@ -229,6 +231,7 @@ public class User extends AuditableEntity {
 	}
 	
 	@Column(nullable = true)
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getIsLdapUser() {
 		return isLdapUser != null && isLdapUser;
 	}
@@ -238,6 +241,7 @@ public class User extends AuditableEntity {
 	}
 
     @Column(length = PASSWORD_LENGTH, nullable = true)
+    @JsonView(AllViews.TableRow.class)
     public String getDisplayName() {
         return displayName;
     }

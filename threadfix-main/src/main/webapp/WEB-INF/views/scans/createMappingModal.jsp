@@ -15,7 +15,7 @@
                 </tr>
                 <tr>
                     <td>CWE</td>
-                    <td>
+                    <td class="typeaheadPointer">
                         <input id="sourceGenericVulnerability.name"
                                required style="z-index:1041;width:500px"
                                type = "text"

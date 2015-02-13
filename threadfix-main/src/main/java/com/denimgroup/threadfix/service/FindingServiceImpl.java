@@ -421,4 +421,9 @@ public class FindingServiceImpl implements FindingService {
 	public List<String> getAllManualUrls(Integer appId) {
 		return findingDao.retrieveManualUrls(appId);
 	}
+
+	@Override
+	public long getTotalUnmappedFindings() {
+		return findingDao.getTotalUnmappedFindings();
+	}
 }

@@ -86,4 +86,6 @@ public interface FindingDao extends GenericObjectDao<Finding> {
     List<Finding> retrieveUnmappedFindingsByPage(int page, Integer appId);
 
 	List<Finding> retrieveByChannelVulnerabilityAndApplication(Integer channelVulnerabilityId, Integer applicationId);
+
+	long getTotalUnmappedFindings();
 }

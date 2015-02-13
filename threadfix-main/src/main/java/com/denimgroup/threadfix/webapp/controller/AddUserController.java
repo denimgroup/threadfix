@@ -71,16 +71,16 @@ public class AddUserController {
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		if(ldapPluginInstalled && EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
-					"passwordConfirm", "hasGlobalGroupAccess", "isLdapUser");
+					"passwordConfirm", "displayName", "hasGlobalGroupAccess", "isLdapUser");
 		} else if (ldapPluginInstalled) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
-					"passwordConfirm", "isLdapUser");
+					"passwordConfirm", "displayName", "isLdapUser");
 		} else if (EnterpriseTest.isEnterprise()) {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
-					"passwordConfirm", "hasGlobalGroupAccess");
+					"passwordConfirm", "displayName", "hasGlobalGroupAccess");
 		} else {
 			dataBinder.setAllowedFields("name", "globalRole.id", "unencryptedPassword", 
-					"passwordConfirm", "hasGlobalGroupAccess");
+					"passwordConfirm", "displayName", "hasGlobalGroupAccess");
 		}
 	}
 
@@ -108,7 +108,7 @@ public class AddUserController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() +
                     ", the ID " + user.getId());
-			return ControllerUtils.writeSuccessObjectWithView(userService.loadUser(id), AllViews.FormInfo.class);
+			return ControllerUtils.writeSuccessObjectWithView(userService.loadUser(id), AllViews.TableRow.class);
 		}
 	}
 }
