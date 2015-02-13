@@ -26,14 +26,6 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>CSV2SSVL</td>
-                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/CSV2SSVL">
-                        Wiki
-                        </a></td>
-                    <td><a href="<spring:url value="/configuration/download/csv2ssvl" htmlEscape="true"/>">
-                        Jar File</a></td>
-                </tr>
-                <tr>
                     <td>ThreadFix Command Line Interface (CLI)</td>
                     <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Command-Line-Interface">
                         Wiki</a></td>
@@ -42,18 +34,17 @@
                 </tr>
                 <tr>
                     <td>ThreadFix Scan Importer CLI</td>
-                    <td>
-                        &nbsp;
-                    </td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/CLI-Importers">
+                        Wiki</a></td>
                     <td><a href="<spring:url value="/configuration/download/tfscancli" htmlEscape="true"/>">
                         Jar File</a></td>
                 </tr>
                 <tr>
-                    <td>ThreadFix HAM CLI</td>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td><a href="<spring:url value="/configuration/download/tfhamcli" htmlEscape="true"/>">
+                    <td>Endpoint Command Line Interface</td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Endpoint-CLI">
+                        Wiki
+                    </a></td>
+                    <td><a href="<spring:url value="/configuration/download/tfendpoint" htmlEscape="true"/>">
                         Jar File</a></td>
                 </tr>
                 <tr>
@@ -62,6 +53,38 @@
                         Wiki
                     </a></td>
                     <td><a href="<spring:url value="/configuration/download/tfdatamigration" htmlEscape="true"/>">
+                        Jar File</a></td>
+                </tr>
+                <tr>
+                    <td>Burp Plugin</td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Burp-Plugin">
+                        Wiki
+                    </a></td>
+                    <td><a href="<spring:url value="/configuration/download/burp" htmlEscape="true"/>">
+                        Jar File</a></td>
+                </tr>
+                <tr>
+                    <td>ZAP Plugin</td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Zap-Plugin">
+                        Wiki
+                    </a></td>
+                    <td><a href="<spring:url value="/configuration/download/zap" htmlEscape="true"/>">
+                        Zap File</a></td>
+                </tr>
+                <tr>
+                    <td>Sonar Plugin</td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/Using-the-Sonar-Plugin">
+                        Wiki
+                    </a></td>
+                    <td><a href="<spring:url value="/configuration/download/sonar" htmlEscape="true"/>">
+                        Jar File</a></td>
+                </tr>
+                <tr>
+                    <td>CSV2SSVL, CSV to SSVL Tool</td>
+                    <td><a target="_blank" href="https://github.com/denimgroup/threadfix/wiki/CSV2SSVL">
+                        Wiki
+                        </a></td>
+                    <td><a href="<spring:url value="/configuration/download/csv2ssvl" htmlEscape="true"/>">
                         Jar File</a></td>
                 </tr>
             </tbody>

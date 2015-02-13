@@ -42,32 +42,25 @@ public class ToolsDownloadController {
 
 	private final SanitizedLogger log = new SanitizedLogger(ToolsDownloadController.class);
 
-    private final static String JAR_DOWNLOAD_DIR = "/WEB-INF/download/";
+    private final static String JAR_DOWNLOAD_DIR = "/WEB-INF/classes/downloads/";
 
-    private final static String CSV2SSVL_JAR = "CSV2SSVL-1.0-SNAPSHOT-jar-with-dependencies.jar";
-    private final static String TF_CLI_JAR = "threadfix-cli-2.2-SNAPSHOT-jar-with-dependencies.jar";
-    private final static String TF_SCAN_IMPORTER_JAR = "threadfix-cli-importers-2.2-SNAPSHOT.jar";
-    private final static String TF_HAM_CLI_JAR = "threadfix-ham-2.2-SNAPSHOT.jar";
-    private final static String TF_DATA_MIGRATION_JAR = "threadfix-data-migration-2.2-SNAPSHOT.jar";
+    private final static String TF_CLI_JAR = "tfcli.jar";
+    private final static String TF_SCAN_IMPORTER_JAR = "threadfix-cli-importers.jar";
+    private final static String TF_ENDPOINT_JAR = "endpoints.jar";
+    private final static String TF_DATA_MIGRATION_JAR = "threadfix-data-migration.jar";
+    private final static String TF_BURP_JAR = "threadfix-release-2-burp.jar";
+    private final static String TF_ZAP = "threadfix-release-2.zap";
+    private final static String TF_SONAR_JAR = "sonar-threadfix-plugin.jar";
+    private final static String CSV2SSVL_JAR = "csv2ssvl.jar";
 
-	public ToolsDownloadController(){}
+
+    public ToolsDownloadController(){}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String index() {
 
 		return "config/download/index";
 	}
-
-    @RequestMapping(value="/csv2ssvl")
-    public String doDownloadCsv2ssvl(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, CSV2SSVL_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
-    }
 
     @RequestMapping(value="/tfcli")
     public String doDownloadTFcli(HttpServletRequest request, HttpServletResponse response) {
@@ -91,11 +84,11 @@ public class ToolsDownloadController {
         return destination;
     }
 
-    @RequestMapping(value="/tfhamcli")
-    public String doDownloadTFhamcli(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value="/tfendpoint")
+    public String doDownloadTFendcli(HttpServletRequest request, HttpServletResponse response) {
         String destination = null;
         try {
-            doDownload(request, response, TF_HAM_CLI_JAR);
+            doDownload(request, response, TF_ENDPOINT_JAR);
         } catch (Exception e) {
             destination = "config/download/index";
         }
@@ -113,6 +106,51 @@ public class ToolsDownloadController {
         return destination;
     }
 
+    @RequestMapping(value="/burp")
+    public String doDownloadBurp(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_BURP_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
+    }
+
+    @RequestMapping(value="/zap")
+    public String doDownloadZap(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_ZAP);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
+    }
+
+    @RequestMapping(value="/sonar")
+    public String doDownloadSonar(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, TF_SONAR_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
+    }
+
+    @RequestMapping(value="/csv2ssvl")
+    public String doDownloadCsv2ssvl(HttpServletRequest request, HttpServletResponse response) {
+        String destination = null;
+        try {
+            doDownload(request, response, CSV2SSVL_JAR);
+        } catch (Exception e) {
+            destination = "config/download/index";
+        }
+        return destination;
+    }
+
+
     private void doDownload(HttpServletRequest request, HttpServletResponse response, String jarName) throws IOException {
 
         String jarResource = JAR_DOWNLOAD_DIR + jarName;
@@ -126,7 +164,10 @@ public class ToolsDownloadController {
         ServletOutputStream out = response.getOutputStream();
         int jarSize = request.getServletContext().getResource(jarResource).openConnection().getContentLength();
 
-        response.setContentType("application/java-archive");
+        if (jarName.endsWith(".jar"))
+            response.setContentType("application/java-archive");
+        else
+            response.setContentType("application/octet-stream");;
         response.setContentLength(jarSize);
         response.addHeader("Content-Disposition", "attachment; filename=\"" + jarName + "\"");
 
