@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.framework.impl.struts.model.StrutsAction;
 import com.denimgroup.threadfix.framework.impl.struts.model.StrutsPackage;
 import com.denimgroup.threadfix.framework.impl.struts.model.StrutsResult;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import org.hibernate.property.Dom4jAccessor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

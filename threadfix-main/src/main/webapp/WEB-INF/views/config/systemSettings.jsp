@@ -4,14 +4,21 @@
 	<title>System Settings</title>
 </head>
 
-<body id="config" ng-init="successMessage = '<c:out value="${ successMessage }"/>'">
-	<h2>System Settings</h2>
+<body id="config" ng-init="successMessage = '<c:out value="${ successMessage }"/>'; showErrors = '<c:out value="${ errors.size() > 0 }"/>'">
+    <h2>System Settings</h2>
 
     <%@ include file="../angular-init.jspf" %>
 
     <div ng-show="successMessage" class="alert alert-success">
         <button class="close" ng-click="successMessage = undefined" type="button">&times;</button>
         {{ successMessage }}
+    </div>
+
+    <div ng-show="showErrors" class="alert alert-error">
+        <button class="close" ng-click="showErrors = false" type="button">&times;</button>
+        <c:forEach items="${ errors }" var="error">
+            <c:out value="${ error }"/><br/>
+        </c:forEach>
     </div>
 	
 	<spring:url value="" var="emptyUrl"/>

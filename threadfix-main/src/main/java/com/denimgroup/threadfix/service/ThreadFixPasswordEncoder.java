@@ -23,14 +23,16 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
+
+// TODO This needs to be updated, but more research is needed to determine impact on existing systems
+// we can't make updates that make it impossible to use existing credentials
 @Service
 public class ThreadFixPasswordEncoder implements PasswordEncoder {
 

@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.dao.namingstrategy;
 
+
 import org.hibernate.cfg.DefaultComponentSafeNamingStrategy;
 
 import java.util.StringTokenizer;

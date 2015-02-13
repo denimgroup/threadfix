@@ -118,7 +118,7 @@ public class DefectViewModel {
 		this.vulnerabilityIds = vulnerabilityIds;
 	}
 
-    public Map<String, Object> getFieldsMap() {
+    public Map getFieldsMap() {
 //        return fieldsMap;
         try {
             return new ObjectMapper().readValue(fieldsMapStr, HashMap.class);

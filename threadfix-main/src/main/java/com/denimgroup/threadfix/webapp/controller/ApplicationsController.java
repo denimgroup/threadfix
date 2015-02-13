@@ -139,7 +139,7 @@ public class ApplicationsController {
 				Permission.CAN_MODIFY_VULNERABILITIES,
 				Permission.CAN_MANAGE_VULN_FILTERS,
 				Permission.CAN_SUBMIT_DEFECTS,
-//				Permission.CAN_VIEW_JOB_STATUSES,
+                Permission.CAN_SUBMIT_COMMENTS,
 				Permission.CAN_GENERATE_REPORTS,
 				Permission.CAN_MANAGE_DEFECT_TRACKERS,
 				Permission.CAN_MANAGE_GRC_TOOLS,

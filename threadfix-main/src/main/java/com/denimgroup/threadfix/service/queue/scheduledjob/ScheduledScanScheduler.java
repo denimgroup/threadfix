@@ -43,6 +43,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+
 /**
  * Created with IntelliJ IDEA.
  * User: stran
@@ -129,7 +131,7 @@ public class ScheduledScanScheduler {
         String groupName = createGroupName(scheduledScan);
         String jobName = createJobName(scheduledScan);
         try {
-            scheduler.deleteJob(jobName, groupName);
+            scheduler.deleteJob(JobKey.jobKey(jobName, groupName));
             log.info(groupName + "." + jobName + " was successfully deleted from scheduler");
         } catch (SchedulerException e) {
             log.error("Error when deleting job from scheduler", e);
@@ -143,7 +145,9 @@ public class ScheduledScanScheduler {
         String groupName = createGroupName(scheduledScan);
         String jobName = createJobName(scheduledScan);
 
-        JobDetail job = new JobDetail(jobName, groupName, ScheduledScanJob.class);
+        JobDetail job = JobBuilder
+                .newJob(ScheduledScanJob.class)
+                .withIdentity(jobName, groupName).build();
         job.getJobDataMap().put("appId", scheduledScan.getApplication().getId());
         job.getJobDataMap().put("scanner", scheduledScan.getScanner());
         job.getJobDataMap().put("queueSender", queueSender);
@@ -152,15 +156,22 @@ public class ScheduledScanScheduler {
             if (cronExpression == null)
                 return false;
 
-            CronTrigger trigger = new CronTrigger(jobName, groupName, jobName, groupName, cronExpression);
+            Trigger trigger = TriggerBuilder.<CronTrigger>newTrigger()
+                    .forJob(jobName, groupName)
+                    .withIdentity(jobName, groupName)
+                    .withSchedule(cronSchedule(cronExpression))
+                    .build();
 
-            scheduler.addJob(job, true);
-            Date ft = scheduler.scheduleJob(trigger);
+            Date ft = scheduler.scheduleJob(job, trigger);
             log.info(job.getKey() + " has been scheduled to run at: " + ft
-                    + " and repeat based on expression: " + trigger.getCronExpression());
-        } catch (ParseException ex) {
-            log.error("Error when parsing trigger", ex);
-            return false;
+                    + " and repeat based on expression: " + cronExpression);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof ParseException) {
+                log.error("Got ParseException while parsing cron expression.", e.getCause());
+                return false;
+            } else {
+                throw e;
+            }
         } catch (SchedulerException scheEx) {
             log.error("Error when scheduling job", scheEx);
             return false;

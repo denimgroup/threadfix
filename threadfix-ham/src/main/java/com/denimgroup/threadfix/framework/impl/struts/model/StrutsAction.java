@@ -23,7 +23,6 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.framework.impl.struts.model;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,11 +71,11 @@ public class StrutsAction {
 		this.actClass = actClass;
 	}
 
-	public Map getParams() {
+	public Map<String, String> getParams() {
 		return params;
 	}
 
-	public void setParams(Map params) {
+	public void setParams(Map<String, String> params) {
 		this.params = params;
 	}
 

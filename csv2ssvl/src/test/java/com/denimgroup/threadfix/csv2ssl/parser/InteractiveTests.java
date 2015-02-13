@@ -23,26 +23,15 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
-import com.denimgroup.threadfix.csv2ssl.Main;
 import com.denimgroup.threadfix.csv2ssl.ResourceLoader;
-import com.denimgroup.threadfix.csv2ssl.util.InteractionUtils;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
+import static com.denimgroup.threadfix.csv2ssl.DialogUtils.testDialog;
 
 /**
  * Created by mcollins on 1/21/15.
  */
 public class InteractiveTests {
-
-    private void testDialog(String dialog) {
-        InteractionUtils.reader = new BufferedReader(new StringReader(dialog));
-
-        String s = Main.doConfigurationAndParsing(new String[]{});
-
-        assert s.contains("<Vulnerability") : "Didn't have any vulnerabilities.";
-    }
 
     @Test
     public void testBasicDialog() {
@@ -130,18 +119,6 @@ public class InteractiveTests {
                 "y\n" +
                 ResourceLoader.getFilePath("fromJunit.properties") + "\n" +
                 ResourceLoader.getFilePath("withDifferentHeaderLine.csv") + "\n";
-
-        System.out.println(dialog);
-
-        testDialog(dialog);
-    }
-
-    @Test
-    public void testExcel() {
-        String dialog =
-                "y\n" +
-                ResourceLoader.getFilePath("fromJunit.properties") + "\n" +
-                "/Users/mcollins/Documents/clients/Pearson/sample_data.xls\n";
 
         System.out.println(dialog);
 

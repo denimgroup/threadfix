@@ -25,6 +25,9 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Report;
+
+import java.util.List;
 
 public interface DefaultConfigService {
 
@@ -38,6 +41,8 @@ public interface DefaultConfigService {
 	 * Save new system settings
 	 */
 	void saveConfiguration(DefaultConfiguration config);
+
+    boolean reportDuplicateExists(List<Report> reports);
 
     boolean isReportCacheDirty();
 
