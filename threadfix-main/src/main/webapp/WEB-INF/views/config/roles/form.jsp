@@ -231,11 +231,27 @@
             <td class="inputValue" style="text-align: center;"><input type="radio"
                                                                       id="canModifyVulnerabilitiesFalse" ng-model="object.canModifyVulnerabilities"
                                                                       name="canModifyVulnerabilities" value="false" /></td>
-            <td
-                    style="border: 0 solid black; background-color: white; padding-left: 5px">
-                            <form:errors id="canModifyVulnerabilitiesError"
-                                name="canModifyVulnerabilities" cssClass="errors" />
-                        </td>
+            <td style="border: 0 solid black; background-color: white; padding-left: 5px">
+                <form:errors id="canModifyVulnerabilitiesError"
+                    name="canModifyVulnerabilities" cssClass="errors" />
+            </td>
+        </tr>
+        <tr>
+            <td>Comment On Vulnerabilities</td>
+            <td class="inputValue" style="text-align: center;">
+                <input type="radio"
+                       ng-model="object.canSubmitComments"
+                       id="canSubmitComments"
+                       name="canSubmitComments"
+                       value="true" />
+            </td>
+            <td class="inputValue" style="text-align: center;">
+                <input type="radio"
+                       ng-model="object.canSubmitComments"
+                       id="canSubmitCommentsFalse"
+                       name="canSubmitComments"
+                       value="false" />
+            </td>
         </tr>
         <tr>
             <td>Manage Vulnerability Filters</td>
@@ -276,15 +292,6 @@
                                                                       id="canViewErrorLogsFalse" name="canViewErrorLogs" value="false" />
             </td>
         </tr>
-        <!--<tr>-->
-            <!--<td>View Job Statuses</td>-->
-            <!--<td class="inputValue" style="text-align: center;"><input type="radio"-->
-                                                                      <!--id="canViewJobStatusesTrue" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"-->
-                                                                      <!--value="true" /></td>-->
-            <!--<td class="inputValue" style="text-align: center;"><input type="radio"-->
-                                                                      <!--id="canViewJobStatusesFalse" name="canViewJobStatuses" ng-model="object.canViewJobStatuses"-->
-                                                                      <!--value="false" /></td>-->
-        <!--</tr>-->
         </tbody>
     </table>
     </div>

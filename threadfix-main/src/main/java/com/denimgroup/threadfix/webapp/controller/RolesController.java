@@ -31,6 +31,7 @@ import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
@@ -92,7 +93,8 @@ public class RolesController {
 
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<List<Role>> map() {
+    @ResponseBody
+    public String map() {
 
         List<Role> roles = roleService.loadAll();
 
@@ -100,12 +102,13 @@ public class RolesController {
             listRole.setCanDelete(roleService.canDelete(listRole));
         }
 
-        return RestResponse.success(roles);
+        return ControllerUtils.writeSuccessObjectWithView(roles, AllViews.TableRow.class);
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Role> newSubmit(Model model, @Valid @ModelAttribute Role role,
-                                 BindingResult result) {
+    @ResponseBody
+    public Object newSubmit(Model model, @Valid @ModelAttribute Role role,
+                            BindingResult result) {
         role.setId(null);
 
         String resultString = roleService.validateRole(role, result);
@@ -134,7 +137,7 @@ public class RolesController {
 
         model.addAttribute("roleList", roles);
 
-        return RestResponse.success(role);
+        return ControllerUtils.writeSuccessObjectWithView(role, AllViews.TableRow.class);
     }
 
     @RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
@@ -167,9 +170,10 @@ public class RolesController {
 	}
 	
 	@RequestMapping(value = "/{roleId}/edit", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Role> saveEdit(@PathVariable("roleId") int roleId,
-			@Valid @ModelAttribute Role role,
-			BindingResult result, ModelMap model) {
+    @ResponseBody
+    public Object saveEdit(@PathVariable("roleId") int roleId,
+                           @Valid @ModelAttribute Role role,
+                           BindingResult result, ModelMap model) {
 		
 		role.setId(roleId);
 		
@@ -184,7 +188,7 @@ public class RolesController {
 			log.warn(ResourceNotFoundException.getLogMessage("Group", roleId));
 			throw new ResourceNotFoundException();
 		}
-		
-		return RestResponse.success(role);
+
+        return ControllerUtils.writeSuccessObjectWithView(role, AllViews.TableRow.class);
 	}
 }

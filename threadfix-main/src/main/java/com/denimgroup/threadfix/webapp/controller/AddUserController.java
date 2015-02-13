@@ -26,10 +26,11 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
-import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
+import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
@@ -89,7 +90,8 @@ public class AddUserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<User> processNew(@Valid @ModelAttribute User user, BindingResult result) {
+	@ResponseBody
+	public Object processNew(@Valid @ModelAttribute User user, BindingResult result) {
 		new UserValidator(roleService).validate(user, result);
 		if (result.hasErrors()) {
             return FormRestResponse.failure("Errors", result);
@@ -106,7 +108,7 @@ public class AddUserController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() +
                     ", the ID " + user.getId());
-			return RestResponse.success(userService.loadUser(id));
+			return ControllerUtils.writeSuccessObjectWithView(userService.loadUser(id), AllViews.FormInfo.class);
 		}
 	}
 }
