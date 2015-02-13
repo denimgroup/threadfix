@@ -76,6 +76,12 @@ public class UserIndexPage extends BasePage {
         return this;
     }
 
+    public UserIndexPage setDisplayName(String displayName) {
+        driver.findElementByCssSelector("input#displayName").clear();
+        driver.findElementByCssSelector("input#displayName").sendKeys(displayName);
+        return this;
+    }
+
     public UserIndexPage setPassword(String password) {
         driver.findElementById("password").clear();
         driver.findElementById("password").sendKeys(password);

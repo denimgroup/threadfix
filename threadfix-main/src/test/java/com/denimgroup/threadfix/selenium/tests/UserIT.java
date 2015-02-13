@@ -392,4 +392,37 @@ public class UserIT extends BaseIT {
         assertTrue("Deletion Message not displayed.", userIndexPage.isSuccessDisplayed(userName));
         assertFalse("User still present in user table.", userIndexPage.isUserNamePresent(userName));
     }
+
+    @Test
+    public void testEditMultipleUsers() {
+        String USER_NAME_1 = getName();
+        String PASSWORD_1 = "testEditMultipleUsers";
+        String USER_NAME_2 = getName();
+        String PASSWORD_2 = "testEditMultipleUsers2";
+        String CHANGED_PASSWORD = "changedPasswordTestMultipleUsers";
+        String CHANGED_NAME = getName();
+        String DISPLAY_CSS_ID = "displayName" + CHANGED_NAME;
+
+        userIndexPage.clickAddUserLink()
+                .setName(USER_NAME_1)
+                .setPassword(PASSWORD_1)
+                .setConfirmPassword(PASSWORD_1)
+                .clickAddNewUserBtn()
+                .clickAddUserLink()
+                .setName(USER_NAME_2)
+                .setPassword(PASSWORD_2)
+                .setConfirmPassword(PASSWORD_2)
+                .clickAddNewUserBtn();
+
+        userIndexPage.clickEditLink(USER_NAME_1)
+                .setDisplayName(CHANGED_NAME)
+                .clickUpdateUserBtn(USER_NAME_1)
+                .clickEditLink(USER_NAME_2)
+                .setPassword(CHANGED_PASSWORD)
+                .setConfirmPassword(CHANGED_PASSWORD)
+                .clickUpdateUserBtn(USER_NAME_2);
+
+        assertTrue("Second user's display name was changed to the first user's name when changing password.",
+                driver.findElements(By.id(DISPLAY_CSS_ID)).size() < 2);
+    }
 }
