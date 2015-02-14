@@ -395,34 +395,34 @@ public class UserIT extends BaseIT {
 
     @Test
     public void testEditMultipleUsers() {
-        String USER_NAME_1 = getName();
-        String PASSWORD_1 = "testEditMultipleUsers";
-        String USER_NAME_2 = getName();
-        String PASSWORD_2 = "testEditMultipleUsers2";
-        String CHANGED_PASSWORD = "changedPasswordTestMultipleUsers";
-        String CHANGED_NAME = getName();
-        String DISPLAY_CSS_ID = "displayName" + CHANGED_NAME;
+        String userName1 = getName();
+        String password1 = "testEditMultipleUsers";
+        String userName2 = getName();
+        String password2 = "testEditMultipleUsers2";
+        String changedPassword = "changedPasswordTestMultipleUsers";
+        String changedName = getName();
+        String displayCssId = "displayName" + changedName;
 
-        userIndexPage.clickAddUserLink()
-                .setName(USER_NAME_1)
-                .setPassword(PASSWORD_1)
-                .setConfirmPassword(PASSWORD_1)
+        userIndexPage = userIndexPage.clickAddUserLink()
+                .setName(userName1)
+                .setPassword(password1)
+                .setConfirmPassword(password1)
                 .clickAddNewUserBtn()
                 .clickAddUserLink()
-                .setName(USER_NAME_2)
-                .setPassword(PASSWORD_2)
-                .setConfirmPassword(PASSWORD_2)
+                .setName(userName2)
+                .setPassword(password2)
+                .setConfirmPassword(password2)
                 .clickAddNewUserBtn();
 
-        userIndexPage.clickEditLink(USER_NAME_1)
-                .setDisplayName(CHANGED_NAME)
-                .clickUpdateUserBtn(USER_NAME_1)
-                .clickEditLink(USER_NAME_2)
-                .setPassword(CHANGED_PASSWORD)
-                .setConfirmPassword(CHANGED_PASSWORD)
-                .clickUpdateUserBtn(USER_NAME_2);
+        userIndexPage.clickEditLink(userName1)
+                .setDisplayName(changedName)
+                .clickUpdateUserBtn(userName1)
+                .clickEditLink(userName2)
+                .setPassword(changedPassword)
+                .setConfirmPassword(changedPassword)
+                .clickUpdateUserBtn(userName2);
 
-        assertTrue("Second user's display name was changed to the first user's name when changing password.",
-                driver.findElements(By.id(DISPLAY_CSS_ID)).size() < 2);
+        assertTrue("Second user's display name was changed to the first user's name when attempting to change only password.",
+                driver.findElements(By.id(displayCssId)).size() < 2);
     }
 }
