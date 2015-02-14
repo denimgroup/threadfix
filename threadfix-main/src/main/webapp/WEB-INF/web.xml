@@ -89,7 +89,7 @@
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,/configuration/grctools,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,/configuration/download,
         		/configuration/settings,/configuration/filters,/configuration/scanqueue,/scanplugin/index,/configuration/tags,/teams,
-        		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,
+        		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,/configuration/download/*,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
                 regex ^/organizations/[0-9]+/applications/[0-9]+/scans/new/ajax_cwe$,
