@@ -39,10 +39,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -77,7 +74,13 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 
 		inputStream = fvdlInputStream;
 		Scan returnScan = parseSAXInput(new FortifySAXParser());
-		Calendar auditXmlDate = getTime(auditXmlStream);
+
+		FortifyAuditXmlParser timeParser = new FortifyAuditXmlParser();
+		ScanUtils.readSAXInput(timeParser, FILE_CHECK_COMPLETED, auditXmlStream);
+		Calendar auditXmlDate = timeParser.resultTime;
+
+		applySuppressedInformation(timeParser, returnScan);
+
 		if (returnScan != null) {
 			if (auditXmlDate == null) {
 				returnScan.setImportTime(date);
@@ -89,6 +92,16 @@ class FortifyChannelImporter extends AbstractChannelImporter {
         deleteZipFile();
 		
 		return returnScan;
+	}
+
+	private void applySuppressedInformation(FortifyAuditXmlParser timeParser, Scan returnScan) {
+		Set<String> suppressedIds = timeParser.suppressedIds;
+
+		for (Finding finding : returnScan) {
+			if (suppressedIds.contains(finding.getNativeId())) {
+				finding.setMarkedFalsePositive(true);
+			}
+		}
 	}
 
 	/**
@@ -503,7 +516,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 	    		testDate = DateUtils.getCalendarFromString("yyyy-MM-dd hh:mm:ss",
                         atts.getValue("date") + " " + atts.getValue("time"));
 	    	}
-	    	
+
 	    	if ("Vulnerability".equals(qName)) {
 	    		hasFindings = true;
 	    		setTestStatus();
@@ -518,7 +531,7 @@ class FortifyChannelImporter extends AbstractChannelImporter {
 		}
 
 		inputStream = stream;
-		FortifyTimeParser timeParser = new FortifyTimeParser();
+		FortifyAuditXmlParser timeParser = new FortifyAuditXmlParser();
 		ScanUtils.readSAXInput(timeParser, FILE_CHECK_COMPLETED, stream);
 
 		return timeParser.resultTime;
