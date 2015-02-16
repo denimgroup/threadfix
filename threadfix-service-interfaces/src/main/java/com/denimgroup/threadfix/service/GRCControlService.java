@@ -63,4 +63,9 @@ public interface GRCControlService {
      */
     void deleteUnlinkedControls();
 
+    /**
+     * @param vulnId
+     */
+    void deleteByVulnerabilityId(Integer vulnId);
+
 }
