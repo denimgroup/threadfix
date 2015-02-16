@@ -349,7 +349,7 @@ public class Finding extends AuditableEntity implements FindingLike {
         this.attackString = attackString;
     }
 
-    @JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class})
+    @JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class, AllViews.VulnerabilityDetail.class})
     @Column(length = ATTACK_REQUEST_LENGTH)
 	public String getAttackRequest() {
 		return attackRequest;
@@ -359,7 +359,7 @@ public class Finding extends AuditableEntity implements FindingLike {
 		this.attackRequest = attackRequest;
 	}
 
-	@JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class})
+	@JsonView({AllViews.RestView2_1.class, AllViews.UIVulnSearch.class, AllViews.VulnerabilityDetail.class})
     @Column(length = ATTACK_RESPONSE_LENGTH)
 	public String getAttackResponse() {
 		return attackResponse;
