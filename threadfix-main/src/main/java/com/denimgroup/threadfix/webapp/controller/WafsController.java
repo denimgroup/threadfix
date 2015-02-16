@@ -25,11 +25,11 @@ package com.denimgroup.threadfix.webapp.controller;
 
 import com.denimgroup.threadfix.data.entities.*;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +45,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.denimgroup.threadfix.CollectionUtils.list;
 
@@ -70,13 +73,14 @@ public class WafsController {
 	}
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> map() {
+    public @ResponseBody
+	String map() {
         Map<String, Object> responseMap = new HashMap<>();
 
         responseMap.put("wafs", wafService.loadAll());
         responseMap.put("wafTypes", wafService.loadAllWafTypes());
 
-        return RestResponse.success(responseMap);
+        return ControllerUtils.writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
     }
 
 	@RequestMapping("/{wafId}")

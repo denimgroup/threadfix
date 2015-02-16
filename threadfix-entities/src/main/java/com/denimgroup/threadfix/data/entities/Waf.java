@@ -77,6 +77,7 @@ public class Waf extends AuditableEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "wafTypeId")
+	@JsonView(AllViews.TableRow.class)
 	public WafType getWafType() {
 		return wafType;
 	}
