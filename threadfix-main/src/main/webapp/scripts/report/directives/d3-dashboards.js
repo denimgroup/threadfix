@@ -127,12 +127,11 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                         .tickFormat(function(d){
                             var arr = d.split("/");
                             d = (arr.length >1) ? arr[1] : d;
-                            if (d && d.length > 8)
+                            if (d && d.length > 9)
                                 return d.substring(0,8) + "...";
                             else
                                 return d;
-                        })
-                    ;
+                        });
 
                 var svg = d3Service.getSvg(d3, ele[0], width + margin.left + margin.right, height + margin.top + margin.bottom);
 
@@ -176,7 +175,11 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                     svg1.append("g")
                         .attr("class", "x axis")
-                        .call(yAxis);
+                        .call(yAxis)
+                        .selectAll("text")
+                        .attr("transform", function(d) {
+                            return "rotate(-35)"
+                        });;
 
                     var col = svg1.selectAll(".rect")
                         .data(data)
