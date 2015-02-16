@@ -23,8 +23,12 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.data.entities.ExceptionLog;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ExceptionLogService;
+import com.denimgroup.threadfix.service.ExceptionLogServiceImpl;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +43,9 @@ import java.io.InputStream;
 @Controller
 @RequestMapping("/configuration/download")
 public class ToolsDownloadController {
+
+    @Autowired
+    private ExceptionLogService exceptionLogService;
 
 	private final SanitizedLogger log = new SanitizedLogger(ToolsDownloadController.class);
 
@@ -58,123 +65,80 @@ public class ToolsDownloadController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String index() {
-
 		return "config/download/index";
 	}
 
     @RequestMapping(value="/tfcli")
     public String doDownloadTFcli(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_CLI_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_CLI_JAR);
     }
 
     @RequestMapping(value="/tfscancli")
     public String doDownloadTFscancli(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_SCAN_IMPORTER_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_SCAN_IMPORTER_JAR);
     }
 
     @RequestMapping(value="/tfendpoint")
     public String doDownloadTFendcli(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_ENDPOINT_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_ENDPOINT_JAR);
     }
 
     @RequestMapping(value="/tfdatamigration")
     public String doDownloadTFdatamigration(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_DATA_MIGRATION_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_DATA_MIGRATION_JAR);
     }
 
     @RequestMapping(value="/burp")
     public String doDownloadBurp(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_BURP_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_BURP_JAR);
     }
 
     @RequestMapping(value="/zap")
     public String doDownloadZap(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_ZAP);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_ZAP);
     }
 
     @RequestMapping(value="/sonar")
     public String doDownloadSonar(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, TF_SONAR_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, TF_SONAR_JAR);
     }
 
     @RequestMapping(value="/csv2ssvl")
     public String doDownloadCsv2ssvl(HttpServletRequest request, HttpServletResponse response) {
-        String destination = null;
-        try {
-            doDownload(request, response, CSV2SSVL_JAR);
-        } catch (Exception e) {
-            destination = "config/download/index";
-        }
-        return destination;
+        return doDownload(request, response, CSV2SSVL_JAR);
     }
 
 
-    private void doDownload(HttpServletRequest request, HttpServletResponse response, String jarName) throws IOException {
+    private String doDownload(HttpServletRequest request, HttpServletResponse response, String jarName) {
 
         String jarResource = JAR_DOWNLOAD_DIR + jarName;
 
         InputStream in = request.getServletContext().getResourceAsStream(jarResource);
         if (in == null) {
-            log.error("JAR File not found for download: " + jarResource);
-            throw new FileNotFoundException("JAR File not found for download: " + jarResource);
+            exceptionLogService.storeExceptionLog(new ExceptionLog(new FileNotFoundException("File not found for download: " + jarResource)));
+            return index();
         }
 
-        ServletOutputStream out = response.getOutputStream();
-        int jarSize = request.getServletContext().getResource(jarResource).openConnection().getContentLength();
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            int jarSize = request.getServletContext().getResource(jarResource).openConnection().getContentLength();
 
-        if (jarName.endsWith(".jar"))
-            response.setContentType("application/java-archive");
-        else
-            response.setContentType("application/octet-stream");;
-        response.setContentLength(jarSize);
-        response.addHeader("Content-Disposition", "attachment; filename=\"" + jarName + "\"");
+            if (jarName.endsWith(".jar"))
+                response.setContentType("application/java-archive");
+            else
+                response.setContentType("application/octet-stream");;
+            response.setContentLength(jarSize);
+            response.addHeader("Content-Disposition", "attachment; filename=\"" + jarName + "\"");
 
-        IOUtils.copy(in, out);
-        in.close();
-        out.flush();
-        out.close();
+            IOUtils.copy(in, out);
+            in.close();
+            out.flush();
+            out.close();
+        } catch (IOException ioe) {
+            exceptionLogService.storeExceptionLog(new ExceptionLog(ioe));
+            return index();
+        }
+        return null;
     }
 
 
