@@ -107,30 +107,19 @@
 
         <div ng-if="vulnerability.staticFindings.length > 1">
             <div><b>Data Flow Variants</b></div>
-            <div ng-repeat="finding in vulnerability.staticFindings" ng-show="finding.dataFlowElements">
-                <a class="pointer" ng-click="toggleFinding(finding)">Toggle
-                    finding {{ finding.id }} data flow (Elements: {{ finding.dataFlowElements.length }})
-                </a>
-                <br />
-
-                <div id='dataFlow{{ finding.id }}' ng-show="isShowFlow{{finding.id}}">
+            <div ng-repeat="finding in vulnerability.staticFindings" ng-if="finding.dataFlowElements">
+                <div id='dataFlow{{ finding.id }}'>
                     <h5>
                         Finding
                         {{ finding.id }}
-                        Data Flow
+                        Data Flow (Elements: {{ finding.dataFlowElements.length }})
                     </h5>
                     <div ng-repeat="dataFlowElement in finding.dataFlowElements">
-                        <table class="dataTable">
-                            <tr>
-                                <td colspan="2" class="inputValue">{{ dataFlowElement.sourceFileName }} line {{ dataFlowElement.lineNumber }}</td>
-                            </tr>
-                            <tr>
-                                <td class="inputValue"><pre>{{ dataFlowElement.lineText }}</pre></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </table>
+
+                        <div>{{ dataFlowElement.sourceFileName }} line {{ dataFlowElement.lineNumber }}</div>
+                        <div>
+                            <pre>{{ dataFlowElement.lineText }}</pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,61 +128,42 @@
         <div ng-if="vulnerability.staticFindings.length === 1">
             <div><b>Data Flow</b></div>
             <div ng-repeat="dataFlowElement in vulnerability.staticFindings[0].dataFlowElements">
-                <table class="dataTable">
-                    <tr>
-                        <td colspan="2" class="inputValue">{{ dataFlowElement.sourceFileName }} line {{ dataFlowElement.lineNumber }}</td>
-                    </tr>
-                    <tr>
-                        <td class="inputValue"><pre>{{ dataFlowElement.lineText }}</pre></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                </table>
+                <div>{{ dataFlowElement.sourceFileName }} line {{ dataFlowElement.lineNumber }}</div>
+                <div>
+                    <pre>{{ dataFlowElement.lineText }}</pre>
+                </div>
             </div>
         </div>
 
 
         <div ng-if="vulnerability.dynamicFindings.length > 1">
             <div><b>Request Variants</b></div>
+            <br>
             <div ng-repeat="finding in vulnerability.dynamicFindings">
-                <a class="pointer" ng-click="toggleFinding(finding)">Toggle
-                    finding {{ finding.id }} attack string
-                </a>
-                <br />
-
-                <div id='{{ finding.id }}' ng-show="isShowFlow{{finding.id}}">
+                <div id='{{ finding.id }}'>
                     <h5>
                         Finding
                         {{ finding.id }}
                         Attack
                     </h5>
-                    <table class="dataTable">
-                        <tr>
-                            <td class="bold" valign=top>Attack Request</td>
-                            <td class="inputValue" style="word-wrap: break-word;"><PRE id="attackRequest">{{ finding.attackRequest }}</PRE></td>
-                        </tr>
-                        <tr>
-                            <td class="bold" valign=top>Attack Response</td>
-                            <td class="inputValue" style="word-wrap: break-word;"><PRE id="attackResponse">{{ finding.attackResponse }}</PRE></td>
-                        </tr>
-                    </table>
+                    <div style="word-wrap: break-word;" class="inputValue"><b>Attack Request </b>
+                        <PRE>{{ finding.attackRequest }}</PRE>
+                    </div>
+                    <div style="word-wrap: break-word;" class="inputValue"><b>Attack Response </b>
+                        <PRE>{{ finding.attackResponse }}</PRE>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div ng-if="vulnerability.dynamicFindings.length === 1">
             <div><b>Request</b></div>
-            <table class="dataTable">
-                <tr>
-                    <td class="bold" valign=top>Attack Request</td>
-                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="singleAttackRequest">{{ vulnerability.dynamicFindings[0].attackRequest }}</PRE></td>
-                </tr>
-                <tr>
-                    <td class="bold" valign=top>Attack Response</td>
-                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="singleAttackResponse">{{ vulnerability.dynamicFindings[0].attackResponse }}</PRE></td>
-                </tr>
-            </table>
+            <div style="word-wrap: break-word;"><b>Attack Request </b>
+                <PRE>{{ vulnerability.dynamicFindings[0].attackRequest }}</PRE>
+            </div>
+            <div style="word-wrap: break-word;"><b>Attack Response </b>
+                <PRE>{{ vulnerability.dynamicFindings[0].attackResponse }}</PRE>
+            </div>
         </div>
     </div>
 
