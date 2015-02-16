@@ -44,7 +44,7 @@ public class ScheduledDefectTrackerUpdateJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        String jobName = context.getJobDetail().getFullName();
+        String jobName = context.getJobDetail().getDescription();
         log.info("ScheduledDefectTrackerUpdateJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();

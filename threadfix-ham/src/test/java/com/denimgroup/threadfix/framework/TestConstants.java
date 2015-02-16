@@ -43,9 +43,11 @@ public class TestConstants {
 
     // TODO move relevant files to the src/test/resources folder and use that
 	public static final String
+        ROLLER_FOLDER_NAME = "roller-weblogger-5.1.1-source",
         PETCLINIC_FOLDER_NAME = "petclinic",
         WAVSEP_FOLDER_NAME = "wavsep",
         BODGEIT_FOLDER_NAME = "bodgeit",
+        ROLLER_SOURCE_LOCATION = testRoot + ROLLER_FOLDER_NAME,
 		PETCLINIC_SOURCE_LOCATION = testRoot + PETCLINIC_FOLDER_NAME,
 		WAVSEP_SOURCE_LOCATION = testRoot + WAVSEP_FOLDER_NAME,
 		BODGEIT_SOURCE_LOCATION = testRoot + BODGEIT_FOLDER_NAME,

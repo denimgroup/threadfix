@@ -113,6 +113,11 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
+    public Application loadApplicationByUniqueId(String uniqueId, int teamId) {
+        return applicationDao.retrieveByUniqueId(uniqueId, teamId);
+    }
+
+    @Override
 	@Transactional(readOnly = false)
 	public void storeApplication(Application application) {
 		if (application != null) {

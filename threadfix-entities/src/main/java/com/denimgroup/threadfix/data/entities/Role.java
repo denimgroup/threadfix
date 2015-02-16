@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
+import com.denimgroup.threadfix.views.AllViews;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -51,7 +52,7 @@ public class Role extends AuditableEntity {
 			canManageRemoteProviders, canManageRoles, canManageTeams,
 			canManageUsers, canManageWafs, canManageVulnFilters, canModifyVulnerabilities,
 			canSubmitDefects, canUploadScans, canViewErrorLogs, canManageScanAgents, canManageSystemSettings,
-            canViewJobStatuses, enterprise, canManageTags;
+            canViewJobStatuses, enterprise, canManageTags, canSubmitComments;
 
     public static final String[] PROTECTED_PERMISSIONS = {
             "canManageRoles", "canManageUsers"
@@ -61,7 +62,8 @@ public class Role extends AuditableEntity {
             "canManageUsers", "canManageRoles", "canManageTeams", "canManageDefectTrackers", "canManageGrcTools",
             "canManageVulnFilters", "canModifyVulnerabilities", "canUploadScans", "canViewErrorLogs", "canSubmitDefects",
             "canManageWafs", "canGenerateWafRules", "canManageApiKeys", "canManageRemoteProviders",
-            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents", "canManageSystemSettings", "canManageTags"
+            "canGenerateReports", "canManageApplications", "enterprise", "canManageScanAgents",
+            "canManageSystemSettings", "canManageTags", "canSubmitComments"
     };
 
     @NotEmpty(message = "{errors.required}")
@@ -69,6 +71,7 @@ public class Role extends AuditableEntity {
     private String displayName;
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageSystemSettings() {
         return canManageSystemSettings != null && canManageSystemSettings;
     }
@@ -88,6 +91,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageScanAgents() {
         return canManageScanAgents != null && canManageScanAgents;
     }
@@ -97,6 +101,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanGenerateReports() {
         return canGenerateReports != null && canGenerateReports;
     }
@@ -106,6 +111,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanGenerateWafRules() {
         return canGenerateWafRules != null && canGenerateWafRules;
     }
@@ -115,6 +121,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageApiKeys() {
         return canManageApiKeys != null && canManageApiKeys;
     }
@@ -124,6 +131,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageApplications() {
         return canManageApplications != null && canManageApplications;
     }
@@ -133,6 +141,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageGrcTools() {
         return canManageGrcTools != null && canManageGrcTools;
     }
@@ -142,6 +151,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageDefectTrackers() {
         return canManageDefectTrackers != null && canManageDefectTrackers;
     }
@@ -151,6 +161,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageRemoteProviders() {
         return canManageRemoteProviders != null && canManageRemoteProviders;
     }
@@ -160,6 +171,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageRoles() {
         return canManageRoles != null && canManageRoles;
     }
@@ -169,6 +181,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageTeams() {
         return canManageTeams != null && canManageTeams;
     }
@@ -178,6 +191,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageUsers() {
         return canManageUsers != null && canManageUsers;
     }
@@ -187,6 +201,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageWafs() {
         return canManageWafs != null && canManageWafs;
     }
@@ -196,6 +211,7 @@ public class Role extends AuditableEntity {
     }
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanModifyVulnerabilities() {
 		return canModifyVulnerabilities != null && canModifyVulnerabilities;
 	}
@@ -205,6 +221,7 @@ public class Role extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageVulnFilters() {
 		return canManageVulnFilters != null && canManageVulnFilters;
 	}
@@ -214,6 +231,7 @@ public class Role extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getCanSubmitDefects() {
 		return canSubmitDefects != null && canSubmitDefects;
 	}
@@ -223,6 +241,7 @@ public class Role extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getCanUploadScans() {
 		return canUploadScans != null && canUploadScans;
 	}
@@ -232,6 +251,7 @@ public class Role extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getCanViewErrorLogs() {
 		return canViewErrorLogs != null && canViewErrorLogs;
 	}
@@ -241,6 +261,7 @@ public class Role extends AuditableEntity {
 	}
 
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getCanViewJobStatuses() {
 		return canViewJobStatuses != null && canViewJobStatuses;
 	}
@@ -250,6 +271,7 @@ public class Role extends AuditableEntity {
 	}
 	
 	@Column
+    @JsonView(AllViews.TableRow.class)
 	public Boolean getEnterprise(){
 		return enterprise != null && enterprise;
 	}
@@ -259,12 +281,23 @@ public class Role extends AuditableEntity {
 	}
 
     @Column
+    @JsonView(AllViews.TableRow.class)
     public Boolean getCanManageTags() {
-        return canManageTags;
+        return canManageTags != null && canManageTags;
     }
 
     public void setCanManageTags(Boolean canManageTags) {
         this.canManageTags = canManageTags;
+    }
+
+    @Column
+    @JsonView(AllViews.TableRow.class)
+    public Boolean getCanSubmitComments() {
+        return canSubmitComments != null && canSubmitComments;
+    }
+
+    public void setCanSubmitComments(Boolean canSubmitComments) {
+        this.canSubmitComments = canSubmitComments;
     }
 
     @Transient
@@ -330,6 +363,9 @@ public class Role extends AuditableEntity {
 
         if (getCanManageTags() != null && getCanManageTags())
             permissions.add(Permission.CAN_MANAGE_TAGS);
+
+        if (getCanSubmitComments() != null && getCanSubmitComments())
+            permissions.add(Permission.CAN_SUBMIT_COMMENTS);
 
 		return permissions;
 	}

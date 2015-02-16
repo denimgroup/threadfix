@@ -43,7 +43,8 @@ public class ScannerMappingUpdateController {
     public ChannelVulnerabilityService channelVulnerabilityService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody RestResponse<String> addMappings(@RequestParam String channelName,
+    @ResponseBody
+    public RestResponse<String> addMappings(@RequestParam String channelName,
                                                           @RequestParam String channelVulnerabilityCode,
                                                           @RequestParam String genericVulnerabilityId) {
 
@@ -57,4 +58,18 @@ public class ScannerMappingUpdateController {
         }
     }
 
+    @RequestMapping(value="/createVulnerabilities", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse<String> createVulnerabilities(@RequestParam String channelName,
+                                                          @RequestParam String channelVulnerabilityCode) {
+
+        ChannelVulnerabilityService.MappingCreateResult result =
+                channelVulnerabilityService.createVulnerabilities(channelName, channelVulnerabilityCode);
+
+        if (result == ChannelVulnerabilityService.MappingCreateResult.SUCCESS) {
+            return success("Successfully created Vulnerabilities.");
+        } else {
+            return failure(result.toString());
+        }
+    }
 }

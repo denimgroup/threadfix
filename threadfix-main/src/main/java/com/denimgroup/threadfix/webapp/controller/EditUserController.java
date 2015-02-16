@@ -26,10 +26,11 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
@@ -37,11 +38,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -64,7 +63,7 @@ public class EditUserController {
 		this.roleService = roleService;
 		ldapPluginInstalled = EnterpriseTest.isEnterprise();
 	}
-	
+
 	public EditUserController(){}
 
 	@InitBinder
@@ -90,18 +89,21 @@ public class EditUserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<User> processEdit(@PathVariable("userId") int userId, @ModelAttribute User user,
-			BindingResult result, SessionStatus status, HttpServletRequest request, Model model) {
-		
+	@ResponseBody
+	public Object processEdit(@PathVariable("userId") int userId,
+							  @ModelAttribute User user,
+							  BindingResult result,
+							  HttpServletRequest request) {
+
 		userService.applyChanges(user, userId);
-		
+
 		new UserValidator(roleService).validate(user, result);
-		
+
 		if (userService.hasRemovedAdminPermissions(user) && !userService.canDelete(user)) {
-			result.rejectValue("hasGlobalGroupAccess", null, null, 
+			result.rejectValue("hasGlobalGroupAccess", null, null,
 					"This would leave users unable to access the user management portion of ThreadFix.");
 		}
-		
+
 		if (result.hasErrors()) {
 			return FormRestResponse.failure("Errors", result);
 		} else {
@@ -111,16 +113,16 @@ public class EditUserController {
 				result.rejectValue("name", MessageConstants.ERROR_NAMETAKEN);
                 return FormRestResponse.failure("Errors", result);
 			}
-			
+
 			if (user.getGlobalRole() != null && user.getGlobalRole().getId() != null) {
 				Role role = roleService.loadRole(user.getGlobalRole().getId());
 				if (role == null) {
 					user.setGlobalRole(null);
 				}
 			}
-			
+
 			String globalGroupAccess = request.getParameter("hasGlobalGroupAccess");
-			
+
 			Boolean hasGlobalGroup = globalGroupAccess != null && globalGroupAccess.equals("true");
 			user.setHasGlobalGroupAccess(hasGlobalGroup);
 			if (!hasGlobalGroup) {
@@ -129,12 +131,12 @@ public class EditUserController {
 			userService.storeUser(user);
 
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
-			
+
 			// For now, we'll say that if the name matches then they are the same.
 			// This may not hold for AD scenarios.
 			log.info("The User " + user.getName() + " (id=" + user.getId() + ") has been edited by user " + currentUser);
 
-			return RestResponse.success(user);
+			return ControllerUtils.writeSuccessObjectWithView(user, AllViews.TableRow.class);
 		}
 	}
 }

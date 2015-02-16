@@ -26,12 +26,12 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.beans.AccessControlMapModel;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -99,7 +99,7 @@ public class UsersController {
 	}
 
     @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public @ResponseBody RestResponse<Map<String, Object>> map() {
+    public @ResponseBody Object map() {
         List<User> users = userService.loadAllUsers();
 
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -114,7 +114,7 @@ public class UsersController {
         returnMap.put("users", users);
         returnMap.put("roles", roleService.loadAll());
 
-        return RestResponse.success(returnMap);
+		return ControllerUtils.writeSuccessObjectWithView(returnMap, AllViews.TableRow.class);
     }
 
 	@RequestMapping("/{userId}/delete")

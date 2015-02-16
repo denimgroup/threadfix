@@ -24,9 +24,12 @@
 
 package com.denimgroup.threadfix.webapp.controller;
 
+import com.denimgroup.threadfix.annotations.ReportLocation;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.service.ReportService;
 import com.denimgroup.threadfix.service.DefaultConfigService;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
@@ -42,6 +45,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.denimgroup.threadfix.CollectionUtils.list;
+
 @Controller
 @RequestMapping("/configuration/settings")
 @SessionAttributes("defaultConfiguration")
@@ -54,6 +59,8 @@ public class SystemSettingsController {
 	private RoleService roleService = null;
 	@Autowired
     private DefaultConfigService defaultConfigService = null;
+	@Autowired
+	private ReportService reportService = null;
 	
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -63,7 +70,9 @@ public class SystemSettingsController {
                     "proxyHost", "proxyPort", "proxyUsername", "proxyPassword", "shouldProxyVeracode",
                     "shouldProxyQualys", "shouldProxyTFS", "shouldProxyBugzilla", "shouldProxyJira",
                     "shouldProxyVersionOne", "shouldProxyHPQC", "shouldProxyWhiteHat", "shouldProxyTrustwaveHailstorm",
-					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout");
+					"shouldProxyContrast", "shouldUseProxyCredentials", "sessionTimeout", "dashboardTopLeft.id",
+                    "dashboardTopRight.id", "dashboardBottomLeft.id", "dashboardBottomRight.id",
+                    "applicationTopLeft.id", "applicationTopRight.id", "teamTopLeft.id", "teamTopRight.id");
 		} else {
             // this should prevent any parameters from coming in.
             // We also need to check permissions on the server side though
@@ -74,6 +83,21 @@ public class SystemSettingsController {
 	@ModelAttribute
 	public List<Role> populateRoles() {
 		return roleService.loadAll();
+	}
+
+	@ModelAttribute("dashboardReports")
+	public List<Report> populateDashboardReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.DASHBOARD);
+	}
+
+	@ModelAttribute("applicationReports")
+	public List<Report> populateApplicationReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.APPLICATION);
+	}
+
+	@ModelAttribute("teamReports")
+	public List<Report> populateTeamReportTypes() {
+		return reportService.loadByLocationType(ReportLocation.TEAM);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -88,7 +112,24 @@ public class SystemSettingsController {
 							  Model model,
 							  HttpServletRequest request) {
 		addModelAttributes(model, request);
-		if (bindingResult.hasErrors()) {
+
+        List<String> errors = list();
+
+        if(defaultConfigService.reportDuplicateExists(configModel.getDashboardReports())) {
+            errors.add("Cannot set more than one Dashboard report placement to the same report.");
+        }
+
+        if(defaultConfigService.reportDuplicateExists(configModel.getApplicationReports())) {
+            errors.add("Cannot set more than one Application report placement to the same report.");
+        }
+
+        if(defaultConfigService.reportDuplicateExists(configModel.getTeamReports())) {
+            errors.add("Cannot set more than one Team report placement to the same report.");
+        }
+
+        model.addAttribute("errors", errors);
+
+        if (bindingResult.hasErrors() || errors.size() > 0) {
 
 			// TODO look into this
 			if (bindingResult.hasFieldErrors("proxyPort")) {

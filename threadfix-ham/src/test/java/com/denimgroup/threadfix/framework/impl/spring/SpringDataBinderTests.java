@@ -28,6 +28,7 @@ import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.TestUtils;
 import com.denimgroup.threadfix.framework.util.EventBasedTokenizerRunner;
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,7 +37,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 // TODO add more tests?
 public class SpringDataBinderTests {
@@ -92,8 +93,8 @@ public class SpringDataBinderTests {
                     TestConstants.THREADFIX_SOURCE_ROOT);
         }
 
-        SpringEntityMappings threadfixMappings =
-                new SpringEntityMappings(new File(TestConstants.THREADFIX_SOURCE_ROOT));
+        EntityMappings threadfixMappings =
+                new EntityMappings(new File(TestConstants.THREADFIX_SOURCE_ROOT));
 
         Set<SpringControllerEndpoint> endpointSet =
                 SpringControllerEndpointParser.parse(editAppController, threadfixMappings);

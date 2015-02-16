@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0" metadata-complete="true">
 	<display-name>threadfix</display-name>
@@ -88,7 +89,7 @@
         		,/,/index.jsp,/login.jsp,/organizations,/about,/wafs,/configuration,/reports,/dashboard,/scans,
         		/configuration/keys,/configuration/defecttrackers,/jobs/all,/configuration/remoteproviders,/configuration/grctools,
         		/configuration/users/password,/configuration/users,/configuration/roles,/configuration/logs,
-        		/configuration/settings,/configuration/filters,/configuration/scanqueue,/scanplugin/index,/configuration/tags,/teams,
+        		/configuration/settings,/configuration/filters,/configuration/scanqueue,/mappings/index,/configuration/tags,/teams,
         		/j_spring_security_check,/j_spring_security_logout,/images/*,/styles/*,/scripts/*,/rest/*,
         		regex ^/rest/[a-zA-Z0-9/]*$,
                 regex ^/v/[^/]+/scripts/.*$,
@@ -145,6 +146,8 @@
         		protected-regex ^/configuration/users/[0-9]+/access/team/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/app/[0-9]+/delete$,
         		protected-regex ^/configuration/users/[0-9]+/access/new$,
+		    	protected-regex ^/mappings/index/cwe$,
+		    	protected-regex ^/mappings/index/unmappedTable$,
 		    	protected-regex ^/organizations/modalAdd$,
 		    	protected-regex ^/organizations/scanqueue/list$,
 		    	protected-regex ^/organizations/severityFilter/set$,
@@ -219,6 +222,8 @@
         		protected-regex ^/reports/parameters$,
                 protected-regex ^/reports/ajax/export/[0-9]+/[0-9]+/[0-9]+/[0-9]+$,
         		protected-regex ^/scans/table$,
+        		protected-regex ^/scannerMappings/update$,
+        		protected-regex ^/scannerMappings/update/createVulnerabilities$,
 		    	protected-regex ^/wafs/[0-9]+/edit/ajax$,
 		    	protected-regex ^/wafs/map$,
         		protected-regex ^/wafs/new/ajax$,
@@ -234,6 +239,8 @@
                 protected-regex ^/configuration/scanqueue/scanQueueTask/[0-9]+/delete$,
         		protected-regex ^/configuration/scanqueue/organizations/[0-9]+/applications/[0-9]+/scanQueueTask/[0-9]+/delete$,
         		protected-regex ^/configuration/scanqueue/organizations/[0-9]+/applications/[0-9]+/addScanQueueTask$,
+                protected-regex ^/graphConfig$, protected-regex ^/graphConfig/table$, protected-regex ^/graphConfig/channels$,
+                protected-regex ^/graphConfig/data,
         	</param-value>
 		</init-param>
 	</filter>

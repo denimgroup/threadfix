@@ -99,6 +99,12 @@ public class ApplicationsController {
     private ChannelTypeService channelTypeService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private DefaultConfigService defaultConfigService;
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private CacheBustService cacheBustService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -133,7 +139,7 @@ public class ApplicationsController {
 				Permission.CAN_MODIFY_VULNERABILITIES,
 				Permission.CAN_MANAGE_VULN_FILTERS,
 				Permission.CAN_SUBMIT_DEFECTS,
-//				Permission.CAN_VIEW_JOB_STATUSES,
+                Permission.CAN_SUBMIT_COMMENTS,
 				Permission.CAN_GENERATE_REPORTS,
 				Permission.CAN_MANAGE_DEFECT_TRACKERS,
 				Permission.CAN_MANAGE_GRC_TOOLS,
@@ -144,6 +150,10 @@ public class ApplicationsController {
 			application.setPassword(Application.TEMP_PASSWORD);
 		}
 
+        DefaultConfiguration config = defaultConfigService.loadCurrentConfiguration();
+
+        model.addAttribute("config", config);
+        model.addAttribute("reportJsPaths", cacheBustService.notCachedJsPaths(request, config.getApplicationReports()));
         model.addAttribute("tagList", application.getTags());
 		model.addAttribute("urlManualList", findingService.getAllManualUrls(appId));
 		model.addAttribute("numVulns", numVulns);

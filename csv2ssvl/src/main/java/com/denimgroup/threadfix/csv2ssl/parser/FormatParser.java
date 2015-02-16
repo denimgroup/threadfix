@@ -26,8 +26,13 @@ package com.denimgroup.threadfix.csv2ssl.parser;
 import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.util.Option;
 import com.denimgroup.threadfix.csv2ssl.util.Strings;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -60,6 +65,46 @@ public class FormatParser {
 
         File file = new File(fileName);
 
+        if (Configuration.isExcel(file)) {
+            return getHeadersExcel(file);
+        } else {
+            return getHeadersCSV(file);
+        }
+    }
+
+    private static Option<String[]> getHeadersExcel(File file) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            XSSFWorkbook wb = new XSSFWorkbook(fis);
+
+            XSSFSheet ws = wb.getSheetAt(0); // read the first sheet
+            int totalRows = ws.getLastRowNum();
+
+            if (totalRows == 0) {
+                return Option.failure("No lines found in file " + file.getName());
+            }
+
+            XSSFRow row = ws.getRow(0);
+
+            String[] headers = new String[row.getLastCellNum()];
+
+            for (int index = 0; index <= row.getLastCellNum(); index++) {
+                XSSFCell cell = row.getCell(index);
+
+                assert cell != null : "Got null cell at index " + index;
+
+                headers[index] = cell.toString();
+            }
+
+            return Option.success(headers);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Option.failure("Encountered IOException.");
+        }
+    }
+
+    private static Option<String[]> getHeadersCSV(File file) {
         String error;
 
         if (file.exists() && file.isFile()) {
@@ -67,16 +112,16 @@ public class FormatParser {
                 String content = readFile(file, StandardCharsets.UTF_8);
 
                 if (content.length() > 0) {
-                    error = "No content found in file " + arg;
+                    error = "No content found in file " + file.getName();
                 } else {
                     return getStringsOrError(content);
                 }
             } catch (IOException e) {
-                error = "Encountered IOException while attempting to read file " + fileName;
+                error = "Encountered IOException while attempting to read file " + file.getName();
                 e.printStackTrace();
             }
         } else {
-            error = "Invalid file: " + fileName;
+            error = "Invalid file: " + file.getName();
         }
 
         return Option.failure(error);

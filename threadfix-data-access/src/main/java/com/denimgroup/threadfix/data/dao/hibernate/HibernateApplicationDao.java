@@ -27,7 +27,6 @@ import com.denimgroup.threadfix.data.dao.ApplicationDao;
 import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.Finding;
 import com.denimgroup.threadfix.data.entities.Vulnerability;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -38,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -86,6 +86,13 @@ public class HibernateApplicationDao implements ApplicationDao {
     @Override
     public Application retrieveByName(String name, int teamId) {
         return (Application) getActiveAppCriteria().add(Restrictions.eq("name",name))
+                .add(Restrictions.eq("organization.id", teamId))
+                .uniqueResult();
+    }
+
+    @Override
+    public Application retrieveByUniqueId(String uniqueId, int teamId) {
+        return (Application) getActiveAppCriteria().add(Restrictions.eq("uniqueId",uniqueId))
                 .add(Restrictions.eq("organization.id", teamId))
                 .uniqueResult();
     }
@@ -210,6 +217,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Application> getTopAppsFromList(List<Integer> applicationIdList) {
         List<Application> apps = sessionFactory.getCurrentSession()
                 .createQuery("SELECT application " +
@@ -225,6 +233,7 @@ public class HibernateApplicationDao implements ApplicationDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Object[]> getPointInTime(List<Integer> applicationIdList) {
         return sessionFactory
                 .getCurrentSession()

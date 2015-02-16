@@ -31,10 +31,7 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by dzabdi88 on 8/15/14.
@@ -46,7 +43,7 @@ public class ScheduledRemoteProviderImportJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        String jobName = context.getJobDetail().getFullName();
+        String jobName = context.getJobDetail().getDescription();
         log.info("ScheduledRemoteProviderImportJob " + jobName + " executing at " + new Date() + ". Sending request to queue.");
 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();

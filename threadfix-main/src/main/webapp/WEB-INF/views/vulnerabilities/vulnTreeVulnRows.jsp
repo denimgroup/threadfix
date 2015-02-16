@@ -28,10 +28,10 @@
 
     <!-- Dependency -->
     <div ng-if="vulnerability.dependency">
-        <div class="vuln-tree-label">CVE</div>
+        <div class="vuln-tree-label">Reference</div>
         <span id="cve{{ $index }}">
-            {{ vulnerability.dependency.cve }}
-            (<a target="_blank" id="linkCve{{ $index }}" href="http://cve.mitre.org/cgi-bin/cvename.cgi?name={{ vulnerability.dependency.cve }}">View</a>)
+            {{ vulnerability.dependency.refId }}
+            (<a target="_blank" id="linkCve{{ $index }}" href="{{ vulnerability.dependency.refLink }}">View</a>)
         </span>
         <br>
         <div class="vuln-tree-label">Component</div>
@@ -95,7 +95,13 @@
         <div id="commentDiv{{ $index }}" >
             <%@ include file="/WEB-INF/views/applications/vulnComments.jsp" %>
         </div>
-        <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}" class="btn margin-bottom" ng-click="showCommentForm(vulnerability, tags)">Add Comment</a>
+        <c:if test="${ canSubmitComments || canModifyVulnerabilities }">
+            <a id="addCommentButton{{ category.name }}{{ element.genericVulnerability.displayId }}{{ $index }}"
+               class="btn margin-bottom"
+               ng-click="showCommentForm(vulnerability, tags)">
+                Add Comment
+            </a>
+        </c:if>
     </div>
 
     <!-- Documents body -->
@@ -136,7 +142,6 @@
     <!-- Data Flow and Request/Response body  -->
     <br ng-show="vulnerability.showAttacks">
     <div ng-show="vulnerability.showAttacks">
-
         <div ng-show="!vulnerability.staticFindings.length && !vulnerability.dynamicFindings.length || vulnerability.staticFindings.length+vulnerability.dynamicFindings.length===0">
             <h4>No Data Flows or Request/Response Attacks found.</h4>
         </div>
@@ -189,48 +194,7 @@
             </div>
         </div>
 
-
-        <div ng-show="vulnerability.dynamicFindings.length > 1">
-            <h4>Request Variants</h4>
-            <div ng-repeat="finding in vulnerability.dynamicFindings">
-                <a class="pointer" ng-click="toggleFinding(finding)">Toggle
-                    finding {{ finding.id }} attack string
-                </a>
-                <br />
-
-                <div id='{{ finding.id }}' ng-show="isShowFlow{{finding.id}}">
-                    <h5>
-                        Finding
-                        {{ finding.id }}
-                        Attack
-                    </h5>
-                    <table class="dataTable">
-                        <tr>
-                            <td class="bold" valign=top>Attack Request</td>
-                            <td class="inputValue" style="word-wrap: break-word;"><PRE id="attackRequest">{{ finding.attackRequest }}</PRE></td>
-                        </tr>
-                        <tr>
-                            <td class="bold" valign=top>Attack Response</td>
-                            <td class="inputValue" style="word-wrap: break-word;"><PRE id="attackResponse">{{ finding.attackResponse }}</PRE></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div ng-show="vulnerability.dynamicFindings.length === 1">
-            <h4>Request</h4>
-            <table class="dataTable">
-                <tr>
-                    <td class="bold" valign=top>Attack Request</td>
-                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="singleAttackRequest">{{ vulnerability.dynamicFindings[0].attackRequest }}</PRE></td>
-                </tr>
-                <tr>
-                    <td class="bold" valign=top>Attack Response</td>
-                    <td class="inputValue" style="word-wrap: break-word;"><PRE id="singleAttackResponse">{{ vulnerability.dynamicFindings[0].attackResponse }}</PRE></td>
-                </tr>
-            </table>
-        </div>
+        <%@ include file="/WEB-INF/views/vulnerabilities/vulnRequestResponseAttacks.jsp" %>
     </div>
 
 </div>

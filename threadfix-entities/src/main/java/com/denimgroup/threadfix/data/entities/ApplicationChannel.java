@@ -26,11 +26,14 @@ package com.denimgroup.threadfix.data.entities;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Iterator;
 import java.util.List;
+
+import static com.denimgroup.threadfix.CollectionUtils.listOf;
 
 @Entity
 @Table(name = "ApplicationChannel")
-public class ApplicationChannel extends AuditableEntity {
+public class ApplicationChannel extends AuditableEntity implements Iterable<Scan> {
 
 	private static final long serialVersionUID = 184587892482641379L;
 
@@ -106,4 +109,9 @@ public class ApplicationChannel extends AuditableEntity {
     public static boolean matchesFileHandleFormat(String fileName) {
         return fileName.matches("scan-file-[0-9]+-[0-9]+");
     }
+
+	@Override
+	public Iterator<Scan> iterator() {
+		return getScanList() == null ? listOf(Scan.class).iterator() : getScanList().iterator();
+	}
 }

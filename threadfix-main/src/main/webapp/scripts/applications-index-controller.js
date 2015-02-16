@@ -189,6 +189,15 @@ myAppModule.controller('ApplicationsIndexController',
             }
 
             var newApplication = object.application;
+
+            newApplication.active = true;
+            newApplication.criticalVulnCount = 0;
+            newApplication.highVulnCount = 0;
+            newApplication.mediumVulnCount = 0;
+            newApplication.lowVulnCount = 0;
+            newApplication.totalVulnCount = 0;
+            newApplication.infoVulnCount = 0;
+
             newApplication.showUploadScanButton = object.uploadScan;
 
             team.applications.push(newApplication);

@@ -1,6 +1,6 @@
 package com.denimgroup.threadfix.importer.impl.remoteprovider.utils;
 
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import com.denimgroup.threadfix.importer.impl.remoteprovider.RemoteProviderScanParser;
 
 /**

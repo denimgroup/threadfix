@@ -83,7 +83,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
     protected enum FindingKey {
         VULN_CODE, PATH, PARAMETER, SEVERITY_CODE, NATIVE_ID, CVE, CWE, VALUE, REQUEST, RESPONSE, DETAIL,
-        RECOMMENDATION, RAWFINDING, URL_REFERENCE, ISSUE_ID
+        RECOMMENDATION, RAWFINDING, URL_REFERENCE, ISSUE_ID, ATTACK_STRING
     }
 
     // A stream pointing to the scan's contents. Set with either setFile or
@@ -383,6 +383,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
 
         ChannelVulnerability channelVulnerability = getChannelVulnerability(channelVulnerabilityCode);
 
+
         if (channelVulnerability == null) {
             channelVulnerability = new ChannelVulnerability();
             channelVulnerability.setChannelType(getChannelType());
@@ -405,8 +406,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
             }
         }
 
-        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
         finding.setChannelVulnerability(channelVulnerability);
+        channelVulnerability.setFindings(list(finding));
+
+        channelVulnerabilityDao.saveOrUpdate(channelVulnerability);
 
         ChannelSeverity channelSeverity = null;
         if (channelSeverityCode != null) {
@@ -425,6 +428,7 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         String recommendation = findingMap.get(FindingKey.RECOMMENDATION);
         String rawFinding = findingMap.get(FindingKey.RAWFINDING);
         String urlReference = findingMap.get(FindingKey.URL_REFERENCE);
+        String attackString = findingMap.get(FindingKey.ATTACK_STRING);
 
         if (parameterValue != null && parameterValue.length() > Finding.ATTACK_STRING_LENGTH)
             parameterValue = parameterValue.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
@@ -453,6 +457,10 @@ public abstract class AbstractChannelImporter extends SpringBeanAutowiringSuppor
         if (urlReference != null && urlReference.length() > Finding.URL_REFERENCE_LENGTH)
             urlReference = urlReference.substring(0,Finding.URL_REFERENCE_LENGTH-20) + "\n\n[truncated]\n";
         finding.setUrlReference(urlReference);
+
+        if (attackString != null && attackString.length() > Finding.ATTACK_STRING_LENGTH)
+            attackString = attackString.substring(0,Finding.ATTACK_STRING_LENGTH-20) + "\n\n[truncated]\n";
+        finding.setAttackString(attackString);
     }
 
     protected void closeInputStream(InputStream stream) {

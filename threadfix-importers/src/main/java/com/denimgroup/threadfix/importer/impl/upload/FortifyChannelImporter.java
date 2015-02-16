@@ -152,15 +152,13 @@ public class FortifyChannelImporter extends AbstractChannelImporter {
 		inputStream = fvdlInputStream;
 		Scan returnScan = parseSAXInput(new FortifySAXParser());
 		Calendar auditXmlDate = getTime(auditXmlStream);
-		if (returnScan != null) {
-			if (auditXmlDate == null) {
-				returnScan.setImportTime(date);
-			} else {
-				returnScan.setImportTime(auditXmlDate);
-			}
-		}
+		if (auditXmlDate == null) {
+            returnScan.setImportTime(date);
+        } else {
+            returnScan.setImportTime(auditXmlDate);
+        }
 
-        deleteZipFile();
+		deleteZipFile();
 		
 		return returnScan;
 	}

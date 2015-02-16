@@ -43,10 +43,10 @@ public enum Permission {
 	CAN_MANAGE_SCAN_AGENTS("ROLE_CAN_MANAGE_SCAN_AGENTS","canManageScanAgents"),
 	CAN_MANAGE_SYSTEM_SETTINGS("ROLE_CAN_MANAGE_SYSTEM_SETTINGS","canManageSystemSettings"),
 	CAN_VIEW_ERROR_LOGS("ROLE_CAN_VIEW_ERROR_LOGS","canViewErrorLogs"),
-//	CAN_VIEW_JOB_STATUSES("ROLE_CAN_VIEW_JOB_STATUSES","canViewJobStatuses"),
 	ENTERPRISE("ROLE_ENTERPRISE","enterprise"),
 	READ_ACCESS("ROLE_READ_ACCESS","readAccess"),
-    CAN_MANAGE_TAGS("ROLE_CAN_MANAGE_TAGS","canManageTags");
+    CAN_MANAGE_TAGS("ROLE_CAN_MANAGE_TAGS","canManageTags"),
+    CAN_SUBMIT_COMMENTS("ROLE_CAN_SUBMIT_COMMENTS","canSubmitComments");
 
 	private String text, camelCase;
 	

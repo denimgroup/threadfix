@@ -62,6 +62,12 @@ public interface ApplicationService {
 	Application loadApplication(String applicationName, int teamId);
 
 	/**
+     * @param applicationUniqueId
+     * @return
+     */
+    Application loadApplicationByUniqueId(String applicationUniqueId, int teamId);
+
+    /**
 	 * @param application
 	 */
 	void storeApplication(Application application);

@@ -98,7 +98,7 @@
                         </security:authorize>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_SYSTEM_SETTINGS">
                             <li class="normalLinks">
-                                <a id="updateChannelVulnLink" href="<spring:url value="/scanplugin/index" htmlEscape="true"/>">Scanner Plugin</a>
+                                <a id="updateChannelVulnLink" href="<spring:url value="/mappings/index" htmlEscape="true"/>">Scanner Mappings</a>
                             </li>
                         </security:authorize>
                         <security:authorize ifAllGranted="ROLE_CAN_MANAGE_TAGS">

@@ -52,6 +52,8 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
                         $scope.output = "Failure. Message was : " + data.message;
                     }
 
+                    $rootScope.$broadcast('newMappings');
+
                     $scope.loading = false;
                 }).
                 error(function(data, status) {
@@ -100,11 +102,30 @@ myAppModule.controller('ScanUnmappedFindingTableController', function ($scope, $
         $scope.currentModal = modalInstance;
 
         modalInstance.result.then(function (object) {
-            $scope.successMessage = "Successfully created mapping. You should re-upload your scan.";
+            $scope.successMessage = "Successfully created mapping. You should see new Vulnerabilities in the Vulnerabilities tree. Please export these mappings to Denim Group from the Scanner Mappings page.";
             $scope.refresh(true, false);
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
+    };
+
+    $scope.createVulnerabilities = function(finding) {
+
+        var url = tfEncoder.encode("/scannerMappings/update/createVulnerabilities");
+
+        var object = {
+            channelVulnerabilityCode: finding.channelVulnerability.name,
+            channelName : finding.scannerName
+        };
+
+        $http.post(url, object).
+            success(function(data) {
+                $scope.successMessage = "Successfully created vulnerabilities. You should see the new Vulnerability in the Vulnerabilities tree. Please export these mappings to Denim Group from the Scanner Mappings page.";
+                $scope.refresh(true, false);
+            }).
+            error(function(data, status) {
+                $scope.errorMessage = "Failed to create a vulnerability. HTTP status was " + status;
+            });
     };
 
     $scope.goToPage = function(valid) {

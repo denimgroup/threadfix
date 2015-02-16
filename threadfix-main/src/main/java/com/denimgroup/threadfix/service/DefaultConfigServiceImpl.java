@@ -26,6 +26,7 @@ package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.dao.DefaultConfigurationDao;
 import com.denimgroup.threadfix.data.entities.DefaultConfiguration;
+import com.denimgroup.threadfix.data.entities.Report;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.errors.EncryptionException;
@@ -33,7 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DefaultConfigServiceImpl implements DefaultConfigService {
@@ -152,4 +155,17 @@ public class DefaultConfigServiceImpl implements DefaultConfigService {
         return !loadCurrentConfiguration().getHasCachedData();
     }
 
+    @Override
+    public boolean reportDuplicateExists(List<Report> reports) {
+
+        Set<Integer> set = new HashSet<>();
+
+        for (Report report : reports) {
+            if (!set.add(report.getId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

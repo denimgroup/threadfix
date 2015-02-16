@@ -28,12 +28,14 @@ import com.denimgroup.threadfix.framework.ResourceManager;
 import com.denimgroup.threadfix.framework.TestConstants;
 import com.denimgroup.threadfix.framework.engine.full.EndpointGenerator;
 import javax.annotation.Nonnull;
+
+import com.denimgroup.threadfix.framework.util.java.EntityMappings;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Set;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SpringControllerEndpointParserTests {
@@ -53,7 +55,7 @@ public class SpringControllerEndpointParserTests {
 
     @Test
     public void testClassRequestParamAnnotation() {
-        SpringEntityMappings mappings = new SpringEntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
+        EntityMappings mappings = new EntityMappings(new File(TestConstants.PETCLINIC_SOURCE_LOCATION));
 
         File file = ResourceManager.getSpringFile(TestConstants.SPRING_CONTROLLER_WITH_CLASS_REQUEST_MAPPING);
 
@@ -144,7 +146,7 @@ public class SpringControllerEndpointParserTests {
 
     Set<SpringControllerEndpoint> parseEndpoints(String controllerName, String rootFolderName) {
         return SpringControllerEndpointParser.parse(ResourceManager.getSpringFile(controllerName),
-                new SpringEntityMappings(new File(TestConstants.getFolderName(rootFolderName))));
+                new EntityMappings(new File(TestConstants.getFolderName(rootFolderName))));
     }
 
 

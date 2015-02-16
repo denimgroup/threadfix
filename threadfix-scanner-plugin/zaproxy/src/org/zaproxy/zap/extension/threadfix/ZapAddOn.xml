@@ -7,7 +7,7 @@
     <changes>First Version</changes>
     <dependson/>
     <extensions>
-        <extension>org.zaproxy.zap.extension.ThreadFixExtension</extension>
+        <extension>org.zaproxy.zap.extension.threadfix.ThreadFixExtension</extension>
     </extensions>
     <ascanrules/>
     <pscanrules/>

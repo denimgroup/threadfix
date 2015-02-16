@@ -26,8 +26,8 @@ package com.denimgroup.threadfix.importer.date;
 import com.denimgroup.threadfix.data.ScanCheckResultBean;
 import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.importer.ScanLocationManager;
-import com.denimgroup.threadfix.importer.cli.ScanParser;
-import com.denimgroup.threadfix.importer.config.SpringConfiguration;
+import com.denimgroup.threadfix.importer.util.ScanParser;
+import com.denimgroup.threadfix.importer.util.SpringConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

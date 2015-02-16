@@ -156,17 +156,20 @@ public class ServletMappingTests {
     				"\nResulting value was " + result.get(0), passed);
     	}
     }
-	
+
+	@SuppressWarnings("null")
 	@Test(expected=NullPointerException.class)
 	public void testUrlPatternMappingNullArgs() {
 		new UrlPatternMapping(null, null);
 	}
-	
+
+	@SuppressWarnings("null")
 	@Test(expected=NullPointerException.class)
 	public void testClassMappingNullArgs() {
 		new ClassMapping(null, null, null, null);
 	}
 
+	@SuppressWarnings("null")
 	@Test(expected=NullPointerException.class)
 	public void testServletMappingNulls() {
         new ServletMappings(null, null, null, null);

@@ -50,7 +50,14 @@ import java.util.*;
  */
 @ScanImporter(
         scannerName = ScannerDatabaseNames.BRAKEMAN_DB_NAME,
-        format = ScanFormat.JSON
+        format = ScanFormat.JSON,
+		jsonStructure = ScanImporter.JSONStructure.OBJECT,
+		jsonProperties = {
+				"errors",
+				"scan_info",
+				"warnings"
+		}
+
 )
 public class BrakemanChannelImporter extends AbstractChannelImporter {
 
@@ -208,7 +215,7 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 					
 					String parameter = null;
 					
-					if (isVersion2) {
+					if (isVersion2 && !jsonItem.isNull("user_input")) {
 						parameter = jsonItem.getString("user_input");
 					}
 
@@ -225,18 +232,16 @@ public class BrakemanChannelImporter extends AbstractChannelImporter {
 						finding.setIsStatic(true);
 						finding.setNativeId(hashFindingInfo(jsonItem.toString(),null,null));
 						
-						if (jsonItem.getString("code") != null) {
+						if (!jsonItem.isNull("code")) {
 							DataFlowElement element = new DataFlowElement();
 							element.setLineText(jsonItem.getString("code"));
 							element.setSourceFileName(jsonItem.getString("file"));
-							if (isVersion2) {
-								String lineString = jsonItem.getString("line");
-								if (!lineString.equals("null")) {
-									try {
-										element.setLineNumber(Integer.valueOf(lineString));
-									} catch (NumberFormatException e) {
-										log.error("Non-numeric value found in Brakeman JSON file.", e);
-									}
+							if (isVersion2 && !jsonItem.isNull("line")) {
+								long lineString = jsonItem.getLong("line");
+								try {
+									element.setLineNumber((int) lineString);
+								} catch (NumberFormatException e) {
+									log.error("Non-numeric value found in Brakeman JSON file.", e);
 								}
 							}
 							finding.setDataFlowElements(CollectionUtils.list(element));

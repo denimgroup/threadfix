@@ -24,13 +24,13 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.denimgroup.threadfix.CollectionUtils.list;
 
 @Entity
 @Table(name="DefaultConfiguration")
@@ -56,6 +56,9 @@ public class DefaultConfiguration extends BaseEntity {
     private Calendar lastScannerMappingsUpdate;
 
     private Integer sessionTimeout = null;
+    
+    private Report dashboardTopLeft, dashboardTopRight, dashboardBottomLeft,dashboardBottomRight,
+            applicationTopLeft, applicationTopRight, teamTopLeft, teamTopRight;
 
     public static DefaultConfiguration getInitialConfig() {
         DefaultConfiguration config = new DefaultConfiguration();
@@ -76,6 +79,85 @@ public class DefaultConfiguration extends BaseEntity {
         this.sessionTimeout = sessionTimeout;
     }
 
+    @OneToOne
+    @JoinColumn(name = "teamTopLeftId")
+    public Report getTeamTopLeft() {
+        return teamTopLeft;
+    }
+
+    public void setTeamTopLeft(Report teamTopLeft) {
+        this.teamTopLeft = teamTopLeft;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "teamTopRightId")
+    public Report getTeamTopRight() {
+        return teamTopRight;
+    }
+
+    public void setTeamTopRight(Report teamTopRight) {
+        this.teamTopRight = teamTopRight;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "applicationTopLeftId")
+    public Report getApplicationTopLeft() {
+        return applicationTopLeft;
+    }
+
+    public void setApplicationTopLeft(Report applicationTopLeft) {
+        this.applicationTopLeft = applicationTopLeft;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "applicationTopRightId")
+    public Report getApplicationTopRight() {
+        return applicationTopRight;
+    }
+
+    public void setApplicationTopRight(Report applicationTopRight) {
+        this.applicationTopRight = applicationTopRight;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "dashboardTopLeftId")
+    public Report getDashboardTopLeft() {
+        return dashboardTopLeft;
+    }
+
+    public void setDashboardTopLeft(Report dashboardTopLeft) {
+        this.dashboardTopLeft = dashboardTopLeft;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "dashboardTopRightId")
+    public Report getDashboardTopRight() {
+        return dashboardTopRight;
+    }
+
+    public void setDashboardTopRight(Report dashboardTopRight) {
+        this.dashboardTopRight = dashboardTopRight;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "dashboardBottomLeftId")
+    public Report getDashboardBottomLeft() {
+        return dashboardBottomLeft;
+    }
+
+    public void setDashboardBottomLeft(Report dashboardBottomLeft) {
+        this.dashboardBottomLeft = dashboardBottomLeft;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "dashboardBottomRightId")
+    public Report getDashboardBottomRight() {
+        return dashboardBottomRight;
+    }
+
+    public void setDashboardBottomRight(Report dashboardBottomRight) {
+        this.dashboardBottomRight = dashboardBottomRight;
+    }
 
     @Column
     public Boolean getHasAddedScheduledImports() {
@@ -282,6 +364,38 @@ public class DefaultConfiguration extends BaseEntity {
         map.put("TrustwaveHailstormRemoteProvider", getShouldProxyTrustwaveHailstorm());
         map.put("ContrastRemoteProvider", getShouldProxyContrast());
         return map;
+    }
+
+    @Transient
+    public List<Report> getDashboardReports() {
+        List<Report> dashboardReports = list();
+
+        dashboardReports.add(getDashboardTopLeft());
+        dashboardReports.add(getDashboardTopRight());
+        dashboardReports.add(getDashboardBottomLeft());
+        dashboardReports.add(getDashboardBottomRight());
+
+        return dashboardReports;
+    }
+
+    @Transient
+    public List<Report> getApplicationReports() {
+        List<Report> applicationReports = list();
+
+        applicationReports.add(getApplicationTopLeft());
+        applicationReports.add(getApplicationTopRight());
+
+        return applicationReports;
+    }
+
+    @Transient
+    public List<Report> getTeamReports() {
+        List<Report> teamReports = list();
+
+        teamReports.add(getTeamTopLeft());
+        teamReports.add(getTeamTopRight());
+
+        return teamReports;
     }
 
     @Column

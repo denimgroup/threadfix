@@ -23,9 +23,11 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.csv2ssl.parser;
 
+import com.denimgroup.threadfix.csv2ssl.checker.Configuration;
 import com.denimgroup.threadfix.csv2ssl.serializer.RecordToXMLSerializer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 
@@ -45,48 +47,49 @@ public class CSVToSSVLParser {
 
         assert file.isFile() : "File should already have been checked at this point.";
 
-        try {
-            return parse(new FileReader(file), format);
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException("Coding error: " + filePath + " wasn't found.", e);
-        }
-    }
+        boolean excel = Configuration.isExcel(file);
 
-    // expects well-formed input
-    public static String parse(String filePath) {
-
-        File file = new File(filePath);
-
-        assert file.isFile() : "File should already have been checked at this point.";
-
-        try {
-            return parse(new FileReader(file));
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException("Coding error: " + filePath + " wasn't found.", e);
+        if (excel) {
+            return parseExcel(file, format);
+        } else {
+            return parseCsv(file, format);
         }
     }
 
     public static String parse(Reader reader, String... format) {
         try {
-            CSVParser parse;
-
-            if (format.length == 0) { // headers must be in the first line of the file
-                // Use header row as set of headers? not sure why I have to spell it out like this
-
-                parse = CSVFormat.DEFAULT.withSkipHeaderRecord(CONFIG.shouldSkipFirstLine).parse(reader);
-
-            } else {
-                parse = CSVFormat.DEFAULT.withSkipHeaderRecord(CONFIG.shouldSkipFirstLine).withHeader(format).parse(reader);
-            }
+            CSVParser parse = CSVFormat.DEFAULT
+                    .withSkipHeaderRecord(CONFIG.shouldSkipFirstLine)
+                    .withHeader(format)
+                    .parse(reader);
 
             return RecordToXMLSerializer.getFromReader(parse);
         } catch (IOException e) {
             throw new IllegalStateException("Received IOException while parsing file.", e);
         }
     }
+
+    public static String parseCsv(File file, String... format) {
+        try {
+            CSVParser parse = CSVFormat.DEFAULT
+                    .withSkipHeaderRecord(CONFIG.shouldSkipFirstLine)
+                    .withHeader(format)
+                    .parse(new FileReader(file));
+
+            return RecordToXMLSerializer.getFromReader(parse);
+        } catch (IOException e) {
+            throw new IllegalStateException("Received IOException while parsing file.", e);
+        }
+    }
+
+    public static String parseExcel(File file, String... format) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            XSSFWorkbook wb = new XSSFWorkbook(fis);
+
+            return RecordToXMLSerializer.getFromExcel(wb, format);
+        } catch (IOException e) {
+            throw new IllegalStateException("Received IOException while parsing file.", e);
+        }
+    }
 }
-
-
-// CWE,Path,Parameter,LongDescription,NativeId,Source
-// /Users/mcollins/git/csv2ssl/csv2ssvl/csv2ssvl/src/test/resources/basic.csv
-// /Users/mcollins/git/csv2ssl/csv2ssvl/csv2ssvl/src/test/resources/out.ssvl
