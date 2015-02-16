@@ -28,16 +28,16 @@ import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.data.entities.Waf;
 import com.denimgroup.threadfix.data.entities.WafType;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
-import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafService;
+import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
+import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/wafs/new")
 @SessionAttributes("waf")
 @PreAuthorize("hasRole('ROLE_CAN_MANAGE_WAFS')")
@@ -81,10 +81,10 @@ public class AddWafController {
 	}
 
 	@RequestMapping(value="/ajax/appPage", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Waf> newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
-			BindingResult result,
-			SessionStatus status, Model model,
-			HttpServletRequest request) {
+	public Object newSubmitAjaxAppPage(@Valid @ModelAttribute Waf waf,
+								BindingResult result,
+								SessionStatus status, Model model,
+								HttpServletRequest request) {
 		model.addAttribute("createWafUrl", "/wafs/new/ajax/appPage");
 
 		String validationResult = newSubmit(waf,result,status,model,request);
@@ -110,7 +110,7 @@ public class AddWafController {
 			applicationService.storeApplication(application);
 		}
 
-        return RestResponse.success(waf);
+        return ControllerUtils.writeSuccessObjectWithView(waf, AllViews.TableRow.class);
 	}
 	
 	@RequestMapping(value="/ajax", method = RequestMethod.POST)
