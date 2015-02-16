@@ -28,19 +28,30 @@ import com.denimgroup.threadfix.importer.util.HandlerWithBuilder;
 import org.xml.sax.Attributes;
 
 import java.util.Calendar;
+import java.util.Set;
+
+import static com.denimgroup.threadfix.CollectionUtils.set;
 
 /**
  * Created by mcollins on 2/16/15.
  */
-class FortifyTimeParser extends HandlerWithBuilder {
+class FortifyAuditXmlParser extends HandlerWithBuilder {
     Calendar resultTime = null;
     boolean getDate = false;
+
+    Set<String> suppressedIds = set();
 
     public void startElement (String uri, String name,
                               String qName, Attributes atts)
     {
         if ("WriteDate".equals(qName)) {
             getDate = true;
+        } else if ("Issue".equals(qName)) {
+            String instanceId = atts.getValue("instanceId");
+            boolean suppressed = "true".equals(atts.getValue("suppressed"));
+            if (suppressed && instanceId != null) {
+                suppressedIds.add(instanceId);
+            }
         }
     }
 
