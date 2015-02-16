@@ -58,8 +58,12 @@ module.controller('BulkOperationsController', function($rootScope, $http, $log, 
                 url: function() {
                     return tfEncoder.encode(getAppUrlBase() + "/controls");
                 },
+                cleanUrl: function() {
+                    return tfEncoder.encode(getAppUrlBase() + "/controls/clean");
+                },
                 object: function () {
-                    return {};
+                    return {
+                    };
                 },
                 config: function() {
                     return {

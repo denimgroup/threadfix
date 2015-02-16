@@ -53,4 +53,19 @@ public interface GRCControlService {
      */
     void store(GRCControl control);
 
+    /**
+     * @param control
+     */
+    void delete(GRCControl control);
+
+    /**
+     *
+     */
+    void deleteUnlinkedControls();
+
+    /**
+     * @param vulnId
+     */
+    void deleteByVulnerabilityId(Integer vulnId);
+
 }
