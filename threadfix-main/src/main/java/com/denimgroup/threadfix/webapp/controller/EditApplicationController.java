@@ -39,7 +39,6 @@ import com.google.gson.reflect.TypeToken;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -50,7 +49,9 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-@Controller
+import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
+@RestController
 @RequestMapping("/organizations/{orgId}/applications/{appId}/edit")
 @SessionAttributes({"application", "scanParametersBean"})
 public class EditApplicationController {
@@ -108,7 +109,7 @@ public class EditApplicationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody String processSubmit(@PathVariable("appId") int appId,
+	public String processSubmit(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@Valid @ModelAttribute Application application,
 			BindingResult result, Model model) throws IOException {
@@ -169,7 +170,7 @@ public class EditApplicationController {
 	}
 	
 	@RequestMapping(value="/wafAjax", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<Waf> processSubmitAjaxWaf(@PathVariable("appId") int appId,
+	public Object processSubmitAjaxWaf(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, Model model) {
@@ -220,15 +221,15 @@ public class EditApplicationController {
             return FormRestResponse.failure("Unable to retrieve the application.", result);
 		}
 		
-		if (result.hasErrors()) {
+		if (result.hasErrors() || waf == null) {
             return FormRestResponse.failure("Unable to add the WAF. Try again.", result);
 		} else {
-		    return RestResponse.success(waf);
+		    return writeSuccessObjectWithView(waf, AllViews.TableRow.class);
         }
 	}
 
 	@RequestMapping(value="/addDTAjax", method = RequestMethod.POST)
-	public @ResponseBody RestResponse<DefectTracker> processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
+	public RestResponse<DefectTracker> processSubmitAjaxDefectTracker(@PathVariable("appId") int appId,
 			@PathVariable("orgId") int orgId,
 			@ModelAttribute Application application,
 			BindingResult result, SessionStatus status, Model model) {
@@ -266,7 +267,7 @@ public class EditApplicationController {
 	}
 
 	@RequestMapping(value="/setTagsEndpoint", method = RequestMethod.POST)
-    public @ResponseBody RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
+    public RestResponse<Application> setTagsEndpoint(@PathVariable("appId") int appId,
                                                                                     @PathVariable("orgId") int orgId,
                                                                                     @RequestParam("jsonStr") String jsonStr) {
         log.info("Updating tags endpoint");
@@ -285,7 +286,7 @@ public class EditApplicationController {
 
             return RestResponse.success(dbApplication);
 
-        }    catch (JsonSyntaxException exception) {
+        } catch (JsonSyntaxException exception) {
             log.warn("JSON Parsing failed.", exception);
             return FormRestResponse.failure("Invalid data.");
         }
