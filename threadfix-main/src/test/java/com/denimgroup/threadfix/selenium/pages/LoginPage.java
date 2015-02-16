@@ -29,9 +29,11 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.net.URL;
+
 public class LoginPage extends BasePage {
 
-	public static String url = "http://localhost:8080/threadfix/";
+	public static String url = "http://localhost:8080/threadfix/login.jsp";
     //public static String url = "https://localhost:8443/threadfix/";
     //public static String url = "http://jenkins-slave5:8080/threadfix/";
 
@@ -42,7 +44,7 @@ public class LoginPage extends BasePage {
 		if (maybeUrl != null) {
 			url = maybeUrl;
 		}
-		
+
 		webdriver.get(url);
 
         if (!webdriver.getPageSource().contains("id=\"username\"")) {
