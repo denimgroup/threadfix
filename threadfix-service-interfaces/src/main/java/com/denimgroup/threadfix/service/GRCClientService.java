@@ -24,6 +24,7 @@
 package com.denimgroup.threadfix.service;
 
 import com.denimgroup.threadfix.data.entities.*;
+import org.springframework.ws.client.WebServiceTransportException;
 
 import java.util.List;
 
@@ -37,5 +38,6 @@ public interface GRCClientService {
 
     public GRCApplication createGRCApplication(GRCTool grcTool, Application application);
 
-    public List<GRCControl> bulkSubmitControls(GRCTool grcTool, List<GRCControl> controls);
+    public List<GRCControl> bulkSubmitControls(GRCTool grcTool, List<GRCControl> controls)
+            throws WebServiceTransportException;
 }
