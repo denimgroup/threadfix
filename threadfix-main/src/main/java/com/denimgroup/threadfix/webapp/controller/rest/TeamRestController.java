@@ -33,23 +33,21 @@ import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.LicenseService;
 import com.denimgroup.threadfix.service.OrganizationService;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
-
-@Controller
+@RestController
 @RequestMapping("/rest/teams")
-public class TeamRestController extends RestController {
+public class TeamRestController extends TFRestController {
     @Autowired
     private OrganizationService           organizationService;
     @Autowired
@@ -79,7 +77,8 @@ public class TeamRestController extends RestController {
      * @return
      */
     @RequestMapping(headers = "Accept=application/json", value = "/{teamID}", method = RequestMethod.GET)
-    public @ResponseBody Object teamIDLookup(@PathVariable("teamID") int teamId,
+    @JsonView(AllViews.RestViewTeam2_1.class)
+	public Object teamIDLookup(@PathVariable("teamID") int teamId,
                         HttpServletRequest request) {
         log.info("Received REST request for Team with ID " + teamId + ".");
 
@@ -96,7 +95,7 @@ public class TeamRestController extends RestController {
         } else {
             log.info("REST request for Team with ID " + teamId
                     + " completed successfully.");
-            return writeSuccessObjectWithView(org, AllViews.RestViewTeam2_1.class);
+            return RestResponse.success(org);
         }
     }
 
@@ -105,8 +104,9 @@ public class TeamRestController extends RestController {
      * Create a new application with the supplied name and URL.
      * The rest of the configuration is done through other methods.
      */
+	@JsonView(AllViews.RestViewApplication2_1.class)
     @RequestMapping(headers = "Accept=application/json", value = "/{teamId}/applications/new", method = RequestMethod.POST)
-    public @ResponseBody Object newApplication(HttpServletRequest request,
+    public Object newApplication(HttpServletRequest request,
                           @PathVariable("teamId") int teamId) {
         log.info("Received REST request for a new Application.");
 
@@ -160,7 +160,7 @@ public class TeamRestController extends RestController {
 		if (applicationService.checkApplication(application)) {
 			applicationService.storeApplication(application);
 			log.info("Application creation was successful. Returning application.");
-            return writeSuccessObjectWithView(application, AllViews.RestViewApplication2_1.class);
+            return RestResponse.success(application);
 		} else {
 			//	TODO - We could really use some better debug here
 			log.warn("Something was invalid.");
@@ -173,8 +173,9 @@ public class TeamRestController extends RestController {
      * @param request
      * @return
      */
+	@JsonView(AllViews.RestViewTeam2_1.class)
 	@RequestMapping(headers = "Accept=application/json", value="/lookup", method = RequestMethod.GET)
-	public @ResponseBody Object teamNameLookup(HttpServletRequest request) {
+	public Object teamNameLookup(HttpServletRequest request) {
 		
 		String teamName = request.getParameter("name");
 		
@@ -193,7 +194,7 @@ public class TeamRestController extends RestController {
 		} else {
 			log.info("REST request for Team with ID " + teamName
 					+ " completed successfully.");
-            return writeSuccessObjectWithView(org, AllViews.RestViewTeam2_1.class);
+            return RestResponse.success(org);
 		}
 	}
 
@@ -204,7 +205,8 @@ public class TeamRestController extends RestController {
      */
 	@RequestMapping(headers = "Accept=application/json", value = "/new", method = RequestMethod.POST,
             produces = "application/json; charset=utf-8")
-	public @ResponseBody Object newTeam(HttpServletRequest request) {
+	@JsonView(AllViews.RestViewTeam2_1.class)
+	public Object newTeam(HttpServletRequest request) {
 		log.info("Received REST request for new Team.");
 
 		String result = checkKey(request, NEW);
@@ -220,7 +222,7 @@ public class TeamRestController extends RestController {
 			if (organizationService.isValidOrganization(organization)) {
 				organizationService.saveOrUpdate(organization);
 				log.info("Successfully created new Team.");
-				return writeSuccessObjectWithView(organization, AllViews.RestViewTeam2_1.class);
+				return RestResponse.success(organization);
 			} else {
 				log.info(CREATION_FAILED);
 				return RestResponse.failure(CREATION_FAILED);
@@ -240,7 +242,8 @@ public class TeamRestController extends RestController {
      * @return
      */
 	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public @ResponseBody Object teamList(HttpServletRequest request) {
+	@JsonView(AllViews.RestViewTeam2_1.class)
+	public Object teamList(HttpServletRequest request) {
 		log.info("Received REST request for Team list.");
 		
 		String result = checkKey(request, INDEX);
@@ -253,12 +256,12 @@ public class TeamRestController extends RestController {
         if (organizations == null) {
             return RestResponse.failure("No organizations found.");
         } else {
-            return writeSuccessObjectWithView(organizations, AllViews.RestViewTeam2_1.class);
+            return RestResponse.success(organizations);
         }
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "")
-	public @ResponseBody Object alsoTeamList(HttpServletRequest request) {
+	public Object alsoTeamList(HttpServletRequest request) {
 		return teamList(request);
 	}
 

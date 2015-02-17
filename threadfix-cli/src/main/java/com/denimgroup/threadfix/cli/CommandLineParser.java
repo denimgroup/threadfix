@@ -45,9 +45,9 @@ public class CommandLineParser {
 		"Framework Type", new String[]{ "None", "Detect", "JSP", "Spring MVC" },
 		"Repository URL", new String[]{ "Arbitrary Git URL" }
     );
-	
+
 	public static void main(String[] args) {
-		
+
 		Options options = OptionsHolder.getOptions();
 		
 		PosixParser parser = new PosixParser();

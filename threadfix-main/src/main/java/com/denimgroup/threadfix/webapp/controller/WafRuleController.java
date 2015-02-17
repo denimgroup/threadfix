@@ -29,9 +29,9 @@ import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ApplicationService;
 import com.denimgroup.threadfix.service.WafRuleService;
 import com.denimgroup.threadfix.service.WafService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -115,9 +115,10 @@ public class WafRuleController {
         return "wafs/rules/detail";
     }
 
+    @JsonView(AllViews.TableRow.class)
 	@RequestMapping("/getRules")
     @ResponseBody
-    public String getRules(@PathVariable("wafId") int wafId) {
+    public Object getRules(@PathVariable("wafId") int wafId) {
         Map<String, Object> responseMap = new HashMap<>();
 
         Waf waf = wafService.loadWaf(wafId);
@@ -136,7 +137,7 @@ public class WafRuleController {
         responseMap.put("waf", waf);
         responseMap.put("rulesText", rulesText);
         responseMap.put("lastDirective", lastDirective);
-		return ControllerUtils.writeSuccessObjectWithView(responseMap, AllViews.TableRow.class);
+		return RestResponse.success(responseMap);
 	}
 	
 }

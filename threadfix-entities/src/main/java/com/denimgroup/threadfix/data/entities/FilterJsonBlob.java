@@ -23,10 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,7 +33,7 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "FilterJsonBlob")
-@JsonAutoDetect(value = { JsonMethod.NONE })
+//@JsonAutoDetect(value = { JsonMethod.NONE }) TODO figure this out
 public class FilterJsonBlob extends AuditableEntity {
 
     private String json, name;

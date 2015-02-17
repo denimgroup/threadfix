@@ -26,14 +26,15 @@ package com.denimgroup.threadfix.webapp.controller;
 import com.denimgroup.threadfix.data.entities.Role;
 import com.denimgroup.threadfix.data.entities.User;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
+import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.RoleService;
 import com.denimgroup.threadfix.service.UserService;
 import com.denimgroup.threadfix.service.enterprise.EnterpriseTest;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
 import com.denimgroup.threadfix.webapp.validator.UserValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,6 +91,7 @@ public class AddUserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
+	@JsonView(AllViews.TableRow.class)
 	@ResponseBody
 	public Object processNew(@Valid @ModelAttribute User user, BindingResult result) {
 		new UserValidator(roleService).validate(user, result);
@@ -108,7 +110,7 @@ public class AddUserController {
 			String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
 			log.debug(currentUser + " has created a new User with the name " + user.getName() +
                     ", the ID " + user.getId());
-			return ControllerUtils.writeSuccessObjectWithView(userService.loadUser(id), AllViews.TableRow.class);
+			return RestResponse.success(userService.loadUser(id));
 		}
 	}
 }

@@ -28,7 +28,6 @@ import com.denimgroup.threadfix.data.entities.DefectTrackerType;
 import com.denimgroup.threadfix.data.entities.Permission;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.DefectTrackerService;
-import com.denimgroup.threadfix.service.PermissionService;
 import com.denimgroup.threadfix.service.defects.AbstractDefectTracker;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
@@ -45,7 +44,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -57,10 +55,7 @@ public class AddDefectTrackerController {
 
     @Autowired
 	private DefectTrackerService defectTrackerService;
-    @Autowired(required = false)
-    @Nullable
-	private PermissionService permissionService;
-	
+
 	public AddDefectTrackerController(){}
 	
 	private final Log log = LogFactory.getLog(AddDefectTrackerController.class);
@@ -88,7 +83,7 @@ public class AddDefectTrackerController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public @ResponseBody RestResponse<DefectTracker> processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
+	public @ResponseBody Object processSubmit(@Valid @ModelAttribute DefectTracker defectTracker,
 			BindingResult result, Model model) {
 
         if (!PermissionUtils.hasGlobalPermission(Permission.CAN_MANAGE_DEFECT_TRACKERS)) {
