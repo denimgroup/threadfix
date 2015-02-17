@@ -24,7 +24,7 @@
 
 package com.denimgroup.threadfix.data.entities;
 
-import org.codehaus.jackson.map.annotate.JsonView;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import java.util.List;

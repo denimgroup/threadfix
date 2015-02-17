@@ -23,29 +23,27 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.webapp.controller;
 
-import com.denimgroup.threadfix.data.entities.*;
+import com.denimgroup.threadfix.data.entities.Tag;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.TagService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
-import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.MessageConstants;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/configuration/tags")
@@ -56,7 +54,6 @@ public class TagsController {
     private TagService tagService;
 
     private final SanitizedLogger log = new SanitizedLogger(TagsController.class);
-    private static final ObjectWriter WRITER = ControllerUtils.getObjectWriter(AllViews.RestViewTag.class);
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
@@ -163,14 +160,15 @@ public class TagsController {
         return mav;
     }
 
+    @JsonView(AllViews.RestViewTag.class)
     @RequestMapping(value = "/{tagId}/objects", method = RequestMethod.GET)
-    public @ResponseBody String getAppList(@PathVariable("tagId") int tagId) throws IOException {
+    public Object getAppList(@PathVariable("tagId") int tagId) throws IOException {
 
         Tag tag = tagService.loadTag(tagId);
 
         if (tag == null ) {
             log.warn("Tag Id is invalid.");
-            return WRITER.writeValueAsString(RestResponse.failure("Tag Id is invalid."));
+            return RestResponse.failure("Tag Id is invalid.");
         }
 
         Map<String, Object> responseMap = new HashMap<>();
@@ -178,7 +176,7 @@ public class TagsController {
         responseMap.put("numApps", tag.getApplications().size());
         responseMap.put("commentList", tag.getVulnerabilityComments());
 
-        return WRITER.writeValueAsString(RestResponse.success(responseMap));
+        return RestResponse.success(responseMap);
     }
 
 }

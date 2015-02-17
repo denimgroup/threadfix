@@ -37,6 +37,7 @@ import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +49,7 @@ import java.util.Map;
 
 import static com.denimgroup.threadfix.CollectionUtils.newMap;
 import static com.denimgroup.threadfix.remote.response.RestResponse.failure;
-import static com.denimgroup.threadfix.service.util.ControllerUtils.writeSuccessObjectWithView;
+
 
 /**
  * @author bbeverly
@@ -97,6 +98,7 @@ public class ApplicationsIndexController {
 	}
 
 	@RequestMapping(value="/organizations/jsonList", method = RequestMethod.GET)
+	@JsonView(AllViews.TableRow.class)
 	public @ResponseBody Object jsonList() {
         List<Organization> organizations = organizationService.loadAllActiveFilter();
 
@@ -110,7 +112,7 @@ public class ApplicationsIndexController {
             map.put("canEditIds", PermissionUtils.getIdsWithPermission(Permission.CAN_MANAGE_APPLICATIONS, organizations));
             map.put("canUploadIds", PermissionUtils.getAppIdsWithPermission(Permission.CAN_UPLOAD_SCANS, organizations));
 
-            return writeSuccessObjectWithView(map, AllViews.TableRow.class);
+            return RestResponse.success(map);
         }
 	}
 

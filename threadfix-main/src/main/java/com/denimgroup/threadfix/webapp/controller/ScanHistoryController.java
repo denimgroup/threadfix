@@ -28,10 +28,9 @@ import com.denimgroup.threadfix.data.entities.Scan;
 import com.denimgroup.threadfix.logging.SanitizedLogger;
 import com.denimgroup.threadfix.remote.response.RestResponse;
 import com.denimgroup.threadfix.service.ScanService;
-import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -69,9 +68,11 @@ public class ScanHistoryController {
 
 		return new ModelAndView("scans/history");
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/table/{pageNumber}", method = RequestMethod.POST)
-	public @ResponseBody String getScanTable(@PathVariable int pageNumber) throws IOException {
+	@ResponseBody
+	public Object getScanTable(@PathVariable int pageNumber) throws IOException {
 
 		int scanCount = scanService.getScanCount();
 		int totalPages = (scanCount / 100) + 1;
@@ -87,12 +88,10 @@ public class ScanHistoryController {
 		
 		List<Scan> scans = scanService.getTableScans(pageNumber);
 
-        ObjectWriter writer = ControllerUtils.getObjectWriter(AllViews.TableRow.class);
-
         Map<String, Object> map = new HashMap<>();
 		map.put("scanList", scans);
 		map.put("numScans", scanCount);
-        return writer.writeValueAsString(RestResponse.success(map));
+        return RestResponse.success(map);
 	}
 	
 

@@ -229,12 +229,6 @@
             <version>${json.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${codehaus.jackson.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
 </project>

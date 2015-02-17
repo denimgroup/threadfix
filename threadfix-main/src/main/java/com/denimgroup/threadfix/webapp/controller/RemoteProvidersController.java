@@ -39,6 +39,7 @@ import com.denimgroup.threadfix.service.queue.QueueSender;
 import com.denimgroup.threadfix.service.util.ControllerUtils;
 import com.denimgroup.threadfix.service.util.PermissionUtils;
 import com.denimgroup.threadfix.views.AllViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -215,7 +216,8 @@ public class RemoteProvidersController {
 
 		return RestResponse.success(remoteProviderApplicationService.load(remoteProviderApplicationId));
 	}
-	
+
+	@JsonView(AllViews.TableRow.class)
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/apps/{rpAppId}/delete/{appId}", method = RequestMethod.POST)
 	public @ResponseBody RestResponse<RemoteProviderApplication> deleteAppConfiguration(@PathVariable("typeId") int typeId, @PathVariable("rpAppId") int rpAppId,
@@ -228,6 +230,7 @@ public class RemoteProvidersController {
         return RestResponse.success(dbRemoteProviderApplication);
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@PreAuthorize("hasRole('ROLE_CAN_MANAGE_REMOTE_PROVIDERS')")
 	@RequestMapping(value="/{typeId}/configure", method = RequestMethod.POST)
 	public @ResponseBody Object configureFinish(@PathVariable("typeId") int typeId,
@@ -253,7 +256,7 @@ public class RemoteProvidersController {
 			return RestResponse.failure(error);
 		} else if (test.equals(ResponseCode.SUCCESS)) {
             RemoteProviderType type = remoteProviderTypeService.load(typeId);
-			return ControllerUtils.writeSuccessObjectWithView(type, AllViews.TableRow.class);
+			return RestResponse.success(type);
 		} else {
             log.warn("Response code was not success but we're still returning success. This shouldn't happen.");
             return RestResponse.failure("Response was " + test);
@@ -290,6 +293,7 @@ public class RemoteProvidersController {
         }
 	}
 
+	@JsonView(AllViews.TableRow.class)
 	@RequestMapping(value="/getMap", method = RequestMethod.GET)
 	public @ResponseBody Object list() {
 
@@ -300,6 +304,6 @@ public class RemoteProvidersController {
         map.put("teams", organizationService.loadAllActive());
         map.put("scheduledImports", scheduledRemoteProviderImportService.loadAll());
 
-		return ControllerUtils.writeSuccessObjectWithView(map, AllViews.TableRow.class);
+		return RestResponse.success(map);
 	}
 }

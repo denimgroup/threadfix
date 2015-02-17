@@ -32,8 +32,8 @@ import com.denimgroup.threadfix.importer.exception.ScanFileUnavailableException;
 import com.denimgroup.threadfix.importer.impl.AbstractChannelImporter;
 import com.denimgroup.threadfix.importer.util.DateUtils;
 import com.denimgroup.threadfix.importer.util.RegexUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

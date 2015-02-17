@@ -35,6 +35,7 @@ import com.denimgroup.threadfix.views.AllViews;
 import com.denimgroup.threadfix.webapp.config.FormRestResponse;
 import com.denimgroup.threadfix.webapp.utils.ResourceNotFoundException;
 import com.denimgroup.threadfix.webapp.validator.BeanValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -91,10 +92,10 @@ public class RolesController {
         return "config/roles/index";
     }
 
-
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "list", method = RequestMethod.GET)
     @ResponseBody
-    public String map() {
+    public Object map() {
 
         List<Role> roles = roleService.loadAll();
 
@@ -102,9 +103,10 @@ public class RolesController {
             listRole.setCanDelete(roleService.canDelete(listRole));
         }
 
-        return ControllerUtils.writeSuccessObjectWithView(roles, AllViews.TableRow.class);
+        return RestResponse.success(roles);
     }
 
+    @JsonView(AllViews.TableRow.class)
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     @ResponseBody
     public Object newSubmit(Model model, @Valid @ModelAttribute Role role,
@@ -137,7 +139,7 @@ public class RolesController {
 
         model.addAttribute("roleList", roles);
 
-        return ControllerUtils.writeSuccessObjectWithView(role, AllViews.TableRow.class);
+        return RestResponse.success(role);
     }
 
     @RequestMapping(value = "/{roleId}/delete", method = RequestMethod.POST)
@@ -168,8 +170,9 @@ public class RolesController {
 			throw new ResourceNotFoundException();
 		}
 	}
-	
-	@RequestMapping(value = "/{roleId}/edit", method = RequestMethod.POST)
+
+    @JsonView(AllViews.TableRow.class)
+    @RequestMapping(value = "/{roleId}/edit", method = RequestMethod.POST)
     @ResponseBody
     public Object saveEdit(@PathVariable("roleId") int roleId,
                            @Valid @ModelAttribute Role role,
@@ -189,6 +192,6 @@ public class RolesController {
 			throw new ResourceNotFoundException();
 		}
 
-        return ControllerUtils.writeSuccessObjectWithView(role, AllViews.TableRow.class);
+        return RestResponse.success(role);
 	}
 }
