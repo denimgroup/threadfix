@@ -2732,7 +2732,7 @@ var jsPDF = (function(global) {
 
         this.addPage();
 
-        setLastCellPosition(margins.left, margins.top, undefined, undefined);
+        setLastCellPosition(margins.left, margins.top, undefined, 20);
         //setLastCellPosition(undefined, undefined, undefined, undefined, undefined);
         pages += 1;
     };
@@ -2831,8 +2831,9 @@ var jsPDF = (function(global) {
      */
 
     jsPDFAPI.table = function (x,y, data, headers, config) {
-        if (!data) {
-            throw 'No data for PDF table';
+        if (!data || data.length === 0) {
+			return;
+            //throw 'No data for PDF table';
         }
 
         var headerNames = [],
@@ -2855,7 +2856,7 @@ var jsPDF = (function(global) {
         //set up defaults. If a value is provided in config, defaults will be overwritten:
            autoSize        = false,
            printHeaders    = true,
-           fontSize        = 12,
+           fontSize        = 10,
            margins         = NO_MARGINS;
 
            margins.width = this.internal.pageSize.width;

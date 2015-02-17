@@ -19,6 +19,24 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         { name: "OWASP Top 10", id: $scope.OWASP_Report_Id }
     ];
 
+    $scope.graphIdMap = {
+    };
+    $scope.graphIdMap[$scope.PIT_Report_Id] = "pointInTimeGraph";
+    $scope.graphIdMap[$scope.MVA_Report_Id] = "mostVulnAppsGraph";
+
+    $scope.htmlElementIdMap = {
+    };
+    $scope.htmlElementIdMap[$scope.PIT_Report_Id] = "pointInTimeTablePdf";
+    $scope.htmlElementIdMap[$scope.OWASP_Report_Id] = "pointInTimeTablePdf";
+    $scope.htmlElementIdMap[$scope.PBV_Report_Id] = "progressVulnsDiv";
+
+    $scope.titleMap = {};
+    $scope.titleMap[$scope.PIT_Report_Id] = "Point_In_Time";
+    $scope.titleMap[$scope.OWASP_Report_Id] = "OWASP_Top_10";
+    $scope.titleMap[$scope.PBV_Report_Id] = "Progress_By_Vulnerability";
+    $scope.titleMap[$scope.MVA_Report_Id] = "Most_Vulnerable_Applications";
+
+
     $scope.OWASP_TOP10 = [
         {
             year: 2013,
@@ -675,6 +693,7 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
     };
 
     $scope.exportPNG = function(isPDF){
+
         if (!$scope.exportInfo) {
             $scope.exportInfo = {
                 id: $scope.reportId
@@ -687,6 +706,24 @@ module.controller('SnapshotReportController', function($scope, $rootScope, $wind
         }
         $scope.exportInfo.isPDF = isPDF;
     };
+
+    $scope.exportPDF = function() {
+
+        var parameters = angular.copy($scope.parameters);
+
+        if ($scope.reportId == $scope.OWASP_Report_Id)
+            parameters.owasp = parameters.selectedOwasp;
+
+        $scope.exportInfo = {};
+        $scope.exportInfo.tableId = $scope.htmlElementIdMap[$scope.reportId];
+        $scope.exportInfo.svgId = $scope.graphIdMap[$scope.reportId];
+        $scope.exportInfo.title = $scope.titleMap[$scope.reportId];
+        $scope.exportInfo.teams = $scope.title.teams;
+        $scope.exportInfo.apps = $scope.title.apps;
+
+        reportExporter.exportPDFTable($scope, parameters, $scope.exportInfo);
+
+    }
 
     $scope.exportCSV = function() {
 

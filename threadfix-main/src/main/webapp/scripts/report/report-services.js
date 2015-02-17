@@ -1,6 +1,6 @@
 var threadfixModule = angular.module('threadfix');
 
-threadfixModule.factory('reportExporter', function($log) {
+threadfixModule.factory('reportExporter', function($log, d3, $http, tfEncoder, vulnSearchParameterService, vulnTreeTransformer, $timeout) {
 
     var reportExporter = {};
 
@@ -46,16 +46,20 @@ threadfixModule.factory('reportExporter', function($log) {
     };
 
     reportExporter.exportPDF = function(d3, exportInfo, width, height, name) {
+        reportExporter.exportPDFSvg(d3, selectSvg(exportInfo.svgId), width, height, name, exportInfo.isPDF);
+    };
+
+    var selectSvg = function(svgId) {
         var svg = d3.select("svg");
         d3.selectAll("svg").each(function(d, i) {
 
-            if (d3.select(this).attr("id") === exportInfo.svgId)
+            if (d3.select(this).attr("id") === svgId)
                 svg = d3.select(this);
 
             $log.info(d3.select(this).attr("id"));
         });
-        reportExporter.exportPDFSvg(d3, svg, width, height, name, exportInfo.isPDF);
-    };
+        return svg;
+    }
 
     reportExporter.exportPDFSvg = function(d3, svg, width, height, name, isPDF) {
         var node = svg
@@ -86,6 +90,20 @@ threadfixModule.factory('reportExporter', function($log) {
             if (isPDF) {
                 var pdf = new jsPDF();
                 pdf.addImage(canvasdata, 'PNG', 10, 10);
+
+                //Adding table
+                pdf.cellInitialize();
+                pdf.setFontSize(10);
+
+                var table = d3.select('#vulnListDiv table')[0][0];
+                for (var i=0; i<table.rows.length; i++) {
+                    var tableRow = table.rows[i];
+                    for (var j=0; j<tableRow.cells.length; j++) {
+                        pdf.cell(10, 50, 40, 30, tableRow.cells[j].innerText || tableRow.cells[j].textContent, i);
+                        console.log(tableRow.cells[j].innerText || tableRow.cells[j].textContent);
+                        pdf.cellAddPage();
+                    }
+                }
                 pdf.save(name + ".pdf");
             } else {
                 var pngimg = '<img src="'+canvasdata+'">';
@@ -99,6 +117,148 @@ threadfixModule.factory('reportExporter', function($log) {
         };
 
     };
+
+    reportExporter.exportPDFTable = function($scope, parameters, exportInfo) {
+
+        $scope.exportingPDF = true;
+
+        //Retrieving table data
+        vulnSearchParameterService.updateParameters($scope, parameters);
+
+        if (parameters.owasp) {
+            parameters.genericVulnerabilities = [];
+            parameters.owasp.top10.forEach(function(owaspVuln){
+                owaspVuln.members.forEach(function(cweId){
+                    parameters.genericVulnerabilities.push({id: cweId})
+
+                });
+            });
+        }
+
+        $http.post(tfEncoder.encode("/reports/search/export/pdf"), parameters).
+            success(function(data, status, headers, config) {
+                if (data.success) {
+                    var exportList = [];
+                    data.object.forEach(function(elementObj){
+                        var element = elementObj.element;
+                        var info = JSON.parse(elementObj.info);
+                        element.vulns = info.vulns;
+                        element.vulnCount = info.vulnCount;
+                        exportList.push(element);
+                    });
+                    $scope.exportVulnTree = vulnTreeTransformer.transform(exportList, parameters.owasp);
+                    $scope.$apply();
+                    reportExporter.exportPDFTableFromId(exportInfo);
+
+                    $timeout(function() {
+                        $scope.exportingPDF = false;
+                        $scope.exportVulnTree = null;
+                    }, 200);
+
+                } else if (data.message) {
+                    $scope.errorMessage = "Failure. Message was : " + data.message;
+                    $scope.exportingPDF = false;
+                }
+
+            }).
+            error(function(data, status, headers, config) {
+                $log.info("Got " + status + " back.");
+                $scope.errorMessage = "Failed to retrieve vulnerability tree. HTTP status was " + status;
+                $scope.exportingPDF = false;
+            });
+
+    }
+
+    reportExporter.exportPDFTableFromId = function(exportInfo, tableInfo) {
+
+        var fileName = getName(exportInfo);
+        var tableId = exportInfo.tableId, graghId = exportInfo.svgId;
+
+        var pdf = new jsPDF({lineHeight: 0.85});
+        addSvgToPdf(pdf, graghId);
+
+        // Adding summary table in Compliance report
+        if (tableInfo && tableInfo.length > 0) {
+            pdf.cellInitialize();
+            pdf.setFontSize(10);
+            var headers = Object.keys(tableInfo[0]);
+            headers.forEach(function(header){
+                pdf.cell(20, 150, 50, 10, header, 0);
+            });
+            tableInfo.forEach(function(row, i){
+                headers.forEach(function(header){
+                    pdf.cell(20, 150, 50, 10, "" + row[header], i+1);
+                });
+            });
+        }
+
+        if (graghId && tableId)
+            pdf.addPage();
+        addElementToPdf(pdf, tableId);
+        pdf.save(fileName + '.pdf');
+
+    }
+
+    var addSvgToPdf = function(pdf, graphId) {
+        if (graphId) {
+            var svg = selectSvg(graphId);
+            var node = svg
+                .attr("version", 1.1)
+                .attr("xmlns", "http://www.w3.org/2000/svg")
+                .node();
+
+            styles(node);
+
+            var html = node.parentNode.innerHTML;
+
+            var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
+            var img = '<img src="' + imgsrc + '">';
+            d3.select("#svgdataurl").html(img);
+
+            var canvas = document.createElement("canvas");
+            canvas.width = svg.attr("width");
+            canvas.height = svg.attr("height");
+            var context = canvas.getContext("2d");
+
+            var image = new Image();
+            image.src = imgsrc;
+            //image.onload = function () {
+            context.drawImage(image, 0, 0);
+            var canvasdata = canvas.toDataURL("image/png");
+            pdf.addImage(canvasdata, 'PNG', 10, 10);
+            //return pdf;
+            //}
+        }
+        return pdf;
+    }
+
+    var addElementToPdf = function(pdf, elementId) {
+        if (elementId) {
+            pdf.cellInitialize();
+            pdf.setFontSize(10);
+            var specialElementHandlers = {
+                '#editor': function (element, renderer) {
+                    return true;
+                }
+            };
+
+            var table = d3.select("#" + elementId)[0][0];
+            pdf.fromHTML(table, 15, 15, {
+                'width': 200,
+                'elementHandlers': specialElementHandlers
+            });
+        }
+
+        return pdf;
+    }
+
+    var getName = function(exportInfo) {
+        var teamsName = (exportInfo && exportInfo.teams) ? "_" + exportInfo.teams : "",
+            appsName = (exportInfo && exportInfo.apps) ? "_" + exportInfo.apps : "",
+            tagsName = (exportInfo && exportInfo.tags) ? "_" + exportInfo.tags : "",
+            title = (exportInfo && exportInfo.title) ? exportInfo.title : "Report";
+        return title + teamsName + appsName + tagsName;
+    }
 
     var styles = function(dom) {
         var used = "";
@@ -456,7 +616,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             keys.forEach(function(key){
                 if (key != "importTime") {
                     startHash[key] = Math.round(hashBefore[key] +
-                        (firstHashInList[key] - hashBefore[key]) / rate1 * rate2);
+                    (firstHashInList[key] - hashBefore[key]) / rate1 * rate2);
                 }
             });
             firstHashInList = hashBefore;
@@ -492,7 +652,7 @@ threadfixModule.factory('trendingUtilities', function(reportUtilities) {
             keys.forEach(function(key){
                 if (key != "importTime") {
                     endHash[key] = Math.round(lastHashInList[key] +
-                        (hashAfter[key] - lastHashInList[key]) / rate1 * rate2);
+                    (hashAfter[key] - lastHashInList[key]) / rate1 * rate2);
                 }
             });
         }
