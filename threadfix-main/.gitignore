@@ -40,7 +40,7 @@ local.properties
 .texlipse
 
 #Fabric
-util/deploy/fabfiletest.pyc
+./util/deploy/fabfiletest.pyc
 
 # IntelliJ IDEA #
 
