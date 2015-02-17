@@ -204,11 +204,26 @@ public class ChannelMerger {
         // the existing finding / vuln
         if (newFinding.isMarkedFalsePositive()
                 && !oldFinding.isMarkedFalsePositive()) {
-            LOG.info("A previously imported finding has been marked a false positive "
+            LOG.info("A previously imported finding (" + oldFinding.getNativeId()
+                    + ") has been marked a false positive "
                     + "in the scan results. Marking the finding and Vulnerability.");
             oldFinding.setMarkedFalsePositive(true);
             if (oldFinding.getVulnerability() != null) {
                 oldFinding.getVulnerability().setIsFalsePositive(true);
+                vulnerabilityDao.saveOrUpdate(oldFinding
+                        .getVulnerability());
+            }
+        }
+        // If the finding has had its false positive status removed, update
+        // the existing finding / vuln
+        else if (oldFinding.isMarkedFalsePositive()
+                && !newFinding.isMarkedFalsePositive()) {
+            LOG.info("A previously imported finding (" + oldFinding.getNativeId()
+                    + ") has been marked not a false positive "
+                    + "in the scan results. Unmarking the finding and Vulnerability.");
+            oldFinding.setMarkedFalsePositive(false);
+            if (oldFinding.getVulnerability() != null) {
+                oldFinding.getVulnerability().setIsFalsePositive(false);
                 vulnerabilityDao.saveOrUpdate(oldFinding
                         .getVulnerability());
             }
