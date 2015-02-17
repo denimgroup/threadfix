@@ -1,0 +1,111 @@
+2/18/2015 3:50:00,,,,
+type.info,,,,
+CodeProfiler,https://www.virtualforge.com/,3.8,Do a manual scan,
+type.vulnerabilities,,
+1 Cross-Site Scripting,Cross-Site Scripting,79
+2 Denial of Service (DOS) in DO Loop,Denial of Service (DOS) in DO Loop,400
+4 Hard-coded User Name (sy-uname),Hard-coded User Name (sy-uname),285
+5 All Occurrences of sy-uname,All Occurrences of sy-uname,0
+8 Dangerous ABAP Commands,Dangerous ABAP Commands,242
+9 Direct Database Modifications,Direct Database Modifications,389
+14 Missing AUTHORITY-CHECK in RFC-Enabled Functions,Missing AUTHORITY-CHECK in RFC-Enabled Functions,862
+15 Missing AUTHORITY-CHECK before CALL TRANSACTION,Missing AUTHORITY-CHECK before CALL TRANSACTION,862
+18 OSQL Injection (Write Access),OSQL Injection (Write Access),89
+20 Usage of Regular Expression,Usage of Regular Expression,0
+21 Forceful Querying (Write Access),Forceful Querying (Write Access),639
+22 Generic ABAP Module Calls,Generic ABAP Module Calls,99
+24 Directory Traversal (Write Access),Directory Traversal (Write Access),22
+25 Suspicious Filter Usage (replace),Suspicious Filter Usage (replace),182
+26 Exposed System Calls,Exposed System Calls,242
+28 Generic Variable Readers,Generic Variable Readers,95
+29 Disclosure of critical DB Content (Customized),Disclosure of critical DB Content (Customized),200
+30 Method Calls in Inactive Assertions,Method Calls in Inactive Assertions,398
+31 HTTP Response Tampering,HTTP Response Tampering,442
+32 Alias Authorization in SUBMIT report,Alias Authorization in SUBMIT report,863
+34 ABAP Command Injection (report),ABAP Command Injection (report),96
+35 ABAP Command Injection (program),ABAP Command Injection (program),95
+36 Exposed Kernel Calls,Exposed Kernel Calls,242
+39 Unmanaged SQL,Unmanaged SQL,0
+41 OS Command Execution (Parameter),OS Command Execution (Parameter),78
+43 Phishing,Phishing,442
+44 OS Command Injection (OPEN DATASET; Filter),OS Command Injection (OPEN DATASET; Filter),
+45 Hard-coded SAP System ID Checks (sy-sysid),Hard-coded SAP System ID Checks (sy-sysid),398
+46 Cross-Client Access to Business Data,Cross-Client Access to Business Data,265
+48 Generic RFC Destinations,Generic RFC Destinations,95
+49 File Upload (SAP GUI),File Upload (SAP GUI),0
+50 File Download (SAP GUI),File Download (SAP GUI),0
+52 OS Command Execution (Client OS),OS Command Execution (Client OS),78
+53 Hard-coded SAP Client Checks (sy-mandt),Hard-coded SAP Client Checks (sy-mandt),398
+56 Hard-coded System Date Checks (sy-datum),Hard-coded System Date Checks (sy-datum),398
+59 Directory Traversal (Read Access),Directory Traversal (Read Access),22
+60 OSQL Injection (Read Access),OSQL Injection (Read Access),89
+71 SQL Injection (Native),SQL Injection (Native),89
+80 Missing AUTHORITY-CHECK in Reports,Missing AUTHORITY-CHECK in Reports,862
+82 Hidden ABAP Code,Hidden ABAP Code,503
+84 Outgoing FTP Connections,Outgoing FTP Connections,0
+85 Forceful Querying (Read Access),Forceful Querying (Read Access),639
+87 Generic Table Query (Read Access),Generic Table Query (Read Access),639
+88 Generic Table Query (Write Access),Generic Table Query (Write Access),639
+94 Alias Authorization in AUTHORITY-CHECK,Alias Authorization in AUTHORITY-CHECK,863
+100 Generic Database Connections,Generic Database Connections,99
+101 Generic Transformations,Generic Transformations,470
+103 Broken AUTHORITY-CHECKs,Broken AUTHORITY-CHECKs,863
+109 Generic DELETE REPORT,Generic DELETE REPORT,99
+110 Generic READ REPORT,Generic READ REPORT,99
+111 Hard-coded Passwords,Hard-coded Passwords,259
+112 Denial of Service (DOS) in TRANSFER,Denial of Service (DOS) in TRANSFER,400
+113 Dummy AUTHORITY-CHECKs,Dummy AUTHORITY-CHECKs,863
+118 AUTHORITY-CHECKs with Dummy Field 'ACTVT',AUTHORITY-CHECKs with Dummy Field 'ACTVT',863
+120 Privileging AUTHORITY-CHECKs (ACTVT),Privileging AUTHORITY-CHECKs (ACTVT),863
+123 Manipulation of SAP Client (sy-mandt),Manipulation of SAP Client (sy-mandt),265
+128 Insufficient Authorization Functionality,Insufficient Authorization Functionality,863
+131 SQL Injection (CALL 'C_DB_FUNCTION'),SQL Injection (CALL 'C_DB_FUNCTION'),89
+132 OS Command Injection (RFC_REMOTE_PIPE),OS Command Injection (RFC_REMOTE_PIPE),78
+133 OS Command Injection (RFC_REMOTE_EXEC),OS Command Injection (RFC_REMOTE_EXEC),78
+134 Directory Traversal (RFC_REMOTE_FILE),Directory Traversal (RFC_REMOTE_FILE),22
+135 Disclosure of Source Code,Disclosure of Source Code,200
+136 OS Command Injection (CALL 'SYSTEM'),OS Command Injection (CALL 'SYSTEM'),78
+137 Directory Traversal (CALL 'ALERTS' / Read Access),Directory Traversal (CALL 'ALERTS' / Read Access),22
+138 OS Command Injection (CALL 'ThWpInfo'),OS Command Injection (CALL 'ThWpInfo'),78
+139 Directory Traversal (CALL 'C_RSTRB_READ_BUFFERED'),Directory Traversal (CALL 'C_RSTRB_READ_BUFFERED'),22
+140 Generic Table Query (CALL 'C_MOD_TABLE' / Write Access),Generic Table Query (CALL 'C_MOD_TABLE' / Write Access),639
+141 Generic Table Query (CALL 'C_GET_TABLE' / Read Access),Generic Table Query (CALL 'C_GET_TABLE' / Read Access),639
+142 SQL Injection (CALL 'C_DB_EXECUTE'),SQL Injection (CALL 'C_DB_EXECUTE'),89
+207 Usage of DB Tables without Authorization Groups,Usage of DB Tables without Authorization Groups,389
+219 Hard-coded Domain (User Name),Hard-coded Domain (User Name),398
+220 Control Flow based on SPA/GPA Parameter,Control Flow based on SPA/GPA Parameter,389
+222 Disclosure of Directory Contents (CALL 'C_DIR_READ_START'),Disclosure of Directory Contents (CALL 'C_DIR_READ_START'),548
+226 Usage of dangerous Kernel Call ('C_REMOVE'),Usage of dangerous Kernel Call ('C_REMOVE'),242
+230 AUTHORITY-CHECKs with Dummy Field 'AUTHC',AUTHORITY-CHECKs with Dummy Field 'AUTHC',863
+231 AUTHORITY-CHECKs with Dummy Field 'CO_ACTION',AUTHORITY-CHECKs with Dummy Field 'CO_ACTION',863
+232 Privileging AUTHORITY-CHECKs (AUTHC),Privileging AUTHORITY-CHECKs (AUTHC),863
+233 Privileging AUTHORITY-CHECKs (CO_ACTION),Privileging AUTHORITY-CHECKs (CO_ACTION),863
+234 Usage of pseudo-cryptographic Algorithms,Usage of pseudo-cryptographic Algorithms,398
+235 Deactivation of Table-Change Logging,Deactivation of Table-Change Logging,0
+237 Cross-Client Data Transfer,Cross-Client Data Transfer,265
+239 OS Command Injection (OPEN DATASET; File Name),OS Command Injection (OPEN DATASET; File Name),
+240 Hard-coded Alias Authorization in AUTHORITY-CHECK,Hard-coded Alias Authorization in AUTHORITY-CHECK,863
+241 SQL Injection on In-Memory Tables (Read Access),SQL Injection on In-Memory Tables (Read Access),89
+242 SQL Injection on In-Memory Tables (Write Access),SQL Injection on In-Memory Tables (Write Access),89
+246 Execution of Stored Procedures (CALL 'C_DB_FUNCTION'),Execution of Stored Procedures (CALL 'C_DB_FUNCTION'),398
+247 OS Command Execution (Command Name),OS Command Execution (Command Name),78
+251 Disclosure of critical Variable Content (Customized),Disclosure of critical Variable Content (Customized),200
+252 Potentially wrong Usage of DUMMY in AUTHORITY-CHECK,Potentially wrong Usage of DUMMY in AUTHORITY-CHECK,863
+253 Hard-coded OS Commands,Hard-coded OS Commands,389
+258 AUTHORITY-CHECKs with an incomplete ID List,AUTHORITY-CHECKs with an incomplete ID List,863
+261 All Kernel Calls,All Kernel Calls,242
+272 All System Calls,All System Calls,242
+274 Hidden OK-Codes,Hidden OK-Codes,389
+275 Cross-Client Access to Data Clusters (Database),Cross-Client Access to Data Clusters (Database),265
+276 Cross-Client Access to Data Clusters (Shared Memory),Cross-Client Access to Data Clusters (Shared Memory),265
+277 Cross-Client Access to Data Clusters (Shared Buffer),Cross-Client Access to Data Clusters (Shared Buffer),265
+279 AUTHORITY-CHECK 'S_TCODE' with Dummy Field 'TCD',AUTHORITY-CHECK 'S_TCODE' with Dummy Field 'TCD',863
+280 Privileging AUTHORITY-CHECKs (S_TCODE),Privileging AUTHORITY-CHECKs (S_TCODE),863
+281 Insecure Usage of Security Functionality (Unchecked classic Exception),Insecure Usage of Security Functionality (Unchecked classic Exception),248
+282 Insecure Usage of Security Functionality (Ignored classic Exception),Insecure Usage of Security Functionality (Ignored classic Exception),248
+type.severities,,,
+Information,Information,1,1
+Critical,Critical,5,5
+High,High,4,4
+Medium,Medium,3,3
+Low,Low,2,2
