@@ -40,7 +40,7 @@ local.properties
 .texlipse
 
 #Fabric
-*.pyc
+threadfix-main/util/deploy/*.pyc
 
 # IntelliJ IDEA #
 
