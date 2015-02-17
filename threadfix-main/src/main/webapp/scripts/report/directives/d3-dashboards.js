@@ -149,6 +149,7 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
                 scope.render = function (reportData) {
                     var data = angular.copy(reportData);
                     svg.selectAll('*').remove();
+                    svg.attr("id", "mostVulnAppsGraph");
                     svg.append("g").attr("id","topAppChart");
 
                     var svg1 = d3.select("#topAppChart")
@@ -212,9 +213,9 @@ d3ThreadfixModule.directive('d3Hbars', ['$window', '$timeout', 'd3', 'd3Service'
 
                 };
 
-                scope.$watch('exportReportId', function() {
-                    scope.export();
-                }, true);
+                //scope.$watch('exportReportId', function() {
+                //    scope.export();
+                //}, true);
 
                 scope.export = function(){
                     if (scope.exportReportId && scope.exportReportId.id==10) {

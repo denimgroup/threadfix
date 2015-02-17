@@ -100,10 +100,10 @@ d3ThreadfixModule.directive('d3Trending', ['d3', 'reportExporter', 'reportUtilit
                     scope.render(scope.data);
                 }, true);
 
-                scope.$watch('exportInfo', function() {
-                    if (scope.exportInfo)
-                        scope.export();
-                }, true);
+                //scope.$watch('exportInfo', function() {
+                //    if (scope.exportInfo)
+                //        scope.export();
+                //}, true);
 
                 scope.render = function (reportData) {
                     if (!reportData)
