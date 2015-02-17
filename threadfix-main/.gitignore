@@ -39,9 +39,6 @@ local.properties
 # TeXlipse plugin
 .texlipse
 
-#Fabric
-./util/deploy/fabfiletest.pyc
-
 # IntelliJ IDEA #
 
 *.iml
