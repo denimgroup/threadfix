@@ -39,6 +39,8 @@ local.properties
 # TeXlipse plugin
 .texlipse
 
+#Fabric
+*.pyc
 
 # IntelliJ IDEA #
 
