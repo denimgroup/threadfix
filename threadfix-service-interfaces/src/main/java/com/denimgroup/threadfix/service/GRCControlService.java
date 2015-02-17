@@ -23,9 +23,8 @@
 ////////////////////////////////////////////////////////////////////////
 package com.denimgroup.threadfix.service;
 
-import com.denimgroup.threadfix.data.entities.GRCApplication;
+import com.denimgroup.threadfix.data.entities.Application;
 import com.denimgroup.threadfix.data.entities.GRCControl;
-import com.denimgroup.threadfix.data.entities.Vulnerability;
 
 import java.util.List;
 
@@ -42,11 +41,11 @@ public interface GRCControlService {
     GRCControl loadGrcControl(String controlId);
 
     /**
-     * @param vulnerabilities
-     * @param grcApplication
+     * @param vulnerabilityIds
+     * @param application
      * @return List<GRCControl>
      */
-    List<GRCControl> bulkCreateControls(List<Vulnerability> vulnerabilities, GRCApplication grcApplication);
+    List<GRCControl> bulkSubmitControls(List<Integer> vulnerabilityIds, Application application);
 
     /**
      * @param control
