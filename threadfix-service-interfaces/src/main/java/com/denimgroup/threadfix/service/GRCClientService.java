@@ -33,9 +33,9 @@ import java.util.List;
  */
 public interface GRCClientService {
 
-    public Integer getGRCApplications(GRCTool grcTool);
+    Integer getGRCApplications(GRCTool grcTool);
 
-    public GRCApplication createGRCApplication(GRCTool grcTool, Application application);
+    GRCApplication createGRCApplication(GRCTool grcTool, Application application);
 
-    public List<GRCControl> bulkSubmitControls(GRCTool grcTool, List<GRCControl> controls);
+    GRCControl submitControl(GRCTool grcTool, Vulnerability vulnerability, GRCApplication grcApplication);
 }
